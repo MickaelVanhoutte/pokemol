@@ -5,3 +5,6 @@ vendor/
 tools/out/
 .DS_Store
 *.log
+
+# original drawing photos stay local
+img-source/
