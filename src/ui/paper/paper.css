@@ -123,8 +123,10 @@ img.picon { image-rendering: pixelated; image-rendering: crisp-edges; }
 @keyframes blink2 { 50% { opacity: 0; } }
 
 /* ---------- text box (dialogs, battle messages) */
-.textbox { --lh: 1.45em; cursor: pointer; font-size: clamp(1.05rem, 4.2vw, 1.35rem); min-height: calc(2 * var(--lh) + 8px); }
-.textbox__text { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+/* fixed height: always --lines lines, longer texts are split into pages */
+.textbox { --lh: 1.45em; --lines: 2; cursor: pointer; font-size: clamp(1.05rem, 4.2vw, 1.35rem); display: flex; flex-direction: column; }
+.textbox__text { margin: 0; white-space: pre-line; overflow-wrap: anywhere; height: calc(var(--lines) * var(--lh)); overflow: hidden; flex: none; }
+.textbox__measure { position: absolute; left: 0; top: 0; height: auto; visibility: hidden; pointer-events: none; }
 .textbox__speaker {
   position: absolute; top: -1.35em; left: 1em;
   background: var(--ink); color: #fff; font-size: 0.75em; padding: 0 8px; border-radius: 4px; line-height: 1.5;

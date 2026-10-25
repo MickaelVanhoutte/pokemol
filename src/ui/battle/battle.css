@@ -124,6 +124,8 @@
   border-top: 3px solid var(--ink);
 }
 .bpanel__text { flex: 1; min-height: 0; overflow: hidden; }
+/* in the battle panel the text fills the fixed panel: as many whole lines as fit */
+.bpanel__text .textbox__text { flex: 1 1 0; height: auto; min-height: 0; }
 .bpanel__split { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 2px; }
 .bpanel__prompt {
   --lh: 1.45em;
@@ -177,4 +179,4 @@
 .is-coach { animation: coachPulse 1s ease-in-out infinite; }
 @keyframes coachPulse { 50% { filter: drop-shadow(0 0 6px #f2c14e) brightness(1.06); } }
 /* inside the fixed panel the speaker label sits on the first line (nothing may stick out) */
-.bpanel__text .textbox__speaker { position: static; display: inline-block; margin: 2px 0 0; }
+.bpanel__text .textbox__speaker { position: static; display: inline-block; align-self: flex-start; margin: 2px 0 0; }

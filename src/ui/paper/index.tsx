@@ -1,5 +1,5 @@
 import type { ComponentChildren } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { move } from '../../data/moves';
 import { STATUSES, TYPES } from '../../data/types';
@@ -9,6 +9,7 @@ import { textPace } from '../../state/prefs';
 import { sfx } from '../../audio/sfx';
 import { iconUrl } from '../icons';
 import { useMenuNav } from './nav';
+import { paginate } from './paginate';
 import './paper.css';
 
 export function Window({ children, class: cls = '', seyes, onClick }: { children: ComponentChildren; class?: string; seyes?: boolean; onClick?: () => void }) {
@@ -97,29 +98,71 @@ export function YesNo({ onAnswer, active = true }: { onAnswer: (yes: boolean) =>
   );
 }
 
-/** Typewriter text on notebook paper. Tap / A finishes the line, then calls `onAdvance`. */
-export function TextBox({ text, speaker, onAdvance, onDone, arrow = true, keys = false, class: cls = '', instant }: {
-  text: string; speaker?: string; onAdvance?: () => void; onDone?: () => void; arrow?: boolean; keys?: boolean; class?: string; instant?: boolean;
+/**
+ * Typewriter text on notebook paper, in a box of fixed height. Text longer than the box is
+ * split into pages: tap / A finishes the line, then shows the next page, then calls `onAdvance`.
+ * Without `onAdvance` (battle messages), pages turn by themselves after `autoPage` ms.
+ */
+export function TextBox({ text, speaker, onAdvance, onDone, arrow = true, keys = false, class: cls = '', instant, autoPage }: {
+  text: string; speaker?: string; onAdvance?: () => void; onDone?: () => void; arrow?: boolean; keys?: boolean; class?: string; instant?: boolean; autoPage?: number;
 }) {
-  const [shown, setShown] = useState(instant ? text.length : 0);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const measureRef = useRef<HTMLParagraphElement>(null);
+  const [pages, setPages] = useState<string[]>([text]);
+  const [page, setPage] = useState(0);
+  // split into pages that fit the box (again whenever its size changes)
+  useLayoutEffect(() => {
+    const el = textRef.current, m = measureRef.current;
+    if (!el || !m) return;
+    const compute = () => {
+      const lh = parseFloat(getComputedStyle(el).lineHeight) || 20;
+      const maxH = Math.max(lh, Math.floor((el.clientHeight + 1) / lh) * lh) + 1;
+      m.style.width = `${el.clientWidth}px`;
+      const out = paginate(text, (candidate) => {
+        m.textContent = candidate;
+        return m.scrollHeight <= maxH;
+      });
+      setPages((prev) => (prev.length === out.length && prev.every((x, i) => x === out[i]) ? prev : out));
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [text]);
+  useEffect(() => setPage(0), [text]);
+
+  const current = pages[Math.min(page, pages.length - 1)] ?? '';
+  const [shown, setShown] = useState(instant ? current.length : 0);
   useEffect(() => {
-    if (instant) return setShown(text.length);
+    if (instant) return setShown(current.length);
     setShown(0);
     const { chars, ms } = textPace();
     let n = 0;
     const id = setInterval(() => {
       n += chars;
       setShown(n);
-      if (n >= text.length) clearInterval(id);
+      if (n >= current.length) clearInterval(id);
     }, ms);
     return () => clearInterval(id);
-  }, [text, instant]);
-  const done = shown >= text.length;
+  }, [current, instant]);
+  const last = page >= pages.length - 1;
+  const pageDone = shown >= current.length;
+  const done = last && pageDone;
   useEffect(() => {
     if (done) onDone?.();
   }, [done, text]);
+  // battle messages turn their pages by themselves
+  useEffect(() => {
+    if (!autoPage || onAdvance || !pageDone || last) return;
+    const id = setTimeout(() => setPage((p) => p + 1), autoPage);
+    return () => clearTimeout(id);
+  }, [autoPage, pageDone, last, page]);
   const tap = () => {
-    if (!done) return setShown(text.length);
+    if (!pageDone) return setShown(current.length);
+    if (!last) {
+      sfx.blip();
+      return setPage((p) => p + 1);
+    }
     if (onAdvance) {
       sfx.blip();
       onAdvance();
@@ -139,8 +182,9 @@ export function TextBox({ text, speaker, onAdvance, onDone, arrow = true, keys =
   return (
     <div class={`window seyes textbox ${cls}`} onClick={tap}>
       {speaker && <span class="textbox__speaker">{speaker}</span>}
-      <p class="textbox__text">{text.slice(0, shown)}</p>
-      {arrow && done && onAdvance && <span class="textbox__next blip">▼</span>}
+      <p class="textbox__text" ref={textRef}>{current.slice(0, shown)}</p>
+      <p class="textbox__text textbox__measure" ref={measureRef} aria-hidden="true" />
+      {arrow && pageDone && (!last || onAdvance) && <span class="textbox__next blip">▼</span>}
     </div>
   );
 }

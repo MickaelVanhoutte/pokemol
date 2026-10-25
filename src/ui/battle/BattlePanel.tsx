@@ -88,6 +88,7 @@ export function BattlePanel(p: PanelProps) {
           text={p.text}
           speaker={p.speaker}
           keys={m !== 'message'}
+          autoPage={1300}
           onAdvance={m === 'continue' ? p.onContinue : m === 'coach' ? p.onContinue : undefined}
         />
       )}

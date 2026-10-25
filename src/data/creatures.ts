@@ -29,7 +29,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '003', slug: 'clapotin', name: L('Clapotin', 'Splashell'), kind: L('Bestiole Flaque', 'Puddle Critter'),
+    id: '003', slug: 'clapotin', faces: 'left', name: L('Clapotin', 'Splashell'), kind: L('Bestiole Flaque', 'Puddle Critter'),
     type: 'eau', base: { hp: 52, atk: 50, def: 64, spa: 52, spd: 62, spe: 42 },
     catchRate: 45, baseExp: 64, rarity: 'uncommon',
     learnset: [[1, 'bousculade'], [1, 'fretillement'], [5, 'bulles'], [10, 'carapace-tambour'], [13, 'jet-d-eau'],
