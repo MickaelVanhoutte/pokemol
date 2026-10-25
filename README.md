@@ -15,6 +15,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from
   Options), installable as an app (PWA). On phones, touch the screen anywhere to show the joystick.
+- Plays offline: the first visit downloads every file in the background. New versions download
+  silently too and start the next time the game is opened (Options shows the version and offline state).
 
 ## Run it locally
 

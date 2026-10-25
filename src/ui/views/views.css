@@ -160,6 +160,8 @@
 .opts__save p { margin: 0 0 6px; }
 .opts__row { display: flex; flex-wrap: wrap; gap: 6px; }
 .opts__msg { color: #2a8a3a; }
+.opts__app { font-size: 0.95rem; }
+.opts__app p { margin: 0 0 6px; }
 
 /* ---------- trainer card */
 .tcard { background-color: #fff3c4; font-size: 1.15rem; }
