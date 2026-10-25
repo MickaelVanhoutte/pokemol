@@ -4,9 +4,10 @@ import { MAPS } from '../data/maps';
 import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature } from '../data/creatures';
 import { item } from '../data/items';
+import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { createMon, evolutionOf, evolve, type Mon } from '../engine/pk/creature';
+import { createMon, evolutionOf, evolve, learnMove, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, healParty, partyAlive, persist, save, see, takeItem, update } from '../state/game';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
@@ -323,7 +324,32 @@ export async function checkEvolutions() {
     });
     sfx.levelUp();
     await showMons([into], tr(L('{n} a évolué en {to} !', '{n} evolved into {to}!'), { n: tr(creature(m.species).name), to: tr(creature(into).name) }));
+    // like the GBA games, the new form learns its moves of the current level right away
+    const lvl = s().party[i].level;
+    for (const [at, id] of creature(into).learnset) {
+      if (at === lvl && !s().party[i].moves.some((mv) => mv.id === id)) await teachMove(i, id);
+    }
   }
+}
+
+async function teachMove(i: number, id: string) {
+  const m = s().party[i];
+  const vars = { n: tr(creature(m.species).name), m: tr(move(id).name) };
+  if (m.moves.length < 4) {
+    update((x) => learnMove(x.party[i], x.party[i].moves.length, id));
+    sfx.levelUp();
+    await say(L('{n} apprend {m} !', '{n} learned {m}!'), undefined, vars);
+    return;
+  }
+  const c = await ask(L('{n} veut apprendre {m}. Oublier quelle capacité ?', '{n} wants to learn {m}. Forget which move?'),
+    [...m.moves.map((mv) => move(mv.id).name), L('Ne pas apprendre', 'Don’t learn it')], undefined, vars);
+  if (c >= m.moves.length) {
+    await say(L('{n} n’a pas appris {m}.', '{n} did not learn {m}.'), undefined, vars);
+    return;
+  }
+  const old = tr(move(m.moves[c].id).name);
+  update((x) => learnMove(x.party[i], c, id));
+  await say(L('{n} oublie {o} et apprend {m} !', '{n} forgot {o} and learned {m}!'), undefined, { ...vars, o: old });
 }
 
 async function blackout() {
@@ -390,5 +416,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, screen };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, screen, fight, createMon, checkEvolutions };
 }

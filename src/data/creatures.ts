@@ -7,7 +7,7 @@ import type { SpeciesDef } from './schema';
  */
 export const CREATURES: SpeciesDef[] = [
   {
-    id: '001', slug: 'minousse', name: L('Minousse', 'Sproutkit'), kind: L('Bestiole Chaton', 'Kitten Critter'),
+    id: '001', slug: 'minousse', faces: 'left', name: L('Minousse', 'Sproutkit'), kind: L('Bestiole Chaton', 'Kitten Critter'),
     type: 'plante', base: { hp: 50, atk: 52, def: 50, spa: 62, spd: 62, spe: 46 },
     catchRate: 45, baseExp: 64, rarity: 'uncommon',
     learnset: [[1, 'griffe'], [1, 'grondement'], [5, 'coup-de-liane'], [10, 'griffe-pousse'], [13, 'graine-dodo'],
@@ -18,7 +18,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '002', slug: 'braisou', name: L('Braisou', 'Embunny'), kind: L('Bestiole Braise', 'Ember Critter'),
+    id: '002', slug: 'braisou', faces: 'left', name: L('Braisou', 'Embunny'), kind: L('Bestiole Braise', 'Ember Critter'),
     type: 'feu', base: { hp: 45, atk: 58, def: 44, spa: 64, spd: 50, spe: 66 },
     catchRate: 45, baseExp: 64, rarity: 'uncommon',
     learnset: [[1, 'griffe'], [1, 'grondement'], [5, 'flammeche'], [10, 'pas-de-loup'], [14, 'lueur-brulante'],
@@ -75,8 +75,8 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '007', slug: 'papivole', name: L('Papivole', 'Flutterbug'), kind: L('Bestiole Papillon', 'Butterfly Critter'),
     type: 'insecte', base: { hp: 48, atk: 35, def: 45, spa: 72, spd: 64, spe: 66 },
-    catchRate: 190, baseExp: 72, rarity: 'common',
-    learnset: [[1, 'bousculade'], [1, 'dard'], [5, 'coup-d-ailes'], [9, 'poudre-dodo'], [11, 'poudre-piquante'],
+    catchRate: 120, baseExp: 100, rarity: 'common', evolvesFrom: '012',
+    learnset: [[1, 'bousculade'], [1, 'dard'], [8, 'coup-d-ailes'], [9, 'poudre-dodo'], [11, 'poudre-piquante'],
       [13, 'poudre-toxique'], [16, 'choc-mental'], [21, 'rayon-d-ailes'], [27, 'poudre-arc-en-ciel']],
     dex: L(
       'Ses gros yeux rouges voient toutes les couleurs, même celles qu’on n’a pas encore inventées.',
@@ -127,6 +127,27 @@ export const CREATURES: SpeciesDef[] = [
       'It hides in your shadow and waits for you to laugh, so it can laugh even louder.',
     ),
   },
+  {
+    id: '012', slug: 'chenillou', faces: 'left', name: L('Chenillou', 'Wigglet'), kind: L('Bestiole Chenille', 'Caterpillar Critter'),
+    type: 'insecte', base: { hp: 45, atk: 32, def: 38, spa: 22, spd: 22, spe: 46 },
+    catchRate: 255, baseExp: 50, rarity: 'common', evolvesTo: '007', evolveLevel: 8,
+    learnset: [[1, 'bousculade'], [1, 'fil-de-soie'], [5, 'dard']],
+    dex: L(
+      'Il avance sur ses pattes rondes comme sur des roulettes. Un beau matin, il se réveillera avec des ailes.',
+      'It rolls along on its round feet like little wheels. One fine morning it will wake up with wings.',
+    ),
+  },
+  {
+    id: '013', slug: 'piafou', faces: 'right', name: L('Piafou', 'Chirpie'), kind: L('Bestiole Oiseau', 'Bird Critter'),
+    type: 'normal', base: { hp: 45, atk: 56, def: 42, spa: 38, spd: 40, spe: 62 },
+    catchRate: 200, baseExp: 62, rarity: 'common',
+    learnset: [[1, 'picore'], [1, 'grondement'], [5, 'pas-de-loup'], [9, 'rafale'], [13, 'coup-d-ailes'],
+      [18, 'bec-vrille'], [24, 'coup-de-boule'], [30, 'grosse-voix']],
+    dex: L(
+      'Il chante dès le lever du soleil en gonflant ses plumes brunes. Avec lui, pas besoin de réveil !',
+      'It sings at sunrise, puffing up its brown feathers. With it around, who needs an alarm clock?',
+    ),
+  },
 ];
 
 export const CREATURE_BY_ID: Record<string, SpeciesDef> = Object.fromEntries(CREATURES.map((c) => [c.id, c]));
@@ -138,6 +159,11 @@ export function creature(id: string): SpeciesDef {
 }
 
 export const STARTERS = ['001', '002', '003'] as const;
+
+/** Battles mirror a drawing so both Bestioles face each other: ours looks right, the foe looks left. */
+export function mirrored(c: SpeciesDef, foe: boolean): boolean {
+  return c.faces === (foe ? 'right' : 'left');
+}
 
 export function artUrl(c: SpeciesDef): string {
   return `${import.meta.env.BASE_URL}cards/${c.id}-${c.slug}.webp`;

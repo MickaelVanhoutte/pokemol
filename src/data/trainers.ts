@@ -38,7 +38,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Oh non… Ma Lunelle a dansé pour rien !', 'Oh no… My Moonbun danced for nothing!')],
   }),
   T({
-    id: 'iris', name: L('Fillette Iris', 'Lass Iris'), party: [{ species: '004', level: 6 }, { species: '007', level: 5 }], money: 180,
+    id: 'iris', name: L('Fillette Iris', 'Lass Iris'), party: [{ species: '013', level: 5 }, { species: '004', level: 6 }], money: 180,
     before: [L('J’ai dessiné mes Bestioles moi-même ! Regarde comme elles sont jolies !', 'I drew my Critters myself! Look how pretty they are!')],
     after: [L('Elles sont jolies ET fortes, les tiennes…', 'Yours are pretty AND strong…')],
   }),

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, t, tr } from '../../i18n';
-import { artUrl, creature } from '../../data/creatures';
+import { artUrl, creature, mirrored } from '../../data/creatures';
 import { ITEMS, item } from '../../data/items';
 import { move } from '../../data/moves';
 import { STATUSES, TYPES } from '../../data/types';
@@ -193,22 +193,24 @@ export function BattleScreen(props: BattleProps) {
     </div>
   );
 
+  const mySp = creature(activeMon(view.sides[0]).species);
+  const foeSp = creature(activeMon(view.sides[1]).species);
   return (
     <div class={`battle pk backdrop-${props.backdrop ?? 'grass'}`} onDblClick={() => (speed.current = 0.35)}>
       <div class="pk-scene">
         <HpBox st={view} side={1} />
         <div class="pk-plat pk-plat--foe">
           <img
-            class={`pk-sprite ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${activeMon(view.sides[1]).hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
-            src={artUrl(creature(activeMon(view.sides[1]).species))}
+            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${activeMon(view.sides[1]).hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
+            src={artUrl(foeSp)}
             alt=""
           />
           {ball && <div class={`pk-ball shakes-${ball.shakes} ${ball.caught ? 'is-caught' : ''}`} key={ball.key}>✏️</div>}
         </div>
         <div class="pk-plat pk-plat--me">
           <img
-            class={`pk-sprite pk-sprite--me ${fx[0] ? `fx-${fx[0]}` : ''} ${activeMon(view.sides[0]).hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
-            src={artUrl(creature(activeMon(view.sides[0]).species))}
+            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${activeMon(view.sides[0]).hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
+            src={artUrl(mySp)}
             alt=""
           />
         </div>

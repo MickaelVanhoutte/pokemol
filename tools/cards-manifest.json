@@ -281,6 +281,61 @@
           ]
         ]
       ]
+    },
+    {
+      "id": "012",
+      "slug": "chenillou",
+      "photo": "chenillou.jpeg",
+      "box": [
+        0,
+        1000,
+        2960,
+        2240
+      ],
+      "scale": 0.5,
+      "options": {
+        "paperChroma": 0.26
+      }
+    },
+    {
+      "id": "013",
+      "slug": "piafou",
+      "photo": "piafou.jpeg",
+      "box": [
+        90,
+        650,
+        2560,
+        3700
+      ],
+      "erase": [
+        [
+          [
+            90,
+            650
+          ],
+          [
+            1740,
+            650
+          ],
+          [
+            1300,
+            1000
+          ],
+          [
+            1150,
+            1250
+          ],
+          [
+            90,
+            1250
+          ]
+        ]
+      ],
+      "scale": 0.5,
+      "options": {
+        "paperChroma": 0.26,
+        "minComponent": 0.002
+      }
     }
   ]
 }

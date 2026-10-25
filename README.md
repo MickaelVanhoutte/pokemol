@@ -33,10 +33,12 @@ On a phone or tablet an on-screen D-pad appears.
    ```
    If a neighbour drawing touches it, add `"erase": [[[x, y], [x, y], [x, y], ...]]` polygons (photo pixels).
    Tweak `"options": { "inkLum": 0.8, "inkChroma": 0.11 }` if pale colours disappear.
+   Big phone photos: add `"scale": 0.5`. Beige paper or yellow lamp light: add `"paperChroma": 0.26` to `options`.
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
 5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
-   evolution level if it evolves, Bestiodex text.
+   evolution level if it evolves, Bestiodex text, and `faces: 'left'` or `'right'` if the drawing looks sideways
+   (battles mirror it so both Bestioles face each other).
 6. Put it in a map's `encounters` (`src/data/maps.ts`) or a trainer party (`src/data/trainers.ts`).
    Every creature can also come out of the creature machine.
 7. `npm test`, commit, push: GitHub Pages redeploys.

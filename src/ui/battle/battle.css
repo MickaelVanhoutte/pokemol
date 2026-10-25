@@ -47,27 +47,25 @@
   filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
   transform-origin: 50% 100%;
 }
-.pk-sprite--me { transform: scaleX(-1); }
+.pk-sprite { --flip: 1; }
+/* drawings looking the wrong way are mirrored so both Bestioles face each other */
+.pk-sprite.is-mirrored { --flip: -1; transform: scaleX(-1); }
 .pk-sprite.is-gone { opacity: 0; }
 .pk-sprite.is-captured { animation: intoBall 0.35s ease forwards; }
-@keyframes intoBall { to { transform: scale(0.05); opacity: 0; } }
+@keyframes intoBall { to { transform: scaleX(var(--flip)) scale(0.05); opacity: 0; } }
 
 .fx-in { animation: popIn 0.5s cubic-bezier(.3, 1.6, .5, 1); }
-@keyframes popIn { from { transform: scale(0.1); opacity: 0; } }
-.pk-sprite--me.fx-in { animation-name: popInMe; }
-@keyframes popInMe { from { transform: scaleX(-1) scale(0.1); opacity: 0; } }
+@keyframes popIn { from { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
 .fx-out { animation: popOut 0.5s ease forwards; }
-@keyframes popOut { to { transform: scale(0.1); opacity: 0; } }
+@keyframes popOut { to { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
 .fx-hit { animation: blink 0.6s steps(2) 3; }
 @keyframes blink { 50% { opacity: 0.1; } }
 .fx-faint { animation: faint 0.8s ease forwards; }
-@keyframes faint { to { transform: translateY(60%); opacity: 0; } }
-.pk-sprite--me.fx-faint { animation-name: faintMe; }
-@keyframes faintMe { to { transform: scaleX(-1) translateY(60%); opacity: 0; } }
+@keyframes faint { to { transform: translateY(60%) scaleX(var(--flip)); opacity: 0; } }
 .fx-lunge-me { animation: lungeMe 0.4s ease; }
-@keyframes lungeMe { 40% { transform: scaleX(-1) translate(-18%, -10%); } }
+@keyframes lungeMe { 40% { transform: translate(18%, -10%) scaleX(var(--flip)); } }
 .fx-lunge-foe { animation: lungeFoe 0.4s ease; }
-@keyframes lungeFoe { 40% { transform: translate(-14%, 10%); } }
+@keyframes lungeFoe { 40% { transform: translate(-14%, 10%) scaleX(var(--flip)); } }
 .fx-status { animation: statusFx 0.7s ease; }
 @keyframes statusFx { 50% { filter: hue-rotate(80deg) brightness(1.3); } }
 

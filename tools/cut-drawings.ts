@@ -14,6 +14,8 @@ interface Entry {
   photo: string;
   box: [number, number, number, number];
   erase?: Point[][];
+  /** Resize factor applied to the crop before cutting (big phone photos: 0.5). */
+  scale?: number;
   options?: Partial<CutoutOptions>;
 }
 
@@ -30,13 +32,15 @@ const tiles: { input: Buffer; label: string }[] = [];
 for (const e of manifest.drawings) {
   if (only.length && !only.includes(e.id)) continue;
   const [x0, y0, x1, y1] = e.box;
+  const k = e.scale ?? 1;
   const { data, info } = await sharp(join(root, 'img-source', e.photo))
     .rotate()
     .extract({ left: x0, top: y0, width: x1 - x0, height: y1 - y0 })
+    .resize(Math.round((x1 - x0) * k))
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
-  const erase = (e.erase ?? []).map((poly) => poly.map(([x, y]) => [x - x0, y - y0] as Point));
+  const erase = (e.erase ?? []).map((poly) => poly.map(([x, y]) => [(x - x0) * k, (y - y0) * k] as Point));
   const res = cutout({ data, width: info.width, height: info.height }, { ...e.options, erase });
   const png = await sharp(Buffer.from(res.data.buffer), { raw: { width: res.width, height: res.height, channels: 4 } })
     .resize({ width: MAX_SIDE, height: MAX_SIDE, fit: 'inside', withoutEnlargement: true })

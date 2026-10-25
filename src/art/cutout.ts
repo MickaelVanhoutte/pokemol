@@ -10,6 +10,8 @@ export interface CutoutOptions {
   inkLum: number;
   /** Normalized chroma (max-min of RGB) above which a pixel is colored ink (0..1). */
   inkChroma: number;
+  /** Max raw chroma for a pixel to be sampled as paper (raise for warm/beige paper or yellow light). */
+  paperChroma: number;
   /** Radius (px) of the morphological closing that seals small gaps in outlines. */
   close: number;
   /** Components smaller than this fraction of the largest one are dropped (neighbor fragments, specks). */
@@ -25,6 +27,7 @@ export interface CutoutOptions {
 export const defaultCutoutOptions: CutoutOptions = {
   inkLum: 0.8,
   inkChroma: 0.11,
+  paperChroma: 0.12,
   close: 3,
   minComponent: 0.05,
   feather: 1,
@@ -74,7 +77,7 @@ function evalQuadratic(k: number[], x: number, y: number) {
 }
 
 /** Estimates paper color across the image (handles lighting gradients) and returns normalized RGB floats. */
-function flattenPaper(img: Rgba): Float32Array {
+function flattenPaper(img: Rgba, paperChroma: number): Float32Array {
   const { data, width: w, height: h } = img;
   const lum = new Float32Array(w * h);
   for (let i = 0; i < w * h; i++) {
@@ -90,7 +93,7 @@ function flattenPaper(img: Rgba): Float32Array {
       const i = y * w + x;
       const r = data[i * 4], g = data[i * 4 + 1], b = data[i * 4 + 2];
       const chroma = (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
-      if (lum[i] >= lumCut && chroma < 0.12) samples.push(i);
+      if (lum[i] >= lumCut && chroma < paperChroma) samples.push(i);
     }
   }
   const nx = (x: number) => x / w - 0.5;
@@ -218,7 +221,7 @@ export function cutout(img: Rgba, opts: Partial<CutoutOptions> = {}): CutoutResu
   const o = { ...defaultCutoutOptions, ...opts };
   const { width: w, height: h } = img;
   const n = w * h;
-  const flat = flattenPaper(img);
+  const flat = flattenPaper(img, o.paperChroma);
 
   // 1. ink mask
   let ink: Uint8Array = new Uint8Array(n);

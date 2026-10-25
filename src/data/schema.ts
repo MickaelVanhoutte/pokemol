@@ -65,6 +65,8 @@ export interface SpeciesDef {
   dex: LText;
   /** Kind of creature shown in the Bestiodex ("Bestiole Chaton"). */
   kind: LText;
+  /** Which way the drawing looks (omitted = facing us). */
+  faces?: 'left' | 'right';
 }
 
 export type ItemKind = 'heal' | 'status' | 'revive' | 'ball';
