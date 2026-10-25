@@ -17,7 +17,7 @@ export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
           {CREATURES.map((c) => <img src={artUrl(c)} alt={tr(c.name)} title={tr(c.name)} />)}
         </div>
         <p>{tr(L('Jeu, décors et musique de pixels faits maison.', 'Game, scenery and pixels made at home.'))}</p>
-        <p>{tr(L('Polices : Inter et Pixelify Sans (SIL Open Font License).', 'Fonts: Inter and Pixelify Sans (SIL Open Font License).'))}</p>
+        <p>{tr(L('Polices : Inter et Jersey 15 (SIL Open Font License).', 'Fonts: Inter and Jersey 15 (SIL Open Font License).'))}</p>
         <p class="credits__small">{tr(L('Un jeu de fans, inspiré des jeux de monstres de poche sur Game Boy Advance. Aucun lien avec une marque existante.', 'A fan game inspired by the Game Boy Advance pocket-monster games. Not affiliated with any existing brand.'))}</p>
       </div>
     </div>

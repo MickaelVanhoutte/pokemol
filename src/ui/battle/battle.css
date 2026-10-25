@@ -95,7 +95,7 @@
   border-radius: 10px 10px 10px 2px;
   box-shadow: inset 0 0 0 2px #c8c098, 0 3px 0 rgba(0, 0, 0, 0.25);
   padding: 5px 10px 6px;
-  font-family: var(--pixel);
+  font-family: var(--pixel); font-synthesis: none;
   z-index: 2;
 }
 .pk-hp--foe { left: 8px; top: 8px; }
@@ -113,7 +113,7 @@
 .hpbar--ok span { background: linear-gradient(#7de07b, #3fae4e); }
 .hpbar--mid span { background: linear-gradient(#ffe06a, #e0a92a); }
 .hpbar--low span { background: linear-gradient(#ff8a7a, #d8423a); }
-.pk-status { font-style: normal; font-size: 0.7rem; color: #fff; border-radius: 4px; padding: 0 4px; font-family: var(--pixel); }
+.pk-status { font-style: normal; font-size: 0.7rem; color: #fff; border-radius: 4px; padding: 0 4px; font-family: var(--pixel); font-synthesis: none; }
 
 /* ---------- GBA bottom panel */
 .battle__panel {
@@ -144,7 +144,7 @@
 .gba-btn {
   position: relative;
   min-width: 0;
-  font-family: var(--pixel);
+  font-family: var(--pixel); font-synthesis: none;
   font-size: clamp(1rem, 4.6vw, 1.3rem);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -170,7 +170,7 @@
 .gba-row { display: flex; gap: 6px; }
 .gba-row > * { flex: 1; }
 .gba-back {
-  font-family: var(--pixel); font-size: 1rem; color: #fff;
+  font-family: var(--pixel); font-synthesis: none; font-size: 1rem; color: #fff;
   background: transparent; border: 2px solid rgba(255, 255, 255, 0.45); border-radius: 10px;
   padding: 0.55em 0.8em; cursor: pointer;
 }

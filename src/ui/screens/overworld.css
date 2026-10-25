@@ -99,6 +99,6 @@
 .dpad__left { left: 0; top: 46px; width: 50px; height: 46px; border-radius: 10px 4px 4px 10px; }
 .dpad__right { right: 0; top: 46px; width: 50px; height: 46px; border-radius: 4px 10px 10px 4px; }
 .ab { position: relative; width: 150px; height: 110px; flex: none; }
-.ab button { width: 64px; height: 64px; border-radius: 50%; font-family: var(--pixel); font-size: 1.5rem; }
+.ab button { width: 64px; height: 64px; border-radius: 50%; font-family: var(--pixel); font-synthesis: none; font-size: 1.5rem; }
 .ab__a { right: 0; top: 0; background: #d64545 !important; color: #fff !important; }
 .ab__b { left: 0; bottom: 0; background: #e6a23a !important; color: #fff !important; }

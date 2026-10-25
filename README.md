@@ -66,5 +66,5 @@ src/ui/           battle screen, party, summary, bag, Bestiodex, PC, shop, creat
 
 - Every Bestiole: drawn by the little artist.
 - Tiles, sprites and buildings: pixel art painted in code for this project.
-- Fonts: Inter and Pixelify Sans (SIL Open Font License), via Fontsource.
+- Fonts: Inter and Jersey 15 (SIL Open Font License), via Fontsource.
 - A fan project inspired by the Game Boy Advance pocket-monster games; not affiliated with any brand.

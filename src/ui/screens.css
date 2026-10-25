@@ -1,7 +1,7 @@
 /* Shared styles for the GBA-like menu screens (summary, party, bag, dex, PC, shop, machine). */
 .type-badge {
   display: inline-block;
-  font-family: var(--pixel);
+  font-family: var(--pixel); font-synthesis: none;
   font-size: 0.75rem;
   color: #fff;
   border-radius: 6px;
@@ -39,7 +39,7 @@
 .sheet__tabs .btn[aria-pressed='true'] { background: var(--accent); }
 .stats { width: 100%; border-collapse: collapse; }
 .stats th { text-align: left; font-weight: 600; padding: 3px 0; width: 38%; }
-.stats td { padding: 3px 6px; font-family: var(--pixel); }
+.stats td { padding: 3px 6px; font-family: var(--pixel); font-synthesis: none; }
 .stats__bar span { display: block; height: 6px; border-radius: 4px; background: linear-gradient(90deg, #f2c14e, #e0703a); }
 .sheet__dex { margin: 0; font-style: italic; line-height: 1.4; }
 .sheet__evo { margin: 0; font-weight: 600; color: #7b60c3; }
@@ -47,7 +47,7 @@
 .mvrow { border: 2px solid #2a2140; border-left: 8px solid var(--type); border-radius: 10px; padding: 6px 10px; background: #fff; }
 .mvrow__top { display: flex; align-items: center; gap: 8px; }
 .mvrow__top b { flex: 1; }
-.mvrow__top span:last-child { font-family: var(--pixel); }
+.mvrow__top span:last-child { font-family: var(--pixel); font-synthesis: none; }
 .mvrow small { color: #5d5470; }
 .mvrow p { margin: 4px 0 0; font-size: 0.9rem; }
 
@@ -75,7 +75,7 @@
 .mrow__main small { color: #5d5470; }
 .mrow__side { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex: none; }
 .mrow__side .btn { padding: 0.3em 0.7em; font-size: 0.9rem; }
-.money { font-family: var(--pixel); font-size: 1.2rem; background: rgba(255, 255, 255, 0.1); padding: 4px 12px; border-radius: 10px; }
+.money { font-family: var(--pixel); font-synthesis: none; font-size: 1.2rem; background: rgba(255, 255, 255, 0.1); padding: 4px 12px; border-radius: 10px; }
 .mscreen h2 { font-size: 1.1rem; margin: 14px 0 8px; }
 .mscreen__note { opacity: 0.8; text-align: center; }
 
@@ -100,6 +100,6 @@
 .chooser3__row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .chooser3__cell { width: min(30vw, 150px); aspect-ratio: 0.9; background: #fdf8e6; border: 3px solid #2a2140; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 6px; font: inherit; color: #22183a; }
 .chooser3__cell img { width: 90%; height: 65%; object-fit: contain; filter: drop-shadow(0 0 3px #fff); }
-.chooser3__cell b { font-family: var(--pixel); }
+.chooser3__cell b { font-family: var(--pixel); font-synthesis: none; }
 .chooser3 h2 { margin: 0; color: #fff; text-align: center; text-shadow: 0 3px 0 #2a2140; }
 .chooser3 p { margin: 0; color: #f0eaff; }
