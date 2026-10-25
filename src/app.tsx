@@ -13,6 +13,7 @@ import { ShopScreen } from './ui/screens/ShopScreen';
 import { MachineScreen } from './ui/screens/MachineScreen';
 import { CreditsScreen } from './ui/screens/CreditsScreen';
 import { TrainerCardScreen } from './ui/screens/TrainerCardScreen';
+import { TownMapScreen } from './ui/screens/TownMapScreen';
 
 export function App() {
   // reading locale.value re-renders everything when the language changes
@@ -32,6 +33,7 @@ export function App() {
       {s.id === 'machine' && <MachineScreen />}
       {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
       {s.id === 'trainercard' && <TrainerCardScreen />}
+      {s.id === 'townmap' && <TownMapScreen />}
     </div>
   );
 }

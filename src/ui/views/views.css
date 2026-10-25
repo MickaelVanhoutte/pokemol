@@ -244,3 +244,37 @@
   .dex__paper { width: min(34vw, 40dvh, 210px); }
   .evo__mon { height: min(52dvh, 320px); }
 }
+
+/* ---------- town map */
+.tmap .frame__body { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.tmap__goal-text { flex: none; font-size: 1.05rem; }
+.tmap__goal-text b { font-weight: 400; color: #c0392b; }
+.tmap__sheet { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.tmap__map {
+  position: relative; width: min(100%, calc((100dvh - 230px) * var(--ratio))); aspect-ratio: var(--ratio);
+  border: 2px solid var(--ink); border-radius: 4px; box-shadow: 3px 3px 0 rgba(43, 37, 54, 0.25); cursor: pointer;
+}
+.tmap__art { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.tmap__cursor {
+  position: absolute; box-sizing: border-box; margin: -2px 0 0 -2px; padding: 2px;
+  border: 2px solid var(--cursor); border-radius: 3px; box-shadow: 0 0 0 1px #fff; pointer-events: none;
+}
+.tmap__star {
+  position: absolute; transform: translate(-50%, -60%); font-size: clamp(16px, 5vw, 26px); line-height: 1; color: #f2c14e;
+  -webkit-text-stroke: 1.5px var(--ink); pointer-events: none; animation: tmapPulse 1s ease-in-out infinite;
+}
+.tmap__me {
+  position: absolute; width: clamp(18px, 6vw, 30px); height: auto; transform: translate(-50%, -75%);
+  image-rendering: pixelated; pointer-events: none; animation: blink2 0.8s steps(2) infinite;
+}
+@keyframes tmapPulse { 50% { transform: translate(-50%, -60%) scale(1.3); } }
+.tmap__info { flex: none; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; font-size: 1.05rem; min-height: 2.4em; }
+.tmap__info b { font-weight: 400; font-size: 1.2rem; }
+.tmap__info span { color: var(--ink-soft); }
+@media (orientation: landscape) and (max-height: 540px) {
+  .tmap .frame__body { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  .tmap__sheet { grid-row: 1 / 3; grid-column: 1; }
+  .tmap__map { width: auto; height: calc(100dvh - 100px); }
+  .tmap__goal-text { grid-column: 2; grid-row: 1; align-self: start; }
+  .tmap__info { grid-column: 2; grid-row: 2; }
+}

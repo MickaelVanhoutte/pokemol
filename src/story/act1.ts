@@ -5,7 +5,7 @@ import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
 import {
-  bubble, fight, flag, flash, getGame, giveMon, say, sayAll, scripts, setFlag, showMons, showToast, wait,
+  bubble, fight, flag, flash, getGame, giveItem, giveMon, say, sayAll, scripts, setFlag, showMons, showToast, wait,
 } from '../overworld/controller';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
@@ -34,7 +34,10 @@ scripts.mom = async () => {
       L('Ah, {name}, tu es {g:réveillée|réveillé} !', 'Ah, {name}, you’re up!'),
       L('Le Prof. Fusain est passé ce matin. Il t’attend à son labo, en bas du bourg.', 'Prof. Charcoal dropped by this morning. He’s waiting for you at his lab, down in town.'),
       L('Il a encore pris en photo tous les dessins collés sur le frigo. Quel drôle de bonhomme !', 'He took pictures of every drawing on the fridge again. What a funny man!'),
+      L('Tiens, prends cette carte : comme ça, tu sauras toujours où tu es, et où aller ensuite.', 'Here, take this map: that way you’ll always know where you are, and where to go next.'),
     ], MOM);
+    giveItem('carte');
+    await say(L('{name} reçoit la Carte de Papeterre ! (menu CARTE)', '{name} received the Papeterra Map! (MAP menu)'));
     setFlag('intro');
     return;
   }

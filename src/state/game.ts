@@ -44,6 +44,8 @@ export function migrate(raw: unknown): SaveData | null {
 export function repair(s: SaveData): SaveData {
   s.party.forEach(repairMon);
   s.box.forEach(repairMon);
+  // Mom now hands out the Town Map at the start
+  if (s.flags.intro && !s.bag.carte) s.bag.carte = 1;
   // capsules the Atelier Masters now give with their badge
   for (const b of BADGES) if (b.tm && s.badges.includes(b.id) && !s.bag[b.tm]) s.bag[b.tm] = 1;
   return s;

@@ -120,6 +120,7 @@ function StartMenu() {
     ...(d.flags.dex ? [{ icon: 'dex', label: tr(L('BESTIODEX', 'CRITTERDEX')), info: L('Les Bestioles que tu as vues et attrapées.', 'Critters you have seen and caught.'), onSelect: () => open({ id: 'dex' }) }] : []),
     ...(d.party.length ? [{ icon: 'party', label: tr(L('BESTIOLES', 'CRITTERS')), info: L('Ton équipe : résumés et ordre de passage.', 'Your party: summaries and order.'), onSelect: () => open({ id: 'party' }) }] : []),
     { icon: 'bag', label: tr(L('SAC', 'BAG')), info: L('Tes objets, rangés dans ta trousse.', 'Your items, packed in your pencil case.'), onSelect: () => open({ id: 'bag' }) },
+    ...(d.bag.carte ? [{ icon: 'carte', label: tr(L('CARTE', 'MAP')), info: L('Où tu es, et où aller ensuite.', 'Where you are, and where to go next.'), onSelect: () => open({ id: 'townmap' }) }] : []),
     { icon: 'card', label: d.player.name.toUpperCase(), info: L('Ta carte de dresseur et tes badges.', 'Your trainer card and badges.'), onSelect: () => open({ id: 'trainercard' }) },
     { icon: 'save', label: tr(L('SAUVER', 'SAVE')), info: L('Enregistrer ta progression.', 'Save your progress.'), onSelect: () => setSaving('ask') },
     { icon: 'options', label: tr(L('OPTIONS', 'OPTIONS')), info: L('Vitesse du texte, sons, langue, sauvegarde.', 'Text speed, sound, language, save file.'), onSelect: () => { close(); go({ id: 'settings', back: { id: 'overworld' } }); } },

@@ -12,6 +12,8 @@ import { SummaryView } from '../views/SummaryView';
 import { BagView } from '../views/BagView';
 import { PartyView } from '../views/PartyView';
 import { PageView } from '../views/PageView';
+import { TownMapView } from '../views/TownMapView';
+import { avatarImage } from './TrainerCardScreen';
 import { SwapAsk, giveToParty } from './give';
 
 export function BagScreen() {
@@ -19,11 +21,13 @@ export function BagScreen() {
   const [using, setUsing] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [reading, setReading] = useState<number | null>(null);
+  const [map, setMap] = useState(false);
   const [giving, setGiving] = useState<string | null>(null);
   const [ask, setAsk] = useState<number | null>(null);
   const [teaching, setTeaching] = useState<string | null>(null);
   const [forgetFor, setForgetFor] = useState<number | null>(null);
   if (reading !== null) return <PageView n={reading} onClose={() => setReading(null)} />;
+  if (map) return <TownMapView save={d} avatar={avatarImage(d.player.avatar)} onClose={() => setMap(false)} />;
   if (teaching) {
     const mv = item(teaching).move!;
     const vars = (i: number) => ({ n: tr(creature(d.party[i].species).name), m: tr(move(mv).name) });
@@ -104,7 +108,7 @@ export function BagScreen() {
       note={note}
       onUse={(id) => { setNote(''); if (item(id).kind === 'tm') setTeaching(id); else setUsing(id); }}
       onGive={d.party.length ? (id) => { setNote(''); setGiving(id); } : undefined}
-      onRead={(id) => (id.startsWith('page-') ? setReading(Number(id.slice(5))) : setNote(tr(item(id).desc)))}
+      onRead={(id) => (id.startsWith('page-') ? setReading(Number(id.slice(5))) : id === 'carte' ? setMap(true) : setNote(tr(item(id).desc)))}
       onClose={backToWorld}
     />
   );

@@ -117,6 +117,10 @@ export const ITEMS: ItemDef[] = [
   },
   ...TM_MOVES.map(capsule),
   {
+    id: 'carte', name: L('Carte de Papeterre', 'Papeterra Map'), price: 0, kind: 'key', amount: 0,
+    desc: L('Toute la région dessinée sur une feuille. Choisis LIRE pour voir où tu es et où aller ensuite.', 'The whole region drawn on one sheet. Choose READ to see where you are and where to go next.'),
+  },
+  {
     id: 'ticket-or', name: L('Ticket d’or', 'Golden Ticket'), price: 0, kind: 'key', amount: 0,
     desc: L('Un ticket brillant tombé de la poche du monsieur de la tombola, à Port-Aquarelle.', 'A shiny ticket dropped by the fair man of Port Aquarelle.'),
   },
