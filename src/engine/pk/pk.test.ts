@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { CREATURES } from '../../data/creatures';
 import { MOVES } from '../../data/moves';
+import { ITEM_BY_ID } from '../../data/items';
+import { TRAINERS, partyOf } from '../../data/trainers';
 import { effectiveness } from '../../data/types';
 import { L } from '../../i18n';
 import { aiChoose } from './ai';
-import { act, activeMon, catchChance, computeDamage, createBattle, IllegalAction, usableSlots, type Action, type BattleState } from './battle';
+import { act, activeMon, catchChance, computeDamage, createBattle, IllegalAction, itemUsable, usableSlots, type Action, type BattleState } from './battle';
 import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, maxHp, movesAt, xpAt, type Mon } from './creature';
 
 const IV0 = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
@@ -27,6 +29,12 @@ describe('data', () => {
       for (const [, mv] of c.learnset) expect(ids.has(mv), `${c.id} ${mv}`).toBe(true);
       expect(c.learnset.some(([l]) => l === 1)).toBe(true);
     }
+  });
+
+  it('every held item exists (wild creatures and trainers)', () => {
+    for (const c of CREATURES) if (c.wildItem) expect(ITEM_BY_ID[c.wildItem.id], `${c.id} ${c.wildItem.id}`).toBeDefined();
+    for (const t of Object.values(TRAINERS)) for (const m of t.party) if (m.item) expect(ITEM_BY_ID[m.item], `${t.id} ${m.item}`).toBeDefined();
+    expect(partyOf([{ species: '001', level: 5, item: 'gouter' }], 1)[0].item).toBe('gouter');
   });
 
   it('type chart', () => {
@@ -196,10 +204,82 @@ describe('battle', () => {
     expect(r2.state.learnQueue).toHaveLength(0);
   });
 
+  it('a held berry restores HP once, at half HP or less', () => {
+    const me = mon('003', 20, 1, { item: 'baie-doree' });
+    const foe = mon('002', 30);
+    const st = battle([me], [foe]);
+    let cur = st;
+    let ate = 0;
+    for (let t = 0; t < 6 && !cur.result && !cur.needSwitch; t++) {
+      const r = act(cur, { type: 'move', slot: 0 }, { type: 'move', slot: slotOf(foe, 'flammeche') });
+      ate += r.events.filter((e) => e.t === 'berry').length;
+      cur = r.state;
+    }
+    expect(ate).toBe(1);
+    expect(cur.sides[0].party[0].item).toBeNull();
+  });
+
+  it('status berries cure their status right away, on both sides', () => {
+    const me = mon('009', 13);
+    const foe = mon('002', 13, 1, { item: 'baie-reveil' });
+    const st = battle([me], [foe]);
+    // Regard hypnotique always puts the foe to sleep when it hits
+    let r = act(st, { type: 'move', slot: slotOf(me, 'regard-hypnotique') }, { type: 'move', slot: 0 });
+    for (let seed = 6; !r.events.some((e) => e.t === 'status') && seed < 40; seed++) {
+      r = act({ ...st, rng: seed }, { type: 'move', slot: slotOf(me, 'regard-hypnotique') }, { type: 'move', slot: 0 });
+    }
+    expect(r.events.find((e) => e.t === 'berry')).toMatchObject({ side: 1, cured: 'sleep' });
+    expect(r.state.sides[1].party[0].status).toBeNull();
+  });
+
+  it('a creature that comes in poisoned eats its berry at once', () => {
+    const me = mon('001', 10, 1, { status: 'poison', item: 'baie-peche' });
+    const st = battle([me], [mon('002', 5)]);
+    expect(st.sides[0].party[0].status).toBeNull();
+    expect(st.sides[0].party[0].item).toBeNull();
+  });
+
+  it('the snack restores 1/16 of max HP at the end of each turn', () => {
+    const me = mon('008', 30, 1, { item: 'gouter' });
+    me.hp = 20;
+    const st = battle([me], [mon('006', 30)]);
+    const r = act(st, { type: 'move', slot: slotOf(me, 'grondement') }, { type: 'move', slot: slotOf(st.sides[1].party[0], 'chanson-douce') });
+    const left = r.events.find((e) => e.t === 'leftovers');
+    expect(left).toMatchObject({ side: 0, amount: Math.floor(maxHp(me) / 16) });
+  });
+
+  it('the Tracing Paper shares XP with a creature that did not fight (Gen 3 halves)', () => {
+    const fighter = mon('002', 20);
+    const benched = mon('001', 5, 1, { item: 'papier-calque' });
+    const foe = mon('013', 3);
+    const st = battle([fighter, benched], [foe], 'wild');
+    const r = act(st, { type: 'move', slot: slotOf(fighter, 'flammeche') }, { type: 'move', slot: 0 });
+    const xp = r.events.filter((e) => e.t === 'xp');
+    const full = Math.floor((62 * 3) / 7);
+    expect(xp).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(full / 2) }, { t: 'xp', idx: 1, amount: Math.floor(full / 2) }]);
+    expect(r.state.sides[0].party[1].evs.spe).toBe(1);
+    // without it, the fighter gets everything
+    const solo = act(battle([fighter, mon('001', 5)], [foe], 'wild'), { type: 'move', slot: slotOf(fighter, 'flammeche') }, { type: 'move', slot: 0 });
+    expect(solo.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: full }]);
+  });
+
+  it('berries can be eaten from the bag in battle', () => {
+    const me = mon('001', 10, 1, { status: 'burn' });
+    const st = battle([me], [mon('002', 5)]);
+    expect(itemUsable(st, 'baie-cerise', 0)).toBe(false);
+    expect(itemUsable(st, 'baie-givree', 0)).toBe(true);
+    const r = act(st, { type: 'item', item: 'baie-givree', target: 0 }, { type: 'move', slot: 0 });
+    expect(r.state.sides[0].party[0].status === 'burn').toBe(false);
+  });
+
   it('AI vs AI battles always end', () => {
     const ids = CREATURES.map((c) => c.id);
     for (let seed = 1; seed <= 200; seed++) {
-      const party = (k: number, n: number) => Array.from({ length: n }, (_, i) => createMon(ids[(seed * 3 + i * 5 + k) % ids.length], 3 + ((seed + i) % 30), { rng: seed * 31 + i + k }));
+      const held = ['baie-bleue', 'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'papier-calque', null];
+      const party = (k: number, n: number) => Array.from({ length: n }, (_, i) => ({
+        ...createMon(ids[(seed * 3 + i * 5 + k) % ids.length], 3 + ((seed + i) % 30), { rng: seed * 31 + i + k }),
+        item: held[(seed + i + k) % held.length],
+      }));
       let st: BattleState = battle(party(0, 1 + (seed % 4)), party(7, 1 + ((seed + 2) % 4)), seed % 3 ? 'trainer' : 'wild', seed);
       let turns = 0;
       while (!st.result && turns++ < 400) {

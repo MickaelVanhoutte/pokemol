@@ -59,6 +59,8 @@ export interface SpeciesDef {
   baseExp: number;
   /** Effort points given to each creature that beats it (Gen 3: 1–3 points). */
   evYield: Partial<Stats>;
+  /** A wild one sometimes holds this item (chance in %). */
+  wildItem?: { id: string; pct: number };
   /** Weight in the creature machine. */
   rarity: Rarity;
   /** [level, move id]; level 1 moves are known from the start. */
@@ -73,7 +75,8 @@ export interface SpeciesDef {
   faces?: 'left' | 'right';
 }
 
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key';
+/** `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held. */
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold';
 
 export interface ItemDef {
   id: string;
@@ -81,6 +84,10 @@ export interface ItemDef {
   desc: LText;
   price: number;
   kind: ItemKind;
-  /** HP healed (heal), % HP on revive, or catch bonus ×10 for balls. */
+  /** HP healed (heal; berries: once at half HP or less), % HP on revive, or catch bonus ×10 for balls. */
   amount: number;
+  /** Berries: what they cure. */
+  cures?: (Major | 'confusion')[];
+  /** Held items: their effect. */
+  hold?: 'leftovers' | 'expShare';
 }

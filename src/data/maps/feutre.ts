@@ -50,6 +50,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       { x: 1, y: 20, item: 'ticket-or', hidden: true },
       { x: 16, y: 1, item: 'super-crayon-ball', count: 2 },
     ],
+    berries: [{ x: 12, y: 20, item: 'baie-givree' }],
     encounters: {
       rate: 0.13,
       table: [

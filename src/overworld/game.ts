@@ -1,6 +1,7 @@
 import type { Dir } from '../save/schema';
 import { footprint, paintBuilding } from './buildings';
-import { LEGEND, type MapBuilding, type MapDef, type NpcDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
+import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
+import { BERRY_DOT } from './berries';
 import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
 import { SpriteSheet, type Look } from './sprites';
@@ -150,6 +151,8 @@ export class Game {
   map!: LoadedMap;
   npcs: Actor[] = [];
   pickups: PickupDef[] = [];
+  /** Bushes that have berries right now. */
+  berries: BerryBushDef[] = [];
   player!: Actor;
   /** While > 0, player input is ignored (scripts, dialogs, menus). */
   lock = 0;
@@ -185,11 +188,16 @@ export class Game {
     };
   }
 
-  setMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean, visiblePickup: (p: PickupDef) => boolean = () => true) {
+  setMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean, visiblePickup: (p: PickupDef) => boolean = () => true, ripe: (b: BerryBushDef) => boolean = () => true) {
     const { map, npcs } = loadMap(def, visibleNpc);
     this.map = map;
     this.npcs = npcs;
     this.pickups = (def.items ?? []).filter(visiblePickup);
+    this.berries = (def.berries ?? []).filter(ripe);
+  }
+
+  pickBerries(b: BerryBushDef) {
+    this.berries = this.berries.filter((q) => q !== b);
   }
 
   removePickup(p: PickupDef) {
@@ -427,6 +435,18 @@ export class Game {
       ctx.fillRect(bx + 1, by + 5, 8, 1);
       ctx.fillStyle = '#d64545';
       ctx.fillRect(bx + 4, by + 4, 2, 2);
+    }
+    for (const b of this.berries) {
+      // three berries peeking out of the bush
+      const bx = b.x * TILE - camX, by = b.y * TILE - camY;
+      for (const [dx, dy] of [[3, 4], [10, 6], [6, 10]]) {
+        ctx.fillStyle = '#2a2238';
+        ctx.fillRect(bx + dx - 1, by + dy - 1, 4, 4);
+        ctx.fillStyle = BERRY_DOT[b.item] ?? '#d63a3a';
+        ctx.fillRect(bx + dx, by + dy, 2, 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(bx + dx, by + dy, 1, 1);
+      }
     }
     const actors = [...this.npcs, this.player].sort((a, b) => this.pos(a)[1] - this.pos(b)[1]);
     for (const a of actors) {

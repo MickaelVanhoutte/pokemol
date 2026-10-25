@@ -19,6 +19,7 @@ import type { MapBuilding, MapDef, NpcDef, PickupDef, WarpTarget } from './mapTy
 import { applyPatches } from './patches';
 import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
+import { berryFlag, isRipe, localDay } from './berries';
 import { sfx } from '../audio/sfx';
 
 let game: Game | null = null;
@@ -72,7 +73,7 @@ function loadMap(id: string) {
   const g = getGame();
   const def = MAPS[id] ?? MAPS.maison;
   const free = (p: PickupDef) => !flag(pickupFlag(def.id, p));
-  g.setMap(patched(def), visibleNpc, (p) => !p.hidden && free(p));
+  g.setMap(patched(def), visibleNpc, (p) => !p.hidden && free(p), (b) => isRipe(save.value?.flags[berryFlag(def.id, b)]));
   hiddenPickups = (def.items ?? []).filter((p) => p.hidden && free(p));
 }
 
@@ -226,6 +227,24 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     });
   }
   if (target.sign) return void locked(() => say(target.sign!.text));
+  const bush = g.map.def.berries?.find((b) => b.x === target.x && b.y === target.y);
+  if (bush) {
+    return void locked(async () => {
+      const key = berryFlag(g.map.def.id, bush);
+      if (!isRipe(s().flags[key])) {
+        await say(L('Il n’y a plus de baies sur ce buisson. Elles repousseront demain !', 'There are no berries left on this bush. They’ll grow back tomorrow!'));
+        return;
+      }
+      const n = 1 + Math.floor(Math.random() * 3);
+      update((d) => {
+        addItem(d, bush.item, n);
+        d.flags[key] = localDay();
+      });
+      g.pickBerries(bush);
+      sfx.confirm();
+      await say(L('Tu cueilles {i}{n} !', 'You picked {i}{n}!'), undefined, { i: tr(item(bush.item).name), n: n > 1 ? ` ×${n}` : '' });
+    });
+  }
   const spot = g.map.def.interact?.find((it) => it.x === target.x && it.y === target.y);
   if (spot && scripts[spot.script]) return void runScript(spot.script);
   const hidden = hiddenPickups.find((p) => p.x === target.x && p.y === target.y);
@@ -334,7 +353,7 @@ async function rematch(id: string, actor: Actor) {
     await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), tdef.name);
     return;
   }
-  const party = tdef.party.map((m) => ({ species: m.species, level: Math.min(50, m.level + 12) }));
+  const party = tdef.party.map((m) => ({ ...m, level: Math.min(50, m.level + 12) }));
   const strong: TrainerDef = { ...tdef, id: `${id}:rematch`, badge: undefined, afterScript: undefined, money: tdef.money * 2, party };
   const out = await fight('trainer', tdef.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
   if (out.result === 'win') await say(L('Incroyable… Tu dessines de mieux en mieux !', 'Incredible… You draw better and better!'), tdef.name);
@@ -480,7 +499,11 @@ async function wildBattle(species: string, level: number) {
     await g.fadeTo(0.8, 90, 'white');
     await g.fadeTo(0, 90);
   }
-  await fight('wild', creature(species).name, [createMon(species, level, { rng: newSeed() })]);
+  const wild = createMon(species, level, { rng: newSeed() });
+  // like the GBA games, some wild creatures carry an item (kept when caught)
+  const held = creature(species).wildItem;
+  if (held && Math.random() * 100 < held.pct) wild.item = held.id;
+  await fight('wild', creature(species).name, [wild]);
 }
 
 // ------------------------------------------------------------------ helpers for scripts

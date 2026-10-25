@@ -3,6 +3,8 @@ import { createMon, maxHp } from '../../engine/pk/creature';
 import { canUseOn, pocketItems, useOn } from './bag';
 import { canDeposit } from './pc';
 import { moveCursor } from '../paper/nav';
+import { giveHeld, takeHeld } from '../../state/game';
+import type { SaveData } from '../../save/schema';
 
 const mon = (hp?: number) => {
   const m = createMon('001', 10, { rng: 1 });
@@ -16,6 +18,19 @@ describe('bag', () => {
     expect(pocketItems(bag, 'items').map((i) => i.id)).toEqual(['potion']);
     expect(pocketItems(bag, 'balls').map((i) => i.id)).toEqual(['crayon-ball']);
     expect(pocketItems(bag, 'key')).toEqual([]);
+    expect(pocketItems({ 'baie-bleue': 1, gouter: 1 }, 'berries').map((i) => i.id)).toEqual(['baie-bleue']);
+  });
+  it('berries from the bag heal or cure, like in battle', () => {
+    expect(canUseOn('baie-bleue', mon())).toBe(false);
+    const hurt = mon(5);
+    expect(useOn('baie-bleue', hurt)).toBe(true);
+    expect(hurt.hp).toBe(15);
+    const para = mon();
+    para.status = 'paralyze';
+    expect(canUseOn('baie-reveil', para)).toBe(false);
+    expect(useOn('baie-prisme', para)).toBe(true);
+    expect(para.status).toBe(null);
+    expect(canUseOn('gouter', mon(5))).toBe(false);
   });
   it('heals, cures and revives with the battle rules', () => {
     const full = mon();
@@ -31,6 +46,25 @@ describe('bag', () => {
     sick.status = 'poison';
     expect(useOn('retouche', sick)).toBe(true);
     expect(sick.status).toBe(null);
+  });
+});
+
+describe('held items', () => {
+  const save = () => ({ bag: { 'baie-bleue': 1, gouter: 1 } as Record<string, number> }) as unknown as SaveData;
+  it('gives, swaps and takes back', () => {
+    const s = save();
+    const m = mon();
+    expect(giveHeld(s, m, 'baie-bleue')).toBe(true);
+    expect(m.item).toBe('baie-bleue');
+    expect(s.bag['baie-bleue']).toBeUndefined();
+    expect(giveHeld(s, m, 'gouter')).toBe(true);
+    expect(m.item).toBe('gouter');
+    expect(s.bag['baie-bleue']).toBe(1);
+    expect(giveHeld(s, m, 'potion')).toBe(false);
+    expect(takeHeld(s, m)).toBe('gouter');
+    expect(m.item).toBeNull();
+    expect(s.bag.gouter).toBe(1);
+    expect(takeHeld(s, m)).toBeNull();
   });
 });
 

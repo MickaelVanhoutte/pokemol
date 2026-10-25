@@ -1,6 +1,6 @@
 import type { LText } from '../../i18n';
 import { creature } from '../../data/creatures';
-import { item } from '../../data/items';
+import { ITEM_BY_ID, item } from '../../data/items';
 import { move } from '../../data/moves';
 import type { Major, MoveDef, StageKey } from '../../data/schema';
 import { effectiveness } from '../../data/types';
@@ -82,6 +82,9 @@ export type BattleEvent =
   | { t: 'forgot'; idx: number; old: string; move: string }
   | { t: 'gaveUp'; idx: number; move: string }
   | { t: 'useItem'; item: string; target: number; amount?: number }
+  /** A held berry was eaten (HP restored and/or a status cured). */
+  | { t: 'berry'; side: Side; item: string; amount?: number; cured?: Major | 'confusion' }
+  | { t: 'leftovers'; side: Side; item: string; amount: number }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
   | { t: 'blocked' }
   | { t: 'run'; ok: boolean }
@@ -143,6 +146,8 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
   out.push({ t: 'sendOut', side: 0, idx: state.sides[0].active });
   state.participants = [activeMon(state.sides[0]).uid];
+  checkBerry(state, 1, out);
+  checkBerry(state, 0, out);
   return { state, events: out.events, snaps: out.snaps };
 }
 
@@ -175,7 +180,38 @@ function hurt(st: BattleState, side: Side, amount: number, out: Out, extra: Part
   const dmg = Math.min(m.hp, Math.max(0, Math.round(amount)));
   m.hp -= dmg;
   out.push({ t: 'damage', side, amount: dmg, ...extra });
+  checkBerry(st, side, out);
   return dmg;
+}
+
+/**
+ * A held berry is eaten as soon as it helps: HP at half or less, or a status it cures. Checked
+ * after anything that hurts or afflicts the active creature, on both sides.
+ */
+function checkBerry(st: BattleState, side: Side, out: Out) {
+  const s = st.sides[side];
+  const m = activeMon(s);
+  const def = m?.item ? ITEM_BY_ID[m.item] : undefined;
+  if (!def || def.kind !== 'berry' || !alive(m)) return;
+  if (def.amount > 0 && m.hp * 2 <= maxHp(m) && m.hp < maxHp(m)) {
+    const h = Math.min(def.amount, maxHp(m) - m.hp);
+    m.hp += h;
+    m.item = null;
+    out.push({ t: 'berry', side, item: def.id, amount: h });
+    return;
+  }
+  const cures = def.cures ?? [];
+  if (m.status && cures.includes(m.status)) {
+    const cured = m.status;
+    m.status = null;
+    m.sleepTurns = 0;
+    m.item = null;
+    out.push({ t: 'berry', side, item: def.id, cured });
+  } else if (s.vol.confusion > 0 && cures.includes('confusion')) {
+    s.vol.confusion = 0;
+    m.item = null;
+    out.push({ t: 'berry', side, item: def.id, cured: 'confusion' });
+  }
 }
 
 function healSide(st: BattleState, side: Side, amount: number, out: Out): number {
@@ -198,6 +234,7 @@ function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMov
   m.status = status;
   if (status === 'sleep') m.sleepTurns = 1 + randomInt(st, 3);
   out.push({ t: 'status', side, status });
+  checkBerry(st, side, out);
   return true;
 }
 
@@ -216,6 +253,7 @@ function switchIn(st: BattleState, side: Side, to: number, out: Out) {
   s.vol = freshVol();
   out.push({ t: 'sendOut', side, idx: to });
   if (side === 0 && !st.participants.includes(activeMon(s).uid)) st.participants.push(activeMon(s).uid);
+  checkBerry(st, side, out);
 }
 
 // ------------------------------------------------------------------ damage
@@ -292,6 +330,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
         const amount = Math.min(user.hp, dmg);
         user.hp -= amount;
         out.push({ t: 'confusedHit', side, amount });
+        checkBerry(st, side, out);
         return;
       }
     }
@@ -356,6 +395,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
         const amount = Math.min(m.hp, r);
         m.hp -= amount;
         out.push({ t: 'recoil', side, amount });
+        checkBerry(st, side, out);
         break;
       }
       case 'status':
@@ -365,6 +405,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
         if (alive(target) && foe.vol.confusion === 0 && nextRandom(st) * 100 < e.chance) {
           foe.vol.confusion = 2 + randomInt(st, 4);
           out.push({ t: 'confuse', side: foeSide });
+          checkBerry(st, foeSide, out);
         }
         break;
       case 'flinch':
@@ -397,6 +438,7 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
         if (foe.vol.confusion > 0) break;
         foe.vol.confusion = 2 + randomInt(st, 4);
         out.push({ t: 'confuse', side: foeSide });
+        checkBerry(st, foeSide, out);
         anything = true;
         break;
       case 'stage':
@@ -412,6 +454,7 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
         user.sleepTurns = 2;
         out.push({ t: 'rest', side });
         healSide(st, side, (maxHp(user) * e.pct) / 100, out);
+        checkBerry(st, side, out);
         anything = true;
         break;
     }
@@ -472,7 +515,12 @@ export function itemUsable(st: BattleState, itemId: string, target: number): boo
   if (!m) return false;
   if (def.kind === 'heal') return alive(m) && m.hp < maxHp(m);
   if (def.kind === 'status') return alive(m) && !!m.status;
-  return !alive(m);
+  if (def.kind === 'berry') {
+    const confused = target === st.sides[0].active && st.sides[0].vol.confusion > 0;
+    return alive(m) && ((def.amount > 0 && m.hp < maxHp(m)) || (!!m.status && !!def.cures?.includes(m.status)) || (confused && !!def.cures?.includes('confusion')));
+  }
+  if (def.kind === 'revive') return !alive(m);
+  return false;
 }
 
 function useItem(st: BattleState, itemId: string, target: number, out: Out) {
@@ -491,6 +539,15 @@ function useItem(st: BattleState, itemId: string, target: number, out: Out) {
     m.hp = Math.max(1, Math.floor((maxHp(m) * def.amount) / 100));
     m.status = null;
     out.push({ t: 'useItem', item: itemId, target, amount: m.hp });
+  } else if (def.kind === 'berry') {
+    const h = Math.min(def.amount, maxHp(m) - m.hp);
+    m.hp += h;
+    if (m.status && def.cures?.includes(m.status)) {
+      m.status = null;
+      m.sleepTurns = 0;
+    }
+    if (target === st.sides[0].active && def.cures?.includes('confusion')) st.sides[0].vol.confusion = 0;
+    out.push({ t: 'useItem', item: itemId, target, amount: h || undefined });
   }
 }
 
@@ -502,6 +559,25 @@ function finish(st: BattleState, result: BattleResult, out: Out) {
   out.push({ t: 'end', result });
 }
 
+/**
+ * Who gets XP for a knocked-out foe (Gen 3): the creatures that fought it share it; when some hold
+ * the Tracing Paper (Exp. Share), fighters share one half and holders the other.
+ */
+function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: number }[] {
+  const party = st.sides[0].party.map((m, i) => ({ m, i })).filter(({ m }) => alive(m));
+  const fighters = party.filter(({ m }) => st.participants.includes(m.uid));
+  const holders = party.filter(({ m }) => m.item && ITEM_BY_ID[m.item]?.hold === 'expShare');
+  const full = xpYield(foeMon, st.kind === 'trainer', 1);
+  const part = (pool: number, n: number) => Math.max(1, Math.floor(pool / n));
+  const gain = new Map<number, number>();
+  if (!holders.length) for (const { i } of fighters) gain.set(i, part(full, fighters.length));
+  else {
+    for (const { i } of fighters) gain.set(i, part(Math.floor(full / 2), fighters.length));
+    for (const { i } of holders) gain.set(i, (gain.get(i) ?? 0) + part(Math.floor(full / 2), holders.length));
+  }
+  return party.filter(({ i }) => gain.has(i)).map(({ m, i }) => ({ m, i, amount: gain.get(i)! }));
+}
+
 /** Handles fainted actives: XP, level-ups, replacements, end of battle. */
 function checkFaints(st: BattleState, out: Out) {
   if (st.result) return;
@@ -510,9 +586,7 @@ function checkFaints(st: BattleState, out: Out) {
   const foeMon = activeMon(foe);
   if (!alive(foeMon)) {
     out.push({ t: 'faint', side: 1, idx: foe.active });
-    const gainers = me.party.map((m, i) => ({ m, i })).filter(({ m }) => alive(m) && st.participants.includes(m.uid));
-    for (const { m, i } of gainers) {
-      const amount = xpYield(foeMon, st.kind === 'trainer', gainers.length);
+    for (const { m, i, amount } of xpShares(st, foeMon)) {
       gainEvs(m, foeMon.species);
       out.push({ t: 'xp', idx: i, amount });
       for (const up of addXp(m, amount)) {
@@ -618,8 +692,18 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
       const amount = Math.min(m.hp, Math.max(1, Math.floor(maxHp(m) / 8)));
       m.hp -= amount;
       out.push({ t: 'residual', side, status: m.status, amount });
+      checkBerry(st, side, out);
       checkFaints(st, out);
     }
+  }
+  // end of turn: held snacks (Leftovers)
+  for (const side of [0, 1] as Side[]) {
+    if (st.result) break;
+    const m = activeMon(st.sides[side]);
+    if (!alive(m) || m.hp >= maxHp(m) || !m.item || ITEM_BY_ID[m.item]?.hold !== 'leftovers') continue;
+    const amount = Math.min(maxHp(m) - m.hp, Math.max(1, Math.floor(maxHp(m) / 16)));
+    m.hp += amount;
+    out.push({ t: 'leftovers', side, item: m.item, amount });
   }
   me.vol.flinch = false;
   st.sides[1].vol.flinch = false;

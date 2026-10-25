@@ -4,7 +4,8 @@ import { artUrl, creature } from '../../data/creatures';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
-import { HpBar, MenuList, StatusTag, TextBox, TypeBadge, Window, XpBar, YesNo, lv } from '../paper';
+import { HpBar, MenuList, PixelIcon, StatusTag, TextBox, TypeBadge, Window, XpBar, YesNo, lv } from '../paper';
+import { item } from '../../data/items';
 import { judge } from '../../engine/pk/judge';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
@@ -95,6 +96,8 @@ export function SummaryView({ mon, onClose, learn }: {
               <dt>{tr(L('N° Dex', 'Dex No.'))}</dt><dd>{sp.id}</dd>
               <dt>{tr(L('Espèce', 'Kind'))}</dt><dd>{tr(sp.kind)}</dd>
               <dt>{tr(L('Type', 'Type'))}</dt><dd><TypeBadge type={sp.type} /></dd>
+              <dt>{tr(L('Objet tenu', 'Item'))}</dt>
+              <dd class="summary__held">{mon.item ? <><PixelIcon id={mon.item} size={18} /> {tr(item(mon.item).name)}</> : tr(L('Aucun', 'None'))}</dd>
               {sp.evolvesTo && sp.evolveLevel && (
                 <><dt>{tr(L('Évolution', 'Evolves'))}</dt><dd>{tr(L('{n} au N.{l}', '{n} at Lv{l}'), { n: tr(creature(sp.evolvesTo).name), l: sp.evolveLevel })}</dd></>
               )}

@@ -43,7 +43,8 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'r7a', x: 12, y: 8, look: LOOKS.granny, facing: 'left', trainer: 'r7a', sight: 3 },
       { id: 'r7b', x: 4, y: 15, look: LOOKS.hiker, facing: 'right', trainer: 'r7b', sight: 4 },
     ],
-    items: [{ x: 16, y: 1, item: 'rappel' }],
+    items: [{ x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }],
+    berries: [{ x: 13, y: 13, item: 'baie-menthe' }, { x: 2, y: 2, item: 'baie-doree' }],
     encounters: {
       rate: 0.14,
       table: [
@@ -94,6 +95,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     ],
     signs: [{ x: 2, y: 12, text: L('JARDIN-GOUACHE\nIci, même l’herbe est peinte à la main.\nAtelier de Basile', 'GOUACHE GARDEN\nHere, even the grass is hand-painted.\nBasil’s Atelier') }],
     items: [{ x: 1, y: 13, item: 'page-10', hidden: true }],
+    berries: [{ x: 2, y: 8, item: 'baie-doree' }],
     npcs: [
       { id: 'gouaGardener', x: 18, y: 5, look: LOOKS.granny, facing: 'down', wander: true, text: [L('La gouache, c’est épais : quand Basile peint une fleur, elle pousse vraiment !', 'Gouache is thick: when Basil paints a flower, it really grows!')] },
       { id: 'gouaKid', x: 5, y: 13, look: LOOKS.kid, facing: 'right', text: [L('Au nord, la Cité-Encre est toute noire… On dit que le chef des Gomme s’y cache.', 'Up north, Ink City is all black… They say the Team Gomme boss hides there.')] },

@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { item } from '../../data/items';
+import { canHold, item } from '../../data/items';
 import { MenuList, PixelIcon, Window, type MenuItem } from '../paper';
 import { POCKETS, pocketItems, type Pocket } from '../logic/bag';
 import './views.css';
@@ -8,36 +8,40 @@ import './views.css';
 const POCKET_NAMES: Record<Pocket, ReturnType<typeof L>> = {
   items: L('OBJETS', 'ITEMS'),
   balls: L('CRAYON-BALLS', 'PENCIL BALLS'),
+  berries: L('BAIES', 'BERRIES'),
   key: L('OBJETS RARES', 'KEY ITEMS'),
 };
 
 /**
- * FRLG bag: a pencil case with pockets. Picking an item and USE calls `onUse`; key items
- * with a text (sketchbook pages) can be READ.
+ * FRLG bag: a pencil case with pockets. Picking an item and USE calls `onUse`, GIVE calls `onGive`
+ * (a Bestiole holds it); key items with a text (sketchbook pages) can be READ. The `give` context
+ * only shows what can be held (opened from the party's ITEM menu).
  */
-export function BagView({ bag, context, wild, onUse, onRead, onClose, note }: {
+export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, note }: {
   bag: Record<string, number>;
-  context: 'field' | 'battle';
+  context: 'field' | 'battle' | 'give';
   wild?: boolean;
   onUse: (id: string) => void;
+  onGive?: (id: string) => void;
   onRead?: (id: string) => void;
   onClose: () => void;
   /** Message shown in the description box (e.g. "It won't have any effect"). */
   note?: string;
 }) {
+  const pockets = context === 'give' ? POCKETS.filter((p) => p !== 'key') : POCKETS;
   const [pocket, setPocket] = useState<Pocket>(context === 'battle' && wild ? 'balls' : 'items');
   const [cursor, setCursor] = useState(0);
   const [action, setAction] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
-  const list = pocketItems(bag, pocket);
+  const list = pocketItems(bag, pocket).filter((it) => context !== 'give' || canHold(it));
   const turn = (d: 1 | -1) => {
-    setPocket((p) => POCKETS[(POCKETS.indexOf(p) + d + POCKETS.length) % POCKETS.length]);
+    setPocket((p) => pockets[(pockets.indexOf(p) + d + pockets.length) % pockets.length]);
     setMsg('');
   };
   const focused = list[cursor];
   const why = (id: string): string | null => {
     const def = item(id);
-    if (context === 'battle' && def.kind === 'key') return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
+    if (context === 'battle' && (def.kind === 'key' || def.kind === 'hold')) return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
     if (context === 'battle' && def.kind === 'ball' && !wild) return tr(L('On ne lance pas de Crayon-ball sur la Bestiole d’un dresseur !', 'You can’t throw a Pencil Ball at a trainer’s Critter!'));
     if (context === 'field' && def.kind === 'ball') return tr(L('Les Crayon-balls se lancent sur les Bestioles sauvages, en combat.', 'Pencil Balls are thrown at wild Critters, in battle.'));
     return null;
@@ -53,19 +57,24 @@ export function BagView({ bag, context, wild, onUse, onRead, onClose, note }: {
     { label: tr(L('FERMER LE SAC', 'CLOSE BAG')), onSelect: onClose },
   ];
 
-  const actions: MenuItem[] = action ? [
-    ...(item(action).kind === 'key' && onRead
-      ? [{ label: tr(L('LIRE', 'READ')), onSelect: () => { const id = action; setAction(null); onRead(id); } }]
-      : [{
-        label: tr(L('UTILISER', 'USE')),
-        onSelect: () => {
-          const id = action;
-          setAction(null);
-          const no = why(id);
-          if (no) setMsg(no);
-          else onUse(id);
-        },
-      }]),
+  const def = action ? item(action) : null;
+  const give: MenuItem = { label: tr(L('DONNER', 'GIVE')), onSelect: () => { const id = action!; setAction(null); onGive?.(id); } };
+  const actions: MenuItem[] = def ? [
+    ...(context === 'give' ? [give] : def.kind === 'key' && onRead
+      ? [{ label: tr(L('LIRE', 'READ')), onSelect: () => { const id = action!; setAction(null); onRead(id); } }]
+      : [
+        ...(def.kind === 'hold' && context === 'field' ? [] : [{
+          label: tr(L('UTILISER', 'USE')),
+          onSelect: () => {
+            const id = action!;
+            setAction(null);
+            const no = why(id);
+            if (no) setMsg(no);
+            else onUse(id);
+          },
+        }]),
+        ...(context === 'field' && onGive && canHold(def) ? [give] : []),
+      ]),
     { label: tr(L('ANNULER', 'CANCEL')), onSelect: () => setAction(null) },
   ] : [];
 
@@ -76,7 +85,7 @@ export function BagView({ bag, context, wild, onUse, onRead, onClose, note }: {
         <Window class="bag__pocket">
           <PixelIcon id="bag" size={32} />
           <span>{tr(POCKET_NAMES[pocket])}</span>
-          <span class="bag__dots">{POCKETS.map((p) => <i class={p === pocket ? 'is-on' : ''} />)}</span>
+          <span class="bag__dots">{pockets.map((p) => <i class={p === pocket ? 'is-on' : ''} />)}</span>
         </Window>
         <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
       </div>

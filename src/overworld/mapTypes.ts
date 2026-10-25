@@ -81,6 +81,13 @@ export interface PickupDef {
   hidden?: boolean;
 }
 
+/** A bush on a solid tile that gives a few berries once a day (press A in front of it). */
+export interface BerryBushDef {
+  x: number;
+  y: number;
+  item: string;
+}
+
 export interface MapBuilding extends BuildingDef {
   /** Where the door leads; without it the door is locked. */
   to?: WarpTarget;
@@ -102,6 +109,7 @@ export interface MapDef {
   signs?: SignDef[];
   triggers?: TriggerDef[];
   items?: PickupDef[];
+  berries?: BerryBushDef[];
   encounters?: EncounterTable;
   backdrop?: Backdrop;
   /** Color wash drawn over the map (e.g. dusk in the woods). */
