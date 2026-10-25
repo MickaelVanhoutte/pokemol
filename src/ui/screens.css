@@ -26,8 +26,12 @@
   gap: 10px;
 }
 .sheet__head { display: flex; gap: 12px; align-items: center; }
-.sheet__art { width: 112px; height: 100px; flex: none; border-radius: 12px; background: radial-gradient(circle at 50% 70%, #d6eec4, #a8d48a); display: grid; place-items: center; border: 3px solid #2a2140; }
-.sheet__art img { max-width: 92%; max-height: 92%; object-fit: contain; filter: drop-shadow(0 0 2px #fff); }
+.sheet__art { position: relative; width: 112px; height: 100px; flex: none; overflow: hidden; border-radius: 12px; background: radial-gradient(circle at 50% 70%, #d6eec4, #a8d48a); border: 3px solid #2a2140; }
+/* absolutely placed so the drawing's natural size never stretches the box */
+.sheet__art img { position: absolute; inset: 4%; width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 0 2px #fff); }
+.pick__nav { display: flex; gap: 8px; }
+.pick__nav > .btn { flex: none; padding-inline: 0.6em; }
+.pick__nav > .btn--primary { flex: 1; min-width: 0; padding-inline: 0.4em; overflow-wrap: anywhere; }
 .sheet__id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .sheet__id h2 { margin: 0; font-size: 1.4rem; }
 .sheet__id p { margin: 0; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }

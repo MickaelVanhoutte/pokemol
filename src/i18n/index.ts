@@ -30,18 +30,23 @@ export function setLocale(next: Locale) {
   if (typeof document !== 'undefined') document.documentElement.lang = next;
 }
 
+/** French puts a space before ! ? : ; — make it non-breaking so the mark never wraps alone. */
+function typo(s: string): string {
+  return locale.value === 'fr' ? s.replace(/ ([!?:;»])/g, '\u00a0$1') : s;
+}
+
 /** UI string by key, with `{name}` placeholders. */
 export function t(key: StringKey, vars?: Record<string, string | number>): string {
   let s = dictionaries[locale.value][key] ?? key;
   if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
-  return s;
+  return typo(s);
 }
 
 /** Localized data text (card names, attack texts, dialog lines). */
 export function tr(text: LText, vars?: Record<string, string | number>): string {
   let s = text[locale.value];
   if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
-  return s;
+  return typo(s);
 }
 
 export const L = (fr: string, en: string): LText => ({ fr, en });

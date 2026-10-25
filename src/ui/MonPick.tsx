@@ -23,12 +23,14 @@ export function MonPick({ ids, title, pick, onChoose }: { ids: string[]; title?:
           <h2 class="pixel" style={{ margin: 0, textAlign: 'center' }}>{tr(sp.name)} <TypeBadge type={sp.type} /></h2>
           <p class="sheet__dex"><b>{tr(sp.kind)}</b> — {tr(sp.dex)}</p>
           {pick ? (
-            <div class="preview__btns">
-              {n > 1 && <button class="btn" onClick={() => setFocus((focus + n - 1) % n)}>‹</button>}
+            <>
+              <div class="pick__nav">
+                {n > 1 && <button class="btn" aria-label={tr(L('Précédente', 'Previous'))} onClick={() => setFocus((focus + n - 1) % n)}>‹</button>}
+                <button class="btn btn--primary" onClick={() => onChoose(focus)}>{tr(L('Choisir {n}', 'Choose {n}'), { n: tr(sp.name) })}</button>
+                {n > 1 && <button class="btn" aria-label={tr(L('Suivante', 'Next'))} onClick={() => setFocus((focus + 1) % n)}>›</button>}
+              </div>
               <button class="btn" onClick={() => setFocus(null)}>← {tr(L('Retour', 'Back'))}</button>
-              <button class="btn btn--primary" onClick={() => onChoose(focus)}>{tr(L('Choisir {n}', 'Choose {n}'), { n: tr(sp.name) })}</button>
-              {n > 1 && <button class="btn" onClick={() => setFocus((focus + 1) % n)}>›</button>}
-            </div>
+            </>
           ) : (
             <button class="btn btn--primary" onClick={() => onChoose(0)}>OK</button>
           )}
