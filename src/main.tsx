@@ -6,5 +6,7 @@ import '@fontsource/inter/800.css';
 import './styles/global.css';
 import { App } from './app';
 import './story';
+import { startPwa } from './state/pwa';
 
 render(<App />, document.getElementById('app')!);
+startPwa();

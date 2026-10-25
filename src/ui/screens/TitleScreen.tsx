@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
+import { effect } from '@preact/signals';
 import { L, t, tr } from '../../i18n';
 import { CREATURES, artUrl } from '../../data/creatures';
 import { enterWorld } from '../../overworld/controller';
@@ -7,6 +8,7 @@ import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
 import { MenuList, Window, YesNo } from '../paper';
 import { playMusic } from '../../audio/music';
+import { firstOfflineReady } from '../../state/pwa';
 import './title.css';
 
 function peek(): SaveData | null {
@@ -29,6 +31,9 @@ export function TitleScreen() {
   const [phase, setPhase] = useState<'press' | 'menu'>('press');
   const [confirmNew, setConfirmNew] = useState(false);
   const [hero, setHero] = useState(0);
+  const [offlineNote, setOfflineNote] = useState(false);
+  // said once per device, when every file has been downloaded
+  useEffect(() => effect(() => void (firstOfflineReady() && setOfflineNote(true))), []);
   useEffect(() => {
     const id = setInterval(() => setHero((h) => (h + 1) % CREATURES.length), 2600);
     return () => clearInterval(id);
@@ -78,6 +83,9 @@ export function TitleScreen() {
         <div class="title__menu" onClick={(e) => e.stopPropagation()}>
           {outdatedSave.value && (
             <Window seyes class="title__note">{tr(L('Le jeu a beaucoup changé : ton ancienne partie ne peut plus être chargée. Commence une nouvelle aventure !', 'The game changed a lot: your old save can’t be loaded anymore. Start a new adventure!'))}</Window>
+          )}
+          {offlineNote && (
+            <Window seyes class="title__note">{tr(L('Le jeu est maintenant sur ton appareil : tu peux jouer même sans Internet !', 'The game is now on your device: you can play even without the Internet!'))}</Window>
           )}
           {s && (
             <Window class="title__save">

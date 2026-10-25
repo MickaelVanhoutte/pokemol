@@ -82,5 +82,8 @@ await page.screenshot({ path: 'shot.png' });
    ls dist/assets | grep -E '^index-.*\.js$'
    curl -s https://mickaelvanhoutte.github.io/pokemol/ | grep -oE 'index-[A-Za-z0-9_-]+\.js' | head -1
    ```
-4. The PWA updates itself (`registerType: 'autoUpdate'`). A phone may need one reload to pick up the
-   new version.
+4. The PWA never reloads a running game (`registerType: 'prompt'`, `src/state/pwa.ts`). It checks for
+   a new version on start, every hour, when the app comes back to the foreground and when the network
+   returns. Only the changed files are downloaded, and the new version starts from the title screen,
+   which in practice is the next time the game is opened. Options shows the build date
+   (`__APP_BUILD__`), whether the game is playable offline, and whether an update is waiting.
