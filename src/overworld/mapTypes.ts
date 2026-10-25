@@ -76,6 +76,10 @@ export interface MapDef {
   triggers?: TriggerDef[];
   encounters?: EncounterTable;
   backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
+  /** Color wash drawn over the map (e.g. dusk in the woods). */
+  tint?: string;
+  /** Drifting fog wisps. */
+  fog?: boolean;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
 }

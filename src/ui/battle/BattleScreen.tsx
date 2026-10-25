@@ -12,6 +12,7 @@ import type { Action, BattleEvent, BattleResult, BattleSetup, BattleState, Side 
 import { Card, SupportCard, TypeIcon, damageLabel } from '../Card';
 import { FieldCard, type Floater } from './FieldCard';
 import { describe, eventDuration, fighterName } from './messages';
+import { sfx } from '../../audio/sfx';
 import './battle.css';
 
 export interface BattleProps {
@@ -52,6 +53,7 @@ export function BattleScreen(props: BattleProps) {
   const [busy, setBusy] = useState(true);
   const [mode, setMode] = useState<Mode>(null);
   const [zoom, setZoom] = useState<CreatureDef | SupportDef | null>(null);
+  const [zoomLevel, setZoomLevel] = useState<number | null>(null);
   const [preview, setPreview] = useState<number | null>(null);
   const [fx, setFx] = useState<Record<string, string>>({});
   const [floaters, setFloaters] = useState<Floater[]>([]);
@@ -81,15 +83,19 @@ export function BattleScreen(props: BattleProps) {
     if (lines.length) setMsg(lines.join(' '));
     const uidOf = (side: Side, f: number) => snap.sides[side].fighters[f]?.uid ?? '';
     switch (e.t) {
-      case 'damage': flash(uidOf(e.side, e.f), 'hit', `−${e.amount}`); break;
-      case 'heal': flash(uidOf(e.side, e.f), 'heal', `+${e.amount}`, 'heal'); break;
-      case 'ko': flash(uidOf(e.side, e.f), 'ko'); break;
+      case 'damage': flash(uidOf(e.side, e.f), 'hit', `−${e.amount}`); if (e.amount) sfx.hit(); break;
+      case 'heal': flash(uidOf(e.side, e.f), 'heal', `+${e.amount}`, 'heal'); sfx.heal(); break;
+      case 'ko': flash(uidOf(e.side, e.f), 'ko'); sfx.ko(); break;
+      case 'end': if (e.result === 'win') sfx.victory(); break;
       case 'attack': flash(uidOf(e.side, e.f), e.side === 0 ? 'lunge-up' : 'lunge-down'); break;
-      case 'energy': flash(uidOf(e.side, e.f), 'glow', `+${e.amount}⚡`, 'info'); break;
+      case 'energy': flash(uidOf(e.side, e.f), 'glow', `+${e.amount}⚡`, 'info'); sfx.energy(); break;
       case 'status': flash(uidOf(e.side, e.f), 'status'); break;
-      case 'coin': setCoin({ heads: e.heads, key: Date.now() }); break;
+      case 'coin': setCoin({ heads: e.heads, key: Date.now() }); sfx.coin(); break;
       case 'capture':
-        if (e.success) setCaptured(snap.sides[1].fighters[0].defId);
+        if (e.success) {
+          setCaptured(snap.sides[1].fighters[0].defId);
+          sfx.capture();
+        }
         else flash(uidOf(1, 0), 'hit');
         break;
     }
@@ -221,7 +227,7 @@ export function BattleScreen(props: BattleProps) {
         floaters={floaters.filter((x) => x.uid === f.uid)}
         selectable={sideIdx === 0 && selectableMine(i)}
         onClick={() => onMine(i)}
-        onInfo={() => setZoom(creature(f.defId))}
+        onInfo={() => { setZoom(creature(f.defId)); setZoomLevel(f.level); }}
       />
     )));
   };
@@ -250,7 +256,7 @@ export function BattleScreen(props: BattleProps) {
             wildName={wildName}
             fx={fx[activeOf(foe).uid]}
             floaters={floaters.filter((x) => x.uid === activeOf(foe).uid)}
-            onInfo={() => setZoom(creature(activeOf(foe).defId))}
+            onInfo={() => { setZoom(creature(activeOf(foe).defId)); setZoomLevel(activeOf(foe).level); }}
           />
         </div>
         <div class="slot slot--me">
@@ -261,7 +267,7 @@ export function BattleScreen(props: BattleProps) {
             floaters={floaters.filter((x) => x.uid === activeOf(me).uid)}
             selectable={selectableMine(me.active)}
             onClick={() => onMine(me.active)}
-            onInfo={() => setZoom(creature(activeOf(me).defId))}
+            onInfo={() => { setZoom(creature(activeOf(me).defId)); setZoomLevel(activeOf(me).level); }}
           />
         </div>
         <div class="battle__bench battle__bench--me">{bench(0)}</div>
@@ -281,7 +287,7 @@ export function BattleScreen(props: BattleProps) {
                 {tr(a.name)}
                 {myTurn && why ? <small class="atk-btn__why">{t(`battle.why.${why}`)}</small> : null}
               </span>
-              <span class="atk-btn__dmg">{damageLabel(a)}</span>
+              <span class="atk-btn__dmg">{damageLabel(a, active.dmgBonus)}</span>
             </button>
           );
         })}
@@ -350,7 +356,7 @@ export function BattleScreen(props: BattleProps) {
       {zoom && (
         <div class="overlay" onClick={() => setZoom(null)}>
           {'attacks' in zoom
-            ? <Card def={zoom} width={Math.min(380, window.innerWidth - 32)} />
+            ? <Card def={zoom} width={Math.min(380, window.innerWidth - 32)} level={zoomLevel ?? undefined} />
             : <SupportCard def={zoom} width={Math.min(380, window.innerWidth - 32)} />}
         </div>
       )}

@@ -3,11 +3,13 @@ import { L, locale, setLocale, t, tr } from '../../i18n';
 import { deleteSave, exportSave, hasSave, importSave, loadSave, save } from '../../state/game';
 import { go, type Screen } from '../../state/router';
 import { battleSpeed } from '../battle/BattleScreen';
+import { setSfxEnabled, sfx, sfxEnabled } from '../../audio/sfx';
 
 export function SettingsScreen({ back }: { back: Screen }) {
   const [msg, setMsg] = useState('');
   const [confirmDel, setConfirmDel] = useState(false);
   const [speed, setSpeed] = useState(battleSpeed());
+  const [sound, setSound] = useState(sfxEnabled());
   const setSpeedPref = (v: number) => {
     try {
       localStorage.setItem('atelier-bestioles.speed', String(v));
@@ -39,6 +41,11 @@ export function SettingsScreen({ back }: { back: Screen }) {
           {([[1, L('Normale', 'Normal')], [0.55, L('Rapide', 'Fast')], [0.3, L('Très rapide', 'Very fast')]] as const).map(([v, label]) => (
             <button class="btn" aria-pressed={speed === v} onClick={() => setSpeedPref(v)}>{tr(label)}</button>
           ))}
+        </div>
+        <h2 class="pixel">{tr(L('Sons', 'Sounds'))}</h2>
+        <div class="tabs">
+          <button class="btn" aria-pressed={sound} onClick={() => { setSfxEnabled(true); setSound(true); sfx.confirm(); }}>🔊 {tr(L('Activés', 'On'))}</button>
+          <button class="btn" aria-pressed={!sound} onClick={() => { setSfxEnabled(false); setSound(false); }}>🔇 {tr(L('Coupés', 'Off'))}</button>
         </div>
         <h2 class="pixel">{tr(L('Sauvegarde', 'Save data'))}</h2>
         <p class="settings__hint">

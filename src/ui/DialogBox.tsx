@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import { closeDialog, dialog } from '../overworld/dialog';
+import { sfx } from '../audio/sfx';
 import './dialog.css';
 
 /** GBA-style text box with a typewriter effect; A / Enter / Space / tap advances. */
@@ -26,6 +27,7 @@ export function DialogBox() {
   const advance = () => {
     if (!d) return;
     if (!done) return setShown(d.text.length);
+    sfx.blip();
     closeDialog(choice);
   };
 

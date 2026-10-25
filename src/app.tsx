@@ -27,7 +27,7 @@ export function App() {
       {s.id === 'shop' && <ShopScreen />}
       {s.id === 'gacha' && <GachaScreen />}
       {s.id === 'dungeon' && <DungeonScreen />}
-      {s.id === 'credits' && <CreditsScreen />}
+      {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
     </div>
   );
 }

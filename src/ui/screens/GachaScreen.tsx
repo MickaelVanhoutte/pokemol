@@ -7,6 +7,7 @@ import { newSeed } from '../../engine/rng';
 import { backToWorld } from '../../overworld/controller';
 import { addCreature, addSupply, save, update } from '../../state/game';
 import { Card, SupportCard } from '../Card';
+import { sfx } from '../../audio/sfx';
 import './shop.css';
 
 interface Shown {
@@ -36,9 +37,11 @@ export function GachaScreen() {
       const r = pull({ rng: newSeed() }, banner, count, x.pity[banner]);
       x.pity[banner] = r.pity;
       x.stats.pulls += count;
+      const top = Math.max(1, ...Object.values(x.collection).map((o) => o.level));
+      const joinLevel = Math.min(8, Math.max(3, top - 2));
       res = r.cards.map((c) => {
         if (banner === 'creature') {
-          const a = addCreature(x, c.id, 1);
+          const a = addCreature(x, c.id, joinLevel);
           return { id: c.id, rarity: c.rarity, banner, isNew: a.isNew, xp: a.xp };
         }
         const isNew = !(x.supplies[c.id] > 0);
@@ -67,7 +70,7 @@ export function GachaScreen() {
         </div>
         <div class="pulls">
           {shown.map((s, i) => (
-            <div class={`pull r-${s.rarity} ${i < open ? 'is-open' : ''}`} onClick={() => i === open && setOpen(open + 1)}>
+            <div class={`pull r-${s.rarity} ${i < open ? 'is-open' : ''}`} onClick={() => { if (i !== open) return; setOpen(open + 1); if (s.rarity === 'holo' || s.rarity === 'rare') sfx.capture(); else sfx.sparkle(); }}>
               {i < open && <span class={`pull__tag ${s.isNew ? '' : 'pull__tag--dupe'}`}>{s.isNew ? tr(L('NOUVEAU !', 'NEW!')) : s.xp ? `+${s.xp} XP` : '+1'}</span>}
               <div class="pull__inner">
                 <div class="pull__front">
@@ -79,7 +82,7 @@ export function GachaScreen() {
           ))}
         </div>
         <div class="gacha__btns" style={{ marginTop: '18px' }}>
-          {!all && <button class="btn" onClick={() => setOpen(shown.length)}>{tr(L('Tout retourner', 'Reveal all'))}</button>}
+          {!all && <button class="btn" onClick={() => { setOpen(shown.length); sfx.sparkle(); }}>{tr(L('Tout retourner', 'Reveal all'))}</button>}
           {all && <button class="btn btn--primary" onClick={() => setShown(null)}>OK</button>}
         </div>
       </div>
@@ -110,7 +113,7 @@ export function GachaScreen() {
         </div>
         <p>
           {banner === 'creature'
-            ? tr(L('Les doublons font gagner de l’expérience à ta carte !', 'Duplicates give your card experience!'))
+            ? tr(L('Les nouvelles Bestioles arrivent presque au niveau de ton équipe. Les doublons font gagner de l’expérience !', 'New Critters join close to your team’s level. Duplicates give experience!'))
             : tr(L('Les cartes obtenues rejoignent ta collection de Fournitures.', 'Pulled cards join your Supply collection.'))}
         </p>
         <div class="gacha__btns">

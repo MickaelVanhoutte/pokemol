@@ -377,6 +377,7 @@ export function finishRun(victory: boolean, keepCard: string | null) {
     d.glitter += Math.round(r.glitter * k) + (victory ? dg.rewardGlitter : 0);
     if (victory) {
       if (!d.badges.includes(dg.badge)) d.badges.push(dg.badge);
+      d.flags[`badge:${dg.badge}`] = 1;
       d.stats.runsWon++;
       if (keepCard) addSupply(d, keepCard);
     }

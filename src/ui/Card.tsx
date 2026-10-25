@@ -4,6 +4,7 @@ import { CREATURES, artUrl } from '../data/creatures';
 import type { AttackDef, CreatureDef, SupportDef, TypeId } from '../data/schema';
 import { RARITIES, RESISTANCE_AMOUNT, STAGES, TYPES, WEAKNESS_MULT } from '../data/types';
 import { CardBackground } from './CardBackground';
+import { dmgBonusAt, maxHpAt } from '../engine/progression';
 import './card.css';
 
 export function TypeIcon({ type, size = '1em' }: { type: TypeId; size?: string }) {
@@ -16,11 +17,12 @@ export function TypeIcon({ type, size = '1em' }: { type: TypeId; size?: string }
   );
 }
 
-export function damageLabel(a: AttackDef): string {
+export function damageLabel(a: AttackDef, bonus = 0): string {
   if (!a.damage && !a.mod) return '';
-  if (a.mod?.kind === 'perHeads') return `${a.damage}×`;
-  if (a.mod && a.mod.kind !== 'flipOrFail') return `${a.damage}+`;
-  return String(a.damage);
+  const dmg = a.damage ? a.damage + bonus : a.damage;
+  if (a.mod?.kind === 'perHeads') return `${dmg}×`;
+  if (a.mod && a.mod.kind !== 'flipOrFail') return `${dmg}+`;
+  return String(dmg);
 }
 
 let uidCounter = 0;
@@ -40,6 +42,9 @@ export function Card({ def, width = 300, level, onClick, class: cls = '', style 
   const uid = `c${def.id}-${uidCounter++}`;
   const sameSeries = CREATURES.filter((c) => c.series === def.series).length;
   const rarity = RARITIES[def.rarity];
+  // a levelled card shows its real HP and damage
+  const hp = level ? maxHpAt(def.id, level) : def.hp;
+  const bonus = level ? dmgBonusAt(level) : 0;
   return (
     <div
       class={`card rarity-${def.rarity} ${onClick ? 'is-clickable' : ''} ${cls}`}
@@ -53,7 +58,7 @@ export function Card({ def, width = 300, level, onClick, class: cls = '', style 
             <h3 class="card__name">{tr(def.name)}</h3>
             <div class="card__hp">
               <small>{t('card.hp')}</small>
-              <b>{def.hp}</b>
+              <b>{hp}</b>
               <TypeIcon type={def.type} size="2.6em" />
             </div>
           </div>
@@ -72,7 +77,7 @@ export function Card({ def, width = 300, level, onClick, class: cls = '', style 
                   {Array.from({ length: a.cost }, () => <TypeIcon type={def.type} size="1.9em" />)}
                 </span>
                 <span class="atk__name">{tr(a.name)}</span>
-                <span class="atk__dmg">{damageLabel(a)}</span>
+                <span class="atk__dmg">{damageLabel(a, bonus)}</span>
               </div>
               {a.text ? <p class="atk__text">{tr(a.text)}</p> : null}
             </div>

@@ -1,12 +1,13 @@
 import { L, tr } from '../../i18n';
 import { CREATURES, artUrl } from '../../data/creatures';
 import { go } from '../../state/router';
+import { backToWorld } from '../../overworld/controller';
 
-export function CreditsScreen() {
+export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
   return (
     <div class="screen credits">
       <div class="screen__bar">
-        <button class="btn btn--small" onClick={() => go({ id: 'title' })}>← {tr(L('Retour', 'Back'))}</button>
+        <button class="btn btn--small" onClick={() => (fromWorld ? backToWorld() : go({ id: 'title' }))}>← {tr(L('Retour', 'Back'))}</button>
         <h1>{tr(L('Crédits', 'Credits'))}</h1>
       </div>
       <div class="credits__body">
