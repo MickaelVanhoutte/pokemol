@@ -15,6 +15,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `rivalStarter` | lab script | Rival's species, stored as a number (e.g. `3` for `'003'`) |
 | `a1.*`, `a2.*`, `a3.*` | story scripts | Act milestones (`a1.bois`, `a2.feutre`, `a3.usine`… see [story.md](story.md#region-path)) |
 | `tr:<trainerId>` | `trainerBattle()` on a win | Trainer beaten (NPC trainers stop battling; also used as a story gate) |
+| a trainer's `storyFlag` (`a1.bois`…) | `trainerBattle()` on a win, saved together with `tr:` and the badge | What the win unlocks; its `afterScript` only plays the scene |
 | `badge:<badgeId>` | `trainerBattle()` for leaders | Badge owned (also pushed to `save.badges`) |
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
@@ -117,6 +118,11 @@ Scripts run one at a time and lock player input. To change an existing script af
   are said after the badge is given (use them to point to what comes next).
 - `money`, `badge` (an id from `src/data/badges.ts`), `grey: true` for Team Gomme, and `afterScript`
   (a story script run right after the win).
+- `storyFlag`: the story flag the win unlocks. Never set progress at the end of an `afterScript`: the
+  app can be closed during its dialog and the battle never replays, which would block the story for
+  good. `trainerBattle()` saves `tr:<id>`, `storyFlag` and the badge in one `update` before any line is
+  said; `repair()` in `src/state/game.ts` also restores them for saves made by older versions.
+- `item` on a party entry: a held item (berries are eaten in battle).
 - Run `npm run balance` before and after changing levels or teams (see [testing.md](testing.md)).
   Keep the early game gentle ([story.md](story.md#level-curve-and-difficulty)).
 

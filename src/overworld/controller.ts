@@ -326,15 +326,21 @@ export async function trainerBattle(id: string, actor?: Actor) {
   await sayAll(tdef.before, tdef.name);
   const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef, look: actor?.npc?.look, grey: tdef.grey });
   if (out.result === 'win') {
-    setFlag(`tr:${id}`);
-    // the first defeat line is said in battle, like the GBA games
-    await sayAll(tdef.after.slice(1, tdef.badge ? 1 : undefined), tdef.name);
-    if (tdef.badge && !s().badges.includes(tdef.badge)) {
-      update((d) => {
+    // everything the win unlocks is saved at once, before any dialog: closing the app during the
+    // cut-scene that follows can't block the story (the map itself changes when the scene ends)
+    const newBadge = !!tdef.badge && !s().badges.includes(tdef.badge);
+    update((d) => {
+      d.flags[`tr:${id}`] = 1;
+      if (tdef.storyFlag) d.flags[tdef.storyFlag] = 1;
+      if (newBadge) {
         d.badges.push(tdef.badge!);
         d.flags[`badge:${tdef.badge}`] = 1;
-      });
-      mapDirty = true;
+      }
+    });
+    mapDirty = true;
+    // the first defeat line is said in battle, like the GBA games
+    await sayAll(tdef.after.slice(1, tdef.badge ? 1 : undefined), tdef.name);
+    if (newBadge && tdef.badge) {
       sfx.victory();
       await say(L('{name} reçoit le {b} de {l} !', '{name} received the {b} from {l}!'), undefined, { b: tr(badgeDef(tdef.badge)?.name ?? L('Badge', 'Badge')), l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name) });
       // like FireRed, the leader adds a move to teach: a stencil

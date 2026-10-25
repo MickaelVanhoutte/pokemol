@@ -22,6 +22,11 @@ export interface TrainerDef {
   grey?: boolean;
   /** Story script run right after winning (inside the same cut-scene). */
   afterScript?: string;
+  /**
+   * Story flag the win unlocks. It is saved with the win itself, before any dialog, so closing the
+   * app during the cut-scene can't leave a road blocked forever.
+   */
+  storyFlag?: string;
 }
 
 /**
@@ -120,7 +125,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Quoi ?! Les couleurs reviennent ? Ce n’était pas prévu…', 'What?! The colours are coming back? That wasn’t the plan…')],
   }),
   T({
-    id: 'gomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 10 }, { species: '013', level: 11 }], money: 360, grey: true, afterScript: 'boisRestore',
+    id: 'gomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 10 }, { species: '013', level: 11 }], money: 360, grey: true, afterScript: 'boisRestore', storyFlag: 'a1.bois',
     before: [
       L('Halte ! Personne ne passe. Le Grand Effaceur dit que ces dessins ne valent rien.', 'Halt! Nobody gets through. The Great Eraser says these drawings are worthless.'),
       L('Un coup de gomme, et pouf ! Plus de bois, plus de Bestioles, plus de bazar !', 'One rub of the eraser, and poof! No more woods, no more Critters, no more mess!'),
@@ -203,7 +208,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Les vagues ont perdu le rythme…', 'The waves lost the beat…')],
   }),
   T({
-    id: 'marine', name: L('Maître d’Atelier Marine', 'Atelier Master Marine'), money: 2000, badge: 'aquarelle', afterScript: 'marineAfter',
+    id: 'marine', name: L('Maître d’Atelier Marine', 'Atelier Master Marine'), money: 2000, badge: 'aquarelle', afterScript: 'marineAfter', storyFlag: 'a2.bridge',
     party: [{ species: '006', level: 16 }, { species: '005', level: 17 }, { species: '003', level: 19 }],
     before: [
       L('L’aquarelle, c’est de l’eau qui rêve d’être une couleur. Tu le savais ?', 'Watercolour is water dreaming of being a colour. Did you know that?'),
@@ -253,7 +258,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon… Dérange-le, alors.', 'Fine… Disturb him, then.')],
   }),
   T({
-    id: 'rature', name: L('Admin Rature', 'Admin Smudge'), money: 2600, grey: true, afterScript: 'feutreRestore',
+    id: 'rature', name: L('Admin Rature', 'Admin Smudge'), money: 2600, grey: true, afterScript: 'feutreRestore', storyFlag: 'a2.feutre',
     party: [{ species: '013', level: 19 }, { species: '009', level: 18 }, { species: '010', level: 20 }],
     before: [
       L('Tiens, tiens. C’est toi qui recolories tout derrière nous ?', 'Well, well. So you’re the one colouring everything back in behind us?'),
@@ -394,7 +399,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon, passe…', 'Fine, pass…')],
   }),
   T({
-    id: 'blanche', name: L('Admin Blanche', 'Admin Whiteout'), money: 3600, grey: true, afterScript: 'towerFreed',
+    id: 'blanche', name: L('Admin Blanche', 'Admin Whiteout'), money: 3600, grey: true, afterScript: 'towerFreed', storyFlag: 'a3.tour',
     party: [{ species: '006', level: 30 }, { species: '010', level: 31 }, { species: '007', level: 30 }, { species: '008', level: 31 }],
     before: [
       L('Chut. Ici, tout est blanc, propre, silencieux. Plus un trait qui dépasse.', 'Shh. Here everything is white, clean, silent. Not a single line out of place.'),
@@ -495,7 +500,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Je… je raye ce combat de ma mémoire.', 'I… I’m crossing this battle out of my memory.')],
   }),
   T({
-    id: 'blanche2', name: L('Admin Blanche', 'Admin Whiteout'), money: 4400, grey: true, afterScript: 'usineEnd',
+    id: 'blanche2', name: L('Admin Blanche', 'Admin Whiteout'), money: 4400, grey: true, afterScript: 'usineEnd', storyFlag: 'a3.usine',
     party: [{ species: '006', level: 37 }, { species: '010', level: 38 }, { species: '007', level: 37 }, { species: '008', level: 38 }],
     before: [L('Le patron est juste derrière moi. Il ne faut pas le déranger… Il prépare la page blanche.', 'The boss is right behind me. He mustn’t be disturbed… He is preparing the blank page.')],
     after: [L('Même mon blanc… a des couleurs, maintenant.', 'Even my white… has colours in it now.')],

@@ -153,3 +153,6 @@ excluded from `tsc`).
 - `src/story/story.test.ts` checks every script id and every flag a map waits for. Flags starting
   with `a2.` to `a9.` are exempt (a leftover from when later acts weren't written yet).
 - After the ending (`ending` flag), Atelier Masters offer rematches at +12 levels (capped at 50).
+- Progress must be saved before a cut-scene's dialog, not after: a trainer's `storyFlag` is set with
+  its win, and the final scenes resume from their map's `onEnter` (`bordPage`, `ending`) if the app was
+  closed midway.
