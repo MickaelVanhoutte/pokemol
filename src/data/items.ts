@@ -1,5 +1,6 @@
 import { L } from '../i18n';
 import { move } from './moves';
+import { TYPES } from './types';
 import type { ItemDef } from './schema';
 
 /** Stencils, in order (pochoir-01…): the first eight are the Atelier Masters' rewards. */
@@ -111,6 +112,69 @@ export const ITEMS: ItemDef[] = [
   {
     id: 'gouter', name: L('Goûter', 'Snack'), price: 0, kind: 'hold', amount: 0, hold: 'regen',
     desc: L('À faire tenir. La Bestiole en grignote un peu à chaque tour de combat et récupère des PV.', 'An item to hold. Its holder nibbles a bit every turn of battle and regains HP.'),
+  },
+  // coloured pencils: moves of one type hit 20% harder
+  ...([
+    ['crayon-gris', 'normal', L('Crayon Gris', 'Grey Pencil'), L('gris', 'grey')],
+    ['crayon-vert', 'plante', L('Crayon Vert', 'Green Pencil'), L('vert', 'green')],
+    ['crayon-rouge', 'feu', L('Crayon Rouge', 'Red Pencil'), L('rouge', 'red')],
+    ['crayon-bleu', 'eau', L('Crayon Bleu', 'Blue Pencil'), L('bleu', 'blue')],
+    ['crayon-jaune', 'electrique', L('Crayon Jaune', 'Yellow Pencil'), L('jaune', 'yellow')],
+    ['crayon-rose', 'fee', L('Crayon Rose', 'Pink Pencil'), L('rose', 'pink')],
+    ['crayon-olive', 'insecte', L('Crayon Olive', 'Olive Pencil'), L('vert olive', 'olive')],
+    ['crayon-mauve', 'psy', L('Crayon Mauve', 'Mauve Pencil'), L('mauve', 'mauve')],
+    ['crayon-violet', 'spectre', L('Crayon Violet', 'Purple Pencil'), L('violet', 'purple')],
+    ['crayon-orange', 'combat', L('Crayon Orange', 'Orange Pencil'), L('orange', 'orange')],
+    ['crayon-noir', 'tenebres', L('Crayon Noir', 'Black Pencil'), L('noir', 'black')],
+  ] as const).map(([id, type, name, colour]): ItemDef => ({
+    id, name, price: 0, kind: 'hold', amount: 0, hold: 'typeBoost', type,
+    desc: L(`Un crayon de couleur ${colour.fr} bien taillé. À faire tenir : les capacités de type ${TYPES[type].name.fr} font 20 % de dégâts en plus.`,
+      `A sharp ${colour.en} colouring pencil. To hold: ${TYPES[type].name.en}-type moves do 20% more damage.`),
+  })),
+  // stronger held items
+  {
+    id: 'bandeau-tetu', name: L('Bandeau Têtu', 'Stubborn Band'), price: 6000, kind: 'hold', amount: 0, hold: 'lockAtk',
+    desc: L('Attaque ×1,5, mais la Bestiole s’entête : elle ne peut utiliser que sa première capacité tant qu’elle reste au combat.', 'Attack ×1.5, but its holder is stubborn: it can only use the first move it picks until it is withdrawn.'),
+  },
+  {
+    id: 'lunettes-tetues', name: L('Lunettes Têtues', 'Stubborn Specs'), price: 6000, kind: 'hold', amount: 0, hold: 'lockSpa',
+    desc: L('Atq. Spé. ×1,5, mais la Bestiole s’entête : elle ne peut utiliser que sa première capacité tant qu’elle reste au combat.', 'Sp. Atk ×1.5, but its holder is stubborn: it can only use the first move it picks until it is withdrawn.'),
+  },
+  {
+    id: 'echarpe-tetue', name: L('Écharpe Têtue', 'Stubborn Scarf'), price: 6000, kind: 'hold', amount: 0, hold: 'lockSpe',
+    desc: L('Vitesse ×1,5, mais la Bestiole s’entête : elle ne peut utiliser que sa première capacité tant qu’elle reste au combat.', 'Speed ×1.5, but its holder is stubborn: it can only use the first move it picks until it is withdrawn.'),
+  },
+  {
+    id: 'bille-ardente', name: L('Bille Ardente', 'Fierce Marble'), price: 6000, kind: 'hold', amount: 0, hold: 'powerCost',
+    desc: L('Une bille qui brûle les doigts : les attaques font 30 % de dégâts en plus, mais coûtent un peu de PV à chaque coup.', 'A marble that burns your fingers: attacks do 30% more damage, but each one costs a little HP.'),
+  },
+  {
+    id: 'tablier-peintre', name: L('Tablier de Peintre', 'Painter’s Apron'), price: 6000, kind: 'hold', amount: 0, hold: 'specialGuard',
+    desc: L('Déf. Spé. ×1,5, mais la Bestiole ne peut utiliser que des capacités offensives.', 'Sp. Def ×1.5, but its holder can only use attacking moves.'),
+  },
+  {
+    id: 'casque-pointes', name: L('Casque à Pointes', 'Spiky Helmet'), price: 4000, kind: 'hold', amount: 0, hold: 'spikes',
+    desc: L('Une Bestiole qui frappe le porteur au corps à corps perd un sixième de ses PV.', 'A Critter that hits the holder with a physical move loses a sixth of its HP.'),
+  },
+  {
+    id: 'ruban-tenace', name: L('Ruban Tenace', 'Steadfast Ribbon'), price: 4000, kind: 'hold', amount: 0, hold: 'holdOn',
+    desc: L('Si ses PV sont au maximum, la Bestiole tient bon avec 1 PV au lieu d’être K.O. Ne sert qu’une fois.', 'At full HP, its holder survives a knockout hit with 1 HP. Works once.'),
+  },
+  {
+    id: 'plume-vive', name: L('Plume Vive', 'Swift Quill'), price: 3000, kind: 'hold', amount: 0, hold: 'quickStart',
+    desc: L('Une plume à dessin si légère que, parfois, la Bestiole agit en premier.', 'A drawing quill so light that its holder sometimes moves first.'),
+  },
+  {
+    id: 'loupe', name: L('Loupe de Dessinateur', 'Drafter’s Loupe'), price: 3000, kind: 'hold', amount: 0, hold: 'critUp',
+    desc: L('Une loupe qui aide à viser : plus de coups critiques.', 'A magnifying glass that helps aim: more critical hits.'),
+  },
+  {
+    id: 'couronne-carton', name: L('Couronne en Carton', 'Cardboard Crown'), price: 3000, kind: 'hold', amount: 0, hold: 'flinchUp',
+    desc: L('Une couronne qui impressionne : quand le porteur attaque, l’ennemi peut avoir peur et ne pas agir.', 'An impressive crown: when its holder attacks, the foe may flinch.'),
+  },
+  {
+    id: 'clochette', name: L('Clochette Gourmande', 'Greedy Bell'), price: 3000, kind: 'hold', amount: 0, hold: 'drainHit',
+    desc: L('Rend au porteur un huitième des dégâts qu’il inflige.', 'Restores an eighth of the damage its holder deals.'),
   },
   {
     id: 'papier-calque', name: L('Papier Calque', 'Tracing Paper'), price: 0, kind: 'hold', amount: 0, hold: 'shareXp',

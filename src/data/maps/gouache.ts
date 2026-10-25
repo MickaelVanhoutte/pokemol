@@ -43,7 +43,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'r7a', x: 12, y: 8, look: LOOKS.granny, facing: 'left', trainer: 'r7a', sight: 3 },
       { id: 'r7b', x: 4, y: 15, look: LOOKS.hiker, facing: 'right', trainer: 'r7b', sight: 4 },
     ],
-    items: [{ x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }],
+    items: [{ x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }, { x: 13, y: 5, item: 'crayon-mauve' }],
     berries: [{ x: 13, y: 13, item: 'baie-menthe' }, { x: 2, y: 2, item: 'baie-doree' }],
     encounters: {
       rate: 0.14,

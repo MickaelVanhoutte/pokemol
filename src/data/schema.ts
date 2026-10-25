@@ -77,6 +77,12 @@ export interface SpeciesDef {
   faces?: 'left' | 'right';
 }
 
+/** What a held item does in battle (see `src/engine/pk/battle.ts`). */
+export type HoldEffect =
+  | 'regen' | 'shareXp' | 'typeBoost'
+  | 'lockAtk' | 'lockSpe' | 'lockSpa' | 'powerCost' | 'specialGuard' | 'spikes' | 'holdOn'
+  | 'quickStart' | 'critUp' | 'flinchUp' | 'drainHit';
+
 /**
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
  * `battle`: boosts the creature fighting (syrups, sharpener, varnish), only in battle.
@@ -94,7 +100,9 @@ export interface ItemDef {
   /** Berries: what they cure. */
   cures?: (Major | 'confusion')[];
   /** Held items: their effect. */
-  hold?: 'regen' | 'shareXp';
+  hold?: HoldEffect;
+  /** Type boosters: moves of this type hit 20% harder. */
+  type?: TypeId;
   /** Battle items: the stat raised one stage, `crit` (Pencil Sharpener) or `guard` (Protective Varnish, 5 turns). */
   boost?: StageKey | 'crit' | 'guard';
   /** Stencils: the move they teach (never used up). */

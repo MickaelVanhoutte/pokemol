@@ -167,7 +167,7 @@ scripts.rivalFinal = async () => {
   ], RIVAL);
   const starter = String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0');
   const party = partyOf([
-    { species: '013', level: 40 }, { species: '008', level: 40 }, { species: '010', level: 41 },
+    { species: '013', level: 40, item: 'plume-vive' }, { species: '008', level: 40, item: 'gouter' }, { species: '010', level: 41, item: 'lunettes-tetues' },
     { species: '007', level: 40 }, { species: '004', level: 41 }, { species: starter, level: 43, item: 'baie-doree' },
   ], newSeed());
   const out = await fight('trainer', RIVAL, party, {

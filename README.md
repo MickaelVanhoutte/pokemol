@@ -14,7 +14,9 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
 - Deeper battles, GBA style: IVs and effort points, with a judge in the summary (STATS > JUGER);
-  held items, eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
+  held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the
+  Painter’s Apron, the Spiky Helmet, the Steadfast Ribbon and more, and a coloured pencil for every
+  type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
   battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 12 Pochoirs: stencils that
   teach a move as often as you like, one from each Atelier Master.
 - Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.

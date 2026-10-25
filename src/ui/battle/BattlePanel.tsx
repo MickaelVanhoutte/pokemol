@@ -12,6 +12,8 @@ export interface PanelProps {
   active: Mon;
   /** Only Struggle is left. */
   struggling: boolean;
+  /** Moves that can be picked (a Stubborn item locks one, the Painter’s Apron forbids status moves). */
+  usable: number[];
   pulseAttack: boolean;
   onFight: () => void;
   onBag: () => void;
@@ -50,7 +52,7 @@ function FightGrid(p: PanelProps) {
   const slots = p.struggling ? [-1] : p.active.moves.map((_, i) => i);
   const pick = (k: number) => {
     const s = slots[k];
-    if (s === undefined || (s >= 0 && p.active.moves[s].pp <= 0)) return;
+    if (s === undefined || (s >= 0 && !p.usable.includes(s))) return;
     p.onMove(s);
   };
   const [cur, setCur] = useMenuNav(slots.length, { cols: 2, onSelect: pick, onCancel: p.onBack });
@@ -64,7 +66,7 @@ function FightGrid(p: PanelProps) {
           <MoveButton
             id={id}
             pp={s < 0 ? undefined : p.active.moves[s].pp}
-            disabled={s >= 0 && p.active.moves[s].pp <= 0}
+            disabled={s >= 0 && !p.usable.includes(s)}
             class={k === cur ? 'is-on' : ''}
             onClick={() => { setCur(k); pick(k); }}
           />

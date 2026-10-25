@@ -89,11 +89,32 @@ function stencilCard(p: Painter, color: string) {
   ], PAL);
 }
 
-/** Painter for an id: the table below, or a stencil tinted by its move type. */
+/** A coloured pencil (type boosters), its wood and lead in the colour of its type. */
+function pencil(p: Painter, color: string) {
+  p.at(0, 0).sprite([
+    '............KK..',
+    '...........KLLK.',
+    '..........KCCLK.',
+    '.........KLLCK..',
+    '........KLLLK...',
+    '.......KLLLK....',
+    '......KLLLK.....',
+    '.....KLLLK......',
+    '....KLLLK.......',
+    '...KnnnK........',
+    '..KnnnK.........',
+    '..KnLK..........',
+    '..KKK...........',
+  ], { ...PAL, L: color });
+}
+
+/** Painter for an id: the table below, a stencil tinted by its move type, or a coloured pencil. */
 function painterFor(id: string): ((p: Painter) => void) | undefined {
   if (PAINTED[id]) return PAINTED[id];
-  const mv = ITEM_BY_ID[id]?.kind === 'stencil' ? MOVE_BY_ID[ITEM_BY_ID[id].move ?? ''] : undefined;
-  return mv ? (p) => stencilCard(p, TYPES[mv.type].color) : undefined;
+  const def = ITEM_BY_ID[id];
+  const mv = def?.kind === 'stencil' ? MOVE_BY_ID[def.move ?? ''] : undefined;
+  if (mv) return (p) => stencilCard(p, TYPES[mv.type].color);
+  return def?.hold === 'typeBoost' && def.type ? (p) => pencil(p, TYPES[def.type!].color) : undefined;
 }
 
 /** Items painted in code (berries, tinted items). */
@@ -116,6 +137,141 @@ const PAINTED: Record<string, (p: Painter) => void> = {
 };
 
 const ROWS: Record<string, string[]> = {
+  'bandeau-tetu': [
+    '................',
+    '................',
+    '..KKKKKKKKKKK...',
+    '.KRRRRRRRRRRRK..',
+    '.KRWWRRRRRRRRRK.',
+    '.KRRRRRRRRRRRRK.',
+    '..KKKKKKKKKKKRK.',
+    '............KRK.',
+    '...........KRrK.',
+    '...........KrK..',
+    '............K...',
+  ],
+  'lunettes-tetues': [
+    '................',
+    '................',
+    '.KKKKK....KKKKK.',
+    'KBBBBBK..KBBBBBK',
+    'KBWBBBKKKKBWBBBK',
+    'KBBWBBK..KBBWBBK',
+    'KBBBBBK..KBBBBBK',
+    '.KKKKK....KKKKK.',
+  ],
+  'echarpe-tetue': [
+    '..KKKKKKKKKKK...',
+    '.KTTTTTTTTTTTK..',
+    'KTTWTTTTTTTTTTK.',
+    '.KKKKKKKKKTTTTK.',
+    '........KTTTTK..',
+    '........KTTTK...',
+    '........KTMTK...',
+    '........KTTTK...',
+    '........KMTTK...',
+    '........KTTTK...',
+    '........KKKKK...',
+  ],
+  'bille-ardente': [
+    '.....KKKKKK.....',
+    '...KKPPPPPPKK...',
+    '..KPPpPPPPPPPK..',
+    '.KPPWpPPPPPPPPK.',
+    '.KPPppPPPPPPPPK.',
+    '.KPPPPPPPPPPPPK.',
+    '.KPPPPPPPPPrPPK.',
+    '.KPPPPPPPPrrPPK.',
+    '..KPPPPPPPPPPK..',
+    '...KKPPPPPPKK...',
+    '.....KKKKKK.....',
+  ],
+  'tablier-peintre': [
+    '...KKK....KKK...',
+    '..KeEEK..KEEeK..',
+    '.KeEEEEKKEEEEeK.',
+    '.KEEEEEKKEEEEEK.',
+    '.KEEYEEKKEEYEEK.',
+    '.KEEEEEKKEEEEEK.',
+    '..KEEEEKKEEEEK..',
+    '..KEEEEKKEEEEK..',
+    '..KeEEEKKEEEeK..',
+    '..KKKKKKKKKKKK..',
+  ],
+  'casque-pointes': [
+    '...K...K...K....',
+    '..KGK.KGK.KGK...',
+    '..KKKKKKKKKKKK..',
+    '.KGGgGGGGGGGGGK.',
+    'KGGgGGGGGGGGGGGK',
+    'KGGGGGGGGGGGGGGK',
+    'KGGGGGKKKKKKKKKK',
+    'KGGGGK..........',
+    '.KKKK...........',
+  ],
+  'ruban-tenace': [
+    '................',
+    '.KKKKKKKKKKKKKK.',
+    'KOOOOOOOOOOOOOOK',
+    'KOWWOOOKKOOOOOOK',
+    'KOOOOOKYYKOOOOOK',
+    'KOOOOOKYYKOOOOOK',
+    'KOOOOOOKKOOOOOOK',
+    '.KKKKKKKKKKKKKK.',
+  ],
+  'plume-vive': [
+    '............KK..',
+    '..........KKWWK.',
+    '........KKWWWWK.',
+    '.......KWWWgWWK.',
+    '......KWWWgWWK..',
+    '.....KWWWgWWK...',
+    '.....KWWgWWK....',
+    '....KWWgWWK.....',
+    '....KWgKKK......',
+    '...KgK..........',
+    '..KNK...........',
+    '.KNK............',
+    '.KK.............',
+  ],
+  loupe: [
+    '...KKKKK........',
+    '..KBBBBBK.......',
+    '.KBWBBBBBK......',
+    '.KBBWBBBBK......',
+    '.KBBBBBBBK......',
+    '.KBBBBBBBK......',
+    '..KBBBBBK.......',
+    '...KKKKKNK......',
+    '........KNK.....',
+    '.........KNK....',
+    '..........KNK...',
+    '...........KK...',
+  ],
+  'couronne-carton': [
+    '..K..K..K..K....',
+    '.KYKKYKKYKKYK...',
+    '.KYYYYYYYYYYK...',
+    '.KYRYYBYYRYYK...',
+    '.KKKKKKKKKKKK...',
+    '.KGGGGGGGGGGK...',
+    'KGgGGGGGGGGGGK..',
+    'KGGGGGGGGGGGGK..',
+    '.KKKKKKKKKKKK...',
+  ],
+  'clochette': [
+    '.......KK.......',
+    '......KyyK......',
+    '.....KKKKKK.....',
+    '....KYYYYYYK....',
+    '...KYWYYYYYYK...',
+    '...KYYYYYYYYK...',
+    '..KYYYYYYYYYYK..',
+    '..KYYYYYYYYYYK..',
+    '.KKKKKKKKKKKKKK.',
+    '......KyyK......',
+    '.......KK.......',
+  ],
   carte: [
     'KKKKKKKKKKKKKKKK',
     'KEEEEKCCCCKBBBBK',

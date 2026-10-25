@@ -68,7 +68,7 @@
 }
 @keyframes pencilNudge { 50% { transform: translateX(2px); } }
 .mlist__item img.picon { width: 1.4em; height: 1.4em; flex: none; }
-.mlist__item small { margin-left: auto; color: var(--ink-soft); }
+.mlist__item small { margin-left: auto; color: var(--ink-soft); white-space: nowrap; }
 
 /* ---------- full-screen frames */
 .frame {

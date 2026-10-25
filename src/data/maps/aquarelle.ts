@@ -38,7 +38,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       { id: 'r3gus', x: 15, y: 10, look: LOOKS.sailor, facing: 'left', trainer: 'r3gus', sight: 3 },
       { id: 'r3lise', x: 6, y: 5, look: LOOKS.girl, facing: 'right', trainer: 'r3lise', sight: 4 },
     ],
-    items: [{ x: 18, y: 1, item: 'super-potion' }, { x: 16, y: 10, item: 'baie-peche' }],
+    items: [{ x: 18, y: 1, item: 'super-potion' }, { x: 16, y: 10, item: 'baie-peche' }, { x: 4, y: 5, item: 'crayon-bleu' }],
     berries: [{ x: 16, y: 4, item: 'baie-bleue' }],
     encounters: {
       rate: 0.13,

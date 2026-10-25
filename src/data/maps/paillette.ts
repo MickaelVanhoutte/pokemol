@@ -43,7 +43,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'r6a', x: 12, y: 4, look: LOOKS.girl, facing: 'left', trainer: 'r6a', sight: 3 },
       { id: 'r6b', x: 4, y: 12, look: LOOKS.kid, facing: 'right', trainer: 'r6b', sight: 4 },
     ],
-    items: [{ x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }],
+    items: [{ x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }, { x: 15, y: 2, item: 'crayon-rose' }],
     berries: [{ x: 4, y: 8, item: 'baie-doree' }],
     encounters: {
       rate: 0.13,

@@ -50,7 +50,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'mfOlga', x: 7, y: 5, look: LOOKS.hiker, facing: 'right', trainer: 'mfOlga', sight: 4 },
       { id: 'mfRemi', x: 13, y: 9, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'up', trainer: 'mfRemi', sight: 3 },
     ],
-    items: [{ x: 1, y: 10, item: 'super-potion' }, { x: 3, y: 1, item: 'retouche', count: 2 }],
+    items: [{ x: 1, y: 10, item: 'super-potion' }, { x: 3, y: 1, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }],
     encounters: FUSAIN_ENCOUNTERS,
   },
 

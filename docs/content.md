@@ -136,8 +136,13 @@ Scripts run one at a time and lock player input. To change an existing script af
   Key items (pages, golden ticket) go in the OBJETS RARES pocket and are never sold.
   - `berry`: a Bestiole holding it eats it in battle as soon as it helps (`amount` HP at half HP or
     less, or a status in `cures`); berries can also be eaten from the bag. They have their own pocket.
-  - `hold`: works while held; `hold` names the effect run by `src/engine/pk/battle.ts`
-    (`regen`: 1/16 HP each turn, `shareXp`: half the XP without fighting).
+  - `hold`: works while held; `hold` names the effect run by `src/engine/pk/battle.ts`:
+    `regen` (Snack, 1/16 HP each turn), `shareXp` (Tracing Paper), `typeBoost` with `type` (coloured
+    pencils, +20%), `lockAtk` / `lockSpa` / `lockSpe` (Stubborn items: ×1.5, one move until withdrawn),
+    `powerCost` (Fierce Marble), `specialGuard` (Painter’s Apron), `spikes` (Spiky Helmet), `holdOn`
+    (Steadfast Ribbon), `quickStart` (Swift Quill), `critUp` (Drafter’s Loupe), `flinchUp` (Cardboard
+    Crown), `drainHit` (Greedy Bell). Both sides use them; a new effect needs its battle hook, a
+    message in `messages.ts` for any new event, and a test in `pk.test.ts`.
   - `battle`: used from the bag in battle on the Bestiole fighting, with no party picker; `boost`
     is a stat raised one stage (syrups), `crit` (Pencil Sharpener) or `guard` (Protective Varnish:
     the foe can't lower your stats for 5 turns).
