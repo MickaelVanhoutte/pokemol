@@ -10,8 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "cards": "tsx tools/cut-drawings.ts",
-    "import-assets": "tsx tools/import-assets.ts",
-    "icons": "tsx tools/make-icons.ts"
+    "icons": "tsx tools/make-icons.ts",
+    "balance": "tsx tools/balance.ts"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

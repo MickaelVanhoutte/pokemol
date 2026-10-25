@@ -23,9 +23,13 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
 ```bash
 npm install
 npm run dev        # http://localhost:5173/pokemol/
-npm test           # battle engine, creatures/XP, maps
+npm test           # battle engine, creatures/XP, maps, story wiring
 npm run build      # static site in dist/
+npm run balance    # simulated trainer fights along the story (win rate per starter)
 ```
+
+More for contributors (and coding agents): [CLAUDE.md](CLAUDE.md), [docs/story.md](docs/story.md),
+[docs/content.md](docs/content.md), [docs/testing.md](docs/testing.md).
 
 Controls: arrows/WASD to move, Z/Enter/Space = A, X/Shift = B (hold to run), Esc/M = menu.
 On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap = A.
@@ -46,8 +50,8 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
    evolution level if it evolves, Bestiodex text, and `faces: 'left'` or `'right'` if the drawing looks sideways
    (battles mirror it so both Bestioles face each other).
-6. Put it in a map's `encounters` (`src/data/maps.ts`) or a trainer party (`src/data/trainers.ts`).
-   Every creature can also come out of the creature machine.
+6. Put it in a map's `encounters` (`src/data/maps/<area>.ts`) or a trainer party (`src/data/trainers.ts`).
+   Every creature can also come out of the Tombola.
 7. `npm test`, commit, push: GitHub Pages redeploys.
 
 ## Deploy (GitHub Pages)
