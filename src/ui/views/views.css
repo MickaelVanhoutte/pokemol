@@ -207,3 +207,33 @@
 }
 .torn-page__title { margin: 6px 0 12px; color: var(--ink-soft); }
 .torn-page__text { margin: 0; font-family: 'Inter', system-ui, sans-serif; font-style: italic; font-size: 1.05rem; line-height: 1.5em; }
+
+/* ---------- landscape phones */
+@media (orientation: landscape) and (max-height: 540px) {
+  .party__grid { grid-template-rows: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .pslot { border-width: 6px; border-image-width: 6px; }
+  .pslot__art { width: 34px; height: 30px; }
+  .pslot--lead .pslot__art { height: min(22dvh, 90px); }
+  .pslot__info b { font-size: 1rem; }
+  /* small slots: name and level on one line, HP bar under, numbers only for the lead */
+  .pslot:not(.pslot--lead) .pslot__info { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 6px; align-items: center; }
+  .pslot:not(.pslot--lead) .pslot__info .hpbar { grid-column: 1 / -1; }
+  .pslot:not(.pslot--lead) .pslot__hp { display: none; }
+  .summary__art { height: min(28dvh, 140px); }
+  .party__msg { min-height: 2.4em; }
+  .summary {
+    display: grid; gap: 6px;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  .summary__tabs { grid-column: 1 / -1; }
+  .summary__head { grid-column: 1; grid-row: 2; flex-direction: column; align-items: flex-start; overflow: hidden; }
+  .summary__art { width: 100%; aspect-ratio: auto; height: min(34dvh, 160px); }
+  .summary__page { grid-column: 2; grid-row: 2 / 4; }
+  .summary__foot { grid-column: 1; grid-row: 3; justify-content: flex-start; }
+  .tcard__badges { grid-template-columns: repeat(8, 1fr); }
+  .tcard__avatar { width: 72px; height: 72px; }
+  .dex__entry { align-items: flex-start; }
+  .dex__paper { width: min(34vw, 40dvh, 210px); }
+  .evo__mon { height: min(52dvh, 320px); }
+}

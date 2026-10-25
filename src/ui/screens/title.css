@@ -39,3 +39,11 @@
 .title__save { display: grid; grid-template-columns: auto 1fr; gap: 0 12px; font-size: 1.1rem; }
 .title__save b { font-weight: 400; text-align: right; color: #2a6ad6; }
 .title__note { font-size: 1rem; }
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .title { padding-top: 10px; }
+  .title__logo { font-size: clamp(2.2rem, 7vw, 3.4rem); }
+  .title__hero { height: min(40dvh, 200px); }
+  .title__menu { width: min(100%, 520px); }
+  .title__list .mlist__item { min-height: 1.7em; font-size: 1.15rem; }
+}

@@ -68,8 +68,8 @@
 .prologue__night { color: #e8e2f8; font-size: 1.4rem; text-align: center; animation: fade-in 1.2s ease; }
 .prologue__hidden { position: absolute; opacity: 0; pointer-events: none; }
 .prologue__stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 0; }
-.prologue__pic { width: min(52vw, 220px); image-rendering: pixelated; image-rendering: crisp-edges; animation: fade-in 0.4s ease; }
-.prologue__mon { width: min(70vw, 300px); height: min(40vh, 280px); animation: heroIn 0.6s cubic-bezier(.3, 1.4, .5, 1); }
+.prologue__pic { width: min(52vw, 220px, 40dvh); image-rendering: pixelated; image-rendering: crisp-edges; animation: fade-in 0.4s ease; }
+.prologue__mon { width: min(70vw, 300px); height: min(40dvh, 280px); animation: heroIn 0.6s cubic-bezier(.3, 1.4, .5, 1); }
 .prologue__avatars { display: flex; gap: 12px; }
 .prologue__avatars .newgame__avatar { width: 96px; height: 96px; }
 .prologue__bottom { display: flex; flex-direction: column; gap: 6px; }
@@ -80,3 +80,22 @@
 .prologue__input input { flex: 1; min-width: 0; }
 .prologue__skip { position: absolute; top: 10px; right: 8px; }
 @keyframes heroIn { from { transform: scale(0.6) rotate(-8deg); opacity: 0; } }
+
+/* ---------- landscape phones */
+@media (orientation: landscape) and (max-height: 540px) {
+  .prologue { padding-top: 6px; }
+  .prologue__pic { width: min(30vw, 160px, 34dvh); }
+  .prologue__avatars .newgame__avatar { width: 72px; height: 72px; }
+  .prologue__bottom { max-width: 820px; width: 100%; margin: 0 auto; }
+  .prologue__ask { flex-direction: row; align-items: flex-end; gap: 8px; }
+  .prologue__ask > .textbox { flex: 1; }
+  .monpick { justify-content: flex-start; gap: 6px; padding-top: 8px; }
+  .monpick__row { max-width: min(620px, 150dvh); }
+  .monpick__cell { aspect-ratio: auto; height: min(56dvh, 220px); }
+  .monpick__card { flex-direction: row; flex-wrap: wrap; max-height: 58dvh; max-width: 760px; }
+  .monpick__art { width: 40%; height: min(46dvh, 220px); }
+  .monpick__card > :not(.monpick__art) { flex: 1 1 50%; }
+  .monpick__ask { max-width: 760px; flex-direction: row; align-items: flex-end; }
+  .monpick__ask .monpick__q { flex: 1; }
+  .credits__parade img { width: 56px; height: 50px; }
+}

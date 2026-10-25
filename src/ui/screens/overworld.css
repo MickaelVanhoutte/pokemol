@@ -119,3 +119,22 @@
 .ab button { width: 64px; height: 64px; border-radius: 50%; font-family: var(--pixel); font-synthesis: none; font-size: 1.5rem; }
 .ab__a { right: 0; top: 0; background: #d64545 !important; color: #fff !important; }
 .ab__b { left: 0; bottom: 0; background: #e6a23a !important; color: #fff !important; }
+
+/* landscape phones: the map gets the whole screen, A/B float over it, the start menu goes side by side */
+@media (orientation: landscape) and (max-height: 540px) {
+  .touch {
+    position: absolute; right: 0; bottom: 0; z-index: 20;
+    background: none; border: 0; padding: 0 12px calc(10px + env(safe-area-inset-bottom)) 0;
+    pointer-events: none;
+  }
+  .touch__hint { display: none; }
+  .ab { pointer-events: auto; width: 128px; height: 86px; }
+  .ab button { width: 54px; height: 54px; opacity: 0.85; font-size: 1.3rem; }
+  .startmenu { flex-direction: row-reverse; align-items: stretch; gap: 8px; }
+  .startmenu > div:first-child { display: flex; flex-direction: column; min-height: 0; }
+  .startmenu__list { overflow-y: auto; min-height: 0; }
+  .startmenu__list .mlist__item { min-height: 1.75em; font-size: 1.1rem; }
+  .startmenu__desc { flex: 1; align-self: flex-end; }
+  /* the dialog leaves room for the floating buttons */
+  .dialog-layer { padding-right: 150px; }
+}
