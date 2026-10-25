@@ -6,6 +6,7 @@ import { hasSave, loadSave, outdatedSave } from '../../state/game';
 import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
 import { MenuList, Window, YesNo } from '../paper';
+import { playMusic } from '../../audio/music';
 import './title.css';
 
 function peek(): SaveData | null {
@@ -32,6 +33,9 @@ export function TitleScreen() {
     const id = setInterval(() => setHero((h) => (h + 1) % CREATURES.length), 2600);
     return () => clearInterval(id);
   }, []);
+  useEffect(() => {
+    if (phase === 'menu') playMusic('title');
+  }, [phase]);
   useEffect(() => {
     if (phase !== 'press') return;
     const go = () => setPhase('menu');

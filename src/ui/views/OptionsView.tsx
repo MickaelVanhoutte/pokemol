@@ -3,6 +3,7 @@ import { L, locale, setLocale, tr, type LText } from '../../i18n';
 import { prefs, setPref } from '../../state/prefs';
 import { deleteSave, exportSave, hasSave, importSave, loadSave, save } from '../../state/game';
 import { sfx } from '../../audio/sfx';
+import { stopMusic } from '../../audio/music';
 import { Frame, Window } from '../paper';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
@@ -26,7 +27,13 @@ const ROWS: Row<unknown>[] = [
     label: L('SONS', 'SOUND'),
     values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
     get: () => prefs.value.sound,
-    set: (v) => { setPref('sound', v as boolean); if (v) sfx.confirm(); },
+    set: (v) => { setPref('sound', v as boolean); if (v) sfx.confirm(); else stopMusic(); },
+  },
+  {
+    label: L('MUSIQUE', 'MUSIC'),
+    values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
+    get: () => prefs.value.music,
+    set: (v) => { setPref('music', v as boolean); if (!v) stopMusic(); },
   },
   {
     label: L('LANGUE', 'LANGUAGE'),

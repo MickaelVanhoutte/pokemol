@@ -206,6 +206,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     const def = npc.npc;
     if (!def) return;
     if (def.trainer && !flag(`tr:${def.trainer}`)) return void locked(() => trainerBattle(def.trainer!, npc));
+    if (def.trainer && TRAINERS[def.trainer].badge && flag('ending')) return void locked(() => rematch(def.trainer!, npc));
     if (def.trainer) return void locked(() => sayAll(TRAINERS[def.trainer!].after, TRAINERS[def.trainer!].name));
     if (def.script && scripts[def.script]) return void runScript(def.script);
     if (def.text) return void locked(() => sayAll(def.text!));
@@ -324,6 +325,21 @@ export async function trainerBattle(id: string, actor?: Actor) {
   }
 }
 
+/** After the ending, Atelier Masters accept rematches with stronger teams. */
+async function rematch(id: string, actor: Actor) {
+  const tdef = TRAINERS[id];
+  const c = await ask(L('Te revoilà ! Une revanche ? Cette fois, je ne retiens pas mes coups.', 'You’re back! A rematch? This time I won’t hold back.'), [L('Oui', 'Yes'), L('Non', 'No')], tdef.name);
+  if (c !== 0) return;
+  if (!partyAlive(s())) {
+    await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), tdef.name);
+    return;
+  }
+  const party = tdef.party.map((m) => ({ species: m.species, level: Math.min(50, m.level + 12) }));
+  const strong: TrainerDef = { ...tdef, id: `${id}:rematch`, badge: undefined, afterScript: undefined, money: tdef.money * 2, party };
+  const out = await fight('trainer', tdef.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
+  if (out.result === 'win') await say(L('Incroyable… Tu dessines de mieux en mieux !', 'Incredible… You draw better and better!'), tdef.name);
+}
+
 // ------------------------------------------------------------------ battles
 
 export interface FightOptions {
@@ -359,6 +375,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
         playerLook: AVATARS[d.player.avatar] ?? AVATARS[0],
+        music: opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gomme' : kind === 'trainer' ? 'trainer' : 'wild',
         trainer: kind === 'trainer' ? {
           title: tr(enemyName),
           look: opts.look ?? LOOKS.kid,

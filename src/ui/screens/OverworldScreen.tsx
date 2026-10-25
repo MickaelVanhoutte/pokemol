@@ -6,6 +6,8 @@ import { EvolutionView } from '../views/EvolutionView';
 import { dialog } from '../../overworld/dialog';
 import { persist, save } from '../../state/game';
 import { sfx } from '../../audio/sfx';
+import { playMusic } from '../../audio/music';
+import { trackForMap } from '../../audio/mapMusic';
 import { MenuList, PixelIcon, TextBox, Window, YesNo } from '../paper';
 import { go } from '../../state/router';
 import { MonPick } from '../MonPick';
@@ -67,6 +69,7 @@ export function OverworldScreen() {
     const g = getGame();
     if (!g.map) return;
     setMapName(tr(g.map.def.name));
+    playMusic(trackForMap(g.map.def));
     const id = setTimeout(() => setMapName(null), 1800);
     return () => clearTimeout(id);
   }, [currentMap]);

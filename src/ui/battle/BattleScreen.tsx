@@ -9,6 +9,7 @@ import {
   type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Step,
 } from '../../engine/pk/battle';
 import { sfx } from '../../audio/sfx';
+import { playMusic, stopMusic, type TrackId } from '../../audio/music';
 import type { Backdrop } from '../../data/schema';
 import type { Look } from '../../overworld/sprites';
 import { prefs } from '../../state/prefs';
@@ -37,6 +38,7 @@ export interface BattleProps {
   trainer?: BattleTrainer;
   /** Player character, seen from behind at the start. */
   playerLook?: Look;
+  music?: TrackId;
 }
 
 export interface BattleTrainer {
@@ -116,7 +118,7 @@ export function BattleScreen(props: BattleProps) {
         setCaptured(true);
         if (e.caught) setTimeout(() => sfx.capture(), 400 + e.shakes * 650);
         break;
-      case 'end': if (e.result === 'win') sfx.victory(); break;
+      case 'end': if (e.result === 'win' || e.result === 'capture') { stopMusic(); sfx.victory(); } break;
     }
     await sleep(eventDuration(e) * speed.current);
     if (e.t === 'ball') {
@@ -172,6 +174,7 @@ export function BattleScreen(props: BattleProps) {
   }
 
   useEffect(() => {
+    playMusic(props.music ?? (props.trainer ? 'trainer' : 'wild'));
     const step = createBattle(props.setup, true);
     commit(step.state);
     setView(step.snaps[0] ?? step.state);

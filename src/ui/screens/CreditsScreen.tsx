@@ -1,4 +1,6 @@
+import { useEffect } from 'preact/hooks';
 import { L, tr } from '../../i18n';
+import { playMusic } from '../../audio/music';
 import { CREATURES, artUrl } from '../../data/creatures';
 import { go } from '../../state/router';
 import { backToWorld } from '../../overworld/controller';
@@ -8,6 +10,7 @@ import '../screens.css';
 
 export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
   const ended = !!save.value?.flags.ending;
+  useEffect(() => playMusic('ending'), []);
   return (
     <Frame title={tr(L('Crédits', 'Credits'))} onBack={() => (fromWorld ? backToWorld() : go({ id: 'title' }))}>
       <Window class="credits__body">
