@@ -39,6 +39,18 @@
 .title__save { display: grid; grid-template-columns: auto 1fr; gap: 0 12px; font-size: 1.1rem; }
 .title__save b { font-weight: 400; text-align: right; color: #2a6ad6; }
 .title__note { font-size: 1rem; }
+/* install offer: a toast over the logo, the menu stays reachable */
+.title__install {
+  position: absolute; z-index: 5;
+  top: calc(8px + env(safe-area-inset-top)); left: 50%;
+  width: min(calc(100% - 24px), 420px);
+  transform: translateX(-50%);
+  cursor: default;
+  animation: installIn 0.35s cubic-bezier(.3, 1.4, .5, 1);
+}
+@keyframes installIn { from { transform: translateX(-50%) translateY(-30px); opacity: 0; } }
+.title__install p { margin: 0 0 6px; font-size: 1rem; }
+.title__install-row { display: flex; justify-content: flex-end; gap: 6px; }
 
 @media (orientation: landscape) and (max-height: 540px) {
   .title { padding-top: 10px; }
@@ -46,4 +58,7 @@
   .title__hero { height: min(40dvh, 200px); }
   .title__menu { width: min(100%, 520px); }
   .title__list .mlist__item { min-height: 1.7em; font-size: 1.15rem; }
+  .title__install { width: min(calc(100% - 24px), 620px); }
+  .title__install .window { display: flex; align-items: center; gap: 10px; }
+  .title__install p { flex: 1; margin: 0; }
 }

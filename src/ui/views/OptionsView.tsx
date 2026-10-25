@@ -4,7 +4,7 @@ import { prefs, setPref } from '../../state/prefs';
 import { deleteSave, exportSave, hasSave, importSave, loadSave, save } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { stopMusic } from '../../audio/music';
-import { checkForUpdate, offlineReady, pwaActive, updateReady } from '../../state/pwa';
+import { checkForUpdate, install, installWay, offlineReady, pwaActive, updateReady } from '../../state/pwa';
 import { Frame, Window } from '../paper';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
@@ -122,18 +122,26 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
             : pwaActive.value ? tr(L('Téléchargement pour jouer hors ligne…', 'Downloading to play offline…')) : tr(L('Hors ligne : pas encore prêt', 'Offline: not ready yet'))}
         </p>
         {updateReady.value && <p class="opts__msg">{tr(L('Nouvelle version prête : elle démarrera à la prochaine ouverture du jeu.', 'New version ready: it starts the next time you open the game.'))}</p>}
-        {pwaActive.value && !updateReady.value && (
-          <button class="pbtn" disabled={checking} onClick={async () => {
-            setChecking(true);
-            await checkForUpdate();
-            setChecking(false);
-            setMsg(!navigator.onLine
-              ? tr(L('Pas de connexion : réessaie plus tard.', 'No connection: try again later.'))
-              : updateReady.value ? '' : tr(L('Le jeu est à jour (ou la nouvelle version se télécharge).', 'The game is up to date (or the new version is downloading).')));
-          }}>
-            {tr(L('Chercher une mise à jour', 'Check for updates'))}
-          </button>
+        {installWay.value === 'ios' && (
+          <p>{tr(L('Pour installer le jeu : bouton Partager, puis « Sur l’écran d’accueil ».', 'To install the game: the Share button, then “Add to Home Screen”.'))}</p>
         )}
+        <div class="opts__row">
+          {pwaActive.value && !updateReady.value && (
+            <button class="pbtn" disabled={checking} onClick={async () => {
+              setChecking(true);
+              await checkForUpdate();
+              setChecking(false);
+              setMsg(!navigator.onLine
+                ? tr(L('Pas de connexion : réessaie plus tard.', 'No connection: try again later.'))
+                : updateReady.value ? '' : tr(L('Le jeu est à jour (ou la nouvelle version se télécharge).', 'The game is up to date (or the new version is downloading).')));
+            }}>
+              {tr(L('Chercher une mise à jour', 'Check for updates'))}
+            </button>
+          )}
+          {installWay.value === 'prompt' && (
+            <button class="pbtn" onClick={() => void install()}>{tr(L('Installer le jeu', 'Install the game'))}</button>
+          )}
+        </div>
       </Window>
     </Frame>
   );

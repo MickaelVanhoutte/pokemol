@@ -154,7 +154,11 @@ excluded from `tsc`).
   with `a2.` to `a9.` are exempt (a leftover from when later acts weren't written yet).
 - After the ending (`ending` flag), Atelier Masters offer rematches at +12 levels (capped at 50).
 - The web app manifest `id` in `vite.config.ts` (`/pokemol/?app=atelier-bestioles`) is the app's
-  identity for browsers: never change it, or every installed copy becomes a different app.
+  identity for browsers: never change it, or every installed copy becomes a different app. When
+  Android Chrome says the game is already installed but it isn't, another web app installed from
+  `mickaelvanhoutte.github.io` is the cause (Chrome mixes up apps sharing an origin). Uninstalling
+  that app fixes it; the manifest doesn't. In that case Chrome sends no install offer, so the
+  title-screen install toast (`installWay` in `src/state/pwa.ts`) stays hidden.
 - Progress must be saved before a cut-scene's dialog, not after: a trainer's `storyFlag` is set with
   its win, and the final scenes resume from their map's `onEnter` (`bordPage`, `ending`) if the app was
   closed midway.

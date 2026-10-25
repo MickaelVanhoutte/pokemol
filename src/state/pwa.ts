@@ -9,6 +9,8 @@ export const updateReady = signal(false);
 export const pwaActive = signal(false);
 
 const SEEN_KEY = 'atelier-bestioles.offline';
+const LATER_KEY = 'atelier-bestioles.install-later';
+const LATER_DAYS = 7;
 const HOUR = 60 * 60 * 1000;
 const RESUME_GAP = 10 * 60 * 1000;
 
@@ -39,12 +41,83 @@ export function firstOfflineReady(): boolean {
   return true;
 }
 
+/** Chrome, Edge and Samsung Internet's install offer, kept until the player asks for it. */
+interface InstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
 /**
- * Registers the service worker. Every asset is precached in the background on the first visit;
- * new versions are downloaded silently and only switched on from the title screen (normally right
- * when the game is opened again), so a running adventure is never interrupted.
+ * How the game can be installed on this device: the browser's own dialog, the Share menu on
+ * iPhone and iPad (Safari has no install dialog), or not at all (already installed, or unsupported).
+ */
+export const installWay = signal<'prompt' | 'ios' | null>(null);
+let installEvent: InstallPromptEvent | undefined;
+
+function runsInstalled(): boolean {
+  return matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches
+    || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+}
+
+function isIos(): boolean {
+  const ua = navigator.userAgent;
+  // iPadOS says it is a Mac: touch gives it away
+  return /iPad|iPhone|iPod/.test(ua) || (ua.includes('Macintosh') && navigator.maxTouchPoints > 1);
+}
+
+/** False for a week after the player answered « Plus tard ». */
+export function installToastDue(): boolean {
+  try {
+    return Date.now() - Number(localStorage.getItem(LATER_KEY) ?? 0) > LATER_DAYS * 24 * HOUR;
+  } catch {
+    return true;
+  }
+}
+
+export function installLater() {
+  try {
+    localStorage.setItem(LATER_KEY, String(Date.now()));
+  } catch {
+    // storage unavailable: the toast comes back next time
+  }
+}
+
+/** Opens the browser's install dialog. True if the player installed the game. */
+export async function install(): Promise<boolean> {
+  const e = installEvent;
+  if (!e) return false;
+  // the browser offers each event only once; it sends a new one if the player said no
+  installEvent = undefined;
+  installWay.value = null;
+  await e.prompt();
+  const { outcome } = await e.userChoice;
+  if (outcome === 'dismissed') installLater();
+  return outcome === 'accepted';
+}
+
+function watchInstall() {
+  if (typeof window === 'undefined' || runsInstalled()) return;
+  if (isIos()) installWay.value = 'ios';
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // keep the offer for our own toast instead of the browser's banner
+    e.preventDefault();
+    installEvent = e as InstallPromptEvent;
+    installWay.value = 'prompt';
+  });
+  window.addEventListener('appinstalled', () => {
+    installEvent = undefined;
+    installWay.value = null;
+  });
+}
+
+/**
+ * Listens for the install offer and registers the service worker. Every asset is precached in the
+ * background on the first visit; new versions are downloaded silently and only switched on from the
+ * title screen (normally right when the game is opened again), so a running adventure is never
+ * interrupted.
  */
 export function startPwa() {
+  watchInstall();
   if (!import.meta.env.PROD || typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
   void import('virtual:pwa-register').then(({ registerSW }) => {
     const update = registerSW({

@@ -23,7 +23,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
 - Side quests: 12 torn sketchbook pages (memories of the real world), the Tombola at the fair,
   a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from
-  Options), installable as an app (PWA). On phones, touch the screen anywhere to show the joystick.
+  Options), installable as an app (PWA: the title screen offers it). On phones, touch the screen
+  anywhere to show the joystick.
 - Plays offline: the first visit downloads every file in the background. New versions download
   silently too and start the next time the game is opened (Options shows the version and offline state).
 

@@ -8,7 +8,7 @@ import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
 import { MenuList, Window, YesNo } from '../paper';
 import { playMusic } from '../../audio/music';
-import { firstOfflineReady } from '../../state/pwa';
+import { firstOfflineReady, install, installLater, installToastDue, installWay } from '../../state/pwa';
 import './title.css';
 
 function peek(): SaveData | null {
@@ -18,6 +18,33 @@ function peek(): SaveData | null {
   } catch {
     return null;
   }
+}
+
+/** Offers to install the game, over the logo. « Plus tard » hides it for a week. */
+function InstallToast() {
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setShown(installToastDue()), 1200);
+    return () => clearTimeout(id);
+  }, []);
+  const way = installWay.value;
+  if (!shown || !way) return null;
+  const later = () => { installLater(); setShown(false); };
+  return (
+    <div class="title__install">
+      <Window>
+        <p>
+          {way === 'prompt'
+            ? tr(L('Installe le jeu sur ton appareil : il s’ouvrira comme une appli, même sans Internet.', 'Install the game on your device: it opens like an app, even without the Internet.'))
+            : tr(L('Pour installer le jeu, touche le bouton Partager, puis « Sur l’écran d’accueil ».', 'To install the game, tap the Share button, then “Add to Home Screen”.'))}
+        </p>
+        <div class="title__install-row">
+          {way === 'prompt' && <button class="pbtn pbtn--accent" onClick={() => { setShown(false); void install(); }}>{tr(L('Installer', 'Install'))}</button>}
+          <button class="pbtn" onClick={later}>{tr(way === 'prompt' ? L('Plus tard', 'Later') : L('OK', 'OK'))}</button>
+        </div>
+      </Window>
+    </div>
+  );
 }
 
 const time = (ms: number) => {
@@ -56,7 +83,9 @@ export function TitleScreen() {
     { label: tr(L('Crédits', 'Credits')), onSelect: () => go({ id: 'credits' }) },
   ];
   return (
-    <div class="title" onClick={() => phase === 'press' && setPhase('menu')}>
+    // taps on the install toast don't open the menu (it may already be gone when the tap gets here)
+    <div class="title" onClick={(e) => phase === 'press' && !(e.target as Element).closest('.title__install') && setPhase('menu')}>
+      <InstallToast />
       <div class="title__float" aria-hidden="true">
         {CREATURES.map((c, i) => (
           <img
