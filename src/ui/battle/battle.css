@@ -28,7 +28,7 @@
   transform: translateX(-50%);
   background: var(--plat) center / 100% 100% no-repeat;
 }
-.pk-plat--foe { right: 4%; top: 9%; width: min(40vw, 30dvh, 230px); height: min(36vw, 26dvh, 200px); }
+.pk-plat--foe { right: 4%; bottom: 47%; width: min(40vw, 30dvh, 230px); height: min(36vw, 26dvh, 200px); }
 .pk-plat--me { left: 3%; bottom: 7%; width: min(46vw, 34dvh, 260px); height: min(42vw, 30dvh, 230px); }
 .pk-sprite {
   max-width: 100%;
