@@ -1,18 +1,23 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { L, t, tr } from '../../i18n';
-import { artUrl, creature, mirrored } from '../../data/creatures';
-import { ITEMS, item } from '../../data/items';
+import { L, tr } from '../../i18n';
+import { creature } from '../../data/creatures';
+import { item } from '../../data/items';
 import { move } from '../../data/moves';
-import { STATUSES, TYPES } from '../../data/types';
 import { aiChoose } from '../../engine/pk/ai';
 import {
   act, activeMon, blocked, createBattle, itemUsable, usableSlots,
-  type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Side, type Step,
+  type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Step,
 } from '../../engine/pk/battle';
-import { maxHp, xpAt, type Mon } from '../../engine/pk/creature';
 import { sfx } from '../../audio/sfx';
-import { MonSummary } from '../MonSummary';
-import { describe, eventDuration, monName } from './messages';
+import type { Backdrop } from '../../data/schema';
+import { prefs } from '../../state/prefs';
+import { BagView } from '../views/BagView';
+import { PartyView } from '../views/PartyView';
+import { SummaryView } from '../views/SummaryView';
+import { describe, eventDuration } from './messages';
+import { BattleScene, type BallFx, type Fx } from './BattleScene';
+import { BattlePanel } from './BattlePanel';
+import { panelMode } from './panelMode';
 import './battle.css';
 
 export interface BattleProps {
@@ -24,24 +29,19 @@ export interface BattleProps {
   onEnd: (result: BattleResult, state: BattleState) => void;
   /** Extra lines shown when the battle is won (money…). */
   rewardLines?: (result: BattleResult, state: BattleState) => string[];
-  backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
+  backdrop?: Backdrop;
   /** First battle: the professor explains the menu. */
   tutorial?: boolean;
 }
 
-type Menu = 'main' | 'fight' | 'bag' | 'party';
-type Fx = Partial<Record<Side, string>>;
+type Overlay = null | { kind: 'bag' } | { kind: 'party' } | { kind: 'target'; item: string } | { kind: 'learn' };
 
 const sleep = (ms: number) => (ms <= 0 ? Promise.resolve() : new Promise((r) => setTimeout(r, ms)));
 
-/** Battle animation speed multiplier (1 = normal, 0.5 = fast), remembered per device. */
-export function battleSpeed(): number {
-  try {
-    return Number(localStorage.getItem('atelier-bestioles.speed') ?? '1') || 1;
-  } catch {
-    return 1;
-  }
-}
+const COACH = [
+  L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
+  L('Dans le SAC : tes Potions et tes Crayon-balls. BESTIOLES sert à changer de Bestiole, et FUITE marche contre les Bestioles sauvages.', 'The BAG holds your Potions and Pencil Balls. CRITTERS lets you switch, and RUN works against wild Critters.'),
+];
 
 export function BattleScreen(props: BattleProps) {
   const stRef = useRef<BattleState | null>(null);
@@ -49,19 +49,18 @@ export function BattleScreen(props: BattleProps) {
   const [view, setView] = useState<BattleState | null>(null);
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(true);
-  const [menu, setMenu] = useState<Menu>('main');
-  const [itemTarget, setItemTarget] = useState<string | null>(null);
-  const [partyPick, setPartyPick] = useState<number | null>(null);
-  const [summary, setSummary] = useState<Mon | null>(null);
+  const [menu, setMenu] = useState<'main' | 'fight'>('main');
+  const [overlay, setOverlay] = useState<Overlay>(null);
   const [fx, setFx] = useState<Fx>({});
-  const [ball, setBall] = useState<{ shakes: number; caught: boolean; key: number } | null>(null);
+  const [ball, setBall] = useState<BallFx | null>(null);
   const [captured, setCaptured] = useState(false);
   const [bag, setBag] = useState<Record<string, number>>({ ...props.bag });
   const [ended, setEnded] = useState(false);
+  // tutorial: -1 off, 0 first page, 1 pulse FIGHT, 2 second page after the first move
   const [coach, setCoach] = useState(props.tutorial ? 0 : -1);
-  const speed = useRef(battleSpeed());
+  const speed = useRef(prefs.value.battleAnim);
 
-  const pulse = (side: Side, kind: string, ms = 500) => {
+  const pulse = (side: 0 | 1, kind: string, ms = 500) => {
     setFx((f) => ({ ...f, [side]: kind }));
     setTimeout(() => setFx((f) => (f[side] === kind ? { ...f, [side]: undefined } : f)), ms);
   };
@@ -70,7 +69,7 @@ export function BattleScreen(props: BattleProps) {
     const lines = describe(e, snap);
     // the ball shakes first, the result comes after
     if (e.t === 'ball') setMsg(tr(L('Tu lances une {i} !', 'You threw a {i}!'), { i: tr(item(e.item).name) }));
-    else if (lines.length) setMsg(lines.join(' '));
+    else if (lines.length) setMsg(lines.join('\n'));
     switch (e.t) {
       case 'sendOut': pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
       case 'withdraw': pulse(e.side, 'out', 600); break;
@@ -90,7 +89,7 @@ export function BattleScreen(props: BattleProps) {
     }
     await sleep(eventDuration(e) * speed.current);
     if (e.t === 'ball') {
-      setMsg(lines.join(' '));
+      setMsg(lines.join('\n'));
       if (!e.caught) {
         setBall(null);
         setCaptured(false);
@@ -117,8 +116,7 @@ export function BattleScreen(props: BattleProps) {
     const cur = stRef.current;
     if (!cur) return;
     setMenu('main');
-    setItemTarget(null);
-    setPartyPick(null);
+    setOverlay(null);
     setBusy(true);
     try {
       const enemy: Action = a.type === 'learn' || a.type === 'replace' ? { type: 'move', slot: 0 } : aiChoose(cur);
@@ -126,7 +124,7 @@ export function BattleScreen(props: BattleProps) {
       commit(step.state);
       await play(step);
       if (step.state.result && !step.state.learnQueue.length) setEnded(true);
-      if (a.type === 'move') setCoach((c) => (c === 0 ? 1 : c));
+      if (a.type === 'move') setCoach((c) => (c === 1 ? 2 : c));
     } finally {
       setBusy(false);
     }
@@ -156,198 +154,85 @@ export function BattleScreen(props: BattleProps) {
   const me = st.sides[0];
   const active = activeMon(me);
   const learn = !busy && st.learnQueue.length ? st.learnQueue[0] : null;
-  const forced = !busy && st.needSwitch;
+  const learner = learn ? me.party.find((m) => m.uid === learn.uid) ?? null : null;
+  const forced = !busy && !!st.needSwitch;
   const idle = !busy && !st.result && !blocked(st);
-  const wild = st.kind === 'wild';
-  const learner = learn ? me.party.find((m) => m.uid === learn.uid) : null;
-  const bagItems = ITEMS.filter((it) => (bag[it.id] ?? 0) > 0 && (it.kind !== 'ball' || wild));
+  const coaching = coach === 0 || coach === 2;
+  const mode = panelMode({ busy: busy || (!!st.result && !ended && !learner), ended, coach: coaching && idle, learnPending: !!learner, forced, menu });
 
-  const prompt = forced
-    ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?'))
-    : itemTarget ? tr(L('Sur quelle Bestiole ?', 'Use it on which Critter?'))
-    : learn && learner ? tr(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. Laquelle oublier ?', '{n} wants to learn {m} but already knows 4 moves. Which one to forget?'), { n: tr(creature(learner.species).name), m: tr(move(learn.move).name) })
-    : idle ? tr(L('Que doit faire {n} ?', 'What will {n} do?'), { n: tr(creature(active.species).name) })
+  const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
+  const name = tr(creature(active.species).name);
+  const text = mode === 'continue' ? [msg, ...rewardLines].filter(Boolean).join('\n')
+    : mode === 'coach' ? tr(COACH[coach === 0 ? 0 : 1])
+    : mode === 'learnAsk' && learner && learn ? tr(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. En oublier une ?', '{n} wants to learn {m}, but already knows 4 moves. Forget one?'), { n: tr(creature(learner.species).name), m: tr(move(learn.move).name) })
+    : forced ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?'))
+    : mode === 'fight' ? tr(L('Quelle capacité ?', 'Which move?'))
+    : mode === 'command' ? tr(L('Que doit faire {n} ?', 'What will {n} do?'), { n: name })
     : msg;
 
-  const panel = forced || itemTarget ? 'party' : menu;
-  const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
-  const back = () => {
-    setMenu('main');
-    setItemTarget(null);
-    setPartyPick(null);
-  };
-
-  const partyList = (onPick: (i: number) => void, can: (i: number) => boolean) => (
-    <div class="gba-sub">
-      {me.party.map((m, i) => (
-        <button class={`team-row ${i === me.active ? 'is-active' : ''} ${m.hp <= 0 ? 'is-ko' : ''}`} disabled={!can(i)} onClick={() => onPick(i)}>
-          <img src={artUrl(creature(m.species))} alt="" />
-          <span class="team-row__text">
-            <b>{tr(creature(m.species).name)} <small>{tr(L('N.{l}', 'Lv{l}'), { l: m.level })}</small> {m.status && <StatusTag s={m.status} />}</b>
-            <HpBar hp={m.hp} max={maxHp(m)} />
-            <small>{m.hp}/{maxHp(m)} {tr(L('PV', 'HP'))}</small>
-          </span>
-        </button>
-      ))}
-      {!forced && <button class="gba-back" onClick={back}>← {t('battle.btn.back')}</button>}
-    </div>
-  );
-
-  const mySp = creature(activeMon(view.sides[0]).species);
-  const foeSp = creature(activeMon(view.sides[1]).species);
   return (
-    <div class={`battle pk backdrop-${props.backdrop ?? 'grass'}`} onDblClick={() => (speed.current = 0.35)}>
-      <div class="pk-scene">
-        <HpBox st={view} side={1} />
-        <div class="pk-plat pk-plat--foe">
-          <img
-            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${activeMon(view.sides[1]).hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
-            src={artUrl(foeSp)}
-            alt=""
-          />
-          {ball && <div class={`pk-ball shakes-${ball.shakes} ${ball.caught ? 'is-caught' : ''}`} key={ball.key}>✏️</div>}
-        </div>
-        <div class="pk-plat pk-plat--me">
-          <img
-            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${activeMon(view.sides[0]).hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
-            src={artUrl(mySp)}
-            alt=""
-          />
-        </div>
-        <HpBox st={view} side={0} />
-      </div>
+    <div class="battle pk" onDblClick={() => (speed.current = 0.35)}>
+      <BattleScene view={view} fx={fx} ball={ball} captured={captured} backdrop={props.backdrop ?? 'grass'} />
+      <BattlePanel
+        mode={mode}
+        text={text}
+        speaker={mode === 'coach' ? tr(L('Prof. Fusain', 'Prof. Charcoal')) : undefined}
+        active={active}
+        struggling={!usableSlots(active).length}
+        pulseAttack={coach === 1}
+        onFight={() => setMenu('fight')}
+        onBag={() => setOverlay({ kind: 'bag' })}
+        onParty={() => setOverlay({ kind: 'party' })}
+        onRun={() => dispatch({ type: 'run' })}
+        onMove={(slot) => dispatch({ type: 'move', slot })}
+        onBack={() => setMenu('main')}
+        onContinue={() => (mode === 'coach' ? setCoach((c) => (c === 0 ? 1 : -1)) : props.onEnd(st.result!, stRef.current!))}
+        onLearnAnswer={(yes) => (yes ? setOverlay({ kind: 'learn' }) : dispatch({ type: 'learn', forget: null }))}
+      />
 
-      <div class="battle__panel">
-        {coach >= 0 && idle && !ended ? (
-          <div class="coach">
-            <span class="coach__who pixel">{tr(L('Prof. Fusain', 'Prof. Charcoal'))}</span>
-            <p class="pixel">{tr(COACH[coach])}</p>
-            {coach === 1 && <button class="btn btn--small btn--primary" onClick={() => setCoach(-1)}>OK</button>}
-          </div>
-        ) : (
-          <div class="battle__msg pixel" aria-live="polite">
-            <span>{ended ? [msg, ...rewardLines].filter(Boolean).join(' ') : prompt}</span>
-          </div>
-        )}
-
-        {ended ? (
-          <button class="gba-btn gba-btn--attack gba-continue" onClick={() => props.onEnd(st.result!, stRef.current!)}>
-            {t('battle.btn.continue')} ▶
-          </button>
-        ) : learn && learner ? (
-          <div class="gba-sub">
-            <div class="pk-moves">
-              {learner.moves.map((s, i) => <MoveButton id={s.id} pp={s.pp} onClick={() => dispatch({ type: 'learn', forget: i })} />)}
-            </div>
-            <button class="gba-back gba-back--pass" onClick={() => dispatch({ type: 'learn', forget: null })}>
-              {tr(L('Ne pas apprendre {m}', 'Don’t learn {m}'), { m: tr(move(learn.move).name) })}
-            </button>
-          </div>
-        ) : panel === 'main' ? (
-          <div class="gba-menu">
-            <button class={`gba-btn gba-btn--attack ${coach === 0 ? 'is-coach' : ''}`} disabled={!idle} onClick={() => setMenu('fight')}>
-              {t('battle.menu.attack')}
-            </button>
-            <button class="gba-btn gba-btn--bag" disabled={!idle} onClick={() => setMenu('bag')}>{t('battle.menu.bag')}</button>
-            <button class="gba-btn gba-btn--team" disabled={!idle} onClick={() => setMenu('party')}>{tr(L('Bestioles', 'Critters'))}</button>
-            <button class="gba-btn gba-btn--run" disabled={!idle} onClick={() => dispatch({ type: 'run' })}>{t('battle.menu.run')}</button>
-          </div>
-        ) : panel === 'fight' ? (
-          <div class="gba-sub">
-            <div class="pk-moves">
-              {usableSlots(active).length
-                ? active.moves.map((s, i) => <MoveButton id={s.id} pp={s.pp} disabled={!idle || s.pp <= 0} onClick={() => dispatch({ type: 'move', slot: i })} />)
-                : <MoveButton id="lutte" disabled={!idle} onClick={() => dispatch({ type: 'move', slot: -1 })} />}
-            </div>
-            <button class="gba-back" onClick={back}>← {t('battle.btn.back')}</button>
-          </div>
-        ) : panel === 'bag' ? (
-          <div class="gba-sub">
-            {bagItems.map((it) => (
-              <button class={`bag-row ${it.kind === 'ball' ? 'bag-row--blank' : ''}`} disabled={!idle} onClick={() => (it.kind === 'ball' ? useItemNow(it.id) : setItemTarget(it.id))}>
-                <span class="bag-row__icon">{it.icon}</span>
-                <span class="bag-row__text"><b>{tr(it.name)} ×{bag[it.id]}</b><small>{tr(it.desc)}</small></span>
-                <span class="bag-row__state is-ok">▶</span>
-              </button>
-            ))}
-            {!bagItems.length && <p class="gba-empty">{tr(L('Ton sac est vide.', 'Your bag is empty.'))}</p>}
-            <button class="gba-back" onClick={back}>← {t('battle.btn.back')}</button>
-          </div>
-        ) : forced ? (
-          partyList((i) => dispatch({ type: 'replace', to: i }), (i) => me.party[i].hp > 0 && i !== me.active)
-        ) : itemTarget ? (
-          partyList((i) => useItemNow(itemTarget, i), (i) => itemUsable(st, itemTarget, i))
-        ) : partyPick !== null ? (
-          <div class="gba-sub">
-            <p class="gba-empty">{tr(creature(me.party[partyPick].species).name)}</p>
-            <div class="gba-row">
-              <button
-                class="gba-back gba-back--pass"
-                disabled={!idle || partyPick === me.active || me.party[partyPick].hp <= 0}
-                onClick={() => dispatch({ type: 'switch', to: partyPick })}
-              >
-                {tr(L('Envoyer', 'Shift'))}
-              </button>
-              <button class="gba-back" onClick={() => setSummary(me.party[partyPick])}>{tr(L('Résumé', 'Summary'))}</button>
-            </div>
-            <button class="gba-back" onClick={() => setPartyPick(null)}>← {t('battle.btn.back')}</button>
-          </div>
-        ) : (
-          partyList((i) => setPartyPick(i), () => true)
-        )}
-      </div>
-
-      {summary && <MonSummary mon={summary} onClose={() => setSummary(null)} />}
-    </div>
-  );
-}
-
-const COACH = [
-  L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
-  L('Dans le SAC : tes Potions et tes Crayon-balls. BESTIOLES sert à changer de Bestiole, et FUITE marche contre les Bestioles sauvages.', 'The BAG holds your Potions and Pencil Balls. CRITTERS lets you switch, and RUN works against wild Critters.'),
-];
-
-export function StatusTag({ s }: { s: NonNullable<Mon['status']> }) {
-  return <i class="pk-status" style={{ background: STATUSES[s].color }}>{tr(STATUSES[s].tag)}</i>;
-}
-
-export function HpBar({ hp, max }: { hp: number; max: number }) {
-  const pct = Math.max(0, (hp / max) * 100);
-  return (
-    <span class={`hpbar hpbar--${pct > 50 ? 'ok' : pct > 20 ? 'mid' : 'low'}`}>
-      <span style={{ width: `${pct}%` }} />
-    </span>
-  );
-}
-
-function HpBox({ st, side }: { st: BattleState; side: Side }) {
-  const m = activeMon(st.sides[side]);
-  const max = maxHp(m);
-  const xpPct = side === 0 && m.level < 50 ? ((m.xp - xpAt(m.level)) / (xpAt(m.level + 1) - xpAt(m.level))) * 100 : 0;
-  return (
-    <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
-      <div class="pk-hp__top">
-        <b>{side === 0 ? tr(creature(m.species).name) : monName(st, 1)}</b>
-        {m.status && <StatusTag s={m.status} />}
-        <span>{tr(L('N.{l}', 'Lv{l}'), { l: m.level })}</span>
-      </div>
-      <div class="pk-hp__bar"><small>{tr(L('PV', 'HP'))}</small><HpBar hp={m.hp} max={max} /></div>
-      {side === 0 && (
-        <>
-          <div class="pk-hp__num">{m.hp}/{max}</div>
-          <div class="pk-xp"><span style={{ width: `${Math.max(0, Math.min(100, xpPct))}%` }} /></div>
-        </>
+      {overlay?.kind === 'bag' && (
+        <BagView
+          bag={bag}
+          context="battle"
+          wild={st.kind === 'wild'}
+          onClose={() => setOverlay(null)}
+          onUse={(id) => {
+            if (item(id).kind === 'ball') {
+              setOverlay(null);
+              useItemNow(id);
+            } else setOverlay({ kind: 'target', item: id });
+          }}
+        />
+      )}
+      {overlay?.kind === 'target' && (
+        <PartyView
+          party={me.party}
+          mode="target"
+          active={me.active}
+          canPick={(i) => itemUsable(st, overlay.item, i)}
+          message={tr(L('Utiliser {i} sur quelle Bestiole ?', 'Use {i} on which Critter?'), { i: tr(item(overlay.item).name) })}
+          onPick={(i) => useItemNow(overlay.item, i)}
+          onClose={() => setOverlay({ kind: 'bag' })}
+        />
+      )}
+      {(overlay?.kind === 'party' || forced) && (
+        <PartyView
+          party={me.party}
+          mode={forced ? 'forced' : 'battle'}
+          active={me.active}
+          canPick={(i) => i !== me.active && me.party[i].hp > 0}
+          message={forced ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?')) : undefined}
+          onPick={(i) => dispatch(forced ? { type: 'replace', to: i } : { type: 'switch', to: i })}
+          onClose={() => setOverlay(null)}
+        />
+      )}
+      {overlay?.kind === 'learn' && learner && learn && (
+        <SummaryView
+          mon={learner}
+          onClose={() => setOverlay(null)}
+          learn={{ move: learn.move, onPick: (forget) => dispatch({ type: 'learn', forget }) }}
+        />
       )}
     </div>
-  );
-}
-
-export function MoveButton({ id, pp, disabled, onClick }: { id: string; pp?: number; disabled?: boolean; onClick: () => void }) {
-  const mv = move(id);
-  return (
-    <button class="pk-move" style={{ '--type': TYPES[mv.type].color }} disabled={disabled} onClick={onClick}>
-      <b>{tr(mv.name)}</b>
-      <small>{tr(TYPES[mv.type].name)}{pp !== undefined ? ` · PP ${pp}/${mv.pp}` : ''}</small>
-    </button>
   );
 }

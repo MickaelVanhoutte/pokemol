@@ -3,7 +3,9 @@ import type { LText } from '../i18n';
 export type TypeId =
   | 'plante' | 'feu' | 'eau' | 'electrique' | 'fee' | 'insecte'
   | 'normal' | 'spectre' | 'psy' | 'combat' | 'tenebres';
-export type Rarity = 'common' | 'uncommon' | 'rare' | 'holo';
+/** Battle background, drawn with colouring pencils (src/ui/battle/backdrops.ts). */
+export type Backdrop = 'grass' | 'forest' | 'cave' | 'tower' | 'lab' | 'beach' | 'city' | 'volcano' | 'sketch';
+export type Rarity = 'common' | 'uncommon' | 'rare' | 'legendary';
 /** Major status, kept outside battles like in the GBA games. */
 export type Major = 'sleep' | 'paralyze' | 'poison' | 'burn';
 export type StatKey = 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe';
@@ -69,13 +71,12 @@ export interface SpeciesDef {
   faces?: 'left' | 'right';
 }
 
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball';
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key';
 
 export interface ItemDef {
   id: string;
   name: LText;
   desc: LText;
-  icon: string;
   price: number;
   kind: ItemKind;
   /** HP healed (heal), % HP on revive, or catch bonus ×10 for balls. */

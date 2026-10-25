@@ -14,61 +14,54 @@
 .ow-canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
 .ow__mapname {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #fdfaf0;
-  color: #22183a;
-  border: 3px solid #2a2140;
-  border-radius: 8px;
-  padding: 4px 12px;
-  font-size: 1.1rem;
-  animation: slideIn 0.3s ease;
+  top: 8px;
+  left: 8px;
   z-index: 5;
+  font-size: 1.2rem;
+  padding: 0 10px;
+  animation: slideIn 0.3s ease;
 }
-@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } }
+@keyframes slideIn { from { transform: translateY(-40px); } }
 .ow__menu-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   z-index: 6;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  border: 3px solid #2a2140;
-  background: #fdfaf0;
-  color: #22183a;
-  font-size: 1.4rem;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  display: grid;
+  place-items: center;
   cursor: pointer;
+  background: var(--paper) padding-box;
+  border: 8px solid transparent;
+  border-image: var(--pencil-frame) 14 / 8px round;
 }
 .ow__toast {
   position: absolute;
   top: 64px;
   left: 50%;
   transform: translateX(-50%);
-  background: #2a2140;
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 10px;
   z-index: 40;
+  white-space: nowrap;
   animation: pop 0.3s ease;
 }
-.ow__cards { flex-direction: column; display: flex; gap: 14px; align-items: center; justify-content: center; }
-.ow__cards h2 { margin: 0; color: #fff; text-align: center; font-size: clamp(1.2rem, 4vw, 1.8rem); text-shadow: 0 3px 0 #2a2140; }
-.ow__cards-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+@keyframes pop { from { transform: translateX(-50%) scale(0.6); opacity: 0; } }
 
-.menu {
-  background: #fdfaf0;
-  color: #22183a;
-  border: 4px solid #2a2140;
-  border-radius: 14px;
-  padding: 14px;
-  width: min(360px, 100%);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+/* FRLG start menu: list on the right, description box at the bottom */
+.startmenu {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(20, 14, 30, 0.2);
+  animation: fade-in 0.12s ease;
 }
-.menu__head { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 12px; font-size: 1.05rem; }
-.menu__list, .menu__bag { display: flex; flex-direction: column; gap: 8px; }
-.menu__bag p { margin: 2px 0; }
-.menu .btn { text-align: left; }
+.startmenu__list { min-width: 11em; max-width: 72vw; }
+.startmenu__list .mlist__item { font-size: 1.25rem; }
+.startmenu__desc { align-self: stretch; }
+.startmenu__text { font-size: 1.15rem; min-height: 3.2em; display: flex; align-items: center; }
+.startmenu__save { display: flex; gap: 6px; align-items: flex-end; }
+.startmenu__save .startmenu__text { flex: 1; }
 
 /* touch controls: shown on touch devices */
 .touch { display: none; }
@@ -78,27 +71,38 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
-    background: linear-gradient(#3a2f6b, #2a2148);
-    border-top: 3px solid #120c22;
+    background: #d8c7a0;
+    background-image: repeating-linear-gradient(90deg, rgba(120, 90, 40, 0.07) 0 2px, transparent 2px 9px);
+    border-top: 3px solid var(--ink);
     flex: none;
   }
 }
-.dpad { position: relative; width: 138px; height: 138px; flex: none; }
+/* floating joystick (appears where the screen is touched) */
+.joy {
+  position: fixed; z-index: 45; pointer-events: none;
+  width: 104px; height: 104px; margin: -52px 0 0 -52px;
+  border-radius: 50%;
+  background: rgba(255, 250, 240, 0.35);
+  border: 3px dashed rgba(43, 37, 54, 0.6);
+  display: grid; place-items: center;
+}
+.joy__knob {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--ink);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+.touch__hint { margin: 0; flex: 1; font-family: var(--pixel); font-synthesis: none; color: #6b5a3a; font-size: 1rem; padding-right: 8px; }
 .dpad button, .ab button {
   position: absolute;
-  border: 3px solid #120c22;
-  background: #514682;
-  color: #d8d0ff;
+  border: 3px solid var(--ink);
+  background: #fffaf0;
+  color: var(--ink);
   font-size: 1.1rem;
   touch-action: none;
   cursor: pointer;
 }
-.dpad button:active, .ab button:active { background: #7a6cc0; }
-.dpad__up { left: 46px; top: 0; width: 46px; height: 50px; border-radius: 10px 10px 4px 4px; }
-.dpad__down { left: 46px; bottom: 0; width: 46px; height: 50px; border-radius: 4px 4px 10px 10px; }
-.dpad__left { left: 0; top: 46px; width: 50px; height: 46px; border-radius: 10px 4px 4px 10px; }
-.dpad__right { right: 0; top: 46px; width: 50px; height: 46px; border-radius: 4px 10px 10px 4px; }
-.ab { position: relative; width: 150px; height: 110px; flex: none; }
+.ab button:active { background: #f2e4bd; }
+.ab { position: relative; width: 150px; height: 96px; flex: none; }
 .ab button { width: 64px; height: 64px; border-radius: 50%; font-family: var(--pixel); font-synthesis: none; font-size: 1.5rem; }
 .ab__a { right: 0; top: 0; background: #d64545 !important; color: #fff !important; }
 .ab__b { left: 0; bottom: 0; background: #e6a23a !important; color: #fff !important; }

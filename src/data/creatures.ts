@@ -119,7 +119,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '011', slug: 'ombrouille', name: L('Ombrouille', 'Gloomgrin'), kind: L('Bestiole Ombre', 'Shadow Critter'),
     type: 'spectre', base: { hp: 62, atk: 70, def: 60, spa: 125, spd: 75, spe: 110 },
-    catchRate: 45, baseExp: 190, rarity: 'holo', evolvesFrom: '010',
+    catchRate: 45, baseExp: 190, rarity: 'legendary', evolvesFrom: '010',
     learnset: [[1, 'bouh'], [1, 'brouillard'], [1, 'coup-en-douce'], [5, 'langue-fantome'], [9, 'regard-hypnotique'],
       [13, 'grimace'], [16, 'mains-de-brume'], [19, 'cauchemar'], [29, 'ombre-farceuse'], [35, 'rire-sinistre']],
     dex: L(

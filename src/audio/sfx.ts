@@ -1,22 +1,10 @@
 /** Tiny chiptune sound effects synthesized with WebAudio (no audio files needed). */
+import { prefs } from '../state/prefs';
 
-const KEY = 'atelier-bestioles.sfx';
 let ctx: AudioContext | null = null;
 
 export function sfxEnabled(): boolean {
-  try {
-    return localStorage.getItem(KEY) !== 'off';
-  } catch {
-    return true;
-  }
-}
-
-export function setSfxEnabled(on: boolean) {
-  try {
-    localStorage.setItem(KEY, on ? 'on' : 'off');
-  } catch {
-    // storage unavailable
-  }
+  return prefs.value.sound;
 }
 
 function audio(): AudioContext | null {

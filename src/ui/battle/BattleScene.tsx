@@ -1,0 +1,66 @@
+import { L, tr } from '../../i18n';
+import { artUrl, creature, mirrored } from '../../data/creatures';
+import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
+import { maxHp, xpAt, MAX_LEVEL } from '../../engine/pk/creature';
+import { HpBar, PixelIcon, StatusTag, XpBar, lv } from '../paper';
+import { monName } from './messages';
+import { backdropUrl, platformUrl } from './backdrops';
+import type { Backdrop } from '../../data/schema';
+
+export type Fx = Partial<Record<Side, string>>;
+export interface BallFx { shakes: number; caught: boolean; key: number }
+
+function HpBox({ st, side }: { st: BattleState; side: Side }) {
+  const m = activeMon(st.sides[side]);
+  const max = maxHp(m);
+  const xpPct = side === 0 && m.level < MAX_LEVEL ? ((m.xp - xpAt(m.level)) / (xpAt(m.level + 1) - xpAt(m.level))) * 100 : 0;
+  return (
+    <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
+      <div class="pk-hp__top">
+        <b>{side === 0 ? tr(creature(m.species).name) : monName(st, 1)}</b>
+        {m.status && <StatusTag s={m.status} />}
+        <span>{lv(m.level)}</span>
+      </div>
+      <div class="pk-hp__bar"><span class="hp-label">{tr(L('PV', 'HP'))}</span><HpBar hp={m.hp} max={max} /></div>
+      {side === 0 && (
+        <>
+          <div class="pk-hp__num">{m.hp}/{max}</div>
+          <XpBar pct={xpPct} />
+        </>
+      )}
+    </div>
+  );
+}
+
+/** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
+export function BattleScene({ view, fx, ball, captured, backdrop }: { view: BattleState; fx: Fx; ball: BallFx | null; captured: boolean; backdrop: Backdrop }) {
+  const mine = activeMon(view.sides[0]);
+  const foe = activeMon(view.sides[1]);
+  const mySp = creature(mine.species);
+  const foeSp = creature(foe.species);
+  return (
+    <div class="pk-scene" style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
+      <HpBox st={view} side={1} />
+      <div class="pk-plat pk-plat--foe">
+        <img
+          class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
+          src={artUrl(foeSp)}
+          alt=""
+        />
+        {ball && (
+          <div class={`pk-ball shakes-${ball.shakes} ${ball.caught ? 'is-caught' : ''}`} key={ball.key}>
+            <PixelIcon id="crayon-ball" size={32} />
+          </div>
+        )}
+      </div>
+      <div class="pk-plat pk-plat--me">
+        <img
+          class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
+          src={artUrl(mySp)}
+          alt=""
+        />
+      </div>
+      <HpBox st={view} side={0} />
+    </div>
+  );
+}

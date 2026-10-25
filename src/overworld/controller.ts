@@ -11,6 +11,7 @@ import { createMon, evolutionOf, evolve, learnMove, type Mon } from '../engine/p
 import { addItem, addMon, healParty, partyAlive, persist, save, see, takeItem, update } from '../state/game';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
+import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
 import { DIRS, Game, type Actor } from './game';
 import type { MapBuilding, NpcDef, PickupDef, WarpTarget } from './mapTypes';
@@ -263,7 +264,7 @@ export interface FightOptions {
   trainer?: TrainerDef;
   /** First lab battle: losing is fine, no blackout. */
   friendly?: boolean;
-  backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
+  backdrop?: Backdrop;
   tutorial?: boolean;
 }
 

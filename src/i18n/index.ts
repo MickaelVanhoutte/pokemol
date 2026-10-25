@@ -30,23 +30,31 @@ export function setLocale(next: Locale) {
   if (typeof document !== 'undefined') document.documentElement.lang = next;
 }
 
-/** French puts a space before ! ? : ; — make it non-breaking so the mark never wraps alone. */
-function typo(s: string): string {
+/** Grammatical gender of the player, for French agreements written `{g:endormie|endormi}`. */
+export const gender = signal<'f' | 'm'>('f');
+
+/** Placeholders filled in every text (`{name}`, `{rival}`…), set from the save. */
+const globals: Record<string, string> = {};
+export function setGlobalVars(vars: Record<string, string>) {
+  Object.assign(globals, vars);
+}
+
+function fill(s: string, vars?: Record<string, string | number>): string {
+  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
+  for (const [k, v] of Object.entries(globals)) s = s.replaceAll(`{${k}}`, v);
+  s = s.replace(/\{g:([^|}]*)\|([^}]*)\}/g, (_, f: string, m: string) => (gender.value === 'f' ? f : m));
+  // French puts a space before ! ? : ; — make it non-breaking so the mark never wraps alone
   return locale.value === 'fr' ? s.replace(/ ([!?:;»])/g, '\u00a0$1') : s;
 }
 
 /** UI string by key, with `{name}` placeholders. */
 export function t(key: StringKey, vars?: Record<string, string | number>): string {
-  let s = dictionaries[locale.value][key] ?? key;
-  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
-  return typo(s);
+  return fill(dictionaries[locale.value][key] ?? key, vars);
 }
 
-/** Localized data text (card names, attack texts, dialog lines). */
+/** Localized data text (names, move texts, dialog lines). */
 export function tr(text: LText, vars?: Record<string, string | number>): string {
-  let s = text[locale.value];
-  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
-  return typo(s);
+  return fill(text[locale.value], vars);
 }
 
 export const L = (fr: string, en: string): LText => ({ fr, en });

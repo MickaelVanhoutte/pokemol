@@ -13,6 +13,7 @@ export type Screen =
   | { id: 'pc' }
   | { id: 'shop' }
   | { id: 'machine' }
+  | { id: 'trainercard' }
   | { id: 'credits'; fromWorld?: boolean };
 
 export const screen = signal<Screen>({ id: 'title' });

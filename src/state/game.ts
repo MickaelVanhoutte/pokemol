@@ -1,4 +1,5 @@
-import { signal } from '@preact/signals';
+import { effect, signal } from '@preact/signals';
+import { gender, setGlobalVars } from '../i18n';
 import { healMon, type Mon } from '../engine/pk/creature';
 import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 
@@ -7,6 +8,14 @@ const KEY = 'atelier-bestioles.save';
 export const save = signal<SaveData | null>(null);
 /** A save from an older version of the game was found (it can't be loaded). */
 export const outdatedSave = signal(false);
+
+// texts use {name} and agree with the player's gender
+effect(() => {
+  const d = save.value;
+  if (!d) return;
+  setGlobalVars({ name: d.player.name });
+  gender.value = d.player.avatar % 2 === 0 ? 'f' : 'm';
+});
 
 function readRaw(): unknown {
   try {
@@ -20,7 +29,13 @@ function readRaw(): unknown {
 function migrate(raw: unknown): SaveData | null {
   if (!raw || typeof raw !== 'object') return null;
   const s = raw as SaveData;
-  return s.version === SAVE_VERSION ? s : null;
+  if (s.version !== SAVE_VERSION) return null;
+  // "Gomme magique" became "Retouche" (erasers are the villains now)
+  if (s.bag.gomme) {
+    s.bag.retouche = (s.bag.retouche ?? 0) + s.bag.gomme;
+    delete s.bag.gomme;
+  }
+  return s;
 }
 
 export function hasSave(): boolean {

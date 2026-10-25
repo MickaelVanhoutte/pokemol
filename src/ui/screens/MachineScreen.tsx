@@ -7,7 +7,7 @@ import { newSeed, pickWeighted } from '../../engine/rng';
 import { backToWorld } from '../../overworld/controller';
 import { addMon, save, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
-import { TypeBadge } from '../MonSummary';
+import { Frame, TypeBadge, Window } from '../paper';
 import '../screens.css';
 
 export const MACHINE_PRICE = 1000;
@@ -43,29 +43,24 @@ export function MachineScreen() {
     }, 1400);
   };
   return (
-    <div class="screen mscreen">
-      <div class="screen__bar">
-        <button class="btn btn--small" onClick={backToWorld}>← {tr(L('Sortir', 'Leave'))}</button>
-        <h1>{tr(L('Machine à Bestioles', 'Critter Machine'))}</h1>
-        <span class="money">{d.money} ₽</span>
-      </div>
-      <div class="machine">
+    <Frame title={tr(L('Machine à Bestioles', 'Critter Machine'))} onBack={backToWorld} backLabel={tr(L('Sortir', 'Leave'))} right={<Window class="money-win">{d.money} ₽</Window>}>
+      <Window class="machine">
         <p>{tr(L('Pour {p} ₽, la machine dessine une Bestiole surprise. Les plus rares sortent moins souvent !', 'For ₽{p}, the machine draws a surprise Critter. Rare ones come out less often!'), { p: MACHINE_PRICE })}</p>
         <div class={`machine__box ${spinning ? 'is-spinning' : ''}`}>
           {got && <img key={got.mon.uid} src={artUrl(creature(got.mon.species))} alt="" />}
         </div>
         {got && (
-          <p class="pixel">
+          <p>
             {tr(L('{n} (N.{l}) rejoint {w} !', '{n} (Lv{l}) joins {w}!'), {
               n: tr(creature(got.mon.species).name), l: got.mon.level,
               w: got.where === 'party' ? tr(L('ton équipe', 'your party')) : tr(L('le PC', 'the PC')),
             })} <TypeBadge type={creature(got.mon.species).type} />
           </p>
         )}
-        <button class="btn btn--primary" disabled={d.money < MACHINE_PRICE || spinning} onClick={run}>
-          ✦ {tr(L('Lancer la machine', 'Start the machine'))} · {MACHINE_PRICE} ₽
+        <button class="pbtn pbtn--accent" disabled={d.money < MACHINE_PRICE || spinning} onClick={run}>
+          {tr(L('Lancer la machine', 'Start the machine'))} · {MACHINE_PRICE} ₽
         </button>
-      </div>
-    </div>
+      </Window>
+    </Frame>
   );
 }

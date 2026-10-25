@@ -1,3 +1,4 @@
+import type { Backdrop } from '../data/schema';
 import type { LText } from '../i18n';
 import type { Dir } from '../save/schema';
 import type { BuildingDef } from './buildings';
@@ -86,7 +87,7 @@ export interface MapDef {
   triggers?: TriggerDef[];
   items?: PickupDef[];
   encounters?: EncounterTable;
-  backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
+  backdrop?: Backdrop;
   /** Color wash drawn over the map (e.g. dusk in the woods). */
   tint?: string;
   /** Drifting fog wisps. */

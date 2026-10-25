@@ -1,76 +1,33 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { closeDialog, dialog } from '../overworld/dialog';
-import { sfx } from '../audio/sfx';
+import { MenuList, TextBox, Window } from './paper';
 import './dialog.css';
 
-/** GBA-style text box with a typewriter effect; A / Enter / Space / tap advances. */
+/** Overworld text on notebook paper; questions get a choice window with the pencil cursor. */
 export function DialogBox() {
   const d = dialog.value;
-  const [shown, setShown] = useState(0);
-  const [choice, setChoice] = useState(0);
-
-  useEffect(() => {
-    setShown(0);
-    setChoice(0);
-    if (!d) return;
-    let n = 0;
-    const id = setInterval(() => {
-      n += 2;
-      setShown(n);
-      if (n >= d.text.length) clearInterval(id);
-    }, 22);
-    return () => clearInterval(id);
-  }, [d]);
-
-  const done = !!d && shown >= d.text.length;
-
-  const advance = () => {
-    if (!d) return;
-    if (!done) return setShown(d.text.length);
-    sfx.blip();
-    closeDialog(choice);
-  };
-
-  useEffect(() => {
-    if (!d) return;
-    const onKey = (e: KeyboardEvent) => {
-      const k = e.key;
-      if (['Enter', ' ', 'z', 'Z', 'x', 'X', 'Escape', 'Backspace'].includes(k)) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (d.choices && done && (k === 'x' || k === 'X' || k === 'Escape' || k === 'Backspace')) {
-          closeDialog(d.choices.length - 1);
-          return;
-        }
-        advance();
-      } else if (d.choices && (k === 'ArrowUp' || k === 'ArrowDown' || k === 'w' || k === 's')) {
-        e.preventDefault();
-        e.stopPropagation();
-        const dir = k === 'ArrowUp' || k === 'w' ? -1 : 1;
-        setChoice((c) => (c + dir + d.choices!.length) % d.choices!.length);
-      }
-    };
-    window.addEventListener('keydown', onKey, true);
-    return () => window.removeEventListener('keydown', onKey, true);
-  });
-
+  const [doneFor, setDoneFor] = useState(0);
   if (!d) return null;
+  const done = doneFor === d.id;
   return (
     <div class="dialog-layer">
       {d.choices && done && (
-        <div class="dialog-choices pixel">
-          {d.choices.map((c, i) => (
-            <button class={i === choice ? 'is-on' : ''} onClick={() => closeDialog(i)} onPointerEnter={() => setChoice(i)}>
-              {i === choice ? '▶ ' : '  '}{c}
-            </button>
-          ))}
-        </div>
+        <Window class="dialog-choices">
+          <MenuList
+            items={d.choices.map((c, i) => ({ label: c, onSelect: () => closeDialog(i) }))}
+            onCancel={() => closeDialog(d.choices!.length - 1)}
+          />
+        </Window>
       )}
-      <div class="dialog pixel" onClick={() => !d.choices && advance()}>
-        {d.speaker && <div class="dialog__speaker">{d.speaker}</div>}
-        <p>{d.text.slice(0, shown)}</p>
-        {done && !d.choices && <span class="dialog__next">▼</span>}
-      </div>
+      <TextBox
+        key={d.id}
+        class="dialog"
+        text={d.text}
+        speaker={d.speaker}
+        keys={!d.choices}
+        onDone={() => setDoneFor(d.id)}
+        onAdvance={d.choices ? undefined : () => closeDialog(0)}
+      />
     </div>
   );
 }

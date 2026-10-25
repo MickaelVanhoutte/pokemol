@@ -3,7 +3,9 @@ import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
 import { getGame, menuOpen, monOverlay, openScreen, toast } from '../../overworld/controller';
 import { dialog } from '../../overworld/dialog';
-import { exportSave, persist, save } from '../../state/game';
+import { persist, save } from '../../state/game';
+import { sfx } from '../../audio/sfx';
+import { MenuList, PixelIcon, TextBox, Window, YesNo } from '../paper';
 import { go } from '../../state/router';
 import { MonPick } from '../MonPick';
 import { DialogBox } from '../DialogBox';
@@ -21,6 +23,7 @@ function key(k: string, down: boolean) {
 export function OverworldScreen() {
   const host = useRef<HTMLDivElement>(null);
   const [mapName, setMapName] = useState<string | null>(null);
+  const joystick = useJoystick();
 
   useEffect(() => {
     const g = getGame();
@@ -68,17 +71,18 @@ export function OverworldScreen() {
   }, [currentMap]);
 
   return (
-    <div class="ow">
+    <div class="ow" {...joystick.handlers}>
       <div class="ow__stage">
         <div class="ow__view" ref={host} />
-        {mapName && <div class="ow__mapname pixel">{mapName}</div>}
-        <button class="ow__menu-btn pixel" onClick={() => (menuOpen.value = true)} aria-label="Menu">☰</button>
-        {toast.value && <div class="ow__toast pixel">{toast.value}</div>}
+        {mapName && <Window class="ow__mapname">{mapName}</Window>}
+        <button class="ow__menu-btn" onClick={() => (menuOpen.value = true)} aria-label="Menu"><PixelIcon id="bag" size={28} /></button>
+        {toast.value && <Window class="ow__toast">{toast.value}</Window>}
         <DialogBox />
       </div>
       {monOverlay.value && <MonOverlay />}
       {menuOpen.value && <StartMenu />}
       <TouchControls />
+      {joystick.view}
     </div>
   );
 }
@@ -101,44 +105,112 @@ function MonOverlay() {
 function StartMenu() {
   const d = save.value!;
   const close = () => (menuOpen.value = false);
-  const [saved, setSaved] = useState(false);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'x' || e.key === 'X' || e.key === 'm') close();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  const [desc, setDesc] = useState(0);
+  const [saving, setSaving] = useState<'ask' | 'done' | null>(null);
   const open = (sc: Parameters<typeof openScreen>[0]) => {
     close();
     void openScreen(sc);
   };
+  const items = [
+    ...(d.flags.dex ? [{ icon: 'dex', label: tr(L('BESTIODEX', 'CRITTERDEX')), info: L('Les Bestioles que tu as vues et attrapées.', 'Critters you have seen and caught.'), onSelect: () => open({ id: 'dex' }) }] : []),
+    ...(d.party.length ? [{ icon: 'party', label: tr(L('BESTIOLES', 'CRITTERS')), info: L('Ton équipe : résumés et ordre de passage.', 'Your party: summaries and order.'), onSelect: () => open({ id: 'party' }) }] : []),
+    { icon: 'bag', label: tr(L('SAC', 'BAG')), info: L('Tes objets, rangés dans ta trousse.', 'Your items, packed in your pencil case.'), onSelect: () => open({ id: 'bag' }) },
+    { icon: 'card', label: d.player.name.toUpperCase(), info: L('Ta carte de dresseur et tes badges.', 'Your trainer card and badges.'), onSelect: () => open({ id: 'trainercard' }) },
+    { icon: 'save', label: tr(L('SAUVER', 'SAVE')), info: L('Enregistrer ta progression.', 'Save your progress.'), onSelect: () => setSaving('ask') },
+    { icon: 'options', label: tr(L('OPTIONS', 'OPTIONS')), info: L('Vitesse du texte, sons, langue, sauvegarde.', 'Text speed, sound, language, save file.'), onSelect: () => { close(); go({ id: 'settings', back: { id: 'overworld' } }); } },
+    { icon: 'close', label: tr(L('FERMER', 'EXIT')), info: L('Fermer ce menu.', 'Close this menu.'), onSelect: close },
+  ];
   return (
-    <div class="overlay" onClick={close}>
-      <div class="menu pixel" onClick={(e) => e.stopPropagation()}>
-        <div class="menu__head">
-          <b>{d.player.name}</b>
-          <span>{d.money} ₽</span>
-          <span>🏅 {d.badges.length}</span>
-        </div>
-        <div class="menu__list">
-          {d.flags.dex ? <button class="btn" onClick={() => open({ id: 'dex' })}>📖 {tr(L('Bestiodex', 'Critterdex'))}</button> : null}
-          <button class="btn" disabled={!d.party.length} onClick={() => open({ id: 'party' })}>🐾 {tr(L('Bestioles', 'Critters'))}</button>
-          <button class="btn" onClick={() => open({ id: 'bag' })}>🎒 {tr(L('Sac', 'Bag'))}</button>
-          <button class="btn" onClick={() => { persist(); setSaved(true); }}>💾 {saved ? tr(L('Sauvegardé !', 'Saved!')) : tr(L('Sauvegarder', 'Save'))}</button>
-          <button class="btn" onClick={() => exportSave()}>⬇️ {tr(L('Exporter la sauvegarde', 'Export save'))}</button>
-          <button class="btn" onClick={() => { close(); go({ id: 'settings', back: { id: 'overworld' } }); }}>⚙️ {tr(L('Options', 'Options'))}</button>
-          <button class="btn btn--ghost" onClick={() => { persist(); close(); go({ id: 'title' }); }}>🏠 {tr(L('Écran titre', 'Title screen'))}</button>
-          <button class="btn btn--primary" onClick={close}>{tr(L('Fermer', 'Close'))}</button>
-        </div>
+    <div class="startmenu" onClick={close}>
+      <div onClick={(e) => e.stopPropagation()}>
+        <Window class="startmenu__list">
+          <MenuList items={items} active={!saving} onCancel={close} onCursor={setDesc} />
+        </Window>
+      </div>
+      <div class="startmenu__desc" onClick={(e) => e.stopPropagation()}>
+        {saving === 'ask' ? (
+          <div class="startmenu__save">
+            <Window seyes class="startmenu__text">{tr(L('Sauvegarder la partie ?', 'Would you like to save the game?'))}</Window>
+            <YesNo onAnswer={(yes) => {
+              if (!yes) return setSaving(null);
+              persist();
+              sfx.confirm();
+              setSaving('done');
+            }} />
+          </div>
+        ) : saving === 'done' ? (
+          <TextBox text={tr(L('{name} a sauvegardé la partie.', '{name} saved the game.'))} keys onAdvance={close} />
+        ) : (
+          <Window seyes class="startmenu__text">{tr(items[desc]?.info ?? items[0].info)}</Window>
+        )}
       </div>
     </div>
   );
 }
 
+const JOY_R = 44;
+
+/**
+ * Floating joystick: touching anywhere on the map makes it appear under the finger.
+ * Drag to walk, drag far to run, a quick tap is the A button (talk, read, next line).
+ */
+function useJoystick() {
+  const [joy, setJoy] = useState<{ x: number; y: number; kx: number; ky: number } | null>(null);
+  const cur = useRef<{ id: number; x: number; y: number; t: number; moved: boolean; dir: Dir | null } | null>(null);
+  const setDir = (dir: Dir | null) => {
+    const c = cur.current;
+    if (!c || c.dir === dir) return;
+    const g = getGame();
+    if (c.dir) g.input.release(c.dir);
+    if (dir) g.input.press(dir);
+    c.dir = dir;
+  };
+  const end = (e: PointerEvent) => {
+    const c = cur.current;
+    if (!c || c.id !== e.pointerId) return;
+    setDir(null);
+    getGame().input.run = false;
+    // a tap is A, except while a question waits for an answer (tap the choices instead)
+    if (!c.moved && performance.now() - c.t < 350 && !dialog.value?.choices) {
+      key('z', true);
+      key('z', false);
+    }
+    cur.current = null;
+    setJoy(null);
+  };
+  const handlers = {
+    onPointerDown: (e: PointerEvent) => {
+      if (cur.current || menuOpen.value || monOverlay.value) return;
+      if ((e.target as HTMLElement).closest('button, .dialog, .dialog-choices, .startmenu')) return;
+      cur.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, dir: null };
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      setJoy({ x: e.clientX, y: e.clientY, kx: 0, ky: 0 });
+    },
+    onPointerMove: (e: PointerEvent) => {
+      const c = cur.current;
+      if (!c || c.id !== e.pointerId) return;
+      const dx = e.clientX - c.x, dy = e.clientY - c.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 10) c.moved = true;
+      const k = Math.min(1, JOY_R / Math.max(dist, 1));
+      setJoy({ x: c.x, y: c.y, kx: dx * k, ky: dy * k });
+      setDir(dist < 14 ? null : Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up');
+      getGame().input.run = dist > JOY_R * 1.6;
+    },
+    onPointerUp: end,
+    onPointerCancel: end,
+  };
+  const view = joy && (
+    <div class="joy" style={{ left: `${joy.x}px`, top: `${joy.y}px` }} aria-hidden="true">
+      <span class="joy__knob" style={{ transform: `translate(${joy.kx}px, ${joy.ky}px)` }} />
+    </div>
+  );
+  return { handlers, view };
+}
+
 function TouchControls() {
   const hold = (k: string) => ({
-    onPointerDown: (e: PointerEvent) => { e.preventDefault(); (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); key(k, true); },
+    onPointerDown: (e: PointerEvent) => { e.preventDefault(); e.stopPropagation(); (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); key(k, true); },
     onPointerUp: () => key(k, false),
     onPointerCancel: () => key(k, false),
     onPointerLeave: () => key(k, false),
@@ -146,15 +218,10 @@ function TouchControls() {
   const inDialog = !!dialog.value;
   return (
     <div class="touch">
-      <div class="dpad">
-        <button class="dpad__up" {...hold('ArrowUp')}>▲</button>
-        <button class="dpad__left" {...hold('ArrowLeft')}>◀</button>
-        <button class="dpad__right" {...hold('ArrowRight')}>▶</button>
-        <button class="dpad__down" {...hold('ArrowDown')}>▼</button>
-      </div>
+      <p class="touch__hint">{tr(L('Touche l’écran et glisse pour marcher', 'Touch the screen and slide to walk'))}</p>
       <div class="ab">
         <button class="ab__b" {...hold('x')}>B</button>
-        <button class="ab__a" onPointerDown={(e) => { e.preventDefault(); key(inDialog ? 'Enter' : 'z', true); }}>A</button>
+        <button class="ab__a" onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); key(inDialog ? 'Enter' : 'z', true); }}>A</button>
       </div>
     </div>
   );

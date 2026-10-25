@@ -4,6 +4,8 @@ import { AVATARS, SpriteSheet } from '../../overworld/sprites';
 import { enterWorld, runScript } from '../../overworld/controller';
 import { newGame } from '../../state/game';
 import { go } from '../../state/router';
+import { Frame, Window } from '../paper';
+import '../screens.css';
 
 export function NewGameScreen() {
   const [name, setName] = useState('');
@@ -22,23 +24,19 @@ export function NewGameScreen() {
     void runScript('intro');
   };
   return (
-    <div class="screen newgame">
-      <div class="screen__bar">
-        <button class="btn btn--small" onClick={() => go({ id: 'title' })}>← {tr(L('Retour', 'Back'))}</button>
-        <h1>{tr(L('Nouvelle partie', 'New game'))}</h1>
-      </div>
-      <div class="newgame__panel">
-        <label class="pixel" for="pname">{tr(L('Comment t’appelles-tu ?', 'What’s your name?'))}</label>
+    <Frame title={tr(L('Nouvelle partie', 'New game'))} onBack={() => go({ id: 'title' })}>
+      <Window class="newgame__panel">
+        <label for="pname">{tr(L('Comment t’appelles-tu ?', 'What’s your name?'))}</label>
         <input
           id="pname"
-          class="newgame__input pixel"
+          class="newgame__input"
           maxLength={12}
           value={name}
           placeholder={tr(L('Ton prénom', 'Your name'))}
           onInput={(e) => setName((e.target as HTMLInputElement).value)}
           onKeyDown={(e) => e.key === 'Enter' && start()}
         />
-        <p class="pixel">{tr(L('Choisis ton personnage :', 'Choose your character:'))}</p>
+        <p>{tr(L('Choisis ton personnage :', 'Choose your character:'))}</p>
         <div class="newgame__avatars">
           {pics.map((src, i) => (
             <button class={`newgame__avatar ${i === avatar ? 'is-on' : ''}`} onClick={() => setAvatar(i)} aria-pressed={i === avatar}>
@@ -46,8 +44,8 @@ export function NewGameScreen() {
             </button>
           ))}
         </div>
-        <button class="btn btn--primary" onClick={start}>{tr(L('C’est parti !', 'Let’s go!'))}</button>
-      </div>
-    </div>
+        <button class="pbtn pbtn--accent" onClick={start}>{tr(L('C’est parti !', 'Let’s go!'))}</button>
+      </Window>
+    </Frame>
   );
 }

@@ -72,7 +72,7 @@ export const RARITIES: Record<Rarity, { name: LText; weight: number }> = {
   common: { name: L('Commune', 'Common'), weight: 60 },
   uncommon: { name: L('Peu commune', 'Uncommon'), weight: 28 },
   rare: { name: L('Rare', 'Rare'), weight: 10 },
-  holo: { name: L('Très rare', 'Very rare'), weight: 2 },
+  legendary: { name: L('Très rare', 'Very rare'), weight: 2 },
 };
 
 /** Major status labels, with the short GBA-style tag shown in HP boxes. */

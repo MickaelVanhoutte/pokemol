@@ -2,6 +2,8 @@ import { signal } from '@preact/signals';
 import { tr, type LText } from '../i18n';
 
 export interface DialogState {
+  /** Changes with every new box (the text box restarts its typewriter). */
+  id: number;
   text: string;
   speaker?: string;
   choices?: string[];
@@ -12,11 +14,12 @@ export interface DialogState {
 export const dialog = signal<DialogState | null>(null);
 
 type Text = LText | string;
+let nextId = 1;
 const str = (t: Text, vars?: Record<string, string | number>) => (typeof t === 'string' ? t : tr(t, vars));
 
 export function say(text: Text, speaker?: Text, vars?: Record<string, string | number>): Promise<void> {
   return new Promise((resolve) => {
-    dialog.value = { text: str(text, vars), speaker: speaker ? str(speaker) : undefined, resolve: () => resolve() };
+    dialog.value = { id: nextId++, text: str(text, vars), speaker: speaker ? str(speaker) : undefined, resolve: () => resolve() };
   });
 }
 
@@ -26,7 +29,7 @@ export async function sayAll(lines: Text[], speaker?: Text, vars?: Record<string
 
 export function ask(text: Text, choices: Text[], speaker?: Text, vars?: Record<string, string | number>): Promise<number> {
   return new Promise((resolve) => {
-    dialog.value = { text: str(text, vars), speaker: speaker ? str(speaker) : undefined, choices: choices.map((c) => str(c)), resolve };
+    dialog.value = { id: nextId++, text: str(text, vars), speaker: speaker ? str(speaker) : undefined, choices: choices.map((c) => str(c)), resolve };
   });
 }
 
