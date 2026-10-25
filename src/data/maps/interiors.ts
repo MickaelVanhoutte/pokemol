@@ -24,6 +24,7 @@ export const INTERIOR_MAPS: Record<string, MapDef> = {
     warps: [{ x: 5, y: 7, to: 'back' }],
     npcs: [
       { id: 'nurse', x: 5, y: 1, look: LOOKS.nurse, facing: 'down', script: 'nurse' },
+      { id: 'pilot', x: 9, y: 4, look: { hair: '#c0582a', shirt: '#f2c14e', pants: '#5a3a20', hat: '#d64545' }, facing: 'left', script: 'balloon' },
       { id: 'visitor', x: 1, y: 4, look: LOOKS.sailor, facing: 'right', text: [L('Le PC dans le coin range tes Bestioles quand tu en as plus de six.', 'The PC in the corner stores your Critters when you have more than six.')] },
     ],
   },

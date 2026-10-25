@@ -1,0 +1,91 @@
+import { L } from '../../i18n';
+import type { MapDef } from '../../overworld/mapTypes';
+import { LOOKS } from '../../overworld/sprites';
+
+/** The end of the dream: a world not coloured in yet, the edge of the page, and waking up. */
+export const DREAM_MAPS: Record<string, MapDef> = {
+  routeBlanche: {
+    id: 'routeBlanche',
+    name: L('Route Blanche', 'Blank Road'),
+    border: 'sketchtree',
+    backdrop: 'sketch',
+    rows: [
+      'YYYYYYYYYnnYYYYYYYYY',
+      'YnnnnnnnnnnnnnnnnnnY',
+      'YnnYnnnnnnnnnnnnYnnY',
+      'YnnnnnnnnnnnnnnnnnnY',
+      'YnnnnnnnnnnnnnnnnnnY',
+      'YnYnnnnnnnnnnnnnnYnY',
+      'YnnnnnnnnnnnnnnnnnnY',
+      'TnnnnYnnn::nnnYnnnnT',
+      'T..nnnnnn::nnnnnn..T',
+      'T...nnn..::..nnn...T',
+      'T.."""...::..."""..T',
+      'T........::........T',
+      'T.*......::......*.T',
+      'T........::........T',
+      'T........::........T',
+      'TTTTTTTTT::TTTTTTTTT',
+    ],
+    warps: [
+      { x: 9, y: 15, to: { map: 'encre', x: 9, y: 1, facing: 'down' } },
+      { x: 10, y: 15, to: { map: 'encre', x: 10, y: 1, facing: 'down' } },
+      { x: 9, y: 0, to: { map: 'bordPage', x: 7, y: 12, facing: 'up' } },
+      { x: 10, y: 0, to: { map: 'bordPage', x: 8, y: 12, facing: 'up' } },
+    ],
+    triggers: [{ x: 9, y: 9, w: 2, h: 1, script: 'rivalFinal', if: 'a3.usine', unless: 'tr:rivalFinal' }],
+    npcs: [{ id: 'rivalEnd', x: 9, y: 6, look: LOOKS.rival, facing: 'down', script: 'rivalFinal', showIf: 'a3.usine', hideIf: 'tr:rivalFinal' }],
+  },
+
+  bordPage: {
+    id: 'bordPage',
+    name: L('Le Bord de la Page', 'The Edge of the Page'),
+    border: 'erased',
+    backdrop: 'sketch',
+    rows: [
+      'eeeeeeeeeeeeeeee',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      '|nYnnnnnnnnnnYne',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      '|nYnnnnnnnnnnYne',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      '|nnnnnnnnnnnnnne',
+      'eeeeeeennneeeeee',
+    ],
+    warps: [
+      { x: 7, y: 13, to: { map: 'routeBlanche', x: 9, y: 1, facing: 'down' } },
+      { x: 8, y: 13, to: { map: 'routeBlanche', x: 10, y: 1, facing: 'down' } },
+    ],
+    triggers: [{ x: 1, y: 6, w: 13, h: 1, script: 'finalBoss', unless: 'tr:effaceur' }],
+    npcs: [{ id: 'effaceur', x: 7, y: 3, look: LOOKS.effaceur, facing: 'down', script: 'finalBoss', hideIf: 'tr:effaceur' }],
+    items: [{ x: 13, y: 11, item: 'page-12', hidden: true }],
+  },
+
+  chambre: {
+    id: 'chambre',
+    name: L('Ta chambre', 'Your bedroom'),
+    indoor: true,
+    border: 'void',
+    backdrop: 'lab',
+    tint: 'rgba(255, 190, 120, 0.16)',
+    onEnter: 'ending',
+    rows: [
+      'WWwWWWWwWW',
+      'bbfffffttf',
+      'ffffffffff',
+      'fhffffffff',
+      'ffffffffff',
+      'pfffffffff',
+      'ffffffffff',
+      'WWWWWWWWWW',
+    ],
+    npcs: [{ id: 'papa', x: 3, y: 3, look: LOOKS.papa, facing: 'left', script: 'papa' }],
+    interact: [{ x: 7, y: 1, script: 'desk' }, { x: 8, y: 1, script: 'desk' }],
+  },
+};

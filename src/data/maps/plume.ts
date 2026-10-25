@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const PLUME_MAPS: Record<string, MapDef> = {
   plume: {
     id: 'plume',
+    onEnter: 'visitTown',
     name: L('Village-Plume', 'Featherby'),
     border: 'tree',
     rows: [

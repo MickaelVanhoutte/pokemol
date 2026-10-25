@@ -419,6 +419,36 @@ export const TILES: Record<string, TileDef> = {
       if (hash(x, y, 4) < 0.5) { p.rect(4 + Math.floor(hash(x, y, 5) * 6), 6, 2, 1, '#e8a0b0'); p.px(10, 10, '#e8a0b0'); }
     },
   },
+  // the edge of the page: the world is only sketched there, not coloured in yet
+  paper: {
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#fbf6ea');
+      p.noise(0.04, '#e9e0cc', x * 5 + y * 11);
+      if (hash(x, y, 9) < 0.35) { p.px(3 + Math.floor(hash(x, y, 2) * 9), 6, '#b8b0c4'); p.px(4 + Math.floor(hash(x, y, 2) * 9), 5, '#b8b0c4'); }
+    },
+  },
+  sketchtree: {
+    solid: true,
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#fbf6ea');
+      const g = '#8a8494';
+      for (let a = 0; a < 40; a++) {
+        const t = (a / 40) * Math.PI * 2;
+        const r = 6 + (hash(x, y, a) - 0.5) * 1.2;
+        p.px(Math.round(8 + Math.cos(t) * r), Math.round(7 + Math.sin(t) * r * 0.9), g);
+      }
+      p.rect(7, 13, 1, 3, g);
+      p.rect(9, 13, 1, 3, g);
+    },
+  },
+  margin: {
+    solid: true,
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#fbf6ea');
+      p.noise(0.03, '#e9e0cc', x + y * 7);
+      p.rect(7, 0, 2, 16, '#e57e7e');
+    },
+  },
   bridge: {
     paint: (p, _f, n, x, y) => {
       water(p, 0, n, x, y);

@@ -66,6 +66,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
 
   feutre: {
     id: 'feutre',
+    onEnter: 'visitTown',
     name: L('Ville-Feutre', 'Felt City'),
     border: 'tree',
     backdrop: 'city',

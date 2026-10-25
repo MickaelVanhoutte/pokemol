@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const PASTEL_MAPS: Record<string, MapDef> = {
   ville: {
     id: 'ville',
+    onEnter: 'visitTown',
     name: L('Ville-Pastel', 'Pastel City'),
     border: 'tree',
     rows: [

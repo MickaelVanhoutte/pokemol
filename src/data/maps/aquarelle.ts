@@ -55,6 +55,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
 
   port: {
     id: 'port',
+    onEnter: 'visitTown',
     name: L('Port-Aquarelle', 'Port Aquarelle'),
     border: 'tree',
     backdrop: 'beach',

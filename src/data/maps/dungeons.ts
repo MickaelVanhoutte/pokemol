@@ -7,11 +7,12 @@ const TOWER_ENCOUNTERS = {
   rate: 0.1,
   anyTile: true,
   table: [
-    { id: '009', w: 45, min: 14, max: 17 },
-    { id: '010', w: 10, min: 16, max: 19 },
-    { id: '005', w: 15, min: 14, max: 17 },
-    { id: '006', w: 15, min: 14, max: 17 },
-    { id: '007', w: 15, min: 15, max: 18 },
+    { id: '009', w: 45, min: 28, max: 31 },
+    { id: '010', w: 14, min: 29, max: 32 },
+    { id: '005', w: 13, min: 28, max: 31 },
+    { id: '006', w: 13, min: 28, max: 31 },
+    { id: '007', w: 13, min: 29, max: 32 },
+    { id: '011', w: 2, min: 31, max: 32 },
   ],
 };
 
@@ -138,7 +139,11 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       { x: 6, y: 11, to: { map: 'bois', x: 3, y: 6, facing: 'down' } },
       { x: 10, y: 1, to: { map: 'tour2', x: 10, y: 2, facing: 'down' } },
     ],
-    npcs: [{ id: 'elsa', x: 5, y: 4, look: LOOKS.ghostgirl, facing: 'down', trainer: 'elsa', sight: 3 }],
+    npcs: [
+      { id: 'elsa', x: 5, y: 4, look: LOOKS.ghostgirl, facing: 'down', trainer: 'elsa', sight: 3 },
+      { id: 'tgomme1', x: 9, y: 9, look: LOOKS.gomme, facing: 'left', trainer: 'tgomme1', sight: 3 },
+      { id: 'rivalTour', x: 4, y: 10, look: LOOKS.rival, facing: 'right', script: 'rivalTower', hideIf: 'a3.tour' },
+    ],
     items: [{ x: 1, y: 1, item: 'potion', count: 2 }],
     encounters: TOWER_ENCOUNTERS,
   },
@@ -172,6 +177,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'pif', x: 5, y: 3, look: { hair: '#4a3a6a', shirt: '#2a2238', pants: '#7b60c3' }, facing: 'down', trainer: 'pif', sight: 2 },
       { id: 'rose', x: 2, y: 9, look: LOOKS.granny, facing: 'right', trainer: 'rose', sight: 4 },
+      { id: 'tgomme2', x: 9, y: 7, look: LOOKS.gommeF, facing: 'left', trainer: 'tgomme2', sight: 4 },
     ],
     items: [{ x: 10, y: 10, item: 'super-crayon-ball', count: 2 }],
     encounters: TOWER_ENCOUNTERS,
@@ -199,8 +205,8 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
     warps: [{ x: 1, y: 1, to: { map: 'tour2', x: 1, y: 2, facing: 'down' } }],
     npcs: [
       { id: 'hugo', x: 2, y: 3, look: LOOKS.sailor, facing: 'right', trainer: 'hugo', sight: 4 },
-      { id: 'ombre', x: 5, y: 6, look: { hair: '#1a1424', shirt: '#3a2a5a', pants: '#1a1424', longHair: true }, facing: 'up', trainer: 'ombre', sight: 2 },
+      { id: 'blanche', x: 5, y: 6, look: LOOKS.blanche, facing: 'up', trainer: 'blanche', sight: 2, hideIf: 'a3.tour' },
     ],
-    items: [{ x: 10, y: 7, item: 'rappel' }],
+    items: [{ x: 10, y: 7, item: 'rappel' }, { x: 1, y: 7, item: 'page-9', hidden: true }],
   },
 };

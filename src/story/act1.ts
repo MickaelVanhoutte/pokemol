@@ -219,7 +219,3 @@ scripts.plumeBridge = async () => {
   }
   await say(L('Gaspard t’a donné son badge ? Alors passe par la Grotte Gribouillis, à l’est de Ville-Pastel. Le pont, on va le redessiner !', 'Gaspard gave you his badge? Then go through Scribble Cave, east of Pastel City. We’ll redraw the bridge!'), L('Marin', 'Sailor'));
 };
-
-scripts.gateTour = async () => {
-  await say(L('La porte de la tour est couverte de traces de gomme… Elle ne s’ouvre pas.', 'The tower door is covered in eraser marks… It won’t open.'));
-};

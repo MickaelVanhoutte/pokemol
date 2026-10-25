@@ -48,6 +48,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
 
   bourg: {
     id: 'bourg',
+    onEnter: 'visitTown',
     name: L('Bourg-Gribouille', 'Scribbleton'),
     border: 'tree',
     rows: [

@@ -119,7 +119,7 @@ function target(to: WarpTarget | 'back'): WarpTarget {
   return r ? { map: r.map, x: r.x, y: r.y, facing: r.facing ?? 'down' } : { map: 'bourg', x: 9, y: 14, facing: 'down' };
 }
 
-export async function warpTo(dest: WarpTarget | 'back') {
+export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boolean } = {}) {
   const to = target(dest);
   const g = getGame();
   g.lock++;
@@ -133,7 +133,7 @@ export async function warpTo(dest: WarpTarget | 'back') {
   g.player.moving = false;
   if (to.facing) g.player.dir = to.facing;
   savePosition();
-  await g.fadeTo(0, 180);
+  if (!opts.keepFade) await g.fadeTo(0, 180);
   g.lock--;
   const onEnter = g.map.def.onEnter;
   if (onEnter) await runScript(onEnter);

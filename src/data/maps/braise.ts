@@ -90,8 +90,9 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     border: 'tree',
     backdrop: 'volcano',
     tint: 'rgba(240, 120, 60, 0.1)',
+    onEnter: 'visitTown',
     rows: [
-      'TTTTTTTTTTTTTTTTTTTT',
+      'TTTTTTTT::TTTTTTTTTT',
       'TRR.....::.......RRT',
       'T.......::.........T',
       'T.......::.........T',
@@ -116,11 +117,13 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     warps: [
       { x: 8, y: 15, to: { map: 'montFusain2', x: 8, y: 10, facing: 'up' } },
       { x: 9, y: 15, to: { map: 'montFusain2', x: 9, y: 10, facing: 'up' } },
+      { x: 8, y: 0, to: { map: 'route6', x: 8, y: 20, facing: 'up' } },
+      { x: 9, y: 0, to: { map: 'route6', x: 9, y: 20, facing: 'up' } },
     ],
     signs: [
       { x: 2, y: 12, text: L('VILLAGE-BRAISE\nAu chaud, au pied du volcan.\nAtelier d’Ambre', 'EMBERVALE\nCosy, at the foot of the volcano.\nAmber’s Atelier') },
     ],
-    triggers: [{ x: 8, y: 1, w: 2, h: 1, script: 'braiseNorth', unless: 'a3.open' }],
+    triggers: [{ x: 8, y: 1, w: 2, h: 1, script: 'braiseNorth', unless: 'badge:braise' }],
     npcs: [
       { id: 'braiseOld', x: 16, y: 8, look: LOOKS.granny, facing: 'left', text: [L('Le volcan ? Il crache des étincelles de crayon orange quand il est content.', 'The volcano? It spits orange crayon sparks when it’s happy.')] },
       { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embunny. So cool!')] },

@@ -207,6 +207,15 @@ export const LOOKS = {
   leaderAqua: { hair: '#3a78cc', shirt: '#8ec6fa', pants: '#f29ac8', longHair: true },
   leaderFluo: { hair: '#f2d23e', shirt: '#2a2238', pants: '#7ad6a0', longHair: true },
   leaderBraise: { hair: '#d64545', shirt: '#f08a3a', pants: '#5a3a2a', hat: '#8a5a32' },
+  leaderPaillette: { hair: '#f2c8e8', shirt: '#f29ac8', pants: '#ffffff', longHair: true },
+  leaderGouache: { hair: '#5a3a20', shirt: '#4fae5a', pants: '#8a5a32', hat: '#e0a030' },
+  leaderEncre: { hair: '#1a1424', shirt: '#3a2a5a', pants: '#1a1424', longHair: true },
+  /** Admin Blanche: all white, like correction fluid. */
+  blanche: { hair: '#f4f2f8', shirt: '#e8e6f0', pants: '#9a96a8', longHair: true, hat: '#f2a0b0' },
+  /** The Great Eraser: tall, grey, featureless. */
+  effaceur: { hair: '#d8d4e0', hairShade: '#b8b4c4', skin: '#e8e4ec', shirt: '#8a8698', pants: '#5a5670', hat: '#f2a0b0' },
+  /** Papa in the real world: the professor's colours, in pyjamas. */
+  papa: { hair: '#c8c8d0', shirt: '#7ab0e0', pants: '#5a8ad6' },
   /** Admin Rature: Team Gomme officer, darker grey with a red eraser cap. */
   rature: { hair: '#5a5470', shirt: '#7a7488', pants: '#3a3448', hat: '#d64545' },
 } satisfies Record<string, Look>;

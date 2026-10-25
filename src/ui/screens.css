@@ -45,6 +45,7 @@
 .credits__parade { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 12px; }
 .credits__parade img { width: 72px; height: 64px; animation: bob 3s ease-in-out infinite; }
 .credits__parade img:nth-child(2n) { animation-delay: -1.5s; }
+.credits__end { font-size: 1.3rem; color: #2a6ad6; }
 .credits__small { color: var(--ink-soft); font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; }
 @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(4deg); } }
 

@@ -1,15 +1,20 @@
-# Atelier Bestioles
+# Atelier Bestioles: le Rêve de Papeterre
 
 A small FireRed/LeafGreen-style adventure, made from a child's drawings.
 Every creature ("Bestiole") is a real pencil drawing, cut out of a photo.
 
-- Explore a pixel-art world drawn in code: town, lab, routes, city, misty woods, a cave and a tower.
-- Get your first Bestiole from Prof. Fusain, fight trainers, catch wild Bestioles with Crayon-balls.
-- Classic battles: party of 6, four moves with PP, moves learnt by level-up, types and weaknesses,
-  statuses (sleep, paralysis, poison, burn, confusion), stat stages, XP and evolution.
-- Healing Center, PC storage, shop, Bestiodex, and a creature machine that draws a surprise Bestiole for coins.
-- Two badges (Grotte Gribouillis, Tour Brumeuse) and a final rival battle.
-- French and English, saves in the browser (export/import from Options), installable as an app (PWA).
+**The story.** The little artist falls asleep on the sketchbook and wakes up in Papeterre, a region
+drawn on a giant sheet of paper. Prof. Fusain photographs every Bestiole "so none ever gets lost".
+Team Gomme rubs out the scenery and greys out Bestioles for their boss, the Great Eraser: the little
+voice that says your drawings aren't good enough. Beat him at the Edge of the Page… and wake up.
+
+- 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, an ending.
+- Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
+  stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
+- Side quests: 12 torn sketchbook pages (memories of the real world), the Tombola at the fair,
+  a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
+- Girl or boy (French texts agree), French and English, saves in the browser (export/import from
+  Options), installable as an app (PWA). On phones, touch the screen anywhere to show the joystick.
 
 ## Run it locally
 
@@ -21,7 +26,7 @@ npm run build      # static site in dist/
 ```
 
 Controls: arrows/WASD to move, Z/Enter/Space = A, X/Shift = B (hold to run), Esc/M = menu.
-On a phone or tablet an on-screen D-pad appears.
+On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap = A.
 
 ## Add a new drawing
 
@@ -54,17 +59,18 @@ The site is served at `https://<user>.github.io/pokemol/` (the `base` in `vite.c
 ```
 tools/            drawing cutout pipeline (sharp) and icon generator
 src/art/          cutout algorithm (paper flattening, ink mask, flood fill)
-src/data/         creatures, moves, items, types chart, trainers, maps
+src/data/         creatures, moves, items, badges, sketchbook pages, types chart, trainers, maps/ (one file per area)
 src/engine/pk/    pure game logic: creatures/stats/XP, Gen 3–style battle engine, catching, AI (tested)
 src/overworld/    canvas engine: hand-painted tiles, sprites, buildings, movement, dialogs, pick-ups
-src/story/        story scripts (intro, lab, rival, healing center, tower gate, final rival…)
+src/story/        story scripts: prologue and act 1, act 2, act 3 + ending, shared ones (healing center…)
 src/state/        save data (party, PC box, bag, Bestiodex), screen router
-src/ui/           battle screen, party, summary, bag, Bestiodex, PC, shop, creature machine
+src/ui/           paper kit (windows, notebook text boxes, menus), battle, FRLG views (party, summary, bag,
+                  Bestiodex, PC, shop, options, trainer card), pencil battle backdrops, pixel icons
 ```
 
 ## Credits
 
 - Every Bestiole: drawn by the little artist.
-- Tiles, sprites and buildings: pixel art painted in code for this project.
+- Tiles, sprites, buildings, icons and battle backdrops: drawn in code for this project.
 - Fonts: Inter and Jersey 15 (SIL Open Font License), via Fontsource.
 - A fan project inspired by the Game Boy Advance pocket-monster games; not affiliated with any brand.

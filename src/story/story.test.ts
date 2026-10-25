@@ -18,7 +18,7 @@ const source = [
 
 /** Flags some code sets: setFlag('x'), d.flags.x = …, d.flags['x'] = …, plus trainer wins and badges. */
 function flagIsSet(name: string): boolean {
-  if (name.startsWith('tr:')) return !!TRAINERS[name.slice(3)];
+  if (name.startsWith('tr:') && TRAINERS[name.slice(3)]) return true;
   if (name.startsWith('badge:')) return Object.values(TRAINERS).some((t) => t.badge === name.slice(6));
   const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return new RegExp(`setFlag\\(\\s*'${esc}'|flags\\.${esc}\\s*=|flags\\['${esc}'\\]\\s*=`).test(source);
