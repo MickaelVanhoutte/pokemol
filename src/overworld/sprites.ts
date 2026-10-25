@@ -198,6 +198,12 @@ export const LOOKS = {
   granny: { hair: '#e8e8f0', shirt: '#7a8ad0', pants: '#5a5a8a', longHair: true },
   ghostgirl: { hair: '#4a3a6a', shirt: '#7b60c3', pants: '#2a2238', longHair: true },
   sailor: { hair: '#2a2238', shirt: '#ffffff', pants: '#3a5aa8', hat: '#ffffff' },
+  /** Team Gomme: grey uniform and a pink eraser cap. */
+  gomme: { hair: '#8a8494', shirt: '#b8b2c4', pants: '#5a5470', hat: '#f2a0b0' },
+  gommeF: { hair: '#8a8494', shirt: '#b8b2c4', pants: '#5a5470', hat: '#f2a0b0', longHair: true },
+  leaderPastel: { hair: '#f29ac8', shirt: '#9ed36a', pants: '#f2d23e', longHair: true },
+  leaderPlume: { hair: '#c8b48a', shirt: '#8a5a32', pants: '#5a4a3a', hat: '#e0a030' },
+  grandma: { hair: '#e8e8f0', shirt: '#d9a0c8', pants: '#6a5a8a', longHair: true },
 } satisfies Record<string, Look>;
 
 const lookCache = new Map<string, string>();

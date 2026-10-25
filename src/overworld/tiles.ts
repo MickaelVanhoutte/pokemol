@@ -400,6 +400,34 @@ export const TILES: Record<string, TileDef> = {
       for (let i = 0; i < 16; i += 4) { p.rect(0, i, 16, 3, '#2a2238'); p.rect(0, i + 3, 16, 1, '#6a5a7a'); }
     },
   },
+  // Team Gomme rubbed this part of the drawing out: blank paper with the pencil traces left
+  erased: {
+    solid: true,
+    animated: true,
+    paint: (p, f, n, x, y) => {
+      p.fill('#fbf6ea');
+      p.noise(0.05, '#e9e0cc', x * 7 + y * 3);
+      // faint dashed outline where the drawing met the blank
+      const dash = (i: number) => (i + f) % 4 < 2;
+      for (let i = 0; i < 16; i++) {
+        if (n(0, -1) !== 'erased' && dash(i)) p.px(i, 0, '#b8b0c4');
+        if (n(0, 1) !== 'erased' && dash(i)) p.px(i, 15, '#b8b0c4');
+        if (n(-1, 0) !== 'erased' && dash(i)) p.px(0, i, '#b8b0c4');
+        if (n(1, 0) !== 'erased' && dash(i)) p.px(15, i, '#b8b0c4');
+      }
+      // eraser crumbs
+      if (hash(x, y, 4) < 0.5) { p.rect(4 + Math.floor(hash(x, y, 5) * 6), 6, 2, 1, '#e8a0b0'); p.px(10, 10, '#e8a0b0'); }
+    },
+  },
+  bridge: {
+    paint: (p, _f, n, x, y) => {
+      water(p, 0, n, x, y);
+      p.rect(0, 1, 16, 14, C.wood);
+      for (let i = 1; i < 16; i += 4) p.rect(i, 1, 1, 14, C.wood2);
+      p.rect(0, 1, 16, 1, C.wood2);
+      p.rect(0, 14, 16, 1, C.wood2);
+    },
+  },
   towerfloor: { paint: (p, _f, _n, x, y) => { p.fill('#6b6a8c'); for (let i = 0; i < 16; i += 8) { p.rect(0, i, 16, 1, '#55547a'); p.rect(i + ((y % 2) * 4), 0, 1, 16, '#55547a'); } p.noise(0.03, '#8584a8', x + y); } },
 };
 

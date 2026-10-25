@@ -157,6 +157,8 @@ export class Game {
   /** Battle transition: 0 = clear, 1 = screen fully scribbled over. */
   wipe = 0;
   wipeKind: 'pencil' | 'eraser' = 'pencil';
+  /** The camera shakes until this time (performance.now()). */
+  shakeUntil = 0;
   hooks: GameHooks;
   viewW = 240;
   viewH = 160;
@@ -401,6 +403,10 @@ export class Game {
     let camY = mapH <= this.viewH ? (mapH - this.viewH) / 2 : Math.min(Math.max(py + 8 - this.viewH / 2, 0), mapH - this.viewH);
     camX = Math.round(camX);
     camY = Math.round(camY);
+    if (performance.now() < this.shakeUntil) {
+      camX += Math.round((Math.random() - 0.5) * 6);
+      camY += Math.round((Math.random() - 0.5) * 4);
+    }
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, this.viewW, this.viewH);
     ctx.drawImage(this.map.layers[this.frame], -camX - MARGIN * TILE, -camY - MARGIN * TILE);
@@ -435,16 +441,7 @@ export class Game {
       if (onGrass) {
         ctx.drawImage(this.map.layers[this.frame], (a.x + MARGIN) * TILE, (a.y + MARGIN) * TILE + 9, TILE, 7, sx, a.y * TILE - camY + 9, TILE, 7);
       }
-      if (a.bubble) {
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(sx + 4, sy - 14, 9, 11);
-        ctx.fillStyle = '#2a2238';
-        ctx.fillRect(sx + 4, sy - 14, 9, 1); ctx.fillRect(sx + 4, sy - 4, 9, 1);
-        ctx.fillRect(sx + 3, sy - 13, 1, 9); ctx.fillRect(sx + 13, sy - 13, 1, 9);
-        ctx.fillStyle = '#d64545';
-        ctx.fillRect(sx + 8, sy - 12, 1, 5);
-        ctx.fillRect(sx + 8, sy - 6, 1, 1);
-      }
+      if (a.bubble) this.drawBubble(ctx, a.bubble, sx, sy);
     }
     for (const r of this.rustle) {
       const k = r.t / 260;
@@ -473,6 +470,25 @@ export class Game {
     if (this.fade > 0) {
       ctx.fillStyle = `rgba(${this.fadeColor},${this.fade})`;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
+    }
+  }
+
+  /** Speech bubble over a character: ! ? … ♪ ♥ zz */
+  private drawBubble(ctx: CanvasRenderingContext2D, kind: string, sx: number, sy: number) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(sx + 3, sy - 14, 11, 11);
+    ctx.fillStyle = '#2a2238';
+    ctx.fillRect(sx + 3, sy - 14, 11, 1); ctx.fillRect(sx + 3, sy - 4, 11, 1);
+    ctx.fillRect(sx + 2, sy - 13, 1, 9); ctx.fillRect(sx + 14, sy - 13, 1, 9);
+    ctx.fillRect(sx + 7, sy - 3, 2, 1);
+    const px = (x: number, y: number, c: string, w = 1, h = 1) => { ctx.fillStyle = c; ctx.fillRect(sx + x, sy + y, w, h); };
+    switch (kind) {
+      case '?': px(7, -12, '#3a7ad6', 3, 1); px(10, -11, '#3a7ad6', 1, 2); px(8, -9, '#3a7ad6', 2, 1); px(8, -8, '#3a7ad6', 1, 1); px(8, -6, '#3a7ad6'); break;
+      case '…': px(5, -8, '#2a2238'); px(8, -8, '#2a2238'); px(11, -8, '#2a2238'); break;
+      case '♪': px(9, -12, '#7b60c3', 1, 6); px(10, -12, '#7b60c3', 2, 1); px(7, -7, '#7b60c3', 3, 2); break;
+      case '♥': px(5, -11, '#d64545', 2, 2); px(9, -11, '#d64545', 2, 2); px(5, -10, '#d64545', 6, 2); px(6, -8, '#d64545', 4, 1); px(7, -7, '#d64545', 2, 1); break;
+      case 'zz': px(5, -12, '#5b8ad6', 3, 1); px(6, -11, '#5b8ad6'); px(5, -10, '#5b8ad6', 3, 1); px(9, -9, '#5b8ad6', 3, 1); px(10, -8, '#5b8ad6'); px(9, -7, '#5b8ad6', 3, 1); break;
+      default: px(8, -12, '#d64545', 1, 5); px(8, -6, '#d64545');
     }
   }
 

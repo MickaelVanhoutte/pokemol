@@ -1,5 +1,5 @@
 import { effect, signal } from '@preact/signals';
-import { gender, setGlobalVars } from '../i18n';
+import { gender, locale, setGlobalVars } from '../i18n';
 import { healMon, type Mon } from '../engine/pk/creature';
 import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 
@@ -13,8 +13,8 @@ export const outdatedSave = signal(false);
 effect(() => {
   const d = save.value;
   if (!d) return;
-  setGlobalVars({ name: d.player.name });
-  gender.value = d.player.avatar % 2 === 0 ? 'f' : 'm';
+  setGlobalVars({ name: d.player.name, rival: d.rivalName || (locale.value === 'fr' ? 'Feutre' : 'Marker') });
+  gender.value = d.player.gender;
 });
 
 function readRaw(): unknown {
@@ -26,15 +26,40 @@ function readRaw(): unknown {
   }
 }
 
-function migrate(raw: unknown): SaveData | null {
+/** Upgrades an older save, or returns null if it can't be used. */
+export function migrate(raw: unknown): SaveData | null {
   if (!raw || typeof raw !== 'object') return null;
-  const s = raw as SaveData;
-  if (s.version !== SAVE_VERSION) return null;
-  // "Gomme magique" became "Retouche" (erasers are the villains now)
-  if (s.bag.gomme) {
-    s.bag.retouche = (s.bag.retouche ?? 0) + s.bag.gomme;
-    delete s.bag.gomme;
-  }
+  const v = (raw as { version?: number }).version;
+  if (v === 2) return migrateV2(raw as V2Save);
+  return v === SAVE_VERSION ? (raw as SaveData) : null;
+}
+
+interface V2Save {
+  createdAt: number;
+  playMs: number;
+  player: { name: string; avatar: number };
+  party: Mon[];
+  box: Mon[];
+  bag: Record<string, number>;
+  money: number;
+  dex: { seen: string[]; caught: string[] };
+  stats: SaveData['stats'];
+}
+
+/**
+ * The story was rewritten (Papeterre): the adventure starts over, but the old Bestioles wait
+ * in the PC box, and the Bestiodex and money are kept.
+ */
+export function migrateV2(old: V2Save): SaveData {
+  const s = freshSave(old.player.name, old.player.avatar, old.player.avatar % 2 === 0 ? 'f' : 'm', '');
+  s.createdAt = old.createdAt;
+  s.playMs = old.playMs;
+  s.box = [...old.party, ...old.box].map((m) => ({ ...m }));
+  s.box.forEach((m) => healMon(m));
+  s.money = Math.max(s.money, old.money);
+  s.dex = { seen: [...old.dex.seen], caught: [...old.dex.caught] };
+  s.stats = { ...old.stats };
+  s.flags.migrated = 1;
   return s;
 }
 
@@ -78,12 +103,13 @@ export function deleteSave() {
   outdatedSave.value = false;
 }
 
-export function newGame(name: string, avatar: number): SaveData {
-  const s: SaveData = {
+function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: string): SaveData {
+  return {
     version: SAVE_VERSION,
     createdAt: Date.now(),
     playMs: 0,
-    player: { name, avatar, map: 'maison', x: 4, y: 5, facing: 'down' },
+    player: { name, avatar, gender, map: 'maison', x: 7, y: 2, facing: 'down' },
+    rivalName,
     respawn: { map: 'maison', x: 4, y: 5 },
     flags: {},
     party: [],
@@ -94,6 +120,10 @@ export function newGame(name: string, avatar: number): SaveData {
     badges: [],
     stats: { battles: 0, captures: 0 },
   };
+}
+
+export function newGame(name: string, avatar: number, gender: 'f' | 'm', rivalName: string): SaveData {
+  const s = freshSave(name, avatar, gender, rivalName);
   save.value = s;
   outdatedSave.value = false;
   persist();

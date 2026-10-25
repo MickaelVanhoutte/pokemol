@@ -31,6 +31,11 @@ describe('maps', () => {
       it('has warps that land on walkable tiles', () => {
         for (const wp of map.warps ?? []) {
           expect(walkable(map, wp.x, wp.y), `warp tile ${wp.x},${wp.y}`).toBe(true);
+          if (wp.to === 'back') {
+            // only shared interiors send you back through the door you came in by
+            expect(map.generic, `'back' warp outside a shared interior`).toBe(true);
+            continue;
+          }
           const target = MAPS[wp.to.map];
           expect(target, wp.to.map).toBeDefined();
           expect(walkable(target, wp.to.x, wp.to.y, false), `${wp.to.map} ${wp.to.x},${wp.to.y}`).toBe(true);
@@ -57,6 +62,17 @@ describe('maps', () => {
           expect(walkable(map, p.x, p.y, false), `item ${p.item} ${p.x},${p.y}`).toBe(true);
           expect(ITEM_BY_ID[p.item], p.item).toBeDefined();
         }
+      });
+
+      it('keeps patches inside the map with known tiles', () => {
+        for (const p of map.patches ?? []) {
+          p.rows.forEach((r, dy) => {
+            expect(p.y + dy < map.rows.length, `patch ${p.id} row ${dy}`).toBe(true);
+            expect(p.x + r.length <= map.rows[0].length, `patch ${p.id} width`).toBe(true);
+            for (const ch of r) expect(ch === '?' || LEGEND[ch] !== undefined, `patch ${p.id} "${ch}"`).toBe(true);
+          });
+        }
+        for (const it2 of map.interact ?? []) expect(it2.y < map.rows.length && it2.x < map.rows[0].length, `interact ${it2.script}`).toBe(true);
       });
 
       it('only lists known creatures in encounters', () => {

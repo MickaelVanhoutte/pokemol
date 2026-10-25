@@ -4,6 +4,7 @@ import { MAPS } from '../data/maps';
 import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature } from '../data/creatures';
 import { item } from '../data/items';
+import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
@@ -14,7 +15,8 @@ import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
 import { DIRS, Game, type Actor } from './game';
-import type { MapBuilding, NpcDef, PickupDef, WarpTarget } from './mapTypes';
+import type { MapBuilding, MapDef, NpcDef, PickupDef, WarpTarget } from './mapTypes';
+import { applyPatches } from './patches';
 import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
 import { sfx } from '../audio/sfx';
@@ -41,22 +43,47 @@ export function getGame(): Game {
 
 const s = (): SaveData => save.value!;
 export const flag = (name: string) => !!save.value?.flags[name];
+/** Set when a flag changes, so the map (patches, NPCs) is rebuilt once the script ends. */
+let mapDirty = false;
 export function setFlag(name: string, v = 1) {
   update((d) => (d.flags[name] = v));
+  mapDirty = true;
 }
 
 function visibleNpc(n: NpcDef): boolean {
   if (n.showIf && !flag(n.showIf)) return false;
   if (n.hideIf && flag(n.hideIf)) return false;
+  if (n.fromMap && !n.fromMap.includes(save.value?.player.returnTo?.map ?? '')) return false;
   return true;
 }
 
 const pickupFlag = (map: string, p: PickupDef) => `item:${map}:${p.x},${p.y}`;
+/** Hidden items of the current map, found with A. */
+let hiddenPickups: PickupDef[] = [];
+
+function patched(def: MapDef): MapDef {
+  return def.patches?.length ? { ...def, rows: applyPatches(def.rows, def.patches, flag) } : def;
+}
 
 function loadMap(id: string) {
   const g = getGame();
   const def = MAPS[id] ?? MAPS.maison;
-  g.setMap(def, visibleNpc, (p) => !flag(pickupFlag(def.id, p)));
+  const free = (p: PickupDef) => !flag(pickupFlag(def.id, p));
+  g.setMap(patched(def), visibleNpc, (p) => !p.hidden && free(p));
+  hiddenPickups = (def.items ?? []).filter((p) => p.hidden && free(p));
+}
+
+/** Rebuilds the current map after story flags changed (erased areas, people coming and going). */
+export function refreshMap() {
+  mapDirty = false;
+  const g = getGame();
+  if (!g.map) return;
+  const keep = new Map(g.npcs.map((n) => [n.id, n]));
+  loadMap(g.map.def.id);
+  g.npcs = g.npcs.map((n) => {
+    const old = keep.get(n.id);
+    return old && old.npc ? old : n;
+  });
 }
 
 /** Builds the world from the save and shows it. */
@@ -82,7 +109,15 @@ function savePosition() {
   persist();
 }
 
-export async function warpTo(to: WarpTarget) {
+/** Resolves 'back' (leaving a shared interior) to the door the player came in by. */
+function target(to: WarpTarget | 'back'): WarpTarget {
+  if (to !== 'back') return to;
+  const r = save.value?.player.returnTo;
+  return r ? { map: r.map, x: r.x, y: r.y, facing: r.facing ?? 'down' } : { map: 'bourg', x: 9, y: 14, facing: 'down' };
+}
+
+export async function warpTo(dest: WarpTarget | 'back') {
+  const to = target(dest);
   const g = getGame();
   g.lock++;
   sfx.door();
@@ -113,6 +148,7 @@ async function locked(fn: () => Promise<void>) {
   try {
     await fn();
   } finally {
+    if (mapDirty) refreshMap();
     g.lock--;
     g.input.clear();
   }
@@ -135,7 +171,9 @@ function onStep(x: number, y: number): boolean {
     void warpTo(wp.to);
     return true;
   }
-  const trig = g.map.def.triggers?.find((tg) => x >= tg.x && x < tg.x + (tg.w ?? 1) && y >= tg.y && y < tg.y + (tg.h ?? 1));
+  const trig = g.map.def.triggers?.find((tg) =>
+    x >= tg.x && x < tg.x + (tg.w ?? 1) && y >= tg.y && y < tg.y + (tg.h ?? 1)
+    && (!tg.if || flag(tg.if)) && (!tg.unless || !flag(tg.unless)));
   if (trig && scripts[trig.script]) {
     void runScript(trig.script);
     return true;
@@ -184,16 +222,36 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     });
   }
   if (target.sign) return void locked(() => say(target.sign!.text));
-  const map = g.map.def.id;
+  const spot = g.map.def.interact?.find((it) => it.x === target.x && it.y === target.y);
+  if (spot && scripts[spot.script]) return void runScript(spot.script);
+  const hidden = hiddenPickups.find((p) => p.x === target.x && p.y === target.y);
+  if (hidden) {
+    hiddenPickups = hiddenPickups.filter((p) => p !== hidden);
+    return void locked(async () => {
+      const n = hidden.count ?? 1;
+      update((d) => {
+        addItem(d, hidden.item, n);
+        d.flags[pickupFlag(g.map.def.id, hidden)] = 1;
+      });
+      sfx.sparkle();
+      await say(L('Tiens ? Il y a quelque chose ici… Tu trouves {i} !', 'Huh? There’s something here… You found {i}!'), undefined, { i: tr(item(hidden.item).name) });
+      if (hidden.item.startsWith('page-')) await runScript('pageFound');
+    });
+  }
   if (target.tileId === 'pc') return void runScript('pc');
-  if (target.tileId === 'machine' && map === 'invocations') return void runScript('machine');
-  if (target.tileId === 'table' && map === 'labo') return void runScript('labTable');
   if (target.tileId === 'bookshelf') return void locked(() => say(L('Des livres pleins de dessins de Bestioles.', 'Books full of Critter drawings.')));
   if (target.tileId === 'tv') return void locked(() => say(L('À la télé : « Les Bestioles dessinées envahissent le pays ! »', 'On TV: "Drawn Critters are taking over the country!"')));
 }
 
 function onDoor(b: MapBuilding) {
-  if (b.to && (!b.script || !scripts[b.script])) return void warpTo(b.to);
+  if (b.to && (!b.script || !scripts[b.script])) {
+    // shared interiors (Healing Centers, shops) remember which town's door was used
+    if (MAPS[b.to.map]?.generic && save.value) {
+      const g = getGame();
+      save.value.player.returnTo = { map: g.map.def.id, x: b.x + b.door, y: b.y + b.h, facing: 'down' };
+    }
+    return void warpTo(b.to);
+  }
   void locked(async () => {
     if (b.script && scripts[b.script]) await scripts[b.script]();
     else if (b.lockedText) await say(b.lockedText);
@@ -243,19 +301,23 @@ export async function trainerBattle(id: string, actor?: Actor) {
   }
   if (actor) getGame().faceToward(actor, getGame().player);
   await sayAll(tdef.before, tdef.name);
-  const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef, look: actor?.npc?.look });
+  const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef, look: actor?.npc?.look, grey: tdef.grey });
   if (out.result === 'win') {
     setFlag(`tr:${id}`);
     // the first defeat line is said in battle, like the GBA games
-    await sayAll(tdef.after.slice(1), tdef.name);
+    await sayAll(tdef.after.slice(1, tdef.badge ? 1 : undefined), tdef.name);
     if (tdef.badge && !s().badges.includes(tdef.badge)) {
       update((d) => {
         d.badges.push(tdef.badge!);
         d.flags[`badge:${tdef.badge}`] = 1;
       });
+      mapDirty = true;
       sfx.victory();
-      await say(L('Tu obtiens le {b} !', 'You received the {b}!'), undefined, { b: tr(tdef.badgeName ?? L('Badge', 'Badge')) });
+      await say(L('{name} reçoit le {b} de {l} !', '{name} received the {b} from {l}!'), undefined, { b: tr(badgeDef(tdef.badge)?.name ?? L('Badge', 'Badge')), l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name) });
+      // leaders explain what comes next after giving the badge
+      await sayAll(tdef.after.slice(1), tdef.name);
     }
+    if (tdef.afterScript && scripts[tdef.afterScript]) await scripts[tdef.afterScript]();
   }
 }
 
@@ -385,6 +447,7 @@ async function blackout() {
     x.money -= lost;
     healParty(x);
   });
+  if (save.value) save.value.player.returnTo = d.respawn.returnTo;
   await warpTo({ map: d.respawn.map, x: d.respawn.x, y: d.respawn.y, facing: 'down' });
 }
 
@@ -401,6 +464,28 @@ async function wildBattle(species: string, level: number) {
 }
 
 // ------------------------------------------------------------------ helpers for scripts
+
+/** Quick white (or black) flash of the screen. */
+export async function flash(color: 'white' | 'black' = 'white', ms = 140) {
+  const g = getGame();
+  await g.fadeTo(0.9, ms / 2, color);
+  await g.fadeTo(0, ms);
+}
+
+export async function shake(ms = 500) {
+  getGame().shakeUntil = performance.now() + ms;
+  await wait(ms);
+}
+
+/** Shows a bubble over someone ('!', '?', '…', '♪', '♥', 'zz') for a moment. */
+export async function bubble(id: string, kind: string, ms = 900) {
+  const g = getGame();
+  const a = id === 'player' ? g.player : g.npc(id);
+  if (!a) return;
+  a.bubble = kind;
+  await wait(ms);
+  a.bubble = undefined;
+}
 
 export const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -442,5 +527,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, screen, fight, createMon, checkEvolutions };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }

@@ -5,6 +5,6 @@ import '@fontsource/inter/600.css';
 import '@fontsource/inter/800.css';
 import './styles/global.css';
 import { App } from './app';
-import './story/scripts';
+import './story';
 
 render(<App />, document.getElementById('app')!);

@@ -3,6 +3,7 @@ import type { LText } from '../i18n';
 import type { Dir } from '../save/schema';
 import type { BuildingDef } from './buildings';
 import type { Look } from './sprites';
+import type { PatchDef } from './patches';
 
 export interface WarpTarget {
   map: string;
@@ -14,7 +15,8 @@ export interface WarpTarget {
 export interface Warp {
   x: number;
   y: number;
-  to: WarpTarget;
+  /** 'back' = out through the door you came in by (shared interiors). */
+  to: WarpTarget | 'back';
 }
 
 export interface NpcDef {
@@ -34,6 +36,8 @@ export interface NpcDef {
   /** Visible only when this flag is set / not set. */
   showIf?: string;
   hideIf?: string;
+  /** In a shared interior: only there when entered from one of these maps. */
+  fromMap?: string[];
 }
 
 export interface SignDef {
@@ -47,6 +51,16 @@ export interface TriggerDef {
   y: number;
   w?: number;
   h?: number;
+  script: string;
+  /** Only while this flag is set / not set. */
+  if?: string;
+  unless?: string;
+}
+
+/** Something to examine with A (a desk, a photo, a machine…). */
+export interface InteractDef {
+  x: number;
+  y: number;
   script: string;
 }
 
@@ -63,6 +77,8 @@ export interface PickupDef {
   y: number;
   item: string;
   count?: number;
+  /** Not drawn: found by pressing A in front of it (torn pages…). */
+  hidden?: boolean;
 }
 
 export interface MapBuilding extends BuildingDef {
@@ -94,6 +110,11 @@ export interface MapDef {
   fog?: boolean;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
+  /** Shared interior (Healing Center, shop…): its exits lead back to the door used to enter. */
+  generic?: boolean;
+  /** Parts of the map redrawn while story flags are set (erased or restored areas). */
+  patches?: PatchDef[];
+  interact?: InteractDef[];
 }
 
 export const LEGEND: Record<string, string> = {
@@ -102,4 +123,5 @@ export const LEGEND: Record<string, string> = {
   'f': 'floor', 'W': 'wall', 'w': 'window', 'C': 'counter', 'c': 'carpet', 'X': 'mat', 'b': 'bookshelf',
   't': 'table', 'p': 'plant', 'P': 'pc', 'h': 'bed', 'v': 'tv', 'm': 'machine', 'H': 'healer', 'U': 'stairs',
   'K': 'cavewall', 'k': 'cavefloor', 'r': 'caverock', 'o': 'towerfloor', 'Q': 'towerwall', 'D': 'stairsdown', 'E': 'caveexit', ' ': 'void',
+  'e': 'erased', '=': 'bridge',
 };

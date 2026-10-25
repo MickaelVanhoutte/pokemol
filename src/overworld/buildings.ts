@@ -1,6 +1,6 @@
 import { hash, makeCanvas, Painter } from './pixel';
 
-export type BuildingKind = 'house' | 'lab' | 'center' | 'shop' | 'summon' | 'cave' | 'tower';
+export type BuildingKind = 'house' | 'lab' | 'center' | 'shop' | 'summon' | 'cave' | 'tower' | 'gym';
 
 export interface BuildingDef {
   kind: BuildingKind;
@@ -97,6 +97,22 @@ export function paintBuilding(b: BuildingDef): HTMLCanvasElement {
       door(p, doorX, H, '#6a7a9a');
       p.rect(W - 12, 0, 2, 8, OUT);
       p.disc(W - 11, 1, 2.5, '#f15a5a');
+      break;
+    }
+    case 'gym': {
+      // an Atelier: big roof, wide door and a giant pencil over the entrance
+      const roofColor = b.roof ?? '#e0a030';
+      const roofBottom = H - 26;
+      roof(p, W, 6, roofBottom, roofColor);
+      wall(p, W, roofBottom + 2, H, '#f4e6c8');
+      for (let tx = 0; tx < b.w; tx++) if (Math.abs(tx - b.door) > 1) windowAt(p, tx * 16 + 2, roofBottom + 7, 12, 10);
+      door(p, doorX, H, '#c0392b');
+      const px = Math.floor(W / 2) - 20, py = Math.floor((6 + roofBottom) / 2) - 4;
+      p.rect(px - 1, py - 1, 42, 10, OUT);
+      p.rect(px, py, 30, 8, '#f2c14e');
+      p.rect(px, py + 2, 30, 1, '#d99a2a');
+      p.rect(px, py, 5, 8, '#5b8ad6');
+      for (let i = 0; i < 9; i++) p.rect(px + 30 + i, py + Math.floor(i / 2), 1, 8 - Math.floor(i / 2) * 2, i < 6 ? '#f1d2a8' : OUT);
       break;
     }
     case 'cave': {
