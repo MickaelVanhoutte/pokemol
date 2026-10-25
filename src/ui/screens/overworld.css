@@ -10,8 +10,21 @@
   touch-action: none;
 }
 .ow__stage { flex: 1; min-height: 0; position: relative; overflow: hidden; }
-.ow__view { position: absolute; inset: 0; overflow: hidden; display: grid; place-items: center; }
+.ow__view { position: absolute; inset: 0; overflow: hidden; display: grid; place-items: center; background: #000; }
 .ow-canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+/* the whole world is drawn on paper: fine grain and pencil hatching at screen resolution */
+.ow__view::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  background:
+    repeating-linear-gradient(135deg, rgba(70, 60, 90, 0.1) 0 1px, transparent 1px 5px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 .ow__mapname {
   position: absolute;
   top: 8px;

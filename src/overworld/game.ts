@@ -2,6 +2,7 @@ import type { Dir } from '../save/schema';
 import { footprint, paintBuilding } from './buildings';
 import { LEGEND, type MapBuilding, type MapDef, type NpcDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
 import { makeCanvas, Painter } from './pixel';
+import { pencilize } from './pencil';
 import { SpriteSheet, type Look } from './sprites';
 import { tile } from './tiles';
 
@@ -131,6 +132,7 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
       }
     }
     for (const b of def.buildings ?? []) ctx.drawImage(paintBuilding(b), (b.x + MARGIN) * TILE, (b.y + MARGIN) * TILE);
+    pencilize(c);
     layers.push(c);
   }
   const npcs: Actor[] = (def.npcs ?? []).filter(visibleNpc).map((n) => ({
