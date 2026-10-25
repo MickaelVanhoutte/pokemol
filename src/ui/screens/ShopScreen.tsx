@@ -8,6 +8,8 @@ import { ShopView } from '../views/ShopView';
 const STOCK: Record<string, number> = {
   'crayon-ball': 0, potion: 0, retouche: 0,
   'super-crayon-ball': 1, 'super-potion': 1, rappel: 1,
+  'sirop-attaque': 2, 'sirop-defense': 2, 'sirop-vitesse': 2, 'sirop-special': 2, 'sirop-precision': 2,
+  'taille-crayon': 3, 'vernis': 3,
 };
 
 export function ShopScreen() {

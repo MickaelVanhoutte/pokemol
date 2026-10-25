@@ -130,6 +130,14 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       }
       return lines;
     }
+    case 'focus':
+      return [f(L('{n} se concentre à fond !', '{n} is getting pumped!'), { n: nm(e.side) })];
+    case 'guard':
+      return e.on
+        ? [tr(L('Une couche de vernis protège ton équipe : ses stats ne baisseront pas !', 'A coat of varnish protects your team: its stats won’t be lowered!'))]
+        : e.side === 0 ? [tr(L('Le vernis protecteur s’écaille.', 'The protective varnish wore off.'))] : [];
+    case 'guarded':
+      return [f(L('Le vernis protège {n} : ses stats ne baissent pas !', '{n} is protected by the varnish!'), { n: nm(e.side) })];
     case 'regen':
       return [f(L('{n} grignote son {i} et récupère des PV.', '{n} restored a little HP using its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
     case 'ball':

@@ -15,6 +15,8 @@ export interface Volatile {
   stages: Record<StageKey, number>;
   confusion: number;
   flinch: boolean;
+  /** Pencil Sharpener: one more critical-hit stage (lost when withdrawn). */
+  focus: boolean;
 }
 
 export interface SideState {
@@ -23,6 +25,8 @@ export interface SideState {
   active: number;
   isAI: boolean;
   vol: Volatile;
+  /** Protective Varnish: turns left during which the foe can't lower this side's stats (whole side). */
+  guard: number;
 }
 
 export interface BattleState {
@@ -85,6 +89,11 @@ export type BattleEvent =
   /** A held berry was eaten (HP restored and/or a status cured). */
   | { t: 'berry'; side: Side; item: string; amount?: number; cured?: Major | 'confusion' }
   | { t: 'regen'; side: Side; item: string; amount: number }
+  | { t: 'focus'; side: Side }
+  /** Protective Varnish starts (`on`) or wears off. */
+  | { t: 'guard'; side: Side; on: boolean }
+  /** A foe's stat drop was blocked by the varnish. */
+  | { t: 'guarded'; side: Side }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
   | { t: 'blocked' }
   | { t: 'run'; ok: boolean }
@@ -128,7 +137,9 @@ class Recorder implements Out {
 
 const STRUGGLE = 'lutte';
 const other = (s: Side): Side => (s === 0 ? 1 : 0);
-const freshVol = (): Volatile => ({ stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false });
+const freshVol = (): Volatile => ({ stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false });
+/** Gen 3 critical-hit chance by stage (high-crit moves +1, Pencil Sharpener +1). */
+const CRIT = [1 / 16, 1 / 8, 1 / 4, 1 / 3, 1 / 2];
 export const activeMon = (s: SideState): Mon => s.party[s.active];
 const alive = (m: Mon) => m.hp > 0;
 
@@ -136,7 +147,7 @@ const alive = (m: Mon) => m.hp > 0;
 
 export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   const mk = (s: SideSetup): SideState => ({
-    name: s.name, party: structuredClone(s.party), active: Math.max(0, s.party.findIndex(alive)), isAI: s.isAI, vol: freshVol(),
+    name: s.name, party: structuredClone(s.party), active: Math.max(0, s.party.findIndex(alive)), isAI: s.isAI, vol: freshVol(), guard: 0,
   });
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
@@ -238,7 +249,12 @@ function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMov
   return true;
 }
 
-function changeStage(st: BattleState, side: Side, stat: StageKey, delta: number, out: Out) {
+/** `byFoe`: the change comes from the other side (the varnish blocks those drops). */
+function changeStage(st: BattleState, side: Side, stat: StageKey, delta: number, out: Out, byFoe = false) {
+  if (byFoe && delta < 0 && st.sides[side].guard > 0) {
+    out.push({ t: 'guarded', side });
+    return;
+  }
   const v = st.sides[side].vol;
   const before = v.stages[stat];
   const after = Math.max(-6, Math.min(6, before + delta));
@@ -264,7 +280,7 @@ export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: 
   const phys = mv.cat === 'phys';
   const A = effectiveStat(atkSide, phys ? 'atk' : 'spa') * (phys && a.status === 'burn' ? 0.5 : 1);
   const D = effectiveStat(defSide, phys ? 'def' : 'spd');
-  const critChance = mv.effects?.some((e) => e.kind === 'highCrit') ? 1 / 8 : 1 / 16;
+  const critChance = CRIT[(mv.effects?.some((e) => e.kind === 'highCrit') ? 1 : 0) + (atkSide.vol.focus ? 1 : 0)];
   const crit = forceCrit ?? nextRandom(st) < critChance;
   let dmg = Math.floor(Math.floor((Math.floor((2 * a.level) / 5 + 2) * power * A) / D) / 50) + 2;
   if (crit) dmg *= 2;
@@ -414,7 +430,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
       case 'stage':
         if (nextRandom(st) * 100 < e.chance) {
           if (e.target === 'self') changeStage(st, side, e.stat, e.stages, out);
-          else if (alive(target)) changeStage(st, foeSide, e.stat, e.stages, out);
+          else if (alive(target)) changeStage(st, foeSide, e.stat, e.stages, out, true);
         }
         break;
     }
@@ -442,7 +458,7 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
         anything = true;
         break;
       case 'stage':
-        changeStage(st, e.target === 'self' ? side : foeSide, e.stat, e.stages, out);
+        changeStage(st, e.target === 'self' ? side : foeSide, e.stat, e.stages, out, e.target !== 'self');
         anything = true;
         break;
       case 'heal':
@@ -520,6 +536,13 @@ export function itemUsable(st: BattleState, itemId: string, target: number): boo
     return alive(m) && ((def.amount > 0 && m.hp < maxHp(m)) || (!!m.status && !!def.cures?.includes(m.status)) || (confused && !!def.cures?.includes('confusion')));
   }
   if (def.kind === 'revive') return !alive(m);
+  if (def.kind === 'battle') {
+    const me = st.sides[0];
+    if (target !== me.active || !alive(m)) return false;
+    if (def.boost === 'crit') return !me.vol.focus;
+    if (def.boost === 'guard') return me.guard === 0;
+    return !!def.boost && me.vol.stages[def.boost] < 6;
+  }
   return false;
 }
 
@@ -548,6 +571,15 @@ function useItem(st: BattleState, itemId: string, target: number, out: Out) {
     }
     if (target === st.sides[0].active && def.cures?.includes('confusion')) st.sides[0].vol.confusion = 0;
     out.push({ t: 'useItem', item: itemId, target, amount: h || undefined });
+  } else if (def.kind === 'battle') {
+    out.push({ t: 'useItem', item: itemId, target });
+    if (def.boost === 'crit') {
+      st.sides[0].vol.focus = true;
+      out.push({ t: 'focus', side: 0 });
+    } else if (def.boost === 'guard') {
+      st.sides[0].guard = 5;
+      out.push({ t: 'guard', side: 0, on: true });
+    } else if (def.boost) changeStage(st, 0, def.boost, 1, out);
   }
 }
 
@@ -704,6 +736,13 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     const amount = Math.min(maxHp(m) - m.hp, Math.max(1, Math.floor(maxHp(m) / 16)));
     m.hp += amount;
     out.push({ t: 'regen', side, item: m.item, amount });
+  }
+  // end of turn: the varnish wears off
+  for (const side of [0, 1] as Side[]) {
+    const s = st.sides[side];
+    if (st.result || s.guard <= 0) continue;
+    s.guard--;
+    if (s.guard === 0) out.push({ t: 'guard', side, on: false });
   }
   me.vol.flinch = false;
   st.sides[1].vol.flinch = false;

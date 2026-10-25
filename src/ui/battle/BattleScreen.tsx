@@ -69,6 +69,7 @@ export function BattleScreen(props: BattleProps) {
   const [busy, setBusy] = useState(true);
   const [menu, setMenu] = useState<'main' | 'fight'>('main');
   const [overlay, setOverlay] = useState<Overlay>(null);
+  const [bagNote, setBagNote] = useState('');
   const [fx, setFx] = useState<Fx>({});
   const [ball, setBall] = useState<BallFx | null>(null);
   const [captured, setCaptured] = useState(false);
@@ -230,7 +231,7 @@ export function BattleScreen(props: BattleProps) {
         struggling={!usableSlots(active).length}
         pulseAttack={coach === 1}
         onFight={() => setMenu('fight')}
-        onBag={() => setOverlay({ kind: 'bag' })}
+        onBag={() => { setBagNote(''); setOverlay({ kind: 'bag' }); }}
         onParty={() => setOverlay({ kind: 'party' })}
         onRun={() => dispatch({ type: 'run' })}
         onMove={(slot) => dispatch({ type: 'move', slot })}
@@ -243,12 +244,19 @@ export function BattleScreen(props: BattleProps) {
         <BagView
           bag={bag}
           context="battle"
+          note={bagNote}
           wild={st.kind === 'wild'}
           onClose={() => setOverlay(null)}
           onUse={(id) => {
-            if (item(id).kind === 'ball') {
+            const kind = item(id).kind;
+            if (kind === 'ball') {
               setOverlay(null);
               useItemNow(id);
+            } else if (kind === 'battle') {
+              // syrups and the like work on the creature fighting, like the GBA games
+              if (!itemUsable(st, id, me.active)) return setBagNote(tr(L('Ça n’aura aucun effet.', 'It won’t have any effect.')));
+              setOverlay(null);
+              useItemNow(id, me.active);
             } else setOverlay({ kind: 'target', item: id });
           }}
         />

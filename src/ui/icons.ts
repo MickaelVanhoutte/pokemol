@@ -50,6 +50,25 @@ function berry(p: Painter, light: string, dark: string) {
   p.rect(9, 3, 2, 1, PAL.e);
 }
 
+/** A small flask for battle items (syrups…), with a coloured label. */
+function flask(p: Painter, liquid: string, label: string) {
+  const rows = [
+    '.....KKKK.......',
+    '.....KggK.......',
+    '.....KggK.......',
+    '....KKggKK......',
+    '...KLLLLLLK.....',
+    '..KLLLLLLLLK....',
+    '..KLWLLLLLLK....',
+    '..KCCCCCCCCK....',
+    '..KCCCCCCCCK....',
+    '..KLLLLLLLLK....',
+    '...KLLLLLLK.....',
+    '....KKKKKK......',
+  ];
+  p.at(3, 2).sprite(rows, { ...PAL, L: liquid, C: label });
+}
+
 /** Items painted in code (berries, tinted items). */
 const PAINTED: Record<string, (p: Painter) => void> = {
   'baie-bleue': (p) => berry(p, PAL.B, PAL.b),
@@ -60,6 +79,13 @@ const PAINTED: Record<string, (p: Painter) => void> = {
   'baie-givree': (p) => berry(p, '#bfeaf2', PAL.T),
   'baie-menthe': (p) => berry(p, '#9fe09a', PAL.e),
   'baie-prisme': (p) => berry(p, PAL.M, PAL.P),
+  'sirop-attaque': (p) => flask(p, PAL.R, PAL.Y),
+  'sirop-defense': (p) => flask(p, PAL.B, PAL.Y),
+  'sirop-vitesse': (p) => flask(p, PAL.T, PAL.Y),
+  'sirop-special': (p) => flask(p, PAL.P, PAL.Y),
+  'sirop-precision': (p) => flask(p, PAL.E, PAL.Y),
+  'taille-crayon': (p) => flask(p, PAL.O, PAL.W),
+  'vernis': (p) => flask(p, PAL.g, PAL.M),
 };
 
 const ROWS: Record<string, string[]> = {

@@ -75,8 +75,11 @@ export interface SpeciesDef {
   faces?: 'left' | 'right';
 }
 
-/** `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held. */
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold';
+/**
+ * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
+ * `battle`: boosts the creature fighting (syrups, sharpener, varnish), only in battle.
+ */
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle';
 
 export interface ItemDef {
   id: string;
@@ -90,4 +93,6 @@ export interface ItemDef {
   cures?: (Major | 'confusion')[];
   /** Held items: their effect. */
   hold?: 'regen' | 'shareXp';
+  /** Battle items: the stat raised one stage, `crit` (Pencil Sharpener) or `guard` (Protective Varnish, 5 turns). */
+  boost?: StageKey | 'crit' | 'guard';
 }

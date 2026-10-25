@@ -272,6 +272,52 @@ describe('battle', () => {
     expect(r.state.sides[0].party[0].status === 'burn').toBe(false);
   });
 
+  it('syrups raise a stat of the creature fighting, one stage each', () => {
+    const me = mon('002', 10);
+    const st = battle([me, mon('001', 10)], [mon('003', 10)]);
+    expect(itemUsable(st, 'sirop-attaque', 1)).toBe(false);
+    expect(itemUsable(st, 'sirop-attaque', 0)).toBe(true);
+    const r = act(st, { type: 'item', item: 'sirop-attaque', target: 0 }, { type: 'move', slot: 0 });
+    expect(r.events.find((e) => e.t === 'stage')).toMatchObject({ side: 0, stat: 'atk', delta: 1 });
+    expect(r.state.sides[0].vol.stages.atk).toBe(1);
+    const maxed = structuredClone(st);
+    maxed.sides[0].vol.stages.spe = 6;
+    expect(itemUsable(maxed, 'sirop-vitesse', 0)).toBe(false);
+  });
+
+  it('the Pencil Sharpener doubles the critical-hit chance until withdrawn', () => {
+    const st = battle([mon('002', 10)], [mon('001', 10)]);
+    const fire = MOVES.find((m) => m.id === 'flammeche')!;
+    const crits = (s: BattleState) => {
+      let n = 0;
+      for (let i = 0; i < 4000; i++) if (computeDamage({ rng: i * 7919 }, s.sides[0], s.sides[1], fire, 40).crit) n++;
+      return n / 4000;
+    };
+    const r = act(st, { type: 'item', item: 'taille-crayon', target: 0 }, { type: 'move', slot: 0 });
+    expect(r.state.sides[0].vol.focus).toBe(true);
+    expect(itemUsable(r.state, 'taille-crayon', 0)).toBe(false);
+    expect(crits(st)).toBeLessThan(0.09);
+    expect(crits(r.state)).toBeGreaterThan(0.1);
+  });
+
+  it('the Protective Varnish blocks the foe’s stat drops for 5 turns, not your own', () => {
+    const me = mon('003', 15);
+    const foe = mon('009', 15);
+    const st = battle([me], [foe]);
+    expect(slotOf(foe, 'grimace')).toBeGreaterThanOrEqual(0);
+    let r = act(st, { type: 'item', item: 'vernis', target: 0 }, { type: 'move', slot: slotOf(foe, 'grimace') });
+    expect(r.events.some((e) => e.t === 'guarded' && e.side === 0)).toBe(true);
+    expect(r.state.sides[0].guard).toBe(4);
+    expect(r.state.sides[0].vol.stages.spe).toBe(0);
+    let cur = r.state;
+    for (let t = 0; t < 4; t++) {
+      r = act(cur, { type: 'move', slot: slotOf(me, 'carapace-tambour') >= 0 ? slotOf(me, 'carapace-tambour') : 0 }, { type: 'move', slot: slotOf(foe, 'grimace') });
+      cur = r.state;
+    }
+    expect(cur.sides[0].guard).toBe(0);
+    expect(r.events.some((e) => e.t === 'guard' && !e.on)).toBe(true);
+  });
+
   it('AI vs AI battles always end', () => {
     const ids = CREATURES.map((c) => c.id);
     for (let seed = 1; seed <= 200; seed++) {

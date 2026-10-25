@@ -26,6 +26,35 @@ export const ITEMS: ItemDef[] = [
     id: 'rappel', name: L('Rappel', 'Revive'), price: 1500, kind: 'revive', amount: 50,
     desc: L('Réveille une Bestiole K.O. avec la moitié de ses PV.', 'Revives a fainted Critter with half its HP.'),
   },
+  // ---------------------------------------------------------------- battle items (on the creature fighting)
+  {
+    id: 'sirop-attaque', name: L('Sirop d’Attaque', 'Attack Syrup'), price: 500, kind: 'battle', amount: 0, boost: 'atk',
+    desc: L('Une gorgée qui augmente l’Attaque de la Bestiole au combat, jusqu’à ce qu’elle revienne.', 'A sip that raises the Attack of the Critter in battle, until it is withdrawn.'),
+  },
+  {
+    id: 'sirop-defense', name: L('Sirop de Défense', 'Defense Syrup'), price: 550, kind: 'battle', amount: 0, boost: 'def',
+    desc: L('Une gorgée qui augmente la Défense de la Bestiole au combat.', 'A sip that raises the Defense of the Critter in battle.'),
+  },
+  {
+    id: 'sirop-vitesse', name: L('Sirop de Vitesse', 'Speed Syrup'), price: 350, kind: 'battle', amount: 0, boost: 'spe',
+    desc: L('Une gorgée qui augmente la Vitesse de la Bestiole au combat.', 'A sip that raises the Speed of the Critter in battle.'),
+  },
+  {
+    id: 'sirop-special', name: L('Sirop Spécial', 'Special Syrup'), price: 350, kind: 'battle', amount: 0, boost: 'spa',
+    desc: L('Une gorgée qui augmente l’Attaque Spéciale de la Bestiole au combat.', 'A sip that raises the Sp. Atk of the Critter in battle.'),
+  },
+  {
+    id: 'sirop-precision', name: L('Sirop de Précision', 'Accuracy Syrup'), price: 950, kind: 'battle', amount: 0, boost: 'acc',
+    desc: L('Une gorgée qui augmente la Précision de la Bestiole au combat.', 'A sip that raises the accuracy of the Critter in battle.'),
+  },
+  {
+    id: 'taille-crayon', name: L('Taille-crayon', 'Pencil Sharpener'), price: 650, kind: 'battle', amount: 0, boost: 'crit',
+    desc: L('Une mine bien taillée : la Bestiole au combat porte plus souvent des coups critiques.', 'A sharp tip: the Critter in battle lands critical hits more often.'),
+  },
+  {
+    id: 'vernis', name: L('Vernis Protecteur', 'Protective Varnish'), price: 700, kind: 'battle', amount: 0, boost: 'guard',
+    desc: L('Un coup de vernis : pendant 5 tours, l’ennemi ne peut pas faire baisser les stats de ton équipe.', 'A coat of varnish: for 5 turns, the foe can’t lower your team’s stats.'),
+  },
   // ---------------------------------------------------------------- berries (a Bestiole can hold one)
   {
     id: 'baie-bleue', name: L('Baie Bleue', 'Blue Berry'), price: 0, kind: 'berry', amount: 10,

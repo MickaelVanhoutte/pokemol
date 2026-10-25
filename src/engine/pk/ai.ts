@@ -46,7 +46,7 @@ export function aiChoose(st: BattleState, slip = 0): Action {
       for (const e of mv.effects ?? []) {
         if (e.kind === 'status') score += target.status ? -50 : e.status === 'sleep' ? 70 : 50;
         if (e.kind === 'confuse') score += foe.vol.confusion ? -50 : 35;
-        if (e.kind === 'stage' && e.target === 'foe') score += foe.vol.stages[e.stat] <= -2 ? -30 : 25;
+        if (e.kind === 'stage' && e.target === 'foe') score += foe.vol.stages[e.stat] <= -2 || (e.stages < 0 && foe.guard > 0) ? -30 : 25;
         if (e.kind === 'stage' && e.target === 'self') score += me.vol.stages[e.stat] >= 2 || hpRatio < 0.5 ? -30 : 30;
         if (e.kind === 'heal' || e.kind === 'rest') score += hpRatio < 0.4 ? 90 : -60;
       }
