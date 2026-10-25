@@ -5,13 +5,14 @@ export type Screen =
   | { id: 'title' }
   | { id: 'newgame' }
   | { id: 'overworld' }
-  | { id: 'gallery' }
   | { id: 'settings'; back: Screen }
   | { id: 'battle'; props: BattleProps }
-  | { id: 'collection'; back: Screen }
+  | { id: 'party' }
+  | { id: 'bag' }
+  | { id: 'dex'; all?: boolean }
+  | { id: 'pc' }
   | { id: 'shop' }
-  | { id: 'gacha' }
-  | { id: 'dungeon' }
+  | { id: 'machine' }
   | { id: 'credits'; fromWorld?: boolean };
 
 export const screen = signal<Screen>({ id: 'title' });

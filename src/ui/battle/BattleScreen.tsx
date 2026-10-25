@@ -1,35 +1,36 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, t, tr } from '../../i18n';
 import { artUrl, creature } from '../../data/creatures';
-import { support } from '../../data/supportCards';
-import { aiStep } from '../../engine/battle/ai';
+import { ITEMS, item } from '../../data/items';
+import { move } from '../../data/moves';
+import { STATUSES, TYPES } from '../../data/types';
+import { aiChoose } from '../../engine/pk/ai';
 import {
-  activeOf, applyAction, attackProblem, blocked, canAttachEnergy, canAttack, canPlay, canSwapCard, captureChance,
-  createBattle, playTargets, retreatTargets, type Step,
-} from '../../engine/battle/engine';
-import type { Action, BattleEvent, BattleResult, BattleSetup, BattleState, Side } from '../../engine/battle/types';
-import { Card, SupportCard, TypeIcon, damageLabel } from '../Card';
-import { FieldCard, type Floater } from './FieldCard';
-import { describe, eventDuration, fighterName } from './messages';
+  act, activeMon, blocked, createBattle, itemUsable, usableSlots,
+  type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Side, type Step,
+} from '../../engine/pk/battle';
+import { maxHp, xpAt, type Mon } from '../../engine/pk/creature';
 import { sfx } from '../../audio/sfx';
+import { MonSummary } from '../MonSummary';
+import { describe, eventDuration, monName } from './messages';
 import './battle.css';
 
 export interface BattleProps {
   setup: BattleSetup;
-  /** Blank cards available for capture (wild battles). */
-  blankCards?: number;
-  captureBonus?: number;
-  onUseBlank?: () => void;
+  /** Bag contents when the battle starts. */
+  bag: Record<string, number>;
+  /** Called when an item is used, so the save can drop it from the bag. */
+  onUseItem?: (id: string) => void;
   onEnd: (result: BattleResult, state: BattleState) => void;
-  /** Extra lines shown on the result panel (rewards, XP…), computed by the caller. */
+  /** Extra lines shown when the battle is won (money…). */
   rewardLines?: (result: BattleResult, state: BattleState) => string[];
   backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
-  /** First battle: a coach explains energy, cards and attacks step by step. */
+  /** First battle: the professor explains the menu. */
   tutorial?: boolean;
 }
 
-type Mode = null | { kind: 'card'; hand: number; targets: number[] };
-type Menu = 'main' | 'attack' | 'bag' | 'team';
+type Menu = 'main' | 'fight' | 'bag' | 'party';
+type Fx = Partial<Record<Side, string>>;
 
 const sleep = (ms: number) => (ms <= 0 ? Promise.resolve() : new Promise((r) => setTimeout(r, ms)));
 
@@ -43,70 +44,59 @@ export function battleSpeed(): number {
 }
 
 export function BattleScreen(props: BattleProps) {
-  const { setup } = props;
   const stRef = useRef<BattleState | null>(null);
   const [st, setSt] = useState<BattleState | null>(null);
   const [view, setView] = useState<BattleState | null>(null);
-  const [msg, setMsg] = useState<string>('');
+  const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(true);
-  const [mode, setMode] = useState<Mode>(null);
-  const [sheet, setSheet] = useState<{ side: Side; fi: number } | null>(null);
-  const [foeCard, setFoeCard] = useState<string | null>(null);
-  const [coachStep, setCoachStep] = useState(props.tutorial ? 0 : -1);
   const [menu, setMenu] = useState<Menu>('main');
-  const [note, setNote] = useState<string | null>(null);
-  const [preview, setPreview] = useState<number | null>(null);
-  const [fx, setFx] = useState<Record<string, string>>({});
-  const [floaters, setFloaters] = useState<Floater[]>([]);
-  const [coin, setCoin] = useState<{ heads: boolean; key: number } | null>(null);
-  const [captured, setCaptured] = useState<string | null>(null);
-  const [ended, setEnded] = useState<BattleResult | null>(null);
-  const [blanks, setBlanks] = useState(props.blankCards ?? 0);
-  const floaterId = useRef(0);
+  const [itemTarget, setItemTarget] = useState<string | null>(null);
+  const [partyPick, setPartyPick] = useState<number | null>(null);
+  const [summary, setSummary] = useState<Mon | null>(null);
+  const [fx, setFx] = useState<Fx>({});
+  const [ball, setBall] = useState<{ shakes: number; caught: boolean; key: number } | null>(null);
+  const [captured, setCaptured] = useState(false);
+  const [bag, setBag] = useState<Record<string, number>>({ ...props.bag });
+  const [ended, setEnded] = useState(false);
+  const [coach, setCoach] = useState(props.tutorial ? 0 : -1);
   const speed = useRef(battleSpeed());
 
-  const flash = (uid: string, kind: string, text?: string, fkind: Floater['kind'] = 'dmg') => {
-    setFx((m) => ({ ...m, [uid]: kind }));
-    setTimeout(() => setFx((m) => {
-      const n = { ...m };
-      if (n[uid] === kind) delete n[uid];
-      return n;
-    }), 600);
-    if (text) {
-      const id = ++floaterId.current;
-      setFloaters((l) => [...l, { id, uid, text, kind: fkind }]);
-      setTimeout(() => setFloaters((l) => l.filter((x) => x.id !== id)), 1100);
-    }
+  const pulse = (side: Side, kind: string, ms = 500) => {
+    setFx((f) => ({ ...f, [side]: kind }));
+    setTimeout(() => setFx((f) => (f[side] === kind ? { ...f, [side]: undefined } : f)), ms);
   };
 
   const animate = async (e: BattleEvent, snap: BattleState) => {
     const lines = describe(e, snap);
-    if (lines.length) setMsg(lines.join(' '));
-    const uidOf = (side: Side, f: number) => snap.sides[side].fighters[f]?.uid ?? '';
+    // the ball shakes first, the result comes after
+    if (e.t === 'ball') setMsg(tr(L('Tu lances une {i} !', 'You threw a {i}!'), { i: tr(item(e.item).name) }));
+    else if (lines.length) setMsg(lines.join(' '));
     switch (e.t) {
-      case 'damage': flash(uidOf(e.side, e.f), 'hit', `−${e.amount}`); if (e.amount) sfx.hit(); break;
-      case 'heal': flash(uidOf(e.side, e.f), 'heal', `+${e.amount}`, 'heal'); sfx.heal(); break;
-      case 'ko': flash(uidOf(e.side, e.f), 'ko'); sfx.ko(); break;
-      case 'end': if (e.result === 'win') sfx.victory(); break;
-      case 'attack': flash(uidOf(e.side, e.f), e.side === 0 ? 'lunge-up' : 'lunge-down'); break;
-      case 'energy': flash(uidOf(e.side, e.f), 'glow', `+${e.amount}⚡`, 'info'); sfx.energy(); break;
-      case 'status': flash(uidOf(e.side, e.f), 'status'); break;
-      case 'coin': setCoin({ heads: e.heads, key: Date.now() }); sfx.coin(); break;
-      case 'play': if (e.side === 1) setFoeCard(e.card); break;
-      case 'swap': if (e.side === 0) sfx.sparkle(); break;
-      case 'capture':
-        if (e.success) {
-          setCaptured(snap.sides[1].fighters[0].defId);
-          sfx.capture();
-        }
-        else flash(uidOf(1, 0), 'hit');
+      case 'sendOut': pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
+      case 'withdraw': pulse(e.side, 'out', 600); break;
+      case 'move': pulse(e.side, e.side === 0 ? 'lunge-me' : 'lunge-foe', 450); break;
+      case 'damage': if (e.amount) { pulse(e.side, 'hit', 600); sfx.hit(); } break;
+      case 'confusedHit': case 'recoil': pulse(e.side, 'hit', 600); sfx.hit(); break;
+      case 'faint': pulse(e.side, 'faint', 2000); sfx.ko(); break;
+      case 'heal': case 'useItem': sfx.heal(); break;
+      case 'levelUp': sfx.levelUp(); break;
+      case 'status': pulse(e.side, 'status', 700); break;
+      case 'ball':
+        setBall({ shakes: e.shakes, caught: e.caught, key: Date.now() });
+        setCaptured(true);
+        if (e.caught) setTimeout(() => sfx.capture(), 400 + e.shakes * 650);
         break;
+      case 'end': if (e.result === 'win') sfx.victory(); break;
     }
     await sleep(eventDuration(e) * speed.current);
-    if (e.t === 'coin') setCoin(null);
-    if (e.t === 'play' && e.side === 1) {
-      await sleep(700 * speed.current);
-      setFoeCard(null);
+    if (e.t === 'ball') {
+      setMsg(lines.join(' '));
+      if (!e.caught) {
+        setBall(null);
+        setCaptured(false);
+      }
+      await sleep(900 * speed.current);
+      setBall(null);
     }
   };
 
@@ -123,62 +113,37 @@ export function BattleScreen(props: BattleProps) {
     setSt(s);
   };
 
-  const runAI = async () => {
-    let cur = stRef.current!;
-    let guard = 0;
-    while (cur.turn === 1 && !cur.result && !blocked(cur) && guard++ < 40) {
-      await sleep(350 * speed.current);
-      const step = applyAction(cur, aiStep(cur), true);
-      cur = step.state;
-      commit(cur);
-      await play(step);
-    }
-  };
-
-  const finishIfOver = (s: BattleState) => {
-    if (s.result) {
-      setEnded(s.result);
-      return true;
-    }
-    return false;
-  };
-
-  const dispatch = async (action: Action) => {
+  const dispatch = async (a: Action) => {
     const cur = stRef.current;
     if (!cur) return;
-    setMode(null);
-    setPreview(null);
-    setSheet(null);
-    setNote(null);
     setMenu('main');
+    setItemTarget(null);
+    setPartyPick(null);
     setBusy(true);
     try {
-      const step = applyAction(cur, action, true);
+      const enemy: Action = a.type === 'learn' || a.type === 'replace' ? { type: 'move', slot: 0 } : aiChoose(cur);
+      const step = act(cur, a, enemy, true);
       commit(step.state);
       await play(step);
-      if (!finishIfOver(step.state)) {
-        await runAI();
-        finishIfOver(stRef.current!);
-      }
+      if (step.state.result && !step.state.learnQueue.length) setEnded(true);
+      if (a.type === 'move') setCoach((c) => (c === 0 ? 1 : c));
     } finally {
       setBusy(false);
     }
+  };
+
+  const useItemNow = (id: string, target?: number) => {
+    setBag((b) => ({ ...b, [id]: (b[id] ?? 1) - 1 }));
+    props.onUseItem?.(id);
+    void dispatch(target === undefined ? { type: 'ball', item: id } : { type: 'item', item: id, target });
   };
 
   if (import.meta.env.DEV) {
     (window as unknown as Record<string, unknown>).__battle = { dispatch, state: () => stRef.current, speed };
   }
 
-  // tutorial steps move on by themselves once the player did the thing
   useEffect(() => {
-    if (!st) return;
-    if (coachStep === 0 && st.sides[0].energyAttached) setCoachStep(1);
-    if (coachStep <= 2 && coachStep >= 0 && st.turnNumber > 1) setCoachStep(3);
-    if (coachStep === 1 && menu === 'bag') setCoachStep(2);
-  }, [st, coachStep, menu]);
-
-  useEffect(() => {
-    const step = createBattle(setup, true);
+    const step = createBattle(props.setup, true);
     commit(step.state);
     (async () => {
       await play(step);
@@ -188,269 +153,199 @@ export function BattleScreen(props: BattleProps) {
 
   if (!st || !view) return <div class="battle" />;
 
-  const me = view.sides[0];
-  const foe = view.sides[1];
-  const myTurn = !busy && !ended && st.turn === 0 && !blocked(st);
-  const choosing = !busy && !ended && st.sides[0].mustChooseActive;
-  const active = activeOf(st.sides[0]);
-  const activeDef = creature(active.defId);
+  const me = st.sides[0];
+  const active = activeMon(me);
+  const learn = !busy && st.learnQueue.length ? st.learnQueue[0] : null;
+  const forced = !busy && st.needSwitch;
+  const idle = !busy && !st.result && !blocked(st);
   const wild = st.kind === 'wild';
-  const wildName = wild ? fighterName(view, 1, 0) : undefined;
-  const energyFree = myTurn && !st.sides[0].energyAttached;
-  const panel: Menu = choosing || mode ? 'team' : menu;
+  const learner = learn ? me.party.find((m) => m.uid === learn.uid) : null;
+  const bagItems = ITEMS.filter((it) => (bag[it.id] ?? 0) > 0 && (it.kind !== 'ball' || wild));
 
-  const selectableMine = (i: number): boolean => {
-    if (choosing) return !st.sides[0].fighters[i].ko && i !== st.sides[0].active;
-    if (!myTurn) return false;
-    if (mode) return mode.targets.includes(i);
-    return energyFree && canAttachEnergy(st, 0, i);
+  const prompt = forced
+    ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?'))
+    : itemTarget ? tr(L('Sur quelle Bestiole ?', 'Use it on which Critter?'))
+    : learn && learner ? tr(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. Laquelle oublier ?', '{n} wants to learn {m} but already knows 4 moves. Which one to forget?'), { n: tr(creature(learner.species).name), m: tr(move(learn.move).name) })
+    : idle ? tr(L('Que doit faire {n} ?', 'What will {n} do?'), { n: tr(creature(active.species).name) })
+    : msg;
+
+  const panel = forced || itemTarget ? 'party' : menu;
+  const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
+  const back = () => {
+    setMenu('main');
+    setItemTarget(null);
+    setPartyPick(null);
   };
 
-  const onMine = (i: number) => {
-    if (choosing) return dispatch({ type: 'chooseActive', fighter: i });
-    if (mode) return dispatch({ type: 'playCard', hand: mode.hand, target: i });
-    if (energyFree) return dispatch({ type: 'attachEnergy', fighter: i });
-  };
-
-  const playCard = (hi: number) => {
-    const targets = playTargets(st, 0, hi);
-    if (targets === null) return dispatch({ type: 'playCard', hand: hi });
-    if (targets.length === 1) return dispatch({ type: 'playCard', hand: hi, target: targets[0] });
-    setPreview(null);
-    setMode({ kind: 'card', hand: hi, targets });
-  };
-
-  const idlePrompt = t('battle.whatDo', { name: tr(activeDef.name) });
-  const prompt = choosing
-    ? t('battle.chooseActive')
-    : mode ? t('battle.pick.card')
-    : note ?? (myTurn ? idlePrompt : msg);
-
-  const fieldCard = (sideIdx: Side, i: number, size: 'active' | 'bench') => {
-    const f = view.sides[sideIdx].fighters[i];
-    return (
-      <FieldCard
-        key={f.uid}
-        f={f}
-        size={size}
-        wildName={sideIdx === 1 ? wildName : undefined}
-        fx={fx[f.uid]}
-        floaters={floaters.filter((x) => x.uid === f.uid)}
-        selectable={sideIdx === 0 && selectableMine(i)}
-        onClick={() => onMine(i)}
-        onInfo={() => setSheet({ side: sideIdx, fi: i })}
-      />
-    );
-  };
-  const bench = (sideIdx: Side) => view.sides[sideIdx].fighters.map((_, i) => (i === view.sides[sideIdx].active ? null : fieldCard(sideIdx, i, 'bench')));
-
-  const result = ended;
-  const rewardLines = result && props.rewardLines ? props.rewardLines(result, st) : [];
-  const chance = wild ? Math.round(captureChance(st, props.captureBonus ?? 0) * 100) : 0;
-
-  const coach = coachStep >= 0 && !busy && !ended && (coachStep < 3 ? myTurn : st.turn === 0) ? COACH[coachStep] : null;
-  const coachOn = (k: CoachTarget) => (coach?.target === k ? 'is-coach' : '');
-
-  const sheetFighter = sheet ? st.sides[sheet.side].fighters[sheet.fi] : null;
-  const back = <button class="gba-back" onClick={() => { setMenu('main'); setMode(null); }}>← {t('battle.btn.back')}</button>;
-
-  const run = () => {
-    if (wild) return dispatch({ type: 'flee' });
-    setNote(t('battle.cantFlee'));
-  };
+  const partyList = (onPick: (i: number) => void, can: (i: number) => boolean) => (
+    <div class="gba-sub">
+      {me.party.map((m, i) => (
+        <button class={`team-row ${i === me.active ? 'is-active' : ''} ${m.hp <= 0 ? 'is-ko' : ''}`} disabled={!can(i)} onClick={() => onPick(i)}>
+          <img src={artUrl(creature(m.species))} alt="" />
+          <span class="team-row__text">
+            <b>{tr(creature(m.species).name)} <small>{tr(L('N.{l}', 'Lv{l}'), { l: m.level })}</small> {m.status && <StatusTag s={m.status} />}</b>
+            <HpBar hp={m.hp} max={maxHp(m)} />
+            <small>{m.hp}/{maxHp(m)} {tr(L('PV', 'HP'))}</small>
+          </span>
+        </button>
+      ))}
+      {!forced && <button class="gba-back" onClick={back}>← {t('battle.btn.back')}</button>}
+    </div>
+  );
 
   return (
-    <div class={`battle backdrop-${props.backdrop ?? 'grass'}`} onDblClick={() => (speed.current = 0.35)}>
-      <div class="battle__foe-bar">
-        <span class="battle__who">{wild ? wildName : tr(foe.name)}</span>
-      </div>
-      <div class="battle__arena">
-        <div class="battle__bench battle__bench--foe">{bench(1)}</div>
-        <div class="slot slot--foe">{fieldCard(1, foe.active, 'active')}</div>
-        <div class="slot slot--me">{fieldCard(0, me.active, 'active')}</div>
-        <div class="battle__bench battle__bench--me">{bench(0)}</div>
+    <div class={`battle pk backdrop-${props.backdrop ?? 'grass'}`} onDblClick={() => (speed.current = 0.35)}>
+      <div class="pk-scene">
+        <HpBox st={view} side={1} />
+        <div class="pk-plat pk-plat--foe">
+          <img
+            class={`pk-sprite ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${activeMon(view.sides[1]).hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
+            src={artUrl(creature(activeMon(view.sides[1]).species))}
+            alt=""
+          />
+          {ball && <div class={`pk-ball shakes-${ball.shakes} ${ball.caught ? 'is-caught' : ''}`} key={ball.key}>✏️</div>}
+        </div>
+        <div class="pk-plat pk-plat--me">
+          <img
+            class={`pk-sprite pk-sprite--me ${fx[0] ? `fx-${fx[0]}` : ''} ${activeMon(view.sides[0]).hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
+            src={artUrl(creature(activeMon(view.sides[0]).species))}
+            alt=""
+          />
+        </div>
+        <HpBox st={view} side={0} />
       </div>
 
       <div class="battle__panel">
-        {coach ? (
+        {coach >= 0 && idle && !ended ? (
           <div class="coach">
             <span class="coach__who pixel">{tr(L('Prof. Fusain', 'Prof. Charcoal'))}</span>
-            <p class="pixel">{tr(coach.text)}</p>
-            {coach.ok && <button class="btn btn--small btn--primary" onClick={() => setCoachStep(coachStep === 3 ? -1 : coachStep + 1)}>OK</button>}
+            <p class="pixel">{tr(COACH[coach])}</p>
+            {coach === 1 && <button class="btn btn--small btn--primary" onClick={() => setCoach(-1)}>OK</button>}
           </div>
         ) : (
           <div class="battle__msg pixel" aria-live="polite">
-            <span>{prompt}</span>
-            {energyFree && !mode && !note && <span class="battle__hint">{t('battle.energyHint')}</span>}
+            <span>{ended ? [msg, ...rewardLines].filter(Boolean).join(' ') : prompt}</span>
           </div>
         )}
 
-        {panel === 'main' && (
-          <div class="gba-menu">
-            <button class={`gba-btn gba-btn--attack ${coachOn('attack')}`} disabled={!myTurn} onClick={() => { setNote(null); setMenu('attack'); }}>{t('battle.menu.attack')}</button>
-            <button class={`gba-btn gba-btn--bag ${coachOn('bag')}`} disabled={!myTurn} onClick={() => { setNote(null); setMenu('bag'); }}>
-              {t('battle.menu.bag')}{me.hand.length ? <i class="gba-badge">{me.hand.length}</i> : null}
-            </button>
-            <button class="gba-btn gba-btn--team" disabled={!myTurn} onClick={() => { setNote(null); setMenu('team'); }}>
-              {t('battle.menu.team')}{energyFree ? <i class="gba-badge gba-badge--energy">⚡</i> : null}
-            </button>
-            <button class="gba-btn gba-btn--run" disabled={!myTurn} onClick={run}>{t('battle.menu.run')}</button>
-          </div>
-        )}
-
-        {panel === 'attack' && (
+        {ended ? (
+          <button class="gba-btn gba-btn--attack gba-continue" onClick={() => props.onEnd(st.result!, stRef.current!)}>
+            {t('battle.btn.continue')} ▶
+          </button>
+        ) : learn && learner ? (
           <div class="gba-sub">
-            {activeDef.attacks.map((a, i) => {
-              const why = attackProblem(st, 0, i);
-              return (
-                <button class={`atk-btn ${coachOn('attack')}`} disabled={!myTurn || !canAttack(st, 0, i)} onClick={() => dispatch({ type: 'attack', attack: i })}>
-                  <span class="atk-btn__cost">
-                    {a.cost ? Array.from({ length: a.cost }, () => <TypeIcon type={activeDef.type} size="1.05em" />) : '—'}
-                  </span>
-                  <span class="atk-btn__name">
-                    {tr(a.name)}
-                    {why ? <small class="atk-btn__why">{t(`battle.why.${why}`)}</small> : a.text ? <small class="atk-btn__text">{tr(a.text)}</small> : null}
-                  </span>
-                  <span class="atk-btn__dmg">{damageLabel(a, active.dmgBonus)}</span>
-                </button>
-              );
-            })}
-            <div class="gba-row">
-              {back}
-              <button class="gba-back gba-back--pass" disabled={!myTurn} onClick={() => dispatch({ type: 'endTurn' })}>{t('battle.menu.pass')} ▶</button>
+            <div class="pk-moves">
+              {learner.moves.map((s, i) => <MoveButton id={s.id} pp={s.pp} onClick={() => dispatch({ type: 'learn', forget: i })} />)}
             </div>
+            <button class="gba-back gba-back--pass" onClick={() => dispatch({ type: 'learn', forget: null })}>
+              {tr(L('Ne pas apprendre {m}', 'Don’t learn {m}'), { m: tr(move(learn.move).name) })}
+            </button>
           </div>
-        )}
-
-        {panel === 'bag' && (
+        ) : panel === 'main' ? (
+          <div class="gba-menu">
+            <button class={`gba-btn gba-btn--attack ${coach === 0 ? 'is-coach' : ''}`} disabled={!idle} onClick={() => setMenu('fight')}>
+              {t('battle.menu.attack')}
+            </button>
+            <button class="gba-btn gba-btn--bag" disabled={!idle} onClick={() => setMenu('bag')}>{t('battle.menu.bag')}</button>
+            <button class="gba-btn gba-btn--team" disabled={!idle} onClick={() => setMenu('party')}>{tr(L('Bestioles', 'Critters'))}</button>
+            <button class="gba-btn gba-btn--run" disabled={!idle} onClick={() => dispatch({ type: 'run' })}>{t('battle.menu.run')}</button>
+          </div>
+        ) : panel === 'fight' ? (
           <div class="gba-sub">
-            {me.hand.length === 0 && !wild && <p class="gba-empty">{t('battle.bagEmpty')}</p>}
-            {me.hand.map((id, i) => {
-              const def = support(id);
-              return (
-                <button class={`bag-row ${coachOn('bag')}`} onClick={() => setPreview(i)}>
-                  <span class="bag-row__icon">{def.icon}</span>
-                  <span class="bag-row__text"><b>{tr(def.name)}</b><small>{tr(def.text)}</small></span>
-                  <span class={`bag-row__state ${canPlay(st, 0, i) ? 'is-ok' : ''}`}>▶</span>
-                </button>
-              );
-            })}
-            {wild && (
-              <button
-                class="bag-row bag-row--blank"
-                disabled={!myTurn || blanks <= 0}
-                onClick={() => {
-                  setBlanks((b) => b - 1);
-                  props.onUseBlank?.();
-                  dispatch({ type: 'capture', bonus: props.captureBonus });
-                }}
-              >
-                <span class="bag-row__icon">🃏</span>
-                <span class="bag-row__text"><b>{t('battle.btn.capture', { n: blanks })}</b><small>{t('battle.chance', { n: chance })}</small></span>
+            <div class="pk-moves">
+              {usableSlots(active).length
+                ? active.moves.map((s, i) => <MoveButton id={s.id} pp={s.pp} disabled={!idle || s.pp <= 0} onClick={() => dispatch({ type: 'move', slot: i })} />)
+                : <MoveButton id="lutte" disabled={!idle} onClick={() => dispatch({ type: 'move', slot: -1 })} />}
+            </div>
+            <button class="gba-back" onClick={back}>← {t('battle.btn.back')}</button>
+          </div>
+        ) : panel === 'bag' ? (
+          <div class="gba-sub">
+            {bagItems.map((it) => (
+              <button class={`bag-row ${it.kind === 'ball' ? 'bag-row--blank' : ''}`} disabled={!idle} onClick={() => (it.kind === 'ball' ? useItemNow(it.id) : setItemTarget(it.id))}>
+                <span class="bag-row__icon">{it.icon}</span>
+                <span class="bag-row__text"><b>{tr(it.name)} ×{bag[it.id]}</b><small>{tr(it.desc)}</small></span>
                 <span class="bag-row__state is-ok">▶</span>
               </button>
-            )}
-            {back}
+            ))}
+            {!bagItems.length && <p class="gba-empty">{tr(L('Ton sac est vide.', 'Your bag is empty.'))}</p>}
+            <button class="gba-back" onClick={back}>← {t('battle.btn.back')}</button>
           </div>
-        )}
-
-        {panel === 'team' && (
+        ) : forced ? (
+          partyList((i) => dispatch({ type: 'replace', to: i }), (i) => me.party[i].hp > 0 && i !== me.active)
+        ) : itemTarget ? (
+          partyList((i) => useItemNow(itemTarget, i), (i) => itemUsable(st, itemTarget, i))
+        ) : partyPick !== null ? (
           <div class="gba-sub">
-            {st.sides[0].fighters.map((f, i) => {
-              const def = creature(f.defId);
-              const pick = choosing || !!mode;
-              const can = pick ? selectableMine(i) : true;
-              return (
-                <button
-                  class={`team-row ${i === st.sides[0].active ? 'is-active' : ''} ${f.ko ? 'is-ko' : ''} ${pick && can ? 'is-target' : ''}`}
-                  disabled={pick && !can}
-                  onClick={() => (pick ? onMine(i) : setSheet({ side: 0, fi: i }))}
-                >
-                  <img src={artUrl(def)} alt="" />
-                  <span class="team-row__text">
-                    <b>{tr(def.name)} <small>{t('card.level', { n: f.level })}</small></b>
-                    <span class={`hpbar hpbar--${f.hp / f.maxHp > 0.5 ? 'ok' : f.hp / f.maxHp > 0.2 ? 'mid' : 'low'}`}><span style={{ width: `${(f.hp / f.maxHp) * 100}%` }} /></span>
-                    <small>{f.hp}/{f.maxHp}{f.energy ? ` · ${f.energy > 5 ? `⚡×${f.energy}` : '⚡'.repeat(f.energy)}` : ''}{i === st.sides[0].active ? ` · ${t('battle.inBattle')}` : ''}</small>
-                  </span>
-                </button>
-              );
-            })}
-            {!choosing && back}
+            <p class="gba-empty">{tr(creature(me.party[partyPick].species).name)}</p>
+            <div class="gba-row">
+              <button
+                class="gba-back gba-back--pass"
+                disabled={!idle || partyPick === me.active || me.party[partyPick].hp <= 0}
+                onClick={() => dispatch({ type: 'switch', to: partyPick })}
+              >
+                {tr(L('Envoyer', 'Shift'))}
+              </button>
+              <button class="gba-back" onClick={() => setSummary(me.party[partyPick])}>{tr(L('Résumé', 'Summary'))}</button>
+            </div>
+            <button class="gba-back" onClick={() => setPartyPick(null)}>← {t('battle.btn.back')}</button>
           </div>
+        ) : (
+          partyList((i) => setPartyPick(i), () => true)
         )}
       </div>
 
-      {preview !== null && me.hand[preview] && (
-        <div class="overlay" onClick={() => setPreview(null)}>
-          <div class="preview" onClick={(e) => e.stopPropagation()}>
-            <SupportCard def={support(me.hand[preview])} width={Math.min(300, window.innerWidth - 48, Math.floor((window.innerHeight - 140) * 0.7))} />
-            <div class="preview__btns">
-              <button class="btn" onClick={() => setPreview(null)}>{t('battle.btn.close')}</button>
-              <button class="btn" disabled={!myTurn || !canSwapCard(st, 0, preview)} onClick={() => dispatch({ type: 'swapCard', hand: preview })}>🔄 {t('battle.btn.swap')} ⚡</button>
-              <button class="btn btn--primary" disabled={!myTurn || !canPlay(st, 0, preview)} onClick={() => playCard(preview)}>{t('battle.btn.play')}</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {summary && <MonSummary mon={summary} onClose={() => setSummary(null)} />}
+    </div>
+  );
+}
 
-      {sheet && sheetFighter && (
-        <div class="overlay" onClick={() => setSheet(null)}>
-          <div class="preview" onClick={(e) => e.stopPropagation()}>
-            <Card def={creature(sheetFighter.defId)} width={Math.min(340, window.innerWidth - 32, Math.floor((window.innerHeight - 130) * 0.7))} level={sheetFighter.level} />
-            <div class="preview__btns">
-              <button class="btn" onClick={() => setSheet(null)}>{t('battle.btn.close')}</button>
-              {sheet.side === 0 && myTurn && canAttachEnergy(st, 0, sheet.fi) && (
-                <button class="btn btn--energy" onClick={() => dispatch({ type: 'attachEnergy', fighter: sheet.fi })}>⚡ {t('battle.giveEnergy')}</button>
-              )}
-              {sheet.side === 0 && sheet.fi !== st.sides[0].active && !sheetFighter.ko && (
-                <button class="btn btn--primary" disabled={!myTurn || !retreatTargets(st, 0).includes(sheet.fi)} onClick={() => dispatch({ type: 'retreat', to: sheet.fi })}>
-                  ↩ {t('battle.sendOut')} {activeDef.retreat ? `(−${'⚡'.repeat(activeDef.retreat)})` : ''}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+const COACH = [
+  L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
+  L('Dans le SAC : tes Potions et tes Crayon-balls. BESTIOLES sert à changer de Bestiole, et FUITE marche contre les Bestioles sauvages.', 'The BAG holds your Potions and Pencil Balls. CRITTERS lets you switch, and RUN works against wild Critters.'),
+];
 
-      {foeCard && (
-        <div class="foe-card">
-          <SupportCard def={support(foeCard)} width={Math.min(200, window.innerWidth * 0.5)} />
-        </div>
-      )}
+export function StatusTag({ s }: { s: NonNullable<Mon['status']> }) {
+  return <i class="pk-status" style={{ background: STATUSES[s].color }}>{tr(STATUSES[s].tag)}</i>;
+}
 
-      {coin && (
-        <div class="coin-wrap" key={coin.key}>
-          <div class={`coin ${coin.heads ? 'coin--heads' : 'coin--tails'}`}>
-            <div class="coin__face coin__face--heads">☺</div>
-            <div class="coin__face coin__face--tails">✿</div>
-          </div>
-          <div class="coin__label pixel">{coin.heads ? t('battle.heads') : t('battle.tails')}</div>
-        </div>
-      )}
+export function HpBar({ hp, max }: { hp: number; max: number }) {
+  const pct = Math.max(0, (hp / max) * 100);
+  return (
+    <span class={`hpbar hpbar--${pct > 50 ? 'ok' : pct > 20 ? 'mid' : 'low'}`}>
+      <span style={{ width: `${pct}%` }} />
+    </span>
+  );
+}
 
-      {(captured || result) && (
-        <div class="overlay">
-          <div class="result-col">
-            {captured && <Card def={creature(captured)} width={Math.min(280, window.innerWidth - 48)} class="card--reveal" />}
-            {result && (
-              <div class={`result result--${result}`}>
-                <h2 class="pixel">{t(`battle.end.${result}`)}</h2>
-                {rewardLines.map((l) => <p>{l}</p>)}
-                <button class="btn btn--primary" onClick={() => props.onEnd(result, stRef.current!)}>{t('battle.btn.continue')}</button>
-              </div>
-            )}
-          </div>
-        </div>
+function HpBox({ st, side }: { st: BattleState; side: Side }) {
+  const m = activeMon(st.sides[side]);
+  const max = maxHp(m);
+  const xpPct = side === 0 && m.level < 50 ? ((m.xp - xpAt(m.level)) / (xpAt(m.level + 1) - xpAt(m.level))) * 100 : 0;
+  return (
+    <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
+      <div class="pk-hp__top">
+        <b>{side === 0 ? tr(creature(m.species).name) : monName(st, 1)}</b>
+        {m.status && <StatusTag s={m.status} />}
+        <span>{tr(L('N.{l}', 'Lv{l}'), { l: m.level })}</span>
+      </div>
+      <div class="pk-hp__bar"><small>{tr(L('PV', 'HP'))}</small><HpBar hp={m.hp} max={max} /></div>
+      {side === 0 && (
+        <>
+          <div class="pk-hp__num">{m.hp}/{max}</div>
+          <div class="pk-xp"><span style={{ width: `${Math.max(0, Math.min(100, xpPct))}%` }} /></div>
+        </>
       )}
     </div>
   );
 }
 
-type CoachTarget = 'bag' | 'attack' | null;
-
-const COACH: { text: ReturnType<typeof L>; target: CoachTarget; ok?: boolean }[] = [
-  { text: L('À chaque tour, tu reçois une énergie ⚡. Touche ta Bestiole pour la lui donner !', 'Each turn you get one energy ⚡. Tap your Critter to give it!'), target: null },
-  { text: L('Ouvre ton SAC : tu y trouves une carte à chaque tour. Joue-la, ou échange-la contre ton ⚡ un autre tour.', 'Open your BAG: you get a card in it every turn. Play it, or trade it for your ⚡ another turn.'), target: 'bag', ok: true },
-  { text: L('Maintenant, touche ATTAQUE et choisis une attaque ! Elle coûte de l’énergie ⚡ et termine ton tour.', 'Now tap FIGHT and choose an attack! It costs energy ⚡ and ends your turn.'), target: 'attack' },
-  { text: L('Bravo ! Gomme a joué son tour. À toi : ⚡, le SAC si tu veux, puis ATTAQUE !', 'Well done! Eraser played their turn. Your go: ⚡, the BAG if you like, then FIGHT!'), target: null, ok: true },
-];
+export function MoveButton({ id, pp, disabled, onClick }: { id: string; pp?: number; disabled?: boolean; onClick: () => void }) {
+  const mv = move(id);
+  return (
+    <button class="pk-move" style={{ '--type': TYPES[mv.type].color }} disabled={disabled} onClick={onClick}>
+      <b>{tr(mv.name)}</b>
+      <small>{tr(TYPES[mv.type].name)}{pp !== undefined ? ` · PP ${pp}/${mv.pp}` : ''}</small>
+    </button>
+  );
+}

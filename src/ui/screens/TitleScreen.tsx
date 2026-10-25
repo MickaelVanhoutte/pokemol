@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, t, tr } from '../../i18n';
 import { CREATURES, artUrl } from '../../data/creatures';
 import { enterWorld } from '../../overworld/controller';
-import { hasSave, loadSave } from '../../state/game';
+import { hasSave, loadSave, outdatedSave } from '../../state/game';
 import { go } from '../../state/router';
 import './title.css';
 
@@ -34,12 +34,15 @@ export function TitleScreen() {
       <div class="title__panel">
         <h1 class="title__logo pixel">{t('game.title')}</h1>
         <p class="title__sub">{t('game.subtitle')}</p>
+        {outdatedSave.value && (
+          <p class="title__note">{tr(L('Le jeu a beaucoup changé : ton ancienne partie ne peut plus être chargée. Commence une nouvelle aventure !', 'The game changed a lot: your old save can’t be loaded anymore. Start a new adventure!'))}</p>
+        )}
         <div class="title__menu">
           {exists && <button class="btn btn--primary" onClick={cont}>{t('menu.continue')}</button>}
           <button class={`btn ${exists ? '' : 'btn--primary'}`} onClick={fresh}>
             {confirmNew ? tr(L('Effacer l’ancienne partie ?', 'Erase the old save?')) : t('menu.newGame')}
           </button>
-          <button class="btn" onClick={() => go({ id: 'gallery' })}>{t('menu.gallery')}</button>
+          <button class="btn" onClick={() => go({ id: 'dex', all: true })}>📖 {tr(L('Bestiodex', 'Critterdex'))}</button>
           <button class="btn btn--ghost" onClick={() => go({ id: 'settings', back: { id: 'title' } })}>{t('menu.settings')}</button>
           <button class="btn btn--ghost" onClick={() => go({ id: 'credits' })}>{tr(L('Crédits', 'Credits'))}</button>
         </div>

@@ -1,6 +1,6 @@
 import type { Dir } from '../save/schema';
 import { footprint, paintBuilding } from './buildings';
-import { LEGEND, type MapBuilding, type MapDef, type NpcDef, type SignDef, type Warp } from './mapTypes';
+import { LEGEND, type MapBuilding, type MapDef, type NpcDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
 import { makeCanvas, Painter } from './pixel';
 import { SpriteSheet, type Look } from './sprites';
 import { tile } from './tiles';
@@ -48,7 +48,7 @@ export interface LoadedMap {
 export interface GameHooks {
   /** Called after each completed player step. Return true to stop auto-walking. */
   onStep(x: number, y: number): boolean | void;
-  onInteract(target: { npc?: Actor; sign?: SignDef; tileId?: string; x: number; y: number }): void;
+  onInteract(target: { npc?: Actor; sign?: SignDef; pickup?: PickupDef; tileId?: string; x: number; y: number }): void;
   onDoor(b: MapBuilding): void;
   onMenu(): void;
 }
@@ -147,6 +147,7 @@ export class Game {
   input = new Input();
   map!: LoadedMap;
   npcs: Actor[] = [];
+  pickups: PickupDef[] = [];
   player!: Actor;
   /** While > 0, player input is ignored (scripts, dialogs, menus). */
   lock = 0;
@@ -175,10 +176,15 @@ export class Game {
     };
   }
 
-  setMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean) {
+  setMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean, visiblePickup: (p: PickupDef) => boolean = () => true) {
     const { map, npcs } = loadMap(def, visibleNpc);
     this.map = map;
     this.npcs = npcs;
+    this.pickups = (def.items ?? []).filter(visiblePickup);
+  }
+
+  removePickup(p: PickupDef) {
+    this.pickups = this.pickups.filter((q) => q !== p);
   }
 
   resize(cssW: number, cssH: number) {
@@ -225,6 +231,7 @@ export class Game {
   blocked(x: number, y: number, who?: Actor): boolean {
     if (!this.inside(x, y)) return true;
     if (this.map.solid[y * this.map.w + x]) return true;
+    if (this.pickups.some((p) => p.x === x && p.y === y)) return true;
     return !!this.actorAt(x, y, who);
   }
 
@@ -339,7 +346,8 @@ export class Game {
       if (this.tileAt(fx, fy) === 'counter') { tx += fx - p.x; ty += fy - p.y; }
       const npc = this.actorAt(tx, ty, p) ?? this.actorAt(fx, fy, p);
       const sign = this.map.signs.get(fy * this.map.w + fx);
-      this.hooks.onInteract({ npc, sign, tileId: this.tileAt(fx, fy), x: fx, y: fy });
+      const pickup = this.pickups.find((q) => q.x === fx && q.y === fy);
+      this.hooks.onInteract({ npc, sign, pickup, tileId: this.tileAt(fx, fy), x: fx, y: fy });
       return;
     }
     const d = this.input.current();
@@ -392,6 +400,21 @@ export class Game {
     ctx.fillRect(0, 0, this.viewW, this.viewH);
     ctx.drawImage(this.map.layers[this.frame], -camX - MARGIN * TILE, -camY - MARGIN * TILE);
 
+    for (const p of this.pickups) {
+      const bx = p.x * TILE - camX + 3, by = p.y * TILE - camY + 4;
+      // a little pencil ball: yellow wood on top, white below, red button
+      ctx.fillStyle = '#2a2238';
+      ctx.fillRect(bx + 2, by, 6, 1); ctx.fillRect(bx, by + 2, 1, 6); ctx.fillRect(bx + 9, by + 2, 1, 6); ctx.fillRect(bx + 2, by + 9, 6, 1);
+      ctx.fillRect(bx + 1, by + 1, 1, 1); ctx.fillRect(bx + 8, by + 1, 1, 1); ctx.fillRect(bx + 1, by + 8, 1, 1); ctx.fillRect(bx + 8, by + 8, 1, 1);
+      ctx.fillStyle = '#f2c14e';
+      ctx.fillRect(bx + 1, by + 2, 8, 3); ctx.fillRect(bx + 2, by + 1, 6, 1);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(bx + 1, by + 5, 8, 3); ctx.fillRect(bx + 2, by + 8, 6, 1);
+      ctx.fillStyle = '#2a2238';
+      ctx.fillRect(bx + 1, by + 5, 8, 1);
+      ctx.fillStyle = '#d64545';
+      ctx.fillRect(bx + 4, by + 4, 2, 2);
+    }
     const actors = [...this.npcs, this.player].sort((a, b) => this.pos(a)[1] - this.pos(b)[1]);
     for (const a of actors) {
       const [ax, ay] = this.pos(a);
@@ -448,17 +471,28 @@ export class Game {
   }
 
   async fadeTo(target: number, ms = 220) {
+    // animation frames can stop (hidden or covered window): fall back to a timer so a
+    // transition never hangs
+    const frame = () =>
+      new Promise<void>((resolve) => {
+        let done = false;
+        const fin = () => {
+          if (!done) {
+            done = true;
+            resolve();
+          }
+        };
+        requestAnimationFrame(fin);
+        setTimeout(fin, 60);
+      });
     const start = this.fade;
     const t0 = performance.now();
-    await new Promise<void>((resolve) => {
-      const tick = () => {
-        const k = Math.min(1, (performance.now() - t0) / ms);
-        this.fade = start + (target - start) * k;
-        if (k < 1) requestAnimationFrame(tick);
-        else resolve();
-      };
-      tick();
-    });
+    for (;;) {
+      const k = Math.min(1, (performance.now() - t0) / ms);
+      this.fade = start + (target - start) * k;
+      if (k >= 1) return;
+      await frame();
+    }
   }
 
   npc(id: string): Actor | undefined {

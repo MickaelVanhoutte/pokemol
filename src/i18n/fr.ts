@@ -1,6 +1,6 @@
 export const fr = {
   'game.title': 'Atelier Bestioles',
-  'game.subtitle': 'Des cartes, des aventures, et des Bestioles dessinées à la main',
+  'game.subtitle': 'Une grande aventure avec des Bestioles dessinées à la main',
 
   'menu.newGame': 'Nouvelle partie',
   'menu.continue': 'Continuer',

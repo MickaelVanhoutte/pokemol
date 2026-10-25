@@ -1,12 +1,12 @@
 import { L, tr } from '../i18n';
 import { creature, STARTERS } from '../data/creatures';
-import { RIVAL_COUNTER } from '../data/trainers';
-import { DUNGEONS } from '../data/dungeons';
-import { giveStarterKit, healTeam, save, update } from '../state/game';
+import { partyOf, RIVAL_COUNTER } from '../data/trainers';
+import { newSeed } from '../engine/rng';
+import { healParty, save, update } from '../state/game';
 import {
-  ask, checkEvolutions, fight, flag, getGame, giveCreature, openScreen, say, sayAll, scripts, setFlag, showCards, showToast, wait,
+  ask, checkEvolutions, fight, flag, getGame, giveItem, giveMon, openScreen, say, sayAll, scripts, setFlag, showMons,
+  showToast, wait, warpTo,
 } from '../overworld/controller';
-import { startRun } from '../state/dungeon';
 
 const PROF = L('Prof. Fusain', 'Prof. Charcoal');
 const MOM = L('Maman', 'Mom');
@@ -14,7 +14,7 @@ const RIVAL = L('Gomme', 'Eraser');
 const NURSE = L('Infirmière', 'Nurse');
 
 const name = () => save.value!.player.name;
-const hasTeam = () => (save.value?.team.length ?? 0) > 0;
+const hasTeam = () => (save.value?.party.length ?? 0) > 0;
 
 scripts.mom = async () => {
   if (!flag('intro')) {
@@ -33,7 +33,7 @@ scripts.mom = async () => {
   await say(L('Tes Bestioles ont l’air fatiguées. Reposez-vous un peu !', 'Your Critters look tired. Have a little rest!'), MOM);
   await getGame().fadeTo(1, 300);
   update((d) => {
-    healTeam(d);
+    healParty(d);
     d.respawn = { map: 'maison', x: 4, y: 5 };
   });
   await wait(400);
@@ -58,37 +58,35 @@ scripts.prof = async () => {
     await sayAll([
       L('Bonjour {name} ! Bienvenue dans mon labo.', 'Hello {name}! Welcome to my lab.'),
       L('J’étudie les Bestioles : des créatures nées des dessins d’une petite artiste.', 'I study Critters: creatures born from the drawings of a little artist.'),
-      L('Sur la table, il y a trois cartes. Choisis celle qui te plaît !', 'There are three cards on the table. Pick the one you like!'),
+      L('Sur la table, il y a trois Bestioles. Choisis celle qui te plaît !', 'There are three Critters on the table. Pick the one you like!'),
     ], PROF, { name: name() });
     return;
   }
-  const d = save.value!;
-  if (d.items.blank === 0) {
-    await say(L('Tu n’as plus de Cartes vierges ? Tiens, en voici 3.', 'Out of Blank Cards? Here, take 3.'), PROF);
-    update((x) => (x.items.blank += 3));
+  if (!save.value!.bag['crayon-ball']) {
+    await say(L('Plus de Crayon-balls ? Tiens, en voici 3. Tu en trouveras aussi à la Boutique.', 'Out of Pencil Balls? Here, take 3. The Shop sells them too.'), PROF);
+    giveItem('crayon-ball', 3);
     return;
   }
   const tips = [
-    L('Les Cartes vierges capturent mieux une Bestiole affaiblie ou endormie.', 'Blank Cards work better on a weakened or sleeping Critter.'),
-    L('Change ton équipe et ton deck au PC du Centre de soin, à Ville-Pastel.', 'Change your team and deck at the PC in the Pastel City Healing Center.'),
-    L('La Grotte Gribouillis change à chaque visite. Ce qu’on y gagne se garde !', 'Scribble Cave changes every visit. What you win there, you keep!'),
-    L('Quand une Bestiole atteint un certain niveau, elle peut évoluer. Brumouille, par exemple…', 'When a Critter reaches a certain level, it can evolve. Mistchief, for example…'),
+    L('Affaiblis une Bestiole sauvage avant de lancer une Crayon-ball. Endormie, c’est encore mieux !', 'Weaken a wild Critter before throwing a Pencil Ball. Asleep is even better!'),
+    L('Les Bestioles apprennent de nouvelles capacités en montant de niveau.', 'Critters learn new moves as they level up.'),
+    L('Le Feu bat la Plante, l’Eau bat le Feu, la Plante bat l’Eau. Les Spectres ne craignent pas les attaques Normales !', 'Fire beats Grass, Water beats Fire, Grass beats Water. Ghosts ignore Normal attacks!'),
+    L('Brumouille évolue au niveau 16. Et après… surprise !', 'Mistchief evolves at level 16. And after that… surprise!'),
   ];
   await say(tips[Math.floor(Math.random() * tips.length)], PROF);
 };
 
 scripts.labTable = async () => {
   if (hasTeam()) {
-    await say(L('Il n’y a plus de cartes sur la table.', 'There are no more cards on the table.'));
+    await say(L('Il n’y a plus de Bestiole sur la table.', 'There are no more Critters on the table.'));
     return;
   }
   if (!flag('intro')) setFlag('intro');
-  const i = await showCards([...STARTERS], tr(L('Choisis ta première Bestiole !', 'Choose your first Critter!')), true);
+  const i = await showMons([...STARTERS], tr(L('Choisis ta première Bestiole !', 'Choose your first Critter!')), true);
   const pick = STARTERS[i];
-  giveCreature(pick, 5);
+  giveMon(pick, 5);
   setFlag('rivalStarter', Number(RIVAL_COUNTER[pick]));
-  update((d) => giveStarterKit(d));
-  await say(L('{starter} rejoint ton équipe !', '{starter} joins your team!'), undefined, { starter: tr(creature(pick).name) });
+  await say(L('{starter} rejoint ton équipe !', '{starter} joined your team!'), undefined, { starter: tr(creature(pick).name) });
 
   const g = getGame();
   const counter = RIVAL_COUNTER[pick];
@@ -98,15 +96,12 @@ scripts.labTable = async () => {
     g.face(rival, 'up');
   }
   await sayAll([
-    L('Hé ! Moi aussi je veux une carte !', 'Hey! I want a card too!'),
-    L('Je prends {c}, il est trop mignon ! Allez, on teste nos Bestioles. Je vais t’effacer !', 'I’ll take {c}, it’s so cute! Come on, let’s test our Critters. I’m going to erase you!'),
+    L('Hé ! Moi aussi je veux une Bestiole !', 'Hey! I want a Critter too!'),
+    L('Je prends {c}, il est trop mignon ! Allez, on les teste. Je vais t’effacer !', 'I’ll take {c}, it’s so cute! Come on, let’s test them. I’m going to erase you!'),
   ], RIVAL, { c: tr(creature(counter).name) });
   if (rival) g.faceToward(g.player, rival);
-  await say(L('Oh oh, un premier combat ! Je vais te montrer comment faire, pas à pas.', 'Oh ho, a first battle! I’ll show you how it works, step by step.'), PROF);
-  const out = await fight(
-    { kind: 'trainer', enemy: { name: RIVAL, team: [{ defId: counter, level: 4 }], deck: ['potion', 'pile', 'pile', 'pile', 'crayon', 'gomme', 'taille-crayon', 'bouclier'], isAI: true } },
-    { friendly: true, backdrop: 'lab', tutorial: true },
-  );
+  await say(L('Oh oh, un premier combat ! Je vais te guider.', 'Oh ho, a first battle! I’ll guide you.'), PROF);
+  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 5 }], newSeed()), { friendly: true, backdrop: 'lab', tutorial: true });
   if (out.result === 'win') await say(L('Quoi ?! Je me suis fait gommer… C’était de la chance !', 'What?! I got erased… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);
   await say(L('Je vais devenir le meilleur dresseur de Bestioles ! Salut !', 'I’ll become the greatest Critter trainer! Bye!'), RIVAL);
@@ -118,14 +113,17 @@ scripts.labTable = async () => {
   const prof = g.npc('prof');
   if (prof) g.faceToward(prof, g.player);
   await sayAll([
-    L('Bravo à vous deux ! Voici ton premier deck de Fournitures : 10 cartes pour t’aider en combat.', 'Well done, both of you! Here’s your first Supply deck: 10 cards to help you in battle.'),
-    L('Et voici 5 Cartes vierges ! Lance-les sur une Bestiole sauvage affaiblie pour la dessiner dessus.', 'And here are 5 Blank Cards! Throw one at a weakened wild Critter to draw it onto the card.'),
+    L('Bravo à vous deux ! Tiens, voici 5 Crayon-balls et 2 Potions.', 'Well done, both of you! Here are 5 Pencil Balls and 2 Potions.'),
+    L('Lance une Crayon-ball sur une Bestiole sauvage affaiblie : elle se dessine dedans et rejoint ton équipe !', 'Throw a Pencil Ball at a weakened wild Critter: it draws itself inside and joins your team!'),
+    L('Ton Bestiodex note toutes les Bestioles que tu croises. Essaie de le remplir !', 'Your Critterdex records every Critter you meet. Try to fill it up!'),
   ], PROF);
   update((d) => {
-    d.items.blank += 5;
+    d.bag['crayon-ball'] = (d.bag['crayon-ball'] ?? 0) + 5;
+    d.bag.potion = (d.bag.potion ?? 0) + 2;
     d.respawn = { map: 'maison', x: 4, y: 5 };
+    d.flags.dex = 1;
   });
-  showToast(tr(L('+5 Cartes vierges', '+5 Blank Cards')));
+  showToast(tr(L('+5 Crayon-balls · +2 Potions', '+5 Pencil Balls · +2 Potions')));
   await say(L('Pars vers le nord, sur le Chemin des Crayons, jusqu’à Ville-Pastel. Bonne aventure, {name} !', 'Head north along Crayon Road to Pastel City. Good luck, {name}!'), PROF, { name: name() });
 };
 
@@ -137,14 +135,14 @@ scripts.nurse = async () => {
     await wait(600);
     await getGame().fadeTo(0, 250);
     update((d) => {
-      healTeam(d);
+      healParty(d);
       d.respawn = { map: 'centre', x: 5, y: 4 };
     });
     await say(L('Et voilà ! Tes Bestioles sont en pleine forme. À bientôt !', 'There you go! Your Critters are in top shape. See you soon!'), NURSE);
   }
   if (first) {
     setFlag('visitedCenter');
-    await say(L('Le PC dans le coin te permet de changer ton équipe et ton deck.', 'The PC in the corner lets you change your team and deck.'), NURSE);
+    await say(L('Le PC dans le coin te permet de ranger tes Bestioles quand tu en as plus de six.', 'The PC in the corner stores your Critters when you have more than six.'), NURSE);
   }
 };
 
@@ -153,69 +151,33 @@ scripts.clerk = async () => {
   await openScreen({ id: 'shop' });
 };
 
-scripts.gacha = async () => {
-  await openScreen({ id: 'gacha' });
+scripts.machine = async () => {
+  await openScreen({ id: 'machine' });
   await checkEvolutions();
 };
 
 scripts.pc = async () => {
   await say(L('Tu allumes le PC…', 'You switch on the PC…'));
-  await openScreen({ id: 'collection', back: { id: 'overworld' } });
+  await openScreen({ id: 'pc' });
 };
 
-scripts.afterRun = async () => {
-  await checkEvolutions();
+scripts.gateTour = async () => {
+  if (!save.value!.badges.includes('grotte')) {
+    await say(L('Une force étrange t’empêche d’entrer… Reviens avec le Badge Gribouillis de la grotte.', 'A strange force keeps you out… Come back with the Scribble Badge from the cave.'));
+    return;
+  }
+  await warpTo({ map: 'tour1', x: 5, y: 10, facing: 'up' });
 };
-
-async function gate(dungeonId: string) {
-  const dg = DUNGEONS[dungeonId];
-  const d = save.value!;
-  if (!d.team.length) {
-    await say(L('Il fait trop sombre pour entrer sans Bestiole…', 'It’s too dark to go in without a Critter…'));
-    return;
-  }
-  if (dg.requires && !d.badges.includes(dg.requires)) {
-    await say(dg.lockedText);
-    return;
-  }
-  if (d.run && d.run.dungeonId === dungeonId) {
-    const c = await ask(L('Reprendre l’exploration de {name} ?', 'Resume exploring {name}?'), [L('Oui', 'Yes'), L('Non', 'No')], undefined, { name: tr(dg.name) });
-    if (c === 0) {
-      await openScreen({ id: 'dungeon' });
-      await checkEvolutions();
-    }
-    return;
-  }
-  if (d.run) {
-    await say(L('Tu es déjà en pleine exploration ailleurs !', 'You’re already in the middle of another expedition!'));
-    return;
-  }
-  await say(dg.intro);
-  const c = await ask(L('Entrer ? (Choisis 4 Bestioles au maximum)', 'Go in? (Pick up to 4 Critters)'), [L('Oui', 'Yes'), L('Non', 'No')]);
-  if (c !== 0) return;
-  startRun(dungeonId);
-  await openScreen({ id: 'dungeon' });
-  await checkEvolutions();
-}
-
-scripts.gateGrotte = () => gate('grotte');
-scripts.gateTour = () => gate('tour');
 
 scripts.rivalFinal = async () => {
   await sayAll([
     L('Te voilà enfin ! J’ai entendu dire que tu as vaincu l’Ombre de la Tour…', 'There you are! I heard you beat the Shadow of the Tower…'),
     L('Moi aussi je me suis entraîné, tu sais. Ce coup-ci, je vais vraiment t’effacer !', 'I’ve been training too, you know. This time I’ll really erase you!'),
   ], RIVAL);
-  const starter = String(flag('rivalStarter') ? save.value!.flags.rivalStarter : 2).padStart(3, '0');
-  const out = await fight({
-    kind: 'trainer',
-    enemy: {
-      name: RIVAL,
-      team: [{ defId: '007', level: 10 }, { defId: '008', level: 10 }, { defId: '010', level: 10 }, { defId: starter, level: 12 }],
-      deck: ['potion+', 'potion', 'pile+', 'pile', 'pile', 'crayon+', 'gomme', 'professeur', 'bouclier+', 'echange', 'maman', 'piece'],
-      isAI: true,
-    },
-  });
+  const starter = String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0');
+  const out = await fight('trainer', RIVAL, partyOf([
+    { species: '007', level: 21 }, { species: '008', level: 22 }, { species: '010', level: 22 }, { species: starter, level: 25 },
+  ], newSeed()), { trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 3000, before: [], after: [] } });
   if (out.result !== 'win') {
     await say(L('Ha ! Va t’entraîner et on remet ça !', 'Ha! Go train and we’ll do this again!'), RIVAL);
     return;
@@ -225,12 +187,7 @@ scripts.rivalFinal = async () => {
     L('… J’ai perdu. Tes Bestioles sont vraiment incroyables.', '… I lost. Your Critters are truly amazing.'),
     L('Tu sais quoi ? Ces dessins, ils ont l’air vivants. La petite artiste doit être fière.', 'You know what? These drawings look alive. The little artist must be proud.'),
   ], RIVAL);
-  update((d) => {
-    d.glitter += 300;
-    d.coins += 1000;
-  });
-  showToast(tr(L('+300 ✨  +1000 🪙', '+300 ✨  +1000 🪙')));
-  await say(L('Bravo, {name} ! Tu es maintenant Maître des Bestioles. L’atelier reste ouvert : de nouveaux dessins arriveront bientôt…', 'Well done, {name}! You are now a Critter Master. The workshop stays open: new drawings are coming soon…'), PROF, { name: name() });
+  await say(L('Bravo, {name} ! Tu es maintenant Maître des Bestioles. De nouveaux dessins arriveront bientôt…', 'Well done, {name}! You are now a Critter Master. New drawings are coming soon…'), PROF, { name: name() });
   await openScreen({ id: 'credits', fromWorld: true });
 };
 
@@ -239,4 +196,3 @@ scripts.intro = async () => {
   await wait(300);
   await say(L('Quelle belle journée ! On dirait que Maman veut te parler.', 'What a lovely day! Looks like Mom wants to talk to you.'));
 };
-

@@ -1,15 +1,16 @@
 import { locale } from './i18n';
 import { screen } from './state/router';
 import { TitleScreen } from './ui/screens/TitleScreen';
-import { GalleryScreen } from './ui/screens/GalleryScreen';
 import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { BattleScreen } from './ui/battle/BattleScreen';
 import { NewGameScreen } from './ui/screens/NewGameScreen';
 import { OverworldScreen } from './ui/screens/OverworldScreen';
-import { CollectionScreen } from './ui/screens/CollectionScreen';
+import { PartyScreen } from './ui/screens/PartyScreen';
+import { BagScreen } from './ui/screens/BagScreen';
+import { DexScreen } from './ui/screens/DexScreen';
+import { PcScreen } from './ui/screens/PcScreen';
 import { ShopScreen } from './ui/screens/ShopScreen';
-import { GachaScreen } from './ui/screens/GachaScreen';
-import { DungeonScreen } from './ui/screens/DungeonScreen';
+import { MachineScreen } from './ui/screens/MachineScreen';
 import { CreditsScreen } from './ui/screens/CreditsScreen';
 
 export function App() {
@@ -20,13 +21,14 @@ export function App() {
       {s.id === 'title' && <TitleScreen />}
       {s.id === 'newgame' && <NewGameScreen />}
       {s.id === 'overworld' && <OverworldScreen />}
-      {s.id === 'gallery' && <GalleryScreen />}
       {s.id === 'settings' && <SettingsScreen back={s.back} />}
       {s.id === 'battle' && <BattleScreen key={s.props.setup.seed} {...s.props} />}
-      {s.id === 'collection' && <CollectionScreen back={s.back} />}
+      {s.id === 'party' && <PartyScreen />}
+      {s.id === 'bag' && <BagScreen />}
+      {s.id === 'dex' && <DexScreen all={s.all} />}
+      {s.id === 'pc' && <PcScreen />}
       {s.id === 'shop' && <ShopScreen />}
-      {s.id === 'gacha' && <GachaScreen />}
-      {s.id === 'dungeon' && <DungeonScreen />}
+      {s.id === 'machine' && <MachineScreen />}
       {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
     </div>
   );

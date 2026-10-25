@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: 'Atelier Bestioles',
         short_name: 'Bestioles',
-        description: 'Un jeu de cartes et d’aventure dessiné à la main.',
+        description: 'Une aventure de Bestioles dessinées à la main.',
         lang: 'fr',
         theme_color: '#2b1f4a',
         background_color: '#1b1430',

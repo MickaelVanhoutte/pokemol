@@ -1,5 +1,5 @@
 import { L, type LText } from '../i18n';
-import type { Rarity, Stage, StatusId, TypeId } from './schema';
+import type { Major, Rarity, StatKey, TypeId } from './schema';
 
 export interface TypeInfo {
   name: LText;
@@ -68,26 +68,47 @@ export const TYPES: Record<TypeId, TypeInfo> = {
   },
 };
 
-export const STAGES: Record<Stage, LText> = {
-  bebe: L('Bébé', 'Baby'),
-  grand: L('Grand', 'Big'),
-  maitre: L('Maître', 'Master'),
+export const RARITIES: Record<Rarity, { name: LText; weight: number }> = {
+  common: { name: L('Commune', 'Common'), weight: 60 },
+  uncommon: { name: L('Peu commune', 'Uncommon'), weight: 28 },
+  rare: { name: L('Rare', 'Rare'), weight: 10 },
+  holo: { name: L('Très rare', 'Very rare'), weight: 2 },
 };
 
-export const RARITIES: Record<Rarity, { name: LText; symbol: string; weight: number }> = {
-  common: { name: L('Commune', 'Common'), symbol: '●', weight: 60 },
-  uncommon: { name: L('Peu commune', 'Uncommon'), symbol: '◆', weight: 28 },
-  rare: { name: L('Rare', 'Rare'), symbol: '★', weight: 10 },
-  holo: { name: L('Holo', 'Holo'), symbol: '★★', weight: 2 },
+/** Major status labels, with the short GBA-style tag shown in HP boxes. */
+export const STATUSES: Record<Major, { name: LText; tag: LText; color: string }> = {
+  sleep: { name: L('Endormi', 'Asleep'), tag: L('SOM', 'SLP'), color: '#7a86c8' },
+  paralyze: { name: L('Paralysé', 'Paralyzed'), tag: L('PAR', 'PAR'), color: '#c8a800' },
+  poison: { name: L('Empoisonné', 'Poisoned'), tag: L('PSN', 'PSN'), color: '#a050c0' },
+  burn: { name: L('Brûlé', 'Burned'), tag: L('BRL', 'BRN'), color: '#e06030' },
 };
 
-export const STATUSES: Record<StatusId, { name: LText; icon: string; color: string }> = {
-  sleep: { name: L('Endormi', 'Asleep'), icon: '💤', color: '#5b6bd6' },
-  paralyze: { name: L('Paralysé', 'Paralyzed'), icon: '⚡', color: '#d6a400' },
-  poison: { name: L('Empoisonné', 'Poisoned'), icon: '☠', color: '#8a3fb5' },
-  confuse: { name: L('Confus', 'Confused'), icon: '💫', color: '#d0569c' },
-  blind: { name: L('Aveuglé', 'Blinded'), icon: '🌫', color: '#6e7a8a' },
+export const STAT_NAMES: Record<StatKey, LText> = {
+  hp: L('PV', 'HP'),
+  atk: L('Attaque', 'Attack'),
+  def: L('Défense', 'Defense'),
+  spa: L('Atq. Spé.', 'Sp. Atk'),
+  spd: L('Déf. Spé.', 'Sp. Def'),
+  spe: L('Vitesse', 'Speed'),
 };
 
-export const RESISTANCE_AMOUNT = 20;
-export const WEAKNESS_MULT = 2;
+/** Attack type → defending type → multiplier (missing = ×1). */
+const CHART: Partial<Record<TypeId, Partial<Record<TypeId, number>>>> = {
+  normal: { spectre: 0 },
+  feu: { plante: 2, insecte: 2, feu: 0.5, eau: 0.5 },
+  eau: { feu: 2, eau: 0.5, plante: 0.5 },
+  plante: { eau: 2, plante: 0.5, feu: 0.5, insecte: 0.5 },
+  electrique: { eau: 2, electrique: 0.5, plante: 0.5 },
+  combat: { normal: 2, tenebres: 2, insecte: 0.5, psy: 0.5, fee: 0.5, spectre: 0 },
+  psy: { combat: 2, psy: 0.5, tenebres: 0 },
+  insecte: { plante: 2, psy: 2, tenebres: 2, feu: 0.5, combat: 0.5, spectre: 0.5, fee: 0.5 },
+  spectre: { spectre: 2, psy: 2, tenebres: 0.5, normal: 0 },
+  tenebres: { psy: 2, spectre: 2, combat: 0.5, tenebres: 0.5, fee: 0.5 },
+  fee: { combat: 2, tenebres: 2, feu: 0.5 },
+};
+
+export function effectiveness(attack: TypeId, defender: TypeId): number {
+  return CHART[attack]?.[defender] ?? 1;
+}
+
+export const STATUS_IDS: Major[] = ['sleep', 'paralyze', 'poison', 'burn'];

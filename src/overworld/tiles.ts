@@ -367,6 +367,39 @@ export const TILES: Record<string, TileDef> = {
       p.rect(0, 14, 16, 2, '#3a2a1e');
     },
   },
+  caverock: {
+    solid: true,
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#a08a72');
+      p.noise(0.08, '#8a745c', x * 3 + y);
+      p.disc(8, 9, 6.4, '#3e2e24');
+      p.disc(8, 9, 5.6, '#7a604a');
+      p.disc(6.5, 7.5, 2.4, '#9a806a');
+      p.noise(0.05, '#5e4838', x + y * 5);
+    },
+  },
+  caveexit: {
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#a08a72');
+      p.noise(0.08, '#8a745c', x * 3 + y);
+      for (let i = 0; i < 6; i++) p.rect(0, 15 - i * 2, 16, 2, `rgba(255, 244, 200, ${0.12 + i * 0.06})`);
+    },
+  },
+  towerwall: {
+    solid: true,
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#3d3a5c');
+      for (let r = 0; r < 16; r += 5) for (let c = (r / 5) % 2 ? 0 : 4; c < 16; c += 8) p.rect(c, r, 7, 4, '#4a4770');
+      p.noise(0.04, '#2a2840', x + y * 7);
+      p.rect(0, 14, 16, 2, '#24223a');
+    },
+  },
+  stairsdown: {
+    paint: (p) => {
+      p.fill('#4a3a5a');
+      for (let i = 0; i < 16; i += 4) { p.rect(0, i, 16, 3, '#2a2238'); p.rect(0, i + 3, 16, 1, '#6a5a7a'); }
+    },
+  },
   towerfloor: { paint: (p, _f, _n, x, y) => { p.fill('#6b6a8c'); for (let i = 0; i < 16; i += 8) { p.rect(0, i, 16, 1, '#55547a'); p.rect(i + ((y % 2) * 4), 0, 1, 16, '#55547a'); } p.noise(0.03, '#8584a8', x + y); } },
 };
 

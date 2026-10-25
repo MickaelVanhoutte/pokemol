@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
-import { cardOverlay, getGame, menuOpen, openScreen, toast } from '../../overworld/controller';
+import { getGame, menuOpen, monOverlay, openScreen, toast } from '../../overworld/controller';
 import { dialog } from '../../overworld/dialog';
 import { exportSave, persist, save } from '../../state/game';
 import { go } from '../../state/router';
-import { CardChooser } from '../CardChooser';
+import { MonPick } from '../MonPick';
 import { DialogBox } from '../DialogBox';
 import './overworld.css';
 
@@ -31,7 +31,7 @@ export function OverworldScreen() {
     g.start();
     g.input.clear();
     const down = (e: KeyboardEvent) => {
-      if (menuOpen.value || cardOverlay.value) return;
+      if (menuOpen.value || monOverlay.value) return;
       const d = KEY_DIR[e.key];
       if (d) { e.preventDefault(); g.input.press(d); return; }
       if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!e.repeat) g.input.pressA(); }
@@ -76,23 +76,22 @@ export function OverworldScreen() {
         {toast.value && <div class="ow__toast pixel">{toast.value}</div>}
         <DialogBox />
       </div>
-      {cardOverlay.value && <CardPick />}
+      {monOverlay.value && <MonOverlay />}
       {menuOpen.value && <StartMenu />}
       <TouchControls />
     </div>
   );
 }
 
-function CardPick() {
-  const o = cardOverlay.value!;
-  const level = (id: string) => save.value?.collection[id]?.level;
+function MonOverlay() {
+  const o = monOverlay.value!;
   return (
-    <CardChooser
-      items={o.ids.map((id) => ({ kind: 'creature', id, level: level(id) }))}
+    <MonPick
+      ids={o.ids}
       title={o.title}
-      mode={o.pick ? 'pick' : 'show'}
+      pick={o.pick}
       onChoose={(i) => {
-        cardOverlay.value = null;
+        monOverlay.value = null;
         o.resolve(i);
       }}
     />
@@ -102,7 +101,6 @@ function CardPick() {
 function StartMenu() {
   const d = save.value!;
   const close = () => (menuOpen.value = false);
-  const [bag, setBag] = useState(false);
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -111,37 +109,28 @@ function StartMenu() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+  const open = (sc: Parameters<typeof openScreen>[0]) => {
+    close();
+    void openScreen(sc);
+  };
   return (
     <div class="overlay" onClick={close}>
       <div class="menu pixel" onClick={(e) => e.stopPropagation()}>
         <div class="menu__head">
           <b>{d.player.name}</b>
-          <span>🪙 {d.coins}</span>
-          <span>✨ {d.glitter}</span>
-          <span>🃏 {d.items.blank}</span>
+          <span>{d.money} ₽</span>
+          <span>🏅 {d.badges.length}</span>
         </div>
-        {bag ? (
-          <div class="menu__bag">
-            <p>🃏 {tr(L('Cartes vierges', 'Blank Cards'))} × {d.items.blank}</p>
-            <p>🪙 {tr(L('Pièces', 'Coins'))} : {d.coins}</p>
-            <p>✨ {tr(L('Paillettes', 'Glitter'))} : {d.glitter}</p>
-            <p>🏅 {tr(L('Badges', 'Badges'))} : {d.badges.length ? d.badges.join(', ') : '—'}</p>
-            <p>📖 {tr(L('Bestioles vues / attrapées', 'Critters seen / caught'))} : {d.seen.length} / {Object.keys(d.collection).length}</p>
-            <button class="btn btn--small" onClick={() => setBag(false)}>{tr(L('Retour', 'Back'))}</button>
-          </div>
-        ) : (
-          <div class="menu__list">
-            <button class="btn" disabled={!d.team.length} onClick={() => { close(); void openScreen({ id: 'collection', back: { id: 'overworld' } }); }}>
-              🃏 {tr(L('Bestioles & deck', 'Critters & deck'))}
-            </button>
-            <button class="btn" onClick={() => setBag(true)}>🎒 {tr(L('Sac', 'Bag'))}</button>
-            <button class="btn" onClick={() => { persist(); setSaved(true); }}>💾 {saved ? tr(L('Sauvegardé !', 'Saved!')) : tr(L('Sauvegarder', 'Save'))}</button>
-            <button class="btn" onClick={() => exportSave()}>⬇️ {tr(L('Exporter la sauvegarde', 'Export save'))}</button>
-            <button class="btn" onClick={() => { close(); go({ id: 'settings', back: { id: 'overworld' } }); }}>⚙️ {tr(L('Options', 'Options'))}</button>
-            <button class="btn btn--ghost" onClick={() => { persist(); close(); go({ id: 'title' }); }}>🏠 {tr(L('Écran titre', 'Title screen'))}</button>
-            <button class="btn btn--primary" onClick={close}>{tr(L('Fermer', 'Close'))}</button>
-          </div>
-        )}
+        <div class="menu__list">
+          {d.flags.dex ? <button class="btn" onClick={() => open({ id: 'dex' })}>📖 {tr(L('Bestiodex', 'Critterdex'))}</button> : null}
+          <button class="btn" disabled={!d.party.length} onClick={() => open({ id: 'party' })}>🐾 {tr(L('Bestioles', 'Critters'))}</button>
+          <button class="btn" onClick={() => open({ id: 'bag' })}>🎒 {tr(L('Sac', 'Bag'))}</button>
+          <button class="btn" onClick={() => { persist(); setSaved(true); }}>💾 {saved ? tr(L('Sauvegardé !', 'Saved!')) : tr(L('Sauvegarder', 'Save'))}</button>
+          <button class="btn" onClick={() => exportSave()}>⬇️ {tr(L('Exporter la sauvegarde', 'Export save'))}</button>
+          <button class="btn" onClick={() => { close(); go({ id: 'settings', back: { id: 'overworld' } }); }}>⚙️ {tr(L('Options', 'Options'))}</button>
+          <button class="btn btn--ghost" onClick={() => { persist(); close(); go({ id: 'title' }); }}>🏠 {tr(L('Écran titre', 'Title screen'))}</button>
+          <button class="btn btn--primary" onClick={close}>{tr(L('Fermer', 'Close'))}</button>
+        </div>
       </div>
     </div>
   );

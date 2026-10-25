@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { MAPS } from './maps';
 import { CREATURE_BY_ID } from './creatures';
 import { TRAINERS } from './trainers';
+import { ITEM_BY_ID } from './items';
 import { LEGEND, type MapDef } from '../overworld/mapTypes';
 import { footprint } from '../overworld/buildings';
 import { TILES } from '../overworld/tiles';
@@ -52,6 +53,10 @@ describe('maps', () => {
           if (n.trainer) expect(TRAINERS[n.trainer], n.trainer).toBeDefined();
         }
         for (const t of map.triggers ?? []) expect(walkable(map, t.x, t.y), `trigger ${t.script}`).toBe(true);
+        for (const p of map.items ?? []) {
+          expect(walkable(map, p.x, p.y, false), `item ${p.item} ${p.x},${p.y}`).toBe(true);
+          expect(ITEM_BY_ID[p.item], p.item).toBeDefined();
+        }
       });
 
       it('only lists known creatures in encounters', () => {

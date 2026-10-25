@@ -51,7 +51,17 @@ export interface TriggerDef {
 
 export interface EncounterTable {
   rate: number;
+  /** Encounters on every walkable tile (caves), not only tall grass. */
+  anyTile?: boolean;
   table: { id: string; w: number; min: number; max: number }[];
+}
+
+/** An item lying on the ground (picked up once). */
+export interface PickupDef {
+  x: number;
+  y: number;
+  item: string;
+  count?: number;
 }
 
 export interface MapBuilding extends BuildingDef {
@@ -74,6 +84,7 @@ export interface MapDef {
   npcs?: NpcDef[];
   signs?: SignDef[];
   triggers?: TriggerDef[];
+  items?: PickupDef[];
   encounters?: EncounterTable;
   backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
   /** Color wash drawn over the map (e.g. dusk in the woods). */
@@ -89,5 +100,5 @@ export const LEGEND: Record<string, string> = {
   'B': 'bush', '#': 'fence', 'S': 'sign', 'M': 'mailbox', 'R': 'rock', '_': 'ledge', 's': 'sand',
   'f': 'floor', 'W': 'wall', 'w': 'window', 'C': 'counter', 'c': 'carpet', 'X': 'mat', 'b': 'bookshelf',
   't': 'table', 'p': 'plant', 'P': 'pc', 'h': 'bed', 'v': 'tv', 'm': 'machine', 'H': 'healer', 'U': 'stairs',
-  'K': 'cavewall', 'k': 'cavefloor', 'o': 'towerfloor', ' ': 'void',
+  'K': 'cavewall', 'k': 'cavefloor', 'r': 'caverock', 'o': 'towerfloor', 'Q': 'towerwall', 'D': 'stairsdown', 'E': 'caveexit', ' ': 'void',
 };

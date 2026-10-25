@@ -1,13 +1,14 @@
 # Atelier Bestioles
 
-A small Game Boy–style adventure and roguelike card game, made from a child's drawings.
-Every creature ("Bestiole") is a real pencil drawing, cut out of a photo and turned into a card.
+A small FireRed/LeafGreen-style adventure, made from a child's drawings.
+Every creature ("Bestiole") is a real pencil drawing, cut out of a photo.
 
-- Explore a pixel-art world (town, lab, route, city, misty woods), FireRed/LeafGreen style.
-- Get your first card from Prof. Fusain, fight trainers, catch wild Bestioles with Blank Cards.
-- Card battles: a team of up to 4 creature cards plus a deck of support cards.
-- Roguelike dungeons (Grotte Gribouillis, Tour Brumeuse) with branching maps, talismans and bosses.
-- Summons (gacha) with Glitter earned in game — no real money, ever.
+- Explore a pixel-art world drawn in code: town, lab, routes, city, misty woods, a cave and a tower.
+- Get your first Bestiole from Prof. Fusain, fight trainers, catch wild Bestioles with Crayon-balls.
+- Classic battles: party of 6, four moves with PP, moves learnt by level-up, types and weaknesses,
+  statuses (sleep, paralysis, poison, burn, confusion), stat stages, XP and evolution.
+- Healing Center, PC storage, shop, Bestiodex, and a creature machine that draws a surprise Bestiole for coins.
+- Two badges (Grotte Gribouillis, Tour Brumeuse) and a final rival battle.
 - French and English, saves in the browser (export/import from Options), installable as an app (PWA).
 
 ## Run it locally
@@ -15,7 +16,7 @@ Every creature ("Bestiole") is a real pencil drawing, cut out of a photo and tur
 ```bash
 npm install
 npm run dev        # http://localhost:5173/pokemol/
-npm test           # battle engine, maps, gacha, dungeon generator
+npm test           # battle engine, creatures/XP, maps
 npm run build      # static site in dist/
 ```
 
@@ -33,10 +34,11 @@ On a phone or tablet an on-screen D-pad appears.
    If a neighbour drawing touches it, add `"erase": [[[x, y], [x, y], [x, y], ...]]` polygons (photo pixels).
    Tweak `"options": { "inkLum": 0.8, "inkChroma": 0.11 }` if pale colours disappear.
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
-5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type, HP,
-   two attacks (cost, damage, effects, text), weakness, flavor text, rarity.
-6. Optionally put it in a map's `encounters` (`src/data/maps.ts`) or a dungeon `pool` (`src/data/dungeons.ts`).
-   Every creature is automatically in the summon pool.
+5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
+   base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
+   evolution level if it evolves, Bestiodex text.
+6. Put it in a map's `encounters` (`src/data/maps.ts`) or a trainer party (`src/data/trainers.ts`).
+   Every creature can also come out of the creature machine.
 7. `npm test`, commit, push: GitHub Pages redeploys.
 
 ## Deploy (GitHub Pages)
@@ -50,12 +52,12 @@ The site is served at `https://<user>.github.io/pokemol/` (the `base` in `vite.c
 ```
 tools/            drawing cutout pipeline (sharp) and icon generator
 src/art/          cutout algorithm (paper flattening, ink mask, flood fill)
-src/data/         creatures, support cards, talismans, trainers, maps, dungeons
-src/engine/       pure game logic: battle engine + AI, dungeon map, gacha, progression (tested)
-src/overworld/    canvas engine: hand-painted tiles, sprites, buildings, movement, dialogs
-src/story/        story scripts (intro, lab, rival, healing center, dungeon gates…)
-src/state/        save data, dungeon runs, screen router
-src/ui/           cards, battle screen, menus, shop, summons, collection, dungeon map
+src/data/         creatures, moves, items, types chart, trainers, maps
+src/engine/pk/    pure game logic: creatures/stats/XP, Gen 3–style battle engine, catching, AI (tested)
+src/overworld/    canvas engine: hand-painted tiles, sprites, buildings, movement, dialogs, pick-ups
+src/story/        story scripts (intro, lab, rival, healing center, tower gate, final rival…)
+src/state/        save data (party, PC box, bag, Bestiodex), screen router
+src/ui/           battle screen, party, summary, bag, Bestiodex, PC, shop, creature machine
 ```
 
 ## Credits
@@ -63,4 +65,4 @@ src/ui/           cards, battle screen, menus, shop, summons, collection, dungeo
 - Every Bestiole: drawn by the little artist.
 - Tiles, sprites and buildings: pixel art painted in code for this project.
 - Fonts: Inter and Pixelify Sans (SIL Open Font License), via Fontsource.
-- A fan project inspired by pocket-monster games and roguelike deck-builders; not affiliated with any brand.
+- A fan project inspired by the Game Boy Advance pocket-monster games; not affiliated with any brand.

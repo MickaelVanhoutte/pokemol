@@ -2,7 +2,7 @@ import type { fr } from './fr';
 
 export const en: Record<keyof typeof fr, string> = {
   'game.title': 'Atelier Bestioles',
-  'game.subtitle': 'Cards, adventures, and hand-drawn Critters',
+  'game.subtitle': 'A big adventure with hand-drawn Critters',
 
   'menu.newGame': 'New game',
   'menu.continue': 'Continue',

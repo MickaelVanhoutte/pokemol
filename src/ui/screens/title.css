@@ -24,3 +24,4 @@
 .title__logo { font-size: clamp(2.2rem, 9vw, 3.4rem); margin: 0; color: var(--accent); text-shadow: 0 4px 0 #7a3d8f, 0 8px 18px rgba(0, 0, 0, 0.5); line-height: 1.05; }
 .title__sub { margin: 10px 0 22px; opacity: 0.85; }
 .title__menu { display: flex; flex-direction: column; gap: 12px; }
+.title__note { background: rgba(242, 193, 78, 0.18); border: 2px solid var(--accent); border-radius: 10px; padding: 8px 10px; font-size: 0.9rem; }

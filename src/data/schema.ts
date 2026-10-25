@@ -3,97 +3,79 @@ import type { LText } from '../i18n';
 export type TypeId =
   | 'plante' | 'feu' | 'eau' | 'electrique' | 'fee' | 'insecte'
   | 'normal' | 'spectre' | 'psy' | 'combat' | 'tenebres';
-export type Stage = 'bebe' | 'grand' | 'maitre';
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'holo';
-export type StatusId = 'sleep' | 'paralyze' | 'poison' | 'confuse' | 'blind';
+/** Major status, kept outside battles like in the GBA games. */
+export type Major = 'sleep' | 'paralyze' | 'poison' | 'burn';
+export type StatKey = 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe';
+/** Stats that can be raised/lowered by stages in battle. */
+export type StageKey = 'atk' | 'def' | 'spa' | 'spd' | 'spe' | 'acc' | 'eva';
+export type Stats = Record<StatKey, number>;
 
-/** Changes how an attack's printed damage is computed (shown as "×" or "+" on the card). */
-export type DamageMod =
-  | { kind: 'perHeads'; flips: number }
-  | { kind: 'flipOrFail' }
-  | { kind: 'bonusIfStatus'; status: StatusId; bonus: number }
-  | { kind: 'bonusOnHeads'; bonus: number }
-  | { kind: 'bonusPerExtraEnergy'; bonus: number };
+export type MoveEffect =
+  /** Inflicts a major status (chance in %). */
+  | { kind: 'status'; status: Major; chance: number }
+  | { kind: 'confuse'; chance: number }
+  | { kind: 'flinch'; chance: number }
+  /** Changes a stat stage of the user or the target (chance in %). */
+  | { kind: 'stage'; target: 'self' | 'foe'; stat: StageKey; stages: number; chance: number }
+  /** Heals the user by % of its max HP. */
+  | { kind: 'heal'; pct: number }
+  /** Heals the user by % of the damage dealt. */
+  | { kind: 'drain'; pct: number }
+  /** User takes % of the damage dealt. */
+  | { kind: 'recoil'; pct: number }
+  /** Heals % of max HP, then sleeps 2 turns. */
+  | { kind: 'rest'; pct: number }
+  | { kind: 'multi'; min: number; max: number }
+  | { kind: 'highCrit' }
+  | { kind: 'boostIfFoeAsleep'; mult: number }
+  /** Only works while the user is asleep. */
+  | { kind: 'onlyAsleep' };
 
-/** Attack side effects, resolved after damage. */
-export type Effect =
-  | { kind: 'status'; status: StatusId; target: 'defender' | 'self' }
-  | { kind: 'heal'; amount: number; target: 'self' | 'team' }
-  | { kind: 'coin'; heads?: Effect[]; tails?: Effect[] }
-  | { kind: 'discardHand'; count: number }
-  | { kind: 'draw'; count: number }
-  | { kind: 'selfDamage'; amount: number }
-  | { kind: 'benchDamage'; amount: number }
-  | { kind: 'protect'; amount: number }
-  | { kind: 'forceSwitch' }
-  | { kind: 'discardEnergy'; count: number; target: 'self' | 'defender' }
-  | { kind: 'cure' }
-  | { kind: 'cantRetreat' };
-
-export interface AttackDef {
+export interface MoveDef {
   id: string;
   name: LText;
-  cost: number;
-  damage: number;
-  mod?: DamageMod;
-  effects?: Effect[];
-  text?: LText;
+  type: TypeId;
+  cat: 'phys' | 'spec' | 'status';
+  power: number;
+  /** null = never misses. */
+  acc: number | null;
+  pp: number;
+  priority?: number;
+  effects?: MoveEffect[];
+  desc: LText;
 }
 
-export interface CreatureDef {
+export interface SpeciesDef {
   id: string;
   slug: string;
   name: LText;
   type: TypeId;
-  stage: Stage;
-  hp: number;
-  retreat: number;
-  weakness?: TypeId;
-  resistance?: TypeId;
-  rarity: Rarity;
-  attacks: AttackDef[];
-  flavor: LText;
-  evolvesFrom?: string;
-  evolvesTo?: string;
-  /** Level at which this creature evolves into `evolvesTo`. */
-  evolveLevel?: number;
-  series: number;
-  /** Base capture chance at full HP is roughly catchRate × 0.4. */
+  base: Stats;
+  /** 0–255, higher is easier (Gen 3 scale). */
   catchRate: number;
+  baseExp: number;
+  /** Weight in the creature machine. */
+  rarity: Rarity;
+  /** [level, move id]; level 1 moves are known from the start. */
+  learnset: [number, string][];
+  evolvesTo?: string;
+  evolveLevel?: number;
+  evolvesFrom?: string;
+  dex: LText;
+  /** Kind of creature shown in the Bestiodex ("Bestiole Chaton"). */
+  kind: LText;
 }
 
-export type SupportEffect =
-  | { kind: 'heal'; amount: number }
-  | { kind: 'healAll'; amount: number }
-  | { kind: 'cure' }
-  | { kind: 'energy'; count: number }
-  | { kind: 'switch' }
-  | { kind: 'luckyCoin' }
-  | { kind: 'atkBonus'; amount: number }
-  | { kind: 'draw'; count: number }
-  | { kind: 'protect'; amount: number }
-  | { kind: 'revive'; pct: number }
-  | { kind: 'gust' }
-  | { kind: 'glue' }
-  | { kind: 'scribble'; count: number }
-  | { kind: 'reshuffle'; draw: number }
-  /** Gives back this turn's energy (attach or swap again). */
-  | { kind: 'refreshEnergy' };
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball';
 
-/** Who a support card must be aimed at when played. */
-export type SupportTarget = 'none' | 'own' | 'ownBench' | 'ownKO';
-
-export interface SupportDef {
+export interface ItemDef {
   id: string;
   name: LText;
-  text: LText;
-  /** "dresseur" cards are limited to one per turn. */
-  kind: 'objet' | 'dresseur';
-  rarity: Rarity;
-  target: SupportTarget;
-  effects: SupportEffect[];
-  /** Id of the upgraded ("+") version. */
-  upgrade?: string;
+  desc: LText;
   icon: string;
   price: number;
+  kind: ItemKind;
+  /** HP healed (heal), % HP on revive, or catch bonus ×10 for balls. */
+  amount: number;
 }
