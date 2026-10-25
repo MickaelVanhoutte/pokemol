@@ -10,6 +10,7 @@ import {
 } from '../../engine/pk/battle';
 import { sfx } from '../../audio/sfx';
 import type { Backdrop } from '../../data/schema';
+import type { Look } from '../../overworld/sprites';
 import { prefs } from '../../state/prefs';
 import { BagView } from '../views/BagView';
 import { PartyView } from '../views/PartyView';
@@ -32,6 +33,20 @@ export interface BattleProps {
   backdrop?: Backdrop;
   /** First battle: the professor explains the menu. */
   tutorial?: boolean;
+  /** Opponent trainer shown before the battle (and again with the defeat quote). */
+  trainer?: BattleTrainer;
+  /** Player character, seen from behind at the start. */
+  playerLook?: Look;
+}
+
+export interface BattleTrainer {
+  /** Class and name, e.g. "Gamine Zoé". */
+  title: string;
+  look: Look;
+  /** Said in battle when beaten. */
+  quote?: string;
+  /** Team Gomme: their Bestioles have lost their colours. */
+  grey?: boolean;
 }
 
 type Overlay = null | { kind: 'bag' } | { kind: 'party' } | { kind: 'target'; item: string } | { kind: 'learn' };
@@ -59,6 +74,10 @@ export function BattleScreen(props: BattleProps) {
   // tutorial: -1 off, 0 first page, 1 pulse FIGHT, 2 second page after the first move
   const [coach, setCoach] = useState(props.tutorial ? 0 : -1);
   const speed = useRef(prefs.value.battleAnim);
+  // intro: the trainer and the player stand on the platforms until they send their Bestioles out
+  const [cast, setCast] = useState<{ foe: boolean; me: boolean }>({ foe: !!props.trainer, me: !!props.playerLook });
+  const [intro, setIntro] = useState(true);
+  const [recolored, setRecolored] = useState<string[]>([]);
 
   const pulse = (side: 0 | 1, kind: string, ms = 500) => {
     setFx((f) => ({ ...f, [side]: kind }));
@@ -66,6 +85,18 @@ export function BattleScreen(props: BattleProps) {
   };
 
   const animate = async (e: BattleEvent, snap: BattleState) => {
+    if (e.t === 'sendOut') {
+      // the trainer (or the player) steps aside and throws the ball
+      if (e.side === 1) setCast((c) => ({ ...c, foe: false }));
+      if (e.side === 0) setCast((c) => ({ ...c, me: false }));
+    }
+    if (e.t === 'faint' && e.side === 1 && props.trainer?.grey) {
+      const uid = activeMon(snap.sides[1]).uid;
+      setRecolored((r) => [...r, uid]);
+      setMsg(tr(L('{n} retrouve ses couleurs !', '{n} got its colours back!'), { n: tr(creature(activeMon(snap.sides[1]).species).name) }));
+      sfx.sparkle();
+      await sleep(1300 * speed.current);
+    }
     const lines = describe(e, snap);
     // the ball shakes first, the result comes after
     if (e.t === 'ball') setMsg(tr(L('Tu lances une {i} !', 'You threw a {i}!'), { i: tr(item(e.item).name) }));
@@ -143,7 +174,15 @@ export function BattleScreen(props: BattleProps) {
   useEffect(() => {
     const step = createBattle(props.setup, true);
     commit(step.state);
+    setView(step.snaps[0] ?? step.state);
     (async () => {
+      // platforms slide in, then the trainer challenges you
+      await sleep(750);
+      setIntro(false);
+      if (props.trainer) {
+        setMsg(tr(L('{t} veut se battre !', '{t} would like to battle!'), { t: props.trainer.title }));
+        await sleep(1500 * speed.current);
+      }
       await play(step);
       setBusy(false);
     })();
@@ -161,8 +200,9 @@ export function BattleScreen(props: BattleProps) {
   const mode = panelMode({ busy: busy || (!!st.result && !ended && !learner), ended, coach: coaching && idle, learnPending: !!learner, forced, menu });
 
   const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
+  const beaten = ended && st.result === 'win' && !!props.trainer;
   const name = tr(creature(active.species).name);
-  const text = mode === 'continue' ? [msg, ...rewardLines].filter(Boolean).join('\n')
+  const text = mode === 'continue' ? (beaten ? [props.trainer!.quote, ...rewardLines] : [msg, ...rewardLines]).filter(Boolean).join('\n')
     : mode === 'coach' ? tr(COACH[coach === 0 ? 0 : 1])
     : mode === 'learnAsk' && learner && learn ? tr(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. En oublier une ?', '{n} wants to learn {m}, but already knows 4 moves. Forget one?'), { n: tr(creature(learner.species).name), m: tr(move(learn.move).name) })
     : forced ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?'))
@@ -172,11 +212,16 @@ export function BattleScreen(props: BattleProps) {
 
   return (
     <div class="battle pk" onDblClick={() => (speed.current = 0.35)}>
-      <BattleScene view={view} fx={fx} ball={ball} captured={captured} backdrop={props.backdrop ?? 'grass'} />
+      <BattleScene
+        view={view} fx={fx} ball={ball} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
+        foeTrainer={props.trainer && (cast.foe || beaten) ? props.trainer.look : undefined}
+        playerBack={cast.me ? props.playerLook : undefined}
+        grey={!!props.trainer?.grey} recolored={recolored}
+      />
       <BattlePanel
         mode={mode}
         text={text}
-        speaker={mode === 'coach' ? tr(L('Prof. Fusain', 'Prof. Charcoal')) : undefined}
+        speaker={mode === 'coach' ? tr(L('Prof. Fusain', 'Prof. Charcoal')) : beaten && mode === 'continue' ? props.trainer!.title : undefined}
         active={active}
         struggling={!usableSlots(active).length}
         pulseAttack={coach === 1}

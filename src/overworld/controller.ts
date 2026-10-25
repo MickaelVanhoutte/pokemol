@@ -15,7 +15,7 @@ import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
 import { DIRS, Game, type Actor } from './game';
 import type { MapBuilding, NpcDef, PickupDef, WarpTarget } from './mapTypes';
-import { AVATARS } from './sprites';
+import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
 import { sfx } from '../audio/sfx';
 
@@ -243,10 +243,11 @@ export async function trainerBattle(id: string, actor?: Actor) {
   }
   if (actor) getGame().faceToward(actor, getGame().player);
   await sayAll(tdef.before, tdef.name);
-  const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef });
+  const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef, look: actor?.npc?.look });
   if (out.result === 'win') {
     setFlag(`tr:${id}`);
-    await sayAll(tdef.after, tdef.name);
+    // the first defeat line is said in battle, like the GBA games
+    await sayAll(tdef.after.slice(1), tdef.name);
     if (tdef.badge && !s().badges.includes(tdef.badge)) {
       update((d) => {
         d.badges.push(tdef.badge!);
@@ -266,6 +267,10 @@ export interface FightOptions {
   friendly?: boolean;
   backdrop?: Backdrop;
   tutorial?: boolean;
+  /** How the opponent trainer looks (battle intro). */
+  look?: Look;
+  /** Team Gomme: their Bestioles are greyed out. */
+  grey?: boolean;
 }
 
 /** Runs a battle from the world and applies its outcome to the save. */
@@ -273,6 +278,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   const d = s();
   const money = opts.trainer ? opts.trainer.money : 0;
   update((x) => enemy.forEach((m) => see(x, m.species)));
+  const g = getGame();
+  await g.wipeTo(1, kind === 'wild' ? 480 : 620, opts.grey ? 'eraser' : 'pencil');
   const res = await new Promise<{ result: BattleResult; state: BattleState }>((resolve) => {
     go({
       id: 'battle',
@@ -286,6 +293,13 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         onUseItem: (id) => update((x) => void takeItem(x, id)),
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
+        playerLook: AVATARS[d.player.avatar] ?? AVATARS[0],
+        trainer: kind === 'trainer' ? {
+          title: tr(enemyName),
+          look: opts.look ?? LOOKS.kid,
+          quote: opts.trainer?.after[0] ? tr(opts.trainer.after[0], { name: d.player.name }) : undefined,
+          grey: opts.grey,
+        } : undefined,
         rewardLines: (result) => (result === 'win' && money ? [tr(L('Tu gagnes {n} ₽.', 'You got ₽{n} for winning!'), { n: money })] : []),
         onEnd: (result, state) => resolve({ result, state }),
       },
@@ -305,6 +319,9 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
     }
   });
   go({ id: 'overworld' });
+  g.wipe = 0;
+  g.fade = 1;
+  void g.fadeTo(0, 320, 'black');
   await wait(250);
   await checkEvolutions();
   if (res.result === 'lose' && !opts.friendly) await blackout();
@@ -312,19 +329,26 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   return res;
 }
 
+/** Evolution scene shown over the world (or null). */
+export const evoOverlay = signal<{ from: string; to: string; resolve: (evolved: boolean) => void } | null>(null);
+
 export async function checkEvolutions() {
   for (let i = 0; i < s().party.length; i++) {
     const m = s().party[i];
     const into = evolutionOf(m);
-    if (!into) continue;
-    await say(L('Quoi ? {n} évolue !', 'What? {n} is evolving!'), undefined, { n: tr(creature(m.species).name) });
+    // stopped with B: asked again at the next level
+    if (!into || s().flags[`noevo:${m.uid}`] === m.level) continue;
+    const evolved = await new Promise<boolean>((resolve) => (evoOverlay.value = { from: m.species, to: into, resolve }));
+    evoOverlay.value = null;
+    if (!evolved) {
+      setFlag(`noevo:${m.uid}`, m.level);
+      continue;
+    }
     update((x) => {
       evolve(x.party[i], into);
       see(x, into);
       if (!x.dex.caught.includes(into)) x.dex.caught.push(into);
     });
-    sfx.levelUp();
-    await showMons([into], tr(L('{n} a évolué en {to} !', '{n} evolved into {to}!'), { n: tr(creature(m.species).name), to: tr(creature(into).name) }));
     // like the GBA games, the new form learns its moves of the current level right away
     const lvl = s().party[i].level;
     for (const [at, id] of creature(into).learnset) {
@@ -368,10 +392,11 @@ async function wildBattle(species: string, level: number) {
   if (!s().party.length) return;
   sfx.encounter();
   const g = getGame();
-  await g.fadeTo(0.85, 120);
-  await g.fadeTo(0, 120);
-  await g.fadeTo(0.85, 120);
-  g.fade = 0;
+  // two white flashes, then the pencil scribbles over the screen
+  for (let i = 0; i < 2; i++) {
+    await g.fadeTo(0.8, 90, 'white');
+    await g.fadeTo(0, 90);
+  }
   await fight('wild', creature(species).name, [createMon(species, level, { rng: newSeed() })]);
 }
 

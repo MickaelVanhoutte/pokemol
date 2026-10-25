@@ -37,7 +37,23 @@
   filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
   transform-origin: 50% 100%;
 }
-.pk-sprite { --flip: 1; }
+.pk-sprite { --flip: 1; transition: filter 0.9s ease; }
+/* Team Gomme drained their colours */
+.pk-sprite.is-grey { filter: grayscale(1) contrast(0.85) brightness(1.08) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
+/* trainers and the player (from behind) before the Bestioles come out */
+.pk-trainer {
+  height: 92%; width: auto; image-rendering: pixelated; image-rendering: crisp-edges;
+  animation: trainerIn 0.5s ease-out;
+}
+.pk-trainer--me { height: 100%; }
+@keyframes trainerIn { from { opacity: 0; transform: translateY(12%); } }
+/* intro: both platforms slide in from the sides, like the GBA games */
+.is-intro .pk-plat--foe { animation: slideFromLeft 0.75s ease-out both; }
+.is-intro .pk-plat--me { animation: slideFromRight 0.75s ease-out both; }
+@keyframes slideFromLeft { from { transform: translateX(-120vw); } }
+@keyframes slideFromRight { from { transform: translateX(120vw); } }
+.pk-hp { animation: hpIn 0.35s ease-out; }
+@keyframes hpIn { from { opacity: 0; transform: translateY(-6px); } }
 /* drawings looking the wrong way are mirrored so both Bestioles face each other */
 .pk-sprite.is-mirrored { --flip: -1; transform: scaleX(-1); }
 .pk-sprite.is-gone { opacity: 0; }
@@ -160,3 +176,5 @@
 .pk-move--empty { display: grid; place-items: center; color: var(--ink-soft); opacity: 0.5; cursor: default; }
 .is-coach { animation: coachPulse 1s ease-in-out infinite; }
 @keyframes coachPulse { 50% { filter: drop-shadow(0 0 6px #f2c14e) brightness(1.06); } }
+/* inside the fixed panel the speaker label sits on the first line (nothing may stick out) */
+.bpanel__text .textbox__speaker { position: static; display: inline-block; margin: 2px 0 0; }

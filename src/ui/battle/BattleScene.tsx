@@ -6,6 +6,7 @@ import { HpBar, PixelIcon, StatusTag, XpBar, lv } from '../paper';
 import { monName } from './messages';
 import { backdropUrl, platformUrl } from './backdrops';
 import type { Backdrop } from '../../data/schema';
+import { lookImage, type Look } from '../../overworld/sprites';
 
 export type Fx = Partial<Record<Side, string>>;
 export interface BallFx { shakes: number; caught: boolean; key: number }
@@ -33,20 +34,28 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
 }
 
 /** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
-export function BattleScene({ view, fx, ball, captured, backdrop }: { view: BattleState; fx: Fx; ball: BallFx | null; captured: boolean; backdrop: Backdrop }) {
+export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored }: {
+  view: BattleState; fx: Fx; ball: BallFx | null; captured: boolean; backdrop: Backdrop; intro: boolean;
+  foeTrainer?: Look; playerBack?: Look; grey: boolean; recolored: string[];
+}) {
   const mine = activeMon(view.sides[0]);
   const foe = activeMon(view.sides[1]);
   const mySp = creature(mine.species);
   const foeSp = creature(foe.species);
+  const isGrey = grey && !recolored.includes(foe.uid);
   return (
-    <div class="pk-scene" style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
-      <HpBox st={view} side={1} />
+    <div class={`pk-scene ${intro ? 'is-intro' : ''}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
+      {!foeTrainer && !intro && <HpBox st={view} side={1} />}
       <div class="pk-plat pk-plat--foe">
-        <img
-          class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
-          src={artUrl(foeSp)}
-          alt=""
-        />
+        {foeTrainer ? (
+          <img class="pk-trainer" src={lookImage(foeTrainer, 'down')} alt="" />
+        ) : (
+          <img
+            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
+            src={artUrl(foeSp)}
+            alt=""
+          />
+        )}
         {ball && (
           <div class={`pk-ball shakes-${ball.shakes} ${ball.caught ? 'is-caught' : ''}`} key={ball.key}>
             <PixelIcon id="crayon-ball" size={32} />
@@ -54,13 +63,17 @@ export function BattleScene({ view, fx, ball, captured, backdrop }: { view: Batt
         )}
       </div>
       <div class="pk-plat pk-plat--me">
-        <img
-          class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
-          src={artUrl(mySp)}
-          alt=""
-        />
+        {playerBack ? (
+          <img class="pk-trainer pk-trainer--me" src={lookImage(playerBack, 'up')} alt="" />
+        ) : (
+          <img
+            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
+            src={artUrl(mySp)}
+            alt=""
+          />
+        )}
       </div>
-      <HpBox st={view} side={0} />
+      {!playerBack && !intro && <HpBox st={view} side={0} />}
     </div>
   );
 }

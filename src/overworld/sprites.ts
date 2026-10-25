@@ -199,3 +199,20 @@ export const LOOKS = {
   ghostgirl: { hair: '#4a3a6a', shirt: '#7b60c3', pants: '#2a2238', longHair: true },
   sailor: { hair: '#2a2238', shirt: '#ffffff', pants: '#3a5aa8', hat: '#ffffff' },
 } satisfies Record<string, Look>;
+
+const lookCache = new Map<string, string>();
+
+/** One standing frame of a character, scaled up with crisp pixels (battle intros, trainer card). */
+export function lookImage(look: Look, dir: 'down' | 'up', scale = 6): string {
+  const key = `${JSON.stringify(look)}|${dir}|${scale}`;
+  const hit = lookCache.get(key);
+  if (hit) return hit;
+  const sheet = new SpriteSheet(look);
+  const c = makeCanvas(16 * scale, 16 * scale);
+  const ctx = c.getContext('2d')!;
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(sheet.canvas, dir === 'down' ? 0 : 32, 0, 16, 16, 0, 0, 16 * scale, 16 * scale);
+  const url = c.toDataURL();
+  lookCache.set(key, url);
+  return url;
+}

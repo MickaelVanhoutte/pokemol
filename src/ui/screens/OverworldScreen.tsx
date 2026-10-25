@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
-import { getGame, menuOpen, monOverlay, openScreen, toast } from '../../overworld/controller';
+import { evoOverlay, getGame, menuOpen, monOverlay, openScreen, toast } from '../../overworld/controller';
+import { EvolutionView } from '../views/EvolutionView';
 import { dialog } from '../../overworld/dialog';
 import { persist, save } from '../../state/game';
 import { sfx } from '../../audio/sfx';
@@ -34,7 +35,7 @@ export function OverworldScreen() {
     g.start();
     g.input.clear();
     const down = (e: KeyboardEvent) => {
-      if (menuOpen.value || monOverlay.value) return;
+      if (menuOpen.value || monOverlay.value || evoOverlay.value) return;
       const d = KEY_DIR[e.key];
       if (d) { e.preventDefault(); g.input.press(d); return; }
       if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!e.repeat) g.input.pressA(); }
@@ -80,6 +81,7 @@ export function OverworldScreen() {
         <DialogBox />
       </div>
       {monOverlay.value && <MonOverlay />}
+      {evoOverlay.value && <EvolutionView key={evoOverlay.value.from} from={evoOverlay.value.from} to={evoOverlay.value.to} onEnd={evoOverlay.value.resolve} />}
       {menuOpen.value && <StartMenu />}
       <TouchControls />
       {joystick.view}
@@ -180,7 +182,7 @@ function useJoystick() {
   };
   const handlers = {
     onPointerDown: (e: PointerEvent) => {
-      if (cur.current || menuOpen.value || monOverlay.value) return;
+      if (cur.current || menuOpen.value || monOverlay.value || evoOverlay.value) return;
       if ((e.target as HTMLElement).closest('button, .dialog, .dialog-choices, .startmenu')) return;
       cur.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, dir: null };
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);

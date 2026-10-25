@@ -152,6 +152,11 @@ export class Game {
   /** While > 0, player input is ignored (scripts, dialogs, menus). */
   lock = 0;
   fade = 0;
+  /** Colour of the fade (black, or white for flashes and dreams). */
+  fadeColor = '0,0,0';
+  /** Battle transition: 0 = clear, 1 = screen fully scribbled over. */
+  wipe = 0;
+  wipeKind: 'pencil' | 'eraser' = 'pencil';
   hooks: GameHooks;
   viewW = 240;
   viewH = 160;
@@ -464,13 +469,68 @@ export class Game {
         ctx.fill();
       }
     }
+    if (this.wipe > 0) this.drawWipe(ctx);
     if (this.fade > 0) {
-      ctx.fillStyle = `rgba(0,0,0,${this.fade})`;
+      ctx.fillStyle = `rgba(${this.fadeColor},${this.fade})`;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
     }
   }
 
-  async fadeTo(target: number, ms = 220) {
+  /** Pencil hatching that covers the screen stroke by stroke (an eraser sweep for Team Gomme). */
+  private drawWipe(ctx: CanvasRenderingContext2D) {
+    const w = this.viewW, h = this.viewH;
+    if (this.wipeKind === 'eraser') {
+      ctx.fillStyle = '#fbf6ea';
+      const bands = 8;
+      for (let i = 0; i < bands; i++) {
+        const k = Math.max(0, Math.min(1, this.wipe * bands - i * 0.6));
+        const y = (i * h) / bands;
+        if (i % 2) ctx.fillRect(w - w * k, y, w * k, h / bands + 1);
+        else ctx.fillRect(0, y, w * k, h / bands + 1);
+      }
+      return;
+    }
+    const n = 34;
+    const done = Math.floor(this.wipe * n);
+    ctx.strokeStyle = '#2b2536';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = Math.max(10, (w + h) / 16);
+    for (let i = 0; i <= done && i < n; i++) {
+      const k = i === done ? (this.wipe * n) % 1 : 1;
+      // zig-zag hatching from the top-left corner to the bottom-right one
+      const off = (i / n) * (w + h) * 1.1 - h * 0.2;
+      const x0 = off, y0 = -10, x1 = off - h * 0.9, y1 = h + 10;
+      const [ax, ay, bx, by] = i % 2 ? [x1, y1, x0, y0] : [x0, y0, x1, y1];
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ax + (bx - ax) * k, ay + (by - ay) * k);
+      ctx.stroke();
+    }
+    if (this.wipe >= 1) {
+      ctx.fillStyle = '#2b2536';
+      ctx.fillRect(0, 0, w, h);
+    }
+  }
+
+  async wipeTo(target: number, ms: number, kind: 'pencil' | 'eraser' = 'pencil') {
+    this.wipeKind = kind;
+    const t0 = performance.now(), start = this.wipe;
+    for (;;) {
+      const k = Math.min(1, (performance.now() - t0) / ms);
+      this.wipe = start + (target - start) * k;
+      this.render();
+      if (k >= 1) return;
+      await new Promise<void>((r) => {
+        let done = false;
+        const fin = () => { if (!done) { done = true; r(); } };
+        requestAnimationFrame(fin);
+        setTimeout(fin, 40);
+      });
+    }
+  }
+
+  async fadeTo(target: number, ms = 220, color?: 'black' | 'white') {
+    if (color) this.fadeColor = color === 'white' ? '251,246,234' : '0,0,0';
     // animation frames can stop (hidden or covered window): fall back to a timer so a
     // transition never hangs
     const frame = () =>

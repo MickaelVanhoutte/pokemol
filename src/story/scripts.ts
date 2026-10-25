@@ -2,6 +2,7 @@ import { L, tr } from '../i18n';
 import { creature, STARTERS } from '../data/creatures';
 import { partyOf, RIVAL_COUNTER } from '../data/trainers';
 import { newSeed } from '../engine/rng';
+import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
 import {
   ask, checkEvolutions, fight, flag, getGame, giveItem, giveMon, openScreen, say, sayAll, scripts, setFlag, showMons,
@@ -101,7 +102,7 @@ scripts.labTable = async () => {
   ], RIVAL, { c: tr(creature(counter).name) });
   if (rival) g.faceToward(g.player, rival);
   await say(L('Oh oh, un premier combat ! Je vais te guider.', 'Oh ho, a first battle! I’ll guide you.'), PROF);
-  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 5 }], newSeed()), { friendly: true, backdrop: 'lab', tutorial: true });
+  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 5 }], newSeed()), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival });
   if (out.result === 'win') await say(L('Quoi ?! Je me suis fait gommer… C’était de la chance !', 'What?! I got erased… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);
   await say(L('Je vais devenir le meilleur dresseur de Bestioles ! Salut !', 'I’ll become the greatest Critter trainer! Bye!'), RIVAL);
@@ -177,7 +178,7 @@ scripts.rivalFinal = async () => {
   const starter = String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0');
   const out = await fight('trainer', RIVAL, partyOf([
     { species: '007', level: 21 }, { species: '008', level: 22 }, { species: '010', level: 22 }, { species: starter, level: 25 },
-  ], newSeed()), { trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 3000, before: [], after: [] } });
+  ], newSeed()), { trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 3000, before: [], after: [] }, look: LOOKS.rival });
   if (out.result !== 'win') {
     await say(L('Ha ! Va t’entraîner et on remet ça !', 'Ha! Go train and we’ll do this again!'), RIVAL);
     return;
