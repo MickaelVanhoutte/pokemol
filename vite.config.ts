@@ -17,6 +17,10 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['icon-192.png', 'icon-512.png'],
       manifest: {
+        // the app's identity for browsers. Never change it again: installed copies would become a
+        // different app. It was set because Chrome on Android kept a broken "already installed"
+        // record for the default identity (the start URL) and refused to install the game.
+        id: '/pokemol/?app=atelier-bestioles',
         name: 'Atelier Bestioles',
         short_name: 'Bestioles',
         description: 'Une aventure de Bestioles dessinées à la main.',
