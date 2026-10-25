@@ -77,7 +77,9 @@ re-renders everything.
 - moves, the type chart, items (`kind: 'key'` for story items);
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in
-  `src/overworld/mapTypes.ts` maps each character to a tile id.
+  `src/overworld/mapTypes.ts` maps each character to a tile id;
+- `worldmap.ts`: the Town Map layout (`WORLD`), where-am-I (`regionOf`, `playerSpot`) and the
+  balloon towns. Next objectives for the map live in `src/story/objective.ts`.
 
 **Overworld** (`src/overworld`):
 - `game.ts`: the `Game` class. It runs the canvas loop and draws the prerendered map layers, actors,

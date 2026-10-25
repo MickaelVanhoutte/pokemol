@@ -365,7 +365,11 @@ async function rematch(id: string, actor: Actor) {
   const party = tdef.party.map((m) => ({ ...m, level: Math.min(50, m.level + 12) }));
   const strong: TrainerDef = { ...tdef, id: `${id}:rematch`, badge: undefined, afterScript: undefined, money: tdef.money * 2, party };
   const out = await fight('trainer', tdef.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
-  if (out.result === 'win') await say(L('Incroyable… Tu dessines de mieux en mieux !', 'Incredible… You draw better and better!'), tdef.name);
+  if (out.result === 'win') {
+    // remembered for the Town Map's list of things left to do
+    setFlag(`rematch:${id}`);
+    await say(L('Incroyable… Tu dessines de mieux en mieux !', 'Incredible… You draw better and better!'), tdef.name);
+  }
 }
 
 // ------------------------------------------------------------------ battles

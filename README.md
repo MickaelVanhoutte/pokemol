@@ -13,6 +13,11 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
+- Deeper battles, GBA style: IVs and effort points, with a judge in the summary (STATS > JUGER);
+  held items, eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
+  battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 12 Pochoirs: stencils that
+  teach a move as often as you like, one from each Atelier Master.
+- Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.
 - Side quests: 12 torn sketchbook pages (memories of the real world), the Tombola at the fair,
   a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from
@@ -70,7 +75,8 @@ src/art/          cutout algorithm (paper flattening, ink mask, flood fill)
 src/data/         creatures, moves, items, badges, sketchbook pages, types chart, trainers, maps/ (one file per area)
 src/engine/pk/    pure game logic: creatures/stats/XP, Gen 3–style battle engine, catching, AI (tested)
 src/overworld/    canvas engine: hand-painted tiles, sprites, buildings, movement, dialogs, pick-ups
-src/story/        story scripts: prologue and act 1, act 2, act 3 + ending, shared ones (healing center…)
+src/story/        story scripts: prologue and act 1, act 2, act 3 + ending, shared ones (healing center…),
+                  objective.ts (next step shown on the Town Map)
 src/state/        save data (party, PC box, bag, Bestiodex), screen router
 src/ui/           paper kit (windows, notebook text boxes, menus), battle, FRLG views (party, summary, bag,
                   Bestiodex, PC, shop, options, trainer card), pencil battle backdrops, pixel icons

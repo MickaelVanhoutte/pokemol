@@ -1,6 +1,7 @@
-import { L, tr, type LText } from '../i18n';
+import { L, tr } from '../i18n';
 import { CREATURES } from '../data/creatures';
 import { partyOf } from '../data/trainers';
+import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
@@ -15,19 +16,6 @@ const PAPA = L('Papa', 'Daddy');
 const GRUNT = L('Sbire Gomme', 'Eraser Grunt');
 
 // ------------------------------------------------------------------ Pencil Balloon (fast travel)
-
-/** Towns the balloon can fly to (the tile in front of each Healing Center, home for Bourg-Gribouille). */
-const TOWNS: { map: string; name: LText; x: number; y: number }[] = [
-  { map: 'bourg', name: L('Bourg-Gribouille', 'Scribbleton'), x: 3, y: 6 },
-  { map: 'ville', name: L('Ville-Pastel', 'Pastel City'), x: 5, y: 7 },
-  { map: 'plume', name: L('Village-Plume', 'Featherby'), x: 6, y: 5 },
-  { map: 'port', name: L('Port-Aquarelle', 'Port Aquarelle'), x: 11, y: 10 },
-  { map: 'feutre', name: L('Ville-Feutre', 'Felt City'), x: 6, y: 9 },
-  { map: 'braise', name: L('Village-Braise', 'Embervale'), x: 4, y: 6 },
-  { map: 'paillette', name: L('Bourg-Paillette', 'Glimmerton'), x: 4, y: 5 },
-  { map: 'gouache', name: L('Jardin-Gouache', 'Gouache Garden'), x: 4, y: 5 },
-  { map: 'encre', name: L('Cité-Encre', 'Ink City'), x: 4, y: 5 },
-];
 
 /** Remembers the towns you have been to (for the balloon). */
 scripts.visitTown = async () => {

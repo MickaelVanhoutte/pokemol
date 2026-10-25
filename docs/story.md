@@ -50,7 +50,16 @@ they are used.
 | 15 | `chambre` | The real bedroom, Papa, the drawings on the desk, credits | `ending` |
 
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
-Healing Center flies to visited towns.
+Healing Center flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
+`src/data/worldmap.ts`).
+
+**Town Map.** Mom gives the Carte de Papeterre with her first lines (`bag.carte`; old saves get it on
+load). START > CARTE shows the region drawn from `WORLD` (`src/data/worldmap.ts`), the player's place
+(`playerSpot`, through `regionOf` for interiors and dungeons) and a star on the next objective.
+Objectives are the ordered steps of `src/story/objective.ts`: the first one whose flags aren't all set
+is shown, from talking to Mom to the Great Eraser, then the post-game (Bestiodex, pages, rematches,
+`rematch:<trainerId>` set on a rematch win). A story step means a new entry there; the story test
+checks every step's flags are set somewhere and its target is on the map.
 
 **Post-game** (`ending` set):
 - the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);

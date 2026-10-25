@@ -116,6 +116,20 @@ const PAINTED: Record<string, (p: Painter) => void> = {
 };
 
 const ROWS: Record<string, string[]> = {
+  carte: [
+    'KKKKKKKKKKKKKKKK',
+    'KEEEEKCCCCKBBBBK',
+    'KEEEEKCCECKBBBBK',
+    'KEnnEKCEEEKBBEBK',
+    'KEnEEKCCECKBEEBK',
+    'KEnEEKCCnnnnEBBK',
+    'KEnnnnnnnCKBBBBK',
+    'KEEEEKCCCCKBBRBK',
+    'KEEEEKCCECKBRRRK',
+    'KEEEEKCEEEKBBRBK',
+    'KEEEEKCCCCKBBBBK',
+    'KKKKKKKKKKKKKKKK',
+  ],
   gouter: [
     '................',
     '.....KKKKKK.....',

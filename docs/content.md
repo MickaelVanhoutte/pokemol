@@ -19,6 +19,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
 | `gift:calque` | Prof. Fusain's aide (Healing Center) | Tracing Paper given |
+| `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
@@ -62,6 +63,11 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
 - `generic: true` marks a shared interior.
 - `patches`: `{ id, x, y, rows, if?, unless? }` redraws a block while the flag condition holds. In
   patch rows, `?` keeps the tile underneath.
+
+A **new outdoor map** also needs a place on the Town Map: an entry in `WORLD`
+(`src/data/worldmap.ts`, a rect on the 24×20 grid). `worldmap.test.ts` checks every outdoor map has one,
+that border warps point the right way on the grid, and that every map (interiors included, through
+their doors) resolves to a place.
 
 A **new tile** needs:
 - a `TileDef` in `src/overworld/tiles.ts` (`paint` with the `Painter`; flags `solid`, `encounter`,

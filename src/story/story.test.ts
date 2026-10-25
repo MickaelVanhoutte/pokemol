@@ -20,6 +20,8 @@ const source = [
 function flagIsSet(name: string): boolean {
   if (name.startsWith('tr:') && TRAINERS[name.slice(3)]) return true;
   if (name.startsWith('badge:')) return Object.values(TRAINERS).some((t) => t.badge === name.slice(6));
+  if (name.startsWith('visit:')) return MAPS[name.slice(6)]?.onEnter === 'visitTown';
+  if (name.startsWith('rematch:')) return !!TRAINERS[name.slice(8)]?.badge && source.includes('setFlag(`rematch:${id}`)');
   const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return new RegExp(`setFlag\\(\\s*'${esc}'|flags\\.${esc}\\s*=|flags\\['${esc}'\\]\\s*=`).test(source);
 }
@@ -49,5 +51,37 @@ describe('story wiring', () => {
   }
   it('runs after-battle scripts that exist', () => {
     for (const t of Object.values(TRAINERS)) if (t.afterScript) expect(scripts[t.afterScript], t.afterScript).toBeTypeOf('function');
+  });
+});
+
+const { OBJECTIVES, currentObjective } = await import('./objective');
+const { WORLD } = await import('../data/worldmap');
+const { CREATURES } = await import('../data/creatures');
+const { newGame } = await import('../state/game');
+
+describe('next objective (Town Map)', () => {
+  const fresh = () => newGame('Lou', 0, 'f', 'Feutre');
+  it('a new game starts with the first step', () => expect(currentObjective(fresh())?.id).toBe(OBJECTIVES[0].id));
+  it('every target is a place on the map', () => {
+    for (const o of OBJECTIVES) expect(WORLD[o.target], `${o.id} → ${o.target}`).toBeDefined();
+  });
+  it('every flag a step waits for is set by the story', () => {
+    for (const o of OBJECTIVES) for (const f of o.flags) expect(flagIsSet(f), `${o.id}: ${f}`).toBe(true);
+  });
+  it('advances one step at a time until everything is done', () => {
+    const s = fresh();
+    for (const o of OBJECTIVES) {
+      expect(currentObjective(s)?.id).toBe(o.id);
+      for (const f of o.flags) s.flags[f] = 1;
+      if (o.id === 'dex') s.dex.caught = CREATURES.map((c) => c.id);
+      expect(o.done(s), o.id).toBe(true);
+    }
+    expect(currentObjective(s)).toBeNull();
+  });
+  it('keeps texts short enough for one line or two', () => {
+    for (const o of OBJECTIVES) for (const t of [o.text.fr, o.text.en]) {
+      expect(t.replace(/\{(rival|name)\}/g, 'X'.repeat(10)).replace(/\{\w\}/g, '99').length, t).toBeLessThanOrEqual(56);
+    }
+    expect(new Set(OBJECTIVES.map((o) => o.id)).size).toBe(OBJECTIVES.length);
   });
 });

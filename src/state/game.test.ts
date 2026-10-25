@@ -28,6 +28,8 @@ describe('save migration', () => {
     expect(s.box[0].evs.hp).toBe(0);
     expect(s.party[0].level).toBe(12);
     expect(s.bag.potion).toBe(2);
+    expect(s.bag.carte).toBe(1);
+    expect(migrate(v3Save())!.bag.carte).toBeUndefined();
   });
 
   it('still upgrades version 2 saves (creatures wait in the PC)', () => {
