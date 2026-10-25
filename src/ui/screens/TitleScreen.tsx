@@ -3,7 +3,7 @@ import { effect } from '@preact/signals';
 import { L, t, tr } from '../../i18n';
 import { CREATURES, artUrl } from '../../data/creatures';
 import { enterWorld } from '../../overworld/controller';
-import { hasSave, loadSave, outdatedSave } from '../../state/game';
+import { hasSave, loadSave, migrate, outdatedSave } from '../../state/game';
 import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
 import { MenuList, Window, YesNo } from '../paper';
@@ -14,7 +14,7 @@ import './title.css';
 function peek(): SaveData | null {
   try {
     const raw = localStorage.getItem('atelier-bestioles.save');
-    return raw ? (JSON.parse(raw) as SaveData) : null;
+    return raw ? migrate(JSON.parse(raw)) : null;
   } catch {
     return null;
   }

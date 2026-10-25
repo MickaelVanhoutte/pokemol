@@ -5,7 +5,7 @@ import { move } from '../../data/moves';
 import type { Major, MoveDef, StageKey } from '../../data/schema';
 import { effectiveness } from '../../data/types';
 import { nextRandom, randomInt } from '../rng';
-import { addXp, learnMove, maxHp, statsOf, xpYield, type Mon } from './creature';
+import { addXp, gainEvs, learnMove, maxHp, statsOf, xpYield, type Mon } from './creature';
 
 export type Side = 0 | 1;
 export type BattleKind = 'wild' | 'trainer';
@@ -513,6 +513,7 @@ function checkFaints(st: BattleState, out: Out) {
     const gainers = me.party.map((m, i) => ({ m, i })).filter(({ m }) => alive(m) && st.participants.includes(m.uid));
     for (const { m, i } of gainers) {
       const amount = xpYield(foeMon, st.kind === 'trainer', gainers.length);
+      gainEvs(m, foeMon.species);
       out.push({ t: 'xp', idx: i, amount });
       for (const up of addXp(m, amount)) {
         out.push({ t: 'levelUp', idx: i, level: up.level });

@@ -57,6 +57,8 @@ export interface SpeciesDef {
   /** 0–255, higher is easier (Gen 3 scale). */
   catchRate: number;
   baseExp: number;
+  /** Effort points given to each creature that beats it (Gen 3: 1–3 points). */
+  evYield: Partial<Stats>;
   /** Weight in the creature machine. */
   rarity: Rarity;
   /** [level, move id]; level 1 moves are known from the start. */

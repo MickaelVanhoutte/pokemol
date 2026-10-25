@@ -5,7 +5,7 @@ export type Dir = 'down' | 'up' | 'left' | 'right';
 export interface Place { map: string; x: number; y: number; facing?: Dir }
 
 export interface SaveData {
-  version: 3;
+  version: 4;
   createdAt: number;
   playMs: number;
   player: {
@@ -36,5 +36,5 @@ export interface SaveData {
   stats: { battles: number; captures: number };
 }
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 export const PARTY_MAX = 6;
