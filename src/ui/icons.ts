@@ -83,11 +83,25 @@ function capsule(p: Painter, color: string) {
   p.px(5, 3, PAL.W);
 }
 
-/** Painter for an id: the table below, or a capsule tinted by its move type. */
+/** A type booster: a little medal on a ribbon, in the colour of its type. */
+function charm(p: Painter, color: string) {
+  p.rect(5, 0, 2, 5, PAL.K);
+  p.rect(9, 0, 2, 5, PAL.K);
+  p.rect(6, 0, 1, 5, PAL.R);
+  p.rect(9, 0, 1, 5, PAL.B);
+  p.disc(8, 10, 5.5, PAL.K);
+  p.disc(8, 10, 4.5, color);
+  p.disc(8, 10, 2, PAL.W);
+  p.px(5, 8, PAL.W);
+}
+
+/** Painter for an id: the table below, a capsule tinted by its move type, or a type medal. */
 function painterFor(id: string): ((p: Painter) => void) | undefined {
   if (PAINTED[id]) return PAINTED[id];
-  const mv = ITEM_BY_ID[id]?.kind === 'tm' ? MOVE_BY_ID[ITEM_BY_ID[id].move ?? ''] : undefined;
-  return mv ? (p) => capsule(p, TYPES[mv.type].color) : undefined;
+  const def = ITEM_BY_ID[id];
+  const mv = def?.kind === 'tm' ? MOVE_BY_ID[def.move ?? ''] : undefined;
+  if (mv) return (p) => capsule(p, TYPES[mv.type].color);
+  return def?.hold === 'typeBoost' && def.type ? (p) => charm(p, TYPES[def.type!].color) : undefined;
 }
 
 /** Items painted in code (berries, tinted items). */
@@ -110,6 +124,139 @@ const PAINTED: Record<string, (p: Painter) => void> = {
 };
 
 const ROWS: Record<string, string[]> = {
+  'bandeau-choix': [
+    '................',
+    '................',
+    '..KKKKKKKKKKK...',
+    '.KRRRRRRRRRRRK..',
+    '.KRWWRRRRRRRRRK.',
+    '.KRRRRRRRRRRRRK.',
+    '..KKKKKKKKKKKRK.',
+    '............KRK.',
+    '...........KRrK.',
+    '...........KrK..',
+    '............K...',
+  ],
+  'lunettes-choix': [
+    '................',
+    '................',
+    '.KKKKK....KKKKK.',
+    'KBBBBBK..KBBBBBK',
+    'KBWBBBKKKKBWBBBK',
+    'KBBWBBK..KBBWBBK',
+    'KBBBBBK..KBBBBBK',
+    '.KKKKK....KKKKK.',
+  ],
+  'echarpe-choix': [
+    '..KKKKKKKKKKK...',
+    '.KTTTTTTTTTTTK..',
+    'KTTWTTTTTTTTTTK.',
+    '.KKKKKKKKKTTTTK.',
+    '........KTTTTK..',
+    '........KTTTK...',
+    '........KTMTK...',
+    '........KTTTK...',
+    '........KMTTK...',
+    '........KTTTK...',
+    '........KKKKK...',
+  ],
+  'orbe-vie': [
+    '.....KKKKKK.....',
+    '...KKPPPPPPKK...',
+    '..KPPpPPPPPPPK..',
+    '.KPPWpPPPPPPPPK.',
+    '.KPPppPPPPPPPPK.',
+    '.KPPPPPPPPPPPPK.',
+    '.KPPPPPPPPPrPPK.',
+    '.KPPPPPPPPrrPPK.',
+    '..KPPPPPPPPPPK..',
+    '...KKPPPPPPKK...',
+    '.....KKKKKK.....',
+  ],
+  'veste-combat': [
+    '...KKK....KKK...',
+    '..KeEEK..KEEeK..',
+    '.KeEEEEKKEEEEeK.',
+    '.KEEEEEKKEEEEEK.',
+    '.KEEYEEKKEEYEEK.',
+    '.KEEEEEKKEEEEEK.',
+    '..KEEEEKKEEEEK..',
+    '..KEEEEKKEEEEK..',
+    '..KeEEEKKEEEeK..',
+    '..KKKKKKKKKKKK..',
+  ],
+  'casque-brut': [
+    '...K...K...K....',
+    '..KGK.KGK.KGK...',
+    '..KKKKKKKKKKKK..',
+    '.KGGgGGGGGGGGGK.',
+    'KGGgGGGGGGGGGGGK',
+    'KGGGGGGGGGGGGGGK',
+    'KGGGGGKKKKKKKKKK',
+    'KGGGGK..........',
+    '.KKKK...........',
+  ],
+  'ceinture-force': [
+    '................',
+    '.KKKKKKKKKKKKKK.',
+    'KOOOOOOOOOOOOOOK',
+    'KOWWOOOKKOOOOOOK',
+    'KOOOOOKYYKOOOOOK',
+    'KOOOOOKYYKOOOOOK',
+    'KOOOOOOKKOOOOOOK',
+    '.KKKKKKKKKKKKKK.',
+  ],
+  'vive-griffe': [
+    '..........KK....',
+    '.........KWK....',
+    '....KK..KWWK....',
+    '...KWK.KWWK.....',
+    '..KWWKKWWK..KK..',
+    '..KWWKWWK..KWK..',
+    '...KWWWKKKKWWK..',
+    '...KNNNNNNNWK...',
+    '..KNnnnnnnNK....',
+    '..KNNNNNNNNK....',
+    '...KKKKKKKK.....',
+  ],
+  lentilscope: [
+    '...KKKKK........',
+    '..KBBBBBK.......',
+    '.KBWBBBBBK......',
+    '.KBBWBBBBK......',
+    '.KBBBBBBBK......',
+    '.KBBBBBBBK......',
+    '..KBBBBBK.......',
+    '...KKKKKNK......',
+    '........KNK.....',
+    '.........KNK....',
+    '..........KNK...',
+    '...........KK...',
+  ],
+  'roche-royale': [
+    '..K..K..K..K....',
+    '.KYKKYKKYKKYK...',
+    '.KYYYYYYYYYYK...',
+    '.KYRYYBYYRYYK...',
+    '.KKKKKKKKKKKK...',
+    '.KGGGGGGGGGGK...',
+    'KGgGGGGGGGGGGK..',
+    'KGGGGGGGGGGGGK..',
+    '.KKKKKKKKKKKK...',
+  ],
+  'grelot-coque': [
+    '.......KK.......',
+    '......KyyK......',
+    '.....KKKKKK.....',
+    '....KYYYYYYK....',
+    '...KYWYYYYYYK...',
+    '...KYYYYYYYYK...',
+    '..KYYYYYYYYYYK..',
+    '..KYYYYYYYYYYK..',
+    '.KKKKKKKKKKKKKK.',
+    '......KyyK......',
+    '.......KK.......',
+  ],
   carte: [
     'KKKKKKKKKKKKKKKK',
     'KEEEEKCCCCKBBBBK',

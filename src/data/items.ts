@@ -1,5 +1,6 @@
 import { L } from '../i18n';
 import { move } from './moves';
+import { TYPES } from './types';
 import type { ItemDef } from './schema';
 
 /** Technical capsules, in order (ct01…): the first eight are the Atelier Masters' rewards. */
@@ -110,6 +111,68 @@ export const ITEMS: ItemDef[] = [
   {
     id: 'gouter', name: L('Goûter', 'Snack'), price: 0, kind: 'hold', amount: 0, hold: 'leftovers',
     desc: L('À faire tenir. La Bestiole en grignote un peu à chaque tour de combat et récupère des PV.', 'An item to hold. Its holder nibbles a bit every turn of battle and regains HP.'),
+  },
+  // type boosters: moves of one type hit 20% harder
+  ...([
+    ['mouchoir-soie', 'normal', L('Mouchoir de Soie', 'Silk Scarf'), L('Un mouchoir tout doux.', 'A soft silky scarf.')],
+    ['graine-miracle', 'plante', L('Graine Miracle', 'Miracle Seed'), L('Une graine pleine de vie.', 'A seed bursting with life.')],
+    ['charbon', 'feu', L('Charbon', 'Charcoal'), L('Un bâton de fusain encore chaud.', 'A stick of charcoal, still warm.')],
+    ['eau-mystique', 'eau', L('Eau Mystique', 'Mystic Water'), L('Un pot d’eau pour pinceaux qui ne se trouble jamais.', 'A jar of brush water that never gets cloudy.')],
+    ['aimant', 'electrique', L('Aimant', 'Magnet'), L('Un aimant de frigo qui grésille.', 'A fridge magnet that crackles.')],
+    ['poudre-fee', 'fee', L('Poudre de Fée', 'Fairy Dust'), L('Des paillettes qui brillent dans le noir.', 'Glitter that shines in the dark.')],
+    ['poudre-argentee', 'insecte', L('Poudre Argentée', 'Silver Powder'), L('Une poudre tombée d’une aile de papillon.', 'Powder fallen from a butterfly’s wing.')],
+    ['cuiller-tordue', 'psy', L('Cuiller Tordue', 'Twisted Spoon'), L('Une cuillère pliée par la pensée.', 'A spoon bent by the power of thought.')],
+    ['rune-sort', 'spectre', L('Rune Sort', 'Spell Tag'), L('Une étiquette griffonnée qui fait frissonner.', 'A scribbled tag that gives you the shivers.')],
+    ['ceinture-noire', 'combat', L('Ceinture Noire', 'Black Belt'), L('Une ceinture de judo bien serrée.', 'A tightly tied judo belt.')],
+    ['lunettes-noires', 'tenebres', L('Lunettes Noires', 'Black Glasses'), L('Des lunettes coloriées au feutre noir.', 'Glasses coloured with black marker.')],
+  ] as const).map(([id, type, name, look]): ItemDef => ({
+    id, name, price: 0, kind: 'hold', amount: 0, hold: 'typeBoost', type,
+    desc: L(`${look.fr} À faire tenir : les capacités de type ${TYPES[type].name.fr} font 20 % de dégâts en plus.`, `${look.en} To hold: ${TYPES[type].name.en}-type moves do 20% more damage.`),
+  })),
+  // popular held items
+  {
+    id: 'bandeau-choix', name: L('Bandeau Choix', 'Choice Band'), price: 6000, kind: 'hold', amount: 0, hold: 'choiceBand',
+    desc: L('Attaque ×1,5, mais la Bestiole ne peut utiliser que sa première capacité tant qu’elle reste au combat.', 'Attack ×1.5, but its holder can only use the first move it picks until it is withdrawn.'),
+  },
+  {
+    id: 'lunettes-choix', name: L('Lunettes Choix', 'Choice Specs'), price: 6000, kind: 'hold', amount: 0, hold: 'choiceSpecs',
+    desc: L('Atq. Spé. ×1,5, mais la Bestiole ne peut utiliser que sa première capacité tant qu’elle reste au combat.', 'Sp. Atk ×1.5, but its holder can only use the first move it picks until it is withdrawn.'),
+  },
+  {
+    id: 'echarpe-choix', name: L('Écharpe Choix', 'Choice Scarf'), price: 6000, kind: 'hold', amount: 0, hold: 'choiceScarf',
+    desc: L('Vitesse ×1,5, mais la Bestiole ne peut utiliser que sa première capacité tant qu’elle reste au combat.', 'Speed ×1.5, but its holder can only use the first move it picks until it is withdrawn.'),
+  },
+  {
+    id: 'orbe-vie', name: L('Orbe Vie', 'Life Orb'), price: 6000, kind: 'hold', amount: 0, hold: 'lifeOrb',
+    desc: L('Les attaques font 30 % de dégâts en plus, mais coûtent un peu de PV à chaque coup.', 'Attacks do 30% more damage, but each one costs a little HP.'),
+  },
+  {
+    id: 'veste-combat', name: L('Veste de Combat', 'Assault Vest'), price: 6000, kind: 'hold', amount: 0, hold: 'assaultVest',
+    desc: L('Déf. Spé. ×1,5, mais la Bestiole ne peut utiliser que des capacités offensives.', 'Sp. Def ×1.5, but its holder can only use attacking moves.'),
+  },
+  {
+    id: 'casque-brut', name: L('Casque Brut', 'Rocky Helmet'), price: 4000, kind: 'hold', amount: 0, hold: 'rockyHelmet',
+    desc: L('Une Bestiole qui frappe le porteur au corps à corps perd un sixième de ses PV.', 'A Critter that hits the holder with a physical move loses a sixth of its HP.'),
+  },
+  {
+    id: 'ceinture-force', name: L('Ceinture Force', 'Focus Sash'), price: 4000, kind: 'hold', amount: 0, hold: 'focusSash',
+    desc: L('Si ses PV sont au maximum, la Bestiole tient bon avec 1 PV au lieu d’être K.O. Ne sert qu’une fois.', 'At full HP, its holder survives a knockout hit with 1 HP. Works once.'),
+  },
+  {
+    id: 'vive-griffe', name: L('Vive Griffe', 'Quick Claw'), price: 3000, kind: 'hold', amount: 0, hold: 'quickClaw',
+    desc: L('Parfois, la Bestiole agit en premier.', 'Sometimes lets its holder move first.'),
+  },
+  {
+    id: 'lentilscope', name: L('Lentilscope', 'Scope Lens'), price: 3000, kind: 'hold', amount: 0, hold: 'scopeLens',
+    desc: L('Une loupe qui aide à viser : plus de coups critiques.', 'A magnifying glass that helps aim: more critical hits.'),
+  },
+  {
+    id: 'roche-royale', name: L('Roche Royale', 'King’s Rock'), price: 3000, kind: 'hold', amount: 0, hold: 'kingsRock',
+    desc: L('Quand le porteur attaque, l’ennemi peut avoir peur et ne pas agir.', 'When its holder attacks, the foe may flinch.'),
+  },
+  {
+    id: 'grelot-coque', name: L('Grelot Coque', 'Shell Bell'), price: 3000, kind: 'hold', amount: 0, hold: 'shellBell',
+    desc: L('Rend au porteur un huitième des dégâts qu’il inflige.', 'Restores an eighth of the damage its holder deals.'),
   },
   {
     id: 'papier-calque', name: L('Papier Calque', 'Tracing Paper'), price: 0, kind: 'hold', amount: 0, hold: 'expShare',

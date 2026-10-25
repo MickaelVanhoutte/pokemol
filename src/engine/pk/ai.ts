@@ -11,7 +11,7 @@ export function aiChoose(st: BattleState): Action {
   const foe = st.sides[0];
   const m = activeMon(me);
   const target = activeMon(foe);
-  const slots = usableSlots(m);
+  const slots = usableSlots(m, me.vol);
   if (!slots.length) return { type: 'move', slot: -1 };
   if (st.kind === 'wild') return { type: 'move', slot: slots[randomInt(st, slots.length)] };
 

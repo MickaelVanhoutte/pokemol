@@ -138,6 +138,14 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
         : e.side === 0 ? [tr(L('La brume protectrice se dissipe.', 'The protective mist wore off.'))] : [];
     case 'guarded':
       return [f(L('La brume protège {n} : ses stats ne baissent pas !', '{n} is protected by the mist!'), { n: nm(e.side) })];
+    case 'itemHeal':
+      return [f(L('{n} récupère des PV grâce à {i} !', '{n} restored HP using its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
+    case 'itemHurt':
+      return [f(L('{n} est blessé par {i} !', '{n} was hurt by the {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
+    case 'sash':
+      return [f(L('{n} tient bon grâce à {i} !', '{n} hung on using its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
+    case 'quick':
+      return [f(L('{n} agit en premier grâce à {i} !', '{n}’s {i} let it move first!'), { n: nm(e.side), i: tr(item(e.item).name) })];
     case 'leftovers':
       return [f(L('{n} grignote son {i} et récupère des PV.', '{n} restored a little HP using its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
     case 'ball':

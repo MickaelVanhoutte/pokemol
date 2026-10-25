@@ -2,7 +2,7 @@ import type { LText } from '../../i18n';
 import { creature } from '../../data/creatures';
 import { ITEM_BY_ID, item } from '../../data/items';
 import { move } from '../../data/moves';
-import type { Major, MoveDef, StageKey } from '../../data/schema';
+import type { HoldEffect, Major, MoveDef, StageKey } from '../../data/schema';
 import { effectiveness } from '../../data/types';
 import { nextRandom, randomInt } from '../rng';
 import { addXp, gainEvs, learnMove, maxHp, statsOf, xpYield, type Mon } from './creature';
@@ -17,6 +17,8 @@ export interface Volatile {
   flinch: boolean;
   /** Dire Hit: one more critical-hit stage (lost when withdrawn). */
   focus: boolean;
+  /** Choice items: the only move allowed until the creature is withdrawn. */
+  lock: string | null;
 }
 
 export interface SideState {
@@ -90,6 +92,13 @@ export type BattleEvent =
   | { t: 'berry'; side: Side; item: string; amount?: number; cured?: Major | 'confusion' }
   | { t: 'leftovers'; side: Side; item: string; amount: number }
   | { t: 'focus'; side: Side }
+  /** A held item restored HP (Shell Bell) or cost HP (Life Orb, the foe's Rocky Helmet). */
+  | { t: 'itemHeal'; side: Side; item: string; amount: number }
+  | { t: 'itemHurt'; side: Side; item: string; amount: number }
+  /** Focus Sash: hung on with 1 HP. */
+  | { t: 'sash'; side: Side; item: string }
+  /** Quick Claw: moves first. */
+  | { t: 'quick'; side: Side; item: string }
   /** Guard Spec starts (`on`) or wears off. */
   | { t: 'guard'; side: Side; on: boolean }
   /** A foe's stat drop was blocked by Guard Spec. */
@@ -137,7 +146,14 @@ class Recorder implements Out {
 
 const STRUGGLE = 'lutte';
 const other = (s: Side): Side => (s === 0 ? 1 : 0);
-const freshVol = (): Volatile => ({ stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false });
+const freshVol = (): Volatile => ({ stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false, lock: null });
+/** Effect of the item a creature holds (undefined if none or not a held item). */
+const held = (m: Mon): HoldEffect | undefined => (m.item ? ITEM_BY_ID[m.item]?.hold : undefined);
+const CHOICE: HoldEffect[] = ['choiceBand', 'choiceSpecs', 'choiceScarf'];
+/** Stat multipliers of held items (Choice items, Assault Vest). */
+const HELD_STAT: Partial<Record<HoldEffect, Partial<Record<'atk' | 'def' | 'spa' | 'spd' | 'spe', number>>>> = {
+  choiceBand: { atk: 1.5 }, choiceSpecs: { spa: 1.5 }, choiceScarf: { spe: 1.5 }, assaultVest: { spd: 1.5 },
+};
 /** Gen 3 critical-hit chance by stage (high-crit moves +1, Dire Hit +1). */
 const CRIT = [1 / 16, 1 / 8, 1 / 4, 1 / 3, 1 / 2];
 export const activeMon = (s: SideState): Mon => s.party[s.active];
@@ -175,11 +191,20 @@ export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd
   const m = activeMon(side);
   let v = statsOf(m)[key] * stageMult(side.vol.stages[key]);
   if (key === 'spe' && m.status === 'paralyze') v *= 0.25;
+  const h = held(m);
+  if (h) v *= HELD_STAT[h]?.[key] ?? 1;
   return v;
 }
 
-export function usableSlots(m: Mon): number[] {
-  return m.moves.map((_, i) => i).filter((i) => m.moves[i].pp > 0);
+/**
+ * Moves the creature may pick: some PP left, only the locked move after a Choice item was used,
+ * and only attacking moves with an Assault Vest. Empty = Struggle.
+ */
+export function usableSlots(m: Mon, vol?: Pick<Volatile, 'lock'>): number[] {
+  let slots = m.moves.map((_, i) => i).filter((i) => m.moves[i].pp > 0);
+  if (held(m) === 'assaultVest') slots = slots.filter((i) => move(m.moves[i].id).cat !== 'status');
+  const lock = vol?.lock && m.moves.some((s) => s.id === vol.lock) ? vol.lock : null;
+  return lock ? slots.filter((i) => m.moves[i].id === lock) : slots;
 }
 
 export function blocked(st: BattleState): boolean {
@@ -188,11 +213,35 @@ export function blocked(st: BattleState): boolean {
 
 function hurt(st: BattleState, side: Side, amount: number, out: Out, extra: Partial<Extract<BattleEvent, { t: 'damage' }>> = {}) {
   const m = activeMon(st.sides[side]);
-  const dmg = Math.min(m.hp, Math.max(0, Math.round(amount)));
+  let dmg = Math.min(m.hp, Math.max(0, Math.round(amount)));
+  // Focus Sash: a knockout from full HP leaves 1 HP instead (once)
+  const sash = dmg >= m.hp && m.hp === maxHp(m) && m.hp > 1 && held(m) === 'focusSash' ? m.item! : null;
+  if (sash) dmg = m.hp - 1;
   m.hp -= dmg;
   out.push({ t: 'damage', side, amount: dmg, ...extra });
+  if (sash) {
+    m.item = null;
+    out.push({ t: 'sash', side, item: sash });
+  }
   checkBerry(st, side, out);
   return dmg;
+}
+
+/** HP lost or regained because of a held item (Life Orb, Rocky Helmet, Shell Bell). */
+function itemHp(st: BattleState, side: Side, item: string, amount: number, out: Out) {
+  const m = activeMon(st.sides[side]);
+  if (!alive(m)) return;
+  if (amount < 0) {
+    const lost = Math.min(m.hp, -amount);
+    m.hp -= lost;
+    out.push({ t: 'itemHurt', side, item, amount: lost });
+    checkBerry(st, side, out);
+  } else {
+    const h = Math.min(maxHp(m) - m.hp, amount);
+    if (h <= 0) return;
+    m.hp += h;
+    out.push({ t: 'itemHeal', side, item, amount: h });
+  }
 }
 
 /**
@@ -280,7 +329,10 @@ export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: 
   const phys = mv.cat === 'phys';
   const A = effectiveStat(atkSide, phys ? 'atk' : 'spa') * (phys && a.status === 'burn' ? 0.5 : 1);
   const D = effectiveStat(defSide, phys ? 'def' : 'spd');
-  const critChance = CRIT[(mv.effects?.some((e) => e.kind === 'highCrit') ? 1 : 0) + (atkSide.vol.focus ? 1 : 0)];
+  const h = held(a);
+  const critChance = CRIT[(mv.effects?.some((e) => e.kind === 'highCrit') ? 1 : 0) + (atkSide.vol.focus ? 1 : 0) + (h === 'scopeLens' ? 1 : 0)];
+  // type boosters (Charcoal, Mystic Water…): +20% power
+  if (h === 'typeBoost' && mv.id !== STRUGGLE && ITEM_BY_ID[a.item!]?.type === mv.type) power = Math.floor(power * 1.2);
   const crit = forceCrit ?? nextRandom(st) < critChance;
   let dmg = Math.floor(Math.floor((Math.floor((2 * a.level) / 5 + 2) * power * A) / D) / 50) + 2;
   if (crit) dmg *= 2;
@@ -290,6 +342,7 @@ export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: 
   const eff = typeless ? 1 : effectiveness(mv.type, creature(d.species).type);
   dmg = Math.floor(dmg * eff);
   dmg = Math.floor((dmg * (85 + randomInt(st, 16))) / 100);
+  if (h === 'lifeOrb' && mv.id !== STRUGGLE) dmg = Math.floor(dmg * 1.3);
   if (eff > 0) dmg = Math.max(1, dmg);
   return { dmg, crit, eff };
 }
@@ -358,6 +411,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
 
   if (slot >= 0 && user.moves[slot]) user.moves[slot].pp = Math.max(0, user.moves[slot].pp - 1);
   out.push({ t: 'move', side, move: moveId });
+  if (moveId !== STRUGGLE && !s.vol.lock && CHOICE.includes(held(user)!)) s.vol.lock = moveId;
 
   if (onlyAsleep && user.status !== 'sleep') {
     out.push({ t: 'fail', side });
@@ -393,12 +447,19 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
   const hits = hitCount(st, mv);
   let total = 0;
   let done = 0;
-  for (let h = 0; h < hits && alive(target); h++) {
+  for (let h = 0; h < hits && alive(target) && alive(user); h++) {
     const { dmg, crit, eff } = computeDamage(st, s, foe, mv, power);
-    total += hurt(st, foeSide, dmg, out, { crit, eff });
+    const dealt = hurt(st, foeSide, dmg, out, { crit, eff });
+    total += dealt;
     done++;
+    // Rocky Helmet: hitting its holder up close hurts
+    if (dealt > 0 && mv.cat === 'phys' && moveId !== STRUGGLE && held(target) === 'rockyHelmet') itemHp(st, side, target.item!, -Math.max(1, Math.floor(maxHp(user) / 6)), out);
   }
   if (hits > 1) out.push({ t: 'hits', count: done });
+  const mine = held(user);
+  if (total > 0 && mine === 'shellBell') itemHp(st, side, user.item!, Math.max(1, Math.floor(total / 8)), out);
+  if (total > 0 && mine === 'lifeOrb' && moveId !== STRUGGLE) itemHp(st, side, user.item!, -Math.max(1, Math.floor(maxHp(user) / 10)), out);
+  if (total > 0 && mine === 'kingsRock' && alive(target) && !mv.effects?.some((e) => e.kind === 'flinch') && nextRandom(st) < 0.1) foe.vol.flinch = true;
 
   for (const e of mv.effects ?? []) {
     switch (e.kind) {
@@ -647,7 +708,7 @@ function checkFaints(st: BattleState, out: Out) {
   }
 }
 
-type Planned = { side: Side; action: Action; prio: number; speed: number; uid: string };
+type Planned = { side: Side; action: Action; prio: number; speed: number; uid: string; quick: boolean };
 
 /** Applies the player's action (and the AI's answer when it is a full turn). */
 export function act(prev: BattleState, action: Action, enemy: Action, withSnaps = false): Step {
@@ -701,13 +762,15 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
   const plans: Planned[] = [];
   if (action.type === 'move') plans.push(plan(st, 0, action));
   if (enemy.type === 'move') plans.push(plan(st, 1, enemy));
-  plans.sort((a, b) => b.prio - a.prio || b.speed - a.speed || (nextRandom(st) < 0.5 ? -1 : 1));
+  plans.sort((a, b) => b.prio - a.prio || Number(b.quick) - Number(a.quick) || b.speed - a.speed || (nextRandom(st) < 0.5 ? -1 : 1));
 
   for (const p of plans) {
     if (st.result || st.needSwitch) break;
     // a creature sent in to replace a fainted one doesn't act this turn
     if (activeMon(st.sides[p.side]).uid !== p.uid) continue;
     if (p.action.type === 'move') {
+      const m = activeMon(st.sides[p.side]);
+      if (p.quick && plans.length > 1 && p === plans[0] && plans[1].speed > p.speed) out.push({ t: 'quick', side: p.side, item: m.item! });
       useMove(st, p.side, p.action.slot, out);
       // the slower side can't flinch the faster one once it already moved
       st.sides[p.side].vol.flinch = false;
@@ -754,7 +817,9 @@ function plan(st: BattleState, side: Side, a: Action): Planned {
   const m = activeMon(s);
   const slot = a.type === 'move' ? a.slot : -1;
   const id = slot >= 0 && m.moves[slot] ? m.moves[slot].id : STRUGGLE;
-  return { side, action: a, prio: move(id).priority ?? 0, speed: effectiveStat(s, 'spe'), uid: m.uid };
+  // Quick Claw: 20% chance to go first among moves of the same priority
+  const quick = held(m) === 'quickClaw' && nextRandom(st) < 0.2;
+  return { side, action: a, prio: move(id).priority ?? 0, speed: effectiveStat(s, 'spe'), uid: m.uid, quick };
 }
 
 function validate(st: BattleState, a: Action) {
@@ -763,7 +828,8 @@ function validate(st: BattleState, a: Action) {
   switch (a.type) {
     case 'move':
       if (a.slot >= 0 && (!m.moves[a.slot] || m.moves[a.slot].pp <= 0)) throw new IllegalAction('no PP');
-      if (a.slot < 0 && usableSlots(m).length) throw new IllegalAction('struggle only without PP');
+      if (a.slot >= 0 && !usableSlots(m, me.vol).includes(a.slot)) throw new IllegalAction('move not allowed (Choice item or Assault Vest)');
+      if (a.slot < 0 && usableSlots(m, me.vol).length) throw new IllegalAction('struggle only without PP');
       break;
     case 'switch':
       if (a.to === me.active || !me.party[a.to] || !alive(me.party[a.to])) throw new IllegalAction('cannot switch');

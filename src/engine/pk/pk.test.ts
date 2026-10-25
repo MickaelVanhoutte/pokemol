@@ -4,11 +4,11 @@ import { MOVES } from '../../data/moves';
 import { ITEM_BY_ID } from '../../data/items';
 import { TRAINERS, partyOf } from '../../data/trainers';
 import { BADGES } from '../../data/badges';
-import { effectiveness } from '../../data/types';
+import { TYPES, effectiveness } from '../../data/types';
 import { L } from '../../i18n';
 import { aiChoose } from './ai';
-import { act, activeMon, catchChance, computeDamage, createBattle, IllegalAction, itemUsable, usableSlots, type Action, type BattleState } from './battle';
-import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, maxHp, movesAt, xpAt, type Mon } from './creature';
+import { act, activeMon, catchChance, computeDamage, createBattle, effectiveStat, IllegalAction, itemUsable, usableSlots, type Action, type BattleState } from './battle';
+import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, maxHp, movesAt, statsOf, xpAt, type Mon } from './creature';
 
 const IV0 = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
 const mon = (species: string, level: number, seed = 1, patch: Partial<Mon> = {}) => ({ ...createMon(species, level, { rng: seed }, IV0), ...patch });
@@ -330,10 +330,108 @@ describe('battle', () => {
     expect(r.events.some((e) => e.t === 'guard' && !e.on)).toBe(true);
   });
 
+  it('type boosters add 20% to moves of their type only', () => {
+    const fire = MOVES.find((m) => m.id === 'flammeche')!;
+    const bubble = MOVES.find((m) => m.id === 'bulles')!;
+    const avg = (item: string | null, mv: typeof fire) => {
+      const st = battle([mon('002', 30, 1, { item })], [mon('008', 30)]);
+      let n = 0;
+      for (let i = 0; i < 300; i++) n += computeDamage({ rng: i * 977 }, st.sides[0], st.sides[1], mv, mv.power, false).dmg;
+      return n / 300;
+    };
+    expect(avg('charbon', fire) / avg(null, fire)).toBeGreaterThan(1.12);
+    expect(avg('charbon', bubble)).toBeCloseTo(avg(null, bubble), 5);
+  });
+
+  it('Choice items boost a stat and lock the first move used', () => {
+    const me = mon('002', 20, 1, { item: 'bandeau-choix' });
+    const st = battle([me], [mon('008', 30)]);
+    expect(effectiveStat(st.sides[0], 'atk')).toBe(Math.floor(statsOf(me).atk) * 1.5);
+    const slot = slotOf(me, 'flammeche');
+    const r = act(st, { type: 'move', slot }, { type: 'move', slot: 0 });
+    expect(r.state.sides[0].vol.lock).toBe('flammeche');
+    expect(usableSlots(activeMon(r.state.sides[0]), r.state.sides[0].vol)).toEqual([slot]);
+    const other = r.state.sides[0].party[0].moves.findIndex((m) => m.id !== 'flammeche');
+    expect(() => act(r.state, { type: 'move', slot: other }, { type: 'move', slot: 0 })).toThrow(IllegalAction);
+    const scarf = battle([mon('002', 20, 1, { item: 'echarpe-choix' })], [mon('008', 30)]);
+    expect(effectiveStat(scarf.sides[0], 'spe')).toBe(statsOf(scarf.sides[0].party[0]).spe * 1.5);
+  });
+
+  it('Assault Vest: Sp. Def ×1.5 and no status moves', () => {
+    const me = mon('001', 10, 1, { item: 'veste-combat' }); // Griffe, Grondement (status), Coup de liane, Griffe-pousse
+    const st = battle([me], [mon('002', 10)]);
+    expect(usableSlots(me)).not.toContain(slotOf(me, 'grondement'));
+    expect(effectiveStat(st.sides[0], 'spd')).toBe(statsOf(me).spd * 1.5);
+  });
+
+  it('Life Orb hits harder and costs 1/10 of max HP per attack', () => {
+    const me = mon('002', 20, 1, { item: 'orbe-vie' });
+    const st = battle([me], [mon('008', 40)]);
+    const r = act(st, { type: 'move', slot: slotOf(me, 'flammeche') }, { type: 'move', slot: 0 });
+    expect(r.events.find((e) => e.t === 'itemHurt')).toMatchObject({ side: 0, item: 'orbe-vie', amount: Math.floor(maxHp(me) / 10) });
+  });
+
+  it('Rocky Helmet hurts physical attackers, not special ones', () => {
+    const foe = mon('008', 30, 1, { item: 'casque-brut' });
+    const me = mon('002', 20); // Pas-de-loup is physical, Flammèche special
+    const st = battle([me], [foe]);
+    const phys = act(st, { type: 'move', slot: slotOf(me, 'pas-de-loup') }, { type: 'move', slot: slotOf(foe, 'grondement') });
+    expect(phys.events.find((e) => e.t === 'itemHurt')).toMatchObject({ side: 0, item: 'casque-brut', amount: Math.floor(maxHp(me) / 6) });
+    const spec = act(st, { type: 'move', slot: slotOf(me, 'flammeche') }, { type: 'move', slot: slotOf(foe, 'grondement') });
+    expect(spec.events.some((e) => e.t === 'itemHurt')).toBe(false);
+  });
+
+  it('Focus Sash keeps 1 HP from full health, once', () => {
+    const foe = mon('012', 3, 1, { item: 'ceinture-force' });
+    const st = battle([mon('002', 30)], [foe], 'wild');
+    const r = act(st, { type: 'move', slot: slotOf(st.sides[0].party[0], 'tourbillon-braises') }, { type: 'move', slot: 0 });
+    expect(r.events.some((e) => e.t === 'sash')).toBe(true);
+    expect(r.state.sides[1].party[0].hp).toBe(1);
+    expect(r.state.sides[1].party[0].item).toBeNull();
+  });
+
+  it('Quick Claw sometimes lets the slower one move first', () => {
+    let first = 0;
+    for (let seed = 1; seed <= 400; seed++) {
+      const slow = mon('008', 20, 1, { item: 'vive-griffe' }); // Ronflon is very slow
+      const st = battle([slow], [mon('004', 20)], 'trainer', seed);
+      const r = act(st, { type: 'move', slot: 0 }, { type: 'move', slot: 0 });
+      const moves = r.events.filter((e) => e.t === 'move');
+      if (moves[0]?.t === 'move' && moves[0].side === 0) first++;
+    }
+    expect(first).toBeGreaterThan(40);
+    expect(first).toBeLessThan(130);
+  });
+
+  it('Scope Lens raises the critical-hit chance', () => {
+    const fire = MOVES.find((m) => m.id === 'flammeche')!;
+    const st = battle([mon('002', 10, 1, { item: 'lentilscope' })], [mon('001', 10)]);
+    let n = 0;
+    for (let i = 0; i < 4000; i++) if (computeDamage({ rng: i * 7919 }, st.sides[0], st.sides[1], fire, 40).crit) n++;
+    expect(n / 4000).toBeGreaterThan(0.1);
+  });
+
+  it('Shell Bell restores 1/8 of the damage dealt', () => {
+    const me = mon('002', 20, 1, { item: 'grelot-coque' });
+    me.hp = 10;
+    const st = battle([me], [mon('008', 40)]);
+    const r = act(st, { type: 'move', slot: slotOf(me, 'flammeche') }, { type: 'move', slot: slotOf(st.sides[1].party[0], 'grondement') });
+    const dmg = r.events.find((e) => e.t === 'damage' && e.side === 1);
+    const bell = r.events.find((e) => e.t === 'itemHeal');
+    expect(bell).toMatchObject({ side: 0, amount: Math.max(1, Math.floor((dmg as { amount: number }).amount / 8)) });
+  });
+
+  it('every type has a booster and every held item has an effect', () => {
+    const boosters = Object.values(ITEM_BY_ID).filter((i) => i.hold === 'typeBoost').map((i) => i.type);
+    for (const t of Object.keys(TYPES)) expect(boosters, t).toContain(t);
+    for (const i of Object.values(ITEM_BY_ID)) if (i.kind === 'hold') expect(i.hold, i.id).toBeDefined();
+  });
+
   it('AI vs AI battles always end', () => {
     const ids = CREATURES.map((c) => c.id);
     for (let seed = 1; seed <= 200; seed++) {
-      const held = ['baie-bleue', 'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'papier-calque', null];
+      const held = ['baie-bleue', 'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'papier-calque', 'bandeau-choix', 'echarpe-choix',
+        'lunettes-choix', 'orbe-vie', 'veste-combat', 'casque-brut', 'ceinture-force', 'vive-griffe', 'lentilscope', 'roche-royale', 'grelot-coque', 'charbon', null];
       const party = (k: number, n: number) => Array.from({ length: n }, (_, i) => ({
         ...createMon(ids[(seed * 3 + i * 5 + k) % ids.length], 3 + ((seed + i) % 30), { rng: seed * 31 + i + k }),
         item: held[(seed + i + k) % held.length],
@@ -345,7 +443,7 @@ describe('battle', () => {
         if (st.learnQueue.length) a = { type: 'learn', forget: seed % 2 ? 0 : null };
         else if (st.needSwitch) a = { type: 'replace', to: st.sides[0].party.findIndex((m) => m.hp > 0) };
         else {
-          const slots = usableSlots(activeMon(st.sides[0]));
+          const slots = usableSlots(activeMon(st.sides[0]), st.sides[0].vol);
           a = { type: 'move', slot: slots.length ? slots[turns % slots.length] : -1 };
         }
         st = act(st, a, aiChoose(st)).state;

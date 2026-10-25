@@ -12,7 +12,9 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - FireRed mechanics: IVs and effort points (EVs), with a judge in the summary (STATS > JUGER);
-  held items, eight berries (bushes on routes regrow every day), the Tracing Paper (Exp. Share),
+  held items (Leftovers, Choice Band/Specs/Scarf, Life Orb, Assault Vest, Rocky Helmet, Focus Sash,
+  Quick Claw, Scope Lens, King's Rock, Shell Bell, a booster for every type like Charcoal or Mystic
+  Water), eight berries (bushes on routes regrow every day), the Tracing Paper (Exp. Share),
   battle items (X Attack… Dire Hit, Guard Spec) and 12 reusable technical capsules (CT01–CT12),
   one from each Atelier Master.
 - Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.

@@ -51,7 +51,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       { id: 'max', x: 6, y: 9, look: LOOKS.hiker, facing: 'right', trainer: 'max', sight: 4 },
       { id: 'zoe', x: 17, y: 5, look: LOOKS.kid, facing: 'down', trainer: 'zoe', sight: 3 },
     ],
-    items: [{ x: 2, y: 13, item: 'potion' }, { x: 22, y: 6, item: 'crayon-ball', count: 2 }],
+    items: [{ x: 2, y: 13, item: 'potion' }, { x: 22, y: 6, item: 'crayon-ball', count: 2 }, { x: 1, y: 13, item: 'ceinture-noire' }],
     encounters: {
       rate: 0.08,
       anyTile: true,
@@ -179,7 +179,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       { id: 'rose', x: 2, y: 9, look: LOOKS.granny, facing: 'right', trainer: 'rose', sight: 4 },
       { id: 'tgomme2', x: 9, y: 7, look: LOOKS.gommeF, facing: 'left', trainer: 'tgomme2', sight: 4 },
     ],
-    items: [{ x: 10, y: 10, item: 'super-crayon-ball', count: 2 }],
+    items: [{ x: 10, y: 10, item: 'super-crayon-ball', count: 2 }, { x: 6, y: 3, item: 'rune-sort' }],
     encounters: TOWER_ENCOUNTERS,
   },
 

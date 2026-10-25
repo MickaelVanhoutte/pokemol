@@ -77,6 +77,12 @@ export interface SpeciesDef {
   faces?: 'left' | 'right';
 }
 
+/** What a held item does in battle (see `src/engine/pk/battle.ts`). */
+export type HoldEffect =
+  | 'leftovers' | 'expShare' | 'typeBoost'
+  | 'choiceBand' | 'choiceScarf' | 'choiceSpecs' | 'lifeOrb' | 'assaultVest' | 'rockyHelmet' | 'focusSash'
+  | 'quickClaw' | 'scopeLens' | 'kingsRock' | 'shellBell';
+
 /**
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
  * `battle`: boosts the creature fighting (X items), only in battle.
@@ -94,7 +100,9 @@ export interface ItemDef {
   /** Berries: what they cure. */
   cures?: (Major | 'confusion')[];
   /** Held items: their effect. */
-  hold?: 'leftovers' | 'expShare';
+  hold?: HoldEffect;
+  /** Type boosters: moves of this type hit 20% harder. */
+  type?: TypeId;
   /** Battle items: the stat raised one stage, `crit` (Dire Hit) or `mist` (Guard Spec, 5 turns). */
   boost?: StageKey | 'crit' | 'mist';
   /** Technical capsules: the move they teach (never used up). */

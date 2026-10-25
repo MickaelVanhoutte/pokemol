@@ -10,6 +10,9 @@ const STOCK: Record<string, number> = {
   'super-crayon-ball': 1, 'super-potion': 1, rappel: 1,
   'attaque-plus': 2, 'defense-plus': 2, 'vitesse-plus': 2, 'special-plus': 2, 'precision-plus': 2,
   'muscle-plus': 3, 'defense-spec': 3,
+  'vive-griffe': 4, 'lentilscope': 4, 'roche-royale': 4, 'grelot-coque': 4,
+  'ceinture-force': 5, 'casque-brut': 5,
+  'bandeau-choix': 6, 'lunettes-choix': 6, 'echarpe-choix': 6, 'orbe-vie': 6, 'veste-combat': 6,
 };
 
 export function ShopScreen() {

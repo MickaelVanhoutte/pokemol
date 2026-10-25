@@ -111,7 +111,8 @@ export function BattleScreen(props: BattleProps) {
       case 'damage': if (e.amount) { pulse(e.side, 'hit', 600); sfx.hit(); } break;
       case 'confusedHit': case 'recoil': pulse(e.side, 'hit', 600); sfx.hit(); break;
       case 'faint': pulse(e.side, 'faint', 2000); sfx.ko(); break;
-      case 'heal': case 'useItem': case 'berry': case 'leftovers': sfx.heal(); break;
+      case 'heal': case 'useItem': case 'berry': case 'leftovers': case 'itemHeal': sfx.heal(); break;
+      case 'itemHurt': pulse(e.side, 'hit', 600); sfx.hit(); break;
       case 'levelUp': sfx.levelUp(); break;
       case 'status': pulse(e.side, 'status', 700); break;
       case 'ball':
@@ -227,7 +228,8 @@ export function BattleScreen(props: BattleProps) {
         text={text}
         speaker={mode === 'coach' ? tr(L('Prof. Fusain', 'Prof. Charcoal')) : beaten && mode === 'continue' ? props.trainer!.title : undefined}
         active={active}
-        struggling={!usableSlots(active).length}
+        struggling={!usableSlots(active, me.vol).length}
+        usable={usableSlots(active, me.vol)}
         pulseAttack={coach === 1}
         onFight={() => setMenu('fight')}
         onBag={() => { setBagNote(''); setOverlay({ kind: 'bag' }); }}

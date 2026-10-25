@@ -164,7 +164,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
       { x: 8, y: 29, to: { map: 'bourg', x: 10, y: 1, facing: 'down' } },
     ],
     triggers: [{ x: 7, y: 27, w: 2, h: 1, script: 'route1Gomme', if: 'rival1', unless: 'a1.r1seen' }],
-    items: [{ x: 14, y: 9, item: 'potion' }, { x: 1, y: 1, item: 'crayon-ball', count: 2 }, { x: 1, y: 17, item: 'page-2', hidden: true }, { x: 14, y: 5, item: 'baie-bleue' }],
+    items: [{ x: 14, y: 9, item: 'potion' }, { x: 1, y: 1, item: 'crayon-ball', count: 2 }, { x: 1, y: 17, item: 'page-2', hidden: true }, { x: 14, y: 5, item: 'baie-bleue' }, { x: 14, y: 10, item: 'mouchoir-soie' }],
     signs: [
       { x: 2, y: 5, text: L('↑ VILLE-PASTEL', '↑ PASTEL CITY') },
       { x: 12, y: 27, text: L('CHEMIN DES CRAYONS\n↓ Bourg-Gribouille   ↑ Ville-Pastel', 'CRAYON ROAD\n↓ Scribbleton   ↑ Pastel City') },

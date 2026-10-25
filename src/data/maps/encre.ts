@@ -45,7 +45,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       { id: 'r8a', x: 12, y: 6, look: LOOKS.ghostgirl, facing: 'left', trainer: 'r8a', sight: 3 },
       { id: 'r8b', x: 4, y: 13, look: LOOKS.gomme, facing: 'right', trainer: 'r8b', sight: 4 },
     ],
-    items: [{ x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'ct11' }],
+    items: [{ x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'ct11' }, { x: 14, y: 7, item: 'lunettes-noires' }],
     berries: [{ x: 13, y: 17, item: 'baie-prisme' }],
     encounters: {
       rate: 0.14,
