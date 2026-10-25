@@ -1,6 +1,6 @@
 import { effect, signal } from '@preact/signals';
 import { gender, locale, setGlobalVars } from '../i18n';
-import { healMon, type Mon } from '../engine/pk/creature';
+import { healMon, noStats, type Mon } from '../engine/pk/creature';
 import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 
 const KEY = 'atelier-bestioles.save';
@@ -30,8 +30,25 @@ function readRaw(): unknown {
 export function migrate(raw: unknown): SaveData | null {
   if (!raw || typeof raw !== 'object') return null;
   const v = (raw as { version?: number }).version;
-  if (v === 2) return migrateV2(raw as V2Save);
-  return v === SAVE_VERSION ? (raw as SaveData) : null;
+  const s = v === 2 ? migrateV2(raw as V2Save) : v === 3 || v === SAVE_VERSION ? (raw as SaveData) : null;
+  if (!s) return null;
+  s.version = SAVE_VERSION;
+  return repair(s);
+}
+
+/**
+ * Fills what newer versions added (v4: effort points and held items), so an old save plays like a
+ * new one. Safe to run on every load.
+ */
+export function repair(s: SaveData): SaveData {
+  s.party.forEach(repairMon);
+  s.box.forEach(repairMon);
+  return s;
+}
+
+function repairMon(m: Mon) {
+  m.evs ??= noStats();
+  m.item ??= null;
 }
 
 interface V2Save {
@@ -55,7 +72,10 @@ export function migrateV2(old: V2Save): SaveData {
   s.createdAt = old.createdAt;
   s.playMs = old.playMs;
   s.box = [...old.party, ...old.box].map((m) => ({ ...m }));
-  s.box.forEach((m) => healMon(m));
+  s.box.forEach((m) => {
+    repairMon(m);
+    healMon(m);
+  });
   s.money = Math.max(s.money, old.money);
   s.dex = { seen: [...old.dex.seen], caught: [...old.dex.caught] };
   s.stats = { ...old.stats };

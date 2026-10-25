@@ -64,10 +64,11 @@ and resume when the player returns to the world. `App` is keyed on the locale, s
 re-renders everything.
 
 **State.**
-- `src/state/game.ts`: the `save` signal (`SaveData` v3 from `src/save/schema.ts`, localStorage key
+- `src/state/game.ts`: the `save` signal (`SaveData` v4 from `src/save/schema.ts`, localStorage key
   `atelier-bestioles.save`). `update(fn)` mutates and persists it. `migrate` and `migrateV2` load older
-  saves (v2 parties go to the PC). Changing the save shape means bumping `SAVE_VERSION`, adding a
-  migration and a test.
+  saves (v2 parties go to the PC); `repair()` then fills in what newer versions added (it runs on every
+  load, so it must stay idempotent). Changing the save shape means bumping `SAVE_VERSION`, adding a
+  migration or repair step and a test (`src/state/game.test.ts`).
 - `src/state/prefs.ts`: per-device preferences outside the save (text speed, difficulty, battle
   speed, sound, music) so Options also work from the title screen.
 

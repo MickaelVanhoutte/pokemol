@@ -5,7 +5,7 @@ import { effectiveness } from '../../data/types';
 import { L } from '../../i18n';
 import { aiChoose } from './ai';
 import { act, activeMon, catchChance, computeDamage, createBattle, IllegalAction, usableSlots, type Action, type BattleState } from './battle';
-import { addXp, calcStat, createMon, evolutionOf, evolve, maxHp, movesAt, xpAt, type Mon } from './creature';
+import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, maxHp, movesAt, xpAt, type Mon } from './creature';
 
 const IV0 = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
 const mon = (species: string, level: number, seed = 1, patch: Partial<Mon> = {}) => ({ ...createMon(species, level, { rng: seed }, IV0), ...patch });
@@ -42,8 +42,10 @@ describe('data', () => {
 
 describe('creatures', () => {
   it('computes Gen 3 stats', () => {
-    expect(calcStat('hp', 50, 0, 5)).toBe(20);
-    expect(calcStat('atk', 52, 31, 50)).toBe(Math.floor(((104 + 31) * 50) / 100) + 5);
+    expect(calcStat('hp', 50, 0, 0, 5)).toBe(20);
+    expect(calcStat('atk', 52, 31, 0, 50)).toBe(Math.floor(((104 + 31) * 50) / 100) + 5);
+    // 4 effort points = 1 point at level 100
+    expect(calcStat('atk', 52, 31, 252, 50)).toBe(Math.floor(((104 + 31 + 63) * 50) / 100) + 5);
     expect(maxHp(mon('001', 5))).toBe(20);
   });
 
@@ -69,6 +71,25 @@ describe('creatures', () => {
     const ups = addXp(m, xpAt(18) - m.xp);
     expect(ups.flatMap((u) => u.pending)).toContain('cauchemar');
     expect(m.moves).toHaveLength(4);
+  });
+
+  it('gains capped effort points and keeps missing HP', () => {
+    const m = mon('001', 50);
+    m.hp -= 10;
+    gainEvs(m, '005'); // Chantouille gives 2 HP points
+    expect(m.evs.hp).toBe(2);
+    m.evs.hp = 254;
+    gainEvs(m, '005');
+    expect(m.evs.hp).toBe(255);
+    m.evs = { hp: 255, atk: 255, def: 0, spa: 0, spd: 0, spe: 0 };
+    gainEvs(m, '011'); // 3 Sp. Atk points, but the 510 total is reached
+    expect(m.evs.spa).toBe(0);
+    const fresh = mon('001', 50);
+    fresh.hp -= 10;
+    const hp = maxHp(fresh);
+    for (let i = 0; i < 4; i++) gainEvs(fresh, '005');
+    expect(maxHp(fresh)).toBe(hp + 1); // 8 points = +2 at level 100, +1 at level 50
+    expect(maxHp(fresh) - fresh.hp).toBe(10);
   });
 
   it('evolves at the right level', () => {
@@ -116,6 +137,7 @@ describe('battle', () => {
     expect(r.state.result).toBe('win');
     expect(r.events.some((e) => e.t === 'xp')).toBe(true);
     expect(activeMon(r.state.sides[0]).xp).toBeGreaterThan(me.xp);
+    expect(activeMon(r.state.sides[0]).evs.spa).toBe(1);
   });
 
   it('asks for a replacement after a faint', () => {

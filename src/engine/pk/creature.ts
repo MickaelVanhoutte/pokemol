@@ -16,6 +16,10 @@ export interface Mon {
   /** Total experience points (medium-fast curve). */
   xp: number;
   ivs: Stats;
+  /** Effort points from beaten creatures (Gen 3: 255 per stat, 510 in all). */
+  evs: Stats;
+  /** Held item id (berries are eaten in battle). */
+  item: string | null;
   hp: number;
   status: Major | null;
   /** Remaining sleep turns while status is sleep. */
@@ -31,15 +35,20 @@ export function xpAt(level: number): number {
   return level <= 1 ? 0 : level ** 3;
 }
 
-export function calcStat(key: StatKey, base: number, iv: number, level: number): number {
-  const core = Math.floor(((2 * base + iv) * level) / 100);
+export const EV_STAT_MAX = 255;
+export const EV_TOTAL_MAX = 510;
+export const noStats = (): Stats => ({ hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 });
+
+/** Gen 3 stat formula (no natures): every 4 effort points add one point at level 100. */
+export function calcStat(key: StatKey, base: number, iv: number, ev: number, level: number): number {
+  const core = Math.floor(((2 * base + iv + Math.floor(ev / 4)) * level) / 100);
   return key === 'hp' ? core + level + 10 : core + 5;
 }
 
 export function statsOf(m: Mon): Stats {
   const sp = creature(m.species);
   const out = {} as Stats;
-  for (const k of STAT_KEYS) out[k] = calcStat(k, sp.base[k], m.ivs[k], m.level);
+  for (const k of STAT_KEYS) out[k] = calcStat(k, sp.base[k], m.ivs[k], m.evs[k], m.level);
   return out;
 }
 
@@ -72,6 +81,8 @@ export function createMon(speciesId: string, level: number, st: { rng: number },
     level,
     xp: xpAt(level),
     ivs: iv,
+    evs: noStats(),
+    item: null,
     hp: 0,
     status: null,
     sleepTurns: 0,
@@ -92,6 +103,19 @@ export function healMon(m: Mon) {
 export function xpYield(defeated: Mon, trainer: boolean, participants: number): number {
   const base = Math.floor((creature(defeated.species).baseExp * defeated.level) / 7);
   return Math.max(1, Math.floor((trainer ? Math.floor(base * 1.5) : base) / Math.max(1, participants)));
+}
+
+/** Adds the effort points of a beaten creature (capped); keeps the same missing HP. Mutates the creature. */
+export function gainEvs(m: Mon, defeatedSpecies: string) {
+  const before = maxHp(m);
+  let total = STAT_KEYS.reduce((n, k) => n + m.evs[k], 0);
+  for (const k of STAT_KEYS) {
+    const add = Math.min(creature(defeatedSpecies).evYield[k] ?? 0, EV_STAT_MAX - m.evs[k], EV_TOTAL_MAX - total);
+    if (add <= 0) continue;
+    m.evs[k] += add;
+    total += add;
+  }
+  if (m.hp > 0) m.hp += maxHp(m) - before;
 }
 
 export interface LevelUp {

@@ -6,7 +6,9 @@ Vitest in a node environment, with no DOM. What they guard:
 
 | File | Checks |
 |---|---|
-| `src/engine/pk/pk.test.ts` | Data completeness (learnsets, type chart), Gen 3 stats, level-ups and move learning, evolution, damage range, immunities, faints and replacements, catching, items, Struggle, AI-vs-AI fights always end |
+| `src/engine/pk/pk.test.ts` | Data completeness (learnsets, type chart), Gen 3 stats with effort points, level-ups and move learning, evolution, damage range, immunities, faints and replacements, catching, items, Struggle, AI-vs-AI fights always end |
+| `src/engine/pk/judge.test.ts` | The IV judge's bands and ratings |
+| `src/state/game.test.ts` | Save migration and repair (older versions load without losing anything) |
 | `src/data/maps.test.ts` | Every map has rectangular rows of known tiles; warps land on walkable tiles; NPCs and triggers stand on free tiles; patches stay in bounds; encounters only list known creatures |
 | `src/story/story.test.ts` | Every script id a map references exists; every flag a map waits for is set somewhere; `afterScript`s exist |
 | `src/data/trainers.test.ts` | Difficulty level shifts and a gentle first two trainers |
