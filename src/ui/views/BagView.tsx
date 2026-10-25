@@ -9,6 +9,7 @@ const POCKET_NAMES: Record<Pocket, ReturnType<typeof L>> = {
   items: L('OBJETS', 'ITEMS'),
   balls: L('CRAYON-BALLS', 'PENCIL BALLS'),
   berries: L('BAIES', 'BERRIES'),
+  tms: L('CAPSULES', 'TM CASE'),
   key: L('OBJETS RARES', 'KEY ITEMS'),
 };
 
@@ -41,7 +42,7 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
   const focused = list[cursor];
   const why = (id: string): string | null => {
     const def = item(id);
-    if (context === 'battle' && (def.kind === 'key' || def.kind === 'hold')) return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
+    if (context === 'battle' && (def.kind === 'key' || def.kind === 'hold' || def.kind === 'tm')) return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
     if (context === 'battle' && def.kind === 'ball' && !wild) return tr(L('On ne lance pas de Crayon-ball sur la Bestiole d’un dresseur !', 'You can’t throw a Pencil Ball at a trainer’s Critter!'));
     if (context === 'field' && def.kind === 'battle') return tr(L('Cet objet ne s’utilise qu’en combat, sur la Bestiole qui se bat.', 'This item only works in battle, on the Critter fighting.'));
     if (context === 'field' && def.kind === 'ball') return tr(L('Les Crayon-balls se lancent sur les Bestioles sauvages, en combat.', 'Pencil Balls are thrown at wild Critters, in battle.'));
@@ -52,7 +53,7 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
     ...list.map((it) => ({
       label: tr(it.name),
       icon: it.id,
-      side: it.kind === 'key' ? '' : `×${bag[it.id]}`,
+      side: it.kind === 'key' || it.kind === 'tm' ? '' : `×${bag[it.id]}`,
       onSelect: () => { setMsg(''); setAction(it.id); },
     })),
     { label: tr(L('FERMER LE SAC', 'CLOSE BAG')), onSelect: onClose },

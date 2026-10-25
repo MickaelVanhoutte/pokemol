@@ -195,6 +195,21 @@ export const MOVES: MoveDef[] = [
     desc: L('Mordille l’ennemi. Peut l’apeurer.', 'Nibbles the foe. May make it flinch.') }),
   M({ id: 'coup-en-douce', name: L('Coup en douce', 'Sneaky Hit'), type: 'tenebres', cat: 'phys', power: 40, acc: 100, pp: 30, priority: 1,
     desc: L('Frappe en premier, sans prévenir.', 'Strikes first, without warning.') }),
+  // ---------------------------------------------------------------- taught by technical capsules only
+  M({ id: 'pluie-d-aquarelle', name: L('Pluie d’aquarelle', 'Watercolor Rain'), type: 'eau', cat: 'spec', power: 60, acc: 100, pp: 20,
+    effects: [{ kind: 'confuse', chance: 20 }],
+    desc: L('Une averse de peinture à l’eau. Peut rendre l’ennemi confus.', 'A shower of watercolor paint. May confuse the foe.') }),
+  M({ id: 'eclair-fluo', name: L('Éclair fluo', 'Neon Bolt'), type: 'electrique', cat: 'spec', power: 70, acc: 100, pp: 15,
+    effects: [{ kind: 'status', status: 'paralyze', chance: 10 }],
+    desc: L('Un éclair surligné au feutre fluo. Peut paralyser.', 'A bolt traced in neon marker. May paralyze.') }),
+  M({ id: 'reve-eveille', name: L('Rêve éveillé', 'Daydream'), type: 'psy', cat: 'spec', power: 75, acc: 100, pp: 15,
+    effects: [{ kind: 'stage', target: 'foe', stat: 'spd', stages: -1, chance: 10 }],
+    desc: L('Envoie un rêve étrange dans la tête de l’ennemi. Peut baisser sa Déf. Spé.', 'Sends a strange dream into the foe’s head. May lower its Sp. Def.') }),
+  M({ id: 'poing-crayon', name: L('Poing-crayon', 'Pencil Punch'), type: 'combat', cat: 'phys', power: 75, acc: 100, pp: 15,
+    desc: L('Un coup de poing bien appuyé, comme un trait de crayon gras.', 'A firm punch, like a stroke of soft pencil.') }),
+  M({ id: 'tache-d-encre', name: L('Tache d’encre', 'Ink Blot'), type: 'tenebres', cat: 'spec', power: 70, acc: 100, pp: 15,
+    effects: [{ kind: 'stage', target: 'foe', stat: 'acc', stages: -1, chance: 30 }],
+    desc: L('Éclabousse l’ennemi d’encre noire. Peut baisser sa Précision.', 'Splashes the foe with black ink. May lower its accuracy.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

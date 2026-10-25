@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMon, maxHp } from '../../engine/pk/creature';
-import { canUseOn, pocketItems, useOn } from './bag';
+import { canUseOn, pocketItems, tmStatus, useOn } from './bag';
 import { canDeposit } from './pc';
 import { moveCursor } from '../paper/nav';
 import { giveHeld, takeHeld } from '../../state/game';
@@ -46,6 +46,17 @@ describe('bag', () => {
     sick.status = 'poison';
     expect(useOn('retouche', sick)).toBe(true);
     expect(sick.status).toBe(null);
+  });
+});
+
+describe('technical capsules', () => {
+  it('say who can learn them', () => {
+    const m = mon(); // Minousse knows Griffe, Grondement, Coup de liane, Griffe-pousse
+    expect(tmStatus('ct07', m)).toBe('able');
+    expect(tmStatus('ct03', m)).toBe('unable');
+    m.moves[0] = { id: 'rafale-de-graines', pp: 15 };
+    expect(tmStatus('ct07', m)).toBe('learned');
+    expect(pocketItems({ ct07: 1, potion: 1 }, 'tms').map((i) => i.id)).toEqual(['ct07']);
   });
 });
 

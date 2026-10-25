@@ -117,7 +117,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'pierrot', x: 10, y: 4, look: LOOKS.kid, facing: 'down', trainer: 'pierrot', sight: 2 },
       { id: 'ninon', x: 14, y: 9, look: LOOKS.girl, facing: 'up', trainer: 'ninon', sight: 2 },
     ],
-    items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }],
+    items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }, { x: 13, y: 2, item: 'ct12' }],
     berries: [{ x: 19, y: 9, item: 'baie-peche' }],
     encounters: {
       rate: 0.13,

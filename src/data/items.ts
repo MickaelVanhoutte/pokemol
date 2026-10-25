@@ -1,5 +1,22 @@
 import { L } from '../i18n';
+import { move } from './moves';
 import type { ItemDef } from './schema';
+
+/** Technical capsules, in order (ct01…): the first eight are the Atelier Masters' rewards. */
+export const TM_MOVES = [
+  'rayon-d-ailes', 'coup-de-boule', 'pluie-d-aquarelle', 'eclair-fluo', 'queue-ardente', 'eclat-de-lune',
+  'rafale-de-graines', 'ombre-farceuse', 'reve-eveille', 'poing-crayon', 'tache-d-encre', 'gros-baillement',
+];
+export const tmId = (n: number) => `ct${String(n).padStart(2, '0')}`;
+
+function capsule(moveId: string, i: number): ItemDef {
+  const mv = move(moveId);
+  const n = String(i + 1).padStart(2, '0');
+  return {
+    id: tmId(i + 1), name: L(`CT${n} ${mv.name.fr}`, `TM${n} ${mv.name.en}`), price: 0, kind: 'tm', amount: 0, move: moveId,
+    desc: L(`${mv.desc.fr} Capsule technique : elle ne s’use jamais.`, `${mv.desc.en} Technical capsule: it never wears out.`),
+  };
+}
 
 export const ITEMS: ItemDef[] = [
   {
@@ -98,6 +115,7 @@ export const ITEMS: ItemDef[] = [
     id: 'papier-calque', name: L('Papier Calque', 'Tracing Paper'), price: 0, kind: 'hold', amount: 0, hold: 'expShare',
     desc: L('À faire tenir. La Bestiole décalque tout ce que voit l’équipe : elle reçoit la moitié de l’expérience, même sans combattre.', 'An item to hold. Its holder traces everything the team sees: it gets half the experience, even without fighting.'),
   },
+  ...TM_MOVES.map(capsule),
   {
     id: 'ticket-or', name: L('Ticket d’or', 'Golden Ticket'), price: 0, kind: 'key', amount: 0,
     desc: L('Un ticket brillant tombé de la poche du monsieur de la tombola, à Port-Aquarelle.', 'A shiny ticket dropped by the fair man of Port Aquarelle.'),
@@ -110,8 +128,8 @@ export const ITEMS: ItemDef[] = [
 
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
 
-/** Things a Bestiole can hold (anything but key items). */
-export const canHold = (def: ItemDef) => def.kind !== 'key';
+/** Things a Bestiole can hold (anything but key items and capsules). */
+export const canHold = (def: ItemDef) => def.kind !== 'key' && def.kind !== 'tm';
 
 export function item(id: string): ItemDef {
   const i = ITEM_BY_ID[id];

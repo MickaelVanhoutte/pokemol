@@ -47,6 +47,7 @@
 .pslot__info b { font-weight: 400; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pslot__lv { font-size: 0.9rem; display: flex; gap: 4px; align-items: center; }
 .pslot__held { display: inline-flex; margin-left: auto; }
+.pslot__tag { font-size: 1rem; color: var(--cursor); }
 .pslot__held .picon { image-rendering: pixelated; }
 .pslot__hp { font-size: 0.85rem; text-align: right; }
 .party__foot { flex: none; display: flex; gap: 6px; align-items: stretch; }

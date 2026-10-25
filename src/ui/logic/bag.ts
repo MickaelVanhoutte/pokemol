@@ -1,12 +1,23 @@
 import { ITEMS, item } from '../../data/items';
 import type { ItemDef } from '../../data/schema';
 import { maxHp, type Mon } from '../../engine/pk/creature';
+import { creature } from '../../data/creatures';
 
-export type Pocket = 'items' | 'balls' | 'berries' | 'key';
-export const POCKETS: Pocket[] = ['items', 'balls', 'berries', 'key'];
+export type Pocket = 'items' | 'balls' | 'berries' | 'tms' | 'key';
+export const POCKETS: Pocket[] = ['items', 'balls', 'berries', 'tms', 'key'];
 
 export function pocketOf(def: ItemDef): Pocket {
-  return def.kind === 'ball' ? 'balls' : def.kind === 'berry' ? 'berries' : def.kind === 'key' ? 'key' : 'items';
+  if (def.kind === 'ball') return 'balls';
+  if (def.kind === 'berry') return 'berries';
+  if (def.kind === 'tm') return 'tms';
+  return def.kind === 'key' ? 'key' : 'items';
+}
+
+/** What a technical capsule can do for a creature (FRLG party labels ABLE / NOT ABLE / LEARNED). */
+export function tmStatus(tmId: string, m: Mon): 'able' | 'unable' | 'learned' {
+  const mv = item(tmId).move;
+  if (m.moves.some((s) => s.id === mv)) return 'learned';
+  return creature(m.species).tms.includes(tmId) ? 'able' : 'unable';
 }
 
 /** Items of one pocket the player owns, in catalog order. */

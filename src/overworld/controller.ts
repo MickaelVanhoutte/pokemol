@@ -3,7 +3,7 @@ import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
 import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature } from '../data/creatures';
-import { item } from '../data/items';
+import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
@@ -337,6 +337,15 @@ export async function trainerBattle(id: string, actor?: Actor) {
       mapDirty = true;
       sfx.victory();
       await say(L('{name} reçoit le {b} de {l} !', '{name} received the {b} from {l}!'), undefined, { b: tr(badgeDef(tdef.badge)?.name ?? L('Badge', 'Badge')), l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name) });
+      // like FireRed, the leader adds a technical capsule
+      const tm = badgeDef(tdef.badge)?.tm;
+      if (tm && !s().bag[tm]) {
+        const first = !Object.keys(s().bag).some((k) => ITEM_BY_ID[k]?.kind === 'tm');
+        giveItem(tm);
+        sfx.confirm();
+        await say(L('{l} te donne {i} !', '{l} gave you {i}!'), undefined, { l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name), i: tr(item(tm).name) });
+        if (first) await say(L('Une capsule technique apprend une capacité à une Bestiole compatible, autant de fois que tu veux ! Regarde dans ton Sac, poche CAPSULES.', 'A technical capsule teaches a move to a compatible Critter, as many times as you like! Look in your Bag, CAPSULES pocket.'), tdef.name);
+      }
       // leaders explain what comes next after giving the badge
       await sayAll(tdef.after.slice(1), tdef.name);
     }

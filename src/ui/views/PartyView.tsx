@@ -10,8 +10,8 @@ import './views.css';
 
 export type PartyMode = 'field' | 'battle' | 'forced' | 'target';
 
-function Slot({ m, i, lead, active, cursor, disabled, swapping, onClick }: {
-  m: Mon; i: number; lead: boolean; active: boolean; cursor: boolean; disabled: boolean; swapping: boolean; onClick: () => void;
+function Slot({ m, i, lead, active, cursor, disabled, swapping, tag, onClick }: {
+  m: Mon; i: number; lead: boolean; active: boolean; cursor: boolean; disabled: boolean; swapping: boolean; tag?: string; onClick: () => void;
 }) {
   const sp = creature(m.species);
   return (
@@ -25,8 +25,12 @@ function Slot({ m, i, lead, active, cursor, disabled, swapping, onClick }: {
       <span class="pslot__info">
         <b>{tr(sp.name)}</b>
         <span class="pslot__lv">{lv(m.level)} {m.status && <StatusTag s={m.status} />}{m.item && <span class="pslot__held" title={tr(item(m.item).name)}><PixelIcon id={m.item} size={16} /></span>}</span>
-        <HpBar hp={m.hp} max={maxHp(m)} />
-        <span class="pslot__hp">{m.hp}/{maxHp(m)}</span>
+        {tag ? <span class="pslot__tag">{tag}</span> : (
+          <>
+            <HpBar hp={m.hp} max={maxHp(m)} />
+            <span class="pslot__hp">{m.hp}/{maxHp(m)}</span>
+          </>
+        )}
       </span>
     </button>
   );
@@ -36,13 +40,17 @@ function Slot({ m, i, lead, active, cursor, disabled, swapping, onClick }: {
  * FRLG party screen. `field`: summary, held item (give / take) and order; `battle`: send out or
  * summary; `forced`: like battle with no cancel (after a faint); `target`: pick who gets an item.
  */
-export function PartyView({ party, mode, active = -1, canPick = () => true, message, onPick, onSwap, onGive, onTake, onClose }: {
+export function PartyView({ party, mode, active = -1, canPick = () => true, message, tag, refuse, onPick, onSwap, onGive, onTake, onClose }: {
   party: Mon[];
   mode: PartyMode;
   /** Creature currently fighting (battle modes). */
   active?: number;
   canPick?: (i: number) => boolean;
   message?: string;
+  /** Replaces the HP line (technical capsules: ABLE / NOT ABLE). */
+  tag?: (i: number) => string;
+  /** Why a creature can't be picked in `target` mode (default: no effect). */
+  refuse?: (i: number) => string;
   onPick?: (i: number) => void;
   onSwap?: (i: number, j: number) => void;
   /** Field ITEM menu: GIVE opens the bag, TAKE puts the held item back in it. */
@@ -67,7 +75,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
     }
     if (mode === 'target') {
       if (canPick(i)) onPick?.(i);
-      else setNote(tr(L('Ça n’aura aucun effet.', 'It won’t have any effect.')));
+      else setNote(refuse?.(i) ?? tr(L('Ça n’aura aucun effet.', 'It won’t have any effect.')));
       return;
     }
     setMenuFor(i);
@@ -127,7 +135,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
         {party.map((m, i) => (
           <Slot
             m={m} i={i} lead={i === 0} active={i === active} cursor={i === cur}
-            disabled={false} swapping={i === swapFrom}
+            disabled={false} swapping={i === swapFrom} tag={tag?.(i)}
             onClick={() => { setCur(i); choose(i); }}
           />
         ))}
