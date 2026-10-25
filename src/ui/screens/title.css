@@ -1,0 +1,26 @@
+.title { align-items: center; justify-content: center; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 30%, #3b2a66, var(--bg) 70%); }
+.title__float { position: absolute; inset: 0; pointer-events: none; }
+.title__float img {
+  position: absolute;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 6px #fff);
+  animation: bob 9s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-18px) rotate(4deg); }
+}
+.title__panel {
+  position: relative;
+  text-align: center;
+  background: rgba(27, 20, 48, 0.82);
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  padding: 28px 24px;
+  max-width: 460px;
+  width: 100%;
+  backdrop-filter: blur(4px);
+}
+.title__logo { font-size: clamp(2.2rem, 9vw, 3.4rem); margin: 0; color: var(--accent); text-shadow: 0 4px 0 #7a3d8f, 0 8px 18px rgba(0, 0, 0, 0.5); line-height: 1.05; }
+.title__sub { margin: 10px 0 22px; opacity: 0.85; }
+.title__menu { display: flex; flex-direction: column; gap: 12px; }

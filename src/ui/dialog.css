@@ -1,0 +1,66 @@
+.dialog-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  z-index: 30;
+  pointer-events: none;
+}
+.dialog {
+  pointer-events: auto;
+  position: relative;
+  background: #fdfaf0;
+  color: #22183a;
+  border: 4px solid #2a2140;
+  box-shadow: inset 0 0 0 3px #7ab0e0, 0 4px 0 rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  padding: 10px 16px 12px;
+  min-height: 4.4em;
+  font-size: clamp(1rem, 2.6vw, 1.35rem);
+  line-height: 1.35;
+  cursor: pointer;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+.dialog p { margin: 0; white-space: pre-line; }
+.dialog__speaker {
+  position: absolute;
+  top: -1.1em;
+  left: 12px;
+  background: #2a2140;
+  color: #fff;
+  padding: 1px 10px;
+  border-radius: 6px;
+  font-size: 0.8em;
+}
+.dialog__next { position: absolute; right: 12px; bottom: 4px; animation: blink 0.8s steps(2) infinite; color: #d64545; }
+@keyframes blink { 50% { opacity: 0; } }
+.dialog-choices {
+  pointer-events: auto;
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  background: #fdfaf0;
+  border: 4px solid #2a2140;
+  box-shadow: inset 0 0 0 3px #7ab0e0;
+  border-radius: 10px;
+  padding: 6px 4px;
+  margin-right: max(8px, calc((100% - 900px) / 2));
+}
+.dialog-choices button {
+  font: inherit;
+  font-size: clamp(1rem, 2.6vw, 1.3rem);
+  background: none;
+  border: 0;
+  color: #22183a;
+  text-align: left;
+  padding: 4px 14px 4px 8px;
+  cursor: pointer;
+}
+.dialog-choices button.is-on { background: #e8f2ff; border-radius: 6px; }

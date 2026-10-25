@@ -1,0 +1,75 @@
+.dg { max-width: 760px; margin: 0 auto; width: 100%; }
+.dg::before { content: ''; position: fixed; inset: 0; z-index: -1; }
+.dg { isolation: isolate; }
+.dg--cave::before { background: radial-gradient(circle at 50% 0%, #5e4838, #1f1612 80%); }
+.dg--tower::before { background: radial-gradient(circle at 50% 0%, #4f4a73, #15122a 80%); }
+.dg__money { background: rgba(0, 0, 0, 0.3); padding: 4px 10px; border-radius: 10px; }
+.dg__status { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.dg__team { display: flex; gap: 8px; }
+.dg__mate { width: 64px; text-align: center; background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 4px; }
+.dg__mate img { width: 52px; height: 44px; object-fit: contain; filter: drop-shadow(0 0 2px #fff); }
+.dg__mate.is-ko { filter: grayscale(1); opacity: 0.5; }
+.dg__mate small { font-size: 0.7rem; }
+.dg__hp { height: 6px; background: #3a3348; border-radius: 6px; overflow: hidden; }
+.dg__hp div { height: 100%; background: linear-gradient(#7de07b, #3fae4e); }
+.dg__tals { display: flex; gap: 4px; font-size: 1.5rem; }
+.dg__tals span { cursor: help; }
+
+.dg__mapwrap { overflow-y: auto; max-height: calc(100dvh - 210px); border-radius: 14px; background: rgba(0, 0, 0, 0.25); border: 2px solid rgba(255, 255, 255, 0.12); }
+.dg__map { position: relative; margin: 0 8%; }
+.dg__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dg__lines line { stroke: rgba(255, 255, 255, 0.28); stroke-width: 3; stroke-dasharray: 6 6; }
+.dg__lines line.is-used { stroke: #f2c14e; stroke-dasharray: none; }
+.dg__node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid #120c22;
+  background: #e8e2f4;
+  font-size: 1.5rem;
+  display: grid;
+  place-items: center;
+  cursor: default;
+  padding: 0;
+}
+.dg__node.k-boss { width: 72px; height: 72px; font-size: 2.1rem; background: #ffd77a; }
+.dg__node.k-elite { background: #f4b0b0; }
+.dg__node.is-visited { opacity: 0.45; }
+.dg__node.is-here { opacity: 1; box-shadow: 0 0 0 4px #f2c14e; }
+.dg__node.is-open { cursor: pointer; animation: nodePulse 1s ease-in-out infinite; opacity: 1; }
+@keyframes nodePulse { 50% { box-shadow: 0 0 0 5px #fff, 0 0 18px 6px #f2c14e; transform: translate(-50%, -50%) scale(1.08); } }
+.dg__node:disabled:not(.is-visited):not(.is-here) { filter: saturate(0.6); }
+.dg__legend { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 8px 12px; font-size: 0.8rem; opacity: 0.85; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.dg__foot { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+.dg__panel {
+  background: var(--panel);
+  color: var(--panel-ink);
+  border: 4px solid #2a2140;
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  animation: pop 0.3s ease;
+}
+.dg__panel h2 { margin: 0; }
+.dg__panel p { margin: 0; }
+.dg__panel .btn { width: min(380px, 100%); }
+.dg__big { font-size: 3.2rem; }
+.dg__tal { background: #fff3d1; padding: 6px 10px; border-radius: 10px; }
+.dg__choices, .dg__deckpick { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.dg__ware { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.dg__ware .btn { width: auto; }
+.card.is-dim { filter: grayscale(1) opacity(0.5); }
+.card.is-picked { box-shadow: 0 0 0 4px #f2c14e, 0 0 20px 6px #f2c14e; }
+.dg__deck { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-height: 90vh; overflow: auto; }
+.dg__pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; width: 100%; }
+.dg__pickcell { position: relative; background: #fff; border: 3px solid #d8d2e6; border-radius: 12px; padding: 6px; display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #22183a; }
+.dg__pickcell.is-on { border-color: #f2c14e; background: #fff7dc; }
+.dg__pickcell img { width: 80px; height: 66px; object-fit: contain; }
+.dg__order { position: absolute; top: 4px; left: 6px; background: #2a2140; color: #fff; width: 22px; height: 22px; border-radius: 50%; font-weight: 800; font-size: 0.8rem; display: grid; place-items: center; }
