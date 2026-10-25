@@ -19,12 +19,12 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, #bfe6f7 0%, #e9f6d9 42%, #9bd17a 42.2%, #7fbe5f 100%);
+  background: linear-gradient(180deg, #bfe6f7 0%, #e9f6d9 56%, #9bd17a 56.2%, #7fbe5f 100%);
 }
-.backdrop-cave::before { background: linear-gradient(180deg, #3b3346 0%, #57495f 45%, #6d5a55 45.2%, #4c3f3a 100%); }
-.backdrop-tower::before { background: linear-gradient(180deg, #2e3352 0%, #4f4a73 45%, #5d5476 45.2%, #3d3755 100%); }
-.backdrop-forest::before { background: linear-gradient(180deg, #2f5a45 0%, #4f7d5a 45%, #4a6e3d 45.2%, #34522c 100%); }
-.backdrop-lab::before { background: linear-gradient(180deg, #e9e4f5 0%, #f6f2ff 45%, #cfc4b4 45.2%, #b8ab98 100%); }
+.backdrop-cave::before { background: linear-gradient(180deg, #3b3346 0%, #57495f 56%, #6d5a55 56.2%, #4c3f3a 100%); }
+.backdrop-tower::before { background: linear-gradient(180deg, #2e3352 0%, #4f4a73 56%, #5d5476 56.2%, #3d3755 100%); }
+.backdrop-forest::before { background: linear-gradient(180deg, #2f5a45 0%, #4f7d5a 56%, #4a6e3d 56.2%, #34522c 100%); }
+.backdrop-lab::before { background: linear-gradient(180deg, #e9e4f5 0%, #f6f2ff 56%, #cfc4b4 56.2%, #b8ab98 100%); }
 
 .battle__foe-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #1d1530; font-weight: 800; }
 .backdrop-cave .battle__foe-bar, .backdrop-tower .battle__foe-bar, .backdrop-forest .battle__foe-bar { color: #fff; }

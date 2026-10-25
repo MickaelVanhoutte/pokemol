@@ -203,6 +203,7 @@ export const MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'granny', x: 8, y: 9, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Les Paillettes s’échangent dans la Salle des Invocations. On y tire des cartes surprises !', 'Glitter is spent in the Summon Hall. You can pull surprise cards there!')] },
       { id: 'hiker', x: 16, y: 16, look: LOOKS.hiker, facing: 'up', text: [L('La Grotte Gribouillis change à chaque visite. Au fond, un énorme Ronflon garde le passage !', 'Scribble Cave changes every visit. Deep inside, a huge Snoozle guards the way!'), L('Si tes Bestioles tombent K.O. dedans, tu repars au début. Prépare bien ton deck !', 'If your Critters get knocked out in there, you start over. Prepare your deck well!')] },
+      { id: 'gommeFinal', x: 12, y: 16, look: LOOKS.rival, facing: 'up', script: 'rivalFinal', showIf: 'badge:tour', hideIf: 'rivalFinal' },
       { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Dans le Bois Brumeux, à l’ouest, il paraît qu’on voit des Bestioles fantômes…', 'In the Misty Woods to the west, they say you can see ghost Critters…')] },
     ],
   },
@@ -275,6 +276,8 @@ export const MAPS: Record<string, MapDef> = {
     name: L('Bois Brumeux', 'Misty Woods'),
     border: 'tree',
     backdrop: 'forest',
+    tint: 'rgba(60, 50, 120, 0.3)',
+    fog: true,
     rows: [
       'TTTTTTTTTTTTTTTTTTTTTT',
       'T.....TT""""T""""..TTT',

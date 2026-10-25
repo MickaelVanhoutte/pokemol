@@ -93,6 +93,7 @@ scripts.labTable = async () => {
     if (ok === 0) pick = c.id;
   }
   giveCreature(pick, 5);
+  setFlag('rivalStarter', Number(RIVAL_COUNTER[pick]));
   update((d) => giveStarterKit(d));
   await say(L('{starter} rejoint ton équipe !', '{starter} joins your team!'), undefined, { starter: tr(creature(pick).name) });
 
@@ -211,6 +212,39 @@ async function gate(dungeonId: string) {
 
 scripts.gateGrotte = () => gate('grotte');
 scripts.gateTour = () => gate('tour');
+
+scripts.rivalFinal = async () => {
+  await sayAll([
+    L('Te voilà enfin ! J’ai entendu dire que tu as vaincu l’Ombre de la Tour…', 'There you are! I heard you beat the Shadow of the Tower…'),
+    L('Moi aussi je me suis entraîné, tu sais. Ce coup-ci, je vais vraiment t’effacer !', 'I’ve been training too, you know. This time I’ll really erase you!'),
+  ], RIVAL);
+  const starter = String(flag('rivalStarter') ? save.value!.flags.rivalStarter : 2).padStart(3, '0');
+  const out = await fight({
+    kind: 'trainer',
+    enemy: {
+      name: RIVAL,
+      team: [{ defId: '007', level: 10 }, { defId: '008', level: 10 }, { defId: '010', level: 10 }, { defId: starter, level: 12 }],
+      deck: ['potion+', 'potion', 'pile+', 'pile', 'pile', 'crayon+', 'gomme', 'professeur', 'bouclier+', 'echange', 'maman', 'piece'],
+      isAI: true,
+    },
+  });
+  if (out.result !== 'win') {
+    await say(L('Ha ! Va t’entraîner et on remet ça !', 'Ha! Go train and we’ll do this again!'), RIVAL);
+    return;
+  }
+  setFlag('rivalFinal');
+  await sayAll([
+    L('… J’ai perdu. Tes Bestioles sont vraiment incroyables.', '… I lost. Your Critters are truly amazing.'),
+    L('Tu sais quoi ? Ces dessins, ils ont l’air vivants. La petite artiste doit être fière.', 'You know what? These drawings look alive. The little artist must be proud.'),
+  ], RIVAL);
+  update((d) => {
+    d.glitter += 300;
+    d.coins += 1000;
+  });
+  showToast(tr(L('+300 ✨  +1000 🪙', '+300 ✨  +1000 🪙')));
+  await say(L('Bravo, {name} ! Tu es maintenant Maître des Bestioles. L’atelier reste ouvert : de nouveaux dessins arriveront bientôt…', 'Well done, {name}! You are now a Critter Master. The workshop stays open: new drawings are coming soon…'), PROF, { name: name() });
+  await openScreen({ id: 'credits', fromWorld: true });
+};
 
 /** New game: wake up at home. */
 scripts.intro = async () => {

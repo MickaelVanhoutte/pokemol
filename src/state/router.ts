@@ -12,7 +12,7 @@ export type Screen =
   | { id: 'shop' }
   | { id: 'gacha' }
   | { id: 'dungeon' }
-  | { id: 'credits' };
+  | { id: 'credits'; fromWorld?: boolean };
 
 export const screen = signal<Screen>({ id: 'title' });
 

@@ -425,6 +425,22 @@ export class Game {
       ctx.fillRect(bx + 2 - k * 4, by + 6 - k * 6, 2, 2);
       ctx.fillRect(bx + 12 + k * 4, by + 6 - k * 6, 2, 2);
     }
+    const def = this.map.def;
+    if (def.tint) {
+      ctx.fillStyle = def.tint;
+      ctx.fillRect(0, 0, this.viewW, this.viewH);
+    }
+    if (def.fog) {
+      const t = performance.now() / 1000;
+      ctx.fillStyle = 'rgba(235, 235, 255, 0.10)';
+      for (let i = 0; i < 7; i++) {
+        const fx = ((i * 97 + t * (8 + i * 2)) % (this.viewW + 160)) - 80 - ((camX * 0.3) % 40);
+        const fy = ((i * 53) % Math.max(1, this.viewH - 20)) + Math.sin(t * 0.5 + i) * 6;
+        ctx.beginPath();
+        ctx.ellipse(fx, fy, 60, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
     if (this.fade > 0) {
       ctx.fillStyle = `rgba(0,0,0,${this.fade})`;
       ctx.fillRect(0, 0, this.viewW, this.viewH);

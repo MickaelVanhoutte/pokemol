@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr, type LText } from '../../i18n';
 import { CREATURES, artUrl, creature } from '../../data/creatures';
 import { DUNGEONS } from '../../data/dungeons';
@@ -144,8 +144,16 @@ function RunMap({ r, onPick }: { r: RunState; onPick: (id: number) => void }) {
   const rows = r.map.rows;
   const H = rows * 86 + 40;
   const pos = (n: MapNode) => ({ x: ((n.col + 0.5) / LANES) * 100, y: H - 40 - n.row * 86 });
+  const wrap = useRef<HTMLDivElement>(null);
+  // keep the current row in view (the start is at the bottom)
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const row = r.at === null ? 0 : r.map.nodes[r.at].row;
+    el.scrollTop = H - 40 - row * 86 - el.clientHeight * 0.65;
+  }, [r.at]);
   return (
-    <div class="dg__mapwrap">
+    <div class="dg__mapwrap" ref={wrap}>
       <div class="dg__map" style={{ height: `${H}px` }}>
         <svg class="dg__lines" viewBox={`0 0 100 ${H}`} preserveAspectRatio="none">
           {r.map.nodes.flatMap((n) =>

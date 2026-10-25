@@ -15,6 +15,7 @@ import { DIRS, Game, type Actor } from './game';
 import type { MapBuilding, NpcDef, WarpTarget } from './mapTypes';
 import { AVATARS } from './sprites';
 import { tile } from './tiles';
+import { sfx } from '../audio/sfx';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -74,6 +75,7 @@ function savePosition() {
 export async function warpTo(to: WarpTarget) {
   const g = getGame();
   g.lock++;
+  sfx.door();
   await g.fadeTo(1, 180);
   g.setMap(MAPS[to.map], visibleNpc);
   g.player.x = to.x;
@@ -189,7 +191,7 @@ function trainerSpotting(): Actor | null {
   const g = getGame();
   for (const n of g.npcs) {
     const def = n.npc;
-    if (!def?.trainer || flag(`tr:${def.trainer}`)) continue;
+    if (!def?.trainer || flag(`tr:${def.trainer}`) || !teamAlive(s())) continue;
     const [dx, dy] = DIRS[n.dir];
     for (let i = 1; i <= (def.sight ?? 3); i++) {
       const x = n.x + dx * i, y = n.y + dy * i;
@@ -203,6 +205,7 @@ function trainerSpotting(): Actor | null {
 async function trainerApproach(n: Actor) {
   const g = getGame();
   n.bubble = '!';
+  sfx.encounter();
   await wait(700);
   n.bubble = undefined;
   const dir = n.dir;
@@ -217,6 +220,10 @@ async function trainerApproach(n: Actor) {
 
 export async function trainerBattle(id: string, actor?: Actor) {
   const tdef = TRAINERS[id];
+  if (!teamAlive(s())) {
+    await say(L('Tes Bestioles sont épuisées… Va vite les soigner au Centre de soin !', 'Your Critters are worn out… Go heal them at the Healing Center!'), tdef.name);
+    return;
+  }
   if (actor) getGame().faceToward(actor, getGame().player);
   await sayAll(tdef.before, tdef.name);
   const out = await fight(trainerSetup(tdef), { trainer: tdef });
@@ -296,7 +303,10 @@ export async function fight(setup: { kind: BattleKind; enemy: SideSetup }, opts:
   await wait(250);
   for (const u of ups) {
     const lvl2 = s().collection[u.defId]?.level;
-    if (lvl2) await say(t('battle.levelUp', { name: tr(creature(u.defId).name), n: lvl2 }));
+    if (lvl2) {
+      sfx.levelUp();
+      await say(t('battle.levelUp', { name: tr(creature(u.defId).name), n: lvl2 }));
+    }
   }
   await checkEvolutions();
   if (res.result === 'lose' && !opts.friendly) await blackout();
@@ -325,6 +335,12 @@ async function blackout() {
 
 async function wildBattle(defId: string, level: number) {
   if (!s().team.length) return;
+  sfx.encounter();
+  const g = getGame();
+  await g.fadeTo(0.85, 120);
+  await g.fadeTo(0, 120);
+  await g.fadeTo(0.85, 120);
+  g.fade = 0;
   await fight({ kind: 'wild', enemy: { name: creature(defId).name, team: [{ defId, level }], deck: [], isAI: true } });
 }
 
