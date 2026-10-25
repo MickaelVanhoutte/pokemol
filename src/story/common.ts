@@ -1,5 +1,5 @@
 import { L } from '../i18n';
-import { healParty, update } from '../state/game';
+import { healParty, save, update } from '../state/game';
 import { ask, flag, getGame, openScreen, say, scripts, setFlag, wait } from '../overworld/controller';
 import { NURSE } from './cast';
 
@@ -34,7 +34,9 @@ scripts.pc = async () => {
   await openScreen({ id: 'pc' });
 };
 
-/** A torn page of a sketchbook was found (the dream's memories: side quest of the next acts). */
+/** A torn page of the sketchbook was found (12 memories of the real world, side quest). */
 scripts.pageFound = async () => {
-  await say(L('C’est une page arrachée d’un cahier de dessin… Elle te dit quelque chose.', 'It’s a page torn from a sketchbook… It feels familiar.'));
+  const n = Object.keys(save.value!.bag).filter((k) => k.startsWith('page-') && save.value!.bag[k] > 0).length;
+  await say(L('Une page arrachée d’un cahier de dessin… Elle te dit quelque chose. ({n}/12)', 'A page torn from a sketchbook… It feels familiar. ({n}/12)'), undefined, { n });
+  if (n === 1) await say(L('Tu peux la lire dans ton Sac, poche OBJETS RARES.', 'You can read it in your Bag, KEY ITEMS pocket.'));
 };

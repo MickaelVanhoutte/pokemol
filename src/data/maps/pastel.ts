@@ -44,11 +44,12 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { x: 0, y: 10, to: { map: 'route2', x: 22, y: 7, facing: 'left' } },
     ],
     triggers: [{ x: 2, y: 9, w: 1, h: 2, script: 'pastelWestGate', unless: 'badge:pastel' }],
+    items: [{ x: 22, y: 1, item: 'page-3', hidden: true }],
     signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Centre · Boutique', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Center · Shop') }],
     npcs: [
       { id: 'westGuard', x: 2, y: 8, look: LOOKS.hiker, facing: 'down', script: 'pastelWestGuard' },
-      { id: 'caveGuard', x: 19, y: 15, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'down', hideIf: 'a2.cave',
-        text: [L('La Grotte Gribouillis est fermée : on entend des bruits de gomme là-dedans…', 'Scribble Cave is closed: you can hear erasers scrubbing in there…'), L('(La suite de l’aventure arrive bientôt !)', '(The rest of the adventure is coming soon!)')] },
+      { id: 'caveGuard', x: 19, y: 15, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'down', hideIf: 'badge:plume',
+        text: [L('La Grotte Gribouillis est fermée : on entend des bruits de gomme là-dedans…', 'Scribble Cave is closed: you can hear erasers scrubbing in there…'), L('Reviens quand tu auras le badge de Village-Plume, je te laisserai passer.', 'Come back with the Featherby badge and I’ll let you through.')] },
       { id: 'granny', x: 8, y: 9, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!')] },
       { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire!')] },
     ],
@@ -157,7 +158,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     // the grunts rub out the woods; beating them brings the trees back
     patches: [{ id: 'boisErased', x: 8, y: 1, rows: ['eeee?eeee', 'eeee?eeee'], unless: 'a1.bois' }],
     buildings: [{ kind: 'tower', x: 2, y: 1, w: 4, h: 5, door: 1, script: 'gateTour' }],
-    items: [{ x: 18, y: 12, item: 'crayon-ball', count: 3 }, { x: 1, y: 14, item: 'super-potion' }],
+    items: [{ x: 18, y: 12, item: 'crayon-ball', count: 3 }, { x: 1, y: 14, item: 'super-potion' }, { x: 1, y: 13, item: 'page-4', hidden: true }],
     warps: [
       { x: 21, y: 7, to: { map: 'route2', x: 1, y: 6, facing: 'right' } },
       { x: 21, y: 8, to: { map: 'route2', x: 1, y: 7, facing: 'right' } },

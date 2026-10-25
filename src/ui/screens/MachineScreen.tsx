@@ -43,9 +43,9 @@ export function MachineScreen() {
     }, 1400);
   };
   return (
-    <Frame title={tr(L('Machine à Bestioles', 'Critter Machine'))} onBack={backToWorld} backLabel={tr(L('Sortir', 'Leave'))} right={<Window class="money-win">{d.money} ₽</Window>}>
+    <Frame title={tr(L('Tombola', 'Fair Raffle'))} onBack={backToWorld} backLabel={tr(L('Sortir', 'Leave'))} right={<Window class="money-win">{d.money} ₽</Window>}>
       <Window class="machine">
-        <p>{tr(L('Pour {p} ₽, la machine dessine une Bestiole surprise. Les plus rares sortent moins souvent !', 'For ₽{p}, the machine draws a surprise Critter. Rare ones come out less often!'), { p: MACHINE_PRICE })}</p>
+        <p>{tr(L('Un ticket = {p} ₽. La machine dessine une Bestiole surprise ; les plus rares sortent moins souvent !', 'One ticket = ₽{p}. The machine draws a surprise Critter; rare ones come out less often!'), { p: MACHINE_PRICE })}</p>
         <div class={`machine__box ${spinning ? 'is-spinning' : ''}`}>
           {got && <img key={got.mon.uid} src={artUrl(creature(got.mon.species))} alt="" />}
         </div>
@@ -58,7 +58,7 @@ export function MachineScreen() {
           </p>
         )}
         <button class="pbtn pbtn--accent" disabled={d.money < MACHINE_PRICE || spinning} onClick={run}>
-          {tr(L('Lancer la machine', 'Start the machine'))} · {MACHINE_PRICE} ₽
+          {tr(L('Acheter un ticket', 'Buy a ticket'))} · {MACHINE_PRICE} ₽
         </button>
       </Window>
     </Frame>

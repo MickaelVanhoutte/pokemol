@@ -41,6 +41,7 @@ describe('story wiring', () => {
         ...(map.npcs ?? []).flatMap((n) => [n.showIf, n.hideIf]),
         ...(map.triggers ?? []).flatMap((t) => [t.if, t.unless]),
         ...(map.patches ?? []).flatMap((p) => [p.if, p.unless]),
+        map.tintUnless,
       ].filter(Boolean) as string[];
       // flags of later acts (a2., a3.…) are allowed to be set by content not written yet
       for (const f of flags.filter((x) => !/^a[2-9]\./.test(x))) expect(flagIsSet(f), f).toBe(true);

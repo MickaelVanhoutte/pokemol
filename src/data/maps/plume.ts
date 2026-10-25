@@ -35,7 +35,11 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       { kind: 'shop', x: 10, y: 1, w: 4, h: 4, door: 1, to: { map: 'boutique', x: 4, y: 6, facing: 'up' } },
       { kind: 'gym', x: 5, y: 7, w: 6, h: 4, door: 3, roof: '#c8b48a', to: { map: 'atelierPlume', x: 5, y: 10, facing: 'up' } },
     ],
-    warps: [{ x: 11, y: 17, to: { map: 'bois', x: 18, y: 1, facing: 'down' } }],
+    warps: [
+      { x: 11, y: 17, to: { map: 'bois', x: 18, y: 1, facing: 'down' } },
+      { x: 21, y: 9, to: { map: 'route3', x: 1, y: 2, facing: 'right' } },
+    ],
+    items: [{ x: 20, y: 1, item: 'page-5', hidden: true }],
     signs: [{ x: 6, y: 11, text: L('VILLAGE-PLUME\nOn y fait la sieste au chant des oiseaux.', 'FEATHERBY\nNaps to the sound of birdsong.') }],
     npcs: [
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },

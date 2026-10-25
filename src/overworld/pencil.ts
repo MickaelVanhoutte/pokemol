@@ -17,6 +17,8 @@ export function pencilize(c: HTMLCanvasElement) {
       const i = (y * w + x) * 4;
       if (d[i + 3] === 0) continue;
       let r = d[i], g = d[i + 1], b = d[i + 2];
+      // the void around small rooms stays plain black
+      if (r < 8 && g < 8 && b < 8) continue;
       const lum = r * 0.299 + g * 0.587 + b * 0.114;
       if (lum < 55) {
         // ink outlines become soft graphite, with a few gaps like a quick sketch

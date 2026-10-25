@@ -106,6 +106,8 @@ export interface MapDef {
   backdrop?: Backdrop;
   /** Color wash drawn over the map (e.g. dusk in the woods). */
   tint?: string;
+  /** The tint disappears once this story flag is set (colours brought back). */
+  tintUnless?: string;
   /** Drifting fog wisps. */
   fog?: boolean;
   /** Story script id run every time the map is entered. */

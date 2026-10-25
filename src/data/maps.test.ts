@@ -59,7 +59,9 @@ describe('maps', () => {
         }
         for (const t of map.triggers ?? []) expect(walkable(map, t.x, t.y), `trigger ${t.script}`).toBe(true);
         for (const p of map.items ?? []) {
-          expect(walkable(map, p.x, p.y, false), `item ${p.item} ${p.x},${p.y}`).toBe(true);
+          // hidden items are examined from the next tile, they may sit on a shelf or the sea
+          if (p.hidden) expect(p.y < map.rows.length && p.x < map.rows[0].length, `hidden ${p.item}`).toBe(true);
+          else expect(walkable(map, p.x, p.y, false), `item ${p.item} ${p.x},${p.y}`).toBe(true);
           expect(ITEM_BY_ID[p.item], p.item).toBeDefined();
         }
       });

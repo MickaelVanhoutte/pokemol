@@ -62,7 +62,10 @@ const pickupFlag = (map: string, p: PickupDef) => `item:${map}:${p.x},${p.y}`;
 let hiddenPickups: PickupDef[] = [];
 
 function patched(def: MapDef): MapDef {
-  return def.patches?.length ? { ...def, rows: applyPatches(def.rows, def.patches, flag) } : def;
+  let out = def;
+  if (def.patches?.length) out = { ...out, rows: applyPatches(def.rows, def.patches, flag) };
+  if (def.tintUnless && flag(def.tintUnless)) out = { ...out, tint: undefined };
+  return out;
 }
 
 function loadMap(id: string) {

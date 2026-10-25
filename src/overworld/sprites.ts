@@ -204,6 +204,11 @@ export const LOOKS = {
   leaderPastel: { hair: '#f29ac8', shirt: '#9ed36a', pants: '#f2d23e', longHair: true },
   leaderPlume: { hair: '#c8b48a', shirt: '#8a5a32', pants: '#5a4a3a', hat: '#e0a030' },
   grandma: { hair: '#e8e8f0', shirt: '#d9a0c8', pants: '#6a5a8a', longHair: true },
+  leaderAqua: { hair: '#3a78cc', shirt: '#8ec6fa', pants: '#f29ac8', longHair: true },
+  leaderFluo: { hair: '#f2d23e', shirt: '#2a2238', pants: '#7ad6a0', longHair: true },
+  leaderBraise: { hair: '#d64545', shirt: '#f08a3a', pants: '#5a3a2a', hat: '#8a5a32' },
+  /** Admin Rature: Team Gomme officer, darker grey with a red eraser cap. */
+  rature: { hair: '#5a5470', shirt: '#7a7488', pants: '#3a3448', hat: '#d64545' },
 } satisfies Record<string, Look>;
 
 const lookCache = new Map<string, string>();

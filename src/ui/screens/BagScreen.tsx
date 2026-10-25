@@ -8,11 +8,14 @@ import { sfx } from '../../audio/sfx';
 import { canUseOn, useOn } from '../logic/bag';
 import { BagView } from '../views/BagView';
 import { PartyView } from '../views/PartyView';
+import { PageView } from '../views/PageView';
 
 export function BagScreen() {
   const d = save.value!;
   const [using, setUsing] = useState<string | null>(null);
   const [note, setNote] = useState('');
+  const [reading, setReading] = useState<number | null>(null);
+  if (reading !== null) return <PageView n={reading} onClose={() => setReading(null)} />;
   if (using) {
     return (
       <PartyView
@@ -38,6 +41,7 @@ export function BagScreen() {
       context="field"
       note={note}
       onUse={(id) => { setNote(''); setUsing(id); }}
+      onRead={(id) => (id.startsWith('page-') ? setReading(Number(id.slice(5))) : setNote(tr(item(id).desc)))}
       onClose={backToWorld}
     />
   );

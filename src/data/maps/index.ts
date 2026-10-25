@@ -4,6 +4,9 @@ import { PASTEL_MAPS } from './pastel';
 import { PLUME_MAPS } from './plume';
 import { INTERIOR_MAPS } from './interiors';
 import { DUNGEON_MAPS } from './dungeons';
+import { AQUARELLE_MAPS } from './aquarelle';
+import { FEUTRE_MAPS } from './feutre';
+import { BRAISE_MAPS } from './braise';
 
 /*
  * Legend: . grass  , grass2  " tall grass  : path  * flowers  ~ water  = bridge  e erased paper  T tree
@@ -17,4 +20,7 @@ export const MAPS: Record<string, MapDef> = {
   ...PLUME_MAPS,
   ...INTERIOR_MAPS,
   ...DUNGEON_MAPS,
+  ...AQUARELLE_MAPS,
+  ...FEUTRE_MAPS,
+  ...BRAISE_MAPS,
 };
