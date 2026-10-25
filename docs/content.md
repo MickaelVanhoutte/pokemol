@@ -126,7 +126,7 @@ Scripts run one at a time and lock player input. To change an existing script af
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.
   Add the matching text in `src/ui/battle/messages.ts` if a new event appears.
 - **Types**: the chart is in `src/data/types.ts` (attacker → defender multipliers).
-- **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle'`.
+- **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil'`.
   Key items (pages, golden ticket) go in the OBJETS RARES pocket and are never sold.
   - `berry`: a Bestiole holding it eats it in battle as soon as it helps (`amount` HP at half HP or
     less, or a status in `cures`); berries can also be eaten from the bag. They have their own pocket.
@@ -135,7 +135,12 @@ Scripts run one at a time and lock player input. To change an existing script af
   - `battle`: used from the bag in battle on the Bestiole fighting, with no party picker; `boost`
     is a stat raised one stage (syrups), `crit` (Pencil Sharpener) or `guard` (Protective Varnish:
     the foe can't lower your stats for 5 turns).
-  - Any non-key item can be held (party ITEM menu or bag GIVE). Trainer parties can give an `item`,
+  - `stencil` (Pochoir): teaches its `move` to a compatible Bestiole as often as you like (never used
+    up, POCHOIRS pocket, no ×count). Add the move to `STENCIL_MOVES` in `items.ts` (the id becomes
+    `pochoir-NN`), list it in the `stencils` of every species that can learn it, and place it (a pick-up,
+    or `stencil` on a badge in `src/data/badges.ts` for a leader's reward). A test checks every
+    stencil teaches a real move and fits at least one species.
+  - Any non-key item except stencils can be held (party ITEM menu or bag GIVE). Trainer parties can give an `item`,
     and species a `wildItem` (`{ id, pct }`) that wild ones sometimes carry.
   - The shop sells the list in `STOCK` (`ShopScreen.tsx`), each item after a number of badges.
   - Item icons are pixel art in `src/ui/icons.ts` (`ROWS`, or a painter in `PAINTED`).

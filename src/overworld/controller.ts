@@ -3,7 +3,7 @@ import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
 import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature } from '../data/creatures';
-import { item } from '../data/items';
+import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
@@ -337,6 +337,15 @@ export async function trainerBattle(id: string, actor?: Actor) {
       mapDirty = true;
       sfx.victory();
       await say(L('{name} reçoit le {b} de {l} !', '{name} received the {b} from {l}!'), undefined, { b: tr(badgeDef(tdef.badge)?.name ?? L('Badge', 'Badge')), l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name) });
+      // like FireRed, the leader adds a move to teach: a stencil
+      const stencil = badgeDef(tdef.badge)?.stencil;
+      if (stencil && !s().bag[stencil]) {
+        const first = !Object.keys(s().bag).some((k) => ITEM_BY_ID[k]?.kind === 'stencil');
+        giveItem(stencil);
+        sfx.confirm();
+        await say(L('{l} te donne {i} !', '{l} gave you {i}!'), undefined, { l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name), i: tr(item(stencil).name) });
+        if (first) await say(L('Un pochoir apprend sa capacité à une Bestiole compatible, autant de fois que tu veux ! Regarde dans ton Sac, poche POCHOIRS.', 'A stencil teaches its move to a compatible Critter, as many times as you like! Look in your Bag, STENCILS pocket.'), tdef.name);
+      }
       // leaders explain what comes next after giving the badge
       await sayAll(tdef.after.slice(1), tdef.name);
     }

@@ -97,7 +97,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       { id: 'bob', x: 13, y: 5, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'left', trainer: 'bob', sight: 3 },
       { id: 'gardien', x: 14, y: 7, look: { hair: '#2a3a6a', shirt: '#3a7ad6', pants: '#2a2a4a', hat: '#2a3a6a' }, facing: 'left', trainer: 'gardien', sight: 2 },
     ],
-    items: [{ x: 16, y: 7, item: 'super-potion' }, { x: 6, y: 10, item: 'rappel' }],
+    items: [{ x: 16, y: 7, item: 'super-potion' }, { x: 6, y: 10, item: 'rappel' }, { x: 15, y: 7, item: 'pochoir-10' }],
     encounters: {
       rate: 0.08,
       anyTile: true,

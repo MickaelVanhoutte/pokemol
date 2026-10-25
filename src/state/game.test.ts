@@ -40,6 +40,15 @@ describe('save migration', () => {
     expect(s.box[0].item).toBeNull();
   });
 
+  it('hands out the stencils of badges won before stencils existed', () => {
+    const raw = v3Save({ intro: 1 });
+    raw.badges = ['pastel', 'plume'] as never[];
+    const s = migrate(raw)!;
+    expect(s.bag['pochoir-01']).toBe(1);
+    expect(s.bag['pochoir-02']).toBe(1);
+    expect(s.bag['pochoir-03']).toBeUndefined();
+  });
+
   it('refuses unknown data', () => {
     expect(migrate({ version: 1 })).toBeNull();
     expect(migrate('nope')).toBeNull();

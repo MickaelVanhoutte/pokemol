@@ -1,5 +1,23 @@
 import { L } from '../i18n';
+import { move } from './moves';
 import type { ItemDef } from './schema';
+
+/** Stencils, in order (pochoir-01…): the first eight are the Atelier Masters' rewards. */
+export const STENCIL_MOVES = [
+  'rayon-d-ailes', 'coup-de-boule', 'pluie-d-aquarelle', 'eclair-fluo', 'queue-ardente', 'eclat-de-lune',
+  'rafale-de-graines', 'ombre-farceuse', 'reve-eveille', 'poing-crayon', 'tache-d-encre', 'gros-baillement',
+];
+export const stencilId = (n: number) => `pochoir-${String(n).padStart(2, '0')}`;
+
+/** A stencil teaches its move to any compatible Bestiole, as often as you like (it never wears out). */
+function stencil(moveId: string, i: number): ItemDef {
+  const mv = move(moveId);
+  const n = String(i + 1).padStart(2, '0');
+  return {
+    id: stencilId(i + 1), name: L(`Pochoir ${n} ${mv.name.fr}`, `Stencil ${n} ${mv.name.en}`), price: 0, kind: 'stencil', amount: 0, move: moveId,
+    desc: L(`${mv.desc.fr} Un pochoir ne s’use jamais.`, `${mv.desc.en} A stencil never wears out.`),
+  };
+}
 
 export const ITEMS: ItemDef[] = [
   {
@@ -98,6 +116,7 @@ export const ITEMS: ItemDef[] = [
     id: 'papier-calque', name: L('Papier Calque', 'Tracing Paper'), price: 0, kind: 'hold', amount: 0, hold: 'shareXp',
     desc: L('À faire tenir. La Bestiole décalque tout ce que voit l’équipe : elle reçoit la moitié de l’expérience, même sans combattre.', 'An item to hold. Its holder traces everything the team sees: it gets half the experience, even without fighting.'),
   },
+  ...STENCIL_MOVES.map(stencil),
   {
     id: 'ticket-or', name: L('Ticket d’or', 'Golden Ticket'), price: 0, kind: 'key', amount: 0,
     desc: L('Un ticket brillant tombé de la poche du monsieur de la tombola, à Port-Aquarelle.', 'A shiny ticket dropped by the fair man of Port Aquarelle.'),
@@ -110,8 +129,8 @@ export const ITEMS: ItemDef[] = [
 
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
 
-/** Things a Bestiole can hold (anything but key items). */
-export const canHold = (def: ItemDef) => def.kind !== 'key';
+/** Things a Bestiole can hold (anything but key items and stencils). */
+export const canHold = (def: ItemDef) => def.kind !== 'key' && def.kind !== 'stencil';
 
 export function item(id: string): ItemDef {
   const i = ITEM_BY_ID[id];

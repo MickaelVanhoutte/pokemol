@@ -61,6 +61,8 @@ export interface SpeciesDef {
   evYield: Partial<Stats>;
   /** A wild one sometimes holds this item (chance in %). */
   wildItem?: { id: string; pct: number };
+  /** Stencils (item ids) whose move it can learn. */
+  stencils: string[];
   /** Weight in the creature machine. */
   rarity: Rarity;
   /** [level, move id]; level 1 moves are known from the start. */
@@ -79,7 +81,7 @@ export interface SpeciesDef {
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
  * `battle`: boosts the creature fighting (syrups, sharpener, varnish), only in battle.
  */
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle';
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil';
 
 export interface ItemDef {
   id: string;
@@ -95,4 +97,6 @@ export interface ItemDef {
   hold?: 'regen' | 'shareXp';
   /** Battle items: the stat raised one stage, `crit` (Pencil Sharpener) or `guard` (Protective Varnish, 5 turns). */
   boost?: StageKey | 'crit' | 'guard';
+  /** Stencils: the move they teach (never used up). */
+  move?: string;
 }

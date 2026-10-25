@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMon, maxHp } from '../../engine/pk/creature';
-import { canUseOn, pocketItems, useOn } from './bag';
+import { canUseOn, pocketItems, stencilStatus, useOn } from './bag';
 import { canDeposit } from './pc';
 import { moveCursor } from '../paper/nav';
 import { giveHeld, takeHeld } from '../../state/game';
@@ -46,6 +46,17 @@ describe('bag', () => {
     sick.status = 'poison';
     expect(useOn('retouche', sick)).toBe(true);
     expect(sick.status).toBe(null);
+  });
+});
+
+describe('stencils', () => {
+  it('say who can learn them', () => {
+    const m = mon(); // Minousse knows Griffe, Grondement, Coup de liane, Griffe-pousse
+    expect(stencilStatus('pochoir-07', m)).toBe('able');
+    expect(stencilStatus('pochoir-03', m)).toBe('unable');
+    m.moves[0] = { id: 'rafale-de-graines', pp: 15 };
+    expect(stencilStatus('pochoir-07', m)).toBe('learned');
+    expect(pocketItems({ 'pochoir-07': 1, potion: 1 }, 'stencils').map((i) => i.id)).toEqual(['pochoir-07']);
   });
 });
 

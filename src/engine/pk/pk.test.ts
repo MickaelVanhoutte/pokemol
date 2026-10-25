@@ -3,6 +3,7 @@ import { CREATURES } from '../../data/creatures';
 import { MOVES } from '../../data/moves';
 import { ITEM_BY_ID } from '../../data/items';
 import { TRAINERS, partyOf } from '../../data/trainers';
+import { BADGES } from '../../data/badges';
 import { effectiveness } from '../../data/types';
 import { L } from '../../i18n';
 import { aiChoose } from './ai';
@@ -35,6 +36,17 @@ describe('data', () => {
     for (const c of CREATURES) if (c.wildItem) expect(ITEM_BY_ID[c.wildItem.id], `${c.id} ${c.wildItem.id}`).toBeDefined();
     for (const t of Object.values(TRAINERS)) for (const m of t.party) if (m.item) expect(ITEM_BY_ID[m.item], `${t.id} ${m.item}`).toBeDefined();
     expect(partyOf([{ species: '001', level: 5, item: 'gouter' }], 1)[0].item).toBe('gouter');
+  });
+
+  it('stencils teach real moves, and each one fits someone', () => {
+    const stencils = Object.values(ITEM_BY_ID).filter((i) => i.kind === 'stencil');
+    expect(stencils).toHaveLength(12);
+    for (const st of stencils) {
+      expect(MOVES.some((m) => m.id === st.move), st.id).toBe(true);
+      expect(CREATURES.some((c) => c.stencils.includes(st.id)), `nobody learns ${st.id}`).toBe(true);
+    }
+    for (const c of CREATURES) for (const id of c.stencils) expect(ITEM_BY_ID[id]?.kind, `${c.id} ${id}`).toBe('stencil');
+    for (const b of BADGES) expect(ITEM_BY_ID[b.stencil ?? '']?.kind, b.id).toBe('stencil');
   });
 
   it('type chart', () => {

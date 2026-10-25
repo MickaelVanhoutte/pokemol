@@ -3,6 +3,9 @@
  * turned into data-URLs once. They replace emoji, which look different on every phone.
  */
 import { makeCanvas, Painter } from '../overworld/pixel';
+import { ITEM_BY_ID } from '../data/items';
+import { MOVE_BY_ID } from '../data/moves';
+import { TYPES } from '../data/types';
 
 const PAL: Record<string, string> = {
   K: '#2b2536', W: '#ffffff', C: '#fff3d6', Y: '#f2c14e', y: '#c98f1e', R: '#d64545', r: '#9c2d2d',
@@ -67,6 +70,30 @@ function flask(p: Painter, liquid: string, label: string) {
     '....KKKKKK......',
   ];
   p.at(3, 2).sprite(rows, { ...PAL, L: liquid, C: label });
+}
+
+/** A stencil: a card in the colour of the move's type with a star cut out of it. */
+function stencilCard(p: Painter, color: string) {
+  p.rect(1, 2, 14, 12, PAL.K);
+  p.rect(2, 3, 12, 10, color);
+  p.rect(2, 3, 12, 1, PAL.W);
+  p.at(0, 4).sprite([
+    '.......K........',
+    '......KCK.......',
+    '.KKKKKCCCKKKKK..',
+    '..KCCCCCCCCCK...',
+    '...KCCCCCCCK....',
+    '...KCCCKCCCK....',
+    '..KCCK...KCCK...',
+    '..KK.......KK...',
+  ], PAL);
+}
+
+/** Painter for an id: the table below, or a stencil tinted by its move type. */
+function painterFor(id: string): ((p: Painter) => void) | undefined {
+  if (PAINTED[id]) return PAINTED[id];
+  const mv = ITEM_BY_ID[id]?.kind === 'stencil' ? MOVE_BY_ID[ITEM_BY_ID[id].move ?? ''] : undefined;
+  return mv ? (p) => stencilCard(p, TYPES[mv.type].color) : undefined;
 }
 
 /** Items painted in code (berries, tinted items). */
@@ -282,14 +309,14 @@ const cache = new Map<string, string>();
 
 /** Icon of an item or a menu entry (unknown ids get the torn page). */
 export function iconUrl(id: string): string {
-  const key = ROWS[id] || PAINTED[id] || ['crayon-ball', 'super-crayon-ball', 'party'].includes(id) ? id : 'page';
+  const key = ROWS[id] || painterFor(id) || ['crayon-ball', 'super-crayon-ball', 'party'].includes(id) ? id : 'page';
   const hit = cache.get(key);
   if (hit) return hit;
   const c = makeCanvas(16, 16);
   const p = new Painter(c.getContext('2d')!);
   if (key === 'crayon-ball' || key === 'party') ball(p, PAL.Y, PAL.y);
   else if (key === 'super-crayon-ball') ball(p, PAL.B, PAL.b, PAL.R);
-  else if (PAINTED[key]) PAINTED[key](p);
+  else if (painterFor(key)) painterFor(key)!(p);
   else {
     const rows = ROWS[key];
     p.at(0, Math.floor((16 - rows.length) / 2)).sprite(rows, PAL);
