@@ -77,6 +77,10 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       return [t('battle.flee')];
     case 'end':
       return [t(`battle.end.${e.result}`)];
+    case 'swap':
+      return [e.side === 0 ? t('battle.swap.you') : t('battle.swap.them', { who: sideName(st, 1) })];
+    case 'refreshEnergy':
+      return [t('battle.refreshEnergy')];
     case 'draw':
     case 'lucky':
       return [];

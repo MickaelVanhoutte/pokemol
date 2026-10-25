@@ -76,7 +76,9 @@ export type SupportEffect =
   | { kind: 'gust' }
   | { kind: 'glue' }
   | { kind: 'scribble'; count: number }
-  | { kind: 'reshuffle'; draw: number };
+  | { kind: 'reshuffle'; draw: number }
+  /** Gives back this turn's energy (attach or swap again). */
+  | { kind: 'refreshEnergy' };
 
 /** Who a support card must be aimed at when played. */
 export type SupportTarget = 'none' | 'own' | 'ownBench' | 'ownKO';

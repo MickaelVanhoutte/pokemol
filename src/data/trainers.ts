@@ -38,7 +38,7 @@ export const TRAINERS: Record<string, TrainerDef> = {
   },
   paul: {
     id: 'paul', name: L('Randonneur Paul', 'Hiker Paul'),
-    team: [{ defId: '008', level: 6 }, { defId: '007', level: 5 }], deck: [...basic, 'potion+', 'professeur'],
+    team: [{ defId: '008', level: 7 }, { defId: '007', level: 6 }], deck: [...basic, 'potion+', 'professeur'],
     before: [L('Rien de tel qu’une bonne marche… et un bon combat !', 'Nothing beats a good hike… and a good battle!')],
     after: [L('Ouf ! Je vais faire une sieste, comme Ronflon.', 'Phew! I’ll take a nap, like Snoozle.')],
     coins: 260, glitter: 20,

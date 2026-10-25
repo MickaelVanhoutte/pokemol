@@ -9,8 +9,10 @@ import type {
   Action, BattleEvent, BattleSetup, BattleState, Fighter, Side, SideSetup, SideState,
 } from './types';
 
-export const START_HAND = 4;
-export const HAND_MAX = 7;
+/** Cards in hand before the first turn's draw (talismans can add some). */
+export const START_HAND = 0;
+/** One card is drawn per turn; unused cards are kept, up to this many. */
+export const HAND_MAX = 2;
 export const POISON_DAMAGE = 10;
 export const CONFUSION_DAMAGE = 20;
 const SPECIAL: StatusId[] = ['sleep', 'paralyze', 'confuse'];
@@ -224,7 +226,7 @@ function startTurn(st: BattleState, side: Side, out: Out) {
   s.retreated = false;
   s.fighters.forEach((f) => (f.protect = 0));
   out.push({ t: 'turn', side, n: st.turnNumber });
-  // the very first turn also gets its draw, so the player starts with START_HAND + 1 cards
+  // one card per turn, only while the hand has room
   drawCards(st, side, 1, out);
   const a = activeOf(s);
   if (!a.ko && a.status.includes('sleep')) {
@@ -261,6 +263,12 @@ export function blocked(st: BattleState): boolean {
 export function canAttachEnergy(st: BattleState, side: Side, fi: number): boolean {
   const s = st.sides[side];
   return !blocked(st) && st.turn === side && !s.energyAttached && !!s.fighters[fi] && !s.fighters[fi].ko;
+}
+
+/** Swapping a hand card for a new one costs the turn's energy. */
+export function canSwapCard(st: BattleState, side: Side, hi: number): boolean {
+  const s = st.sides[side];
+  return !blocked(st) && st.turn === side && !s.energyAttached && !!s.hand[hi] && (s.deck.length + s.discard.length) > 0;
 }
 
 export function attackProblem(st: BattleState, side: Side, ai: number): 'asleep' | 'paralyzed' | 'energy' | null {
@@ -522,6 +530,10 @@ function playSupport(st: BattleState, side: Side, def: SupportDef, target: numbe
         break;
       }
       case 'scribble': discardRandom(st, foeSide, e.count, out); break;
+      case 'refreshEnergy':
+        s.energyAttached = false;
+        out.push({ t: 'refreshEnergy', side });
+        break;
       case 'reshuffle': {
         s.deck = shuffle(st, [...s.deck, ...s.hand]);
         s.hand = [];
@@ -575,6 +587,15 @@ export function applyAction(prev: BattleState, action: Action, withSnaps = false
       out.push({ t: 'play', side, card: id, target: action.target });
       playSupport(st, side, def, action.target, out);
       checkKOs(st, out);
+      break;
+    }
+    case 'swapCard': {
+      if (!canSwapCard(st, side, action.hand)) throw new IllegalAction('cannot swap card');
+      const [card] = s.hand.splice(action.hand, 1);
+      s.discard.push(card);
+      s.energyAttached = true;
+      drawCards(st, side, 1, out);
+      out.push({ t: 'swap', side, from: card, to: s.hand[s.hand.length - 1] });
       break;
     }
     case 'retreat': {

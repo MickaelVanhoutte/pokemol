@@ -59,6 +59,7 @@ export type Action =
   | { type: 'attachEnergy'; fighter: number }
   | { type: 'playCard'; hand: number; target?: number }
   | { type: 'retreat'; to: number }
+  | { type: 'swapCard'; hand: number }
   | { type: 'attack'; attack: number }
   | { type: 'endTurn' }
   | { type: 'chooseActive'; fighter: number }
@@ -87,6 +88,8 @@ export type BattleEvent =
   | { t: 'protect'; side: Side; f: number; amount: number }
   | { t: 'noRetreat'; side: Side; f: number }
   | { t: 'lucky'; side: Side }
+  | { t: 'swap'; side: Side; from: string; to?: string }
+  | { t: 'refreshEnergy'; side: Side }
   | { t: 'atkBonus'; side: Side; amount: number }
   | { t: 'revive'; side: Side; f: number; hp: number }
   | { t: 'ko'; side: Side; f: number }

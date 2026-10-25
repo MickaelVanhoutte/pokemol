@@ -14,6 +14,7 @@ import {
 import { save, update } from '../../state/game';
 import { TEAM_MAX } from '../../save/schema';
 import { SupportCard } from '../Card';
+import { CardChooser } from '../CardChooser';
 import './dungeon.css';
 
 const ICON: Record<NodeKind, string> = {
@@ -232,10 +233,16 @@ function Pending({ r }: { r: RunState }) {
           {p.talisman && (
             <p class="dg__tal">{TALISMAN_BY_ID[p.talisman].icon} <b>{tr(TALISMAN_BY_ID[p.talisman].name)}</b> — {tr(TALISMAN_BY_ID[p.talisman].text)}</p>
           )}
-          {p.cards.length > 0 && <p>{tr(L('Choisis une carte à ajouter à ton deck :', 'Pick a card to add to your deck:'))}</p>}
-          <div class="dg__choices">
-            {p.cards.map((id) => <SupportCard def={support(id)} width={130} onClick={() => takeReward(id)} />)}
-          </div>
+          {p.cards.length > 0 && (
+            <CardChooser
+              inline
+              mode="pick"
+              title={tr(L('Choisis une carte à ajouter à ton deck :', 'Pick a card to add to your deck:'))}
+              items={p.cards.map((id) => ({ kind: 'support', id }))}
+              chooseLabel={(n) => tr(L('Prendre {name}', 'Take {name}'), { name: n })}
+              onChoose={(i) => takeReward(p.cards[i])}
+            />
+          )}
           <button class="btn" onClick={() => takeReward(null)}>{p.cards.length ? tr(L('Passer', 'Skip')) : tr(L('Continuer', 'Continue'))}</button>
         </div>
       );
@@ -303,10 +310,15 @@ function Pending({ r }: { r: RunState }) {
           {r.captured.length > 0 && <p>{tr(L('Capturées : {list}', 'Caught: {list}'), { list: r.captured.map((id) => tr(creature(id).name)).join(', ') })}</p>}
           {gained.length > 0 && (
             <>
-              <p>{tr(L('Garde une carte trouvée pendant l’aventure :', 'Keep one card found during the adventure:'))}</p>
-              <div class="dg__choices">
-                {gained.map((id) => <SupportCard def={support(id)} width={110} class={keep === id ? 'is-picked' : ''} onClick={() => setKeep(id)} />)}
-              </div>
+              <CardChooser
+                inline
+                mode="pick"
+                title={tr(L('Garde une carte trouvée pendant l’aventure :', 'Keep one card found during the adventure:'))}
+                items={gained.map((id) => ({ kind: 'support', id }))}
+                chooseLabel={(n) => tr(L('Garder {name}', 'Keep {name}'), { name: n })}
+                itemClass={(i) => (gained[i] === keep ? 'is-picked' : '')}
+                onChoose={(i) => setKeep(gained[i])}
+              />
             </>
           )}
           <button class="btn btn--primary" onClick={() => { finishRun(true, keep); backToWorld(); }}>{tr(L('Rentrer en ville', 'Head back to town'))}</button>

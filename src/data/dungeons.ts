@@ -36,7 +36,7 @@ export const DUNGEONS: Record<string, DungeonDef> = {
     trainerNames: [L('Spéléo Max', 'Caver Max'), L('Gamine Zoé', 'Kid Zoe'), L('Mineur Bob', 'Miner Bob'), L('Artiste Léa', 'Artist Lea'), L('Campeur Tom', 'Camper Tom')],
     boss: {
       name: L('Gardien Ronflon', 'Guardian Snoozle'),
-      team: [{ defId: '007', level: 7 }, { defId: '008', level: 9 }],
+      team: [{ defId: '007', level: 8 }, { defId: '008', level: 10 }],
       deck: [...deck, 'potion+', 'bouclier+'],
       intro: [L('Ronnn… pshhh… Un énorme Ronflon bloque la sortie de la grotte !', 'Zzzz… pshhh… A huge Snoozle blocks the cave exit!'), L('Il ouvre un œil. Il n’a pas l’air content d’être réveillé…', 'It opens one eye. It doesn’t look happy to be woken up…')],
       outro: [L('Le Gardien Ronflon bâille, se pousse… et se rendort. Le passage est libre !', 'The Guardian Snoozle yawns, shuffles aside… and falls back asleep. The way is clear!')],

@@ -75,13 +75,13 @@ export const SUPPORT_CARDS: SupportDef[] = [
   },
   {
     id: 'taille-crayon', name: L('Taille-crayon', 'Sharpener'), icon: '📐', kind: 'objet', rarity: 'common', target: 'none', price: 50,
-    effects: [{ kind: 'draw', count: 2 }], upgrade: 'taille-crayon+',
-    text: L('Piochez 2 cartes.', 'Draw 2 cards.'),
+    effects: [{ kind: 'draw', count: 1 }], upgrade: 'taille-crayon+',
+    text: L('Piochez 1 carte.', 'Draw 1 card.'),
   },
   {
     id: 'taille-crayon+', name: L('Taille-crayon+', 'Sharpener+'), icon: '📐', kind: 'objet', rarity: 'uncommon', target: 'none', price: 100,
-    effects: [{ kind: 'draw', count: 3 }],
-    text: L('Piochez 3 cartes.', 'Draw 3 cards.'),
+    effects: [{ kind: 'draw', count: 2 }],
+    text: L('Piochez 2 cartes.', 'Draw 2 cards.'),
   },
   {
     id: 'bouclier', name: L('Bouclier en carton', 'Cardboard Shield'), icon: '🛡️', kind: 'objet', rarity: 'common', target: 'none', price: 60,
@@ -115,13 +115,13 @@ export const SUPPORT_CARDS: SupportDef[] = [
   },
   {
     id: 'professeur', name: L('Prof. Fusain', 'Prof. Charcoal'), icon: '🔬', kind: 'dresseur', rarity: 'uncommon', target: 'none', price: 100,
-    effects: [{ kind: 'draw', count: 3 }], upgrade: 'professeur+',
-    text: L('Piochez 3 cartes.', 'Draw 3 cards.'),
+    effects: [{ kind: 'draw', count: 2 }], upgrade: 'professeur+',
+    text: L('Piochez 2 cartes.', 'Draw 2 cards.'),
   },
   {
     id: 'professeur+', name: L('Prof. Fusain+', 'Prof. Charcoal+'), icon: '🔬', kind: 'dresseur', rarity: 'rare', target: 'none', price: 180,
-    effects: [{ kind: 'draw', count: 4 }],
-    text: L('Piochez 4 cartes.', 'Draw 4 cards.'),
+    effects: [{ kind: 'draw', count: 2 }, { kind: 'refreshEnergy' }],
+    text: L('Piochez 2 cartes et récupérez votre ⚡ du tour.', 'Draw 2 cards and get this turn’s ⚡ back.'),
   },
   {
     id: 'maman', name: L('Maman', 'Mom'), icon: '💐', kind: 'dresseur', rarity: 'uncommon', target: 'none', price: 100,
@@ -135,8 +135,8 @@ export const SUPPORT_CARDS: SupportDef[] = [
   },
   {
     id: 'retour', name: L('Retour en arrière', 'Do-Over'), icon: '⏪', kind: 'dresseur', rarity: 'common', target: 'none', price: 60,
-    effects: [{ kind: 'reshuffle', draw: 5 }],
-    text: L('Mélangez votre main dans votre pioche, puis piochez 5 cartes.', 'Shuffle your hand into your deck, then draw 5 cards.'),
+    effects: [{ kind: 'reshuffle', draw: 2 }],
+    text: L('Mélangez votre main dans votre pioche, puis piochez 2 cartes.', 'Shuffle your hand into your deck, then draw 2 cards.'),
   },
 ];
 

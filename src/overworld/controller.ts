@@ -21,7 +21,7 @@ let game: Game | null = null;
 let stepsSinceSave = 0;
 
 /** Card shown full-screen over the world (starter pick, evolutions, gifts). */
-export const cardOverlay = signal<{ ids: string[]; title?: string; resolve: (i: number) => void } | null>(null);
+export const cardOverlay = signal<{ ids: string[]; title?: string; pick: boolean; resolve: (i: number) => void } | null>(null);
 export const menuOpen = signal(false);
 export const toast = signal<string | null>(null);
 
@@ -249,6 +249,7 @@ export interface FightOptions {
   friendly?: boolean;
   backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
   team?: TeamMember[];
+  tutorial?: boolean;
 }
 
 export function avgLevel(team: TeamMember[]) {
@@ -271,6 +272,7 @@ export async function fight(setup: { kind: BattleKind; enemy: SideSetup }, opts:
         blankCards: setup.kind === 'wild' ? d.items.blank : 0,
         onUseBlank: () => update((x) => (x.items.blank = Math.max(0, x.items.blank - 1))),
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
+        tutorial: opts.tutorial,
         rewardLines: (result) =>
           result === 'win' || result === 'capture'
             ? [
@@ -348,8 +350,9 @@ async function wildBattle(defId: string, level: number) {
 
 export const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export function showCards(ids: string[], title?: string): Promise<number> {
-  return new Promise((resolve) => (cardOverlay.value = { ids, title, resolve }));
+/** Shows creature cards full screen; with `pick`, the player chooses one and its index is returned. */
+export function showCards(ids: string[], title?: string, pick = false): Promise<number> {
+  return new Promise((resolve) => (cardOverlay.value = { ids, title, pick, resolve }));
 }
 
 /** Opens a full screen (shop, PC…) and resolves when it goes back to the world. */

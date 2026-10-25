@@ -3,7 +3,7 @@ import { support } from '../../data/supportCards';
 import { RESISTANCE_AMOUNT, WEAKNESS_MULT } from '../../data/types';
 import type { AttackDef } from '../../data/schema';
 import {
-  activeOf, attackProblem, canAttachEnergy, canAttack, canPlay, playTargets, retreatTargets,
+  activeOf, attackProblem, canAttachEnergy, canAttack, canPlay, canSwapCard, playTargets, retreatTargets,
 } from './engine';
 import type { Action, BattleState, Fighter, Side } from './types';
 
@@ -134,7 +134,9 @@ export function aiStep(st: BattleState): Action {
     }
   }
 
-  // 2. energy
+  // 2. energy: trade it for a new card when nobody needs more energy
+  const saturated = s.fighters.every((f) => f.ko || f.energy >= maxCost(f));
+  if (saturated && s.hand.length && canSwapCard(st, side, 0)) return { type: 'swapCard', hand: 0 };
   if (!s.energyAttached) {
     if (canAttachEnergy(st, side, s.active) && me.energy < maxCost(me)) return { type: 'attachEnergy', fighter: s.active };
     const bench = s.fighters.map((_, i) => i).filter((i) => i !== s.active && canAttachEnergy(st, side, i));

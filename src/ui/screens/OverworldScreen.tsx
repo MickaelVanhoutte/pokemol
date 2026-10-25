@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { creature } from '../../data/creatures';
 import type { Dir } from '../../save/schema';
 import { cardOverlay, getGame, menuOpen, openScreen, toast } from '../../overworld/controller';
 import { dialog } from '../../overworld/dialog';
 import { exportSave, persist, save } from '../../state/game';
 import { go } from '../../state/router';
-import { Card } from '../Card';
+import { CardChooser } from '../CardChooser';
 import { DialogBox } from '../DialogBox';
 import './overworld.css';
 
@@ -86,20 +85,17 @@ export function OverworldScreen() {
 
 function CardPick() {
   const o = cardOverlay.value!;
-  const n = o.ids.length;
-  const w = Math.min(260, Math.floor((window.innerWidth - 32 - (n - 1) * 12) / n), Math.floor((window.innerHeight - 140) * 0.7));
-  const pick = (i: number) => {
-    cardOverlay.value = null;
-    o.resolve(i);
-  };
+  const level = (id: string) => save.value?.collection[id]?.level;
   return (
-    <div class="overlay ow__cards">
-      {o.title && <h2 class="pixel">{o.title}</h2>}
-      <div class="ow__cards-row">
-        {o.ids.map((id, i) => <Card def={creature(id)} width={w} onClick={() => pick(i)} class="card--reveal" />)}
-      </div>
-      {n === 1 && <button class="btn btn--primary" onClick={() => pick(0)}>OK</button>}
-    </div>
+    <CardChooser
+      items={o.ids.map((id) => ({ kind: 'creature', id, level: level(id) }))}
+      title={o.title}
+      mode={o.pick ? 'pick' : 'show'}
+      onChoose={(i) => {
+        cardOverlay.value = null;
+        o.resolve(i);
+      }}
+    />
   );
 }
 

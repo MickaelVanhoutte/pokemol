@@ -3,7 +3,7 @@ import { CREATURES } from '../../data/creatures';
 import { SUPPORT_CARDS } from '../../data/supportCards';
 import { L } from '../../i18n';
 import { aiStep } from './ai';
-import { activeOf, applyAction, captureChance, createBattle, IllegalAction, START_HAND } from './engine';
+import { activeOf, applyAction, captureChance, createBattle, HAND_MAX, IllegalAction, START_HAND } from './engine';
 import type { Action, BattleSetup, BattleState, TeamMember } from './types';
 
 function setup(player: TeamMember[], enemy: TeamMember[], opts: Partial<BattleSetup> = {}, decks: [string[], string[]] = [[], []]): BattleSetup {
@@ -29,7 +29,7 @@ function giveEnergy(st: BattleState, side: 0 | 1, n: number): BattleState {
 }
 
 describe('setup', () => {
-  it('deals starting hands and starts with the player', () => {
+  it('starts with the player holding the card of the turn', () => {
     const deck = Array(10).fill('potion');
     const { state } = createBattle(setup([{ defId: '001', level: 1 }], [{ defId: '002', level: 1 }], {}, [deck, deck]));
     expect(state.turn).toBe(0);
@@ -118,12 +118,14 @@ describe('statuses and effects', () => {
   it('Bouh ! makes the defender drop a card', () => {
     const deck = Array(10).fill('potion');
     let { state } = createBattle(setup([{ defId: '009', level: 1 }], [{ defId: '002', level: 1 }], {}, [deck, deck]));
-    const before = state.sides[1].hand.length;
+    // both sides pass once so the opponent keeps an unused card
+    state = act(state, { type: 'endTurn' }, { type: 'endTurn' });
+    expect(state.sides[1].hand).toHaveLength(1);
     state = giveEnergy(state, 0, 1);
     const r = applyAction(state, { type: 'attack', attack: 0 });
     expect(r.events.some((e) => e.t === 'discard' && e.side === 1)).toBe(true);
-    // the opponent then draws 1 at the start of its turn
-    expect(r.state.sides[1].hand.length).toBe(before - 1 + 1);
+    // the opponent then draws its card of the turn
+    expect(r.state.sides[1].hand).toHaveLength(1);
   });
 
   it('lucky coin forces the favorable side', () => {
@@ -152,6 +154,44 @@ describe('statuses and effects', () => {
     state = act(state, { type: 'attachEnergy', fighter: 0 }, { type: 'retreat', to: 1 });
     expect(state.sides[0].active).toBe(1);
     expect(state.sides[0].fighters[0].energy).toBe(0);
+  });
+});
+
+describe('card of the turn', () => {
+  const deck = ['potion', 'pile', 'gomme', 'crayon', 'bouclier', 'echange', 'potion', 'pile', 'gomme', 'crayon'];
+
+  it('keeps unused cards but never holds more than HAND_MAX', () => {
+    let { state } = createBattle(setup([{ defId: '001', level: 1 }], [{ defId: '002', level: 1 }], {}, [deck, deck]));
+    for (let i = 0; i < 6; i++) state = act(state, { type: 'endTurn' });
+    expect(state.sides[0].hand).toHaveLength(HAND_MAX);
+    expect(state.sides[1].hand).toHaveLength(HAND_MAX);
+    expect(state.sides[0].deck).toHaveLength(deck.length - HAND_MAX);
+  });
+
+  it('swapping a card costs the turn energy', () => {
+    let { state } = createBattle(setup([{ defId: '001', level: 1 }], [{ defId: '002', level: 1 }], {}, [deck, deck]));
+    const first = state.sides[0].hand[0];
+    const r = applyAction(state, { type: 'swapCard', hand: 0 });
+    expect(r.state.sides[0].hand).toHaveLength(1);
+    expect(r.state.sides[0].discard).toContain(first);
+    expect(r.state.sides[0].energyAttached).toBe(true);
+    expect(() => applyAction(r.state, { type: 'attachEnergy', fighter: 0 })).toThrow(IllegalAction);
+    expect(() => applyAction(r.state, { type: 'swapCard', hand: 0 })).toThrow(IllegalAction);
+  });
+
+  it('cannot swap after attaching energy', () => {
+    let { state } = createBattle(setup([{ defId: '001', level: 1 }], [{ defId: '002', level: 1 }], {}, [deck, deck]));
+    state = act(state, { type: 'attachEnergy', fighter: 0 });
+    expect(() => applyAction(state, { type: 'swapCard', hand: 0 })).toThrow(IllegalAction);
+  });
+
+  it('Prof. Fusain+ gives the turn energy back', () => {
+    let { state } = createBattle(setup([{ defId: '001', level: 1 }], [{ defId: '002', level: 1 }], {}, [Array(10).fill('professeur+'), deck]));
+    state = act(state, { type: 'attachEnergy', fighter: 0 }, { type: 'playCard', hand: 0 });
+    expect(state.sides[0].energyAttached).toBe(false);
+    expect(state.sides[0].hand).toHaveLength(HAND_MAX);
+    state = act(state, { type: 'attachEnergy', fighter: 0 });
+    expect(activeOf(state.sides[0]).energy).toBe(2);
   });
 });
 

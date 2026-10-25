@@ -7,6 +7,7 @@ import { newSeed } from '../../engine/rng';
 import { backToWorld } from '../../overworld/controller';
 import { addCreature, addSupply, save, update } from '../../state/game';
 import { Card, SupportCard } from '../Card';
+import { CardChooser } from '../CardChooser';
 import { sfx } from '../../audio/sfx';
 import './shop.css';
 
@@ -26,6 +27,7 @@ export function GachaScreen() {
   const [banner, setBanner] = useState<Banner>('creature');
   const [shown, setShown] = useState<Shown[] | null>(null);
   const [open, setOpen] = useState<number>(0);
+  const [zoom, setZoom] = useState<number | null>(null);
   const w = Math.min(150, Math.floor((window.innerWidth - 64) / 3));
 
   const doPull = (count: 1 | 10) => {
@@ -70,7 +72,7 @@ export function GachaScreen() {
         </div>
         <div class="pulls">
           {shown.map((s, i) => (
-            <div class={`pull r-${s.rarity} ${i < open ? 'is-open' : ''}`} onClick={() => { if (i !== open) return; setOpen(open + 1); if (s.rarity === 'holo' || s.rarity === 'rare') sfx.capture(); else sfx.sparkle(); }}>
+            <div class={`pull r-${s.rarity} ${i < open ? 'is-open' : ''}`} onClick={() => { if (i < open) return setZoom(i); if (i !== open) return; setOpen(open + 1); if (s.rarity === 'holo' || s.rarity === 'rare') sfx.capture(); else sfx.sparkle(); }}>
               {i < open && <span class={`pull__tag ${s.isNew ? '' : 'pull__tag--dupe'}`}>{s.isNew ? tr(L('NOUVEAU !', 'NEW!')) : s.xp ? `+${s.xp} XP` : '+1'}</span>}
               <div class="pull__inner">
                 <div class="pull__front">
@@ -81,6 +83,13 @@ export function GachaScreen() {
             </div>
           ))}
         </div>
+        {zoom !== null && shown[zoom] && (
+          <CardChooser
+            mode="show"
+            items={[{ kind: shown[zoom].banner === 'creature' ? 'creature' : 'support', id: shown[zoom].id }]}
+            onChoose={() => setZoom(null)}
+          />
+        )}
         <div class="gacha__btns" style={{ marginTop: '18px' }}>
           {!all && <button class="btn" onClick={() => { setOpen(shown.length); sfx.sparkle(); }}>{tr(L('Tout retourner', 'Reveal all'))}</button>}
           {all && <button class="btn btn--primary" onClick={() => setShown(null)}>OK</button>}

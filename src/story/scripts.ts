@@ -83,15 +83,8 @@ scripts.labTable = async () => {
     return;
   }
   if (!flag('intro')) setFlag('intro');
-  let pick = '';
-  while (!pick) {
-    const i = await showCards([...STARTERS], tr(L('Choisis ta première Bestiole !', 'Choose your first Critter!')));
-    const c = creature(STARTERS[i]);
-    const ok = await ask(L('Tu choisis {name}, la Bestiole {type} ?', 'You choose {name}, the {type} Critter?'), [L('Oui', 'Yes'), L('Non', 'No')], undefined, {
-      name: tr(c.name), type: tr({ plante: L('Plante', 'Grass'), feu: L('Feu', 'Fire'), eau: L('Eau', 'Water') }[c.type as 'plante' | 'feu' | 'eau']),
-    });
-    if (ok === 0) pick = c.id;
-  }
+  const i = await showCards([...STARTERS], tr(L('Choisis ta première Bestiole !', 'Choose your first Critter!')), true);
+  const pick = STARTERS[i];
   giveCreature(pick, 5);
   setFlag('rivalStarter', Number(RIVAL_COUNTER[pick]));
   update((d) => giveStarterKit(d));
@@ -109,15 +102,10 @@ scripts.labTable = async () => {
     L('Je prends {c}, il est trop mignon ! Allez, on teste nos Bestioles. Je vais t’effacer !', 'I’ll take {c}, it’s so cute! Come on, let’s test our Critters. I’m going to erase you!'),
   ], RIVAL, { c: tr(creature(counter).name) });
   if (rival) g.faceToward(g.player, rival);
-  await sayAll([
-    L('Oh oh, un premier combat ! Petit rappel :', 'Oh ho, a first battle! Quick reminder:'),
-    L('À chaque tour, tu pioches une carte et tu donnes 1 énergie ⚡ à une de tes Bestioles.', 'Each turn you draw a card and give 1 energy ⚡ to one of your Critters.'),
-    L('Joue tes cartes Fourniture si tu veux, puis attaque ! Chaque attaque coûte de l’énergie.', 'Play Supply cards if you like, then attack! Each attack costs energy.'),
-    L('Quand toutes les Bestioles d’un camp sont K.O., le combat est terminé. Amusez-vous bien !', 'When all of one side’s Critters are knocked out, the battle is over. Have fun!'),
-  ], PROF);
+  await say(L('Oh oh, un premier combat ! Je vais te montrer comment faire, pas à pas.', 'Oh ho, a first battle! I’ll show you how it works, step by step.'), PROF);
   const out = await fight(
     { kind: 'trainer', enemy: { name: RIVAL, team: [{ defId: counter, level: 4 }], deck: ['potion', 'pile', 'pile', 'pile', 'crayon', 'gomme', 'taille-crayon', 'bouclier'], isAI: true } },
-    { friendly: true, backdrop: 'lab' },
+    { friendly: true, backdrop: 'lab', tutorial: true },
   );
   if (out.result === 'win') await say(L('Quoi ?! Je me suis fait gommer… C’était de la chance !', 'What?! I got erased… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);

@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { t, tr } from '../../i18n';
+import { L, t, tr } from '../../i18n';
 import { creature } from '../../data/creatures';
 import { support } from '../../data/supportCards';
-import type { CreatureDef, SupportDef } from '../../data/schema';
 import { aiStep } from '../../engine/battle/ai';
 import {
-  activeOf, applyAction, attackProblem, blocked, canAttachEnergy, canAttack, canPlay, captureChance,
+  activeOf, applyAction, attackProblem, blocked, canAttachEnergy, canAttack, canPlay, canSwapCard, captureChance,
   createBattle, playTargets, retreatTargets, type Step,
 } from '../../engine/battle/engine';
 import type { Action, BattleEvent, BattleResult, BattleSetup, BattleState, Side } from '../../engine/battle/types';
@@ -25,11 +24,12 @@ export interface BattleProps {
   /** Extra lines shown on the result panel (rewards, XP…), computed by the caller. */
   rewardLines?: (result: BattleResult, state: BattleState) => string[];
   backdrop?: 'grass' | 'cave' | 'tower' | 'lab' | 'forest';
+  /** First battle: a coach explains energy, cards and attacks step by step. */
+  tutorial?: boolean;
 }
 
 type Mode =
   | null
-  | { kind: 'energy' }
   | { kind: 'retreat' }
   | { kind: 'card'; hand: number; targets: number[] };
 
@@ -52,8 +52,9 @@ export function BattleScreen(props: BattleProps) {
   const [msg, setMsg] = useState<string>('');
   const [busy, setBusy] = useState(true);
   const [mode, setMode] = useState<Mode>(null);
-  const [zoom, setZoom] = useState<CreatureDef | SupportDef | null>(null);
-  const [zoomLevel, setZoomLevel] = useState<number | null>(null);
+  const [sheet, setSheet] = useState<{ side: Side; fi: number } | null>(null);
+  const [foeCard, setFoeCard] = useState<string | null>(null);
+  const [coachStep, setCoachStep] = useState(props.tutorial ? 0 : -1);
   const [preview, setPreview] = useState<number | null>(null);
   const [fx, setFx] = useState<Record<string, string>>({});
   const [floaters, setFloaters] = useState<Floater[]>([]);
@@ -91,6 +92,8 @@ export function BattleScreen(props: BattleProps) {
       case 'energy': flash(uidOf(e.side, e.f), 'glow', `+${e.amount}⚡`, 'info'); sfx.energy(); break;
       case 'status': flash(uidOf(e.side, e.f), 'status'); break;
       case 'coin': setCoin({ heads: e.heads, key: Date.now() }); sfx.coin(); break;
+      case 'play': if (e.side === 1) setFoeCard(e.card); break;
+      case 'swap': if (e.side === 0) sfx.sparkle(); break;
       case 'capture':
         if (e.success) {
           setCaptured(snap.sides[1].fighters[0].defId);
@@ -101,6 +104,10 @@ export function BattleScreen(props: BattleProps) {
     }
     await sleep(eventDuration(e) * speed.current);
     if (e.t === 'coin') setCoin(null);
+    if (e.t === 'play' && e.side === 1) {
+      await sleep(700 * speed.current);
+      setFoeCard(null);
+    }
   };
 
   const play = async (step: Step) => {
@@ -141,6 +148,7 @@ export function BattleScreen(props: BattleProps) {
     if (!cur) return;
     setMode(null);
     setPreview(null);
+    setSheet(null);
     setBusy(true);
     try {
       const step = applyAction(cur, action, true);
@@ -158,6 +166,13 @@ export function BattleScreen(props: BattleProps) {
   if (import.meta.env.DEV) {
     (window as unknown as Record<string, unknown>).__battle = { dispatch, state: () => stRef.current, speed };
   }
+
+  // tutorial steps move on by themselves once the player did the thing
+  useEffect(() => {
+    if (!st) return;
+    if (coachStep === 0 && st.sides[0].energyAttached) setCoachStep(1);
+    if (coachStep <= 2 && coachStep >= 0 && st.turnNumber > 1) setCoachStep(3);
+  }, [st, coachStep]);
 
   useEffect(() => {
     const step = createBattle(setup, true);
@@ -178,30 +193,24 @@ export function BattleScreen(props: BattleProps) {
   const activeDef = creature(active.defId);
   const wild = st.kind === 'wild';
   const wildName = wild ? fighterName(view, 1, 0) : undefined;
+  const energyFree = myTurn && !st.sides[0].energyAttached;
 
   const selectableMine = (i: number): boolean => {
     if (choosing) return !st.sides[0].fighters[i].ko && i !== st.sides[0].active;
-    if (!myTurn || !mode) return false;
-    if (mode.kind === 'energy') return canAttachEnergy(st, 0, i);
-    if (mode.kind === 'retreat') return retreatTargets(st, 0).includes(i);
-    return mode.targets.includes(i);
+    if (!myTurn) return false;
+    if (mode?.kind === 'retreat') return retreatTargets(st, 0).includes(i);
+    if (mode?.kind === 'card') return mode.targets.includes(i);
+    return energyFree && canAttachEnergy(st, 0, i);
   };
 
   const onMine = (i: number) => {
     if (choosing) return dispatch({ type: 'chooseActive', fighter: i });
-    if (!mode) return;
-    if (mode.kind === 'energy') return dispatch({ type: 'attachEnergy', fighter: i });
-    if (mode.kind === 'retreat') return dispatch({ type: 'retreat', to: i });
-    return dispatch({ type: 'playCard', hand: mode.hand, target: i });
+    if (mode?.kind === 'retreat') return dispatch({ type: 'retreat', to: i });
+    if (mode?.kind === 'card') return dispatch({ type: 'playCard', hand: mode.hand, target: i });
+    if (energyFree) return dispatch({ type: 'attachEnergy', fighter: i });
   };
 
-  const startEnergy = () => {
-    const alive = st.sides[0].fighters.map((_, i) => i).filter((i) => canAttachEnergy(st, 0, i));
-    if (alive.length === 1) dispatch({ type: 'attachEnergy', fighter: alive[0] });
-    else setMode({ kind: 'energy' });
-  };
-
-  const playFromPreview = (hi: number) => {
+  const playCard = (hi: number) => {
     const targets = playTargets(st, 0, hi);
     if (targets === null) return dispatch({ type: 'playCard', hand: hi });
     if (targets.length === 1) return dispatch({ type: 'playCard', hand: hi, target: targets[0] });
@@ -211,71 +220,61 @@ export function BattleScreen(props: BattleProps) {
 
   const prompt = choosing
     ? t('battle.chooseActive')
-    : mode?.kind === 'energy' ? t('battle.pick.energy')
     : mode?.kind === 'retreat' ? t('battle.pick.retreat')
     : mode?.kind === 'card' ? t('battle.pick.card')
     : msg;
 
-  const bench = (sideIdx: Side) => {
-    const s = view.sides[sideIdx];
-    return s.fighters.map((f, i) => (i === s.active ? null : (
+  const fieldCard = (sideIdx: Side, i: number, size: 'active' | 'bench') => {
+    const f = view.sides[sideIdx].fighters[i];
+    return (
       <FieldCard
         key={f.uid}
         f={f}
-        size="bench"
+        size={size}
+        wildName={sideIdx === 1 ? wildName : undefined}
         fx={fx[f.uid]}
         floaters={floaters.filter((x) => x.uid === f.uid)}
         selectable={sideIdx === 0 && selectableMine(i)}
         onClick={() => onMine(i)}
-        onInfo={() => { setZoom(creature(f.defId)); setZoomLevel(f.level); }}
+        onInfo={() => setSheet({ side: sideIdx, fi: i })}
       />
-    )));
+    );
   };
+  const bench = (sideIdx: Side) => view.sides[sideIdx].fighters.map((_, i) => (i === view.sides[sideIdx].active ? null : fieldCard(sideIdx, i, 'bench')));
 
   const result = ended;
   const rewardLines = result && props.rewardLines ? props.rewardLines(result, st) : [];
   const chance = wild ? Math.round(captureChance(st, props.captureBonus ?? 0) * 100) : 0;
+  const cardW = Math.min(118, Math.floor((Math.min(window.innerWidth, 820) - 170) / 2));
+
+  const coach = coachStep >= 0 && !busy && !ended && (coachStep < 3 ? myTurn : st.turn === 0) ? COACH[coachStep] : null;
+  const coachOn = (k: CoachTarget) => (coach?.target === k ? 'is-coach' : '');
+
+  const sheetFighter = sheet ? st.sides[sheet.side].fighters[sheet.fi] : null;
 
   return (
     <div class={`battle backdrop-${props.backdrop ?? 'grass'}`} onDblClick={() => (speed.current = 0.35)}>
       <div class="battle__foe-bar">
         <span class="battle__who">{wild ? wildName : tr(foe.name)}</span>
-        {!wild && (
-          <span class="battle__counts">
-            <span class="mini-backs">{foe.hand.map(() => <i />)}</span>
-            {t('battle.deck', { n: foe.deck.length })}
-          </span>
-        )}
       </div>
       <div class="battle__arena">
         <div class="battle__bench battle__bench--foe">{bench(1)}</div>
-        <div class="slot slot--foe">
-          <FieldCard
-            f={activeOf(foe)}
-            size="active"
-            wildName={wildName}
-            fx={fx[activeOf(foe).uid]}
-            floaters={floaters.filter((x) => x.uid === activeOf(foe).uid)}
-            onInfo={() => { setZoom(creature(activeOf(foe).defId)); setZoomLevel(activeOf(foe).level); }}
-          />
-        </div>
-        <div class="slot slot--me">
-          <FieldCard
-            f={activeOf(me)}
-            size="active"
-            fx={fx[activeOf(me).uid]}
-            floaters={floaters.filter((x) => x.uid === activeOf(me).uid)}
-            selectable={selectableMine(me.active)}
-            onClick={() => onMine(me.active)}
-            onInfo={() => { setZoom(creature(activeOf(me).defId)); setZoomLevel(activeOf(me).level); }}
-          />
-        </div>
+        <div class="slot slot--foe">{fieldCard(1, foe.active, 'active')}</div>
+        <div class="slot slot--me">{fieldCard(0, me.active, 'active')}</div>
         <div class="battle__bench battle__bench--me">{bench(0)}</div>
       </div>
 
-      <div class="battle__msg pixel" aria-live="polite">{prompt}</div>
+      {coach ? (
+        <div class="coach">
+          <span class="coach__who pixel">{tr(L('Prof. Fusain', 'Prof. Charcoal'))}</span>
+          <p class="pixel">{tr(coach.text)}</p>
+          {coach.ok && <button class="btn btn--small btn--primary" onClick={() => setCoachStep(coachStep === 3 ? -1 : coachStep + 1)}>OK</button>}
+        </div>
+      ) : (
+        <div class="battle__msg pixel" aria-live="polite">{prompt}</div>
+      )}
 
-      <div class="battle__controls">
+      <div class={`battle__attacks ${coachOn('attacks')}`}>
         {activeDef.attacks.map((a, i) => {
           const why = attackProblem(st, 0, i);
           return (
@@ -291,73 +290,88 @@ export function BattleScreen(props: BattleProps) {
             </button>
           );
         })}
-        <div class="battle__row">
+      </div>
+
+      <div class="battle__bottom">
+        <div class={`battle__cards ${coachOn('cards')}`}>
+          {me.hand.length ? me.hand.map((id, i) => (
+            <div class="hcard">
+              <SupportCard def={support(id)} width={cardW} class={myTurn && !mode && canPlay(st, 0, i) ? 'is-playable' : 'is-dim'} onClick={() => !mode && setPreview(i)} />
+              <div class="hcard__btns">
+                <button class="btn btn--small btn--primary" disabled={!myTurn || !!mode || !canPlay(st, 0, i)} onClick={() => playCard(i)}>{t('battle.btn.play')}</button>
+                <button class="btn btn--small" title={t('battle.btn.swap')} disabled={!myTurn || !!mode || !canSwapCard(st, 0, i)} onClick={() => dispatch({ type: 'swapCard', hand: i })}>🔄⚡</button>
+              </div>
+            </div>
+          )) : <div class="hcard hcard--empty">{t('battle.noCards')}</div>}
+        </div>
+        <div class="battle__side">
+          <div class={`energy-chip ${energyFree ? 'is-on' : ''}`}>
+            <b>⚡</b>
+            <span>{energyFree ? t('battle.energyReady') : t('battle.energyUsed')}</span>
+          </div>
           {mode ? (
             <button class="btn btn--small" onClick={() => setMode(null)}>{t('battle.btn.cancel')}</button>
           ) : (
-            <>
-              <button class="btn btn--small btn--energy" disabled={!myTurn || st.sides[0].energyAttached} onClick={startEnergy}>
-                ⚡ {t('battle.btn.energy')}
-              </button>
-              <button class="btn btn--small" disabled={!myTurn || !retreatTargets(st, 0).length} onClick={() => setMode({ kind: 'retreat' })}>
-                ↩ {t('battle.btn.retreat')} ({activeDef.retreat})
-              </button>
-              {wild && (
-                <>
-                  <button
-                    class="btn btn--small btn--capture"
-                    disabled={!myTurn || blanks <= 0}
-                    title={t('battle.chance', { n: chance })}
-                    onClick={() => {
-                      setBlanks((b) => b - 1);
-                      props.onUseBlank?.();
-                      dispatch({ type: 'capture', bonus: props.captureBonus });
-                    }}
-                  >
-                    🃏 {t('battle.btn.capture', { n: blanks })} · {chance}%
-                  </button>
-                  <button class="btn btn--small btn--ghost" disabled={!myTurn} onClick={() => dispatch({ type: 'flee' })}>{t('battle.btn.flee')}</button>
-                </>
-              )}
-              <button class="btn btn--small btn--primary" disabled={!myTurn} onClick={() => dispatch({ type: 'endTurn' })}>
-                {t('battle.btn.endTurn')} ▶
-              </button>
-            </>
+            <button class="btn btn--primary btn--end" disabled={!myTurn} onClick={() => dispatch({ type: 'endTurn' })}>
+              {t('battle.btn.endTurn')} ▶
+            </button>
           )}
         </div>
       </div>
 
-      <div class="battle__hand">
-        {me.hand.map((id, i) => (
-          <SupportCard
-            def={support(id)}
-            width={82}
-            class={!myTurn || mode ? 'is-dim' : canPlay(st, 0, i) ? 'is-playable' : 'is-dim'}
-            onClick={() => !mode && setPreview(i)}
-          />
-        ))}
-        <span class="battle__deckcount">{t('battle.deck', { n: me.deck.length })}</span>
-      </div>
+      {wild && (
+        <div class="battle__row battle__wild">
+          <button
+            class="btn btn--small btn--capture"
+            disabled={!myTurn || blanks <= 0 || !!mode}
+            onClick={() => {
+              setBlanks((b) => b - 1);
+              props.onUseBlank?.();
+              dispatch({ type: 'capture', bonus: props.captureBonus });
+            }}
+          >
+            🃏 {t('battle.btn.capture', { n: blanks })} · {chance}%
+          </button>
+          <button class="btn btn--small btn--ghost" disabled={!myTurn || !!mode} onClick={() => dispatch({ type: 'flee' })}>{t('battle.btn.flee')}</button>
+        </div>
+      )}
 
       {preview !== null && me.hand[preview] && (
         <div class="overlay" onClick={() => setPreview(null)}>
           <div class="preview" onClick={(e) => e.stopPropagation()}>
-            <SupportCard def={support(me.hand[preview])} width={Math.min(280, window.innerWidth - 48)} />
+            <SupportCard def={support(me.hand[preview])} width={Math.min(300, window.innerWidth - 48)} />
             <div class="preview__btns">
-              <button class="btn" onClick={() => setPreview(null)}>{t('battle.btn.cancel')}</button>
-              <button class="btn btn--primary" disabled={!myTurn || !canPlay(st, 0, preview)} onClick={() => playFromPreview(preview)}>
-                {t('battle.btn.play')}
-              </button>
+              <button class="btn" onClick={() => setPreview(null)}>{t('battle.btn.close')}</button>
+              <button class="btn" disabled={!myTurn || !canSwapCard(st, 0, preview)} onClick={() => dispatch({ type: 'swapCard', hand: preview })}>🔄 {t('battle.btn.swap')} ⚡</button>
+              <button class="btn btn--primary" disabled={!myTurn || !canPlay(st, 0, preview)} onClick={() => playCard(preview)}>{t('battle.btn.play')}</button>
             </div>
           </div>
         </div>
       )}
 
-      {zoom && (
-        <div class="overlay" onClick={() => setZoom(null)}>
-          {'attacks' in zoom
-            ? <Card def={zoom} width={Math.min(380, window.innerWidth - 32)} level={zoomLevel ?? undefined} />
-            : <SupportCard def={zoom} width={Math.min(380, window.innerWidth - 32)} />}
+      {sheet && sheetFighter && (
+        <div class="overlay" onClick={() => setSheet(null)}>
+          <div class="preview" onClick={(e) => e.stopPropagation()}>
+            <Card def={creature(sheetFighter.defId)} width={Math.min(340, window.innerWidth - 32, Math.floor((window.innerHeight - 120) * 0.7))} level={sheetFighter.level} />
+            <div class="preview__btns">
+              <button class="btn" onClick={() => setSheet(null)}>{t('battle.btn.close')}</button>
+              {sheet.side === 0 && sheet.fi === st.sides[0].active && (
+                <button
+                  class="btn btn--primary"
+                  disabled={!myTurn || !retreatTargets(st, 0).length}
+                  onClick={() => { setSheet(null); setMode({ kind: 'retreat' }); }}
+                >
+                  ↩ {t('battle.btn.retreat')} {creature(sheetFighter.defId).retreat ? '⚡'.repeat(creature(sheetFighter.defId).retreat) : ''}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {foeCard && (
+        <div class="foe-card">
+          <SupportCard def={support(foeCard)} width={Math.min(200, window.innerWidth * 0.5)} />
         </div>
       )}
 
@@ -388,3 +402,12 @@ export function BattleScreen(props: BattleProps) {
     </div>
   );
 }
+
+type CoachTarget = 'creature' | 'cards' | 'attacks' | null;
+
+const COACH: { text: ReturnType<typeof L>; target: CoachTarget; ok?: boolean }[] = [
+  { text: L('À chaque tour, tu reçois une énergie ⚡. Touche ta Bestiole pour la lui donner !', 'Each turn you get one energy ⚡. Tap your Critter to give it!'), target: 'creature' },
+  { text: L('Voici tes cartes : touche-en une pour la lire, puis « Jouer ». Une autre fois, tu pourras aussi l’échanger contre ton ⚡ (🔄).', 'Here are your cards: tap one to read it, then "Play". Another time you can also trade it for your ⚡ (🔄).'), target: 'cards', ok: true },
+  { text: L('Maintenant, choisis une attaque ! Elle coûte de l’énergie ⚡ et termine ton tour.', 'Now choose an attack! It costs energy ⚡ and ends your turn.'), target: 'attacks' },
+  { text: L('Bravo ! Gomme a joué son tour. À toi : ⚡, une carte si tu veux, puis attaque !', 'Well done! Eraser played their turn. Your go: ⚡, a card if you like, then attack!'), target: null, ok: true },
+];
