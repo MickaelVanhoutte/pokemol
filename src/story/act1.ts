@@ -130,7 +130,7 @@ scripts.labTable = async () => {
   ], RIVAL, { c: tr(creature(counter).name) });
   if (rival) g.faceToward(g.player, rival);
   await say(L('Oh oh, un premier combat ! Je vais te guider.', 'Oh ho, a first battle! I’ll guide you.'), PROF);
-  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 5 }], newSeed()), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival });
+  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 4 }], newSeed(), 'normal'), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival });
   if (out.result === 'win') await say(L('Quoi ?! J’ai perdu… C’était de la chance !', 'What?! I lost… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);
   await say(L('Je vais devenir le meilleur dresseur de Papeterre ! Salut !', 'I’ll become the greatest trainer in Papeterra! Bye!'), RIVAL);

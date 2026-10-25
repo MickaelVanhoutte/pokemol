@@ -152,8 +152,10 @@
 
 /* ---------- options */
 .opts { font-size: 1.15rem; }
-.opt { position: relative; display: flex; align-items: center; gap: 6px; min-height: 2.4em; padding-left: 1.7em; cursor: pointer; }
-.opt__label { flex: 1; min-width: 0; }
+/* the ◀ value ▶ group drops under the label when both don't fit (narrow phone, big text) */
+.opt { position: relative; display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; min-height: 2.4em; padding-left: 1.7em; cursor: pointer; }
+.opt__label { flex: 1 0 auto; }
+.opt__ctl { display: flex; align-items: center; margin-left: auto; }
 .opt__val { min-width: 6.5em; text-align: center; color: #c0392b; }
 .opt__arrow { background: none; border: 0; font: inherit; color: var(--ink); cursor: pointer; padding: 4px 6px; }
 .opts__save { font-size: 1rem; }

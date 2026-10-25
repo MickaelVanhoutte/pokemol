@@ -5,15 +5,18 @@ import { nextRandom, randomInt } from '../rng';
 import { activeMon, stageMult, usableSlots, type Action, type BattleState } from './battle';
 import { maxHp } from './creature';
 
-/** Enemy choice for this turn: wild creatures pick a random move, trainers think a little. */
-export function aiChoose(st: BattleState): Action {
+/**
+ * Enemy choice for this turn: wild creatures pick a random move, trainers think a little.
+ * `slip` is the chance a trainer picks a random move anyway (easy difficulty).
+ */
+export function aiChoose(st: BattleState, slip = 0): Action {
   const me = st.sides[1];
   const foe = st.sides[0];
   const m = activeMon(me);
   const target = activeMon(foe);
   const slots = usableSlots(m);
   if (!slots.length) return { type: 'move', slot: -1 };
-  if (st.kind === 'wild') return { type: 'move', slot: slots[randomInt(st, slots.length)] };
+  if (st.kind === 'wild' || (slip > 0 && nextRandom(st) < slip)) return { type: 'move', slot: slots[randomInt(st, slots.length)] };
 
   const myType = creature(m.species).type;
   const foeType = creature(target.species).type;

@@ -11,6 +11,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
 - 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, an ending.
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
+- A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
+  option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
 - Side quests: 12 torn sketchbook pages (memories of the real world), the Tombola at the fair,
   a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from

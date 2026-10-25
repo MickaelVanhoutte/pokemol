@@ -1,5 +1,6 @@
 import { L, type LText } from '../i18n';
 import { createMon, type Mon } from '../engine/pk/creature';
+import { prefs, type Difficulty } from '../state/prefs';
 
 export interface TrainerMon {
   species: string;
@@ -21,10 +22,28 @@ export interface TrainerDef {
   afterScript?: string;
 }
 
-/** Trainer creatures: fixed decent IVs so battles feel the same every time. */
-export function partyOf(list: TrainerMon[], seed: number): Mon[] {
-  const iv = { hp: 12, atk: 12, def: 12, spa: 12, spd: 12, spe: 12 };
-  return list.map((t, i) => createMon(t.species, t.level, { rng: seed + i }, iv));
+/**
+ * How the difficulty option changes trainers: a level shift proportional to the level (easy always
+ * takes at least 1 off),
+ * fixed IVs (so battles feel the same every time) and, in battle, how often their AI picks a random
+ * move instead of the best one.
+ */
+export const DIFFICULTY: Record<Difficulty, { levels: number; iv: number; slip: number }> = {
+  easy: { levels: -0.15, iv: 6, slip: 0.35 },
+  normal: { levels: 0, iv: 12, slip: 0 },
+  hard: { levels: 0.1, iv: 20, slip: 0 },
+};
+
+export function trainerLevel(level: number, difficulty: Difficulty): number {
+  const k = DIFFICULTY[difficulty].levels;
+  const shift = k < 0 ? -Math.max(1, Math.round(-k * level)) : Math.round(k * level);
+  return Math.min(50, Math.max(2, level + shift));
+}
+
+export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty): Mon[] {
+  const iv = DIFFICULTY[difficulty].iv;
+  const ivs = { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv };
+  return list.map((t, i) => createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs));
 }
 
 export function trainerParty(t: TrainerDef, seed: number): Mon[] {
@@ -36,29 +55,29 @@ const T = (t: TrainerDef) => t;
 export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   // ---------------------------------------------------------------- Chemin des Crayons
   T({
-    id: 'leo', name: L('Gamin Léo', 'Kid Leo'), party: [{ species: '006', level: 5 }], money: 100,
+    id: 'leo', name: L('Gamin Léo', 'Kid Leo'), party: [{ species: '012', level: 3 }, { species: '006', level: 4 }], money: 100,
     before: [L('Hé ! Tu as une Bestiole ? Moi aussi ! On se bat ?', 'Hey! You’ve got a Critter? Me too! Let’s battle!')],
     after: [L('Oh non… Ma Lunelle a dansé pour rien !', 'Oh no… My Moonbun danced for nothing!')],
   }),
   T({
-    id: 'iris', name: L('Fillette Iris', 'Lass Iris'), party: [{ species: '013', level: 5 }, { species: '004', level: 6 }], money: 180,
-    before: [L('J’ai dessiné mes Bestioles moi-même ! Regarde comme elles sont jolies !', 'I drew my Critters myself! Look how pretty they are!')],
-    after: [L('Elles sont jolies ET fortes, les tiennes…', 'Yours are pretty AND strong…')],
+    id: 'iris', name: L('Fillette Iris', 'Lass Iris'), party: [{ species: '013', level: 4 }], money: 180,
+    before: [L('J’ai dessiné ma Bestiole moi-même ! Regarde comme elle est jolie !', 'I drew my Critter myself! Look how pretty it is!')],
+    after: [L('Elle est jolie ET forte, la tienne…', 'Yours is pretty AND strong…')],
   }),
   // ---------------------------------------------------------------- Atelier Pastel
   T({
-    id: 'pastelT1', name: L('Apprentie Lou', 'Apprentice Lou'), party: [{ species: '012', level: 7 }, { species: '013', level: 7 }], money: 210,
+    id: 'pastelT1', name: L('Apprentie Lou', 'Apprentice Lou'), party: [{ species: '012', level: 5 }, { species: '013', level: 5 }], money: 210,
     before: [L('Ici on dessine des ailes, des antennes et des pattes partout !', 'Here we draw wings, antennae and legs everywhere!')],
     after: [L('Je vais redessiner mes Bestioles en plus fortes !', 'I’ll redraw my Critters stronger!')],
   }),
   T({
-    id: 'pastelT2', name: L('Apprenti Malo', 'Apprentice Malo'), party: [{ species: '012', level: 8 }, { species: '007', level: 9 }], money: 240,
+    id: 'pastelT2', name: L('Apprenti Malo', 'Apprentice Malo'), party: [{ species: '013', level: 6 }, { species: '012', level: 6 }], money: 240,
     before: [L('Mireille m’a appris à colorier sans dépasser. Toi, tu dépasses ?', 'Mireille taught me to colour inside the lines. Do you go over them?')],
     after: [L('Bon… j’ai un peu dépassé.', 'Well… I went a bit over the lines.')],
   }),
   T({
     id: 'mireille', name: L('Maître d’Atelier Mireille', 'Atelier Master Mireille'), money: 1200, badge: 'pastel',
-    party: [{ species: '012', level: 8 }, { species: '007', level: 10 }],
+    party: [{ species: '012', level: 6 }, { species: '007', level: 8 }],
     before: [
       L('Bienvenue dans mon atelier ! Ici, chaque papillon a des couleurs qui n’existent pas encore.', 'Welcome to my atelier! Here, every butterfly has colours that don’t exist yet.'),
       L('Montre-moi si tes Bestioles sont aussi bien dessinées que les miennes !', 'Show me if your Critters are drawn as well as mine!'),
@@ -70,28 +89,28 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route des Craies
   T({
-    id: 'pierrot', name: L('Gamin Pierrot', 'Kid Pierrot'), party: [{ species: '006', level: 8 }, { species: '004', level: 9 }], money: 180,
+    id: 'pierrot', name: L('Gamin Pierrot', 'Kid Pierrot'), party: [{ species: '006', level: 7 }, { species: '004', level: 8 }], money: 180,
     before: [L('Je dessine à la craie sur le trottoir. Mes Bestioles aussi !', 'I draw with chalk on the pavement. My Critters too!')],
     after: [L('La pluie va tout effacer… mais pas ta victoire.', 'The rain will wash it all away… but not your win.')],
   }),
   T({
-    id: 'ninon', name: L('Fillette Ninon', 'Lass Ninon'), party: [{ species: '005', level: 9 }, { species: '013', level: 9 }], money: 200,
+    id: 'ninon', name: L('Fillette Ninon', 'Lass Ninon'), party: [{ species: '005', level: 8 }, { species: '013', level: 8 }], money: 200,
     before: [L('Mon Piafou chante faux, mais il se bat juste !', 'My Chirpie sings off-key, but it battles right on!')],
     after: [L('Il a chanté encore plus faux…', 'It sang even more off-key…')],
   }),
   // ---------------------------------------------------------------- Bois Brumeux
   T({
-    id: 'luna', name: L('Médium Luna', 'Medium Luna'), party: [{ species: '009', level: 10 }, { species: '005', level: 11 }], money: 400,
+    id: 'luna', name: L('Médium Luna', 'Medium Luna'), party: [{ species: '009', level: 9 }, { species: '005', level: 10 }], money: 400,
     before: [L('Les esprits de la brume m’ont parlé de toi…', 'The spirits of the mist told me about you…')],
     after: [L('Les esprits n’avaient pas prévu ça.', 'The spirits didn’t see that coming.')],
   }),
   T({
-    id: 'paul', name: L('Randonneur Paul', 'Hiker Paul'), party: [{ species: '007', level: 10 }, { species: '008', level: 11 }], money: 450,
+    id: 'paul', name: L('Randonneur Paul', 'Hiker Paul'), party: [{ species: '006', level: 9 }, { species: '013', level: 10 }], money: 450,
     before: [L('Rien de tel qu’une bonne marche… et un bon combat !', 'Nothing beats a good hike… and a good battle!')],
-    after: [L('Ouf ! Je vais faire une sieste, comme Ronflon.', 'Phew! I’ll take a nap, like Snoozle.')],
+    after: [L('Ouf ! Une petite sieste et je repars.', 'Phew! A little nap and I’ll be off again.')],
   }),
   T({
-    id: 'gomme1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '013', level: 10 }, { species: '012', level: 10 }], money: 300, grey: true,
+    id: 'gomme1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '013', level: 9 }, { species: '012', level: 9 }], money: 300, grey: true,
     before: [
       L('Hé ! Ce bois est trop gribouillé. On fait le ménage pour le Grand Effaceur !', 'Hey! These woods are way too scribbly. We’re tidying up for the Great Eraser!'),
       L('Tu vois mes Bestioles ? Plus de couleurs, plus de bêtises. Elles obéissent !', 'See my Critters? No more colours, no more nonsense. They obey!'),
@@ -99,7 +118,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Quoi ?! Les couleurs reviennent ? Ce n’était pas prévu…', 'What?! The colours are coming back? That wasn’t the plan…')],
   }),
   T({
-    id: 'gomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 11 }, { species: '013', level: 12 }], money: 360, grey: true, afterScript: 'boisRestore',
+    id: 'gomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 10 }, { species: '013', level: 11 }], money: 360, grey: true, afterScript: 'boisRestore',
     before: [
       L('Halte ! Personne ne passe. Le Grand Effaceur dit que ces dessins ne valent rien.', 'Halt! Nobody gets through. The Great Eraser says these drawings are worthless.'),
       L('Un coup de gomme, et pouf ! Plus de bois, plus de Bestioles, plus de bazar !', 'One rub of the eraser, and poof! No more woods, no more Critters, no more mess!'),
@@ -108,18 +127,18 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Plume
   T({
-    id: 'plumeT1', name: L('Ornithologue Paulin', 'Birdwatcher Paulin'), party: [{ species: '013', level: 12 }, { species: '013', level: 13 }], money: 300,
+    id: 'plumeT1', name: L('Ornithologue Paulin', 'Birdwatcher Paulin'), party: [{ species: '013', level: 11 }, { species: '013', level: 11 }], money: 300,
     before: [L('Chut ! J’observe les Piafou… Ah, tu m’as fait peur. Combat !', 'Shh! I’m watching Chirpies… Ah, you startled me. Battle!')],
     after: [L('Mes Piafou se sont envolés… de honte.', 'My Chirpies flew away… out of shame.')],
   }),
   T({
-    id: 'plumeT2', name: L('Rêveuse Nina', 'Dreamer Nina'), party: [{ species: '008', level: 13 }], money: 320,
+    id: 'plumeT2', name: L('Rêveuse Nina', 'Dreamer Nina'), party: [{ species: '005', level: 11 }], money: 320,
     before: [L('Zzz… Hein ? Un combat ? D’accord, mais vite, j’ai sommeil.', 'Zzz… Huh? A battle? Fine, but quickly, I’m sleepy.')],
     after: [L('Bonne nuit…', 'Good night…')],
   }),
   T({
     id: 'gaspard', name: L('Maître d’Atelier Gaspard', 'Atelier Master Gaspard'), money: 1600, badge: 'plume',
-    party: [{ species: '013', level: 13 }, { species: '008', level: 13 }],
+    party: [{ species: '013', level: 10 }, { species: '008', level: 10 }],
     before: [
       L('Zzz… Mmh ? Quelqu’un a dit « combat » ? Bâââille…', 'Zzz… Mmh? Did someone say “battle”? Yaaawn…'),
       L('Bon. Quand je suis réveillé, je ne rigole plus. Montre-moi ce que tu vaux !', 'Right. When I’m awake, I don’t mess around. Show me what you’ve got!'),

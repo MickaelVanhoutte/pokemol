@@ -1,8 +1,12 @@
 import { signal } from '@preact/signals';
 
 /** Player preferences, kept per device (not in the save, so Options work from the title screen). */
+export type Difficulty = 'easy' | 'normal' | 'hard';
+
 export interface Prefs {
   textSpeed: 'slow' | 'mid' | 'fast';
+  /** Strength of trainers' teams (see src/data/trainers.ts). */
+  difficulty: Difficulty;
   /** Battle animation duration multiplier (1 = normal). */
   battleAnim: number;
   sound: boolean;
@@ -10,7 +14,7 @@ export interface Prefs {
 }
 
 const KEY = 'atelier-bestioles.prefs';
-const DEFAULTS: Prefs = { textSpeed: 'mid', battleAnim: 1, sound: true, music: true };
+const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, sound: true, music: true };
 
 function read(): Prefs {
   try {

@@ -4,6 +4,7 @@ import { creature } from '../../data/creatures';
 import { item } from '../../data/items';
 import { move } from '../../data/moves';
 import { aiChoose } from '../../engine/pk/ai';
+import { DIFFICULTY } from '../../data/trainers';
 import {
   act, activeMon, blocked, createBattle, itemUsable, usableSlots,
   type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Step,
@@ -152,7 +153,7 @@ export function BattleScreen(props: BattleProps) {
     setOverlay(null);
     setBusy(true);
     try {
-      const enemy: Action = a.type === 'learn' || a.type === 'replace' ? { type: 'move', slot: 0 } : aiChoose(cur);
+      const enemy: Action = a.type === 'learn' || a.type === 'replace' ? { type: 'move', slot: 0 } : aiChoose(cur, DIFFICULTY[prefs.value.difficulty].slip);
       const step = act(cur, a, enemy, true);
       commit(step.state);
       await play(step);

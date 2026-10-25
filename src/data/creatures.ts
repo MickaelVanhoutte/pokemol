@@ -30,7 +30,7 @@ export const CREATURES: SpeciesDef[] = [
   },
   {
     id: '003', slug: 'clapotin', faces: 'left', name: L('Clapotin', 'Splashell'), kind: L('Bestiole Flaque', 'Puddle Critter'),
-    type: 'eau', base: { hp: 52, atk: 50, def: 64, spa: 52, spd: 62, spe: 42 },
+    type: 'eau', base: { hp: 52, atk: 50, def: 64, spa: 62, spd: 62, spe: 44 },
     catchRate: 45, baseExp: 64, rarity: 'uncommon',
     learnset: [[1, 'bousculade'], [1, 'fretillement'], [5, 'bulles'], [10, 'carapace-tambour'], [13, 'jet-d-eau'],
       [17, 'mordillage'], [22, 'carapace-roulante'], [28, 'coup-de-boule'], [33, 'grosse-vague']],
@@ -76,8 +76,8 @@ export const CREATURES: SpeciesDef[] = [
     id: '007', slug: 'papivole', name: L('Papivole', 'Flutterbug'), kind: L('Bestiole Papillon', 'Butterfly Critter'),
     type: 'insecte', base: { hp: 48, atk: 35, def: 45, spa: 72, spd: 64, spe: 66 },
     catchRate: 120, baseExp: 100, rarity: 'common', evolvesFrom: '012',
-    learnset: [[1, 'bousculade'], [1, 'dard'], [8, 'coup-d-ailes'], [9, 'poudre-dodo'], [11, 'poudre-piquante'],
-      [13, 'poudre-toxique'], [16, 'choc-mental'], [21, 'rayon-d-ailes'], [27, 'poudre-arc-en-ciel']],
+    learnset: [[1, 'bousculade'], [1, 'dard'], [8, 'coup-d-ailes'], [12, 'poudre-dodo'], [14, 'poudre-piquante'],
+      [15, 'poudre-toxique'], [16, 'choc-mental'], [21, 'rayon-d-ailes'], [27, 'poudre-arc-en-ciel']],
     dex: L(
       'Ses gros yeux rouges voient toutes les couleurs, même celles qu’on n’a pas encore inventées.',
       'Its big red eyes see every color, even the ones nobody has invented yet.',
@@ -131,7 +131,7 @@ export const CREATURES: SpeciesDef[] = [
     id: '012', slug: 'chenillou', faces: 'left', name: L('Chenillou', 'Wigglet'), kind: L('Bestiole Chenille', 'Caterpillar Critter'),
     type: 'insecte', base: { hp: 45, atk: 32, def: 38, spa: 22, spd: 22, spe: 46 },
     catchRate: 255, baseExp: 50, rarity: 'common', evolvesTo: '007', evolveLevel: 8,
-    learnset: [[1, 'bousculade'], [1, 'fil-de-soie'], [5, 'dard']],
+    learnset: [[1, 'bousculade'], [1, 'fil-de-soie'], [7, 'dard']],
     dex: L(
       'Il avance sur ses pattes rondes comme sur des roulettes. Un beau matin, il se réveillera avec des ailes.',
       'It rolls along on its round feet like little wheels. One fine morning it will wake up with wings.',

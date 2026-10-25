@@ -18,6 +18,12 @@ const ROWS: Row<unknown>[] = [
     set: (v) => setPref('textSpeed', v as 'slow'),
   },
   {
+    label: L('DIFFICULTÉ', 'DIFFICULTY'),
+    values: [{ v: 'easy', label: L('FACILE', 'EASY') }, { v: 'normal', label: L('NORMAL', 'NORMAL') }, { v: 'hard', label: L('DIFFICILE', 'HARD') }],
+    get: () => prefs.value.difficulty,
+    set: (v) => setPref('difficulty', v as 'normal'),
+  },
+  {
     label: L('COMBATS', 'BATTLE SPEED'),
     values: [{ v: 1, label: L('NORMAL', 'NORMAL') }, { v: 0.55, label: L('RAPIDE', 'FAST') }, { v: 0.3, label: L('ÉCLAIR', 'TURBO') }],
     get: () => prefs.value.battleAnim,
@@ -73,9 +79,11 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
             return (
               <div class={`opt has-cursor ${i === cur ? 'is-on' : ''}`} onClick={() => setCur(i)}>
                 <span class="opt__label">{tr(r.label)}</span>
-                <button class="opt__arrow" onClick={() => cycle(r, -1)} aria-label="◀">◀</button>
-                <span class="opt__val">{tr(val.label)}</span>
-                <button class="opt__arrow" onClick={() => cycle(r, 1)} aria-label="▶">▶</button>
+                <span class="opt__ctl">
+                  <button class="opt__arrow" onClick={() => cycle(r, -1)} aria-label="◀">◀</button>
+                  <span class="opt__val">{tr(val.label)}</span>
+                  <button class="opt__arrow" onClick={() => cycle(r, 1)} aria-label="▶">▶</button>
+                </span>
               </div>
             );
           })}
