@@ -75,8 +75,11 @@ export interface SpeciesDef {
   faces?: 'left' | 'right';
 }
 
-/** `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held. */
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold';
+/**
+ * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
+ * `battle`: boosts the creature fighting (X items), only in battle.
+ */
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle';
 
 export interface ItemDef {
   id: string;
@@ -90,4 +93,6 @@ export interface ItemDef {
   cures?: (Major | 'confusion')[];
   /** Held items: their effect. */
   hold?: 'leftovers' | 'expShare';
+  /** Battle items: the stat raised one stage, `crit` (Dire Hit) or `mist` (Guard Spec, 5 turns). */
+  boost?: StageKey | 'crit' | 'mist';
 }

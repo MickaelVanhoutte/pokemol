@@ -26,6 +26,35 @@ export const ITEMS: ItemDef[] = [
     id: 'rappel', name: L('Rappel', 'Revive'), price: 1500, kind: 'revive', amount: 50,
     desc: L('Réveille une Bestiole K.O. avec la moitié de ses PV.', 'Revives a fainted Critter with half its HP.'),
   },
+  // ---------------------------------------------------------------- battle items (on the creature fighting)
+  {
+    id: 'attaque-plus', name: L('Attaque +', 'X Attack'), price: 500, kind: 'battle', amount: 0, boost: 'atk',
+    desc: L('Augmente l’Attaque de la Bestiole au combat. Ne dure que jusqu’à ce qu’elle revienne.', 'Raises the Attack of the Critter in battle. It wears off once it is withdrawn.'),
+  },
+  {
+    id: 'defense-plus', name: L('Défense +', 'X Defend'), price: 550, kind: 'battle', amount: 0, boost: 'def',
+    desc: L('Augmente la Défense de la Bestiole au combat.', 'Raises the Defense of the Critter in battle.'),
+  },
+  {
+    id: 'vitesse-plus', name: L('Vitesse +', 'X Speed'), price: 350, kind: 'battle', amount: 0, boost: 'spe',
+    desc: L('Augmente la Vitesse de la Bestiole au combat.', 'Raises the Speed of the Critter in battle.'),
+  },
+  {
+    id: 'special-plus', name: L('Spécial +', 'X Special'), price: 350, kind: 'battle', amount: 0, boost: 'spa',
+    desc: L('Augmente l’Attaque Spéciale de la Bestiole au combat.', 'Raises the Sp. Atk of the Critter in battle.'),
+  },
+  {
+    id: 'precision-plus', name: L('Précision +', 'X Accuracy'), price: 950, kind: 'battle', amount: 0, boost: 'acc',
+    desc: L('Augmente la Précision de la Bestiole au combat.', 'Raises the accuracy of the Critter in battle.'),
+  },
+  {
+    id: 'muscle-plus', name: L('Muscle +', 'Dire Hit'), price: 650, kind: 'battle', amount: 0, boost: 'crit',
+    desc: L('La Bestiole au combat porte plus souvent des coups critiques.', 'The Critter in battle lands critical hits more often.'),
+  },
+  {
+    id: 'defense-spec', name: L('Défense Spéc.', 'Guard Spec.'), price: 700, kind: 'battle', amount: 0, boost: 'mist',
+    desc: L('Pendant 5 tours, l’ennemi ne peut pas faire baisser les stats de ton équipe.', 'For 5 turns, the foe can’t lower your team’s stats.'),
+  },
   // ---------------------------------------------------------------- berries (a Bestiole can hold one)
   {
     id: 'baie-bleue', name: L('Baie Bleue', 'Blue Berry'), price: 0, kind: 'berry', amount: 10,
