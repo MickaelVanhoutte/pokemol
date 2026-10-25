@@ -138,7 +138,9 @@
 }
 .bpanel__prompt p { margin: 0; flex: 1; min-width: 0; }
 .bpanel__back { flex: none; font-size: 1rem; min-height: 0; padding: 0 6px; }
-.bpanel__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; }
+/* rows never grow past the fixed panel: at worst a button clips its own text */
+.bpanel__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 2px; }
+.bpanel__grid .pk-move { overflow: hidden; }
 .bpanel--learnAsk .bpanel__split { flex-direction: row; align-items: stretch; }
 .bpanel--learnAsk .bpanel__prompt { flex: 1; height: auto; }
 .bpanel__yesno { flex: none; display: flex; align-items: flex-end; }
@@ -183,12 +185,16 @@
 
 /* landscape phones: a lower panel so the scene keeps room (it stays a fixed height) */
 @media (orientation: landscape) and (max-height: 540px) {
-  .battle { --bp-h: clamp(112px, 33dvh, 200px); max-width: none; }
+  .battle { --bp-h: clamp(112px, 36dvh, 200px); max-width: none; }
   .pk-plat--foe { width: min(30vw, 34dvh, 230px); height: min(26vw, 30dvh, 200px); }
   .pk-plat--me { width: min(34vw, 40dvh, 260px); height: min(30vw, 36dvh, 230px); }
   .pk-hp { width: min(42%, 270px); }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
+  /* two rows of moves fit the low panel, even with large text */
+  .bpanel__grid .pk-move { border: 6px solid transparent; border-image: var(--pencil-frame) 14 / 6px round; padding: 0 6px 0 12px; }
+  .bpanel__grid .pk-move b { font-size: min(1.25rem, 6dvh); line-height: 1.1; }
+  .bpanel__grid .pk-move small { font-size: min(0.85rem, 4.2dvh); line-height: 1.1; }
   /* the speaker label goes in the corner so the text keeps its lines */
   .bpanel__text .textbox__speaker { position: absolute; top: 2px; left: auto; right: 8px; margin: 0; z-index: 1; }
 }
