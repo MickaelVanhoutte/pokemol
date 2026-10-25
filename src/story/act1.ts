@@ -205,7 +205,6 @@ scripts.boisRestore = async () => {
     L('Mais regarde… quand on bat leurs Bestioles grises, les couleurs reviennent !', 'But look… when you beat their grey Critters, the colours come back!'),
   ], RIVAL);
   await flash('white', 220);
-  setFlag('a1.bois');
   showToast(tr(L('Le bois retrouve ses couleurs !', 'The woods get their colours back!')));
   await sayAll([
     L('Wouah… Les arbres sont revenus ! On dirait un dessin qu’on vient de finir.', 'Whoa… The trees are back! It looks like a drawing that was just finished.'),

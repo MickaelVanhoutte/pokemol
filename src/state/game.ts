@@ -3,6 +3,7 @@ import { gender, locale, setGlobalVars } from '../i18n';
 import { healMon, noStats, type Mon } from '../engine/pk/creature';
 import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 import { BADGES } from '../data/badges';
+import { TRAINERS } from '../data/trainers';
 
 const KEY = 'atelier-bestioles.save';
 
@@ -38,12 +39,26 @@ export function migrate(raw: unknown): SaveData | null {
 }
 
 /**
- * Fills what newer versions added (v4: effort points, held items, leaders' capsules), so an old save
- * plays like a new one. Safe to run on every load.
+ * Fills what newer versions added (v4: effort points, held items, leaders' capsules, Town Map) and
+ * unsticks stories cut short by older versions, so an old save plays like a new one. Safe to run
+ * on every load.
  */
 export function repair(s: SaveData): SaveData {
   s.party.forEach(repairMon);
   s.box.forEach(repairMon);
+  // older versions saved a win before what it unlocks: closing the app during the cut-scene left
+  // the road blocked (a grunt in the woods, Zélie never freed…) or the badge missing
+  for (const t of Object.values(TRAINERS)) {
+    if (!s.flags[`tr:${t.id}`]) continue;
+    if (t.storyFlag) s.flags[t.storyFlag] ??= 1;
+    if (t.badge && !s.badges.includes(t.badge)) {
+      s.badges.push(t.badge);
+      s.flags[`badge:${t.badge}`] = 1;
+      s.badges.sort((a, b) => BADGES.findIndex((x) => x.id === a) - BADGES.findIndex((x) => x.id === b));
+    }
+  }
+  // the starter was given but the app closed during the lab battle
+  if (s.party.length && !s.flags.rival1) Object.assign(s.flags, { intro: 1, rival1: 1, dex: 1 });
   // Mom now hands out the Town Map at the start
   if (s.flags.intro && !s.bag.carte) s.bag.carte = 1;
   // capsules the Atelier Masters now give with their badge

@@ -29,7 +29,9 @@ describe('save migration', () => {
     expect(s.party[0].level).toBe(12);
     expect(s.bag.potion).toBe(2);
     expect(s.bag.carte).toBe(1);
-    expect(migrate(v3Save())!.bag.carte).toBeUndefined();
+    const beforeIntro = v3Save();
+    beforeIntro.party = [];
+    expect(migrate(beforeIntro)!.bag.carte).toBeUndefined();
   });
 
   it('still upgrades version 2 saves (creatures wait in the PC)', () => {
@@ -49,6 +51,26 @@ describe('save migration', () => {
     expect(s.bag.ct01).toBe(1);
     expect(s.bag.ct02).toBe(1);
     expect(s.bag.ct03).toBeUndefined();
+  });
+
+  it('unsticks a story cut short during an after-battle scene', () => {
+    const raw = v3Save({ intro: 1, rival1: 1, 'tr:gomme2': 1, 'tr:mireille': 1, 'tr:gaspard': 1, 'badge:gaspard': 0 });
+    raw.badges = ['plume'] as never[];
+    const s = migrate(raw)!;
+    expect(s.flags['a1.bois']).toBe(1);
+    expect(s.badges).toEqual(['pastel', 'plume']);
+    expect(s.flags['badge:pastel']).toBe(1);
+    expect(s.flags['a2.feutre']).toBeUndefined();
+  });
+
+  it('finishes the lab scene if the app closed during the first battle', () => {
+    const raw = v3Save({ intro: 1 });
+    const s = migrate(raw)!;
+    expect(s.flags.rival1).toBe(1);
+    expect(s.flags.dex).toBe(1);
+    const noStarter = v3Save({ intro: 1 });
+    noStarter.party = [];
+    expect(migrate(noStarter)!.flags.rival1).toBeUndefined();
   });
 
   it('refuses unknown data', () => {

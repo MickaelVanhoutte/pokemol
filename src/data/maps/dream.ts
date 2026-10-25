@@ -42,6 +42,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     name: L('Le Bord de la Page', 'The Edge of the Page'),
     border: 'erased',
     backdrop: 'sketch',
+    onEnter: 'bordPage',
     rows: [
       'eeeeeeeeeeeeeeee',
       '|nnnnnnnnnnnnnne',

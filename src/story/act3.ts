@@ -83,7 +83,6 @@ scripts.towerFreed = async () => {
     g.remove('blanche');
   }
   await flash('white', 260);
-  setFlag('a3.tour');
   showToast(tr(L('Les fantômes de la tour retrouvent leurs couleurs !', 'The tower ghosts get their colours back!')));
   await say(L('Hi hi hi ! Merci ! On peut de nouveau faire des grimaces à tout le monde !', 'Hee hee hee! Thank you! We can pull faces at everyone again!'), L('Fantômes', 'Ghosts'));
 };
@@ -148,7 +147,6 @@ scripts.usineEnd = async () => {
   ], EFFACEUR);
   await flash('white', 300);
   g.remove(boss.id);
-  setFlag('a3.usine');
   await say(L('(La brume blanche au nord de la Cité-Encre s’est levée.)', '(The white mist north of Ink City has lifted.)'));
 };
 
@@ -213,16 +211,27 @@ scripts.finalBoss = async () => {
   ], EFFACEUR);
   await flash('white', 300);
   if (boss) g.remove(boss.id);
+  await wakeUp();
+};
+
+/** The page turns white and you wake up at home. */
+async function wakeUp() {
   await say(L('La page se met à trembler… Tout devient blanc, de plus en plus blanc…', 'The page starts to tremble… Everything turns white, whiter and whiter…'));
   await getGame().fadeTo(1, 1200, 'white');
   if (save.value) save.value.player.returnTo = undefined;
   await warpTo({ map: 'chambre', x: 2, y: 3, facing: 'right' }, { keepFade: true });
+}
+
+/** The Great Eraser is beaten but the app closed before the ending: it starts again from here. */
+scripts.bordPage = async () => {
+  if (flag('tr:effaceur') && !flag('ending')) await wakeUp();
 };
 
 // ------------------------------------------------------------------ waking up
 
 scripts.ending = async () => {
-  if (flag('ending')) return;
+  // the app closed during the credits: the ending already counted, go home
+  if (flag('ending')) return backHome();
   const g = getGame();
   await wait(500);
   await say(L('… {name} ? Ma puce ?', '… {name}? Sweetie?'), PAPA);
@@ -241,13 +250,18 @@ scripts.ending = async () => {
   setFlag('ending');
   await openScreen({ id: 'credits', fromWorld: true });
   await g.fadeTo(1, 600, 'white');
+  await backHome();
+};
+
+/** After the credits: back to Papeterre, at home. */
+async function backHome() {
   update((d) => {
     healParty(d);
     d.respawn = { map: 'maison', x: 4, y: 5 };
   });
   await warpTo({ map: 'maison', x: 7, y: 2, facing: 'down' });
   await say(L('La nuit suivante, tu retournes à Papeterre… Les Bestioles t’attendaient !', 'The next night, you go back to Papeterra… The Critters were waiting for you!'));
-};
+}
 
 scripts.papa = async () => {
   await say(L('Allez, au lit. Demain, il y a plein de dessins à faire !', 'Come on, bedtime. Tomorrow there are lots of drawings to do!'), PAPA);

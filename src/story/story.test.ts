@@ -19,6 +19,7 @@ const source = [
 /** Flags some code sets: setFlag('x'), d.flags.x = …, d.flags['x'] = …, plus trainer wins and badges. */
 function flagIsSet(name: string): boolean {
   if (name.startsWith('tr:') && TRAINERS[name.slice(3)]) return true;
+  if (Object.values(TRAINERS).some((t) => t.storyFlag === name)) return true;
   if (name.startsWith('badge:')) return Object.values(TRAINERS).some((t) => t.badge === name.slice(6));
   if (name.startsWith('visit:')) return MAPS[name.slice(6)]?.onEnter === 'visitTown';
   if (name.startsWith('rematch:')) return !!TRAINERS[name.slice(8)]?.badge && source.includes('setFlag(`rematch:${id}`)');

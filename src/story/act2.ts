@@ -11,7 +11,6 @@ const ZELIE = L('Zélie', 'Zelie');
 /** Marine repaints Featherby's bridge: Watercolour Way becomes a shortcut. */
 scripts.marineAfter = async () => {
   await flash('white', 200);
-  setFlag('a2.bridge');
   showToast(tr(L('Le pont de Village-Plume est redessiné !', 'Featherby’s bridge has been redrawn!')));
 };
 
@@ -91,7 +90,6 @@ scripts.feutreRestore = async () => {
   }
   await say(L('(Les Sbires s’enfuient derrière leur chef.)', '(The grunts run off after their boss.)'), GRUNT);
   await flash('white', 300);
-  setFlag('a2.feutre');
   showToast(tr(L('Ville-Feutre retrouve ses couleurs !', 'Felt City gets its colours back!')));
   await sayAll([
     L('Tu m’as libérée ! Et regarde : toutes les couleurs s’envolent vers la ville !', 'You freed me! And look: all the colours are flying back to the city!'),
