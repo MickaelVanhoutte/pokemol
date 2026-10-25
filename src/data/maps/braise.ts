@@ -6,12 +6,13 @@ const FUSAIN_ENCOUNTERS = {
   rate: 0.09,
   anyTile: true,
   table: [
-    { id: '009', w: 26, min: 21, max: 24 },
-    { id: '008', w: 18, min: 22, max: 25 },
-    { id: '004', w: 18, min: 21, max: 24 },
-    { id: '013', w: 16, min: 21, max: 24 },
-    { id: '010', w: 8, min: 23, max: 25 },
-    { id: '007', w: 14, min: 21, max: 24 },
+    { id: '009', w: 26, min: 20, max: 23 },
+    { id: '008', w: 18, min: 21, max: 24 },
+    { id: '004', w: 18, min: 20, max: 23 },
+    { id: '013', w: 16, min: 20, max: 23 },
+    { id: '010', w: 8, min: 22, max: 24 },
+    { id: '007', w: 14, min: 20, max: 23 },
+    { id: '002', w: 4, min: 20, max: 22 },
   ],
 };
 

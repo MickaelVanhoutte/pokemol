@@ -49,7 +49,8 @@ function team(lv: number, size: number, gap = 3): Team {
   return [['S', lv], ...mates];
 }
 
-// [trainer id, player team] in story order
+// [trainer id, player team] in story order. Player levels follow a rough XP estimate: every trainer
+// beaten plus a handful of wild fights per route, the starter taking a bit over half the XP.
 const STEPS: [string, Team][] = [
   ['iris', [['S', 5]]],
   ['leo', [['S', 6]]],
@@ -61,11 +62,16 @@ const STEPS: [string, Team][] = [
   ['luna', team(11, 2)],
   ['gomme2', team(12, 2)],
   ['gaspard', team(14, 2)],
-  ['max', team(15, 3)],
-  ['marine', team(20, 3)],
-  ['rature', team(22, 4)],
-  ['zelie', team(24, 4)],
-  ['ambre', team(27, 4)],
+  ['max', team(14, 3)],
+  ['tom', team(16, 3)],
+  ['r3lise', team(17, 3)],
+  ['marine', team(18, 4)],
+  ['r4tim', team(19, 4)],
+  ['rature', team(21, 4)],
+  ['zelie', team(22, 5)],
+  ['mfErmite', team(24, 5)],
+  ['ambre', team(25, 5)],
+  ['ambre', [['S', 25], ['003', 22], ['013', 22], ['010', 22], ['004', 22]]],
   ['celestine', team(32, 5)],
   ['blanche', team(33, 6)],
   ['basile', team(36, 6)],

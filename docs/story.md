@@ -77,9 +77,9 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Atelier Pastel | L5–6 | Mireille L6/L8 |
 | Route 2, Bois Brumeux | L7–11 | — |
 | Atelier Plume | L11 | Gaspard L10/L10 |
-| Cave, Route 3 | L14–17 | Marine L18–20 |
-| Ville-Feutre | L19–22 | Rature L21–23, Zélie L23–25 |
-| Mont Fusain, Braise | L23–25 | Ambre L24–26 |
+| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15) | Marine L16–19 |
+| Route 4, Ville-Feutre | L17–21 | Rature L18–20, Zélie L22–24 |
+| Mont Fusain, Braise | L22–24 | Ambre L23–25 |
 | Paillette, Tour | L27–31 | Célestine L31–34, Blanche L30–31 (×4) |
 | Gouache, Encre, Factory | L31–38 | Basile L35–38, Nocturne L35–38 |
 | Finale | — | Rival L40–43 (6), Great Eraser L39–41 (5) |
@@ -106,6 +106,11 @@ Run `npm run balance` for the current numbers instead of trusting this table.
 Every trainer team goes through `partyOf`, including rematches and the final rival. The lab tutorial
 passes `'normal'` explicitly.
 
-**Known rough spot.** Act 1 now ends around L10–11, and the cave and Route 3 trainers start at L14–17.
-`npm run balance` shows Act 2 openers (Max, Marine, Rature) are hard for some starters. Smooth these
-next if players report it.
+**Act 2 ramp (Oct 2026).** Act 2 was lowered so it continues Act 1 without a jump. Route trainers sit
+2–4 levels below the expected starter level, and each leader's ace matches it. Mont Fusain and Ambre
+barely moved, so Act 3 (from Route 6, L27) is unchanged.
+- Each starter is also a rare wild find (weight 3–4): Minousse in the Bois Brumeux (L8–10), Clapotin
+  on Route 3 (L14–16), Braisou on Mont Fusain (L20–22). Every team can find a type counter (Minousse
+  against Ambre needs one), and the Bestiodex can be completed without Tombola luck.
+- Still tough on Normal: Camper Tom (three starters) for Braisou, and Ambre for a Minousse team
+  without a Water or Fire Bestiole.

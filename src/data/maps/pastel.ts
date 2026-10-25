@@ -182,6 +182,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         { id: '006', w: 12, min: 8, max: 10 },
         { id: '004', w: 8, min: 8, max: 10 },
         { id: '008', w: 4, min: 10, max: 11 },
+        { id: '001', w: 3, min: 8, max: 10 },
       ],
     },
   },
