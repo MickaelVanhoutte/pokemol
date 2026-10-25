@@ -161,6 +161,18 @@ export const CREATURES: SpeciesDef[] = [
       'It sings at sunrise, puffing up its brown feathers. With it around, who needs an alarm clock?',
     ),
   },
+  {
+    id: '014', slug: 'lamacorne', faces: 'right', name: L('Lamacorne', 'Llamacorn'), kind: L('Bestiole Arc-en-ciel', 'Rainbow Critter'),
+    type: 'psy', base: { hp: 65, atk: 55, def: 55, spa: 85, spd: 75, spe: 60 },
+    catchRate: 60, baseExp: 140, evYield: { spa: 2 }, wildItem: { id: 'crayon-mauve', pct: 5 }, rarity: 'rare',
+    stencils: ['pochoir-02', 'pochoir-06', 'pochoir-07', 'pochoir-09', 'pochoir-12'],
+    learnset: [[1, 'bousculade'], [1, 'fretillement'], [6, 'choc-mental'], [12, 'coup-de-boule'], [19, 'chanson-douce'],
+      [25, 'reve-eveille'], [32, 'eclat-de-lune'], [38, 'corne-arc-en-ciel']],
+    dex: L(
+      'Quand il est content, un petit arc-en-ciel jaillit de sa corne. La fleur de son flanc refleurit chaque printemps.',
+      'When it is happy, a little rainbow bursts from its horn. The flower on its side blooms again every spring.',
+    ),
+  },
 ];
 
 export const CREATURE_BY_ID: Record<string, SpeciesDef> = Object.fromEntries(CREATURES.map((c) => [c.id, c]));

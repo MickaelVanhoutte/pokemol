@@ -161,6 +161,9 @@ export const MOVES: MoveDef[] = [
   M({ id: 'choc-mental', name: L('Choc mental', 'Mind Jolt'), type: 'psy', cat: 'spec', power: 50, acc: 100, pp: 25,
     effects: [{ kind: 'confuse', chance: 10 }],
     desc: L('Une onde mentale. Peut rendre confus.', 'A mental wave. May confuse.') }),
+  M({ id: 'corne-arc-en-ciel', name: L('Corne arc-en-ciel', 'Rainbow Horn'), type: 'psy', cat: 'spec', power: 90, acc: 100, pp: 10,
+    effects: [{ kind: 'confuse', chance: 20 }],
+    desc: L('Un arc-en-ciel jaillit de la corne et éblouit l’ennemi. Peut rendre confus.', 'A rainbow bursts from the horn and dazzles the foe. May confuse.') }),
 
   // ---------------------------------------------------------------- spectre / tenebres
   M({ id: 'bouh', name: L('Bouh !', 'Boo!'), type: 'spectre', cat: 'spec', power: 40, acc: 100, pp: 30,

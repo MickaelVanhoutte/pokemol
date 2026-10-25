@@ -14,6 +14,8 @@ interface Entry {
   photo: string;
   box: [number, number, number, number];
   erase?: Point[][];
+  /** Photo points inside enclosed paper to make see-through. */
+  holes?: Point[];
   /** Resize factor applied to the crop before cutting (big phone photos: 0.5). */
   scale?: number;
   options?: Partial<CutoutOptions>;
@@ -41,7 +43,8 @@ for (const e of manifest.drawings) {
     .raw()
     .toBuffer({ resolveWithObject: true });
   const erase = (e.erase ?? []).map((poly) => poly.map(([x, y]) => [(x - x0) * k, (y - y0) * k] as Point));
-  const res = cutout({ data, width: info.width, height: info.height }, { ...e.options, erase });
+  const holes = (e.holes ?? []).map(([x, y]) => [(x - x0) * k, (y - y0) * k] as Point);
+  const res = cutout({ data, width: info.width, height: info.height }, { ...e.options, erase, holes });
   const png = await sharp(Buffer.from(res.data.buffer), { raw: { width: res.width, height: res.height, channels: 4 } })
     .resize({ width: MAX_SIDE, height: MAX_SIDE, fit: 'inside', withoutEnlargement: true })
     .png({ compressionLevel: 9, palette: false })

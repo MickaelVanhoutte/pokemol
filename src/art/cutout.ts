@@ -22,6 +22,8 @@ export interface CutoutOptions {
   saturate: number;
   /** Polygons (local coords) whose pixels are forced to background. */
   erase: Point[][];
+  /** Points (local coords) in paper the drawing encloses that should still be see-through (between a mane and a neck…). */
+  holes: Point[];
 }
 
 export const defaultCutoutOptions: CutoutOptions = {
@@ -33,6 +35,7 @@ export const defaultCutoutOptions: CutoutOptions = {
   feather: 1,
   saturate: 1.2,
   erase: [],
+  holes: [],
 };
 
 export interface Rgba {
@@ -255,6 +258,10 @@ export function cutout(img: Rgba, opts: Partial<CutoutOptions> = {}): CutoutResu
   const seed = (i: number) => { if (!ink[i] && !outside[i]) { outside[i] = 1; stack.push(i); } };
   for (let x = 0; x < w; x++) { seed(x); seed((h - 1) * w + x); }
   for (let y = 0; y < h; y++) { seed(y * w); seed(y * w + w - 1); }
+  for (const [hx, hy] of o.holes) {
+    const x = Math.round(hx), y = Math.round(hy);
+    if (x >= 0 && y >= 0 && x < w && y < h) seed(y * w + x);
+  }
   while (stack.length) {
     const i = stack.pop()!;
     const x = i % w, y = (i - x) / w;

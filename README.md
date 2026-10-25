@@ -53,6 +53,8 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
    { "id": "012", "slug": "mon-nom", "photo": "photo.jpeg", "box": [100, 200, 900, 1100] }
    ```
    If a neighbour drawing touches it, add `"erase": [[[x, y], [x, y], [x, y], ...]]` polygons (photo pixels).
+   Paper the drawing closes in (between a mane and a neck, say) stays white: add
+   `"holes": [[x, y], ...]`, one photo point inside each such area, to make it see-through.
    Tweak `"options": { "inkLum": 0.8, "inkChroma": 0.11 }` if pale colours disappear.
    Big phone photos: add `"scale": 0.5`. Beige paper or yellow lamp light: add `"paperChroma": 0.26` to `options`.
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
