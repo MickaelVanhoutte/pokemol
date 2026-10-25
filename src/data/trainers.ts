@@ -5,6 +5,8 @@ import { prefs, type Difficulty } from '../state/prefs';
 export interface TrainerMon {
   species: string;
   level: number;
+  /** Held item (berries are eaten in battle, like the GBA games' stronger trainers). */
+  item?: string;
 }
 
 export interface TrainerDef {
@@ -43,7 +45,7 @@ export function trainerLevel(level: number, difficulty: Difficulty): number {
 export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty): Mon[] {
   const iv = DIFFICULTY[difficulty].iv;
   const ivs = { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv };
-  return list.map((t, i) => createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs));
+  return list.map((t, i) => ({ ...createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs), item: t.item ?? null }));
 }
 
 export function trainerParty(t: TrainerDef, seed: number): Mon[] {
@@ -272,7 +274,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'zelie', name: L('Maître d’Atelier Zélie', 'Atelier Master Zelie'), money: 2400, badge: 'fluo',
-    party: [{ species: '004', level: 22 }, { species: '005', level: 22 }, { species: '004', level: 24 }],
+    party: [{ species: '004', level: 22 }, { species: '005', level: 22 }, { species: '004', level: 24, item: 'baie-bleue' }],
     before: [
       L('Merci d’avoir rendu ses couleurs à ma ville ! Maintenant… on va voir si tu brilles autant que mes feutres fluo !', 'Thanks for giving my city its colours back! Now… let’s see if you shine as bright as my neon markers!'),
     ],
@@ -310,7 +312,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise',
-    party: [{ species: '002', level: 24 }, { species: '008', level: 23 }, { species: '002', level: 25 }],
+    party: [{ species: '002', level: 24 }, { species: '008', level: 23 }, { species: '002', level: 25, item: 'baie-bleue' }],
     before: [
       L('Tu as monté le Mont Fusain jusqu’ici ? Courageux. Mais ici, ça chauffe !', 'You climbed all of Mount Charcoal? Brave. But here, things heat up!'),
     ],
@@ -373,7 +375,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'celestine', name: L('Maître d’Atelier Célestine', 'Atelier Master Celestine'), money: 3200, badge: 'paillette',
-    party: [{ species: '006', level: 31 }, { species: '005', level: 32 }, { species: '006', level: 34 }],
+    party: [{ species: '006', level: 31 }, { species: '005', level: 32, item: 'baie-reveil' }, { species: '006', level: 34, item: 'baie-doree' }],
     before: [L('Bienvenue dans mon atelier étoilé ! Chaque paillette ici est un vœu. Voyons si le tien est le plus fort !', 'Welcome to my starry atelier! Every speck of glitter here is a wish. Let’s see if yours is the strongest!')],
     after: [
       L('Ton vœu brille plus que tous les miens. Voici le Badge Paillette !', 'Your wish shines brighter than all of mine. Here is the Glitter Badge!'),
@@ -424,7 +426,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache',
-    party: [{ species: '007', level: 35 }, { species: '001', level: 36 }, { species: '001', level: 38 }],
+    party: [{ species: '007', level: 35, item: 'baie-menthe' }, { species: '001', level: 36 }, { species: '001', level: 38, item: 'baie-doree' }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),
@@ -501,7 +503,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   // ---------------------------------------------------------------- the end of the page
   T({
     id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true,
-    party: [{ species: '008', level: 41 }, { species: '007', level: 40 }, { species: '004', level: 41 }, { species: '010', level: 41 }, { species: '011', level: 39 }],
+    party: [{ species: '008', level: 41 }, { species: '007', level: 40 }, { species: '004', level: 41 }, { species: '010', level: 41 }, { species: '011', level: 39, item: 'baie-doree' }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
   }),

@@ -144,7 +144,7 @@ excluded from `tsc`).
   See [docs/testing.md](docs/testing.md).
 - Shared interiors: one `centre` (Healing Center) and one `boutique` (shop) map serve every town
   (`generic: true`). Their exits warp `to: 'back'`, which uses `player.returnTo`. Per-town NPCs use
-  `fromMap`. The shop sells every non-key item; `AFTER_BADGE` items appear after the first badge.
+  `fromMap`. The shop sells the `STOCK` list in `ShopScreen.tsx`, each item after a number of badges.
 - Sideways drawings set `faces: 'left' | 'right'`. Battle sprites are mirrored so ours looks right and
   the foe looks left.
 - The pencilize pass skips pure black (`#000`, the void around interiors).

@@ -115,6 +115,23 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       if (e.amount) lines.push(f(L('{n} récupère {x} PV.', '{n} recovered {x} HP.'), { n: mine(e.target), x: e.amount }));
       return lines;
     }
+    case 'berry': {
+      const lines = [f(L('{n} mange sa {i} !', '{n} ate its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
+      if (e.amount) lines.push(f(L('{n} récupère des PV !', '{n} regained health!'), { n: nm(e.side) }));
+      if (e.cured === 'confusion') lines.push(f(L('{n} n’est plus confus !', '{n} snapped out of confusion!'), { n: nm(e.side) }));
+      else if (e.cured) {
+        const t = {
+          sleep: L('{n} se réveille !', '{n} woke up!'),
+          paralyze: L('{n} n’est plus paralysé !', '{n} is no longer paralyzed!'),
+          poison: L('{n} n’est plus empoisonné !', '{n} is cured of its poison!'),
+          burn: L('{n} n’est plus brûlé !', '{n}’s burn was healed!'),
+        }[e.cured];
+        lines.push(f(t, { n: nm(e.side) }));
+      }
+      return lines;
+    }
+    case 'regen':
+      return [f(L('{n} grignote son {i} et récupère des PV.', '{n} restored a little HP using its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
     case 'ball':
       return e.caught
         ? [f(L('Hop ! {n} est attrapé !', 'Gotcha! {n} was caught!'), { n: tr(creature(st.sides[1].party[st.sides[1].active].species).name) })]
@@ -139,6 +156,7 @@ export function eventDuration(e: BattleEvent): number {
     case 'ball': return 900 + e.shakes * 650;
     case 'faint': return 1000;
     case 'xp': return 1100;
+    case 'berry': return 1400;
     case 'levelUp': return 1300;
     case 'sendOut': return 1000;
     case 'drain': return 300;

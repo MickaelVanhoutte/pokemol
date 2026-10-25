@@ -4,11 +4,15 @@ import { addItem, save, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { ShopView } from '../views/ShopView';
 
-const AFTER_BADGE = ['super-crayon-ball', 'super-potion', 'rappel'];
+/** What every shop sells, and how many badges each item needs. */
+const STOCK: Record<string, number> = {
+  'crayon-ball': 0, potion: 0, retouche: 0,
+  'super-crayon-ball': 1, 'super-potion': 1, rappel: 1,
+};
 
 export function ShopScreen() {
   const d = save.value!;
-  const stock = ITEMS.filter((it) => it.kind !== 'key' && (!AFTER_BADGE.includes(it.id) || d.badges.length > 0));
+  const stock = ITEMS.filter((it) => it.id in STOCK && d.badges.length >= STOCK[it.id]);
   return (
     <ShopView
       money={d.money}

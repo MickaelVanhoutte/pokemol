@@ -164,7 +164,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
       { x: 8, y: 29, to: { map: 'bourg', x: 10, y: 1, facing: 'down' } },
     ],
     triggers: [{ x: 7, y: 27, w: 2, h: 1, script: 'route1Gomme', if: 'rival1', unless: 'a1.r1seen' }],
-    items: [{ x: 14, y: 9, item: 'potion' }, { x: 1, y: 1, item: 'crayon-ball', count: 2 }, { x: 1, y: 17, item: 'page-2', hidden: true }],
+    items: [{ x: 14, y: 9, item: 'potion' }, { x: 1, y: 1, item: 'crayon-ball', count: 2 }, { x: 1, y: 17, item: 'page-2', hidden: true }, { x: 14, y: 5, item: 'baie-bleue' }],
     signs: [
       { x: 2, y: 5, text: L('↑ VILLE-PASTEL', '↑ PASTEL CITY') },
       { x: 12, y: 27, text: L('CHEMIN DES CRAYONS\n↓ Bourg-Gribouille   ↑ Ville-Pastel', 'CRAYON ROAD\n↓ Scribbleton   ↑ Pastel City') },
@@ -175,6 +175,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
       { id: 'gardener', x: 12, y: 4, look: LOOKS.granny, facing: 'left', showIf: 'rival1', hideIf: 'badge:pastel',
         text: [L('Un drôle de type en gris est passé avec une gomme géante… et pouf ! Mes hautes herbes ont disparu !', 'A strange fellow in grey came by with a giant eraser… and poof! My tall grass vanished!'), L('Il parlait d’un « Grand Effaceur »… Brr.', 'He talked about a “Great Eraser”… Brr.')] },
     ],
+    berries: [{ x: 12, y: 5, item: 'baie-bleue' }, { x: 3, y: 21, item: 'baie-cerise' }],
     encounters: {
       rate: 0.13,
       table: [

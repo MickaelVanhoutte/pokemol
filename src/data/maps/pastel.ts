@@ -118,6 +118,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'ninon', x: 14, y: 9, look: LOOKS.girl, facing: 'up', trainer: 'ninon', sight: 2 },
     ],
     items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }],
+    berries: [{ x: 19, y: 9, item: 'baie-peche' }],
     encounters: {
       rate: 0.13,
       table: [
@@ -159,7 +160,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     // the grunts rub out the woods; beating them brings the trees back
     patches: [{ id: 'boisErased', x: 8, y: 1, rows: ['eeee?eeee', 'eeee?eeee'], unless: 'a1.bois' }],
     buildings: [{ kind: 'tower', x: 2, y: 1, w: 4, h: 5, door: 1, script: 'gateTour' }],
-    items: [{ x: 18, y: 12, item: 'crayon-ball', count: 3 }, { x: 1, y: 14, item: 'super-potion' }, { x: 1, y: 13, item: 'page-4', hidden: true }],
+    items: [{ x: 18, y: 12, item: 'crayon-ball', count: 3 }, { x: 1, y: 14, item: 'super-potion' }, { x: 1, y: 13, item: 'page-4', hidden: true }, { x: 20, y: 4, item: 'baie-cerise' }],
     warps: [
       { x: 21, y: 7, to: { map: 'route2', x: 1, y: 6, facing: 'right' } },
       { x: 21, y: 8, to: { map: 'route2', x: 1, y: 7, facing: 'right' } },
@@ -171,6 +172,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'gomme1', x: 10, y: 9, look: LOOKS.gomme, facing: 'down', trainer: 'gomme1', sight: 3 },
       { id: 'gomme2', x: 18, y: 1, look: LOOKS.gommeF, facing: 'down', trainer: 'gomme2', sight: 4, hideIf: 'a1.bois' },
     ],
+    berries: [{ x: 7, y: 12, item: 'baie-reveil' }],
     encounters: {
       rate: 0.14,
       table: [

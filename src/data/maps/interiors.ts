@@ -25,6 +25,8 @@ export const INTERIOR_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'nurse', x: 5, y: 1, look: LOOKS.nurse, facing: 'down', script: 'nurse' },
       { id: 'pilot', x: 9, y: 4, look: { hair: '#c0582a', shirt: '#f2c14e', pants: '#5a3a20', hat: '#d64545' }, facing: 'left', script: 'balloon' },
+      // Prof. Fusain's aide gives the Tracing Paper (shares XP), then goes back to the lab
+      { id: 'aide', x: 2, y: 6, look: { hair: '#3a2a1a', shirt: '#ffffff', pants: '#4a4a5a', coat: true }, facing: 'right', script: 'calqueAide', showIf: 'dex', hideIf: 'gift:calque' },
       { id: 'visitor', x: 1, y: 4, look: LOOKS.sailor, facing: 'right', text: [L('Le PC dans le coin range tes Bestioles quand tu en as plus de six.', 'The PC in the corner stores your Critters when you have more than six.')] },
     ],
   },

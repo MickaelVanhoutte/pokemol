@@ -46,6 +46,8 @@
 .pslot__info { flex: 1; min-width: 0; width: 100%; display: flex; flex-direction: column; gap: 1px; }
 .pslot__info b { font-weight: 400; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pslot__lv { font-size: 0.9rem; display: flex; gap: 4px; align-items: center; }
+.pslot__held { display: inline-flex; margin-left: auto; }
+.pslot__held .picon { image-rendering: pixelated; }
 .pslot__hp { font-size: 0.85rem; text-align: right; }
 .party__foot { flex: none; display: flex; gap: 6px; align-items: stretch; }
 .party__msg { flex: 1; min-width: 0; font-size: 1rem; display: flex; align-items: center; min-height: 3.2em; }
@@ -75,6 +77,8 @@
 .summary__name { font-weight: 400; font-size: 1.5rem; }
 .summary__page { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .summary__box { font-size: 1.1rem; }
+.summary__held { display: inline-flex; align-items: center; gap: 4px; }
+.summary__held .picon { image-rendering: pixelated; }
 .summary__dex { margin: 6px 0 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.95rem; line-height: 1.4; }
 .summary__hp { display: flex; align-items: center; gap: 6px; }
 .summary__hp .hpbar { flex: 1; }

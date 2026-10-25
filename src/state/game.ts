@@ -211,3 +211,20 @@ export function takeItem(s: SaveData, id: string, n = 1): boolean {
   if (s.bag[id] <= 0) delete s.bag[id];
   return true;
 }
+
+/** The creature holds `id` from the bag; what it held goes back to the bag. False if the bag has none. */
+export function giveHeld(s: SaveData, m: Mon, id: string): boolean {
+  if (!takeItem(s, id)) return false;
+  if (m.item) addItem(s, m.item);
+  m.item = id;
+  return true;
+}
+
+/** Puts the creature's held item back in the bag. Returns it (null if it held nothing). */
+export function takeHeld(s: SaveData, m: Mon): string | null {
+  const id = m.item;
+  if (!id) return null;
+  addItem(s, id);
+  m.item = null;
+  return id;
+}

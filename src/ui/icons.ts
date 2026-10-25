@@ -32,7 +32,66 @@ function ball(p: Painter, top: string, shade: string, stripe?: string) {
   p.px(5, 2, PAL.W);
 }
 
+/** A round berry with a leaf: light and dark tone of its colour. */
+function berry(p: Painter, light: string, dark: string) {
+  for (let y = 4; y < 16; y++) {
+    for (let x = 1; x < 15; x++) {
+      const d = Math.hypot(x - 7.5, y - 9.5);
+      if (d > 6) continue;
+      p.px(x, y, d > 5 ? PAL.K : x + y > 19 ? dark : light);
+    }
+  }
+  p.px(5, 7, PAL.W);
+  p.px(4, 8, PAL.W);
+  // stem and leaf
+  p.rect(7, 2, 1, 3, PAL.K);
+  p.rect(8, 1, 3, 1, PAL.K);
+  p.rect(8, 2, 4, 1, PAL.E);
+  p.rect(9, 3, 2, 1, PAL.e);
+}
+
+/** Items painted in code (berries, tinted items). */
+const PAINTED: Record<string, (p: Painter) => void> = {
+  'baie-bleue': (p) => berry(p, PAL.B, PAL.b),
+  'baie-doree': (p) => berry(p, PAL.Y, PAL.y),
+  'baie-cerise': (p) => berry(p, PAL.R, PAL.r),
+  'baie-reveil': (p) => berry(p, PAL.p, PAL.P),
+  'baie-peche': (p) => berry(p, PAL.S, PAL.O),
+  'baie-givree': (p) => berry(p, '#bfeaf2', PAL.T),
+  'baie-menthe': (p) => berry(p, '#9fe09a', PAL.e),
+  'baie-prisme': (p) => berry(p, PAL.M, PAL.P),
+};
+
 const ROWS: Record<string, string[]> = {
+  gouter: [
+    '................',
+    '.....KKKKKK.....',
+    '...KKnnnnnnKK...',
+    '..KnnNnnnnnnnK..',
+    '..KnnnnnnNnnnK..',
+    '.KnnnnnnnnnnnnK.',
+    '.KnNnnnnnnnnNnK.',
+    '.KnnnnnNnnnnnnK.',
+    '.KnnnnnnnnnnnnK.',
+    '..KnnNnnnnnNnK..',
+    '..KnnnnnNnnnnK..',
+    '...KKnnnnnnKK...',
+    '.....KKKKKK.....',
+  ],
+  'papier-calque': [
+    '..KKKKKKKKKK....',
+    '..KggggggggKK...',
+    '..KgggggggggKK..',
+    '..KgBBBggggggK..',
+    '..KgBgBggggggK..',
+    '..KgBBBggggggK..',
+    '..KggggBBBBggK..',
+    '..KggggggggBgK..',
+    '..KgggggggggBK..',
+    '..KggBBBBBBBBK..',
+    '..KggggggggggK..',
+    '..KKKKKKKKKKKK..',
+  ],
   potion: [
     '......KKKK......',
     '......KggK......',
@@ -197,13 +256,14 @@ const cache = new Map<string, string>();
 
 /** Icon of an item or a menu entry (unknown ids get the torn page). */
 export function iconUrl(id: string): string {
-  const key = ROWS[id] || ['crayon-ball', 'super-crayon-ball', 'party'].includes(id) ? id : id.startsWith('page') ? 'page' : 'page';
+  const key = ROWS[id] || PAINTED[id] || ['crayon-ball', 'super-crayon-ball', 'party'].includes(id) ? id : 'page';
   const hit = cache.get(key);
   if (hit) return hit;
   const c = makeCanvas(16, 16);
   const p = new Painter(c.getContext('2d')!);
   if (key === 'crayon-ball' || key === 'party') ball(p, PAL.Y, PAL.y);
   else if (key === 'super-crayon-ball') ball(p, PAL.B, PAL.b, PAL.R);
+  else if (PAINTED[key]) PAINTED[key](p);
   else {
     const rows = ROWS[key];
     p.at(0, Math.floor((16 - rows.length) / 2)).sprite(rows, PAL);

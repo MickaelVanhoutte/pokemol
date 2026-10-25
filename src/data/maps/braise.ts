@@ -81,7 +81,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { x: 9, y: 11, to: { map: 'braise', x: 9, y: 14, facing: 'up' } },
     ],
     npcs: [{ id: 'mfErmite', x: 12, y: 5, look: { hair: '#e8e8f0', shirt: '#3a3448', pants: '#2a2238', hat: '#5a5470' }, facing: 'left', trainer: 'mfErmite', sight: 4 }],
-    items: [{ x: 1, y: 7, item: 'rappel' }],
+    items: [{ x: 1, y: 7, item: 'rappel' }, { x: 16, y: 7, item: 'gouter', hidden: true }],
     encounters: FUSAIN_ENCOUNTERS,
   },
 

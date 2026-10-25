@@ -1,6 +1,6 @@
 import { L } from '../i18n';
 import { healParty, save, update } from '../state/game';
-import { ask, flag, getGame, openScreen, say, scripts, setFlag, wait } from '../overworld/controller';
+import { ask, flag, getGame, giveItem, openScreen, say, scripts, setFlag, wait } from '../overworld/controller';
 import { NURSE } from './cast';
 
 /** Healing Center (shared by every town). */
@@ -22,6 +22,21 @@ scripts.nurse = async () => {
     setFlag('visitedCenter');
     await say(L('Le PC dans le coin te permet de ranger tes Bestioles quand tu en as plus de six.', 'The PC in the corner stores your Critters when you have more than six.'), NURSE);
   }
+};
+
+/** Prof. Fusain's aide: the Tracing Paper (shares XP) once 3 kinds of Bestioles are caught. */
+scripts.calqueAide = async () => {
+  const AIDE = L('Assistant du Prof.', 'Prof’s Aide');
+  const n = save.value!.dex.caught.length;
+  if (n < 3) {
+    await say(L('Je travaille avec le Prof. Fusain. Attrape au moins 3 sortes de Bestioles, et j’aurai un cadeau pour toi ! (Tu en as {n}.)', 'I work with Prof. Fusain. Catch at least 3 kinds of Critters and I’ll have a present for you! (You have {n}.)'), AIDE, { n });
+    return;
+  }
+  await say(L('Déjà {n} sortes de Bestioles ! Le Prof. m’a confié ceci pour toi.', '{n} kinds of Critters already! The Prof. asked me to give you this.'), AIDE, { n });
+  giveItem('papier-calque');
+  setFlag('gift:calque');
+  await say(L('{name} reçoit le Papier Calque !', '{name} received the Tracing Paper!'));
+  await say(L('Fais-le tenir à une Bestiole (menu BESTIOLES, OBJET) : elle gagnera la moitié de l’expérience de chaque combat, même sans se battre !', 'Have a Critter hold it (CRITTERS menu, ITEM): it gets half the experience of every battle, even without fighting!'), AIDE);
 };
 
 scripts.clerk = async () => {

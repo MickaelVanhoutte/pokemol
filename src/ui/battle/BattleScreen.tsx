@@ -111,7 +111,7 @@ export function BattleScreen(props: BattleProps) {
       case 'damage': if (e.amount) { pulse(e.side, 'hit', 600); sfx.hit(); } break;
       case 'confusedHit': case 'recoil': pulse(e.side, 'hit', 600); sfx.hit(); break;
       case 'faint': pulse(e.side, 'faint', 2000); sfx.ko(); break;
-      case 'heal': case 'useItem': sfx.heal(); break;
+      case 'heal': case 'useItem': case 'berry': case 'regen': sfx.heal(); break;
       case 'levelUp': sfx.levelUp(); break;
       case 'status': pulse(e.side, 'status', 700); break;
       case 'ball':

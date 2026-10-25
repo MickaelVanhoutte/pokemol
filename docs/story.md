@@ -114,3 +114,9 @@ barely moved, so Act 3 (from Route 6, L27) is unchanged.
   against Ambre needs one), and the Bestiodex can be completed without Tombola luck.
 - Still tough on Normal: Camper Tom (three starters) for Braisou, and Ambre for a Minousse team
   without a Water or Fire Bestiole.
+
+**Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
+Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
+includes them; each was kept only if the leader's row stayed within about 10 points of the version
+without items (Nocturne's and the second Admin Rature's were removed for that reason). Players have
+berries, the Tracing Paper and battle items of their own, which the simulation doesn't use.

@@ -17,6 +17,8 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `tr:<trainerId>` | `trainerBattle()` on a win | Trainer beaten (NPC trainers stop battling; also used as a story gate) |
 | `badge:<badgeId>` | `trainerBattle()` for leaders | Badge owned (also pushed to `save.badges`) |
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
+| `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
+| `gift:calque` | Prof. Fusain's aide (Healing Center) | Tracing Paper given |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
@@ -49,6 +51,9 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
 - `signs`, `triggers` (an area that runs a script when stepped on), `interact` (A on a tile runs a
   script).
 - `items`: pick-ups. `hidden: true` is invisible and found with A (used for the sketchbook pages).
+  Pick-ups are solid: put them on dead ends or open ground so they never block a path.
+- `berries`: `{ x, y, item }` bushes on a `B` (bush) tile next to a walkable one; A gives 1–3 berries
+  once per local day (`src/overworld/berries.ts`).
 - `encounters`: `{ rate, table: [{ id, w, min, max }] }`, where `w` is the weight. Add
   `anyTile: true` in caves.
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
@@ -121,10 +126,16 @@ Scripts run one at a time and lock player input. To change an existing script af
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.
   Add the matching text in `src/ui/battle/messages.ts` if a new event appears.
 - **Types**: the chart is in `src/data/types.ts` (attacker → defender multipliers).
-- **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key'`. Key items
-  (pages, golden ticket) go in the OBJETS RARES pocket and are never sold. The shop sells everything
-  else; `AFTER_BADGE` in `ShopScreen.tsx` holds items back until the first badge. Item icons are
-  pixel art in `src/ui/icons.ts`.
+- **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold'`.
+  Key items (pages, golden ticket) go in the OBJETS RARES pocket and are never sold.
+  - `berry`: a Bestiole holding it eats it in battle as soon as it helps (`amount` HP at half HP or
+    less, or a status in `cures`); berries can also be eaten from the bag. They have their own pocket.
+  - `hold`: works while held; `hold` names the effect run by `src/engine/pk/battle.ts`
+    (`regen`: 1/16 HP each turn, `shareXp`: half the XP without fighting).
+  - Any non-key item can be held (party ITEM menu or bag GIVE). Trainer parties can give an `item`,
+    and species a `wildItem` (`{ id, pct }`) that wild ones sometimes carry.
+  - The shop sells the list in `STOCK` (`ShopScreen.tsx`), each item after a number of badges.
+  - Item icons are pixel art in `src/ui/icons.ts` (`ROWS`, or a painter in `PAINTED`).
 
 ## UI
 

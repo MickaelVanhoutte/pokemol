@@ -66,6 +66,14 @@ describe('maps', () => {
         }
       });
 
+      it('puts berry bushes on bushes you can stand next to', () => {
+        for (const b of map.berries ?? []) {
+          expect(map.rows[b.y]?.[b.x], `bush ${b.x},${b.y}`).toBe('B');
+          expect(ITEM_BY_ID[b.item]?.kind, b.item).toBe('berry');
+          expect([[0, 1], [1, 0], [0, -1], [-1, 0]].some(([dx, dy]) => walkable(map, b.x + dx, b.y + dy, false)), `reach ${b.x},${b.y}`).toBe(true);
+        }
+      });
+
       it('keeps patches inside the map with known tiles', () => {
         for (const p of map.patches ?? []) {
           p.rows.forEach((r, dy) => {
