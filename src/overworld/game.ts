@@ -33,6 +33,8 @@ export interface Actor {
   homeY: number;
   wanderIn: number;
   resolveMove?: () => void;
+  /** Time (ms) left over from the step that just ended, so the next step continues smoothly. */
+  carry?: number;
 }
 
 export interface LoadedMap {
@@ -148,6 +150,8 @@ export class Game {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   input = new Input();
+  /** Holding B runs only once the player owns running shoes. */
+  canRun: () => boolean = () => true;
   map!: LoadedMap;
   npcs: Actor[] = [];
   pickups: PickupDef[] = [];
@@ -255,7 +259,7 @@ export class Game {
   // ------------------------------------------------------------ movement
 
   /** Starts a one-tile move (or ledge jump). Returns false when blocked. */
-  tryMove(a: Actor, dir: Dir, ms = a === this.player ? (this.input.run ? RUN_MS : WALK_MS) : a.ms): boolean {
+  tryMove(a: Actor, dir: Dir, ms = a === this.player ? (this.input.run && this.canRun() ? RUN_MS : WALK_MS) : a.ms): boolean {
     a.dir = dir;
     const [dx, dy] = DIRS[dir];
     let nx = a.x + dx, ny = a.y + dy;
@@ -273,8 +277,11 @@ export class Game {
     a.y = ny;
     a.moving = true;
     a.jumping = jumping;
-    a.t = 0;
     a.ms = jumping ? ms * 2 : ms;
+    // a step chained right after another starts where the last frame's leftover time puts it:
+    // dropping it made the player stand still for a frame on every tile
+    a.t = Math.min(0.5, (a.carry ?? 0) / a.ms);
+    a.carry = 0;
     a.step++;
     return true;
   }
@@ -283,11 +290,13 @@ export class Game {
   async walk(a: Actor, dirs: Dir[], ms = WALK_MS * 1.2) {
     for (const d of dirs) {
       let tries = 0;
+      let moved = true;
       while (!this.tryMove(a, d, ms)) {
-        if (++tries > 40) break;
+        // still blocked after 4 s: skip that step rather than wait forever for it
+        if (++tries > 40) { moved = false; break; }
         await new Promise((r) => setTimeout(r, 100));
       }
-      await new Promise<void>((r) => (a.resolveMove = r));
+      if (moved) await new Promise<void>((r) => (a.resolveMove = r));
     }
   }
 
@@ -309,6 +318,7 @@ export class Game {
     if (!a.moving) return false;
     a.t += dt / a.ms;
     if (a.t >= 1) {
+      a.carry = (a.t - 1) * a.ms;
       a.t = 0;
       a.moving = false;
       a.jumping = false;
@@ -328,6 +338,8 @@ export class Game {
     }
     this.rustle = this.rustle.filter((r) => (r.t += dt) < 260);
     const p = this.player;
+    // leftover time only carries into a step that starts in this same frame
+    p.carry = 0;
     const finished = this.updateActor(p, dt);
     if (finished) {
       if (tile(this.tileAt(p.x, p.y)).encounter) this.rustle.push({ x: p.x, y: p.y, t: 0 });
@@ -335,6 +347,7 @@ export class Game {
       if (stop) this.input.clear();
     }
     for (const n of this.npcs) {
+      n.carry = 0;
       this.updateActor(n, dt);
       if (n.npc?.wander && !n.moving && this.lock === 0) {
         n.wanderIn -= dt;

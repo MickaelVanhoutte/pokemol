@@ -13,7 +13,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
-- Deeper battles, GBA style: IVs and effort points, with a judge in the summary (STATS > JUGER);
+- Deeper battles, GBA style: 25 natures (+10% / −10%), IVs graded E to S next to each stat in the
+  summary, effort points;
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the
   Painter’s Apron, the Spiky Helmet, the Steadfast Ribbon and more, and a coloured pencil for every
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
@@ -41,7 +42,8 @@ npm run balance    # simulated trainer fights along the story (win rate per star
 More for contributors (and coding agents): [CLAUDE.md](CLAUDE.md), [docs/story.md](docs/story.md),
 [docs/content.md](docs/content.md), [docs/testing.md](docs/testing.md).
 
-Controls: arrows/WASD to move, Z/Enter/Space = A, X/Shift = B (hold to run), Esc/M = menu.
+Controls: arrows/WASD to move, Z/Enter/Space = A, X/Shift = B (hold to run once Mom gives you the
+Zip Sneakers), Esc/M = menu. The game saves when you choose SAUVER (auto-save is an option).
 On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap = A.
 
 ## Add a new drawing

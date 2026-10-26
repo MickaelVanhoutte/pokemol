@@ -65,7 +65,9 @@ re-renders everything.
 
 **State.**
 - `src/state/game.ts`: the `save` signal (`SaveData` v4 from `src/save/schema.ts`, localStorage key
-  `atelier-bestioles.save`). `update(fn)` mutates and persists it. `migrate` and `migrateV2` load older
+  `atelier-bestioles.save`). `update(fn)` mutates it; it is written to storage only by SAUVER in the
+  start menu (`persist()`), or after every change when the player turned on the auto-save option
+  (`autosave()`, off by default, GBA style). `migrate` and `migrateV2` load older
   saves (v2 parties go to the PC); `repair()` then fills in what newer versions added (it runs on every
   load, so it must stay idempotent). Changing the save shape means bumping `SAVE_VERSION`, adding a
   migration or repair step and a test (`src/state/game.test.ts`).

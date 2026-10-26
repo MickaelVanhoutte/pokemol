@@ -160,7 +160,7 @@ const JOY_R = 44;
 
 /**
  * Floating joystick: touching anywhere on the map makes it appear under the finger.
- * Drag to walk, drag far to run, a quick tap is the A button (talk, read, next line).
+ * Drag to walk (hold B with the other thumb to run), a quick tap is the A button (talk, read, next line).
  * While a question waits for an answer, each push moves the choice cursor instead.
  */
 function useJoystick() {
@@ -183,7 +183,6 @@ function useJoystick() {
     const c = cur.current;
     if (!c || c.id !== e.pointerId) return;
     setDir(null);
-    getGame().input.run = false;
     // a tap is A (in a question: picks the choice under the cursor)
     if (!c.moved && performance.now() - c.t < 350) {
       key('z', true);
@@ -209,7 +208,6 @@ function useJoystick() {
       const k = Math.min(1, JOY_R / Math.max(dist, 1));
       setJoy({ x: c.x, y: c.y, kx: dx * k, ky: dy * k });
       setDir(dist < 14 ? null : Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up');
-      getGame().input.run = dist > JOY_R * 1.6;
     },
     onPointerUp: end,
     onPointerCancel: end,

@@ -1,43 +1,39 @@
 import { useState } from 'preact/hooks';
-import { L, tr, type LText } from '../../i18n';
+import { L, locale, tr } from '../../i18n';
 import { artUrl, creature } from '../../data/creatures';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
-import { HpBar, MenuList, PixelIcon, StatusTag, TextBox, TypeBadge, Window, XpBar, YesNo, lv } from '../paper';
+import { HpBar, MenuList, PixelIcon, StatusTag, TypeBadge, Window, XpBar, YesNo, lv } from '../paper';
 import { item } from '../../data/items';
-import { judge } from '../../engine/pk/judge';
+import { ivGrade } from '../../engine/pk/judge';
+import { nature } from '../../data/natures';
+import type { StatKey } from '../../data/schema';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
 
 type Page = 0 | 1 | 2;
 const PAGES = [L('INFOS', 'INFO'), L('STATS', 'SKILLS'), L('CAPACITÉS', 'MOVES')];
 
-const POTENTIAL: LText[] = [
-  L('Globalement, son potentiel est correct.', 'Overall, its potential is decent.'),
-  L('Globalement, son potentiel est au-dessus de la moyenne.', 'Overall, its potential is above average.'),
-  L('Globalement, son potentiel est vraiment remarquable.', 'Overall, its potential is relatively superior.'),
-  L('Globalement, son potentiel est exceptionnel !', 'Overall, its potential is outstanding!'),
-];
-const RATING: LText[] = [
-  L('C’est plutôt correct.', 'That stat is rather decent.'),
-  L('C’est très bon !', 'It’s very good!'),
-  L('C’est fantastique !', 'It’s fantastic!'),
-  L('On ne peut pas faire mieux !', 'It can’t be any better!'),
-];
-
-/** What the judge says about the IVs (the qualities a creature was born with). */
-function verdictText(mon: Mon): string {
-  const v = judge(mon);
-  const names = v.best.map((k) => tr(STAT_NAMES[k]));
-  const and = tr(L(' et ', ' and '));
-  const best = names.length > 1 ? `${names.slice(0, -1).join(', ')}${and}${names[names.length - 1]}` : names[0];
-  return [
-    tr(POTENTIAL[v.potential]),
-    tr(names.length > 1 ? L('Ses meilleures qualités : {s}.', 'Its best qualities: {s}.') : L('Sa meilleure qualité : {s}.', 'Its best quality: {s}.'), { s: best }),
-    tr(RATING[v.bestRating]),
-  ].join(' ');
+/** Letter for what the Bestiole was born with in a stat (E to S). */
+function Grade({ mon, k }: { mon: Mon; k: StatKey }) {
+  const g = ivGrade(mon.ivs[k]);
+  return <i class={`grade grade--${g}`} title={tr(L('Qualité de naissance', 'Born quality'))}>{g}</i>;
 }
+
+/** ▲ / ▼ when the nature raises or lowers the stat. */
+function NatureMark({ mon, k }: { mon: Mon; k: StatKey }) {
+  const n = nature(mon.nature);
+  if (k === n.up) return <i class="nat nat--up" aria-label="+10%">▲</i>;
+  if (k === n.down) return <i class="nat nat--down" aria-label="−10%">▼</i>;
+  return null;
+}
+
+/** « Nature rêveuse » / "Dreamy nature". */
+const natureLabel = (mon: Mon) => {
+  const name = tr(nature(mon.nature).name);
+  return locale.value === 'fr' ? `Nature ${name.toLowerCase()}` : `${name} nature`;
+};
 
 /**
  * FRLG summary: INFOS / STATS / CAPACITÉS. With `learn`, opens on the moves page with the new
@@ -49,12 +45,11 @@ export function SummaryView({ mon, onClose, learn }: {
   const [page, setPage] = useState<Page>(learn ? 2 : 0);
   const [sel, setSel] = useState<number | null>(null);
   const [confirm, setConfirm] = useState<number | null>(null);
-  const [judging, setJudging] = useState(false);
   const sp = creature(mon.species);
   const color = TYPES[sp.type].color;
   const turn = (d: 1 | -1) => !learn && setPage((p) => (((p + d + 3) % 3) as Page));
   useMenuNav(0, {
-    active: confirm === null && !judging,
+    active: confirm === null,
     onSelect: () => undefined,
     onCancel: () => (learn ? setConfirm(4) : onClose()),
   });
@@ -96,6 +91,7 @@ export function SummaryView({ mon, onClose, learn }: {
               <dt>{tr(L('N° Dex', 'Dex No.'))}</dt><dd>{sp.id}</dd>
               <dt>{tr(L('Espèce', 'Kind'))}</dt><dd>{tr(sp.kind)}</dd>
               <dt>{tr(L('Type', 'Type'))}</dt><dd><TypeBadge type={sp.type} /></dd>
+              <dt>{tr(L('Nature', 'Nature'))}</dt><dd>{tr(nature(mon.nature).name)}</dd>
               <dt>{tr(L('Objet tenu', 'Item'))}</dt>
               <dd class="summary__held">{mon.item ? <><PixelIcon id={mon.item} size={18} /> {tr(item(mon.item).name)}</> : tr(L('Aucun', 'None'))}</dd>
               {sp.evolvesTo && sp.evolveLevel && (
@@ -111,15 +107,19 @@ export function SummaryView({ mon, onClose, learn }: {
               <span class="hp-label">{tr(L('PV', 'HP'))}</span>
               <HpBar hp={mon.hp} max={maxHp(mon)} />
               <span>{mon.hp}/{maxHp(mon)}</span>
+              <Grade mon={mon} k="hp" />
             </div>
             <dl class="kv kv--stats">
               {(['atk', 'def', 'spa', 'spd', 'spe'] as const).map((k) => (
-                <><dt>{tr(STAT_NAMES[k])}</dt><dd>{stats[k]}</dd></>
+                <><dt>{tr(STAT_NAMES[k])} <NatureMark mon={mon} k={k} /></dt><dd>{stats[k]} <Grade mon={mon} k={k} /></dd></>
               ))}
               <dt>{tr(L('Points Exp.', 'Exp. Points'))}</dt><dd>{mon.xp}</dd>
               <dt>{tr(L('Niveau suivant', 'Next Lv.'))}</dt><dd>{toNext || '—'}</dd>
             </dl>
             <div class="summary__xp"><span>EXP</span><XpBar pct={xpPct} /></div>
+            <p class="summary__legend">
+              {natureLabel(mon)}{nature(mon.nature).up ? ' ▲▼' : ''} · {tr(L('E → S : qualités de naissance', 'E → S: born qualities'))}
+            </p>
           </Window>
         )}
         {page === 2 && (
@@ -157,15 +157,8 @@ export function SummaryView({ mon, onClose, learn }: {
       </div>
 
       <div class="frame__foot summary__foot">
-        {page === 1 && !learn && <button class="pbtn" onClick={() => setJudging(true)}>{tr(L('Juger', 'Judge'))}</button>}
         <button class="pbtn pbtn--b" onClick={() => (learn ? setConfirm(4) : onClose())}>{tr(L('Retour', 'Back'))}</button>
       </div>
-
-      {judging && (
-        <div class="view-modal">
-          <TextBox class="view-modal__text" speaker={tr(L('Juge', 'Judge'))} text={verdictText(mon)} keys onAdvance={() => setJudging(false)} />
-        </div>
-      )}
 
       {learn && confirm !== null && (
         <div class="view-modal">

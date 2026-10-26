@@ -29,8 +29,30 @@ export function HpBar({ hp, max }: { hp: number; max: number }) {
   );
 }
 
-export function XpBar({ pct }: { pct: number }) {
-  return <span class="xpbar"><span style={{ width: `${Math.max(0, Math.min(100, pct))}%` }} /></span>;
+const XP_FILL_MS = 700;
+
+/**
+ * Experience bar. Given the `level`, a level-up fills the bar to the end, empties it at once and
+ * fills it again to the new amount, instead of sliding backwards.
+ */
+export function XpBar({ pct, level }: { pct: number; level?: number }) {
+  const target = Math.max(0, Math.min(100, pct));
+  const [bar, setBar] = useState({ pct: target, level, instant: true });
+  useEffect(() => {
+    if (level === undefined || bar.level === undefined || level <= bar.level) {
+      setBar({ pct: target, level, instant: level !== undefined && bar.level !== undefined && level < bar.level });
+      return;
+    }
+    setBar({ pct: 100, level: bar.level, instant: false });
+    const t1 = setTimeout(() => setBar({ pct: 0, level, instant: true }), XP_FILL_MS);
+    const t2 = setTimeout(() => setBar({ pct: target, level, instant: false }), XP_FILL_MS + 50);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [target, level]);
+  return (
+    <span class="xpbar">
+      <span style={{ width: `${bar.pct}%`, transition: bar.instant ? 'none' : `width ${XP_FILL_MS}ms ease` }} />
+    </span>
+  );
 }
 
 export function StatusTag({ s }: { s: NonNullable<Mon['status']> }) {

@@ -3,6 +3,7 @@ import { creature, STARTERS } from '../data/creatures';
 import { partyOf, RIVAL_COUNTER } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
+import type { Dir } from '../save/schema';
 import { healParty, save, update } from '../state/game';
 import {
   bubble, fight, flag, flash, getGame, giveItem, giveMon, say, sayAll, scripts, setFlag, showMons, showToast, wait,
@@ -137,8 +138,15 @@ scripts.labTable = async () => {
   if (out.result === 'win') await say(L('Quoi ?! J’ai perdu… C’était de la chance !', 'What?! I lost… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);
   await say(L('Je vais devenir le meilleur dresseur de Papeterre ! Salut !', 'I’ll become the greatest trainer in Papeterra! Bye!'), RIVAL);
-  if (rival) {
-    await g.walk(rival, ['down', 'down', 'down', 'down'], 170);
+  // the map's characters are rebuilt after a battle: walk the rival that is on screen now
+  const leaving = g.npc('rival');
+  if (leaving) {
+    // down to the last row, along it to the door (5, 9), and out
+    const path: Dir[] = [];
+    for (let y = leaving.y; y < 8; y++) path.push('down');
+    for (let x = leaving.x; x !== 5; x += x < 5 ? 1 : -1) path.push(x < 5 ? 'right' : 'left');
+    path.push('down');
+    await g.walk(leaving, path, 170);
     g.remove('rival');
   }
   setFlag('rival1');
@@ -165,6 +173,32 @@ scripts.labTable = async () => {
 };
 
 // ------------------------------------------------------------------ on the road
+
+/** Leaving town after the lab: Mom runs out of the house with running shoes. */
+scripts.momShoes = async () => {
+  const g = getGame();
+  const { x: px, y: py } = g.player;
+  await bubble('player', '!', 600);
+  await say(L('{name} ! Attends une seconde !', '{name}! Wait a second!'), MOM);
+  const mom = g.spawn('momRun', LOOKS.mom, 3, 6, 'right');
+  g.face(g.player, 'down');
+  const ups = Math.max(0, 6 - (py + 1));
+  await g.walk(mom, [...Array(px - 3).fill('right'), ...Array(ups).fill('up')], 150);
+  g.faceToward(mom, g.player);
+  await sayAll([
+    L('Ouf ! Le Prof. Fusain m’a dit que tu partais à l’aventure avec ta première Bestiole !', 'Phew! Prof. Charcoal told me you’re off on an adventure with your first Critter!'),
+    L('Tiens, je t’ai dessiné des baskets. Avec ça, tu iras aussi vite que le vent !', 'Here, I drew you some sneakers. With these, you’ll be as fast as the wind!'),
+  ], MOM);
+  giveItem('baskets');
+  await say(L('{name} reçoit les Baskets-Éclair !', '{name} received the Zip Sneakers!'));
+  setFlag('shoes');
+  await sayAll([
+    L('Maintiens le bouton B en marchant pour courir. Sur un écran tactile, garde un doigt sur B pendant que l’autre glisse !', 'Hold the B button while walking to run. On a touch screen, keep one finger on B while the other one slides!'),
+    L('Sois {g:prudente|prudent}, mange bien… et reviens me voir de temps en temps. Bonne chance, mon cœur !', 'Be careful, eat well… and come and see me now and then. Good luck, sweetheart!'),
+  ], MOM);
+  await g.walk(mom, [...Array(ups).fill('down'), ...Array(px - 3).fill('left')], 150);
+  g.remove(mom.id);
+};
 
 scripts.route1Gomme = async () => {
   setFlag('a1.r1seen');

@@ -85,6 +85,18 @@
 .summary__hp .hpbar { flex: 1; }
 .summary__xp { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 0.9rem; }
 .summary__xp .xpbar { flex: 1; height: 6px; }
+/* born quality letters (IVs) and nature arrows */
+.grade { display: inline-grid; place-items: center; min-width: 1.25em; height: 1.25em; margin-left: 4px; border-radius: 4px; font-style: normal; font-size: 0.85em; line-height: 1; color: #fff; background: #8a8496; vertical-align: 1px; }
+.grade--S { background: #d9a520; box-shadow: 0 0 0 1.5px #fff3c4 inset; }
+.grade--A { background: #3fae4e; }
+.grade--B { background: #3a8ad6; }
+.grade--C { background: #8a8496; }
+.grade--D { background: #d9822b; }
+.grade--E { background: #c0392b; }
+.nat { font-style: normal; font-size: 0.75em; vertical-align: 1px; }
+.nat--up { color: #c0392b; }
+.nat--down { color: #3a6ad6; }
+.summary__legend { margin: 6px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
 .summary__hint { margin: 0; color: var(--cursor); font-size: 1.1rem; }
 .summary__moves .mlist__item { font-size: 1.1rem; }
 .summary__detail { font-size: 1rem; }

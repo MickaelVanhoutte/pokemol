@@ -3,9 +3,9 @@ import { createMon } from '../engine/pk/creature';
 import { SAVE_VERSION } from '../save/schema';
 import { migrate } from './game';
 
-/** A creature as saved by version 3 (no effort points, no held item). */
+/** A creature as saved by version 3 (no effort points, no held item, no nature). */
 function oldMon(species: string, level: number) {
-  const { evs: _evs, item: _item, ...m } = createMon(species, level, { rng: 3 });
+  const { evs: _evs, item: _item, nature: _nature, ...m } = createMon(species, level, { rng: 3 });
   return m;
 }
 
@@ -76,5 +76,23 @@ describe('save migration', () => {
   it('refuses unknown data', () => {
     expect(migrate({ version: 1 })).toBeNull();
     expect(migrate('nope')).toBeNull();
+  });
+});
+
+describe('natures and running shoes in older saves', () => {
+  it('gives older Bestioles a fixed nature', () => {
+    const raw = v3Save({ intro: 1 });
+    const a = migrate(structuredClone(raw))!;
+    const b = migrate(structuredClone(raw))!;
+    expect(a.party[0].nature).toBeTruthy();
+    expect(a.party[0].nature).toBe(b.party[0].nature);
+  });
+
+  it('hands the Zip Sneakers to players already past Bourg-Gribouille', () => {
+    const away = migrate(v3Save({ intro: 1, rival1: 1 }))!;
+    expect(away.bag.baskets).toBe(1);
+    expect(away.flags.shoes).toBe(1);
+    const atHome = migrate({ ...v3Save({ intro: 1, rival1: 1 }), player: { ...v3Save().player, map: 'bourg' } })!;
+    expect(atHome.bag.baskets).toBeUndefined();
   });
 });

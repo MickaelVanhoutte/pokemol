@@ -128,6 +128,12 @@ Scripts run one at a time and lock player input. To change an existing script af
 
 ## Creatures, moves, items
 
+- **Natures** (`src/data/natures.ts`): 25 kid-like personalities. Twenty raise one stat by 10% and
+  lower another by 10%, and five change nothing. `calcStat` applies them in tenths, so rounding is
+  exact. New Bestioles draw one at random. Trainers' Bestioles use the neutral `joyeuse`, so their
+  battles stay the same. Bestioles from older saves get a fixed one from their uid.
+  French names agree with « une nature » (feminine).
+
 - **New drawing**: follow README "Add a new drawing". It covers the photo in `img-source/`, the
   manifest entry, `npm run cards -- <id>`, checking `tools/out/contact-sheet.png`, then adding the
   creature to `src/data/creatures.ts`. For a creature that evolves, set `evolvesTo` and `evolveLevel`

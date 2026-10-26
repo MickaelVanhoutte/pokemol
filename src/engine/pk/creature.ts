@@ -1,5 +1,6 @@
 import { creature } from '../../data/creatures';
 import { move } from '../../data/moves';
+import { NATURES, natureTenths } from '../../data/natures';
 import type { Major, StatKey, Stats } from '../../data/schema';
 import { randomInt } from '../rng';
 
@@ -18,6 +19,8 @@ export interface Mon {
   ivs: Stats;
   /** Effort points from beaten creatures (Gen 3: 255 per stat, 510 in all). */
   evs: Stats;
+  /** Personality id (src/data/natures.ts): +10% to one stat, −10% to another. */
+  nature: string;
   /** Held item id (berries are eaten in battle). */
   item: string | null;
   hp: number;
@@ -39,16 +42,19 @@ export const EV_STAT_MAX = 255;
 export const EV_TOTAL_MAX = 510;
 export const noStats = (): Stats => ({ hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 });
 
-/** Gen 3 stat formula (no natures): every 4 effort points add one point at level 100. */
-export function calcStat(key: StatKey, base: number, iv: number, ev: number, level: number): number {
+/**
+ * Gen 3 stat formula: every 4 effort points add one point at level 100, and the nature multiplies
+ * the other stats by 1.1 or 0.9 (`tenths`: 11, 9 or 10, kept in integers so rounding is exact).
+ */
+export function calcStat(key: StatKey, base: number, iv: number, ev: number, level: number, tenths = 10): number {
   const core = Math.floor(((2 * base + iv + Math.floor(ev / 4)) * level) / 100);
-  return key === 'hp' ? core + level + 10 : core + 5;
+  return key === 'hp' ? core + level + 10 : Math.floor(((core + 5) * tenths) / 10);
 }
 
 export function statsOf(m: Mon): Stats {
   const sp = creature(m.species);
   const out = {} as Stats;
-  for (const k of STAT_KEYS) out[k] = calcStat(k, sp.base[k], m.ivs[k], m.evs[k], m.level);
+  for (const k of STAT_KEYS) out[k] = calcStat(k, sp.base[k], m.ivs[k], m.evs[k], m.level, natureTenths(m.nature, k));
   return out;
 }
 
@@ -77,6 +83,7 @@ export function createMon(speciesId: string, level: number, st: { rng: number },
   for (const k of STAT_KEYS) iv[k] = ivs?.[k] ?? randomInt(st, 32);
   const m: Mon = {
     uid: newUid(st),
+    nature: NATURES[randomInt(st, NATURES.length)].id,
     species: speciesId,
     level,
     xp: xpAt(level),

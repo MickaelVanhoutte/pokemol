@@ -1,9 +1,11 @@
 import { effect, signal } from '@preact/signals';
 import { gender, locale, setGlobalVars } from '../i18n';
 import { healMon, noStats, type Mon } from '../engine/pk/creature';
+import { natureFromUid } from '../data/natures';
 import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
+import { prefs } from './prefs';
 
 const KEY = 'atelier-bestioles.save';
 
@@ -61,6 +63,11 @@ export function repair(s: SaveData): SaveData {
   if (s.party.length && !s.flags.rival1) Object.assign(s.flags, { intro: 1, rival1: 1, dex: 1 });
   // Mom now hands out the Town Map at the start
   if (s.flags.intro && !s.bag.carte) s.bag.carte = 1;
+  // and the running shoes when you leave town: players already past it get them directly
+  if (s.flags.rival1 && !s.flags.shoes && !['bourg', 'labo', 'maison', 'maisonRival'].includes(s.player.map)) {
+    s.bag.baskets = 1;
+    s.flags.shoes = 1;
+  }
   // stencils the Atelier Masters now give with their badge
   for (const b of BADGES) if (b.stencil && s.badges.includes(b.id) && !s.bag[b.stencil]) s.bag[b.stencil] = 1;
   return s;
@@ -69,6 +76,8 @@ export function repair(s: SaveData): SaveData {
 function repairMon(m: Mon) {
   m.evs ??= noStats();
   m.item ??= null;
+  // natures came later: older Bestioles get a fixed one from their id
+  m.nature ??= natureFromUid(m.uid);
 }
 
 interface V2Save {
@@ -124,13 +133,18 @@ export function persist() {
   }
 }
 
-/** Mutates a copy of the save, publishes it and writes it to storage. */
+/** Writes the save only if the player turned auto-save on; otherwise SAUVER in the menu does it. */
+export function autosave() {
+  if (prefs.value.autosave) persist();
+}
+
+/** Mutates a copy of the save and publishes it (written to storage only with auto-save). */
 export function update(fn: (s: SaveData) => void) {
   if (!save.value) return;
   const next = structuredClone(save.value);
   fn(next);
   save.value = next;
-  persist();
+  autosave();
 }
 
 export function deleteSave() {
@@ -148,7 +162,8 @@ function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: s
     version: SAVE_VERSION,
     createdAt: Date.now(),
     playMs: 0,
-    player: { name, avatar, gender, map: 'maison', x: 7, y: 2, facing: 'down' },
+    // you wake up next to your bed
+    player: { name, avatar, gender, map: 'maison', x: 6, y: 4, facing: 'down' },
     rivalName,
     respawn: { map: 'maison', x: 4, y: 5 },
     flags: {},
@@ -166,7 +181,8 @@ export function newGame(name: string, avatar: number, gender: 'f' | 'm', rivalNa
   const s = freshSave(name, avatar, gender, rivalName);
   save.value = s;
   outdatedSave.value = false;
-  persist();
+  // like the GBA games, a new adventure only replaces the old save once the player saves
+  autosave();
   try {
     navigator.storage?.persist?.();
   } catch {

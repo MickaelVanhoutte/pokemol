@@ -9,7 +9,7 @@ import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
 import { createMon, evolutionOf, evolve, learnMove, type Mon } from '../engine/pk/creature';
-import { addItem, addMon, healParty, partyAlive, persist, save, see, takeItem, update } from '../state/game';
+import { addItem, addMon, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
@@ -38,7 +38,10 @@ export function showToast(msg: string) {
 }
 
 export function getGame(): Game {
-  if (!game) game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true) });
+  if (!game) {
+    game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true) });
+    game.canRun = () => !!save.value?.bag.baskets;
+  }
   return game;
 }
 
@@ -110,7 +113,7 @@ function savePosition() {
   save.value.player.x = g.player.x;
   save.value.player.y = g.player.y;
   save.value.player.facing = g.player.dir;
-  persist();
+  autosave();
 }
 
 /** Resolves 'back' (leaving a shared interior) to the door the player came in by. */

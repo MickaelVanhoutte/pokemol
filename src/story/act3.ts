@@ -259,7 +259,7 @@ async function backHome() {
     healParty(d);
     d.respawn = { map: 'maison', x: 4, y: 5 };
   });
-  await warpTo({ map: 'maison', x: 7, y: 2, facing: 'down' });
+  await warpTo({ map: 'maison', x: 6, y: 4, facing: 'down' });
   await say(L('La nuit suivante, tu retournes à Papeterre… Les Bestioles t’attendaient !', 'The next night, you go back to Papeterra… The Critters were waiting for you!'));
 }
 

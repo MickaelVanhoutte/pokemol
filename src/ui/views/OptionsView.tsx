@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, locale, setLocale, tr, type LText } from '../../i18n';
 import { prefs, setPref } from '../../state/prefs';
-import { deleteSave, exportSave, hasSave, importSave, loadSave, save } from '../../state/game';
+import { deleteSave, exportSave, hasSave, importSave, loadSave, persist, save } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { stopMusic } from '../../audio/music';
 import { checkForUpdate, install, installWay, offlineReady, pwaActive, updateReady } from '../../state/pwa';
@@ -41,6 +41,13 @@ const ROWS: Row<unknown>[] = [
     values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
     get: () => prefs.value.music,
     set: (v) => { setPref('music', v as boolean); if (!v) stopMusic(); },
+  },
+  {
+    label: L('SAUVEGARDE AUTO', 'AUTO-SAVE'),
+    values: [{ v: false, label: L('NON', 'OFF') }, { v: true, label: L('OUI', 'ON') }],
+    get: () => prefs.value.autosave,
+    // turning it on saves right away
+    set: (v) => { setPref('autosave', v as boolean); if (v) persist(); },
   },
   {
     label: L('LANGUE', 'LANGUAGE'),
@@ -109,7 +116,11 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
               {confirmDel ? tr(L('Vraiment effacer ?', 'Really delete?')) : tr(L('Effacer', 'Delete'))}
             </button>
           )}
-          {inGame && onTitle && <button class="pbtn" onClick={onTitle}>{tr(L('Écran titre', 'Title screen'))}</button>}
+          {inGame && onTitle && (
+            <button class="pbtn" onClick={onTitle}>
+              {prefs.value.autosave ? tr(L('Écran titre', 'Title screen')) : tr(L('Quitter sans sauver', 'Quit without saving'))}
+            </button>
+          )}
         </div>
         {msg && <p class="opts__msg">{msg}</p>}
       </Window>

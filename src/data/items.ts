@@ -182,6 +182,10 @@ export const ITEMS: ItemDef[] = [
   },
   ...STENCIL_MOVES.map(stencil),
   {
+    id: 'baskets', name: L('Baskets-Éclair', 'Zip Sneakers'), price: 0, kind: 'key', amount: 0,
+    desc: L('Des baskets dessinées au feutre rouge, avec un éclair sur le côté. Maintiens B pour courir !', 'Sneakers drawn in red felt-tip, with a lightning bolt on the side. Hold B to run!'),
+  },
+  {
     id: 'carte', name: L('Carte de Papeterre', 'Papeterra Map'), price: 0, kind: 'key', amount: 0,
     desc: L('Toute la région dessinée sur une feuille. Choisis LIRE pour voir où tu es et où aller ensuite.', 'The whole region drawn on one sheet. Choose READ to see where you are and where to go next.'),
   },

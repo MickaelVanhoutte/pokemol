@@ -1,22 +1,42 @@
 import { describe, expect, it } from 'vitest';
-import { createMon } from './creature';
-import { judge } from './judge';
+import { ivGrade } from './judge';
+import { calcStat, createMon, statsOf } from './creature';
+import { NATURES, nature, natureFromUid, natureTenths } from '../../data/natures';
 
-const withIvs = (hp: number, atk: number, def: number, spa: number, spd: number, spe: number) =>
-  createMon('001', 10, { rng: 1 }, { hp, atk, def, spa, spd, spe });
+describe('IV grades', () => {
+  it('turns each IV into a letter from E to S', () => {
+    expect([0, 5, 6, 11, 12, 17, 18, 23, 24, 29, 30, 31].map(ivGrade).join('')).toBe('EEDDCCBBAASS');
+  });
+});
 
-describe('IV judge', () => {
-  it('rates the overall potential in four bands', () => {
-    expect(judge(withIvs(15, 15, 15, 15, 15, 15)).potential).toBe(0);
-    expect(judge(withIvs(16, 15, 15, 15, 15, 15)).potential).toBe(1);
-    expect(judge(withIvs(25, 25, 25, 25, 25, 25)).potential).toBe(2);
-    expect(judge(withIvs(31, 31, 31, 31, 31, 31))).toMatchObject({ total: 186, potential: 3 });
+describe('natures', () => {
+  it('has 25 natures: 20 raise one stat and lower another, 5 change nothing', () => {
+    expect(NATURES).toHaveLength(25);
+    expect(new Set(NATURES.map((n) => n.id)).size).toBe(25);
+    const moving = NATURES.filter((n) => n.up);
+    expect(moving).toHaveLength(20);
+    expect(moving.every((n) => n.down && n.down !== n.up)).toBe(true);
+    expect(new Set(moving.map((n) => `${n.up}>${n.down}`)).size).toBe(20);
   });
 
-  it('names every best stat and rates it', () => {
-    expect(judge(withIvs(3, 31, 0, 31, 2, 1))).toMatchObject({ best: ['atk', 'spa'], bestRating: 3 });
-    expect(judge(withIvs(15, 0, 0, 0, 0, 0))).toMatchObject({ best: ['hp'], bestRating: 0 });
-    expect(judge(withIvs(0, 0, 0, 0, 0, 16)).bestRating).toBe(1);
-    expect(judge(withIvs(0, 0, 30, 0, 0, 0)).bestRating).toBe(2);
+  it('multiplies the raised stat by 1.1 and the lowered one by 0.9, never HP', () => {
+    expect(calcStat('atk', 52, 31, 0, 50, 11)).toBe(Math.floor((Math.floor(((104 + 31) * 50) / 100) + 5) * 1.1));
+    expect(calcStat('atk', 52, 31, 0, 50, 9)).toBe(Math.floor((Math.floor(((104 + 31) * 50) / 100) + 5) * 0.9));
+    expect(natureTenths('reveuse', 'spa')).toBe(11);
+    expect(natureTenths('reveuse', 'atk')).toBe(9);
+    expect(natureTenths('reveuse', 'hp')).toBe(10);
+    const m = createMon('001', 30, { rng: 4 });
+    const neutral = statsOf({ ...m, nature: 'joyeuse' });
+    const dreamy = statsOf({ ...m, nature: 'reveuse' });
+    expect(dreamy.hp).toBe(neutral.hp);
+    expect(dreamy.spa).toBeGreaterThan(neutral.spa);
+    expect(dreamy.atk).toBeLessThan(neutral.atk);
+    expect(dreamy.def).toBe(neutral.def);
+  });
+
+  it('gives every new Bestiole a nature, and old ones a fixed one', () => {
+    const m = createMon('013', 5, { rng: 9 });
+    expect(nature(m.nature).id).toBe(m.nature);
+    expect(natureFromUid('abc-1-x')).toBe(natureFromUid('abc-1-x'));
   });
 });

@@ -1,4 +1,4 @@
-import { persist } from '../../state/game';
+import { autosave } from '../../state/game';
 import { go, type Screen } from '../../state/router';
 import { OptionsView } from '../views/OptionsView';
 
@@ -8,7 +8,7 @@ export function SettingsScreen({ back }: { back: Screen }) {
     <OptionsView
       inGame={inGame}
       onClose={() => go(back)}
-      onTitle={() => { persist(); go({ id: 'title' }); }}
+      onTitle={() => { autosave(); go({ id: 'title' }); }}
     />
   );
 }

@@ -1,6 +1,7 @@
 import { L, type LText } from '../i18n';
 import { createMon, type Mon } from '../engine/pk/creature';
 import { prefs, type Difficulty } from '../state/prefs';
+import { NEUTRAL_NATURE } from './natures';
 
 export interface TrainerMon {
   species: string;
@@ -50,7 +51,7 @@ export function trainerLevel(level: number, difficulty: Difficulty): number {
 export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty): Mon[] {
   const iv = DIFFICULTY[difficulty].iv;
   const ivs = { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv };
-  return list.map((t, i) => ({ ...createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs), item: t.item ?? null }));
+  return list.map((t, i) => ({ ...createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs), item: t.item ?? null, nature: NEUTRAL_NATURE }));
 }
 
 export function trainerParty(t: TrainerDef, seed: number): Mon[] {

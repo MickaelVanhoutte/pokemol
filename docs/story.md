@@ -49,6 +49,10 @@ they are used.
 | 14 | `routeBlanche`, `bordPage` (Le Bord de la Page) | Half-drawn world: final rival battle, then the Great Eraser with the choice | `tr:rivalFinal`, `tr:effaceur` |
 | 15 | `chambre` | The real bedroom, Papa, the drawings on the desk, credits | `ending` |
 
+**Running shoes.** Heading north out of Bourg-Gribouille after the lab (`momShoes`, trigger at the
+town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).
+Holding B runs only once you own them. Older saves already past Bourg get them in `repair()`.
+
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
 Healing Center flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
 `src/data/worldmap.ts`).

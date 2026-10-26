@@ -26,7 +26,7 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
       {side === 0 && (
         <>
           <div class="pk-hp__num">{m.hp}/{max}</div>
-          <XpBar pct={xpPct} />
+          <XpBar key={m.uid} pct={xpPct} level={m.level} />
         </>
       )}
     </div>

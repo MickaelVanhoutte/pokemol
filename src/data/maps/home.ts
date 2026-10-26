@@ -80,7 +80,10 @@ export const HOME_MAPS: Record<string, MapDef> = {
       { x: 9, y: 0, to: { map: 'route1', x: 7, y: 28, facing: 'up' } },
       { x: 10, y: 0, to: { map: 'route1', x: 8, y: 28, facing: 'up' } },
     ],
-    triggers: [{ x: 9, y: 1, w: 2, h: 1, script: 'profStops', unless: 'rival1' }],
+    triggers: [
+      { x: 9, y: 1, w: 2, h: 1, script: 'profStops', unless: 'rival1' },
+      { x: 9, y: 1, w: 2, h: 2, script: 'momShoes', if: 'rival1', unless: 'shoes' },
+    ],
     signs: [{ x: 3, y: 8, text: L('BOURG-GRIBOUILLE\nLà où tout commence au crayon.', 'SCRIBBLETON\nWhere everything starts with a pencil.') }],
     npcs: [
       { id: 'kid1', x: 7, y: 4, look: LOOKS.kid, facing: 'down', wander: true, text: [L('Tu as vu le ciel ? Il y a des lignes dedans, comme sur un cahier d’école !', 'Have you seen the sky? It has lines in it, like a school notebook!')] },
