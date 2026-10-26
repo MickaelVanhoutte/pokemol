@@ -310,6 +310,22 @@ Trainers using them:
 
 These Team Gomme fights went from about 55–97% to 53–92% on Normal.
 
+**Smoothed stats (iteration 8).** Base-stat totals follow bands, and catch rates and base XP follow each family's gen-1 model:
+- 3-stage lines: about 310 / 410 / 515;
+- 2-stage lines: about 310 / 480;
+- standalones: 470–515;
+- Ombrouille: 580.
+
+The new brouillons' baby forms went down from 395–460 to 285–325; Papivole went up from 330 to 470, Ronflon to 470, Lamacorne to 480, Touffou's evolutions to 500.
+
+Teams retuned with the sims:
+- Mireille's Papivole L7;
+- Gaspard's Ronflon L9, Max's Papivole L9;
+- the Hermit's and Ambre's Ronflon L21;
+- Nocturne 36/37/39;
+- the Great Eraser's Ronflon L39 and Papivole L38;
+- Prof. Fusain's team L44 except his last one.
+
 **Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
 Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
 includes them; each was kept only if the leader's row stayed within about 10 points of the version

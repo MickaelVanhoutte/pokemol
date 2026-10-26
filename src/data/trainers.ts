@@ -85,7 +85,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'mireille', name: L('Maître d’Atelier Mireille', 'Atelier Master Mireille'), money: 1200, badge: 'pastel',
-    party: [{ species: '015', level: 7 }, { species: '007', level: 9 }],
+    party: [{ species: '015', level: 7 }, { species: '007', level: 7 }],
     before: [
       L('Bienvenue dans mon atelier ! Ici, chaque papillon a des couleurs qui n’existent pas encore.', 'Welcome to my atelier! Here, every butterfly has colours that don’t exist yet.'),
       L('Montre-moi si tes Bestioles sont aussi bien dessinées que les miennes !', 'Show me if your Critters are drawn as well as mine!'),
@@ -146,7 +146,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'gaspard', name: L('Maître d’Atelier Gaspard', 'Atelier Master Gaspard'), money: 1600, badge: 'plume',
-    party: [{ species: '013', level: 10 }, { species: '008', level: 10 }],
+    party: [{ species: '013', level: 10 }, { species: '008', level: 9 }],
     before: [
       L('Zzz… Mmh ? Quelqu’un a dit « combat » ? Bâââille…', 'Zzz… Mmh? Did someone say “battle”? Yaaawn…'),
       L('Bon. Quand je suis réveillé, je ne rigole plus. Montre-moi ce que tu vaux !', 'Right. When I’m awake, I don’t mess around. Show me what you’ve got!'),
@@ -158,7 +158,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Grotte Gribouillis
   T({
-    id: 'max', name: L('Spéléo Max', 'Caver Max'), party: [{ species: '004', level: 11 }, { species: '007', level: 12 }], money: 560,
+    id: 'max', name: L('Spéléo Max', 'Caver Max'), party: [{ species: '004', level: 11 }, { species: '007', level: 9 }], money: 560,
     before: [L('Il fait noir ici, mais mes Bestioles voient tout !', 'It’s dark in here, but my Critters see everything!')],
     after: [L('J’aurais dû prendre une lampe…', 'I should have brought a lamp…')],
   }),
@@ -301,7 +301,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Allume la lumière en sortant…', 'Turn off the light on your way out…')],
   }),
   T({
-    id: 'mfErmite', name: L('Ermite du Fusain', 'Charcoal Hermit'), party: [{ species: '010', level: 23 }, { species: '008', level: 23 }], money: 700,
+    id: 'mfErmite', name: L('Ermite du Fusain', 'Charcoal Hermit'), party: [{ species: '010', level: 23 }, { species: '008', level: 21 }], money: 700,
     before: [L('Je dessine au fusain depuis cent ans. Tout est gris, ici… et c’est très bien comme ça.', 'I’ve drawn in charcoal for a hundred years. Everything is grey here… and that’s just fine.')],
     after: [L('Gris, oui… mais avec des nuances. Bien joué.', 'Grey, yes… but with shades. Well played.')],
   }),
@@ -318,7 +318,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise',
-    party: [{ species: '002', level: 24 }, { species: '008', level: 23 }, { species: '021', level: 24, item: 'baie-bleue' }],
+    party: [{ species: '002', level: 24 }, { species: '008', level: 21 }, { species: '021', level: 24, item: 'baie-bleue' }],
     before: [
       L('Tu as monté le Mont Fusain jusqu’ici ? Courageux. Mais ici, ça chauffe !', 'You climbed all of Mount Charcoal? Brave. But here, things heat up!'),
     ],
@@ -509,7 +509,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre',
-    party: [{ species: '009', level: 35 }, { species: '010', level: 36 }, { species: '010', level: 38 }],
+    party: [{ species: '010', level: 36 }, { species: '010', level: 37 }, { species: '010', level: 39 }],
     before: [
       L('Bonsoir. L’encre de nuit cache tout ce qu’on n’ose pas dessiner…', 'Good evening. Night ink hides everything we don’t dare to draw…'),
       L('Montre-moi que tu n’as peur de rien, même pas de tes propres ombres.', 'Show me you’re afraid of nothing, not even your own shadows.'),
@@ -555,7 +555,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   // ---------------------------------------------------------------- the end of the page
   T({
     id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true,
-    party: [{ species: '008', level: 41 }, { species: '007', level: 40 }, { species: '004', level: 41 }, { species: '010', level: 41 }, { species: '011', level: 39, item: 'baie-doree' }],
+    party: [{ species: '008', level: 39 }, { species: '007', level: 38 }, { species: '004', level: 41 }, { species: '010', level: 41 }, { species: '011', level: 39, item: 'baie-doree' }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
   }),

@@ -374,7 +374,7 @@ describe('battle', () => {
 
   it('the Fierce Marble hits harder and costs 1/10 of max HP per attack', () => {
     const me = mon('002', 20, 1, { item: 'bille-ardente' });
-    const st = battle([me], [mon('008', 40)]);
+    const st = battle([me], [mon('008', 40, 1, { moves: [{ id: 'grondement', pp: 40 }] })]);
     const r = act(st, { type: 'move', slot: slotOf(me, 'flammeche') }, { type: 'move', slot: 0 });
     expect(r.events.find((e) => e.t === 'itemHurt')).toMatchObject({ side: 0, item: 'bille-ardente', amount: Math.floor(maxHp(me) / 10) });
   });
@@ -422,7 +422,7 @@ describe('battle', () => {
   it('the Greedy Bell restores 1/8 of the damage dealt', () => {
     const me = mon('002', 20, 1, { item: 'clochette' });
     me.hp = 10;
-    const st = battle([me], [mon('008', 40)]);
+    const st = battle([me], [mon('008', 40, 1, { moves: [{ id: 'grondement', pp: 40 }] })]);
     const r = act(st, { type: 'move', slot: slotOf(me, 'flammeche') }, { type: 'move', slot: slotOf(st.sides[1].party[0], 'grondement') });
     const dmg = r.events.find((e) => e.t === 'damage' && e.side === 1);
     const bell = r.events.find((e) => e.t === 'itemHeal');
