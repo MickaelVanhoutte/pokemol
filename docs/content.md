@@ -283,7 +283,7 @@ Scripts run one at a time and lock player input. To change an existing script af
 - Build screens from the paper kit (`src/ui/paper`): `Frame` (title strip and back button),
   `Window`, `TextBox`, `MenuList` with `useMenuNav`, `YesNo`, `QtyPicker`. That keeps the FRLG layout
   and the keyboard, touch and B-button behaviour consistent.
-- **The hand-drawn look** comes from `src/ui/paper/sketch.ts`, drawn once at start-up into CSS
+- **The hand-drawn look** (grainy graphite lines, never black ink) comes from `src/ui/paper/sketch.ts`, drawn once at start-up into CSS
   variables: pencil frames (`--pencil-frame`, `--frame-<crayon>`, `--frame-thin-<crayon>` for bars
   and tags), coloured-pencil hatching (`--hatch-<crayon>`, `--hatch-t-<type>`, `--hatch-ink`),
   sketched round buttons (`--blob-<crayon>`) and a wobbly line (`--rule`). The crayons are pastels:

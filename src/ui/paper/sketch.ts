@@ -13,6 +13,13 @@
 import { TYPES } from '../../data/types';
 
 export const INK = '#2b2536';
+/** Pencil lead: a soft grey, not ink. */
+export const GRAPHITE = '#4d4858';
+
+/** Paper grain: noise eats into what it is applied to, like a pencil on rough paper. */
+const grain = (id: string, freq: number, seed: number) =>
+  `<filter id='${id}' x='-5%' y='-5%' width='110%' height='110%'><feTurbulence type='fractalNoise' baseFrequency='${freq}' numOctaves='2' seed='${seed}' result='n'/>`
+  + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.8 1.5' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`;
 
 /** Pastel crayons: base fill, then the darker shade its hatching is drawn with. */
 export const PASTELS = {
@@ -60,29 +67,39 @@ export interface FrameOptions {
 
 /** A pencil rectangle filled with `fill` inside its line (the border area of the box). */
 export function frame(seed: number, fill: string, o: FrameOptions = {}): string {
-  const S = o.size ?? 200, C = o.slice ?? 24, b = o.inset ?? 7, w = o.weight ?? 4.6, amp = o.amp ?? 1.5, ink = o.ink ?? INK;
+  const S = o.size ?? 200, C = o.slice ?? 24, b = o.inset ?? 7, w = o.weight ?? 4.2, amp = o.amp ?? 1.5, ink = o.ink ?? GRAPHITE;
   const L = S - 2 * C;
   const r = rng(seed);
   // each side: position along it (t) → distance from its edge
-  const sides = [0, 1, 2, 3].map(() => ({ main: wobble(r, amp, L, C), light: wobble(r, amp * 1.3, L, C), shift: 1.4 + r() * 1.4 }));
+  const sides = [0, 1, 2, 3].map(() => ({ main: wobble(r, amp, L, C), second: wobble(r, amp, L, C), light: wobble(r, amp * 1.3, L, C), shift: 1.4 + r() * 1.4, gap: (r() - 0.5) * 2.4 }));
   const pt = (side: number, t: number, d: number): [number, number] =>
     side === 0 ? [t, d] : side === 1 ? [S - d, t] : side === 2 ? [S - t, S - d] : [d, S - t];
   const seg = 8;
   const segs = L / seg;
   let strokes = '';
   for (let s = 0; s < 4; s++) {
-    const { main, light, shift } = sides[s];
+    const { main, second, light, shift, gap } = sides[s];
     // the line overshoots its corners a little, like a quick pencil stroke
     const t0 = 1 + r() * 4, t1 = S - 1 - r() * 4;
-    // segment looks repeat with the middle slice, so tiles join without a seam
-    const look: { w: number; o: number }[] = Array.from({ length: segs }, () => ({ w: w * (0.86 + r() * 0.26), o: 0.78 + r() * 0.22 }));
-    const lookAt = (t: number) => (t >= C && t < S - C ? look[Math.floor((t - C) / seg) % segs] : { w: w * (0.8 + r() * 0.35), o: 0.75 + r() * 0.25 });
+    // pressure changes along the line; it repeats with the middle slice, so the edge has no seam
+    const look: { w: number; o: number }[] = Array.from({ length: segs }, () => ({ w: w * (0.75 + r() * 0.3), o: 0.72 + r() * 0.28 }));
+    const lookAt = (t: number) => (t >= C && t < S - C ? look[Math.floor((t - C) / seg) % segs] : { w: w * (0.75 + r() * 0.3), o: 0.62 + r() * 0.33 });
+    // the lead lifts off at both ends
+    const taper = (t: number) => Math.min(1, 0.35 + Math.min(t - t0, t1 - t) / 18);
     for (let t = t0; t < t1; t += seg) {
       const e = Math.min(t + seg + 0.6, t1);
       const a = pt(s, t, b + main(t)), m = pt(s, (t + e) / 2, b + main((t + e) / 2)), z = pt(s, e, b + main(e));
       const { w: sw, o } = lookAt(t);
-      strokes += `<path d='M${f1(a[0])} ${f1(a[1])}Q${f1(m[0])} ${f1(m[1])} ${f1(z[0])} ${f1(z[1])}' stroke-width='${f1(sw)}' stroke-opacity='${f1(o * 100) / 100}'/>`;
+      strokes += `<path d='M${f1(a[0])} ${f1(a[1])}Q${f1(m[0])} ${f1(m[1])} ${f1(z[0])} ${f1(z[1])}' stroke-width='${f1(sw * taper(t))}' stroke-opacity='${f1(o * 100) / 100}'/>`;
     }
+    // a second stroke over the first, never quite on it
+    let d2 = '';
+    const v0 = t0 + 2 + r() * 8, v1 = t1 - 2 - r() * 8;
+    for (let t = v0; t <= v1; t += 4) {
+      const p = pt(s, Math.min(t, v1), b + gap + second(t) * 0.8);
+      d2 += `${d2 ? 'L' : 'M'}${f1(p[0])} ${f1(p[1])}`;
+    }
+    strokes += `<path d='${d2}' stroke-width='${f1(w * 0.55)}' stroke-opacity='.5'/>`;
     // second, lighter pass
     let d = '';
     const u0 = 3 + r() * 6, u1 = S - 3 - r() * 6;
@@ -90,7 +107,7 @@ export function frame(seed: number, fill: string, o: FrameOptions = {}): string 
       const p = pt(s, Math.min(t, u1), b + shift + light(t));
       d += `${d ? 'L' : 'M'}${f1(p[0])} ${f1(p[1])}`;
     }
-    strokes += `<path d='${d}' stroke-width='${f1(w * 0.42)}' stroke-opacity='.38'/>`;
+    strokes += `<path d='${d}' stroke-width='${f1(w * 0.35)}' stroke-opacity='.3'/>`;
   }
   // the paper inside the line
   let fillPath = '';
@@ -100,9 +117,9 @@ export function frame(seed: number, fill: string, o: FrameOptions = {}): string 
       fillPath += `${fillPath ? 'L' : 'M'}${f1(p[0])} ${f1(p[1])}`;
     }
   }
-  return `<svg xmlns='http://www.w3.org/2000/svg' width='${S}' height='${S}' viewBox='0 0 ${S} ${S}'>`
+  return `<svg xmlns='http://www.w3.org/2000/svg' width='${S}' height='${S}' viewBox='0 0 ${S} ${S}'><defs>${grain('g', 0.6, seed % 97)}</defs>`
     + `<path d='${fillPath}Z' fill='${fill}'/>`
-    + `<g fill='none' stroke='${ink}' stroke-linecap='round' stroke-linejoin='round'>${strokes}</g></svg>`;
+    + `<g fill='none' stroke='${ink}' stroke-linecap='round' stroke-linejoin='round' filter='url(#g)'>${strokes}</g></svg>`;
 }
 
 /** Coloured-pencil strokes on a seamless square tile. */
@@ -121,7 +138,7 @@ export function hatch(seed: number, color: string, o: { size?: number; strokes?:
       paths += `<path d='M${f1(cx - dx)} ${f1(cy - dy)}q${f1(dx + bend)} ${f1(dy - bend)} ${f1(dx * 2)} ${f1(dy * 2)}' stroke-width='${sw}' stroke-opacity='${so}'/>`;
     }
   }
-  return `<svg xmlns='http://www.w3.org/2000/svg' width='${S}' height='${S}'><g fill='none' stroke='${color}' stroke-linecap='round'>${paths}</g></svg>`;
+  return `<svg xmlns='http://www.w3.org/2000/svg' width='${S}' height='${S}'><defs>${grain('g', 0.7, seed % 97)}</defs><g fill='none' stroke='${color}' stroke-linecap='round' filter='url(#g)'>${paths}</g></svg>`;
 }
 
 /** A sketched round button: an uneven disc coloured in with hatching, outlined twice. */
@@ -142,8 +159,9 @@ export function blob(seed: number, fill: string, shade: string): string {
   return `<svg xmlns='http://www.w3.org/2000/svg' width='${S}' height='${S}' viewBox='0 0 ${S} ${S}'>`
     + `<defs><clipPath id='c'><path d='${ring((t) => R - 1 + edge(t), 0, Math.PI * 2)}Z'/></clipPath></defs>`
     + `<path d='${ring((t) => R + edge(t), 0, Math.PI * 2)}Z' fill='${fill}'/>`
-    + `<g clip-path='url(#c)' fill='none' stroke='${shade}' stroke-linecap='round'>${strokes}</g>`
-    + `<g fill='none' stroke='${INK}' stroke-linecap='round' stroke-linejoin='round'>`
+    + `<defs>${grain('g', 0.8, seed % 97)}</defs>`
+    + `<g clip-path='url(#c)' fill='none' stroke='${shade}' stroke-linecap='round' filter='url(#g)'>${strokes}</g>`
+    + `<g fill='none' stroke='${GRAPHITE}' stroke-linecap='round' stroke-linejoin='round' filter='url(#g)'>`
     + `<path d='${ring((t) => R + edge(t), start, start + Math.PI * 2.12)}' stroke-width='2.6'/>`
     + `<path d='${ring((t) => R + 1.3 + edge2(t), start + 1, start + 1 + Math.PI * 1.7)}' stroke-width='1.1' stroke-opacity='.4'/></g></svg>`;
 }
@@ -157,7 +175,7 @@ export function rule(seed: number, o: { width?: number; weight?: number } = {}):
     d1 += `${d1 ? 'L' : 'M'}${x} ${f1(4 + a(x))}`;
     d2 += `${d2 ? 'L' : 'M'}${x} ${f1(5.2 + b2(x))}`;
   }
-  return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><g fill='none' stroke='${INK}' stroke-linecap='round'>`
+  return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><defs>${grain('g', 0.7, seed % 97)}</defs><g fill='none' stroke='${GRAPHITE}' stroke-linecap='round' filter='url(#g)'>`
     + `<path d='${d1}' stroke-width='${o.weight ?? 2.2}'/><path d='${d2}' stroke-width='1' stroke-opacity='.35'/></g></svg>`;
 }
 
@@ -174,7 +192,7 @@ export function installSketch(root: HTMLElement = document.documentElement) {
   // the paper itself gets a few faint strokes only
   set('--hatch-paper', hatch(97, PASTELS.paper[1], { strokes: 14, opacity: 0.55 }));
   // graphite shading over colours that are not one of the crayons (type tints, HP)
-  set('--hatch-ink', hatch(98, INK, { strokes: 22, opacity: 0.32 }));
+  set('--hatch-ink', hatch(98, GRAPHITE, { strokes: 22, opacity: 0.4 }));
   set('--pencil-frame', frame(5, PASTELS.paper[0]));
   set('--pencil-frame-2', frame(6, PASTELS.paper[0]));
   // each type's own crayon, for move buttons
