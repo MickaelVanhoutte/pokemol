@@ -87,10 +87,10 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '007', slug: 'papivole', name: L('Papivole', 'Flutterbug'), kind: L('Bestiole Papillon', 'Butterfly Critter'),
     type: 'insecte', base: { hp: 48, atk: 35, def: 45, spa: 72, spd: 64, spe: 66 },
-    catchRate: 120, baseExp: 100, evYield: { spa: 2, spd: 1 }, wildItem: { id: 'baie-menthe', pct: 5 }, rarity: 'common', evolvesFrom: '012',
+    catchRate: 120, baseExp: 100, evYield: { spa: 2, spd: 1 }, wildItem: { id: 'baie-menthe', pct: 5 }, rarity: 'common', evolvesFrom: '015',
     stencils: ['pochoir-01', 'pochoir-06', 'pochoir-07', 'pochoir-09', 'pochoir-12'],
     talents: ['poudre-bouclier', 'mille-yeux'], hiddenTalent: 'bonne-etoile',
-    learnset: [[1, 'bousculade'], [1, 'dard'], [8, 'coup-d-ailes'], [12, 'poudre-dodo'], [14, 'poudre-piquante'],
+    learnset: [[1, 'bousculade'], [1, 'dard'], [10, 'coup-d-ailes'], [12, 'poudre-dodo'], [14, 'poudre-piquante'],
       [15, 'poudre-toxique'], [16, 'choc-mental'], [21, 'rayon-d-ailes'], [27, 'poudre-arc-en-ciel']],
     dex: L(
       'Ses gros yeux rouges voient toutes les couleurs, même celles qu’on n’a pas encore inventées.',
@@ -152,10 +152,10 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '012', slug: 'chenillou', faces: 'left', name: L('Chenillou', 'Wigglet'), kind: L('Bestiole Chenille', 'Caterpillar Critter'),
     type: 'insecte', base: { hp: 45, atk: 32, def: 38, spa: 22, spd: 22, spe: 46 },
-    catchRate: 255, baseExp: 50, evYield: { hp: 1 }, wildItem: { id: 'baie-bleue', pct: 5 }, rarity: 'common', evolvesTo: '007', evolveLevel: 8,
+    catchRate: 255, baseExp: 50, evYield: { hp: 1 }, wildItem: { id: 'baie-bleue', pct: 5 }, rarity: 'common', evolvesTo: '015', evolveLevel: 7,
     stencils: ['pochoir-01', 'pochoir-12'],
     talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'pieds-legers',
-    learnset: [[1, 'bousculade'], [1, 'fil-de-soie'], [7, 'dard']],
+    learnset: [[1, 'bousculade'], [1, 'fil-de-soie']],
     dex: L(
       'Il avance sur ses pattes rondes comme sur des roulettes. Un beau matin, il se réveillera avec des ailes.',
       'It rolls along on its round feet like little wheels. One fine morning it will wake up with wings.',
@@ -185,6 +185,30 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Quand il est content, un petit arc-en-ciel jaillit de sa corne. La fleur de son flanc refleurit chaque printemps.',
       'When it is happy, a little rainbow bursts from its horn. The flower on its side blooms again every spring.',
+    ),
+  },
+  {
+    id: '015', slug: 'chrysalou', faces: 'right', name: L('Chrysalou', 'Cocoonap'), kind: L('Bestiole Chrysalide', 'Chrysalis Critter'),
+    type: 'insecte', base: { hp: 50, atk: 20, def: 60, spa: 25, spd: 30, spe: 25 },
+    catchRate: 120, baseExp: 72, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '012', evolvesTo: '007', evolveLevel: 10,
+    stencils: ['pochoir-01', 'pochoir-12'],
+    talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'increvable',
+    learnset: [[1, 'bousculade'], [1, 'cocon-serre'], [7, 'cocon-serre']],
+    dex: L(
+      'Il ne bouge presque pas : à l’intérieur, il dessine en secret ses futures ailes. Sa coque pointue est plus dure qu’une mine de crayon.',
+      'It hardly moves: inside, it secretly draws its future wings. Its pointy shell is harder than a pencil lead.',
+    ),
+  },
+  {
+    id: '016', slug: 'touffou', faces: 'left', name: L('Touffou', 'Fuzzkit'), kind: L('Bestiole Ébouriffée', 'Scruffy Critter'),
+    type: 'normal', base: { hp: 55, atk: 55, def: 50, spa: 45, spd: 65, spe: 55 },
+    catchRate: 45, baseExp: 65, evYield: { spd: 1 }, rarity: 'rare',
+    stencils: ['pochoir-02', 'pochoir-06', 'pochoir-10', 'pochoir-11', 'pochoir-12'],
+    talents: ['pieds-legers', 'trait-assure'], hiddenTalent: 'bonne-etoile',
+    learnset: [[1, 'bousculade'], [1, 'fretillement'], [6, 'grondement'], [10, 'pas-de-loup'], [16, 'mordillage'], [22, 'coup-de-boule'], [30, 'plat-du-ventre']],
+    dex: L(
+      'Sa fourrure ébouriffée change un peu chaque fois qu’on le redessine. On raconte qu’un jour, il pourra devenir bien des choses différentes.',
+      'Its scruffy fur changes a little every time someone redraws it. They say that one day it could become many different things.',
     ),
   },
 ];

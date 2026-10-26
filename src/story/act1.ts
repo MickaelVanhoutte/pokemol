@@ -6,7 +6,7 @@ import { LOOKS } from '../overworld/sprites';
 import type { Dir } from '../save/schema';
 import { healParty, save, update } from '../state/game';
 import {
-  bubble, fight, flag, flash, getGame, giveItem, giveMon, say, sayAll, scripts, setFlag, showMons, showToast, wait,
+  ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, say, sayAll, scripts, setFlag, showMons, showToast, wait,
 } from '../overworld/controller';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
@@ -198,6 +198,33 @@ scripts.momShoes = async () => {
   ], MOM);
   await g.walk(mom, [...Array(ups).fill('down'), ...Array(px - 3).fill('left')], 150);
   g.remove(mom.id);
+};
+
+/** Ville-Pastel: a girl gives you the scruffy Bestiole she drew (the GBA games' gift Bestiole). */
+scripts.touffouGift = async () => {
+  const who = L('Fillette Capucine', 'Lass Capucine');
+  if (flag('gift:touffou')) {
+    await say(L('Mon Touffou va bien ? On dit qu’en grandissant, il pourra devenir plein de choses différentes !', 'Is my Fuzzkit doing well? They say that as it grows, it could become lots of different things!'), who);
+    return;
+  }
+  if (!hasTeam()) {
+    await say(L('Tu n’as pas encore de Bestiole ? Reviens quand tu en auras une !', 'You don’t have a Critter yet? Come back when you do!'), who);
+    return;
+  }
+  await sayAll([
+    L('J’ai dessiné une Bestiole toute ébouriffée… et elle s’est mise à bouger !', 'I drew a scruffy little Critter… and it started moving!'),
+    L('Elle a envie de voir du pays, mais moi, je dois faire mes devoirs.', 'It wants to see the world, but I have to do my homework.'),
+  ], who);
+  const c = await ask(L('Tu veux bien t’occuper de mon Touffou ?', 'Will you look after my Fuzzkit?'), [L('Oui', 'Yes'), L('Non', 'No')], who);
+  if (c !== 0) {
+    await say(L('Oh… Si tu changes d’avis, je suis là.', 'Oh… If you change your mind, I’ll be here.'), who);
+    return;
+  }
+  const full = (save.value?.party.length ?? 0) >= 6;
+  giveMon('016', 8);
+  setFlag('gift:touffou');
+  await say(full ? L('{name} reçoit Touffou ! Il est envoyé dans le PC.', '{name} received Fuzzkit! It was sent to the PC.') : L('{name} reçoit Touffou !', '{name} received Fuzzkit!'));
+  await say(L('Prends-en bien soin ! On dit qu’un jour, il pourra changer de forme…', 'Take good care of it! They say that one day it could change its shape…'), who);
 };
 
 scripts.route1Gomme = async () => {

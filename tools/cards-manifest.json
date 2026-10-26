@@ -454,6 +454,36 @@
         "paperChroma": 0.26,
         "minComponent": 0.0003
       }
+    },
+    {
+      "id": "015",
+      "slug": "chrysalou",
+      "photo": "chrysalou.jpeg",
+      "box": [
+        330,
+        540,
+        2000,
+        2340
+      ],
+      "scale": 0.5,
+      "options": {
+        "paperChroma": 0.26
+      }
+    },
+    {
+      "id": "016",
+      "slug": "touffou",
+      "photo": "touffou.jpeg",
+      "box": [
+        280,
+        420,
+        2960,
+        3440
+      ],
+      "scale": 0.5,
+      "options": {
+        "paperChroma": 0.26
+      }
     }
   ]
 }

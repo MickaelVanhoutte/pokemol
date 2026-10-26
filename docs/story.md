@@ -53,6 +53,10 @@ they are used.
 town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).
 Holding B runs only once you own them. Older saves already past Bourg get them in `repair()`.
 
+**Touffou** (EN Fuzzkit, Eevee-like, no evolution yet: future drawings will add several). Capucine
+in Ville-Pastel gives one at L8 (`touffouGift`, flag `gift:touffou`); it is also a rare wild find on
+Route 6.
+
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
 Healing Center flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
 `src/data/worldmap.ts`).
@@ -87,7 +91,7 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Stage | Trainers | Leader |
 |---|---|---|
 | Route 1 | Iris L4 (1 Bestiole), Léo L3/L4 | — |
-| Atelier Pastel | L5–6 | Mireille L6/L8 |
+| Atelier Pastel | L5–6 | Mireille L7/L9 (Chrysalou, Papivole) |
 | Route 2, Bois Brumeux | L7–11 | — |
 | Atelier Plume | L11 | Gaspard L10/L10 |
 | Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15) | Marine L16–19 |
@@ -103,7 +107,9 @@ Run `npm run balance` for the current numbers instead of trusting this table.
 - The first trainers have one or two low-level Bestioles; the starter alone should win Act 1 route
   battles.
 - Leaders should be beatable once the player has one teammate.
-- Insect moves come late on purpose (Chenillou Dard at L7, Papivole powders from L12). Gaspard is
+- Insect moves come late on purpose: Chenillou only knows Bump and Silk Thread, and Papivole gets
+  its powders from L12. The bug line is Chenillou → Chrysalou (L7) → Papivole (L10, learns
+  Wing Gust as it evolves). Gaspard is
   the only Act 1 trainer with a Ronflon (it is still a rare wild find on Route 1).
 - Fairy Bestioles on Route 1 resist Mireille's insects; the Atelier guide NPC says so.
 
