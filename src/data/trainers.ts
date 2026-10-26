@@ -51,7 +51,7 @@ export function trainerLevel(level: number, difficulty: Difficulty): number {
 export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty): Mon[] {
   const iv = DIFFICULTY[difficulty].iv;
   const ivs = { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv };
-  return list.map((t, i) => ({ ...createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs), item: t.item ?? null, nature: NEUTRAL_NATURE }));
+  return list.map((t, i) => ({ ...createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs), item: t.item ?? null, nature: NEUTRAL_NATURE, talent: 0 }));
 }
 
 export function trainerParty(t: TrainerDef, seed: number): Mon[] {

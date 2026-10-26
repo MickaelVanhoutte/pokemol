@@ -75,6 +75,10 @@ export interface SpeciesDef {
   kind: LText;
   /** Which way the drawing looks (omitted = facing us). */
   faces?: 'left' | 'right';
+  /** Regular talents (src/data/talents.ts): one or two; evolutions keep the slot. */
+  talents: [string] | [string, string];
+  /** Rarer talent (1 chance in 4). */
+  hiddenTalent: string;
 }
 
 /** What a held item does in battle (see `src/engine/pk/battle.ts`). */

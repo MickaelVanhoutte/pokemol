@@ -4,6 +4,7 @@ import { ITEM_BY_ID, item } from '../../data/items';
 import { move } from '../../data/moves';
 import type { HoldEffect, Major, MoveDef, StageKey } from '../../data/schema';
 import { effectiveness } from '../../data/types';
+import { talentEffect, talentOf } from '../../data/talents';
 import { nextRandom, randomInt } from '../rng';
 import { addXp, gainEvs, learnMove, maxHp, statsOf, xpYield, type Mon } from './creature';
 
@@ -103,6 +104,8 @@ export type BattleEvent =
   | { t: 'guard'; side: Side; on: boolean }
   /** A foe's stat drop was blocked by the varnish. */
   | { t: 'guarded'; side: Side }
+  /** A talent acts. `note`: it endured a knockout, cured its status, or made a move useless. */
+  | { t: 'talent'; side: Side; talent: string; note?: 'endure' | 'cured' | 'immune' }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
   | { t: 'blocked' }
   | { t: 'run'; ok: boolean }
@@ -173,6 +176,8 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
   out.push({ t: 'sendOut', side: 0, idx: state.sides[0].active });
   state.participants = [activeMon(state.sides[0]).uid];
+  onEntry(state, 1, out);
+  onEntry(state, 0, out);
   checkBerry(state, 1, out);
   checkBerry(state, 0, out);
   return { state, events: out.events, snaps: out.snaps };
@@ -214,11 +219,14 @@ export function blocked(st: BattleState): boolean {
 function hurt(st: BattleState, side: Side, amount: number, out: Out, extra: Partial<Extract<BattleEvent, { t: 'damage' }>> = {}) {
   const m = activeMon(st.sides[side]);
   let dmg = Math.min(m.hp, Math.max(0, Math.round(amount)));
-  // Steadfast Ribbon: a knockout from full HP leaves 1 HP instead (once)
-  const ribbon = dmg >= m.hp && m.hp === maxHp(m) && m.hp > 1 && held(m) === 'holdOn' ? m.item! : null;
-  if (ribbon) dmg = m.hp - 1;
+  const fromFull = dmg >= m.hp && m.hp === maxHp(m) && m.hp > 1;
+  // Unbreakable talent, then the Steadfast Ribbon (once): a knockout from full HP leaves 1 HP
+  const sturdy = fromFull && !!talentEffect(m, 'sturdy');
+  const ribbon = fromFull && !sturdy && held(m) === 'holdOn' ? m.item! : null;
+  if (sturdy || ribbon) dmg = m.hp - 1;
   m.hp -= dmg;
   out.push({ t: 'damage', side, amount: dmg, ...extra });
+  if (sturdy) out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'endure' });
   if (ribbon) {
     m.item = null;
     out.push({ t: 'hangOn', side, item: ribbon });
@@ -291,6 +299,10 @@ function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMov
     if (fromMove) out.push({ t: 'already', side, status: m.status });
     return false;
   }
+  if (talentEffect(m, 'immune')?.status === status) {
+    if (fromMove) out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'immune' });
+    return false;
+  }
   m.status = status;
   if (status === 'sleep') m.sleepTurns = 1 + randomInt(st, 3);
   out.push({ t: 'status', side, status });
@@ -304,6 +316,11 @@ function changeStage(st: BattleState, side: Side, stat: StageKey, delta: number,
     out.push({ t: 'guarded', side });
     return;
   }
+  const m = activeMon(st.sides[side]);
+  if (byFoe && delta < 0 && stat === 'acc' && talentEffect(m, 'keenEye')) {
+    out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'immune' });
+    return;
+  }
   const v = st.sides[side].vol;
   const before = v.stages[stat];
   const after = Math.max(-6, Math.min(6, before + delta));
@@ -313,12 +330,37 @@ function changeStage(st: BattleState, side: Side, stat: StageKey, delta: number,
 
 function switchIn(st: BattleState, side: Side, to: number, out: Out) {
   const s = st.sides[side];
-  if (s.party[s.active] && alive(s.party[s.active])) out.push({ t: 'withdraw', side, idx: s.active });
+  const leaving = s.party[s.active];
+  if (leaving && alive(leaving)) {
+    out.push({ t: 'withdraw', side, idx: s.active });
+    onLeave(leaving);
+  }
   s.active = to;
   s.vol = freshVol();
   out.push({ t: 'sendOut', side, idx: to });
   if (side === 0 && !st.participants.includes(activeMon(s).uid)) st.participants.push(activeMon(s).uid);
+  onEntry(st, side, out);
   checkBerry(st, side, out);
+}
+
+/** Talents that act as soon as the creature is sent out (Stink Eye, Thick Mist). */
+function onEntry(st: BattleState, side: Side, out: Out) {
+  const m = activeMon(st.sides[side]);
+  const e = talentEffect(m, 'entryStage');
+  if (!e || !alive(m)) return;
+  const targetSide = e.target === 'self' ? side : other(side);
+  if (!alive(activeMon(st.sides[targetSide]))) return;
+  out.push({ t: 'talent', side, talent: talentOf(m).id });
+  changeStage(st, targetSide, e.stat, e.stages, out, e.target === 'foe');
+}
+
+/** Talents that act quietly when the creature is withdrawn (Recolor, Self-Care). */
+function onLeave(m: Mon) {
+  if (talentEffect(m, 'regenerator')) m.hp = Math.min(maxHp(m), m.hp + Math.floor(maxHp(m) / 3));
+  if (talentEffect(m, 'naturalCure')) {
+    m.status = null;
+    m.sleepTurns = 0;
+  }
 }
 
 // ------------------------------------------------------------------ damage
@@ -330,7 +372,12 @@ export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: 
   const A = effectiveStat(atkSide, phys ? 'atk' : 'spa') * (phys && a.status === 'burn' ? 0.5 : 1);
   const D = effectiveStat(defSide, phys ? 'def' : 'spd');
   const h = held(a);
-  const critChance = CRIT[(mv.effects?.some((e) => e.kind === 'highCrit') ? 1 : 0) + (atkSide.vol.focus ? 1 : 0) + (h === 'critUp' ? 1 : 0)];
+  const at = talentOf(a).effect, dt = talentOf(d).effect;
+  const critStage = (mv.effects?.some((e) => e.kind === 'highCrit') ? 1 : 0) + (atkSide.vol.focus ? 1 : 0) + (h === 'critUp' ? 1 : 0) + (at.kind === 'superLuck' ? 1 : 0);
+  const critChance = CRIT[Math.min(CRIT.length - 1, critStage)];
+  // talents: stronger moves of its type when low on HP, stronger weak moves
+  if (at.kind === 'pinch' && at.type === mv.type && a.hp * 3 <= maxHp(a)) power = Math.floor(power * 1.5);
+  if (at.kind === 'technician' && mv.id !== STRUGGLE && power <= 60) power = Math.floor(power * 1.5);
   // coloured pencils: +20% power for their type
   if (h === 'typeBoost' && mv.id !== STRUGGLE && ITEM_BY_ID[a.item!]?.type === mv.type) power = Math.floor(power * 1.2);
   const crit = forceCrit ?? nextRandom(st) < critChance;
@@ -338,9 +385,11 @@ export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: 
   if (crit) dmg *= 2;
   // Struggle is typeless: no STAB, hits everything
   const typeless = mv.id === STRUGGLE;
-  if (!typeless && creature(a.species).type === mv.type) dmg = Math.floor(dmg * 1.5);
+  if (!typeless && creature(a.species).type === mv.type) dmg = Math.floor(dmg * (at.kind === 'adaptability' ? 2 : 1.5));
   const eff = typeless ? 1 : effectiveness(mv.type, creature(d.species).type);
   dmg = Math.floor(dmg * eff);
+  if (!typeless && dt.kind === 'halve' && dt.types.includes(mv.type)) dmg = Math.floor(dmg / 2);
+  if (dt.kind === 'filter' && eff > 1) dmg = Math.floor(dmg * 0.75);
   dmg = Math.floor((dmg * (85 + randomInt(st, 16))) / 100);
   if (h === 'powerCost' && mv.id !== STRUGGLE) dmg = Math.floor(dmg * 1.3);
   if (eff > 0) dmg = Math.max(1, dmg);
@@ -376,7 +425,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
       user.status = null;
       out.push({ t: 'wake', side });
     } else {
-      user.sleepTurns--;
+      user.sleepTurns = Math.max(0, user.sleepTurns - (talentEffect(user, 'earlyBird') ? 2 : 1));
       out.push({ t: 'asleep', side });
       if (!onlyAsleep) return;
     }
@@ -427,9 +476,18 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     out.push({ t: 'noEffect', side: foeSide });
     return;
   }
+  // absorbing talents (Sponge, Battery Pack, Leaf Nibbler) turn a move of their type into healing
+  const absorb = talentEffect(target, 'absorb');
+  if (absorb && targetsFoe && moveId !== STRUGGLE && absorb.type === mv.type) {
+    const full = target.hp >= maxHp(target);
+    out.push({ t: 'talent', side: foeSide, talent: talentOf(target).id, note: full ? 'immune' : undefined });
+    if (!full) healSide(st, foeSide, maxHp(target) / 4, out);
+    return;
+  }
   // accuracy
   if (mv.acc !== null && targetsFoe) {
-    const chance = (mv.acc / 100) * accMult(Math.max(-6, Math.min(6, s.vol.stages.acc - foe.vol.stages.eva)));
+    const eyes = talentEffect(user, 'compoundEyes') ? 1.3 : 1;
+    const chance = (mv.acc / 100) * eyes * accMult(Math.max(-6, Math.min(6, s.vol.stages.acc - foe.vol.stages.eva)));
     if (nextRandom(st) >= chance) {
       out.push({ t: 'miss', side });
       return;
@@ -454,12 +512,21 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     done++;
     // Spiky Helmet: hitting its holder up close hurts
     if (dealt > 0 && mv.cat === 'phys' && moveId !== STRUGGLE && held(target) === 'spikes') itemHp(st, side, target.item!, -Math.max(1, Math.floor(maxHp(user) / 6)), out);
+    // Fuzzy Spark: touching it may paralyse
+    const touch = talentEffect(target, 'contactStatus');
+    if (touch && dealt > 0 && mv.cat === 'phys' && moveId !== STRUGGLE && alive(user) && !user.status && nextRandom(st) * 100 < touch.chance) {
+      out.push({ t: 'talent', side: foeSide, talent: talentOf(target).id });
+      setStatus(st, side, touch.status, out, false);
+    }
   }
   if (hits > 1) out.push({ t: 'hits', count: done });
   const mine = held(user);
   if (total > 0 && mine === 'drainHit') itemHp(st, side, user.item!, Math.max(1, Math.floor(total / 8)), out);
   if (total > 0 && mine === 'powerCost' && moveId !== STRUGGLE) itemHp(st, side, user.item!, -Math.max(1, Math.floor(maxHp(user) / 10)), out);
-  if (total > 0 && mine === 'flinchUp' && alive(target) && !mv.effects?.some((e) => e.kind === 'flinch') && nextRandom(st) < 0.1) foe.vol.flinch = true;
+  // Dust Coat keeps the foe's added effects away; Lucky Star doubles their chances
+  const dust = !!talentEffect(target, 'shieldDust');
+  const grace = talentEffect(user, 'sereneGrace') ? 2 : 1;
+  if (total > 0 && mine === 'flinchUp' && !dust && alive(target) && !mv.effects?.some((e) => e.kind === 'flinch') && nextRandom(st) < 0.1) foe.vol.flinch = true;
 
   for (const e of mv.effects ?? []) {
     switch (e.kind) {
@@ -476,20 +543,21 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
         break;
       }
       case 'status':
-        if (alive(target) && nextRandom(st) * 100 < e.chance) setStatus(st, foeSide, e.status, out, false);
+        if (!dust && alive(target) && nextRandom(st) * 100 < e.chance * grace) setStatus(st, foeSide, e.status, out, false);
         break;
       case 'confuse':
-        if (alive(target) && foe.vol.confusion === 0 && nextRandom(st) * 100 < e.chance) {
+        if (!dust && alive(target) && foe.vol.confusion === 0 && nextRandom(st) * 100 < e.chance * grace) {
           foe.vol.confusion = 2 + randomInt(st, 4);
           out.push({ t: 'confuse', side: foeSide });
           checkBerry(st, foeSide, out);
         }
         break;
       case 'flinch':
-        if (alive(target) && nextRandom(st) * 100 < e.chance) foe.vol.flinch = true;
+        if (!dust && alive(target) && nextRandom(st) * 100 < e.chance * grace) foe.vol.flinch = true;
         break;
       case 'stage':
-        if (nextRandom(st) * 100 < e.chance) {
+        if (e.target === 'foe' && dust) break;
+        if (nextRandom(st) * 100 < e.chance * grace) {
           if (e.target === 'self') changeStage(st, side, e.stat, e.stages, out);
           else if (alive(target)) changeStage(st, foeSide, e.stat, e.stages, out, true);
         }
@@ -577,7 +645,7 @@ function tryRun(st: BattleState, out: Out): boolean {
   st.escapes++;
   const mine = effectiveStat(st.sides[0], 'spe');
   const theirs = effectiveStat(st.sides[1], 'spe');
-  const ok = mine >= theirs || randomInt(st, 256) < Math.floor((mine * 128) / Math.max(1, theirs)) + 30 * st.escapes;
+  const ok = !!talentEffect(activeMon(st.sides[0]), 'runAway') || mine >= theirs || randomInt(st, 256) < Math.floor((mine * 128) / Math.max(1, theirs)) + 30 * st.escapes;
   out.push({ t: 'run', ok });
   if (ok) finish(st, 'flee', out);
   return ok;
@@ -649,6 +717,12 @@ function useItem(st: BattleState, itemId: string, target: number, out: Out) {
 function finish(st: BattleState, result: BattleResult, out: Out) {
   if (st.result) return;
   st.result = result;
+  // Self-Care: the status goes away after the battle too
+  const mine = activeMon(st.sides[0]);
+  if (mine && alive(mine) && talentEffect(mine, 'naturalCure')) {
+    mine.status = null;
+    mine.sleepTurns = 0;
+  }
   out.push({ t: 'end', result });
 }
 
@@ -799,6 +873,22 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     const amount = Math.min(maxHp(m) - m.hp, Math.max(1, Math.floor(maxHp(m) / 16)));
     m.hp += amount;
     out.push({ t: 'regen', side, item: m.item, amount });
+  }
+  // end of turn: talents (Momentum speeds up, Fresh Skin may shed a status)
+  for (const side of [0, 1] as Side[]) {
+    if (st.result) break;
+    const s = st.sides[side];
+    const m = activeMon(s);
+    if (!alive(m)) continue;
+    if (talentEffect(m, 'speedBoost') && s.vol.stages.spe < 6) {
+      out.push({ t: 'talent', side, talent: talentOf(m).id });
+      changeStage(st, side, 'spe', 1, out);
+    }
+    if (m.status && talentEffect(m, 'shedSkin') && nextRandom(st) < 1 / 3) {
+      m.status = null;
+      m.sleepTurns = 0;
+      out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'cured' });
+    }
   }
   // end of turn: the varnish wears off
   for (const side of [0, 1] as Side[]) {

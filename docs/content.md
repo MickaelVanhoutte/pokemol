@@ -128,6 +128,20 @@ Scripts run one at a time and lock player input. To change an existing script af
 
 ## Creatures, moves, items
 
+- **Talents** (`src/data/talents.ts`, the game's abilities):
+  - each talent has an original name, a description and one `TalentEffect`. `src/engine/pk/battle.ts`
+    runs these effects (damage, absorbing, contact, status immunity, entering, end of turn,
+    switching out, fleeing, sleep);
+  - species list `talents` (one or two regular) and a `hiddenTalent`;
+  - a Bestiole stores a slot (`talent`: 0, 1 or 2), so an evolution keeps its slot;
+  - new Bestioles get the hidden one 1 time in 4 (`HIDDEN_TALENT_CHANCE`), and older saves get a
+    fixed slot from their uid;
+  - trainers always use slot 0, so put the friendlier talent first: early Ronflon and ghosts would
+    otherwise halve Fire or dodge a lot;
+  - battle messages come from the `talent` event.
+
+  A new effect kind needs its hook in `battle.ts`, a test in `src/engine/pk/talents.test.ts` and,
+  if it makes moves useless, a check in `ai.ts`.
 - **Natures** (`src/data/natures.ts`): 25 kid-like personalities. Twenty raise one stat by 10% and
   lower another by 10%, and five change nothing. `calcStat` applies them in tenths, so rounding is
   exact. New Bestioles draw one at random. Trainers' Bestioles use the neutral `joyeuse`, so their

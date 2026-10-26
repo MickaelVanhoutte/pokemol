@@ -1,6 +1,7 @@
 import { creature } from '../../data/creatures';
 import { move } from '../../data/moves';
 import { effectiveness } from '../../data/types';
+import { talentEffect } from '../../data/talents';
 import { nextRandom, randomInt } from '../rng';
 import { activeMon, stageMult, usableSlots, type Action, type BattleState } from './battle';
 import { maxHp } from './creature';
@@ -28,6 +29,9 @@ export function aiChoose(st: BattleState, slip = 0): Action {
     if (mate >= 0) return { type: 'switch', to: mate };
   }
   const hpRatio = m.hp / maxHp(m);
+  // the foe's talent: a move it absorbs or a status it can't get is wasted
+  const absorbs = talentEffect(target, 'absorb')?.type;
+  const immuneTo = talentEffect(target, 'immune')?.status;
   let best = slots[0];
   let bestScore = -Infinity;
   for (const i of slots) {
@@ -42,15 +46,17 @@ export function aiChoose(st: BattleState, slip = 0): Action {
       }
       const atk = mv.cat === 'phys' ? stageMult(me.vol.stages.atk) : stageMult(me.vol.stages.spa);
       score = power * effectiveness(mv.type, foeType) * (myType === mv.type ? 1.5 : 1) * ((mv.acc ?? 100) / 100) * atk;
+      if (absorbs === mv.type) score = -20;
     } else {
       for (const e of mv.effects ?? []) {
-        if (e.kind === 'status') score += target.status ? -50 : e.status === 'sleep' ? 70 : 50;
+        if (e.kind === 'status') score += target.status || immuneTo === e.status ? -50 : e.status === 'sleep' ? 70 : 50;
         if (e.kind === 'confuse') score += foe.vol.confusion ? -50 : 35;
         if (e.kind === 'stage' && e.target === 'foe') score += foe.vol.stages[e.stat] <= -2 || (e.stages < 0 && foe.guard > 0) ? -30 : 25;
         if (e.kind === 'stage' && e.target === 'self') score += me.vol.stages[e.stat] >= 2 || hpRatio < 0.5 ? -30 : 30;
         if (e.kind === 'heal' || e.kind === 'rest') score += hpRatio < 0.4 ? 90 : -60;
       }
       score *= (mv.acc ?? 100) / 100;
+      if (absorbs === mv.type) score = -20;
     }
     score *= 0.85 + nextRandom(st) * 0.3;
     if (score > bestScore) {

@@ -1,8 +1,9 @@
 import { creature } from '../../data/creatures';
 import { move } from '../../data/moves';
 import { NATURES, natureTenths } from '../../data/natures';
+import { HIDDEN_TALENT_CHANCE, type TalentSlot } from '../../data/talents';
 import type { Major, StatKey, Stats } from '../../data/schema';
-import { randomInt } from '../rng';
+import { nextRandom, randomInt } from '../rng';
 
 export interface MoveSlot {
   id: string;
@@ -21,6 +22,8 @@ export interface Mon {
   evs: Stats;
   /** Personality id (src/data/natures.ts): +10% to one stat, −10% to another. */
   nature: string;
+  /** Talent slot of its species (src/data/talents.ts): 0 or 1 regular, 2 hidden. */
+  talent: TalentSlot;
   /** Held item id (berries are eaten in battle). */
   item: string | null;
   hp: number;
@@ -84,6 +87,7 @@ export function createMon(speciesId: string, level: number, st: { rng: number },
   const m: Mon = {
     uid: newUid(st),
     nature: NATURES[randomInt(st, NATURES.length)].id,
+    talent: nextRandom(st) < HIDDEN_TALENT_CHANCE ? 2 : (randomInt(st, 2) as TalentSlot),
     species: speciesId,
     level,
     xp: xpAt(level),

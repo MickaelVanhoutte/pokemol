@@ -13,8 +13,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
-- Deeper battles, GBA style: 25 natures (+10% / −10%), IVs graded E to S next to each stat in the
-  summary, effort points;
+- Deeper battles, GBA style: talents (one or two per species plus a hidden one, 1 chance in 4),
+  25 natures (+10% / −10%), IVs graded E to S next to each stat in the summary, effort points;
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the
   Painter’s Apron, the Spiky Helmet, the Steadfast Ribbon and more, and a coloured pencil for every
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),

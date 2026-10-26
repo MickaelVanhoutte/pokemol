@@ -2,6 +2,7 @@ import { L, tr, type LText } from '../../i18n';
 import { creature } from '../../data/creatures';
 import { item } from '../../data/items';
 import { move } from '../../data/moves';
+import { talent } from '../../data/talents';
 import { STAT_NAMES } from '../../data/types';
 import type { StageKey } from '../../data/schema';
 import type { BattleEvent, BattleState, Side } from '../../engine/pk/battle';
@@ -136,6 +137,14 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       return e.on
         ? [tr(L('Une couche de vernis protège ton équipe : ses stats ne baisseront pas !', 'A coat of varnish protects your team: its stats won’t be lowered!'))]
         : e.side === 0 ? [tr(L('Le vernis protecteur s’écaille.', 'The protective varnish wore off.'))] : [];
+    case 'talent': {
+      // « Regard Noir de Brumouille ennemi ! », then what it did when that isn't another event
+      const lines = [f(L('{a} de {n} !', '{n}’s {a}!'), { n: nm(e.side), a: tr(talent(e.talent).name) })];
+      if (e.note === 'endure') lines.push(f(L('{n} tient bon !', '{n} endured the hit!'), { n: nm(e.side) }));
+      if (e.note === 'cured') lines.push(f(L('{n} retrouve la forme !', '{n} is back in shape!'), { n: nm(e.side) }));
+      if (e.note === 'immune') lines.push(f(L('Ça n’a aucun effet sur {n}.', 'It doesn’t affect {n}.'), { n: nm(e.side) }));
+      return lines;
+    }
     case 'guarded':
       return [f(L('Le vernis protège {n} : ses stats ne baissent pas !', '{n} is protected by the varnish!'), { n: nm(e.side) })];
     case 'itemHeal':

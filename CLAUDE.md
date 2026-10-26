@@ -75,7 +75,7 @@ re-renders everything.
   speed, sound, music) so Options also work from the title screen.
 
 **Data** (`src/data`) is plain TypeScript objects with `L()` texts:
-- creatures (`faces` marks sideways drawings);
+- creatures (`faces` marks sideways drawings; `talents` + `hiddenTalent` index `src/data/talents.ts`), natures;
 - moves, the type chart, items (`kind: 'key'` for story items);
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in

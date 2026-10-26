@@ -2,6 +2,7 @@ import { effect, signal } from '@preact/signals';
 import { gender, locale, setGlobalVars } from '../i18n';
 import { healMon, noStats, type Mon } from '../engine/pk/creature';
 import { natureFromUid } from '../data/natures';
+import { talentFromUid } from '../data/talents';
 import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
@@ -78,6 +79,8 @@ function repairMon(m: Mon) {
   m.item ??= null;
   // natures came later: older Bestioles get a fixed one from their id
   m.nature ??= natureFromUid(m.uid);
+  // and talents too (1 in 4 hidden)
+  m.talent ??= talentFromUid(m.uid);
 }
 
 interface V2Save {

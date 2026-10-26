@@ -78,7 +78,7 @@
 .summary__name { font-weight: 400; font-size: 1.5rem; }
 .summary__page { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .summary__box { font-size: 1.1rem; }
-.summary__held { display: inline-flex; align-items: center; gap: 4px; }
+.summary__held { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
 .summary__held .picon { image-rendering: pixelated; }
 .summary__dex { margin: 6px 0 0; font-family: 'Inter', system-ui, sans-serif; font-size: 0.95rem; line-height: 1.4; }
 .summary__hp { display: flex; align-items: center; gap: 6px; }
@@ -97,6 +97,8 @@
 .nat--up { color: #c0392b; }
 .nat--down { color: #3a6ad6; }
 .summary__legend { margin: 6px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
+.summary__hidden { color: #b07a10; font-size: 0.8em; }
+.summary__talent { margin: 6px 0 0; font-size: 0.9rem; }
 .summary__hint { margin: 0; color: var(--cursor); font-size: 1.1rem; }
 .summary__moves .mlist__item { font-size: 1.1rem; }
 .summary__detail { font-size: 1rem; }

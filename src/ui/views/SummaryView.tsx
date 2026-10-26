@@ -8,6 +8,7 @@ import { HpBar, MenuList, PixelIcon, StatusTag, TypeBadge, Window, XpBar, YesNo,
 import { item } from '../../data/items';
 import { ivGrade } from '../../engine/pk/judge';
 import { nature } from '../../data/natures';
+import { talentOf } from '../../data/talents';
 import type { StatKey } from '../../data/schema';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
@@ -92,12 +93,18 @@ export function SummaryView({ mon, onClose, learn }: {
               <dt>{tr(L('Espèce', 'Kind'))}</dt><dd>{tr(sp.kind)}</dd>
               <dt>{tr(L('Type', 'Type'))}</dt><dd><TypeBadge type={sp.type} /></dd>
               <dt>{tr(L('Nature', 'Nature'))}</dt><dd>{tr(nature(mon.nature).name)}</dd>
+              <dt>{tr(L('Talent', 'Talent'))}</dt>
+              <dd>
+                {tr(talentOf(mon).name)}
+                {mon.talent === 2 && <small class="summary__hidden" title={tr(L('Talent caché', 'Hidden talent'))}> ✦ {tr(L('caché', 'hidden'))}</small>}
+              </dd>
               <dt>{tr(L('Objet tenu', 'Item'))}</dt>
               <dd class="summary__held">{mon.item ? <><PixelIcon id={mon.item} size={18} /> {tr(item(mon.item).name)}</> : tr(L('Aucun', 'None'))}</dd>
               {sp.evolvesTo && sp.evolveLevel && (
                 <><dt>{tr(L('Évolution', 'Evolves'))}</dt><dd>{tr(L('{n} au N.{l}', '{n} at Lv{l}'), { n: tr(creature(sp.evolvesTo).name), l: sp.evolveLevel })}</dd></>
               )}
             </dl>
+            <p class="summary__talent"><b>{tr(talentOf(mon).name)}</b>{locale.value === 'fr' ? '\u00a0: ' : ': '}{tr(talentOf(mon).desc)}</p>
             <p class="summary__dex">{tr(sp.dex)}</p>
           </Window>
         )}
