@@ -46,6 +46,56 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
+    id: '012', slug: 'chenillou', faces: 'left', name: L('Chenillou', 'Wigglet'), kind: L('Bestiole Chenille', 'Caterpillar Critter'),
+    type: 'insecte', base: { hp: 45, atk: 32, def: 38, spa: 22, spd: 22, spe: 46 },
+    catchRate: 255, baseExp: 50, evYield: { hp: 1 }, wildItem: { id: 'baie-bleue', pct: 5 }, rarity: 'common', evolvesTo: '015', evolveLevel: 7,
+    stencils: ['pochoir-01', 'pochoir-12'],
+    talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'pieds-legers',
+    learnset: [[1, 'bousculade'], [1, 'fil-de-soie']],
+    dex: L(
+      'Il avance sur ses pattes rondes comme sur des roulettes. Un beau matin, il se réveillera avec des ailes.',
+      'It rolls along on its round feet like little wheels. One fine morning it will wake up with wings.',
+    ),
+  },
+  {
+    id: '015', slug: 'chrysalou', faces: 'right', name: L('Chrysalou', 'Cocoonap'), kind: L('Bestiole Chrysalide', 'Chrysalis Critter'),
+    type: 'insecte', base: { hp: 50, atk: 20, def: 60, spa: 25, spd: 30, spe: 25 },
+    catchRate: 120, baseExp: 72, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '012', evolvesTo: '007', evolveLevel: 10,
+    stencils: ['pochoir-01', 'pochoir-12'],
+    talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'increvable',
+    learnset: [[1, 'bousculade'], [1, 'cocon-serre'], [7, 'cocon-serre']],
+    dex: L(
+      'Il ne bouge presque pas : à l’intérieur, il dessine en secret ses futures ailes. Sa coque pointue est plus dure qu’une mine de crayon.',
+      'It hardly moves: inside, it secretly draws its future wings. Its pointy shell is harder than a pencil lead.',
+    ),
+  },
+  {
+    id: '007', slug: 'papivole', name: L('Papivole', 'Flutterbug'), kind: L('Bestiole Papillon', 'Butterfly Critter'),
+    type: 'insecte', base: { hp: 48, atk: 35, def: 45, spa: 72, spd: 64, spe: 66 },
+    catchRate: 120, baseExp: 100, evYield: { spa: 2, spd: 1 }, wildItem: { id: 'baie-menthe', pct: 5 }, rarity: 'common', evolvesFrom: '015',
+    stencils: ['pochoir-01', 'pochoir-06', 'pochoir-07', 'pochoir-09', 'pochoir-12'],
+    talents: ['poudre-bouclier', 'mille-yeux'], hiddenTalent: 'bonne-etoile',
+    learnset: [[1, 'bousculade'], [1, 'dard'], [10, 'coup-d-ailes'], [12, 'poudre-dodo'], [14, 'poudre-piquante'],
+      [15, 'poudre-toxique'], [16, 'choc-mental'], [21, 'rayon-d-ailes'], [27, 'poudre-arc-en-ciel']],
+    dex: L(
+      'Ses gros yeux rouges voient toutes les couleurs, même celles qu’on n’a pas encore inventées.',
+      'Its big red eyes see every color, even the ones nobody has invented yet.',
+    ),
+  },
+  {
+    id: '013', slug: 'piafou', faces: 'right', name: L('Piafou', 'Chirpie'), kind: L('Bestiole Oiseau', 'Bird Critter'),
+    type: 'normal', base: { hp: 45, atk: 56, def: 42, spa: 38, spd: 40, spe: 62 },
+    catchRate: 200, baseExp: 62, evYield: { spe: 1 }, wildItem: { id: 'baie-peche', pct: 10 }, rarity: 'common',
+    stencils: ['pochoir-01', 'pochoir-02', 'pochoir-11', 'pochoir-12'],
+    talents: ['oeil-de-lynx', 'coup-de-chance'], hiddenTalent: 'trait-assure',
+    learnset: [[1, 'picore'], [1, 'grondement'], [5, 'pas-de-loup'], [9, 'rafale'], [13, 'coup-d-ailes'],
+      [18, 'bec-vrille'], [24, 'coup-de-boule'], [30, 'grosse-voix']],
+    dex: L(
+      'Il chante dès le lever du soleil en gonflant ses plumes brunes. Avec lui, pas besoin de réveil !',
+      'It sings at sunrise, puffing up its brown feathers. With it around, who needs an alarm clock?',
+    ),
+  },
+  {
     id: '004', slug: 'zigzou', name: L('Zigzou', 'Ziggle'), kind: L('Bestiole Étincelle', 'Spark Critter'),
     type: 'electrique', base: { hp: 40, atk: 55, def: 38, spa: 52, spd: 46, spe: 88 },
     catchRate: 190, baseExp: 82, evYield: { spe: 1 }, wildItem: { id: 'baie-cerise', pct: 10 }, rarity: 'common',
@@ -82,19 +132,6 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Elle danse sous la lune avec la petite boucle de sa tête. On dit qu’elle porte bonheur.',
       'It dances under the moon with the little curl on its head. They say it brings good luck.',
-    ),
-  },
-  {
-    id: '007', slug: 'papivole', name: L('Papivole', 'Flutterbug'), kind: L('Bestiole Papillon', 'Butterfly Critter'),
-    type: 'insecte', base: { hp: 48, atk: 35, def: 45, spa: 72, spd: 64, spe: 66 },
-    catchRate: 120, baseExp: 100, evYield: { spa: 2, spd: 1 }, wildItem: { id: 'baie-menthe', pct: 5 }, rarity: 'common', evolvesFrom: '015',
-    stencils: ['pochoir-01', 'pochoir-06', 'pochoir-07', 'pochoir-09', 'pochoir-12'],
-    talents: ['poudre-bouclier', 'mille-yeux'], hiddenTalent: 'bonne-etoile',
-    learnset: [[1, 'bousculade'], [1, 'dard'], [10, 'coup-d-ailes'], [12, 'poudre-dodo'], [14, 'poudre-piquante'],
-      [15, 'poudre-toxique'], [16, 'choc-mental'], [21, 'rayon-d-ailes'], [27, 'poudre-arc-en-ciel']],
-    dex: L(
-      'Ses gros yeux rouges voient toutes les couleurs, même celles qu’on n’a pas encore inventées.',
-      'Its big red eyes see every color, even the ones nobody has invented yet.',
     ),
   },
   {
@@ -150,31 +187,6 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '012', slug: 'chenillou', faces: 'left', name: L('Chenillou', 'Wigglet'), kind: L('Bestiole Chenille', 'Caterpillar Critter'),
-    type: 'insecte', base: { hp: 45, atk: 32, def: 38, spa: 22, spd: 22, spe: 46 },
-    catchRate: 255, baseExp: 50, evYield: { hp: 1 }, wildItem: { id: 'baie-bleue', pct: 5 }, rarity: 'common', evolvesTo: '015', evolveLevel: 7,
-    stencils: ['pochoir-01', 'pochoir-12'],
-    talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'pieds-legers',
-    learnset: [[1, 'bousculade'], [1, 'fil-de-soie']],
-    dex: L(
-      'Il avance sur ses pattes rondes comme sur des roulettes. Un beau matin, il se réveillera avec des ailes.',
-      'It rolls along on its round feet like little wheels. One fine morning it will wake up with wings.',
-    ),
-  },
-  {
-    id: '013', slug: 'piafou', faces: 'right', name: L('Piafou', 'Chirpie'), kind: L('Bestiole Oiseau', 'Bird Critter'),
-    type: 'normal', base: { hp: 45, atk: 56, def: 42, spa: 38, spd: 40, spe: 62 },
-    catchRate: 200, baseExp: 62, evYield: { spe: 1 }, wildItem: { id: 'baie-peche', pct: 10 }, rarity: 'common',
-    stencils: ['pochoir-01', 'pochoir-02', 'pochoir-11', 'pochoir-12'],
-    talents: ['oeil-de-lynx', 'coup-de-chance'], hiddenTalent: 'trait-assure',
-    learnset: [[1, 'picore'], [1, 'grondement'], [5, 'pas-de-loup'], [9, 'rafale'], [13, 'coup-d-ailes'],
-      [18, 'bec-vrille'], [24, 'coup-de-boule'], [30, 'grosse-voix']],
-    dex: L(
-      'Il chante dès le lever du soleil en gonflant ses plumes brunes. Avec lui, pas besoin de réveil !',
-      'It sings at sunrise, puffing up its brown feathers. With it around, who needs an alarm clock?',
-    ),
-  },
-  {
     id: '014', slug: 'lamacorne', faces: 'right', name: L('Lamacorne', 'Llamacorn'), kind: L('Bestiole Arc-en-ciel', 'Rainbow Critter'),
     type: 'psy', base: { hp: 65, atk: 55, def: 55, spa: 85, spd: 75, spe: 60 },
     catchRate: 60, baseExp: 140, evYield: { spa: 2 }, wildItem: { id: 'crayon-mauve', pct: 5 }, rarity: 'rare',
@@ -185,18 +197,6 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Quand il est content, un petit arc-en-ciel jaillit de sa corne. La fleur de son flanc refleurit chaque printemps.',
       'When it is happy, a little rainbow bursts from its horn. The flower on its side blooms again every spring.',
-    ),
-  },
-  {
-    id: '015', slug: 'chrysalou', faces: 'right', name: L('Chrysalou', 'Cocoonap'), kind: L('Bestiole Chrysalide', 'Chrysalis Critter'),
-    type: 'insecte', base: { hp: 50, atk: 20, def: 60, spa: 25, spd: 30, spe: 25 },
-    catchRate: 120, baseExp: 72, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '012', evolvesTo: '007', evolveLevel: 10,
-    stencils: ['pochoir-01', 'pochoir-12'],
-    talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'increvable',
-    learnset: [[1, 'bousculade'], [1, 'cocon-serre'], [7, 'cocon-serre']],
-    dex: L(
-      'Il ne bouge presque pas : à l’intérieur, il dessine en secret ses futures ailes. Sa coque pointue est plus dure qu’une mine de crayon.',
-      'It hardly moves: inside, it secretly draws its future wings. Its pointy shell is harder than a pencil lead.',
     ),
   },
   {
@@ -219,6 +219,14 @@ export function creature(id: string): SpeciesDef {
   const c = CREATURE_BY_ID[id];
   if (!c) throw new Error(`Unknown creature ${id}`);
   return c;
+}
+
+/**
+ * Bestiodex number: the position in CREATURES, which is ordered like a GBA dex (evolution lines
+ * side by side). Ids stay the keys in saves, maps and card files and never change.
+ */
+export function dexNo(id: string): string {
+  return String(CREATURES.findIndex((c) => c.id === id) + 1).padStart(3, '0');
 }
 
 export const STARTERS = ['001', '002', '003'] as const;

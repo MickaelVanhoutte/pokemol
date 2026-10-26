@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
-import { artUrl, creature } from '../../data/creatures';
+import { artUrl, creature, dexNo } from '../../data/creatures';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
@@ -89,7 +89,7 @@ export function SummaryView({ mon, onClose, learn }: {
         {page === 0 && (
           <Window class="summary__box">
             <dl class="kv">
-              <dt>{tr(L('N° Dex', 'Dex No.'))}</dt><dd>{sp.id}</dd>
+              <dt>{tr(L('N° Dex', 'Dex No.'))}</dt><dd>{dexNo(sp.id)}</dd>
               <dt>{tr(L('Espèce', 'Kind'))}</dt><dd>{tr(sp.kind)}</dd>
               <dt>{tr(L('Type', 'Type'))}</dt><dd><TypeBadge type={sp.type} /></dd>
               <dt>{tr(L('Nature', 'Nature'))}</dt><dd>{tr(nature(mon.nature).name)}</dd>

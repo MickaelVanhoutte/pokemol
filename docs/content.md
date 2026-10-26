@@ -153,6 +153,8 @@ Scripts run one at a time and lock player input. To change an existing script af
   creature to `src/data/creatures.ts`. For a creature that evolves, set `evolvesTo` and `evolveLevel`
   on the base form and `evolvesFrom` on the evolved one. Set `faces` for sideways drawings, and
   `rarity`, which weights the Tombola. Put it in an `encounters` table or a trainer party.
+  The order of `CREATURES` is the Bestiodex order (`dexNo`), and a test keeps evolution lines side by
+  side. Ids are keys used by saves, maps and card files, so never renumber them.
 - **Moves** (`src/data/moves.ts`): `type`, `cat` (`phys` / `spec` / `status`), `power`, `acc`
   (`null` never misses), `pp`, `priority`, and `effects`. The effect kinds (status, confuse, flinch,
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.

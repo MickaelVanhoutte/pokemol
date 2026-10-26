@@ -81,7 +81,8 @@
   animation: frameIn 0.18s ease-out;
 }
 @keyframes frameIn { from { opacity: 0; transform: translateY(8px); } }
-.frame__top { display: flex; align-items: center; gap: 8px; flex: none; }
+/* the title keeps room for a word or two: extra boxes (counters, back) wrap below on narrow screens */
+.frame__top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; flex: none; }
 .frame__title {
   flex: 1; min-width: 0;
   margin: 0; font-size: 1.45rem; font-weight: 400;
@@ -138,7 +139,7 @@ img.picon { image-rendering: pixelated; image-rendering: crisp-edges; }
   background: var(--ink); color: #fff; font-size: 0.75em; padding: 0 8px; border-radius: 4px; line-height: 1.5;
 }
 .textbox__next { position: absolute; right: 6px; bottom: 0; color: var(--cursor); font-size: 0.8em; line-height: 1; }
-.frame__title-win { flex: 1; min-width: 0; padding: 0 8px; }
+.frame__title-win { flex: 1 1 8.5em; min-width: 0; padding: 0 8px; }
 .yesno { min-width: 6.5em; }
 .qty { display: flex; align-items: center; gap: 8px; }
 .qty__n { min-width: 3ch; text-align: center; font-size: 1.3rem; }

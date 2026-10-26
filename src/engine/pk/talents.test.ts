@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CREATURES } from '../../data/creatures';
+import { CREATURES, dexNo } from '../../data/creatures';
 import { HIDDEN_TALENT_CHANCE, TALENTS, talent, talentOf, talentFromUid } from '../../data/talents';
 import { partyOf } from '../../data/trainers';
 import { act, computeDamage, createBattle, type BattleState } from './battle';
@@ -15,6 +15,16 @@ const mon = (species: string, level: number, slot: 0 | 1 | 2, moves?: string[]):
 };
 const battle = (me: Mon, foe: Mon, kind: 'wild' | 'trainer' = 'trainer', seed = 11) =>
   createBattle({ kind, seed, player: { name: L('a'), party: [me], isAI: false }, enemy: { name: L('b'), party: [foe], isAI: true } });
+
+describe('Bestiodex order', () => {
+  it('keeps every evolution line together, in order', () => {
+    CREATURES.forEach((c, i) => {
+      if (c.evolvesTo) expect(CREATURES[i + 1]?.id, `${c.id} → ${c.evolvesTo}`).toBe(c.evolvesTo);
+    });
+    expect(dexNo('012')).toBe('004');
+    expect(dexNo('007')).toBe('006');
+  });
+});
 
 describe('talents data', () => {
   it('gives every species one or two talents and a hidden one, all known', () => {

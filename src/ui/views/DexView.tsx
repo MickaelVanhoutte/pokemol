@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { CREATURES, artUrl, creature } from '../../data/creatures';
+import { CREATURES, artUrl, creature, dexNo } from '../../data/creatures';
 import { Frame, MenuList, PixelIcon, TypeBadge, Window } from '../paper';
 import './views.css';
 
@@ -23,7 +23,7 @@ export function DexView({ seen, caught, all, onClose }: { seen: string[]; caught
           items={CREATURES.map((c, i) => ({
             label: (
               <span class="dexrow">
-                <span class="dexrow__no">{c.id}</span>
+                <span class="dexrow__no">{dexNo(c.id)}</span>
                 {isSeen(c.id) ? <img class="mon-art dexrow__art" src={artUrl(c)} alt="" /> : <span class="dexrow__art dexrow__q">?</span>}
                 <span>{isSeen(c.id) ? tr(c.name) : '-----'}</span>
               </span>
@@ -49,7 +49,7 @@ function DexEntry({ index, isSeen, isCaught, onMove, onClose }: {
     }
   };
   return (
-    <Frame title={`N°${sp.id} ${tr(sp.name)}`} onBack={onClose}>
+    <Frame title={`N°${dexNo(sp.id)} ${tr(sp.name)}`} onBack={onClose}>
       <Window class="dex__entry">
         <div class="dex__paper">
           <img class="mon-art" src={artUrl(sp)} alt="" style={isCaught(sp.id) ? undefined : { filter: 'brightness(0) opacity(0.75)' }} />

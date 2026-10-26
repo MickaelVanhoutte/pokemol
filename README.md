@@ -62,8 +62,9 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
 5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
-   evolution level if it evolves, Bestiodex text, and `faces: 'left'` or `'right'` if the drawing looks sideways
-   (battles mirror it so both Bestioles face each other).
+   evolution level if it evolves, Bestiodex text, talents, and `faces: 'left'` or `'right'` if the drawing
+   looks sideways (battles mirror it so both Bestioles face each other). The `id` is only a key: the
+   Bestiodex number is the creature's place in the list, so put an evolution right after its earlier form.
 6. Put it in a map's `encounters` (`src/data/maps/<area>.ts`) or a trainer party (`src/data/trainers.ts`).
    Every creature can also come out of the Tombola.
 7. `npm test`, commit, push: GitHub Pages redeploys.
