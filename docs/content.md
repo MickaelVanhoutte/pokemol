@@ -22,6 +22,8 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `gift:calque` | Prof. Fusain's aide (Healing Center) | Tracing Paper given |
 | `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
+| `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
+| `gc:<1-4>` | Grand Concours scripts | Grand Maître beaten in the current attempt (cleared at the door) |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
 Maps react without code:

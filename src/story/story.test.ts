@@ -23,6 +23,7 @@ function flagIsSet(name: string): boolean {
   if (name.startsWith('badge:')) return Object.values(TRAINERS).some((t) => t.badge === name.slice(6));
   if (name.startsWith('visit:')) return MAPS[name.slice(6)]?.onEnter === 'visitTown';
   if (name.startsWith('rematch:')) return !!TRAINERS[name.slice(8)]?.badge && source.includes('setFlag(`rematch:${id}`)');
+  if (name.startsWith('gc:')) return source.includes('setFlag(`gc:${n}`)');
   const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return new RegExp(`setFlag\\(\\s*'${esc}'|flags\\.${esc}\\s*=|flags\\['${esc}'\\]\\s*=`).test(source);
 }

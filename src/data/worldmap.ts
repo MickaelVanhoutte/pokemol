@@ -57,6 +57,7 @@ export const WORLD: Record<string, WorldCell> = {
   usine3: { kind: 'building', rects: at(17, 3), of: 'usine1' },
   routeBlanche: { kind: 'route', rects: at(18, 2) },
   bordPage: { kind: 'town', rects: at(17, 1, 3, 1) },
+  galerie: { kind: 'town', rects: at(18, 0), fly: { x: 4, y: 6 } },
 };
 
 /** Maps with no place on the Town Map (the real-world bedroom of the ending). */

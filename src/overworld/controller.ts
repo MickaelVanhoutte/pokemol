@@ -23,6 +23,7 @@ import { tile } from './tiles';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
 import { sfx } from '../audio/sfx';
+import type { TrackId } from '../audio/music';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -510,6 +511,12 @@ export interface FightOptions {
   look?: Look;
   /** Team Gomme: their Bestioles are greyed out. */
   grey?: boolean;
+  music?: TrackId;
+  /**
+   * Fights with these copies instead of the party (Tour des Défis): nothing comes back to the save,
+   * no bag, no prize money and no blackout.
+   */
+  borrowed?: Mon[];
 }
 
 /** Runs a battle from the world and applies its outcome to the save. */
@@ -527,15 +534,15 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         setup: {
           kind, seed: newSeed(),
           // eggs stay out of battles
-          player: { name: L(d.player.name, d.player.name), party: d.party.filter((m) => !m.egg), isAI: false },
+          player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false },
           enemy: { name: enemyName, party: enemy, isAI: true },
         },
-        bag: d.bag,
+        bag: opts.borrowed ? {} : d.bag,
         onUseItem: (id) => update((x) => void takeItem(x, id)),
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
         playerLook: AVATARS[d.player.avatar] ?? AVATARS[0],
-        music: opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gomme' : kind === 'trainer' ? 'trainer' : 'wild',
+        music: opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gomme' : kind === 'trainer' ? 'trainer' : 'wild'),
         trainer: kind === 'trainer' ? {
           title: tr(enemyName),
           look: opts.look ?? LOOKS.kid,
@@ -549,9 +556,10 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   });
   update((x) => {
     // the battle worked on copies: bring back HP, XP, levels, moves and statuses
+    x.stats.battles++;
+    if (opts.borrowed) return;
     const fought = new Map(res.state.sides[0].party.map((m) => [m.uid, m]));
     x.party = x.party.map((m) => (fought.has(m.uid) ? { ...fought.get(m.uid)! } : m));
-    x.stats.battles++;
     if (res.result === 'win') x.money += money;
     if (res.result === 'capture') {
       const wild = res.state.sides[1].party[res.state.sides[1].active];
@@ -569,7 +577,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   await wait(250);
   if (caught) await offerNickname(caught);
   await checkEvolutions();
-  if (res.result === 'lose' && !opts.friendly) await blackout();
+  if (res.result === 'lose' && !opts.friendly && !opts.borrowed) await blackout();
   if (opts.friendly) update((x) => healParty(x));
   return res;
 }

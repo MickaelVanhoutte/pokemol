@@ -32,6 +32,9 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
   battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 12 Pochoirs: stencils that
   teach a move as often as you like, one from each Atelier Master.
+- Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then
+  the Hall of Fame) and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to
+  trade for items).
 - Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.
 - Side quests: 12 torn sketchbook pages (memories of the real world), the Tombola at the fair,
   a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.

@@ -1,4 +1,6 @@
+import { L, tr } from '../../i18n';
 import { ITEMS } from '../../data/items';
+import { TOWER_STOCK } from '../../data/postgame';
 import { backToWorld } from '../../overworld/controller';
 import { addItem, save, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
@@ -16,8 +18,9 @@ const STOCK: Record<string, number> = {
   'bandeau-tetu': 6, 'lunettes-tetues': 6, 'echarpe-tetue': 6, 'bille-ardente': 6, 'tablier-peintre': 6,
 };
 
-export function ShopScreen() {
+export function ShopScreen({ tower }: { tower?: boolean }) {
   const d = save.value!;
+  if (tower) return <TowerShop />;
   const stock = ITEMS.filter((it) => it.id in STOCK && d.badges.length >= STOCK[it.id]);
   return (
     <ShopView
@@ -29,6 +32,35 @@ export function ShopScreen() {
         if (save.value!.money < it.price * n) return;
         update((x) => {
           x.money -= it.price * n;
+          addItem(x, id, n);
+        });
+        sfx.coin();
+      }}
+      onClose={backToWorld}
+    />
+  );
+}
+
+/** The Tour des Défis exchange: items for points (stencils only while you don't have them). */
+function TowerShop() {
+  const d = save.value!;
+  const points = d.tower?.points ?? 0;
+  const stock = ITEMS.filter((it) => it.id in TOWER_STOCK || (it.kind === 'stencil' && !d.bag[it.id]));
+  const priceOf = (id: string) => TOWER_STOCK[id] ?? 32;
+  return (
+    <ShopView
+      title={tr(L('Échange', 'Exchange'))}
+      money={points}
+      stock={stock}
+      bag={d.bag}
+      priceOf={(it) => priceOf(it.id)}
+      fmt={(n) => `${n} pts`}
+      poor={tr(L('Tu n’as pas assez de points.', 'You don’t have enough points.'))}
+      onBuy={(id, n) => {
+        const cost = priceOf(id) * n;
+        if ((save.value!.tower?.points ?? 0) < cost) return;
+        update((x) => {
+          x.tower!.points -= cost;
           addItem(x, id, n);
         });
         sfx.coin();

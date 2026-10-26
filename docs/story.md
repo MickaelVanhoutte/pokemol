@@ -98,7 +98,27 @@ checks every step's flags are set somewhere and its target is on the map.
 **Post-game** (`ending` set):
 - the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);
 - Atelier Masters offer rematches at +12 levels;
-- Mom has new lines.
+- Mom has new lines;
+- a path opens at the top of the Edge of the Page (`bordPage` patch) to **Masterpiece Square**
+  (`galerie`, `src/data/maps/galerie.ts`, a balloon stop once visited), with a Healing Center and a shop.
+
+**Grand Concours** (`concours` hall, scripts in `src/story/postgame.ts`, teams in
+`src/data/postgame.ts` `CONCOURS`): the door script (`concoursDoor`) clears `gc:1`…`gc:4` and warps
+in. Four Grands Maîtres (Marine, Ambre, Célestine, Nocturne at L45–48) stand in doorways and step
+aside once beaten (`gc:<n>`, NPC `hideIf`), then Prof. Fusain (6 Bestioles, L47–50). No healing in
+between, the bag is allowed; a loss is a normal blackout and the next attempt starts over. Winning
+sets `champion`, appends a `save.hallOfFame` entry (`hallEntry`: species, nickname, level, sparkle)
+and shows the Hall of Fame (`HallView`, screen `hall`); the Hall Keeper on the square shows it again.
+`npm run balance` has rows for each fight with a level 50 team.
+
+**Tour des Défis** (`tourDefis` lobby, `tourSalle` battle room): pick 3 party Bestioles; they fight
+as level 50 copies (`towerCopy`, `fight({ borrowed })`: nothing is written back, no bag, no prize,
+no blackout). Opponents come from `towerFoe(streak)`: 3 different species from `TOWER_POOL` (the
+legendary from round 3), IVs, held items and stencil moves growing each round of 7. `save.tower`
+keeps `streak`, `best` and `points` (1 per win, a bonus at the end of a round); the streak survives
+breaks and ends on a loss. Points buy `TOWER_STOCK` items (and missing stencils) at the Exchange
+(`ShopScreen` with `tower`). The trainer card shows a gold star each for the Concours, the
+Bestiodex diploma, the 12 pages and a tower streak of 21.
 
 These work by wrapping the Act 1 scripts: `const prev = scripts.prof; scripts.prof = …`. That is why
 `src/story/index.ts` imports the acts in order.

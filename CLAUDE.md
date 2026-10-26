@@ -158,6 +158,8 @@ excluded from `tsc`).
 - `src/story/story.test.ts` checks every script id and every flag a map waits for. Flags starting
   with `a2.` to `a9.` are exempt (a leftover from when later acts weren't written yet).
 - After the ending (`ending` flag), Atelier Masters offer rematches at +12 levels (capped at 50).
+- New Bestioles strong enough for the battle tower go in `TOWER_POOL` (`src/data/postgame.ts`).
+  `fight({ borrowed })` battles with copies that never come back to the save (tower).
 - The web app manifest `id` in `vite.config.ts` (`/pokemol/?app=atelier-bestioles`) is the app's
   identity for browsers: never change it, or every installed copy becomes a different app. When
   Android Chrome says the game is already installed but it isn't, another web app installed from

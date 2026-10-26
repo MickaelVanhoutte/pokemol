@@ -301,6 +301,7 @@ scripts.prof = async () => {
     return;
   }
   await say(L('Bon retour à Papeterre ! Cherche les pages déchirées ({p}/12) et complète ton Bestiodex ({c}/{t}).', 'Welcome back to Papeterra! Look for the torn pages ({p}/12) and complete your Critterdex ({c}/{t}).'), PROF, { p: pages, c: caught, t: CREATURES.length });
+  if (!flag('champion')) await say(L('Et au-delà du Bord de la Page, une nouvelle page s’est ouverte : le Grand Concours t’y attend !', 'And beyond the Edge of the Page, a new page has opened: the Grand Contest awaits you there!'), PROF);
 };
 
 const prevMom = scripts.mom;

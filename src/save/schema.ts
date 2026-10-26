@@ -1,4 +1,5 @@
 import type { Mon } from '../engine/pk/creature';
+import type { HallEntry } from '../data/postgame';
 
 export type Dir = 'down' | 'up' | 'left' | 'right';
 
@@ -35,6 +36,10 @@ export interface SaveData {
   steps?: number;
   /** The Pension Crayonnée: up to 2 Bestioles (with their level when left), and an egg waiting. */
   daycare?: { slots: { mon: Mon; level: number }[]; egg: boolean };
+  /** Teams that won the Grand Concours, oldest first. */
+  hallOfFame?: HallEntry[];
+  /** Tour des Défis: current win streak, best streak, points to spend. */
+  tower?: { streak: number; best: number; points: number };
   bag: Record<string, number>;
   money: number;
   dex: { seen: string[]; caught: string[] };

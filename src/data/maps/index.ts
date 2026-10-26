@@ -11,6 +11,7 @@ import { PAILLETTE_MAPS } from './paillette';
 import { GOUACHE_MAPS } from './gouache';
 import { ENCRE_MAPS } from './encre';
 import { DREAM_MAPS } from './dream';
+import { GALERIE_MAPS } from './galerie';
 
 /*
  * Legend: . grass  , grass2  " tall grass  : path  * flowers  ~ water  = bridge  e erased paper  T tree
@@ -32,4 +33,5 @@ export const MAPS: Record<string, MapDef> = {
   ...GOUACHE_MAPS,
   ...ENCRE_MAPS,
   ...DREAM_MAPS,
+  ...GALERIE_MAPS,
 };

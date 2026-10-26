@@ -11,10 +11,11 @@ export type Screen =
   | { id: 'bag' }
   | { id: 'dex'; all?: boolean }
   | { id: 'pc' }
-  | { id: 'shop' }
+  | { id: 'shop'; tower?: boolean }
   | { id: 'machine' }
   | { id: 'trainercard' }
   | { id: 'townmap' }
+  | { id: 'hall'; fresh?: boolean }
   | { id: 'credits'; fromWorld?: boolean };
 
 export const screen = signal<Screen>({ id: 'title' });
