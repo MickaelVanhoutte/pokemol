@@ -32,6 +32,7 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
   battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 12 Pochoirs: stencils that
   teach a move as often as you like, one from each Atelier Master.
+- A music box in the title menu (MUSIQUES) to listen to every original tune.
 - Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then
   the Hall of Fame) and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to
   trade for items).

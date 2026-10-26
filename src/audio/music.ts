@@ -215,9 +215,26 @@ function drum(c: AudioContext, kind: string, t: number) {
   s.stop(t + len);
 }
 
-/** Starts a looping tune (no-op if it is already playing or music is off). */
-export function playMusic(id: TrackId) {
-  if (!prefs.value.music || !prefs.value.sound) return stopMusic();
+/** Length of one loop of a tune, in seconds. */
+export function trackSeconds(id: TrackId): number {
+  const t = TRACKS[id];
+  return (lengthOf(t.lead) * 60) / t.bpm / 2;
+}
+
+let startedAt = 0;
+
+/** How far the playing tune is into its loop (seconds), 0 when nothing plays. */
+export function musicPosition(): number {
+  if (!ctx || !current || !timer) return 0;
+  return Math.max(0, ctx.currentTime - startedAt) % trackSeconds(current);
+}
+
+/**
+ * Starts a looping tune (no-op if it is already playing or music is off). `force`: the music box
+ * plays even when the music option is off.
+ */
+export function playMusic(id: TrackId, force = false) {
+  if (!force && (!prefs.value.music || !prefs.value.sound)) return stopMusic();
   if (current === id && timer) return;
   stopMusic();
   const c = audio();
@@ -233,6 +250,7 @@ export function playMusic(id: TrackId) {
   let drumStep = 0;
   let drumAt = 0;
   const start = c.currentTime + 0.08;
+  startedAt = start;
   for (const v of voices) v.at = start;
   drumAt = start;
   const tick = () => {

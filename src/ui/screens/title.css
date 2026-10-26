@@ -62,3 +62,15 @@
   .title__install .window { display: flex; align-items: center; gap: 10px; }
   .title__install p { flex: 1; margin: 0; }
 }
+
+/* ---------- music box */
+.jukebox .frame__body { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.jukebox__now { flex: none; display: flex; flex-direction: column; gap: 6px; }
+.jukebox__name { margin: 0; font-size: 1.3rem; }
+.jukebox__where { margin: 0; color: var(--ink-soft); font-size: 1rem; }
+.jukebox__bar { height: 12px; border: 2px solid var(--ink); border-radius: 6px; background: #fffaf0; overflow: hidden; }
+.jukebox__bar span { display: block; height: 100%; background: repeating-linear-gradient(-45deg, #e07aa6 0 4px, #f29ac8 4px 8px); }
+.jukebox__controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.jukebox__controls .pbtn { padding: 4px 10px; }
+.jukebox__time { margin-left: auto; font-size: 1.05rem; color: var(--ink-soft); }
+.jukebox__list { flex: 1; min-height: 0; overflow-y: auto; }

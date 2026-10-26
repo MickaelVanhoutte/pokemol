@@ -79,6 +79,7 @@ export function TitleScreen() {
     ...(exists ? [{ label: t('menu.continue'), onSelect: () => { if (loadSave()) enterWorld(); } }] : []),
     { label: t('menu.newGame'), onSelect: () => (exists ? setConfirmNew(true) : go({ id: 'newgame' })) },
     { label: tr(L('BESTIODEX', 'CRITTERDEX')), onSelect: () => go({ id: 'dex', all: true }) },
+    { label: tr(L('MUSIQUES', 'MUSIC')), onSelect: () => go({ id: 'jukebox' }) },
     { label: t('menu.settings'), onSelect: () => go({ id: 'settings', back: { id: 'title' } }) },
     { label: tr(L('Crédits', 'Credits')), onSelect: () => go({ id: 'credits' }) },
   ];

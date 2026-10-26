@@ -16,6 +16,7 @@ export type Screen =
   | { id: 'trainercard' }
   | { id: 'townmap' }
   | { id: 'hall'; fresh?: boolean }
+  | { id: 'jukebox' }
   | { id: 'credits'; fromWorld?: boolean };
 
 export const screen = signal<Screen>({ id: 'title' });
