@@ -38,8 +38,7 @@
 @keyframes hailFall { to { background-position: -10px 68px, 7px 80px; } }
 /* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
 /*
- * Each side is a column: the foe's HP box above its drawing (top right), yours under your drawing
- * (bottom left). The foe's column ends at 53% of the scene, below the backdrop's horizon (46% of
+ * Each side is a column with its HP box above its drawing: the foe top right, you bottom left. The foe's column ends at 53% of the scene, below the backdrop's horizon (46% of
  * the picture), so its feet are always on the ground.
  */
 .pk-side { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
@@ -148,7 +147,7 @@
 .hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
 .hpbar__num { position: absolute; inset: 0 6px 0 0; display: flex; align-items: center; justify-content: flex-end; font-style: normal; font-size: 0.8rem; line-height: 1; color: var(--ink); text-shadow: 0 0 2px #fffaf0, 0 0 2px #fffaf0; }
 /* experience: a thin blue line along the top of the box, only while it fills */
-.pk-hp__xp { position: absolute; left: 6px; right: 6px; top: -9px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.pk-hp__xp { position: absolute; left: 6px; right: 6px; top: -6px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
 .pk-hp__xp.is-on { opacity: 1; }
 .pk-hp__xp .xpbar { height: 5px; border: 0; border-image: none; background: rgba(255, 255, 255, 0.7); border-radius: 3px; }
 .pk-hp__xp .xpbar span { background: #4a90e2; }
@@ -233,9 +232,9 @@
 /* landscape phones: a lower panel so the scene keeps room (it stays a fixed height) */
 @media (orientation: landscape) and (max-height: 540px) {
   .battle { --bp-h: clamp(112px, 36dvh, 200px); max-width: none; }
-  /* short scene: each drawing takes what its column has left; the foe's feet stay at 74%, under
-     the horizon (about 52–56% of a wide scene) and level with yours */
-  .pk-side--foe { bottom: 26%; width: min(36%, 260px); }
+  /* short scene: both columns go down to the bottom, so each drawing gets the whole height left
+     under its box (the horizon is at about 52–56% of a wide scene, well above the feet) */
+  .pk-side--foe { bottom: 6px; width: min(36%, 260px); }
   .pk-side--me { top: 6px; width: min(40%, 280px); }
   .pk-plat--foe, .pk-plat--me { flex: 1 1 0; min-height: 0; height: auto; }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }

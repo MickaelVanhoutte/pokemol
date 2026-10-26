@@ -6,7 +6,6 @@ import { maxHp, xpAt, MAX_LEVEL } from '../../engine/pk/creature';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { HpBar, PixelIcon, StatusTag, XpBar, lv } from '../paper';
 import { sketchIconUrl } from '../sketchIcons';
-import { monName } from './messages';
 import { backdropUrl, platformUrl } from './backdrops';
 import type { Backdrop } from '../../data/schema';
 import { lookImage, type Look } from '../../overworld/sprites';
@@ -21,7 +20,8 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
   return (
     <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
       <div class="pk-hp__top">
-        <b>{side === 0 ? monLabel(m) : monName(st, 1)}</b>
+        {/* just the name: "wild" / "foe" stay in the battle messages */}
+        <b>{monLabel(m)}</b>
         {m.status && <StatusTag s={m.status} />}
         <span>{lv(m.level)}</span>
       </div>
@@ -93,6 +93,7 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
       </div>
       </div>
       <div class="pk-side pk-side--me">
+      {!playerBack && !intro && <HpBox st={view} side={0} />}
       <div class="pk-plat pk-plat--me">
         {playerBack ? (
           <img class="pk-trainer pk-trainer--me" src={lookImage(playerBack, 'up')} alt="" />
@@ -104,7 +105,6 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
           />
         )}
       </div>
-      {!playerBack && !intro && <HpBox st={view} side={0} />}
       </div>
     </div>
   );

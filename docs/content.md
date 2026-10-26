@@ -309,8 +309,8 @@ remove it from `DRAFTS` and drop `draft: true`.
   their pixel icons (`src/ui/icons.ts`).
 - Pure views go in `src/ui/views`. A screen wrapper in `src/ui/screens` connects a view to the save.
   A new screen also needs a `Screen` variant in `src/state/router.ts` and a case in `src/app.tsx`.
-- Battle scene: each side is a column (`.pk-side`): the foe's HP box above its drawing (top right),
-  yours under your drawing (bottom left). The foe's column ends low enough that its feet are always
+- Battle scene: each side is a column (`.pk-side`), the HP box above the drawing: the foe top right,
+  you bottom left. The foe's column ends low enough that its feet are always
   below the backdrop's horizon (46% of the picture). Boxes are two short rows (name and level; the
   bar, with your HP written inside it); experience is a thin blue line over your box, shown only
   while it fills. Trainer battles show the foe's team as little Crayon-balls (black: knocked out,
