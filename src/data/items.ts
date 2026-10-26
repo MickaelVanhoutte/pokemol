@@ -57,7 +57,7 @@ export const ITEMS: ItemDef[] = [
   },
   {
     id: 'fil-ariane', name: L('Fil d’Ariane', 'Ariadne Thread'), price: 550, kind: 'field', amount: 0, field: 'escape',
-    desc: L('Dans une grotte, une tour ou un repaire : suis le fil jusqu’au dernier Centre de soin.', 'In a cave, tower or hideout: follow the thread back to the last Healing Center.'),
+    desc: L('Dans une grotte, une tour ou un repaire : suis le fil jusqu’à la dernière Auberge.', 'In a cave, tower or hideout: follow the thread back to the last Inn.'),
   },
   // ---------------------------------------------------------------- battle items (on the creature fighting)
   {

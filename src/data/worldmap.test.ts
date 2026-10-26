@@ -62,7 +62,7 @@ describe('world map', () => {
     expect(townOfTrainer('nocturne')).toBe('encre');
   });
 
-  it('lands the balloon in front of each Healing Center', () => {
+  it('lands the balloon in front of each Inn', () => {
     expect(TOWNS.map((t) => t.map)).toEqual(['bourg', 'ville', 'plume', 'port', 'feutre', 'braise', 'paillette', 'gouache', 'encre', 'galerie']);
   });
 });

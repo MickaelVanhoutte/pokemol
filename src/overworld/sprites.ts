@@ -191,6 +191,7 @@ export const LOOKS = {
   prof: { hair: '#c8c8d0', shirt: '#5a8ad6', pants: '#4a4a5a', coat: true },
   rival: { hair: '#6a3ab0', shirt: '#2a2238', pants: '#4a4a5a' },
   nurse: { hair: '#f08ab0', shirt: '#ffffff', pants: '#f08ab0', longHair: true },
+  innkeeper: { hair: '#8a4a2a', shirt: '#f4e2bc', pants: '#6a8a4a', longHair: true },
   clerk: { hair: '#3a2a1a', shirt: '#4a9a5a', pants: '#2a3a5a' },
   kid: { hair: '#f2d05a', shirt: '#f15a5a', pants: '#3a5aa8' },
   girl: { hair: '#c0582a', shirt: '#b05ad6', pants: '#f2a0c0', longHair: true },

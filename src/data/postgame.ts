@@ -9,7 +9,7 @@ import type { TrainerDef } from './trainers';
 
 // ------------------------------------------------------------------ Grand Concours
 
-/** One opponent of the Grand Concours, fought in a row without going to a Healing Center. */
+/** One opponent of the Grand Concours, fought in a row without resting at an Inn. */
 export interface ConcoursStage {
   /** Index in the hall (1–4 Grands Maîtres, 5 the champion). */
   n: number;
@@ -33,7 +33,7 @@ export const CONCOURS: ConcoursStage[] = [
     ],
     before: [
       L('Bienvenue au Grand Concours ! Ici, quatre Grandes Maîtresses et un dernier artiste t’attendent, l’un après l’autre.', 'Welcome to the Grand Contest! Four Grand Masters and one last artist are waiting for you, one after the other.'),
-      L('Pas de Centre de soin entre nous : seulement ton sac et ton courage. Que l’aquarelle déborde !', 'No Healing Center between us: only your bag and your courage. Let the watercolours run!'),
+      L('Pas d’Auberge entre nous : seulement ton sac et ton courage. Que l’aquarelle déborde !', 'No Inn between us: only your bag and your courage. Let the watercolours run!'),
     ],
     after: [L('Quelle vague ! Passe, la suite t’attend.', 'What a wave! Go on, the next one is waiting.')],
   }),

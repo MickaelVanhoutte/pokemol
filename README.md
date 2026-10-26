@@ -20,8 +20,8 @@ English: [docs/histoire.md](docs/histoire.md).
   family sometimes leave an egg, which hatches as you carry it (inheriting IVs, the hidden talent,
   and the nature of a parent holding the Everstone).
 - Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
-  Rememberer and a Move Forgetter in every Healing Center.
-- Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,
+  Rememberer and a Move Forgetter in every Inn.
+- Collecting: nicknames (and a Calligrapher in every Inn), sparkly Bestioles (1 in 100,
   recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray
   and Ariadne Thread.
 - 18 types with dual-type Bestioles, weather (rain, sun, sandstorm, hail), freeze, bad poison,
@@ -38,7 +38,9 @@ English: [docs/histoire.md](docs/histoire.md).
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
 - Your first Bestiole walks behind you, as a little pixel version of its drawing; talk to it to see
   how it feels (it sometimes finds things). It can be switched off in Options.
-- A living world: day and night on the device's clock (a nap in your bed at home changes it), with
+- Inns (Auberges) instead of healing centers: the innkeeper lets your Bestioles rest, and the beds let
+  you sleep until night or until morning.
+- A living world: day and night on the device's clock (or after sleeping at an Inn or at home), with
   Bestioles that only come out at night; a trade in each town; townspeople asking small favours;
   route trainers who want a rematch the next day.
 - A music box in the title menu (MUSIQUES) to listen to every original tune.
@@ -49,7 +51,7 @@ English: [docs/histoire.md](docs/histoire.md).
   trade for items).
 - Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.
 - Side quests: 12 torn sketchbook pages to find, the Tombola at the fair,
-  a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
+  a complete Bestiodex. A Pencil Balloon in every Inn flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from
   Options), installable as an app (PWA: the title screen offers it). On phones, touch the screen
   anywhere to show the joystick.

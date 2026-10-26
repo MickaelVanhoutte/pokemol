@@ -46,7 +46,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     ],
     triggers: [{ x: 2, y: 9, w: 1, h: 2, script: 'pastelWestGate', unless: 'badge:pastel' }],
     items: [{ x: 22, y: 1, item: 'page-3', hidden: true }],
-    signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Centre · Boutique', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Center · Shop') }],
+    signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Auberge · Boutique', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Inn · Shop') }],
     npcs: [
       { id: 'tradeVille', x: 4, y: 17, look: LOOKS.kid, facing: 'up', script: 'trade_ville' },
       { id: 'westGuard', x: 2, y: 8, look: LOOKS.hiker, facing: 'down', script: 'pastelWestGuard' },

@@ -62,28 +62,78 @@ function door(p: Painter, x: number, H: number, color = '#a06a3a') {
   p.px(x + 11, H - 7, '#f8d030');
 }
 
+/** Top-left corners of the Inn's 10×8 windows, in pixels from the building's corner. */
+function innWindows(b: BuildingDef): [number, number][] {
+  const out: [number, number][] = [];
+  for (let tx = 0; tx < b.w; tx++) if (tx !== b.door) out.push([tx * 16 + 3, b.h * 16 - 15]);
+  return out;
+}
+const innLantern = (b: BuildingDef): [number, number] => [b.door * 16 + 17, b.h * 16 - 15];
+
+/** What stays lit at night (x, y, w, h in pixels from the building's corner): the Inn's windows and lantern. */
+export function lights(b: BuildingDef): [number, number, number, number][] {
+  if (b.kind !== 'center') return [];
+  const [lx, ly] = innLantern(b);
+  return [...innWindows(b).map(([x, y]): [number, number, number, number] => [x, y, 10, 8]), [lx + 1, ly + 1, 3, 4]];
+}
+
 export function paintBuilding(b: BuildingDef): HTMLCanvasElement {
   const W = b.w * 16, H = b.h * 16;
   const c = makeCanvas(W, H);
   const p = new Painter(c.getContext('2d')!);
   const doorX = b.door * 16;
   switch (b.kind) {
+    case 'center': {
+      // the Inn (Auberge): half-timbered walls, lit windows, a lantern and a moon on its signboard
+      const roofBottom = H - 22;
+      roof(p, W, 3, roofBottom, b.roof ?? '#b0583a');
+      wall(p, W, roofBottom + 2, H, '#f4e2bc');
+      const beam = '#6e4526';
+      p.rect(1, roofBottom + 2, W - 2, 2, beam);
+      p.rect(1, roofBottom + 2, 2, H - roofBottom - 3, beam);
+      p.rect(W - 3, roofBottom + 2, 2, H - roofBottom - 3, beam);
+      for (const [wx, wy] of innWindows(b)) {
+        p.rect(wx - 1, wy - 1, 12, 10, OUT);
+        p.rect(wx, wy, 10, 8, '#f8d878');
+        p.rect(wx, wy + 5, 10, 3, '#f2b84a');
+        p.rect(wx + 5, wy, 1, 8, beam);
+        p.rect(wx + 1, wy + 1, 2, 1, '#fff6d0');
+        p.rect(wx - 2, wy + 9, 14, 1, beam);
+      }
+      door(p, doorX, H, '#8a5228');
+      p.rect(doorX + 3, H - 16, 10, 1, beam);
+      // lantern next to the door
+      const [lx, ly] = innLantern(b);
+      p.rect(lx + 2, ly - 2, 1, 2, OUT);
+      p.rect(lx, ly, 5, 6, OUT);
+      p.rect(lx + 1, ly + 1, 3, 4, '#f8d030');
+      p.px(lx + 2, ly + 2, '#fff6d0');
+      // signboard on the roof: a crescent moon and a little star
+      const ex = Math.floor(W / 2) - 8, ey = Math.floor((3 + roofBottom) / 2) - 7;
+      p.rect(ex - 1, ey - 1, 18, 15, OUT);
+      p.rect(ex, ey, 16, 13, '#8a5a30');
+      p.rect(ex + 1, ey + 1, 14, 11, '#3a3a6a');
+      p.disc(ex + 7, ey + 6.5, 4.2, '#f8d878');
+      p.disc(ex + 9, ey + 5, 3.6, '#3a3a6a');
+      p.px(ex + 12, ey + 3, '#ffffff');
+      p.px(ex + 11, ey + 8, '#f8d878');
+      p.px(ex + 4, ey + 2, '#ffffff');
+      break;
+    }
     case 'house':
-    case 'center':
     case 'shop':
     case 'summon': {
-      const roofColor = b.roof ?? { house: '#d9534f', center: '#e06a9a', shop: '#4a7ad6', summon: '#7b60c3' }[b.kind];
+      const roofColor = b.roof ?? { house: '#d9534f', shop: '#4a7ad6', summon: '#7b60c3' }[b.kind];
       const roofBottom = H - 22;
       roof(p, W, 3, roofBottom, roofColor);
       wall(p, W, roofBottom + 2, H);
       for (let tx = 0; tx < b.w; tx++) if (tx !== b.door && (tx + 1) % 2 === (b.door % 2) ) windowAt(p, tx * 16 + 2, roofBottom + 6);
-      door(p, doorX, H, b.kind === 'center' ? '#f6a6c6' : b.kind === 'shop' ? '#7aa6f0' : b.kind === 'summon' ? '#b49ae6' : '#a06a3a');
+      door(p, doorX, H, b.kind === 'shop' ? '#7aa6f0' : b.kind === 'summon' ? '#b49ae6' : '#a06a3a');
       if (b.kind !== 'house') {
         // emblem on the roof
         const ex = Math.floor(W / 2) - 7, ey = Math.floor((3 + roofBottom) / 2) - 6;
         p.rect(ex - 1, ey - 1, 16, 14, OUT);
         p.rect(ex, ey, 14, 12, '#ffffff');
-        if (b.kind === 'center') { p.rect(ex + 5, ey + 2, 4, 8, '#e06a9a'); p.rect(ex + 3, ey + 4, 8, 4, '#e06a9a'); }
         if (b.kind === 'shop') { p.rect(ex + 3, ey + 3, 8, 6, '#4a7ad6'); p.rect(ex + 5, ey + 2, 4, 2, '#4a7ad6'); }
         if (b.kind === 'summon') { for (const [dx, dy] of [[6, 1], [5, 3], [7, 3], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [8, 4], [9, 4], [10, 4], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5], [9, 5], [5, 6], [6, 6], [7, 6], [8, 6], [4, 7], [5, 7], [8, 7], [9, 7], [3, 8], [4, 8], [9, 8], [10, 8]]) p.px(ex + dx, ey + dy + 1, '#7b60c3'); }
       }

@@ -54,7 +54,10 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
   gants.
 - Des **énigmes** dans les grottes et les tours, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
-- Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une sieste dans ton lit).
+- Dans chaque ville, une **Auberge** : l’aubergiste remet tes Bestioles en forme, et ses lits te
+  laissent dormir jusqu’à la nuit ou jusqu’au matin.
+- Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une nuit à l’Auberge ou
+  dans ton lit).
   Certaines Bestioles ne sortent que la nuit…
 - Les habitants te proposent des **échanges** de Bestioles, et certains ont besoin d’un coup de main :
   une Bestiole perdue, une lettre à porter, une curiosité à satisfaire…
@@ -116,7 +119,9 @@ where every drawing is alive: the **Critters** (Bestioles).
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
 - **Puzzles** in caves and towers, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.
-- Papeterra has **day and night**, by your device's clock (or after a nap in your bed). Some Critters
+- Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let
+  you sleep until night or until morning.
+- Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed). Some Critters
   only come out at night…
 - Townspeople offer Critter **trades**, and some need a hand: a lost Critter, a letter to carry, a
   curiosity to satisfy…

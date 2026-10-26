@@ -411,7 +411,7 @@ async function talkFollower() {
   const def = getGame().map.def;
   const fr = lead.friendship ?? BASE_FRIENDSHIP;
   const lines: LText[] = lead.hp * 3 < maxHp(lead)
-    ? [L('{n} a besoin de repos… Un petit tour au Centre de soin ?', '{n} needs a rest… A quick visit to the Healing Center?')]
+    ? [L('{n} a besoin de repos… Un petit tour à l’Auberge ?', '{n} needs a rest… A quick stop at the Inn?')]
     : fr >= 200
       ? [L('{n} se blottit contre toi, débordant de bonheur.', '{n} snuggles up to you, overflowing with happiness.'), L('{n} danse autour de toi de joie !', '{n} dances around you with joy!'), L('{n} te regarde avec des cœurs plein les yeux.', '{n} looks at you with hearts in its eyes.')]
       : fr >= 120
@@ -605,7 +605,7 @@ export function toggleBike(): LText | null {
 
 function onDoor(b: MapBuilding) {
   if (b.to && (!b.script || !scripts[b.script])) {
-    // shared interiors (Healing Centers, shops) remember which town's door was used
+    // shared interiors (Inns, shops) remember which town's door was used
     if (MAPS[b.to.map]?.generic && save.value) {
       const g = getGame();
       save.value.player.returnTo = { map: g.map.def.id, x: b.x + b.door, y: b.y + b.h, facing: 'down' };
@@ -656,7 +656,7 @@ async function trainerApproach(n: Actor) {
 export async function trainerBattle(id: string, actor?: Actor) {
   const tdef = TRAINERS[id];
   if (!partyAlive(s())) {
-    await say(L('Tes Bestioles sont épuisées… Va vite les soigner au Centre de soin !', 'Your Critters are worn out… Go heal them at the Healing Center!'), tdef.name);
+    await say(L('Tes Bestioles sont épuisées… Va vite les reposer à l’Auberge !', 'Your Critters are worn out… Go rest them at the Inn!'), tdef.name);
     return;
   }
   if (actor) getGame().faceToward(actor, getGame().player);
@@ -983,7 +983,7 @@ export async function useFieldItem(id: string) {
       playJingle('heal', { fallback: sfx.heal });
       await say(L('Pschitt ! Les Bestioles sauvages plus faibles t’éviteront pendant {n} pas.', 'Pssht! Weaker wild Critters will stay away for {n} steps.'), undefined, { n: def.amount });
     } else {
-      await say(L('Tu suis le Fil d’Ariane jusqu’au dernier Centre de soin…', 'You follow the Ariadne Thread back to the last Healing Center…'));
+      await say(L('Tu suis le Fil d’Ariane jusqu’à la dernière Auberge…', 'You follow the Ariadne Thread back to the last Inn…'));
       const d = s();
       if (save.value) save.value.player.returnTo = d.respawn.returnTo;
       await warpTo({ map: d.respawn.map, x: d.respawn.x, y: d.respawn.y, facing: 'down' });

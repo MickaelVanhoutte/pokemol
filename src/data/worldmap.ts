@@ -8,7 +8,7 @@ export interface WorldCell {
   kind: CellKind;
   /** Cells covered on the Town Map: one rect, or two for an L-shaped route. */
   rects: Rect[];
-  /** Pencil Balloon landing tile (in front of the Healing Center; home for Bourg-Gribouille). */
+  /** Pencil Balloon landing tile (in front of the Inn; home for Bourg-Gribouille). */
   fly?: { x: number; y: number };
   /** Another floor of this place: not a separate stop for the map cursor. */
   of?: string;
@@ -85,7 +85,7 @@ for (const def of Object.values(MAPS)) {
   if (pick) PARENT[def.id] = pick;
 }
 
-/** Place on the Town Map for a map; shared interiors (Healing Center, shop) use the door they were entered by. */
+/** Place on the Town Map for a map; shared interiors (Inn, shop) use the door they were entered by. */
 export function regionOf(mapId: string, returnTo?: Pick<Place, 'map'>): string | null {
   const seen = new Set<string>();
   for (let id: string | undefined = mapId; id && !seen.has(id); ) {

@@ -78,8 +78,8 @@ re-renders everything.
   saves (v2 parties go to the PC); `repair()` then fills in what newer versions added (it runs on every
   load, so it must stay idempotent). Changing the save shape means bumping `SAVE_VERSION`, adding a
   migration or repair step and a test (`src/state/game.test.ts`).
-- `src/state/clock.ts`: day, evening and night from the device's clock plus `save.clockShift` (naps in the
-  bed at home). Encounter entries can be `time: 'night'`; outdoor maps get a multiplied tint.
+- `src/state/clock.ts`: day, evening and night from the device's clock plus `save.clockShift` (sleeping
+  at an Inn or at home, `sleepUntil`). Encounter entries can be `time: 'night'`; outdoor maps get a multiplied tint.
 - `src/state/prefs.ts`: per-device preferences outside the save (text speed, difficulty, battle
   speed, sound, music) so Options also work from the title screen.
 
@@ -162,7 +162,8 @@ excluded from `tsc`).
   See [docs/testing.md](docs/testing.md).
 - Eggs are `Mon`s in the party with `egg: { steps }`. Anything that picks fighters, heals, evolves,
   teaches or names must skip them (`partyAlive`, `fight()`, `canUseOn`, `evolutionOf`, `monLabel`).
-- Shared interiors: one `centre` (Healing Center) and one `boutique` (shop) map serve every town
+- Shared interiors: one `centre` (the Inn, « Auberge », in place of a Healing Center: the innkeeper
+  heals, its beds sleep until night or morning) and one `boutique` (shop) map serve every town
   (`generic: true`). Their exits warp `to: 'back'`, which uses `player.returnTo`. Per-town NPCs use
   `fromMap`. The shop sells the `STOCK` list in `ShopScreen.tsx`, each item after a number of badges.
 - Sideways drawings set `faces: 'left' | 'right'`. Battle sprites are mirrored so ours looks right and

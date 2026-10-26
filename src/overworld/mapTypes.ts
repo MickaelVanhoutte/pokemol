@@ -169,7 +169,7 @@ export interface MapDef {
   fog?: boolean;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
-  /** Shared interior (Healing Center, shop…): its exits lead back to the door used to enter. */
+  /** Shared interior (Inn, shop…): its exits lead back to the door used to enter. */
   generic?: boolean;
   /** Cave, tower or hideout: the Ariadne Thread works here. */
   dungeon?: boolean;
@@ -193,7 +193,7 @@ export const LEGEND: Record<string, string> = {
   '.': 'grass', ',': 'grass2', '"': 'tallgrass', ':': 'path', '*': 'flowers', '~': 'water', 'T': 'tree',
   'B': 'bush', '#': 'fence', 'S': 'sign', 'M': 'mailbox', 'R': 'rock', '_': 'ledge', 's': 'sand',
   'f': 'floor', 'W': 'wall', 'w': 'window', 'C': 'counter', 'c': 'carpet', 'X': 'mat', 'b': 'bookshelf',
-  't': 'table', 'p': 'plant', 'P': 'pc', 'h': 'bed', 'v': 'tv', 'm': 'machine', 'H': 'healer', 'U': 'stairs',
+  't': 'table', 'p': 'plant', 'P': 'pc', 'h': 'bed', 'v': 'tv', 'm': 'machine', 'H': 'keyrack', 'U': 'stairs',
   'K': 'cavewall', 'k': 'cavefloor', 'r': 'caverock', 'o': 'towerfloor', 'Q': 'towerwall', 'D': 'stairsdown', 'E': 'caveexit', ' ': 'void',
   'e': 'erased', '=': 'bridge', 'n': 'paper', 'Y': 'sketchtree', '|': 'margin',
   // puzzles: pits, plates, gates, crayon barriers (red/blue, up/down) and their switch, glossy paper, fresques

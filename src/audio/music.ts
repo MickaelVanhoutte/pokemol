@@ -641,7 +641,7 @@ const JINGLES: Record<JingleId, Track> = {
       { wave: 'triangle', notes: bars('E3:4 B3:4', 'E3:6 .:2') },
     ],
   },
-  // Healing Center: everyone feels better
+  // the Inn: everyone feels better
   heal: {
     bpm: 110,
     voices: [

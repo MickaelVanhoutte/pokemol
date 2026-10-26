@@ -23,7 +23,7 @@ const TRACKS: Record<TrackId, { name: LText; where: LText }> = {
   cave: { name: L('Échos du Fusain', 'Charcoal Echoes'), where: L('Grottes et tours', 'Caves and towers') },
   gomme: { name: L('La Team Gomme', 'Team Gomme'), where: L('Repaires de la Team Gomme', 'Team Gomme hideouts') },
   edge: { name: L('La Page Blanche', 'The Blank Page'), where: L('Route Blanche et Bord de la Page', 'Blank Road and the Edge of the Page') },
-  center: { name: L('Pause goûter', 'Snack Break'), where: L('Centres de soin et boutiques', 'Healing Centers and shops') },
+  center: { name: L('Pause goûter', 'Snack Break'), where: L('Auberges et boutiques', 'Inns and shops') },
   atelier: { name: L('L’Atelier', 'The Atelier'), where: L('Dans les Ateliers et au Grand Concours', 'Inside the Ateliers and the Grand Contest') },
   rival: { name: L('Mon voisin', 'My Neighbour'), where: L('Quand le rival arrive, et ses combats', 'When the rival shows up, and his battles') },
   wild: { name: L('Une Bestiole sauvage !', 'A Wild Critter!'), where: L('Combats contre les Bestioles sauvages', 'Wild Critter battles') },

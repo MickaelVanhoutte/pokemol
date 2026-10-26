@@ -23,7 +23,7 @@ function resetConcours() {
 scripts.concoursDoor = async () => {
   await sayAll([
     L('Voici le Grand Concours ! Quatre Grandes Maîtresses, puis un dernier artiste, t’attendent l’un après l’autre.', 'This is the Grand Contest! Four Grand Masters, then one last artist, await you one after the other.'),
-    L('Une fois entré, pas de Centre de soin : seulement ton sac. Si tes Bestioles tombent, tout recommence depuis le début.', 'Once inside, no Healing Center: only your bag. If your Critters faint, it all starts again from the beginning.'),
+    L('Une fois entré, pas d’Auberge : seulement ton sac. Si tes Bestioles tombent, tout recommence depuis le début.', 'Once inside, no Inn: only your bag. If your Critters faint, it all starts again from the beginning.'),
   ], USHER);
   if (!partyAlive(save.value!)) {
     await say(L('Tes Bestioles sont épuisées. Va d’abord les soigner !', 'Your Critters are worn out. Heal them first!'), USHER);
@@ -47,7 +47,7 @@ async function concoursBattle(n: number): Promise<boolean> {
   const out = await fight('trainer', st.trainer.name, partyOf(st.trainer.party, newSeed()), {
     trainer: st.trainer, look: LOOKS[st.look as keyof typeof LOOKS], music: n === CONCOURS.length ? 'champion' : 'leader', backdrop: 'city',
   });
-  // a loss already sent the player back to the last Healing Center
+  // a loss already sent the player back to the last Inn
   if (out.result !== 'win') return false;
   setFlag(`gc:${n}`);
   return true;

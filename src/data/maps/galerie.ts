@@ -53,7 +53,7 @@ export const GALERIE_MAPS: Record<string, MapDef> = {
       { id: 'galerieKid', x: 6, y: 10, look: LOOKS.kid, facing: 'down', wander: true,
         text: [L('Cette page-là, la petite artiste l’a coloriée en dernier. Regarde comme les couleurs débordent !', 'The little artist coloured this page in last. Look how the colours go over the lines!')] },
       { id: 'galerieGirl', x: 13, y: 15, look: LOOKS.girl, facing: 'up',
-        text: [L('Au Grand Concours, on enchaîne cinq combats sans passer par un Centre de soin. Prends plein de potions !', 'At the Grand Contest you fight five battles in a row without a Healing Center. Bring lots of potions!')] },
+        text: [L('Au Grand Concours, on enchaîne cinq combats sans passer par une Auberge. Prends plein de potions !', 'At the Grand Contest you fight five battles in a row without resting at an Inn. Bring lots of potions!')] },
     ],
   },
 

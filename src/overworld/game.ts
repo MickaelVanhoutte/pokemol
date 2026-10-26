@@ -1,5 +1,5 @@
 import type { Dir } from '../save/schema';
-import { footprint, paintBuilding } from './buildings';
+import { footprint, lights, paintBuilding } from './buildings';
 import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type ObstacleDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
 import { fieldSprite } from './fieldSprites';
 import { BERRY_DOT } from './berries';
@@ -673,6 +673,11 @@ export class Game {
       ctx.fillStyle = this.timeTint;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
       ctx.globalCompositeOperation = 'source-over';
+      // the Inns keep their windows lit
+      ctx.fillStyle = 'rgba(255, 214, 110, 0.8)';
+      for (const b of def.buildings ?? []) {
+        for (const [x, y, w, h] of lights(b)) ctx.fillRect(b.x * TILE + x - camX, b.y * TILE + y - camY, w, h);
+      }
     }
     if (def.fog) {
       const t = performance.now() / 1000;

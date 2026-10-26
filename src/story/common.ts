@@ -1,30 +1,77 @@
 import { L, tr } from '../i18n';
 import { healParty, save, update } from '../state/game';
-import { ask, flag, getGame, giveItem, offerNickname, openScreen, say, scripts, setFlag, teachMove, wait } from '../overworld/controller';
+import { shiftTo } from '../state/clock';
+import { playJingle } from '../audio/music';
+import { sfx } from '../audio/sfx';
+import { ask, dayPhase, flag, getGame, giveItem, offerNickname, openScreen, say, sayAll, scripts, setFlag, teachMove, updateTime, wait } from '../overworld/controller';
 import { move } from '../data/moves';
 import { rememberableMoves } from '../engine/pk/creature';
 import { monLabel } from '../data/creatures';
-import { NURSE } from './cast';
+import { INNKEEPER } from './cast';
 
-/** Healing Center (shared by every town). */
-scripts.nurse = async () => {
+/** You wake up here after a blackout, and the Ariadne Thread leads back here. */
+const innRespawn = () => update((d) => void (d.respawn = { map: 'centre', x: 5, y: 4, returnTo: d.player.returnTo }));
+
+/**
+ * Sleeps until night (from day or evening) or until the morning (at night), healing the party:
+ * the bed at home and the Inn's beds. Night and day Bestioles come out without waiting for the real clock.
+ */
+export async function sleepUntil(morning: boolean) {
+  const g = getGame();
+  await g.fadeTo(1, 600);
+  update((d) => {
+    d.clockShift = shiftTo(morning ? 8 : 22);
+    healParty(d);
+  });
+  await wait(900);
+  updateTime();
+  await g.fadeTo(0, 600);
+  await say(morning
+    ? L('Bonjour ! Le soleil se lève sur Papeterre. Tes Bestioles sont en pleine forme.', 'Good morning! The sun is rising over Papeterra. Your Critters are in top shape.')
+    : L('Bonsoir ! La nuit est tombée sur Papeterre… Certaines Bestioles ne sortent qu’à cette heure-ci.', 'Good evening! Night has fallen over Papeterra… Some Critters only come out at this time.'));
+}
+
+/** The Inn (shared by every town): a quick rest heals the party, a night's sleep also turns the clock. */
+scripts.auberge = async () => {
   const first = !flag('visitedCenter');
-  const c = await ask(L('Bienvenue au Centre de soin ! Veux-tu que je soigne tes Bestioles ?', 'Welcome to the Healing Center! Shall I heal your Critters?'), [L('Oui', 'Yes'), L('Non', 'No')], NURSE);
+  const morning = dayPhase() === 'night';
+  const c = await ask(L('Bienvenue à l’Auberge ! Une petite pause, ou un bon gros dodo ?', 'Welcome to the Inn! A little rest, or a good long sleep?'),
+    [L('Se reposer', 'Rest'), morning ? L('Dormir jusqu’au matin', 'Sleep till morning') : L('Dormir jusqu’à la nuit', 'Sleep till night'), L('Non merci', 'No thanks')], INNKEEPER);
   if (c === 0) {
-    await say(L('Je m’occupe d’elles. Un petit coup de crayon par-ci, un peu de couleur par-là…', 'I’ll take care of them. A little pencil stroke here, a little colour there…'), NURSE);
+    await say(L('Un bon chocolat chaud, une couverture toute douce… Repose-toi un peu.', 'A nice hot chocolate, a soft blanket… Have a little rest.'), INNKEEPER);
     await getGame().fadeTo(0.6, 250, 'white');
+    playJingle('heal', { fallback: sfx.heal });
     await wait(700);
     await getGame().fadeTo(0, 250);
-    update((d) => {
-      healParty(d);
-      d.respawn = { map: 'centre', x: 5, y: 4, returnTo: d.player.returnTo };
-    });
-    await say(L('Et voilà ! Tes Bestioles sont en pleine forme. À bientôt !', 'There you go! Your Critters are in top shape. See you soon!'), NURSE);
+    update((d) => healParty(d));
+    innRespawn();
+    await say(L('Et voilà ! Tes Bestioles sont en pleine forme. À bientôt !', 'There you go! Your Critters are in top shape. See you soon!'), INNKEEPER);
+  } else if (c === 1) {
+    await say(morning
+      ? L('Ta chambre est prête. Je te réveille au lever du soleil !', 'Your room is ready. I’ll wake you at sunrise!')
+      : L('Ta chambre est prête. Je te réveille à la nuit tombée !', 'Your room is ready. I’ll wake you at nightfall!'), INNKEEPER);
+    innRespawn();
+    await sleepUntil(morning);
   }
   if (first) {
     setFlag('visitedCenter');
-    await say(L('Le PC dans le coin te permet de ranger tes Bestioles quand tu en as plus de six.', 'The PC in the corner stores your Critters when you have more than six.'), NURSE);
+    await sayAll([
+      L('Le PC dans le coin te permet de ranger tes Bestioles quand tu en as plus de six.', 'The PC in the corner stores your Critters when you have more than six.'),
+      L('Et nos lits sont ouverts à tous : on s’y endort le jour, on se réveille la nuit… ou l’inverse !', 'And our beds are open to all: fall asleep in the day, wake up at night… or the other way round!'),
+    ], INNKEEPER);
   }
+};
+
+/** The Inn's beds: the same sleep as the innkeeper's, without the talk. */
+scripts.innBed = async () => {
+  const morning = dayPhase() === 'night';
+  const c = await ask(morning
+    ? L('Un lit douillet qui sent la lavande. Dormir jusqu’au matin ?', 'A cosy bed that smells of lavender. Sleep till morning?')
+    : L('Un lit douillet qui sent la lavande. Dormir jusqu’à la nuit ?', 'A cosy bed that smells of lavender. Sleep till night?'),
+  [L('Oui', 'Yes'), L('Non', 'No')]);
+  if (c !== 0) return;
+  innRespawn();
+  await sleepUntil(morning);
 };
 
 /** Prof. Fusain's aide: the Tracing Paper (shares XP) once 3 kinds of Bestioles are caught. */
@@ -42,7 +89,7 @@ scripts.calqueAide = async () => {
   await say(L('Fais-le tenir à une Bestiole (menu BESTIOLES, OBJET) : elle gagnera la moitié de l’expérience de chaque combat, même sans se battre !', 'Have a Critter hold it (CRITTERS menu, ITEM): it gets half the experience of every battle, even without fighting!'), AIDE);
 };
 
-/** Healing Center: the Calligraphe writes (or rubs out) nicknames. */
+/** Inn: the Calligraphe writes (or rubs out) nicknames. */
 scripts.calligraphe = async () => {
   const who = L('Calligraphe', 'Calligrapher');
   const party = save.value?.party ?? [];
@@ -62,7 +109,7 @@ scripts.calligraphe = async () => {
   await say(L('Et voilà, écrit avec mes plus belles lettres !', 'There, written in my finest letters!'), who);
 };
 
-/** Healing Center: the Move Rememberer teaches back level-up moves a Bestiole forgot or skipped. */
+/** Inn: the Move Rememberer teaches back level-up moves a Bestiole forgot or skipped. */
 scripts.souvenirs = async () => {
   const who = L('Mémoire des Pochoirs', 'Move Rememberer');
   const party = save.value?.party ?? [];
@@ -85,7 +132,7 @@ scripts.souvenirs = async () => {
   await teachMove(c, moves[k]);
 };
 
-/** Healing Center: Madame Trou-de-Mémoire makes a Bestiole forget a move. */
+/** Inn: Madame Trou-de-Mémoire makes a Bestiole forget a move. */
 scripts.oubli = async () => {
   const who = L('Mme Trou-de-Mémoire', 'Mrs Forgetful');
   const party = save.value?.party ?? [];

@@ -18,11 +18,11 @@ export interface SaveData {
     x: number;
     y: number;
     facing: Dir;
-    /** Outside door of the shared interior you are in (Healing Centers and shops serve every town). */
+    /** Outside door of the shared interior you are in (Inns and shops serve every town). */
     returnTo?: Place;
   };
   rivalName: string;
-  /** Where you wake up after every creature fainted (last Healing Center or home). */
+  /** Where you wake up after every creature fainted (last Inn or home). */
   respawn: Place & { returnTo?: Place };
   /** Story progress, beaten trainers, picked-up items… */
   flags: Record<string, number>;

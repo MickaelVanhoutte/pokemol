@@ -312,12 +312,15 @@ export const TILES: Record<string, TileDef> = {
   },
   bed: {
     solid: true,
-    paint: (p) => {
+    // quilts of different colours (the one at home is blue)
+    paint: (p, _f, _n, x, y) => {
+      const [quilt, fold] = [['#d65a5a', '#f08a8a'], ['#6cae5a', '#9ad08a'], ['#e0a030', '#f6c86a'], ['#5a8ad6', '#87aef0']][(x + y) % 4];
       p.fill('#dcae74');
       p.rect(1, 0, 14, 16, '#7a4a24');
       p.rect(2, 1, 12, 4, '#ffffff');
-      p.rect(2, 5, 12, 10, '#5a8ad6');
-      p.rect(2, 5, 12, 1, '#87aef0');
+      p.rect(2, 5, 12, 10, quilt);
+      p.rect(2, 5, 12, 1, fold);
+      for (let i = 4; i < 14; i += 4) p.rect(i, 8, 1, 6, fold);
     },
   },
   tv: {
@@ -340,14 +343,21 @@ export const TILES: Record<string, TileDef> = {
       for (let i = 0; i < 3; i++) p.rect(3 + i * 4, 10, 2, 2, ['#f15a5a', '#f8d030', '#5aa2f0'][(i + f) % 3]);
     },
   },
-  healer: {
+  keyrack: {
+    // the Inn's board of room keys, on the wall behind the innkeeper
     solid: true,
-    animated: true,
-    paint: (p, f) => {
-      p.fill('#f4f4fb');
-      p.rect(1, 2, 14, 12, '#e06a9a');
-      p.rect(2, 3, 12, 10, '#f6a6c6');
-      for (let i = 0; i < 3; i++) p.rect(3 + i * 4, 6, 3, 4, f && i === 1 ? '#ffffff' : '#fff2b0');
+    paint: (p) => {
+      p.fill('#f6ecd6');
+      p.rect(0, 13, 16, 3, '#a5804f');
+      p.rect(1, 1, 14, 10, '#5a3a20');
+      p.rect(2, 2, 12, 8, '#8a5a30');
+      for (let i = 0; i < 3; i++) {
+        const kx = 3 + i * 4, ky = 3 + (i % 2);
+        p.px(kx + 1, 2, '#2a2238');
+        p.rect(kx, ky, 3, 2, '#f8d030');
+        p.rect(kx + 1, ky + 2, 1, 3, '#f8d030');
+        p.px(kx + 2, ky + 4, '#d99a2a');
+      }
     },
   },
   stairs: {

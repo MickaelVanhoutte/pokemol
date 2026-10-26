@@ -19,7 +19,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `badge:<badgeId>` | `trainerBattle()` for leaders | Badge owned (also pushed to `save.badges`) |
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
-| `gift:calque` | Prof. Fusain's aide (Healing Center) | Tracing Paper given |
+| `gift:calque` | Prof. Fusain's aide (Inn) | Tracing Paper given |
 | `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
 | `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
 | `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
@@ -71,7 +71,7 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
 - `encounters`: `{ rate, table: [{ id, w, min, max }] }`, where `w` is the weight. Add
   `anyTile: true` in caves.
   An entry with `time: 'night'` (or `'day'`) only shows up then (evening counts as day): the clock
-  is the device's, shifted by naps in the bed at home (`save.clockShift`, `src/state/clock.ts`).
+  is the device's, shifted by sleeping at an Inn or at home (`save.clockShift`, `src/state/clock.ts`).
   Keep at least one entry for each time in every table. The Bestiodex habitats say « la nuit ».
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
   sketch`).

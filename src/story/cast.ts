@@ -5,7 +5,7 @@ import { save } from '../state/game';
 export const PROF = L('Prof. Fusain', 'Prof. Charcoal');
 export const MOM = L('Maman', 'Mom');
 export const RIVAL = L('{rival}', '{rival}');
-export const NURSE = L('Infirmière', 'Nurse');
+export const INNKEEPER = L('Aubergiste', 'Innkeeper');
 export const GRUNT = L('Sbire Gomme', 'Eraser Grunt');
 
 export const hasTeam = () => (save.value?.party.length ?? 0) > 0;

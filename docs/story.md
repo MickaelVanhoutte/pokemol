@@ -101,7 +101,7 @@ They open optional pockets with the new stencils: Route 2 garden, Scribble Cave 
 (by boat), Mont Fusain boulder, Route 6, Route 7 and Route 8.
 
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
-Healing Center flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
+Inn flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
 `src/data/worldmap.ts`).
 
 **Town Map.** Mom gives the Carte de Papeterre with her first lines (`bag.carte`; old saves get it on
@@ -114,8 +114,10 @@ checks every step's flags are set somewhere and its target is on the map.
 
 **Living world** (`src/story/world.ts`).
 - *Day and night* follow the device's clock (day 7–19 h, evening 19–21 h, night). Outdoors get a
-  warm or blue tint (`TIME_TINT` in the controller, multiplied). The bed at home offers a nap until
-  night or until morning (it heals the party). At night: Lunelle on Routes 1, 2 and 6, Brumouille on
+  warm or blue tint (`TIME_TINT` in the controller, multiplied). Sleeping heals the party and turns
+  the clock to 22 h (from day or evening) or to 8 h (at night): the bed at home, the Inn's beds and
+  the innkeeper's « Dormir » (`sleepUntil` in `src/story/common.ts`). Healing Centers are Inns
+  (Auberges): the innkeeper's « Se reposer » heals without changing the time. At night: Lunelle on Routes 1, 2 and 6, Brumouille on
   Route 1 and more often in the Misty Woods, Grimouille on Route 6; Piafou only comes out by day.
   The trainer card shows the time.
 - *Trades*, one per town (`TRADES`): Hugo in Ville-Pastel (Chenillou → Piafou « Plumette »), Yves in
@@ -142,7 +144,7 @@ checks every step's flags are set somewhere and its target is on the map.
 - Atelier Masters offer rematches at +12 levels;
 - Mom has new lines;
 - a path opens at the top of the Edge of the Page (`bordPage` patch) to **Masterpiece Square**
-  (`galerie`, `src/data/maps/galerie.ts`, a balloon stop once visited), with a Healing Center and a shop.
+  (`galerie`, `src/data/maps/galerie.ts`, a balloon stop once visited), with an Inn and a shop.
 
 **Grand Concours** (`concours` hall, scripts in `src/story/postgame.ts`, teams in
 `src/data/postgame.ts` `CONCOURS`): the door script (`concoursDoor`) clears `gc:1`…`gc:4` and warps
