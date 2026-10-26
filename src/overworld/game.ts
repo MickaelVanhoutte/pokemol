@@ -56,6 +56,8 @@ export interface Follower {
   ms: number;
   moving: boolean;
   jumping?: boolean;
+  /** When it last stopped walking (performance.now()), for the landing squash. */
+  landed?: number;
   dir: Dir;
   img: HTMLImageElement;
   /** Which way the drawing looks, to turn it towards where it walks. */
@@ -463,7 +465,7 @@ export class Game {
     const fw = this.follower;
     if (fw?.moving) {
       fw.t += dt / fw.ms;
-      if (fw.t >= 1) Object.assign(fw, { t: 0, moving: false, jumping: false, fromX: fw.x, fromY: fw.y });
+      if (fw.t >= 1) Object.assign(fw, { t: 0, moving: false, jumping: false, fromX: fw.x, fromY: fw.y, landed: performance.now() });
     }
     // landing on the shore puts the boat away
     if (finished && this.surfing && this.tileAt(p.x, p.y) !== 'water') this.surfing = false;
@@ -560,19 +562,26 @@ export class Game {
     if (!f.img.complete || !f.img.naturalWidth) return;
     const [fx, fy] = this.followerPos(f);
     const w = f.img.naturalWidth, h = f.img.naturalHeight;
-    const bob = f.moving && f.t > 0.25 && f.t < 0.75 ? 1 : 0;
-    const x = Math.round(fx - camX + (TILE - w) / 2), y = Math.round(fy - camY + TILE - h - 1 - bob);
+    // a little hop on every step: squashed on take-off and landing, stretched in the air,
+    // and one last squash when it stops (squash > 0 is wider and shorter)
+    const air = f.moving ? Math.sin(f.t * Math.PI) : 0;
+    const squash = f.moving
+      ? (air < 0.35 ? 0.14 * (1 - air / 0.35) : -0.08 * air)
+      : 0.14 * Math.max(0, 1 - (performance.now() - (f.landed ?? 0)) / 160);
+    const lift = f.jumping ? 0 : Math.round(air * 3);
+    const dw = Math.round(w * (1 + squash)), dh = Math.round(h * (1 - squash));
+    const x = Math.round(fx - camX + (TILE - dw) / 2), y = Math.round(fy - camY + TILE - 1 - dh - lift);
     ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fillRect(Math.round(fx - camX) + 3, Math.round(fy - camY) + 13, 10, 3);
+    ctx.fillRect(Math.round(fx - camX) + 3 + lift, Math.round(fy - camY) + 13, 10 - lift * 2, 3);
     // turn the drawing towards where it walks
     const flip = (f.dir === 'left' && f.faces === 'right') || (f.dir === 'right' && f.faces === 'left') || (f.dir === 'left' && !f.faces);
     if (flip) {
       ctx.save();
-      ctx.translate(x + w, y);
+      ctx.translate(x + dw, y);
       ctx.scale(-1, 1);
-      ctx.drawImage(f.img, 0, 0);
+      ctx.drawImage(f.img, 0, 0, dw, dh);
       ctx.restore();
-    } else ctx.drawImage(f.img, x, y);
+    } else ctx.drawImage(f.img, x, y, dw, dh);
   }
 
   render() {

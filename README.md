@@ -36,7 +36,7 @@ English: [docs/histoire.md](docs/histoire.md).
 - Dungeon puzzles: crayon-barrier switches, glossy paper to slide on, eraser blocks and boulders
   to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
-- Your first Bestiole walks behind you, as a little pixel version of its drawing; talk to it to see
+- Your first Bestiole hops along behind you, as a little pixel version of its drawing; talk to it to see
   how it feels (it sometimes finds things). It can be switched off in Options.
 - Inns (Auberges) instead of healing centers: the innkeeper lets your Bestioles rest, and the beds let
   you sleep until night or until morning.
