@@ -64,6 +64,17 @@ export interface InteractDef {
   script: string;
 }
 
+/** Something in the way that a key item clears: a thin bush (scissors), a round boulder (gloves,
+ * pushed) or a cracked rock (mallet). They come back when the map is entered again. */
+export interface ObstacleDef {
+  x: number;
+  y: number;
+  kind: 'bush' | 'boulder' | 'rock';
+}
+
+/** What bites with each fishing rod (Old, Good, Super). */
+export type FishingTables = Partial<Record<'old' | 'good' | 'super', EncounterTable['table']>>;
+
 export interface EncounterTable {
   rate: number;
   /** Encounters on every walkable tile (caves), not only tall grass. */
@@ -124,6 +135,12 @@ export interface MapDef {
   generic?: boolean;
   /** Cave, tower or hideout: the Ariadne Thread works here. */
   dungeon?: boolean;
+  /** Obstacles cleared with the scissors, gloves or mallet. */
+  obstacles?: ObstacleDef[];
+  /** Wild Bestioles met while sailing on water. */
+  surf?: EncounterTable;
+  /** Wild Bestioles caught with each fishing rod. */
+  fishing?: FishingTables;
   /** Parts of the map redrawn while story flags are set (erased or restored areas). */
   patches?: PatchDef[];
   interact?: InteractDef[];

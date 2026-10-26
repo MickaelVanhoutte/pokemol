@@ -54,6 +54,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'capucine', x: 7, y: 16, look: LOOKS.girl, facing: 'left', script: 'touffouGift' },
       { id: 'granny', x: 8, y: 9, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!')] },
       { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire!')] },
+      { id: 'jardinier', x: 14, y: 16, look: { hair: '#5a3a20', shirt: '#4f9a3c', pants: '#7a5230', hat: '#f2c14e' }, facing: 'down', script: 'jardinier' },
     ],
   },
 
@@ -93,9 +94,9 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     border: 'tree',
     rows: [
       'TTTTTTTTTTTTTTTTTTTTTTTT',
-      'T*....."""""......."""*T',
-      'T......"""""......"""".T',
-      'T....BB.........S......T',
+      'T*....."""""......."T..T',
+      'T......"""""......""T..T',
+      'T....BB.........S.....TT',
       'T......................T',
       'T....."""""""..........T',
       '::::::::::::::::::::::::',
@@ -107,6 +108,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       'T..""""......*.........T',
       'TTTTTTTTTTTTTTTTTTTTTTTT',
     ],
+    obstacles: [{ x: 21, y: 3, kind: 'bush' }],
     warps: [
       { x: 23, y: 6, to: { map: 'ville', x: 1, y: 9, facing: 'right' } },
       { x: 23, y: 7, to: { map: 'ville', x: 1, y: 10, facing: 'right' } },
@@ -118,7 +120,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'pierrot', x: 10, y: 4, look: LOOKS.kid, facing: 'down', trainer: 'pierrot', sight: 2 },
       { id: 'ninon', x: 14, y: 9, look: LOOKS.girl, facing: 'up', trainer: 'ninon', sight: 2 },
     ],
-    items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }, { x: 13, y: 2, item: 'pochoir-12' }, { x: 6, y: 5, item: 'crayon-vert' }],
+    items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }, { x: 13, y: 2, item: 'pochoir-12' }, { x: 6, y: 5, item: 'crayon-vert' }, { x: 22, y: 1, item: 'pochoir-19' }, { x: 21, y: 1, item: 'baie-doree', count: 2 }],
     berries: [{ x: 19, y: 9, item: 'baie-peche' }],
     encounters: {
       rate: 0.13,

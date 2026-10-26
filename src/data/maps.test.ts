@@ -5,6 +5,7 @@ import { TRAINERS } from './trainers';
 import { ITEM_BY_ID } from './items';
 import { LEGEND, type MapDef } from '../overworld/mapTypes';
 import { footprint } from '../overworld/buildings';
+import { habitatsOf } from './habitats';
 import { TILES } from '../overworld/tiles';
 
 function walkable(map: MapDef, x: number, y: number, allowDoor = true): boolean {
@@ -85,9 +86,27 @@ describe('maps', () => {
         for (const it2 of map.interact ?? []) expect(it2.y < map.rows.length && it2.x < map.rows[0].length, `interact ${it2.script}`).toBe(true);
       });
 
-      it('only lists known creatures in encounters', () => {
-        for (const e of map.encounters?.table ?? []) expect(CREATURE_BY_ID[e.id], e.id).toBeDefined();
+      it('only lists known creatures in encounters, sailing and fishing', () => {
+        const tables = [map.encounters?.table, map.surf?.table, ...Object.values(map.fishing ?? {})];
+        for (const t of tables) for (const e of t ?? []) expect(CREATURE_BY_ID[e.id], e.id).toBeDefined();
+        if (map.surf || map.fishing) expect(map.rows.some((r) => r.includes('~')), 'water tables need water').toBe(true);
+      });
+
+      it('puts obstacles on free ground and never two pick-ups on one tile', () => {
+        for (const o of map.obstacles ?? []) expect(walkable(map, o.x, o.y, false), `${o.kind} at ${o.x},${o.y}`).toBe(true);
+        const spots = (map.items ?? []).map((p) => `${p.x},${p.y}`);
+        expect(new Set(spots).size, spots.join(' ')).toBe(spots.length);
       });
     });
   }
+});
+
+describe('habitats', () => {
+  it('finds wild places, sailing and fishing spots, gifts and the Tombola', () => {
+    expect(habitatsOf('012').some((h) => h.map === 'route1' && h.how === 'grass')).toBe(true);
+    expect(habitatsOf('003').some((h) => h.map === 'port' && h.how === 'surf')).toBe(true);
+    expect(habitatsOf('003').some((h) => h.map === 'bourg' && h.how === 'old')).toBe(true);
+    expect(habitatsOf('016').some((h) => h.how === 'gift' && h.map === 'ville')).toBe(true);
+    expect(habitatsOf('011').at(-1)?.how).toBe('tombola');
+  });
 });

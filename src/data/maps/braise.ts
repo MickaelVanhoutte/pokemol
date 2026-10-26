@@ -33,15 +33,16 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       'KkkkkkkkkkkkkkkKKkkK',
       'KKKkkkkKKKkkkkkKKkkK',
       'KkkkkrkkkkkkkkkkkkkK',
-      'KkkkkkkkKKKKkkkrkkkK',
+      'KKkkkkkkKKKKkkkrkkkK',
       'KkKKKkkkKKKKkkkkkkkK',
-      'KkKKKkkkkkkkkkkkKKkK',
-      'KkkkkkkrkkkkkkkkKKkK',
+      'KkkKKkkkkkkkkkkkKKkK',
+      'KkKkkkkrkkkkkkkkKKkK',
       'KkkkkkkkkkkkkkkkkkkK',
       'KKkkkkkkkkkkkkkkkkKK',
       'KKKKKKKKkkkkKKKKKKKK',
       'KKKKKKKKKEEKKKKKKKKK',
     ],
+    obstacles: [{ x: 1, y: 9, kind: 'boulder' }],
     warps: [
       { x: 9, y: 13, to: { map: 'feutre', x: 11, y: 4, facing: 'down' } },
       { x: 10, y: 13, to: { map: 'feutre', x: 11, y: 4, facing: 'down' } },
@@ -50,8 +51,9 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'mfOlga', x: 7, y: 5, look: LOOKS.hiker, facing: 'right', trainer: 'mfOlga', sight: 4 },
       { id: 'mfRemi', x: 13, y: 9, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'up', trainer: 'mfRemi', sight: 3 },
+      { id: 'mineur', x: 13, y: 10, look: LOOKS.hiker, facing: 'down', script: 'mineur' },
     ],
-    items: [{ x: 1, y: 10, item: 'super-potion' }, { x: 3, y: 1, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }],
+    items: [{ x: 1, y: 10, item: 'super-potion' }, { x: 3, y: 1, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }, { x: 2, y: 8, item: 'pochoir-13' }],
     encounters: FUSAIN_ENCOUNTERS,
   },
 
@@ -130,6 +132,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'braiseOld', x: 16, y: 8, look: LOOKS.granny, facing: 'left', text: [L('Le volcan ? Il crache des étincelles de crayon orange quand il est content.', 'The volcano? It spits orange crayon sparks when it’s happy.')] },
       { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embunny. So cool!')] },
+      { id: 'forgeron', x: 17, y: 13, look: { hair: '#2a2238', shirt: '#b5582e', pants: '#4a4458' }, facing: 'left', script: 'forgeron' },
     ],
   },
 

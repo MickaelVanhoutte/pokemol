@@ -4,15 +4,26 @@ import { CREATURES, artUrl, dexNo } from '../../data/creatures';
 import { Frame, MenuList, PixelIcon, TypeBadges, Window } from '../paper';
 import { sfx } from '../../audio/sfx';
 import { evolutionHints } from '../evolutionText';
+import { habitatsOf, type HabitatHow } from '../../data/habitats';
+import { MAPS } from '../../data/maps';
+import type { LText } from '../../i18n';
+
+const HOW: Record<HabitatHow, LText> = {
+  grass: L('hautes herbes', 'tall grass'), cave: L('grotte', 'cave'), surf: L('en bateau', 'sailing'),
+  old: L('Canne en Bois', 'Old Rod'), good: L('Bonne Canne', 'Good Rod'), super: L('Super Canne', 'Super Rod'),
+  gift: L('cadeau', 'gift'), tombola: L('tirage', 'raffle'),
+};
 import './views.css';
 
 /** Bestiodex: numbered list, then an entry page (drawing on paper, kind, type, text). */
-export function DexView({ seen, caught, all, onClose }: { seen: string[]; caught: string[]; all?: boolean; onClose: () => void }) {
+export function DexView({ seen, caught, all, visited = () => true, onClose }: {
+  seen: string[]; caught: string[]; all?: boolean; visited?: (map: string) => boolean; onClose: () => void;
+}) {
   const [open, setOpen] = useState<number | null>(null);
   const isSeen = (id: string) => all || seen.includes(id);
   const isCaught = (id: string) => all || caught.includes(id);
 
-  if (open !== null) return <DexEntry index={open} isSeen={isSeen} isCaught={isCaught} onMove={setOpen} onClose={() => setOpen(null)} />;
+  if (open !== null) return <DexEntry index={open} isSeen={isSeen} isCaught={isCaught} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
   return (
     <Frame
       title={tr(L('Bestiodex', 'Critterdex'))}
@@ -40,8 +51,23 @@ export function DexView({ seen, caught, all, onClose }: { seen: string[]; caught
   );
 }
 
-function DexEntry({ index, isSeen, isCaught, onMove, onClose }: {
-  index: number; isSeen: (id: string) => boolean; isCaught: (id: string) => boolean; onMove: (i: number) => void; onClose: () => void;
+/** « Où le trouver » : places (named once visited) and how, with levels. */
+function Habitats({ species, visited }: { species: string; visited: (map: string) => boolean }) {
+  const lines = habitatsOf(species).map((h) => {
+    const place = visited(h.map) && MAPS[h.map] ? tr(MAPS[h.map].name) : '???';
+    const lv = h.min !== undefined ? ` · N.${h.min}${h.max !== h.min ? `–${h.max}` : ''}` : '';
+    return `${place} (${tr(HOW[h.how])})${lv}`;
+  });
+  return (
+    <div class="dex__where">
+      <b>{tr(L('Où le trouver', 'Where to find it'))}</b>
+      <ul>{lines.map((l) => <li>{l}</li>)}</ul>
+    </div>
+  );
+}
+
+function DexEntry({ index, isSeen, isCaught, visited, onMove, onClose }: {
+  index: number; isSeen: (id: string) => boolean; isCaught: (id: string) => boolean; visited: (map: string) => boolean; onMove: (i: number) => void; onClose: () => void;
 }) {
   const sp = CREATURES[index];
   const step = (d: 1 | -1) => {
@@ -72,6 +98,7 @@ function DexEntry({ index, isSeen, isCaught, onMove, onClose }: {
             )}
           </>
         ) : <p>{tr(L('Attrape cette Bestiole pour en savoir plus !', 'Catch this Critter to learn more about it!'))}</p>}
+        {isSeen(sp.id) && <Habitats species={sp.id} visited={visited} />}
       </Window>
       <div class="dex__nav">
         <button class="pbtn" onClick={() => step(-1)}>◀ {tr(L('Préc.', 'Prev'))}</button>

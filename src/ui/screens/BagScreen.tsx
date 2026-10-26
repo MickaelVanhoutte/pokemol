@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { creature, monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
-import { backToWorld, fieldItemProblem, useFieldItem } from '../../overworld/controller';
+import { backToWorld, fieldItemProblem, toggleBike, useFieldItem } from '../../overworld/controller';
 import { save, see, takeItem, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { canUseOn, evolveWith, stencilStatus, useOn } from '../logic/bag';
@@ -170,7 +170,13 @@ export function BagScreen() {
         else setUsing(id);
       }}
       onGive={d.party.length ? (id) => { setNote(''); setGiving(id); } : undefined}
-      onRead={(id) => (id.startsWith('page-') ? setReading(Number(id.slice(5))) : id === 'carte' ? setMap(true) : setNote(tr(item(id).desc)))}
+      onRead={(id) => {
+        if (id === 'velo') {
+          const no = toggleBike();
+          return no ? setNote(tr(no)) : backToWorld();
+        }
+        return id.startsWith('page-') ? setReading(Number(id.slice(5))) : id === 'carte' ? setMap(true) : setNote(tr(item(id).desc));
+      }}
       onClose={backToWorld}
     />
   );

@@ -213,6 +213,39 @@ export const ITEMS: ItemDef[] = [
     id: 'baskets', name: L('Baskets-Éclair', 'Zip Sneakers'), price: 0, kind: 'key', amount: 0,
     desc: L('Des baskets dessinées au feutre rouge, avec un éclair sur le côté. Maintiens B pour courir !', 'Sneakers drawn in red felt-tip, with a lightning bolt on the side. Hold B to run!'),
   },
+  // ---------------------------------------------------------------- field tools (key items)
+  {
+    id: 'ciseaux', name: L('Ciseaux à Bouts Ronds', 'Safety Scissors'), price: 0, kind: 'key', amount: 0,
+    desc: L('Des ciseaux d’école sans danger. Devant un petit buisson qui bloque le passage, appuie sur A pour le couper.', 'Safe school scissors. Facing a thin bush in the way, press A to cut it.'),
+  },
+  {
+    id: 'bateau', name: L('Bateau en Papier', 'Paper Boat'), price: 0, kind: 'key', amount: 0,
+    desc: L('Un grand bateau plié dans une feuille. Devant l’eau, appuie sur A pour naviguer.', 'A big boat folded from one sheet. Facing water, press A to sail.'),
+  },
+  {
+    id: 'canne-bois', name: L('Canne en Bois', 'Old Rod'), price: 0, kind: 'key', amount: 0,
+    desc: L('Une petite canne à pêche. Devant l’eau, appuie sur A pour pêcher des Bestioles.', 'A little fishing rod. Facing water, press A to fish for Critters.'),
+  },
+  {
+    id: 'bonne-canne', name: L('Bonne Canne', 'Good Rod'), price: 0, kind: 'key', amount: 0,
+    desc: L('Une bonne canne à pêche : des Bestioles plus fortes viennent mordre.', 'A good fishing rod: stronger Critters bite.'),
+  },
+  {
+    id: 'super-canne', name: L('Super Canne', 'Super Rod'), price: 0, kind: 'key', amount: 0,
+    desc: L('La meilleure canne à pêche de Papeterre.', 'The best fishing rod in Papeterra.'),
+  },
+  {
+    id: 'gants', name: L('Gants Costauds', 'Strong Gloves'), price: 0, kind: 'key', amount: 0,
+    desc: L('Devant un rocher rond, appuie sur A pour enfiler les gants, puis marche dedans pour le pousser.', 'Facing a round boulder, press A to put the gloves on, then walk into it to push it.'),
+  },
+  {
+    id: 'maillet', name: L('Maillet en Mousse', 'Foam Mallet'), price: 0, kind: 'key', amount: 0,
+    desc: L('Devant un rocher fissuré, appuie sur A pour le casser. Bong !', 'Facing a cracked rock, press A to break it. Bonk!'),
+  },
+  {
+    id: 'velo', name: L('Vélo-Crayon', 'Pencil Bike'), price: 0, kind: 'key', amount: 0,
+    desc: L('Un vélo aux roues en taille-crayons. Choisis LIRE (ou VÉLO dans le menu) pour monter dessus, dehors seulement.', 'A bike with pencil-sharpener wheels. Choose READ (or BIKE in the menu) to ride it, outdoors only.'),
+  },
   {
     id: 'carte', name: L('Carte de Papeterre', 'Papeterra Map'), price: 0, kind: 'key', amount: 0,
     desc: L('Toute la région dessinée sur une feuille. Choisis LIRE pour voir où tu es et où aller ensuite.', 'The whole region drawn on one sheet. Choose READ to see where you are and where to go next.'),

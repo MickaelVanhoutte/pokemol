@@ -10,7 +10,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     border: 'tree',
     rows: [
       'TTTTTTTT::TTTTTTTT',
-      'T.......::.......T',
+      'T..T....::.......T',
       'T.BB....::....BB.T',
       'T.......::.......T',
       'T"""""""::"""""""T',
@@ -32,6 +32,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       'T.......::.......T',
       'TTTTTTTT::TTTTTTTT',
     ],
+    obstacles: [{ x: 1, y: 2, kind: 'bush' }],
     warps: [
       { x: 8, y: 21, to: { map: 'paillette', x: 9, y: 1, facing: 'down' } },
       { x: 9, y: 21, to: { map: 'paillette', x: 10, y: 1, facing: 'down' } },
@@ -43,7 +44,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'r7a', x: 12, y: 8, look: LOOKS.granny, facing: 'left', trainer: 'r7a', sight: 3 },
       { id: 'r7b', x: 4, y: 15, look: LOOKS.hiker, facing: 'right', trainer: 'r7b', sight: 4 },
     ],
-    items: [{ x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }, { x: 13, y: 5, item: 'crayon-mauve' }],
+    items: [{ x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }, { x: 13, y: 5, item: 'crayon-mauve' }, { x: 1, y: 1, item: 'pochoir-20' }, { x: 2, y: 1, item: 'crayon-indigo' }],
     berries: [{ x: 13, y: 13, item: 'baie-menthe' }, { x: 2, y: 2, item: 'baie-doree' }],
     encounters: {
       rate: 0.14,
@@ -99,6 +100,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'gouaGardener', x: 18, y: 5, look: LOOKS.granny, facing: 'down', wander: true, text: [L('La gouache, c’est épais : quand Basile peint une fleur, elle pousse vraiment !', 'Gouache is thick: when Basil paints a flower, it really grows!')] },
       { id: 'gouaKid', x: 5, y: 13, look: LOOKS.kid, facing: 'right', text: [L('Au nord, la Cité-Encre est toute noire… On dit que le chef des Gomme s’y cache.', 'Up north, Ink City is all black… They say the Team Gomme boss hides there.')] },
+      { id: 'pecheuseGouache', x: 2, y: 14, look: LOOKS.girl, facing: 'right', script: 'superCanne' },
     ],
   },
 

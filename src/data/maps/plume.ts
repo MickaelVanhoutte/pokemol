@@ -29,6 +29,8 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       'T..........:.....~~~.T',
       'TTTTTTTTTTT:TTTTT~~~TT',
     ],
+    surf: { rate: 0.1, table: [{ id: '003', w: 60, min: 11, max: 15 }, { id: '013', w: 40, min: 11, max: 15 }] },
+    fishing: { old: [{ id: '003', w: 100, min: 6, max: 10 }], good: [{ id: '003', w: 100, min: 14, max: 18 }], super: [{ id: '003', w: 100, min: 24, max: 30 }] },
     // the bridge to the east was rubbed out by Team Gomme (rebuilt later in the story)
     patches: [{ id: 'plumeBridge', x: 17, y: 9, rows: ['eee'], unless: 'a2.bridge' }],
     buildings: [
@@ -46,6 +48,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },
       { id: 'birdKid', x: 3, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')] },
       { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!')] },
+      { id: 'pecheurPlume', x: 16, y: 14, look: LOOKS.sailor, facing: 'right', script: 'canneBois' },
     ],
   },
 

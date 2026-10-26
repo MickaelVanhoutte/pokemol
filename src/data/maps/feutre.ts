@@ -113,6 +113,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'feutreMan', x: 8, y: 16, look: LOOKS.hiker, facing: 'right', script: 'feutreMan' },
       { id: 'feutreKid', x: 18, y: 17, look: LOOKS.kid, facing: 'left', wander: true, script: 'feutreKid' },
+      { id: 'velociste', x: 5, y: 16, look: { hair: '#3a2a1a', shirt: '#d64545', pants: '#2a2238', hat: '#5b8ad6' }, facing: 'right', script: 'velociste' },
     ],
   },
 

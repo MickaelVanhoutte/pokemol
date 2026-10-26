@@ -30,10 +30,11 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'T.......::.......T',
       'T..BB...::...BB..T',
       'T.......::.......T',
-      'T.......::.......T',
-      'T.......::.......T',
+      'T.......::.....T.T',
+      'T.......::....T..T',
       'TTTTTTTT::TTTTTTTT',
     ],
+    obstacles: [{ x: 16, y: 19, kind: 'rock' }],
     warps: [
       { x: 8, y: 21, to: { map: 'gouache', x: 9, y: 1, facing: 'down' } },
       { x: 9, y: 21, to: { map: 'gouache', x: 10, y: 1, facing: 'down' } },
@@ -45,7 +46,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       { id: 'r8a', x: 12, y: 6, look: LOOKS.ghostgirl, facing: 'left', trainer: 'r8a', sight: 3 },
       { id: 'r8b', x: 4, y: 13, look: LOOKS.gomme, facing: 'right', trainer: 'r8b', sight: 4 },
     ],
-    items: [{ x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'pochoir-11' }, { x: 14, y: 7, item: 'crayon-noir' }],
+    items: [{ x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'pochoir-11' }, { x: 14, y: 7, item: 'crayon-noir' }, { x: 16, y: 20, item: 'pochoir-16' }, { x: 15, y: 20, item: 'crayon-argent' }],
     berries: [{ x: 13, y: 17, item: 'baie-prisme' }],
     encounters: {
       rate: 0.14,

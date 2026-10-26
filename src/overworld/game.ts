@@ -1,6 +1,7 @@
 import type { Dir } from '../save/schema';
 import { footprint, paintBuilding } from './buildings';
-import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
+import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type ObstacleDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
+import { fieldSprite } from './fieldSprites';
 import { BERRY_DOT } from './berries';
 import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
@@ -11,6 +12,7 @@ export const TILE = 16;
 const MARGIN = 9;
 const WALK_MS = 210;
 const RUN_MS = 120;
+const BIKE_MS = 85;
 
 export const DIRS: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 
@@ -52,7 +54,7 @@ export interface LoadedMap {
 export interface GameHooks {
   /** Called after each completed player step. Return true to stop auto-walking. */
   onStep(x: number, y: number): boolean | void;
-  onInteract(target: { npc?: Actor; sign?: SignDef; pickup?: PickupDef; tileId?: string; x: number; y: number }): void;
+  onInteract(target: { npc?: Actor; sign?: SignDef; pickup?: PickupDef; obstacle?: ObstacleDef; tileId?: string; x: number; y: number }): void;
   onDoor(b: MapBuilding): void;
   onMenu(): void;
 }
@@ -152,6 +154,14 @@ export class Game {
   input = new Input();
   /** Holding B runs only once the player owns running shoes. */
   canRun: () => boolean = () => true;
+  /** Sailing on the paper boat (water is walkable for the player, landing ends it). */
+  surfing = false;
+  /** Riding the Pencil Bike. */
+  biking = false;
+  /** Strong Gloves on: walking into a boulder pushes it (until the next map). */
+  strength = false;
+  /** Obstacles still standing on this map (cut bushes and broken rocks are gone until it is entered again). */
+  obstacles: ObstacleDef[] = [];
   map!: LoadedMap;
   npcs: Actor[] = [];
   pickups: PickupDef[] = [];
@@ -198,6 +208,18 @@ export class Game {
     this.npcs = npcs;
     this.pickups = (def.items ?? []).filter(visiblePickup);
     this.berries = (def.berries ?? []).filter(ripe);
+    this.obstacles = (def.obstacles ?? []).map((o) => ({ ...o }));
+    this.surfing = false;
+    this.strength = false;
+    if (def.indoor || def.dungeon) this.biking = false;
+  }
+
+  obstacleAt(x: number, y: number): ObstacleDef | undefined {
+    return this.obstacles.find((o) => o.x === x && o.y === y);
+  }
+
+  removeObstacle(o: ObstacleDef) {
+    this.obstacles = this.obstacles.filter((q) => q !== o);
   }
 
   pickBerries(b: BerryBushDef) {
@@ -251,7 +273,9 @@ export class Game {
   }
   blocked(x: number, y: number, who?: Actor): boolean {
     if (!this.inside(x, y)) return true;
-    if (this.map.solid[y * this.map.w + x]) return true;
+    // sailing: the player can go on water (and lands by walking onto the shore)
+    if (this.map.solid[y * this.map.w + x] && !(who === this.player && this.surfing && this.tileAt(x, y) === 'water')) return true;
+    if (this.obstacleAt(x, y)) return true;
     if (this.pickups.some((p) => p.x === x && p.y === y)) return true;
     return !!this.actorAt(x, y, who);
   }
@@ -259,10 +283,18 @@ export class Game {
   // ------------------------------------------------------------ movement
 
   /** Starts a one-tile move (or ledge jump). Returns false when blocked. */
-  tryMove(a: Actor, dir: Dir, ms = a === this.player ? (this.input.run && this.canRun() ? RUN_MS : WALK_MS) : a.ms): boolean {
+  tryMove(a: Actor, dir: Dir, ms = a === this.player ? (this.biking ? BIKE_MS : this.input.run && this.canRun() ? RUN_MS : WALK_MS) : a.ms): boolean {
     a.dir = dir;
     const [dx, dy] = DIRS[dir];
     let nx = a.x + dx, ny = a.y + dy;
+    // with the Strong Gloves on, walking into a boulder pushes it one tile (if there is room)
+    const boulder = a === this.player && this.strength ? this.obstacleAt(nx, ny) : undefined;
+    if (boulder?.kind === 'boulder') {
+      const bx = nx + dx, by = ny + dy;
+      if (this.blocked(bx, by) || this.tileAt(bx, by) === 'water' || tile(this.tileAt(bx, by)).ledge || this.map.warps.has(by * this.map.w + bx)) return false;
+      boulder.x = bx;
+      boulder.y = by;
+    }
     let jumping = false;
     if (this.inside(nx, ny) && tile(this.tileAt(nx, ny)).ledge) {
       if (dir !== 'down' || this.blocked(nx, ny + 1, a)) return false;
@@ -341,6 +373,8 @@ export class Game {
     // leftover time only carries into a step that starts in this same frame
     p.carry = 0;
     const finished = this.updateActor(p, dt);
+    // landing on the shore puts the boat away
+    if (finished && this.surfing && this.tileAt(p.x, p.y) !== 'water') this.surfing = false;
     if (finished) {
       if (tile(this.tileAt(p.x, p.y)).encounter) this.rustle.push({ x: p.x, y: p.y, t: 0 });
       const stop = this.hooks.onStep(p.x, p.y);
@@ -377,7 +411,7 @@ export class Game {
       const npc = this.actorAt(tx, ty, p) ?? this.actorAt(fx, fy, p);
       const sign = this.map.signs.get(fy * this.map.w + fx);
       const pickup = this.pickups.find((q) => q.x === fx && q.y === fy);
-      this.hooks.onInteract({ npc, sign, pickup, tileId: this.tileAt(fx, fy), x: fx, y: fy });
+      this.hooks.onInteract({ npc, sign, pickup, obstacle: this.obstacleAt(fx, fy), tileId: this.tileAt(fx, fy), x: fx, y: fy });
       return;
     }
     const d = this.input.current();
@@ -461,6 +495,11 @@ export class Game {
         ctx.fillRect(bx + dx, by + dy, 1, 1);
       }
     }
+    for (const o of this.obstacles) {
+      const ox = o.x * TILE - camX, oy = o.y * TILE - camY;
+      if (ox < -16 || oy < -16 || ox > this.viewW || oy > this.viewH) continue;
+      ctx.drawImage(fieldSprite(o.kind), Math.round(ox), Math.round(oy));
+    }
     const actors = [...this.npcs, this.player].sort((a, b) => this.pos(a)[1] - this.pos(b)[1]);
     for (const a of actors) {
       const [ax, ay] = this.pos(a);
@@ -470,7 +509,10 @@ export class Game {
         ctx.fillStyle = 'rgba(0,0,0,0.25)';
         ctx.fillRect(sx + 3, Math.round((a.fromY + (a.y - a.fromY) * a.t) * TILE - camY) + 13, 10, 3);
       }
-      a.sheet.draw(ctx, a.dir, a.moving && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2);
+      if (a === this.player && this.biking) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
+      a.sheet.draw(ctx, a.dir, a.moving && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
+      // sailing: the paper boat hides the legs
+      if (a === this.player && this.surfing) ctx.drawImage(fieldSprite('boat'), sx, sy + 9 + Math.round(Math.sin(performance.now() / 300)));
       // tall grass hides the legs
       const onGrass = !a.moving && tile(this.tileAt(a.x, a.y)).over;
       if (onGrass) {

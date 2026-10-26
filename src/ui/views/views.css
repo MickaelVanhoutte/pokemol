@@ -85,6 +85,9 @@
 .nickname__art { width: min(140px, 32vw, 22dvh); height: min(140px, 32vw, 22dvh); align-self: center; object-fit: contain; }
 .nickname__none { align-self: flex-end; }
 .summary__met { margin: 6px 0 0; font-size: 0.9rem; color: var(--ink-soft); }
+.dex__where { margin-top: 8px; font-size: 0.9rem; }
+.dex__where ul { margin: 2px 0 0; padding-left: 1.1em; }
+.dex__where li { line-height: 1.5; }
 .summary__page { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .summary__box { font-size: 1.1rem; }
 .summary__held { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }

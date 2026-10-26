@@ -11,6 +11,7 @@ export function DexScreen({ all }: { all?: boolean }) {
       seen={d?.dex.seen ?? []}
       caught={d?.dex.caught ?? []}
       all={all}
+      visited={(m) => all || !!d?.flags[`seen:${m}`] || !!d?.flags[`visit:${m}`]}
       onClose={() => (all ? go({ id: 'title' }) : backToWorld())}
     />
   );

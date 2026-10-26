@@ -13,6 +13,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
+- Field tools: scissors, foam mallet and strong gloves for bushes, rocks and boulders, a paper
+  boat to sail, three fishing rods, a pencil bike; the Bestiodex tells where each Bestiole lives.
 - Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
   Rememberer and a Move Forgetter in every Healing Center.
 - Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,

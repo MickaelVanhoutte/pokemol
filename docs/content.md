@@ -70,6 +70,14 @@ A **new outdoor map** also needs a place on the Town Map: an entry in `WORLD`
 that border warps point the right way on the grid, and that every map (interiors included, through
 their doors) resolves to a place.
 
+- `obstacles: [{ x, y, kind: 'bush' | 'boulder' | 'rock' }]`: things in the way, cleared with key
+  items (Scissors cut bushes, the Mallet breaks cracked rocks, the Strong Gloves push boulders).
+  They stand on walkable ground and come back when the map is entered again. They are used to
+  hide optional pockets with items (stencils 13–20), never the main road.
+- `surf: { rate, table }` and `fishing: { old, good, super }` (tables like `encounters`): water
+  encounters while sailing (Paper Boat) or fishing with each rod. Today only Clapotin lives in
+  water: add new water drawings to these tables.
+
 A **new tile** needs:
 - a `TileDef` in `src/overworld/tiles.ts` (`paint` with the `Painter`; flags `solid`, `encounter`,
   `over`, `ledge`, `animated`);

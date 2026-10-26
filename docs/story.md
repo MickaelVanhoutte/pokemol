@@ -57,6 +57,22 @@ Holding B runs only once you own them. Older saves already past Bourg get them i
 in Ville-Pastel gives one at L8 (`touffouGift`, flag `gift:touffou`); it is also a rare wild find on
 Route 6.
 
+**Field tools** (key items, each given once by someone, `src/story/field.ts`):
+
+| Tool | Giver | Condition |
+|---|---|---|
+| Safety Scissors | Gardener, Ville-Pastel | badge 1 |
+| Old Rod | Fisher, Village-Plume | — |
+| Paper Boat | Paper Folder, Port-Aquarelle | badge 3 |
+| Good Rod | Fisher, Port-Aquarelle | — |
+| Pencil Bike | Bike maker, Ville-Feutre | `a2.feutre` |
+| Foam Mallet | Miner, Mont Fusain | — |
+| Strong Gloves | Smith, Village-Braise | badge 5 |
+| Super Rod | Fisher, Jardin-Gouache | — |
+
+They open optional pockets with the new stencils: Route 2 garden, Scribble Cave nook, Port islets
+(by boat), Mont Fusain boulder, Route 6, Route 7 and Route 8.
+
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
 Healing Center flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
 `src/data/worldmap.ts`).

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
-import { evoOverlay, getGame, menuOpen, monOverlay, nameOverlay, openScreen, toast } from '../../overworld/controller';
+import { evoOverlay, getGame, menuOpen, monOverlay, nameOverlay, openScreen, showToast, toast, toggleBike } from '../../overworld/controller';
 import { NicknameView } from '../views/NicknameView';
 import { EvolutionView } from '../views/EvolutionView';
 import { dialog } from '../../overworld/dialog';
@@ -123,6 +123,10 @@ function StartMenu() {
   const items = [
     ...(d.flags.dex ? [{ icon: 'dex', label: tr(L('BESTIODEX', 'CRITTERDEX')), info: L('Les Bestioles que tu as vues et attrapées.', 'Critters you have seen and caught.'), onSelect: () => open({ id: 'dex' }) }] : []),
     ...(d.party.length ? [{ icon: 'party', label: tr(L('BESTIOLES', 'CRITTERS')), info: L('Ton équipe : résumés et ordre de passage.', 'Your party: summaries and order.'), onSelect: () => open({ id: 'party' }) }] : []),
+    ...(d.bag.velo ? [{
+      icon: 'velo', label: tr(L('VÉLO', 'BIKE')), info: L('Monter sur le Vélo-Crayon ou en descendre.', 'Get on or off the Pencil Bike.'),
+      onSelect: () => { close(); const no = toggleBike(); if (no) showToast(tr(no)); },
+    }] : []),
     { icon: 'bag', label: tr(L('SAC', 'BAG')), info: L('Tes objets, rangés dans ta trousse.', 'Your items, packed in your pencil case.'), onSelect: () => open({ id: 'bag' }) },
     ...(d.bag.carte ? [{ icon: 'carte', label: tr(L('CARTE', 'MAP')), info: L('Où tu es, et où aller ensuite.', 'Where you are, and where to go next.'), onSelect: () => open({ id: 'townmap' }) }] : []),
     { icon: 'card', label: d.player.name.toUpperCase(), info: L('Ta carte de dresseur et tes badges.', 'Your trainer card and badges.'), onSelect: () => open({ id: 'trainercard' }) },

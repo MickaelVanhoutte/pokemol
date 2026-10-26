@@ -27,8 +27,8 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
     tint: 'rgba(20, 10, 30, 0.18)',
     rows: [
       'KKKKKKKKKKKKKKKKKKKKKKKK',
-      'KDkkkkkKKKkkkkkkkkkkkkKK',
-      'KkkkrkkkkkkkkrkkkkkkrkkK',
+      'KDkkkkkKKKkkkkkkkkkKkkKK',
+      'KkkkrkkkkkkkkrkkkkkkrkKK',
       'KkkkkkkKKKkkkkkKKKkkkkkK',
       'KKKkkkkKKKkkkkkKKKkkkKKK',
       'KKKkkrkkkkkkkkkkkkkkkKKK',
@@ -43,6 +43,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       'KKKKKKKKKKkkkkKKKKKKKKKK',
       'KKKKKKKKKKKEEKKKKKKKKKKK',
     ],
+    obstacles: [{ x: 21, y: 2, kind: 'rock' }],
     warps: [
       { x: 11, y: 15, to: { map: 'ville', x: 19, y: 15, facing: 'down' } },
       { x: 12, y: 15, to: { map: 'ville', x: 19, y: 15, facing: 'down' } },
@@ -52,7 +53,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       { id: 'max', x: 6, y: 9, look: LOOKS.hiker, facing: 'right', trainer: 'max', sight: 4 },
       { id: 'zoe', x: 17, y: 5, look: LOOKS.kid, facing: 'down', trainer: 'zoe', sight: 3 },
     ],
-    items: [{ x: 2, y: 13, item: 'potion' }, { x: 22, y: 6, item: 'crayon-ball', count: 2 }, { x: 1, y: 13, item: 'crayon-orange' }],
+    items: [{ x: 2, y: 13, item: 'potion' }, { x: 22, y: 6, item: 'crayon-ball', count: 2 }, { x: 1, y: 13, item: 'crayon-orange' }, { x: 21, y: 1, item: 'pochoir-15' }, { x: 20, y: 1, item: 'super-potion' }],
     encounters: {
       rate: 0.08,
       anyTile: true,

@@ -16,7 +16,7 @@ import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
 import { DIRS, Game, type Actor } from './game';
-import type { MapBuilding, MapDef, NpcDef, PickupDef, WarpTarget } from './mapTypes';
+import type { MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, WarpTarget } from './mapTypes';
 import { applyPatches } from './patches';
 import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
@@ -81,6 +81,8 @@ function loadMap(id: string) {
   const free = (p: PickupDef) => !flag(pickupFlag(def.id, p));
   g.setMap(patched(def), visibleNpc, (p) => !p.hidden && free(p), (b) => isRipe(save.value?.flags[berryFlag(def.id, b)]));
   hiddenPickups = (def.items ?? []).filter((p) => p.hidden && free(p));
+  // places visited (the Bestiodex only names habitats you have been to)
+  if (save.value) save.value.flags[`seen:${def.id}`] = 1;
 }
 
 /** Rebuilds the current map after story flags changed (erased areas, people coming and going). */
@@ -89,7 +91,10 @@ export function refreshMap() {
   const g = getGame();
   if (!g.map) return;
   const keep = new Map(g.npcs.map((n) => [n.id, n]));
+  // a refresh keeps the boat, the gloves and what was cleared on this visit
+  const field = { surfing: g.surfing, strength: g.strength, obstacles: g.obstacles, biking: g.biking };
   loadMap(g.map.def.id);
+  Object.assign(g, field);
   g.npcs = g.npcs.map((n) => {
     const old = keep.get(n.id);
     return old && old.npc ? old : n;
@@ -205,8 +210,10 @@ function onStep(x: number, y: number): boolean {
     void locked(() => trainerApproach(spotter));
     return true;
   }
-  const enc = g.map.def.encounters;
-  const grassy = enc && (enc.anyTile || tile(g.map.tiles[y * g.map.w + x]).encounter);
+  // sailing: wild Bestioles of the water table, on water only
+  const onWater = g.surfing && g.map.tiles[y * g.map.w + x] === 'water';
+  const enc = onWater ? g.map.def.surf : g.surfing ? undefined : g.map.def.encounters;
+  const grassy = enc && (onWater || enc.anyTile || tile(g.map.tiles[y * g.map.w + x]).encounter);
   if (enc && grassy && partyAlive(s()) && Math.random() < enc.rate) {
     const st = { rng: newSeed() };
     const e = pickWeighted(st, enc.table, (r) => r.w);
@@ -220,7 +227,7 @@ function onStep(x: number, y: number): boolean {
   return false;
 }
 
-function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: PickupDef; tileId?: string; x: number; y: number }) {
+function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: PickupDef; obstacle?: ObstacleDef; tileId?: string; x: number; y: number }) {
   const g = getGame();
   if (target.npc) {
     const npc = target.npc;
@@ -282,9 +289,91 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
       if (hidden.item.startsWith('page-')) await runScript('pageFound');
     });
   }
+  if (target.obstacle) return void locked(() => clearObstacle(target.obstacle!));
+  if (target.tileId === 'water') return void locked(waterSide);
   if (target.tileId === 'pc') return void runScript('pc');
   if (target.tileId === 'bookshelf') return void locked(() => say(L('Des livres pleins de dessins de Bestioles.', 'Books full of Critter drawings.')));
   if (target.tileId === 'tv') return void locked(() => say(L('À la télé : « Les Bestioles dessinées envahissent le pays ! »', 'On TV: "Drawn Critters are taking over the country!"')));
+}
+
+// ------------------------------------------------------------------ field tools
+
+const has = (id: string) => !!save.value?.bag[id];
+
+/** A facing obstacle: cut the bush, put the gloves on for the boulder, break the rock. */
+async function clearObstacle(o: ObstacleDef) {
+  const g = getGame();
+  if (o.kind === 'bush') {
+    if (!has('ciseaux')) return say(L('Un petit buisson tout touffu bloque le passage. Des ciseaux pourraient le couper…', 'A thin, bushy shrub blocks the way. Scissors could cut it…'));
+    if ((await ask(L('Ce petit buisson gêne. Le couper avec les Ciseaux ?', 'This thin bush is in the way. Cut it with the Scissors?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
+    sfx.blip();
+    g.removeObstacle(o);
+    return say(L('Clic-clac ! Le buisson est coupé.', 'Snip-snip! The bush is cut.'));
+  }
+  if (o.kind === 'rock') {
+    if (!has('maillet')) return say(L('Un rocher tout fissuré. Un bon coup de maillet le casserait…', 'A rock full of cracks. A good whack with a mallet would break it…'));
+    if ((await ask(L('Ce rocher est fissuré. Le casser avec le Maillet ?', 'This rock is cracked. Break it with the Mallet?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
+    await shake(300);
+    sfx.hit();
+    g.removeObstacle(o);
+    return say(L('Bong ! Le rocher tombe en miettes.', 'Bonk! The rock crumbles.'));
+  }
+  if (g.strength) return say(L('Tu as les Gants Costauds : marche dans le rocher pour le pousser !', 'You have the Strong Gloves on: walk into the boulder to push it!'));
+  if (!has('gants')) return say(L('Un gros rocher rond. Il est bien trop lourd à pousser…', 'A big round boulder. It’s far too heavy to push…'));
+  if ((await ask(L('Un gros rocher rond. Enfiler les Gants Costauds ?', 'A big round boulder. Put on the Strong Gloves?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
+  g.strength = true;
+  await say(L('Tu enfiles les Gants Costauds. Tu peux pousser les rochers !', 'You put on the Strong Gloves. You can push boulders now!'));
+}
+
+/** The best fishing rod in the bag (null without one). */
+function bestRod(): 'old' | 'good' | 'super' | null {
+  return has('super-canne') ? 'super' : has('bonne-canne') ? 'good' : has('canne-bois') ? 'old' : null;
+}
+
+/** Facing water: fish, sail, or just look. */
+async function waterSide() {
+  const g = getGame();
+  const rod = bestRod();
+  const canSail = has('bateau') && !g.surfing;
+  if (!rod && !canSail) return say(L('L’eau est calme et brille au soleil.', 'The water is calm and sparkles in the sun.'));
+  const choices: { label: LText; act: () => Promise<void> }[] = [];
+  if (rod) choices.push({ label: L('Pêcher', 'Fish'), act: () => fish(rod) });
+  if (canSail) choices.push({ label: L('Naviguer', 'Sail'), act: sail });
+  const c = await ask(L('L’eau est calme. Que faire ?', 'The water is calm. What will you do?'), [...choices.map((x) => x.label), L('Rien', 'Nothing')]);
+  if (c < choices.length) await choices[c].act();
+}
+
+async function sail() {
+  const g = getGame();
+  g.biking = false;
+  g.surfing = true;
+  await say(L('Tu déplies ton Bateau en Papier et tu montes dessus !', 'You unfold your Paper Boat and climb aboard!'));
+  await g.walk(g.player, [g.player.dir], 210);
+}
+
+async function fish(rod: 'old' | 'good' | 'super') {
+  const g = getGame();
+  const table = g.map.def.fishing?.[rod];
+  sfx.blip();
+  await bubble('player', '…', 900 + Math.floor(Math.random() * 900));
+  // a bite three times in four, when something lives here
+  if (!table?.length || Math.random() > 0.75) return say(L('Rien ne mord…', 'Not even a nibble…'));
+  await bubble('player', '!', 500);
+  await say(L('Oh ! Ça mord !', 'Oh! A bite!'));
+  const st = { rng: newSeed() };
+  const e = pickWeighted(st, table, (r) => r.w);
+  await wildBattle(e.id, e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1)));
+}
+
+/** Gets on or off the Pencil Bike (outdoors only). Returns a reason when it can't. */
+export function toggleBike(): LText | null {
+  const g = getGame();
+  if (!has('velo')) return L('Tu n’as pas de vélo.', 'You don’t have a bike.');
+  if (g.map.def.indoor || g.map.def.dungeon) return L('Pas de vélo à l’intérieur !', 'No cycling indoors!');
+  if (g.surfing) return L('Pas de vélo sur l’eau !', 'No cycling on water!');
+  g.biking = !g.biking;
+  sfx.confirm();
+  return null;
 }
 
 function onDoor(b: MapBuilding) {
@@ -666,5 +755,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, nameOverlay, offerNickname, useFieldItem, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, nameOverlay, offerNickname, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }
