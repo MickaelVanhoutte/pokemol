@@ -1,41 +1,79 @@
 .title {
   position: fixed; inset: 0; overflow: hidden;
-  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-  gap: 10px; padding: 24px 12px calc(16px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: calc(20px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
   font-family: var(--pixel); font-synthesis: none;
-  background: radial-gradient(circle at 50% 30%, #3b2a66, var(--bg) 70%);
+  background: radial-gradient(ellipse at 50% 38%, #4a3680, #2a1f4a 55%, var(--bg));
   cursor: pointer;
 }
 /* notebook lines in the night sky: it's a dream on paper */
 .title::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: repeating-linear-gradient(transparent 0 31px, rgba(160, 190, 240, 0.12) 31px 32px);
+  background: repeating-linear-gradient(transparent 0 31px, rgba(160, 190, 240, 0.08) 31px 32px);
 }
-.title__float { position: absolute; inset: 0; pointer-events: none; }
-.title__float img {
-  position: absolute;
-  opacity: 0.35;
-  filter: drop-shadow(0 0 6px #fff);
-  animation: bob 9s ease-in-out infinite;
+.title__sky { position: absolute; inset: 0; pointer-events: none; }
+.title__star { position: absolute; animation: twinkle 3.2s ease-in-out infinite; }
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(20deg); }
 }
-@keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(-4deg); }
-  50% { transform: translateY(-18px) rotate(4deg); }
-}
-.title__logo-wrap { position: relative; text-align: center; }
+.title__logo-wrap { position: relative; flex: none; text-align: center; }
 .title__logo {
   margin: 0; font-weight: 400; line-height: 1;
-  font-size: clamp(2.8rem, 13vw, 4.6rem);
+  font-size: clamp(2.6rem, 12vw, 4.4rem);
   color: #ffd75e;
   text-shadow: 3px 3px 0 #d64545, 6px 6px 0 #2b2536, 0 10px 24px rgba(0, 0, 0, 0.5);
   transform: rotate(-3deg);
 }
-.title__sub { margin: 10px 0 0; color: #f0eaff; font-size: clamp(1.1rem, 5vw, 1.5rem); letter-spacing: 0.06em; }
-.title__hero { position: relative; width: min(64vw, 300px); height: min(38vh, 280px); animation: heroIn 0.6s cubic-bezier(.3, 1.4, .5, 1); }
-@keyframes heroIn { from { transform: scale(0.6) rotate(-8deg); opacity: 0; } }
-.title__press { position: relative; margin: 0; color: #fff; font-size: 1.4rem; letter-spacing: 0.1em; }
-.title__menu { position: relative; width: min(100%, 420px); display: flex; flex-direction: column; gap: 6px; cursor: default; }
-.title__list .mlist__item { font-size: 1.35rem; }
+.title__sub { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 10px 0 0; color: #f0eaff; font-size: clamp(1.05rem, 4.6vw, 1.4rem); letter-spacing: 0.06em; }
+.title__moon { width: 1.3em; flex: none; transform: rotate(-12deg); }
+/* the open sketchbook, as big as the room left allows */
+.title__book {
+  position: relative; flex: 1 1 auto; min-height: 0; width: 100%;
+  display: grid; place-items: center;
+  container-type: size; perspective: 900px;
+}
+.title__page {
+  --w: min(100cqw - 24px, (100cqh - 30px) * 0.8, 300px);
+  position: relative; width: var(--w); height: calc(var(--w) * 1.25);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 26px 10px 8px 22px;
+  border: 2px solid var(--ink); border-radius: 4px 10px 10px 4px;
+  background:
+    linear-gradient(90deg, transparent 15px, rgba(214, 69, 69, 0.55) 15px 17px, transparent 17px),
+    repeating-linear-gradient(transparent 0 19px, rgba(91, 138, 214, 0.28) 19px 20px),
+    #fffaf0;
+  box-shadow: 5px 6px 0 rgba(0, 0, 0, 0.35);
+  transform: rotate(-2deg); transform-origin: left center;
+  animation: pageTurn 0.7s cubic-bezier(.3, 1.2, .5, 1);
+}
+/* spiral binding along the top */
+.title__page::before {
+  content: ''; position: absolute; top: -9px; left: 14px; right: 14px; height: 22px;
+  background: radial-gradient(ellipse 4px 9px at 50% 50%, transparent 0 2px, #8a86a0 2.5px 4px, transparent 4.5px) 0 0 / 18px 22px space no-repeat;
+}
+.title__page::after {
+  content: ''; position: absolute; top: 8px; left: 14px; right: 14px; height: 8px;
+  background: radial-gradient(circle at 50% 50%, #2a1f4a 0 3px, transparent 3.5px) 0 0 / 18px 8px space no-repeat;
+}
+@keyframes pageTurn {
+  from { transform: rotate(-2deg) rotateY(-80deg); opacity: 0.2; }
+  to { transform: rotate(-2deg) rotateY(0); opacity: 1; }
+}
+.title__hero { flex: 1; min-height: 0; width: 100%; object-fit: contain; }
+.title__caption { flex: none; max-width: 100%; margin: 4px 0 0; overflow: hidden; color: var(--ink); font-size: 1.05rem; white-space: nowrap; text-overflow: ellipsis; }
+@container (max-height: 300px) {
+  .title__no { display: none; }
+}
+@container (max-height: 120px) {
+  .title__page { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title__page, .title__star { animation: none; }
+}
+.title__press { position: relative; flex: none; margin: 0 0 8px; color: #fff; font-size: 1.4rem; letter-spacing: 0.1em; }
+.title__menu { position: relative; flex: none; width: min(100%, 420px); display: flex; flex-direction: column; gap: 6px; cursor: default; }
+.title__list .mlist__item { font-size: 1.35rem; text-transform: uppercase; }
 .title__save { display: grid; grid-template-columns: auto 1fr; gap: 0 12px; font-size: 1.1rem; }
 .title__save b { font-weight: 400; text-align: right; color: #2a6ad6; }
 .title__note { font-size: 1rem; }
@@ -52,11 +90,19 @@
 .title__install p { margin: 0 0 6px; font-size: 1rem; }
 .title__install-row { display: flex; justify-content: flex-end; gap: 6px; }
 
+/* landscape phones: logo and sketchbook on the left, the menu on the right */
 @media (orientation: landscape) and (max-height: 540px) {
-  .title { padding-top: 10px; }
-  .title__logo { font-size: clamp(2.2rem, 7vw, 3.4rem); }
-  .title__hero { height: min(40dvh, 200px); }
-  .title__menu { width: min(100%, 520px); }
+  .title {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 16px; row-gap: 6px; justify-items: center;
+    padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+  }
+  .title__logo-wrap { grid-column: 1; grid-row: 1; }
+  .title__logo { font-size: clamp(2rem, 6vw, 3.2rem); }
+  .title__sub { margin-top: 6px; font-size: 1.05rem; }
+  .title__book { grid-column: 1; grid-row: 2; height: 100%; }
+  .title__press, .title__menu { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+  .title__menu { width: min(100%, 420px); max-height: 100%; overflow-y: auto; }
   .title__list .mlist__item { min-height: 1.7em; font-size: 1.15rem; }
   .title__install { width: min(calc(100% - 24px), 620px); }
   .title__install .window { display: flex; align-items: center; gap: 10px; }
