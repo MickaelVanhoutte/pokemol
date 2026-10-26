@@ -48,6 +48,7 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 
 - Attrape les Bestioles et remplis ton **Bestiodex**.
 - Retrouve les **12 pages déchirées** d’un cahier, cachées un peu partout.
+- Certaines Bestioles grandissent avec toi : entraîne-les bien, elles te réservent des surprises.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
@@ -114,6 +115,7 @@ where every drawing is alive: the **Critters** (Bestioles).
 
 - Catch Critters and fill your **Critterdex**.
 - Find the **12 torn pages** of a sketchbook, hidden all over the place.
+- Some Critters grow up with you: train them well, they have surprises in store.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.

@@ -85,7 +85,7 @@ re-renders everything.
 
 **Data** (`src/data`) is plain TypeScript objects with `L()` texts:
 - creatures (`faces` marks sideways drawings; `talents` + `hiddenTalent` index `src/data/talents.ts`;
-  `evolutions` rules by level, item or friendship), natures;
+  `evolutions` rules by level, item or friendship; `grownForm(id, level)` for trainer teams), natures;
 - moves, the type chart, items (`kind: 'key'` for story items);
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in

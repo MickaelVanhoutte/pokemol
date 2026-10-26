@@ -16,6 +16,7 @@ import { act, createBattle, type Action, type BattleState } from '../src/engine/
 import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
 import { DIFFICULTY, TRAINERS, partyOf } from '../src/data/trainers.ts';
+import { grownForm } from '../src/data/creatures.ts';
 import { CONCOURS } from '../src/data/postgame.ts';
 import type { Difficulty } from '../src/state/prefs.ts';
 
@@ -95,7 +96,7 @@ if (!DIFFICULTY[difficulty]) throw new Error(`unknown difficulty ${difficulty} (
 console.log(`difficulty ${difficulty}, ${n} fights per cell — Minousse / Braisou / Clapotin`);
 for (const [id, t] of STEPS) {
   const cells = ['001', '002', '003'].map((starter) => {
-    const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? starter : sp, lv, { rng: seed * 13 + i }));
+    const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? grownForm(starter, lv) : sp, lv, { rng: seed * 13 + i }));
     const rate = winRate(mk, (seed) => partyOf(trainer(id).party, seed, difficulty), DIFFICULTY[difficulty].slip, n);
     return `${Math.round(rate * 100)}%`.padStart(5);
   });

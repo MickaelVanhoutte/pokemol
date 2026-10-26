@@ -1,6 +1,6 @@
 import { L, tr } from '../i18n';
 import { playMusic } from '../audio/music';
-import { CREATURES } from '../data/creatures';
+import { CREATURES, grownForm } from '../data/creatures';
 import { partyOf } from '../data/trainers';
 import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
@@ -262,7 +262,7 @@ scripts.rivalFinal = async () => {
     L('{name}… Je savais que tu viendrais jusqu’ici.', '{name}… I knew you’d make it here.'),
     L('Avant d’affronter le Grand Effaceur, montre-moi tout ce que tu as appris. Sans retenue !', 'Before you face the Great Eraser, show me everything you’ve learned. Hold nothing back!'),
   ], RIVAL);
-  const starter = String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0');
+  const starter = grownForm(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0'), 43);
   const party = partyOf([
     { species: '013', level: 40, item: 'plume-vive' }, { species: '008', level: 40, item: 'gouter' }, { species: '010', level: 41, item: 'lunettes-tetues' },
     { species: '007', level: 40 }, { species: '004', level: 41 }, { species: starter, level: 43, item: 'baie-doree' },

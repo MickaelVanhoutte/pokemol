@@ -90,7 +90,8 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
    Big phone photos: add `"scale": 0.5`. Beige paper or yellow lamp light: add `"paperChroma": 0.26` to `options`.
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
    It also makes the little overworld sprite of the Bestiole that follows you (`public/minis/`; review
-   them all with `npm run minis` and `tools/out/minis-sheet.png`).
+   them all with `npm run minis` and `tools/out/minis-sheet.png`). If a pale colour disappears from the
+   miniature, add `"mini": { "saturation": 3, "colors": 8 }` to the entry.
 5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
    evolution level if it evolves, Bestiodex text, talents, and `faces: 'left'` or `'right'` if the drawing

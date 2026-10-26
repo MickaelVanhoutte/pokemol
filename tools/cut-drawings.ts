@@ -8,7 +8,7 @@ import { mkdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp, { type OverlayOptions } from 'sharp';
 import { cutout, type CutoutOptions, type Point } from '../src/art/cutout.ts';
-import { makeMini } from './minis.ts';
+import { makeMini, type MiniTweaks } from './minis.ts';
 
 interface Entry {
   id: string;
@@ -21,6 +21,8 @@ interface Entry {
   /** Resize factor applied to the crop before cutting (big phone photos: 0.5). */
   scale?: number;
   options?: Partial<CutoutOptions>;
+  /** Overworld miniature tweaks (`colors`, `saturation`) when a pale detail gets lost. */
+  mini?: MiniTweaks;
 }
 
 const root = new URL('..', import.meta.url).pathname;
@@ -53,7 +55,7 @@ for (const e of manifest.drawings) {
     .toBuffer();
   await sharp(png).webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(join(outDir, `${e.id}-${e.slug}.webp`));
   await mkdir(join(root, 'public/minis'), { recursive: true });
-  await makeMini(join(outDir, `${e.id}-${e.slug}.webp`), join(root, 'public/minis', `${e.id}-${e.slug}.png`));
+  await makeMini(join(outDir, `${e.id}-${e.slug}.webp`), join(root, 'public/minis', `${e.id}-${e.slug}.png`), e.mini);
   console.log(`✓ ${e.id} ${e.slug} ${res.width}x${res.height}`);
   tiles.push({ input: png, label: `${e.id} ${e.slug}` });
 }

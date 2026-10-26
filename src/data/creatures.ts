@@ -9,7 +9,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '001', slug: 'minousse', faces: 'left', name: L('Minousse', 'Sproutkit'), kind: L('Bestiole Chaton', 'Kitten Critter'),
     type: 'plante', base: { hp: 50, atk: 52, def: 50, spa: 62, spd: 62, spe: 46 },
-    catchRate: 45, baseExp: 64, evYield: { spa: 1 }, rarity: 'uncommon',
+    catchRate: 45, baseExp: 64, evYield: { spa: 1 }, rarity: 'uncommon', evolutions: [{ to: '020', level: 16 }],
     stencils: ['pochoir-02', 'pochoir-07', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
     talents: ['seve-rebelle'], hiddenTalent: 'grignote-feuilles',
     learnset: [[1, 'griffe'], [1, 'grondement'], [5, 'coup-de-liane'], [8, 'graine-gourmande'],
@@ -21,9 +21,24 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
+    id: '020', slug: 'minoufleur', faces: 'right', name: L('Minoufleur', 'Bloomkit'), kind: L('Bestiole Bourgeon', 'Bud Critter'),
+    type: 'plante', base: { hp: 62, atk: 64, def: 64, spa: 82, spd: 82, spe: 60 },
+    catchRate: 45, baseExp: 142, evYield: { spa: 1, spd: 1 }, rarity: 'uncommon', evolvesFrom: '001',
+    stencils: ['pochoir-02', 'pochoir-07', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
+    talents: ['seve-rebelle'], hiddenTalent: 'grignote-feuilles',
+    // its jagged leaves bite: it learns Nibble as Minousse turns into it
+    learnset: [[0, 'mordillage'], [1, 'griffe'], [1, 'grondement'], [1, 'coup-de-liane'], [8, 'graine-gourmande'],
+      [10, 'griffe-pousse'], [13, 'graine-dodo'], [18, 'pas-de-loup'], [22, 'feuille-coupante'],
+      [28, 'ronron-soleil'], [34, 'rafale-de-graines'], [42, 'rayon-de-soleil']],
+    dex: L(
+      'Le bouton rose sur son dos s’ouvrira un jour. En attendant, ses grandes feuilles dentelées claquent comme des mâchoires quand on embête ses amis.',
+      'The pink bud on its back will open one day. Until then, its big jagged leaves snap like jaws at anyone who bothers its friends.',
+    ),
+  },
+  {
     id: '002', slug: 'braisou', faces: 'left', name: L('Braisou', 'Embunny'), kind: L('Bestiole Braise', 'Ember Critter'),
     type: 'feu', base: { hp: 45, atk: 58, def: 44, spa: 64, spd: 50, spe: 66 },
-    catchRate: 45, baseExp: 64, evYield: { spe: 1 }, rarity: 'uncommon',
+    catchRate: 45, baseExp: 64, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '021', level: 16 }],
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-16', 'pochoir-19'],
     talents: ['braise-tetue'], hiddenTalent: 'elan',
     learnset: [[1, 'griffe'], [1, 'grondement'], [5, 'flammeche'], [10, 'pas-de-loup'], [14, 'lueur-brulante'],
@@ -32,6 +47,20 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Le bout de sa queue est une petite braise. Il s’en sert pour faire griller les guimauves.',
       'The tip of its tail is a tiny ember. It uses it to toast marshmallows.',
+    ),
+  },
+  {
+    id: '021', slug: 'braisaure', faces: 'left', name: L('Braisaure', 'Emberoo'), kind: L('Bestiole Lézard', 'Lizard Critter'),
+    type: 'feu', base: { hp: 60, atk: 68, def: 58, spa: 80, spd: 66, spe: 78 },
+    catchRate: 45, baseExp: 142, evYield: { spa: 1, spe: 1 }, rarity: 'uncommon', evolvesFrom: '002',
+    stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-16', 'pochoir-19'],
+    talents: ['braise-tetue'], hiddenTalent: 'elan',
+    learnset: [[0, 'tourbillon-braises'], [1, 'griffe'], [1, 'grondement'], [1, 'flammeche'], [10, 'pas-de-loup'],
+      [14, 'lueur-brulante'], [25, 'queue-ardente'], [30, 'mordillage'], [33, 'grand-soleil'],
+      [37, 'grand-brasier'], [44, 'griffe-dragon']],
+    dex: L(
+      'Il se tient bien droit, la queue en l’air pour ne pas brûler l’herbe. Plus il est content, plus la flamme au bout de sa queue grandit.',
+      'It stands up straight, tail held high so it won’t scorch the grass. The happier it is, the bigger the flame on its tail tip.',
     ),
   },
   {
@@ -272,6 +301,12 @@ export function creature(id: string): SpeciesDef {
   const c = CREATURE_BY_ID[id];
   if (!c) throw new Error(`Unknown creature ${id}`);
   return c;
+}
+
+/** The form a Bestiole of this species has grown into by this level (level evolutions only). */
+export function grownForm(id: string, level: number): string {
+  const next = creature(id).evolutions?.find((e) => e.level !== undefined && e.level <= level);
+  return next ? grownForm(next.to, level) : id;
 }
 
 /**

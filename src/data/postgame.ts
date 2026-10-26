@@ -68,7 +68,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcFusain', name: L('Prof. Fusain', 'Prof. Charcoal'), money: 20000,
     party: [
       { species: '008', level: 47 }, { species: '014', level: 48, item: 'baie-doree' }, { species: '007', level: 47 },
-      { species: '001', level: 48 }, { species: '003', level: 48, item: 'baie-prisme' }, { species: '002', level: 50, item: 'baie-doree' },
+      { species: '020', level: 47 }, { species: '003', level: 48, item: 'baie-prisme' }, { species: '021', level: 48, item: 'baie-doree' },
     ],
     before: [
       L('Te voilà, {name}. Clic-clac : je voulais une photo de toi ici, au sommet du Concours.', 'Here you are, {name}. Click-clack: I wanted a picture of you here, at the top of the Contest.'),
@@ -102,7 +102,7 @@ export const TOWER_TEAM = 3;
 export const TOWER_LEVEL = 50;
 
 /** Bestioles strong enough for the tower (first forms that evolve are left out). */
-export const TOWER_POOL = ['001', '002', '003', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019'];
+export const TOWER_POOL = ['001', '020', '002', '021', '003', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019'];
 const LEGENDS = ['011'];
 const TOWER_ITEMS = [
   'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'plume-vive', 'loupe', 'clochette', 'ruban-tenace',

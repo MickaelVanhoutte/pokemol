@@ -312,13 +312,13 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Aïe, ça brûle…', 'Ouch, that burns…')],
   }),
   T({
-    id: 'braiseT2', name: L('Forgeronne Inès', 'Smith Ines'), party: [{ species: '008', level: 23 }, { species: '002', level: 24 }], money: 640,
+    id: 'braiseT2', name: L('Forgeronne Inès', 'Smith Ines'), party: [{ species: '008', level: 23 }, { species: '021', level: 24 }], money: 640,
     before: [L('Ici on forge des crayons à la chaleur du volcan !', 'Here we forge pencils in the volcano’s heat!')],
     after: [L('Mon crayon a fondu…', 'My pencil melted…')],
   }),
   T({
     id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise',
-    party: [{ species: '002', level: 24 }, { species: '008', level: 23 }, { species: '002', level: 25, item: 'baie-bleue' }],
+    party: [{ species: '002', level: 24 }, { species: '008', level: 23 }, { species: '021', level: 24, item: 'baie-bleue' }],
     before: [
       L('Tu as monté le Mont Fusain jusqu’ici ? Courageux. Mais ici, ça chauffe !', 'You climbed all of Mount Charcoal? Brave. But here, things heat up!'),
     ],
@@ -421,7 +421,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Gouache
   T({
-    id: 'gouaT1', name: L('Jardinière Rosa', 'Gardener Rosa'), party: [{ species: '001', level: 32 }], money: 820,
+    id: 'gouaT1', name: L('Jardinière Rosa', 'Gardener Rosa'), party: [{ species: '020', level: 32 }], money: 820,
     before: [L('Ma Minousse ronronne et les fleurs poussent. Regarde !', 'My Sproutkit purrs and the flowers grow. Look!')],
     after: [L('Les fleurs se sont fanées…', 'The flowers wilted…')],
   }),
@@ -432,7 +432,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache',
-    party: [{ species: '007', level: 35, item: 'baie-menthe' }, { species: '001', level: 36 }, { species: '001', level: 38, item: 'baie-doree' }],
+    party: [{ species: '007', level: 35, item: 'baie-menthe' }, { species: '020', level: 36 }, { species: '020', level: 38, item: 'baie-doree' }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),
@@ -482,7 +482,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Crevaison !', 'Flat tyre!')],
   }),
   T({
-    id: 'pc2', name: L('Cycliste Bastien', 'Cyclist Bastien'), party: [{ species: '016', level: 34 }, { species: '002', level: 34 }], money: 840,
+    id: 'pc2', name: L('Cycliste Bastien', 'Cyclist Bastien'), party: [{ species: '016', level: 34 }, { species: '021', level: 34 }], money: 840,
     before: [L('Sur la Piste, on se dépasse… et on se bat !', 'On the Track, we overtake… and we battle!')],
     after: [L('Je descends de mon vélo pour réfléchir.', 'I’m getting off my bike to think.')],
   }),

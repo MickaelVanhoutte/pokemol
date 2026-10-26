@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { creature } from '../../data/creatures';
+import { creature, grownForm } from '../../data/creatures';
 import { ITEM_BY_ID } from '../../data/items';
 import type { SpeciesDef } from '../../data/schema';
 import { addXp, BASE_FRIENDSHIP, createMon, evolutionFor, evolutionMoves, evolutionOf, movesAt, rememberableMoves, xpAt } from './creature';
@@ -71,5 +71,19 @@ describe('move rememberer', () => {
     const m = createMon('016', 20, { rng: 2 });
     m.moves = [{ id: 'bousculade', pp: 35 }];
     expect(rememberableMoves(m)).toEqual(['mordillage', 'bouclier-papier', 'pas-de-loup', 'grondement', 'fretillement']);
+  });
+});
+
+describe('grownForm (trainer teams)', () => {
+  it('follows level evolutions only', () => {
+    expect(grownForm('001', 15)).toBe('001');
+    expect(grownForm('001', 16)).toBe('020');
+    expect(grownForm('002', 43)).toBe('021');
+    expect(grownForm('003', 50)).toBe('003');
+    // Chenillou → Chrysalou (L7) → Papivole (L10)
+    expect(grownForm('012', 8)).toBe('015');
+    expect(grownForm('012', 10)).toBe('007');
+    // Touffou needs a Magic Pencil
+    expect(grownForm('016', 50)).toBe('016');
   });
 });

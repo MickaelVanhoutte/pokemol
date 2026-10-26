@@ -205,7 +205,7 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Atelier Plume | L11 | Gaspard L10/L10 |
 | Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15) | Marine L16–19 |
 | Route 4, Ville-Feutre | L17–21 | Rature L18–20, Zélie L22–24 |
-| Mont Fusain, Braise | L22–24 | Ambre L23–25 |
+| Mont Fusain, Braise | L22–24 | Ambre L23–24 |
 | Paillette, Tour | L27–31 | Célestine L31–34, Blanche L30–31 (×4) |
 | Gouache, Encre, Factory | L31–38 | Basile L35–38, Nocturne L35–38 |
 | Finale | — | Rival L40–43 (6), Great Eraser L39–41 (5) |
@@ -242,6 +242,15 @@ barely moved, so Act 3 (from Route 6, L27) is unchanged.
   against Ambre needs one), and the Bestiodex can be completed without Tombola luck.
 - Still tough on Normal: Camper Tom (three starters) for Braisou, and Ambre for a Minousse team
   without a Water or Fire Bestiole.
+
+**Starter evolutions (Oct 2026).** Minousse becomes Minoufleur and Braisou becomes Braisaure at
+L16 (Grass and Fire, about 410 base stats, learning Nibble and Ember Swirl as they evolve; Braisaure
+gets Dragon Claw at L44). Clapotin has no evolution yet. `grownForm(id, level)` gives the form a
+level has reached: the balance sim uses it for the player's starter, and the final rival's starter
+(L43) is evolved with it. Hand-written teams use the new forms from L24: Forgeronne Inès, Ambre's
+ace (L24, berry), Jardinière Rosa, both of Basile's, Cycliste Bastien and Prof. Fusain at the Grand
+Concours. Grande Maîtresse Ambre keeps her Braisou: an evolved ace there dropped the Grass and Water
+teams from about 75% to 40%.
 
 **Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
 Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
