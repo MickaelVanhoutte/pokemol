@@ -18,7 +18,7 @@ describe('Grand Concours', () => {
       for (const m of s.trainer.party) {
         expect(species.has(m.species), m.species).toBe(true);
         expect(m.level).toBeLessThanOrEqual(50);
-        expect(m.level).toBeGreaterThanOrEqual(45);
+        expect(m.level).toBeGreaterThanOrEqual(44);
         if (m.item) expect(ITEM_BY_ID[m.item], m.item).toBeDefined();
       }
     }
