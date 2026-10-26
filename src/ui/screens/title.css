@@ -37,13 +37,14 @@
   --w: min(100cqw - 24px, (100cqh - 30px) * 0.8, 300px);
   position: relative; width: var(--w); height: calc(var(--w) * 1.25);
   display: flex; flex-direction: column; align-items: center;
-  padding: 26px 10px 8px 22px;
-  border: 2px solid var(--ink); border-radius: 4px 10px 10px 4px;
+  padding: 18px 2px 0 14px;
+  border: 9px solid transparent; border-image: var(--pencil-frame) 24 / 9px stretch;
   background:
-    linear-gradient(90deg, transparent 15px, rgba(214, 69, 69, 0.55) 15px 17px, transparent 17px),
-    repeating-linear-gradient(transparent 0 19px, rgba(91, 138, 214, 0.28) 19px 20px),
-    #fffaf0;
-  box-shadow: 5px 6px 0 rgba(0, 0, 0, 0.35);
+    linear-gradient(90deg, transparent 6px, rgba(214, 69, 69, 0.55) 6px 8px, transparent 8px) padding-box,
+    repeating-linear-gradient(transparent 0 19px, rgba(91, 138, 214, 0.28) 19px 20px) padding-box,
+    var(--hatch-paper) 0 0 / 72px 72px padding-box,
+    #fffaf0 padding-box;
+  filter: drop-shadow(5px 6px 0 rgba(0, 0, 0, 0.35));
   transform: rotate(-2deg); transform-origin: left center;
   animation: pageTurn 0.7s cubic-bezier(.3, 1.2, .5, 1);
 }
@@ -114,8 +115,8 @@
 .jukebox__now { flex: none; display: flex; flex-direction: column; gap: 6px; }
 .jukebox__name { margin: 0; font-size: 1.3rem; }
 .jukebox__where { margin: 0; color: var(--ink-soft); font-size: 1rem; }
-.jukebox__bar { height: 12px; border: 2px solid var(--ink); border-radius: 6px; background: #fffaf0; overflow: hidden; }
-.jukebox__bar span { display: block; height: 100%; background: repeating-linear-gradient(-45deg, #e07aa6 0 4px, #f29ac8 4px 8px); }
+.jukebox__bar { height: 16px; overflow: hidden; border: 5px solid transparent; border-image: var(--frame-thin-paper) 16 / 5px stretch; background: #efe5d2 padding-box; }
+.jukebox__bar span { display: block; height: 100%; background: var(--hatch-pink) 0 0 / 36px 36px, #f6b5c8; }
 .jukebox__controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .jukebox__controls .pbtn { padding: 4px 10px; }
 .jukebox__time { margin-left: auto; font-size: 1.05rem; color: var(--ink-soft); }

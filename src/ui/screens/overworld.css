@@ -46,9 +46,9 @@
   display: grid;
   place-items: center;
   cursor: pointer;
-  background: var(--paper) padding-box;
+  background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box;
   border: 8px solid transparent;
-  border-image: var(--pencil-frame) 14 / 8px round;
+  border-image: var(--pencil-frame) 24 / 8px stretch;
 }
 .ow__toast {
   position: absolute;
@@ -84,9 +84,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
-    background: #d8c7a0;
-    background-image: repeating-linear-gradient(90deg, rgba(120, 90, 40, 0.07) 0 2px, transparent 2px 9px);
-    border-top: 3px solid var(--ink);
+    /* kraft paper under a wobbly pencil line */
+    background: var(--rule) repeat-x 0 0 / 240px 8px, var(--hatch-paper) 0 0 / 72px 72px, #e3d4b2;
+    padding-top: 16px;
     flex: none;
   }
 }
@@ -94,15 +94,13 @@
 .joy {
   position: fixed; z-index: 45; pointer-events: none;
   width: 104px; height: 104px; margin: -52px 0 0 -52px;
-  border-radius: 50%;
-  background: rgba(255, 250, 240, 0.35);
-  border: 3px dashed rgba(43, 37, 54, 0.6);
+  background: var(--blob-paper) center / 100% 100% no-repeat;
+  opacity: 0.6;
   display: grid; place-items: center;
 }
 .joy__knob {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: var(--paper); border: 3px solid var(--ink);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+  width: 48px; height: 48px;
+  background: var(--blob-butter) center / 100% 100% no-repeat;
 }
 .touch__hint { margin: 0; flex: 1; font-family: var(--pixel); font-synthesis: none; color: #6b5a3a; font-size: 1rem; padding-right: 8px; }
 .dpad button, .ab button {
@@ -114,11 +112,12 @@
   touch-action: none;
   cursor: pointer;
 }
-.ab button:active { background: #f2e4bd; }
+.ab button:active { transform: scale(0.94); }
 .ab { position: relative; width: 150px; height: 96px; flex: none; }
-.ab button { width: 64px; height: 64px; border-radius: 50%; font-family: var(--pixel); font-synthesis: none; font-size: 1.5rem; }
-.ab__a { right: 0; top: 0; background: #d64545 !important; color: #fff !important; }
-.ab__b { left: 0; bottom: 0; background: #e6a23a !important; color: #fff !important; }
+/* sketched crayon discs */
+.ab button { width: 68px; height: 68px; border: 0; background: none center / 100% 100% no-repeat; font-family: var(--pixel); font-synthesis: none; font-size: 1.6rem; }
+.ab__a { right: 0; top: 0; background-image: var(--blob-coral) !important; }
+.ab__b { left: 0; bottom: 0; background-image: var(--blob-peach) !important; }
 
 /* landscape phones: the map gets the whole screen, A/B float over it, the start menu goes side by side */
 @media (orientation: landscape) and (max-height: 540px) {

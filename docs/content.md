@@ -283,6 +283,16 @@ Scripts run one at a time and lock player input. To change an existing script af
 - Build screens from the paper kit (`src/ui/paper`): `Frame` (title strip and back button),
   `Window`, `TextBox`, `MenuList` with `useMenuNav`, `YesNo`, `QtyPicker`. That keeps the FRLG layout
   and the keyboard, touch and B-button behaviour consistent.
+- **The hand-drawn look** comes from `src/ui/paper/sketch.ts`, drawn once at start-up into CSS
+  variables: pencil frames (`--pencil-frame`, `--frame-<crayon>`, `--frame-thin-<crayon>` for bars
+  and tags), coloured-pencil hatching (`--hatch-<crayon>`, `--hatch-t-<type>`, `--hatch-ink`),
+  sketched round buttons (`--blob-<crayon>`) and a wobbly line (`--rule`). The crayons are pastels:
+  paper, pink, coral, peach, butter, mint, sky, lavender. To colour a box in, give it a `sk-<crayon>`
+  class (or set `--sk-fill`, `--sk-hatch` and `--pencil-frame` together) and use
+  `border: Npx solid transparent; border-image: var(--pencil-frame) 24 / Npx stretch` with
+  `background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box`. Keep
+  `stretch`: tiled (`round`/`repeat`) SVG borders leave a thin gap in Chrome. No flat fills, radii or
+  clean CSS borders on new UI.
 - Pure views go in `src/ui/views`. A screen wrapper in `src/ui/screens` connects a view to the save.
   A new screen also needs a `Screen` variant in `src/state/router.ts` and a case in `src/app.tsx`.
 - The battle panel never changes height. If something doesn't fit, it pages (`TextBox`) or opens an

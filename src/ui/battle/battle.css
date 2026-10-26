@@ -120,9 +120,9 @@
   position: absolute;
   width: min(56%, 270px);
   color: var(--ink);
-  background: var(--paper) padding-box;
+  background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box;
   border: 9px solid transparent;
-  border-image: var(--pencil-frame) 14 / 9px round;
+  border-image: var(--pencil-frame) 24 / 9px stretch;
   padding: 0 6px 2px;
   z-index: 2;
 }
@@ -142,9 +142,9 @@
   display: flex;
   flex-direction: column;
   padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
-  background: #d8c7a0;
-  background-image: repeating-linear-gradient(90deg, rgba(120, 90, 40, 0.07) 0 2px, transparent 2px 9px);
-  border-top: 3px solid var(--ink);
+  /* kraft paper under a wobbly pencil line */
+  background: var(--rule) repeat-x 0 0 / 240px 8px, var(--hatch-paper) 0 0 / 72px 72px, #e3d4b2;
+  padding-top: 9px;
 }
 .bpanel__text { flex: 1; min-height: 0; overflow: hidden; }
 /* in the battle panel the text fills the fixed panel: as many whole lines as fit */
@@ -181,9 +181,9 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
   color: var(--ink);
-  background: linear-gradient(90deg, var(--gba) 0 7px, var(--paper) 7px) padding-box;
+  background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box;
   border: 8px solid transparent;
-  border-image: var(--pencil-frame) 14 / 8px round;
+  border-image: var(--pencil-frame) 24 / 8px stretch;
   padding: 0 0.4em 0 1.6em;
   text-align: left;
   cursor: pointer;
@@ -196,10 +196,10 @@
 }
 .pk-move.is-on::before { left: auto; right: 4px; }
 .gba-btn:active { transform: translateY(2px); }
-.gba-btn--attack { --gba: #f08a7a; }
-.gba-btn--bag { --gba: #f2c14e; }
-.gba-btn--team { --gba: #7cc65a; }
-.gba-btn--run { --gba: #7ab0e0; }
+.gba-btn--attack { --sk-fill: var(--coral); --sk-hatch: var(--hatch-coral); --pencil-frame: var(--frame-coral); }
+.gba-btn--bag { --sk-fill: var(--butter); --sk-hatch: var(--hatch-butter); --pencil-frame: var(--frame-butter); }
+.gba-btn--team { --sk-fill: var(--mint); --sk-hatch: var(--hatch-mint); --pencil-frame: var(--frame-mint); }
+.gba-btn--run { --sk-fill: var(--sky); --sk-hatch: var(--hatch-sky); --pencil-frame: var(--frame-sky); }
 .pk-move--empty { display: grid; place-items: center; color: var(--ink-soft); opacity: 0.5; cursor: default; }
 .is-coach { animation: coachPulse 1s ease-in-out infinite; }
 @keyframes coachPulse { 50% { filter: drop-shadow(0 0 6px #f2c14e) brightness(1.06); } }
@@ -215,7 +215,7 @@
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
   /* two rows of moves fit the low panel, even with large text */
-  .bpanel__grid .pk-move { border: 6px solid transparent; border-image: var(--pencil-frame) 14 / 6px round; padding: 0 6px 0 12px; }
+  .bpanel__grid .pk-move { border: 6px solid transparent; border-image: var(--pencil-frame) 24 / 6px stretch; padding: 0 6px 0 12px; }
   .bpanel__grid .pk-move b { font-size: min(1.25rem, 6dvh); line-height: 1.1; }
   .bpanel__grid .pk-move small { font-size: min(0.85rem, 4.2dvh); line-height: 1.1; }
   /* the speaker label goes in the corner so the text keeps its lines */

@@ -1,7 +1,8 @@
 # Atelier Bestioles: le Rêve de Papeterre
 
 A small FireRed/LeafGreen-style adventure, made from a child's drawings.
-Every creature ("Bestiole") is a real pencil drawing, cut out of a photo.
+Every creature ("Bestiole") is a real pencil drawing, cut out of a photo, and the whole interface
+is sketched too: wobbly pencil frames and pastel crayon hatching.
 
 **The story.** One evening, a little artist falls asleep on the sketchbook and opens their eyes in
 Papeterre, a land drawn on a giant sheet of paper where every drawing is alive. Prof. Fusain

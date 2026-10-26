@@ -57,11 +57,11 @@ export function XpBar({ pct, level }: { pct: number; level?: number }) {
 }
 
 export function StatusTag({ s }: { s: NonNullable<Mon['status']> }) {
-  return <i class="status-tag" style={{ background: STATUSES[s].color }}>{tr(STATUSES[s].tag)}</i>;
+  return <i class="status-tag" style={{ '--c': STATUSES[s].color }}>{tr(STATUSES[s].tag)}</i>;
 }
 
 export function TypeBadge({ type }: { type: TypeId }) {
-  return <span class="type-badge" style={{ background: TYPES[type].color }}>{tr(TYPES[type].name)}</span>;
+  return <span class="type-badge" style={{ '--c': TYPES[type].color }}>{tr(TYPES[type].name)}</span>;
 }
 
 /** The type badge(s) of a species: one, or two for dual-type Bestioles. */
@@ -250,7 +250,7 @@ export function Frame({ title, onBack, backLabel, right, children, foot, class: 
 export function MoveButton({ id, pp, disabled, onClick, class: cls = '' }: { id: string; pp?: number; disabled?: boolean; onClick: () => void; class?: string }) {
   const mv = move(id);
   return (
-    <button class={`pk-move ${cls}`} style={{ '--type': TYPES[mv.type].color }} disabled={disabled} onClick={onClick}>
+    <button class={`pk-move ${cls}`} style={{ '--type': TYPES[mv.type].color, '--th': `var(--hatch-t-${mv.type})` }} disabled={disabled} onClick={onClick}>
       <b>{tr(mv.name)}</b>
       <small><span class="pk-move__type">{tr(TYPES[mv.type].name)}</span>{pp !== undefined ? <span>PP {pp}/{mv.pp}</span> : null}</small>
     </button>

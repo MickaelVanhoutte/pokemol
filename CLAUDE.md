@@ -135,6 +135,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - Backdrops are drawn in coloured pencil on a canvas (`backdrops.ts`).
 
 **UI kit** (`src/ui/paper`):
+- `sketch.ts` draws the hand-drawn look at start-up (pencil frames, pastel crayon hatching, sketched
+  round buttons) into CSS variables; boxes pick a crayon with `sk-<crayon>` classes. See
+  [docs/content.md](docs/content.md#ui);
 - `Window` (a pencil border drawn with an SVG `border-image`) and `TextBox` (fixed number of lines,
   `paginate()` measures pages);
 - `MenuList` and `useMenuNav` (a capture-phase key handler; nested menus rely on

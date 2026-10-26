@@ -9,7 +9,10 @@ import './story';
 import { startPwa } from './state/pwa';
 import { save } from './state/game';
 import { screen } from './state/router';
+import { installSketch } from './ui/paper/sketch';
 
+// the hand-drawn frames, hatching and buttons of the interface
+installSketch();
 render(<App />, document.getElementById('app')!);
 startPwa();
 
