@@ -37,6 +37,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
 - A music box in the title menu (MUSIQUES) to listen to every original tune.
+- A late game with detours: a ferry to a lighthouse island to help the last Atelier Master, a
+  cycling track that loops back south, and a hidden cave where a legendary shadow waits.
 - Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then
   the Hall of Fame) and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to
   trade for items).

@@ -109,6 +109,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     signs: [{ x: 3, y: 12, text: L('PORT-AQUARELLE\nLà où la mer se peint toute seule.\nAtelier de Marine · Tombola', 'PORT AQUARELLE\nWhere the sea paints itself.\nMarine’s Atelier · Fair') }],
     items: [{ x: 22, y: 18, item: 'page-6', hidden: true }, { x: 6, y: 22, item: 'pochoir-14' }, { x: 21, y: 24, item: 'crayon-blanc' }],
     npcs: [
+      { id: 'passeur', x: 20, y: 16, look: LOOKS.passeur, facing: 'left', script: 'passeur', showIf: 'a3.note' },
       { id: 'portSailor', x: 21, y: 15, look: LOOKS.sailor, facing: 'down', wander: true, text: [L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!')] },
       { id: 'portKid', x: 14, y: 12, look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le monsieur de la tombola a perdu son Ticket d’or sur la route du nord. Il est tout triste.', 'The fair man lost his Golden Ticket on the north road. He’s so sad.')] },
       { id: 'portGranny', x: 4, y: 14, look: LOOKS.granny, facing: 'right', text: [L('Tu viens de la grotte ? Les gens en gris aussi… Ils sont partis vers Ville-Feutre, au nord-est.', 'You came out of the cave? So did the people in grey… They went to Felt City, up north-east.')] },

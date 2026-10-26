@@ -44,6 +44,8 @@ export const MAIN: Objective[] = [
   step('paillette', 'paillette', L('Bats Célestine à l’Atelier de Bourg-Paillette.', 'Beat Celestine at the Glimmerton Atelier.'), ['badge:paillette']),
   step('tour', 'tour1', L('Chasse la Team Gomme de la Tour Brumeuse.', 'Drive Team Gomme out of the Misty Tower.'), ['a3.tour']),
   step('gouache', 'gouache', L('Bats Basile à l’Atelier du Jardin-Gouache.', 'Beat Basil at the Gouache Garden Atelier.'), ['badge:gouache']),
+  step('encreNote', 'encre', L('Va à la Cité-Encre, au nord du Jardin-Gouache.', 'Go to Ink City, north of Gouache Garden.'), ['a3.note'], (s) => on(s, 'a3.note') || on(s, 'badge:encre')),
+  step('phare', 'phareIle', L('Rejoins Nocturne au phare (passeur du Port).', 'Join Nocturne at the lighthouse (ferry at Port).'), ['a3.phare'], (s) => on(s, 'a3.phare') || on(s, 'badge:encre')),
   step('encre', 'encre', L('Bats Nocturne à l’Atelier de la Cité-Encre.', 'Beat Nocturne at the Ink City Atelier.'), ['badge:encre']),
   step('usine', 'usine1', L('Entre dans l’Usine à Gommes de la Cité-Encre.', 'Storm the Eraser Factory in Ink City.'), ['a3.usine']),
   step('rival', 'routeBlanche', L('{rival} t’attend sur la Route Blanche.', '{rival} is waiting on the Blank Road.'), ['tr:rivalFinal']),

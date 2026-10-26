@@ -45,9 +45,22 @@ they are used.
 | 10 | `route6`, `paillette` (Bourg-Paillette), `atelierPaillette` | 🏅 **Célestine**, Fairy | `badge:paillette` |
 | 11 | `tour1`–`tour3` (Tour Brumeuse) | Team Gomme holds it. The rival heals your team; Admin Blanche at the top | `a3.tour` |
 | 12 | `route7`, `gouache` (Jardin-Gouache), `atelierGouache` | 🏅 **Basile**, Grass | `badge:gouache` |
-| 13 | `route8`, `encre` (Cité-Encre), `atelierEncre`, `usine1`–`usine3` | 🏅 **Nocturne**, Ghost. Then the Eraser Factory: Rature and Blanche again; the Great Eraser escapes | `badge:encre`, `a3.usine` |
+| 13 | `route8`, `encre` (Cité-Encre) | The Atelier is locked: Nocturne’s note (`atelierEncreDoor`) sends you back south | `a3.note` |
+| 13b | `port` → ferry (`passeur`) → `phareIle`, `phare1`–`phare3` (Phare de l’Encrier) | Grunts, a block-and-plate room (2F), **Captain Buvard** at the lantern; Nocturne gets her Midnight Ink back (`phareEnd`) | `a3.phare` |
+| 13c | `encre`, `atelierEncre`, `usine1`–`usine3` | 🏅 **Nocturne**, Ghost. Then the Eraser Factory: Rature and Blanche again; the Great Eraser escapes | `badge:encre`, `a3.usine` |
 | 14 | `routeBlanche`, `bordPage` (Le Bord de la Page) | Half-drawn world: final rival battle, then the Great Eraser with the choice | `tr:rivalFinal`, `tr:effaceur` |
 | 15 | `chambre` | The real bedroom, Papa, the drawings on the desk, credits | `ending` |
+
+**Detours of the late game.** Besides the lighthouse trip (the story's back-and-forth from Cité-Encre
+down to Port-Aquarelle and its island), two optional places break the straight line north:
+- **Piste Cyclable** (`piste`): a long downhill bike road from Jardin-Gouache (east exit) to Ville-Feutre
+  (east exit), with cyclists, grass and items. The Pencil Bike is required (`pisteBike`), and its gate
+  at the Gouache end only opens from the Gouache side (`pisteGate`, flag `piste.open`), so it is a
+  shortcut back south, never a way to skip ahead.
+- **Grotte des Échos** (`grotteEchos`, door on Route 8): two boulders (Strong Gloves) fill the two
+  pits of the passage; at the back, a red-eyed shadow is **Ombrouille** L45, met once
+  (`echoShadow`, flag `static:ombrouille` when caught or beaten). It no longer appears in the
+  Misty Tower.
 
 **Running shoes.** Heading north out of Bourg-Gribouille after the lab (`momShoes`, trigger at the
 town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).

@@ -197,4 +197,6 @@ export const LEGEND: Record<string, string> = {
   'O': 'hole', '0': 'holefilled', '@': 'plate', 'G': 'gate',
   'Z': 'redup', 'z': 'reddown', 'J': 'blueup', 'j': 'bluedown', 'L': 'leverred', 'l': 'leverblue',
   'I': 'glossy', 'F': 'fresque',
+  // a legendary Bestiole waiting in the dark
+  '%': 'shadow',
 };

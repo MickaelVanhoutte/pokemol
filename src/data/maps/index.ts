@@ -12,6 +12,9 @@ import { GOUACHE_MAPS } from './gouache';
 import { ENCRE_MAPS } from './encre';
 import { DREAM_MAPS } from './dream';
 import { GALERIE_MAPS } from './galerie';
+import { PHARE_MAPS } from './phare';
+import { PISTE_MAPS } from './piste';
+import { ECHOS_MAPS } from './echos';
 
 /*
  * Legend: . grass  , grass2  " tall grass  : path  * flowers  ~ water  = bridge  e erased paper  T tree
@@ -34,4 +37,7 @@ export const MAPS: Record<string, MapDef> = {
   ...ENCRE_MAPS,
   ...DREAM_MAPS,
   ...GALERIE_MAPS,
+  ...PHARE_MAPS,
+  ...PISTE_MAPS,
+  ...ECHOS_MAPS,
 };

@@ -261,7 +261,7 @@ function onStep(x: number, y: number): boolean {
     // the spray keeps away wild Bestioles weaker than the first one able to fight
     const lead = s().party.find((m) => m.hp > 0 && !m.egg);
     if (s().repel && lead && level < lead.level) return false;
-    void locked(() => wildBattle(e.id, level));
+    void locked(async () => void (await wildBattle(e.id, level)));
     return true;
   }
   return false;
@@ -778,8 +778,9 @@ async function blackout() {
   await warpTo({ map: d.respawn.map, x: d.respawn.x, y: d.respawn.y, facing: 'down' });
 }
 
-async function wildBattle(species: string, level: number) {
-  if (!s().party.length) return;
+/** A wild battle (random encounters, fishing, or a Bestiole waiting somewhere); returns how it ended. */
+export async function wildBattle(species: string, level: number, opts: { music?: TrackId } = {}): Promise<BattleResult | null> {
+  if (!s().party.length) return null;
   sfx.encounter();
   const g = getGame();
   // two white flashes, then the pencil scribbles over the screen
@@ -791,7 +792,7 @@ async function wildBattle(species: string, level: number) {
   // like the GBA games, some wild creatures carry an item (kept when caught)
   const held = creature(species).wildItem;
   if (held && Math.random() * 100 < held.pct) wild.item = held.id;
-  await fight('wild', creature(species).name, [wild]);
+  return (await fight('wild', creature(species).name, [wild], { music: opts.music })).result;
 }
 
 // ------------------------------------------------------------------ helpers for scripts

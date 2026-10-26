@@ -87,8 +87,8 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       'T..:........::......:..T',
       'T..:........::......:..T',
       'T..::::::::::::::::::..T',
-      'T*.........::.........*T',
-      'T..........::..........T',
+      'T*.........::.........*.',
+      'T..........::...........',
       'T.S........::..........T',
       'T..........::..........T',
       'T..........::..........T',
@@ -108,6 +108,9 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     warps: [
       { x: 11, y: 19, to: { map: 'route4', x: 8, y: 1, facing: 'down' } },
       { x: 12, y: 19, to: { map: 'route4', x: 9, y: 1, facing: 'down' } },
+      // east: the Piste Cyclable up to Jardin-Gouache
+      { x: 23, y: 10, to: { map: 'piste', x: 1, y: 36, facing: 'right' } },
+      { x: 23, y: 11, to: { map: 'piste', x: 1, y: 37, facing: 'right' } },
     ],
     signs: [{ x: 2, y: 12, text: L('VILLE-FEUTRE\nLa ville fluo qui ne dort jamais.\nAtelier de Zélie · Mont Fusain au nord', 'FELT CITY\nThe neon city that never sleeps.\nZelie’s Atelier · Mount Charcoal to the north') }],
     npcs: [

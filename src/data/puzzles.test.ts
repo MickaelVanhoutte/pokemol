@@ -62,7 +62,7 @@ function pushes(def: MapDef, start: [number, number], blocks: [number, number][]
         const bx = nx + dx, by = ny + dy, bk = `${bx},${by}`;
         const rest = s.b.filter((b) => b !== k);
         if (holes.has(bk) && !s.f.includes(bk)) out.push({ p: [nx, ny], b: rest, f: [...s.f, bk].sort(), n: s.n + 1 });
-        else if (!solid(rows, bx, by) && !others.has(bk) && !s.b.includes(bk)) out.push({ p: [nx, ny], b: [...rest, bk].sort(), f: s.f, n: s.n + 1 });
+        else if ((!solid(rows, bx, by) || s.f.includes(bk)) && !others.has(bk) && !s.b.includes(bk)) out.push({ p: [nx, ny], b: [...rest, bk].sort(), f: s.f, n: s.n + 1 });
       }
       return out;
     },
@@ -125,6 +125,23 @@ describe('puzzles: solvable and not too hard', () => {
     const n = pushes(def, [16, 2], blocksOf(def), (_b, f) => f.size === (def.holes ?? []).length);
     expect(n).not.toBeNull();
     expect(n!).toBeLessThanOrEqual(8);
+  });
+
+  it('Inkwell Lighthouse 2F: two blocks open the gate, whichever one fell down the hole', () => {
+    const def = MAPS.phare2;
+    const all = blocksOf(def);
+    const n = pushes(def, [7, 2], all, covers(def));
+    expect(n).not.toBeNull();
+    expect(n!).toBeLessThanOrEqual(8);
+    for (let i = 0; i < all.length; i++) expect(pushes(def, [7, 2], all.filter((_, k) => k !== i), covers(def)), `without block ${i}`).not.toBeNull();
+    expect(pushes(def, [7, 2], all, (b, f) => covers(def)(b) && f.size === 1)).not.toBeNull();
+  });
+
+  it('Echo Cave: two boulders fill the two pits of the passage', () => {
+    const def = MAPS.grotteEchos;
+    const n = pushes(def, [7, 10], blocksOf(def), (_b, f) => f.size === 2);
+    expect(n).not.toBeNull();
+    expect(n!).toBeLessThanOrEqual(10);
   });
 
   it('Eraser Factory 2F: two blocks on the plates open the shutter, even after one fell down the hole', () => {

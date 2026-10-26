@@ -5,9 +5,10 @@ import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
+import { sfx } from '../audio/sfx';
 import {
   ask, bubble, fight, flag, flash, getGame, openScreen, say, sayAll, scripts, setFlag, shake, showToast,
-  trainerBattle, wait, warpTo,
+  trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
 
@@ -97,6 +98,104 @@ scripts.usineDoor = async () => {
     return;
   }
   await warpTo({ map: 'usine1', x: 6, y: 10, facing: 'up' });
+};
+
+/** Nocturne’s Atelier is closed until her Midnight Ink is back from the lighthouse. */
+scripts.atelierEncreDoor = async () => {
+  if (flag('a3.phare') || flag('badge:encre')) {
+    await warpTo({ map: 'atelierEncre', x: 5, y: 10, facing: 'up' });
+    return;
+  }
+  await say(L('La porte de l’Atelier est fermée à clé. Un mot est épinglé dessus :', 'The Atelier door is locked. A note is pinned to it:'));
+  await say(L('« Partie au Phare de l’Encrier, sur l’île au sud de Port-Aquarelle : la Team Gomme m’a volé l’Encre de Minuit ! Le passeur du port connaît le chemin. — Nocturne »', '“Gone to the Inkwell Lighthouse, on the island south of Port Aquarelle: Team Gomme stole my Midnight Ink! The ferryman at the port knows the way. — Nocturne”'));
+  setFlag('a3.note');
+  const g = getGame();
+  await g.walk(g.player, ['down'], 160);
+};
+
+/** The ferryman: Port-Aquarelle ⇄ Île de l’Encrier. */
+scripts.passeur = async () => {
+  const who = L('Passeur', 'Ferryman');
+  const onIsle = getGame().map.def.id === 'phareIle';
+  const c = await ask(onIsle
+    ? L('On rentre à Port-Aquarelle ?', 'Shall we head back to Port Aquarelle?')
+    : L('L’Île de l’Encrier ? Son phare est tombé aux mains de la Team Gomme… Je t’y emmène quand même ?', 'Inkwell Isle? Its lighthouse fell into Team Gomme’s hands… Shall I take you there anyway?'),
+  [L('Oui', 'Yes'), L('Non', 'No')], who);
+  if (c !== 0) return;
+  await say(L('En route ! Accroche-toi au bastingage.', 'Off we go! Hold on to the rail.'), who);
+  const g = getGame();
+  await g.fadeTo(1, 500);
+  showToast(tr(L('~ La barque fend les vagues ~', '~ The boat cuts through the waves ~')));
+  await wait(900);
+  await warpTo(onIsle ? { map: 'port', x: 19, y: 16, facing: 'down' } : { map: 'phareIle', x: 7, y: 10, facing: 'up' });
+};
+
+scripts.buvardStop = async () => {
+  const g = getGame();
+  const b = g.npc('buvard');
+  if (b) {
+    await bubble('buvard', '!', 600);
+    for (let i = 0; i < 4 && Math.abs(b.y - g.player.y) > 1; i++) await g.walk(b, ['down'], 150);
+    g.faceToward(g.player, b);
+  }
+  await trainerBattle('buvard', b);
+};
+
+/** After Captain Buvard: Nocturne gets her ink back and flies home. */
+scripts.phareEnd = async () => {
+  const who = L('Nocturne', 'Nocturne');
+  const g = getGame();
+  const n = g.npc('nocturnePhare');
+  if (n) g.faceToward(n, g.player);
+  await sayAll([
+    L('L’Encre de Minuit ! Tu l’as reprise… Sans elle, mon Atelier restait dans le noir.', 'The Midnight Ink! You got it back… Without it, my Atelier stayed in the dark.'),
+    L('Je rentre tout de suite à la Cité-Encre. Rejoins-moi à l’Atelier : là-bas, je ne te ferai pas de cadeau !', 'I’m heading straight back to Ink City. Meet me at the Atelier: over there, I won’t go easy on you!'),
+  ], who);
+  await flash('white', 250);
+  if (n) g.remove(n.id);
+  const bv = g.npc('buvard');
+  if (bv) g.remove(bv.id);
+  await say(L('(Nocturne s’envole dans un tourbillon d’encre.)', '(Nocturne flies away in a swirl of ink.)'));
+};
+
+/** The gate at the top of the Piste Cyclable only opens from the Gouache side. */
+scripts.pisteGate = async () => {
+  const g = getGame();
+  if (flag('piste.open')) return;
+  if (g.player.x < 2) {
+    sfx.door();
+    setFlag('piste.open');
+    await say(L('Tu soulèves le loquet de la grille. Clac ! La Piste Cyclable est ouverte jusqu’à Ville-Feutre.', 'You lift the gate’s latch. Clack! The Cycling Track is open all the way to Felt City.'));
+  } else {
+    await say(L('La grille est fermée… Le loquet est de l’autre côté, vers le Jardin-Gouache.', 'The gate is shut… The latch is on the other side, towards Gouache Garden.'));
+  }
+};
+
+/** Bikes only on the Piste Cyclable (walking out is fine). */
+scripts.pisteBike = async () => {
+  const g = getGame();
+  if (g.biking) return;
+  const leaving = g.player.dir === 'left';
+  if (leaving) return;
+  await say(L('Panneau : « Piste Cyclable — Vélo-Crayon obligatoire ! » Il faudrait monter sur un vélo.', 'Sign: “Cycling Track — Pencil Bike only!” You’d need to get on a bike.'));
+  await g.walk(g.player, ['left'], 160);
+};
+
+/** The Grotte des Échos: Ombrouille waits at the back, once. */
+scripts.echoShadow = async () => {
+  if (flag('static:ombrouille')) return;
+  await say(L('Une ombre gigantesque te fixe de ses yeux rouges…', 'A huge shadow stares at you with red eyes…'));
+  await shake(500);
+  await say(L('… Elle se jette sur toi !', '… It leaps at you!'));
+  const out = await wildBattle('011', 45, { music: 'final' });
+  if (out === 'capture' || out === 'win') {
+    setFlag('static:ombrouille');
+    await say(out === 'capture'
+      ? L('L’ombre s’est laissé dessiner… Ombrouille est à toi !', 'The shadow let itself be drawn… Ombrouille is yours!')
+      : L('L’ombre se dissipe dans un éclat de rire… Elle ne reviendra pas.', 'The shadow fades away with a laugh… It won’t come back.'));
+  } else if (out) {
+    await say(L('L’ombre recule au fond de la grotte… Elle t’attend toujours.', 'The shadow draws back into the cave… It is still waiting for you.'));
+  }
 };
 
 scripts.encreNorth = async () => {

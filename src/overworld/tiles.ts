@@ -566,6 +566,21 @@ Object.assign(TILES, {
   bluedown: { paint: (p: Painter, _f: number, n: Near, x: number, y: number) => barrierDown(p, n, x, y, 'blue') },
   leverred: { solid: true, paint: (p: Painter, _f: number, n: Near, x: number, y: number) => lever(p, n, x, y, 'red') },
   leverblue: { solid: true, paint: (p: Painter, _f: number, n: Near, x: number, y: number) => lever(p, n, x, y, 'blue') },
+  // a huge shadow with red eyes: a legendary Bestiole waiting at the back of a cave
+  shadow: {
+    solid: true,
+    animated: true,
+    paint: (p: Painter, f: number, n: Near, x: number, y: number) => {
+      under(p, n, x, y);
+      p.disc(8, 9, 7.5, '#2a1f4a');
+      p.disc(8, 8.5, 6.5, '#3a2a5e');
+      for (let a = 0; a < 10; a++) p.px(Math.round(8 + Math.cos(a + f) * 7), Math.round(9 + Math.sin(a + f) * 6.5), '#5a4a8a');
+      // the eyes blink
+      if (!f) { p.rect(4, 6, 3, 2, '#e04848'); p.rect(9, 6, 3, 2, '#e04848'); p.px(5, 6, '#ffd75e'); p.px(10, 6, '#ffd75e'); }
+      else { p.rect(4, 7, 3, 1, '#e04848'); p.rect(9, 7, 3, 1, '#e04848'); }
+      p.rect(5, 11, 6, 1, '#e8e4ec');
+    },
+  },
   // « papier glacé »: glossy paper you slide on
   glossy: {
     animated: true,

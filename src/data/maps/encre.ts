@@ -34,6 +34,8 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'T.......::....T..T',
       'TTTTTTTT::TTTTTTTT',
     ],
+    // the Grotte des Échos (optional)
+    buildings: [{ kind: 'cave', x: 12, y: 8, w: 5, h: 3, door: 2, to: { map: 'grotteEchos', x: 7, y: 10, facing: 'up' } }],
     obstacles: [{ x: 16, y: 19, kind: 'rock' }],
     warps: [
       { x: 8, y: 21, to: { map: 'gouache', x: 9, y: 1, facing: 'down' } },
@@ -90,7 +92,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     buildings: [
       { kind: 'center', x: 2, y: 1, w: 5, h: 4, door: 2, to: { map: 'centre', x: 5, y: 6, facing: 'up' } },
       { kind: 'shop', x: 13, y: 1, w: 4, h: 4, door: 1, to: { map: 'boutique', x: 4, y: 6, facing: 'up' } },
-      { kind: 'gym', x: 12, y: 6, w: 6, h: 4, door: 3, roof: '#6a5aa6', to: { map: 'atelierEncre', x: 5, y: 10, facing: 'up' } },
+      { kind: 'gym', x: 12, y: 6, w: 6, h: 4, door: 3, roof: '#6a5aa6', to: { map: 'atelierEncre', x: 5, y: 10, facing: 'up' }, script: 'atelierEncreDoor' },
       { kind: 'lab', x: 2, y: 6, w: 6, h: 4, door: 3, roof: '#4a4458', to: { map: 'usine1', x: 6, y: 10, facing: 'up' }, script: 'usineDoor' },
     ],
     warps: [

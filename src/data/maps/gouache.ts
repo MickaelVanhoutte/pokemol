@@ -68,8 +68,8 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     rows: [
       'TTTTTTTTT::TTTTTTTTT',
       'T*.......::.......*T',
-      'T........::........T',
-      'T........::........T',
+      'T........::.........',
+      'T........::.........',
       'T........::........T',
       'T........::........T',
       'T.B::::::::::::::B.T',
@@ -93,6 +93,9 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { x: 10, y: 15, to: { map: 'route7', x: 9, y: 1, facing: 'down' } },
       { x: 9, y: 0, to: { map: 'route8', x: 8, y: 20, facing: 'up' } },
       { x: 10, y: 0, to: { map: 'route8', x: 9, y: 20, facing: 'up' } },
+      // east: the gate at the top of the Piste Cyclable, down to Ville-Feutre
+      { x: 19, y: 2, to: { map: 'piste', x: 1, y: 2, facing: 'right' } },
+      { x: 19, y: 3, to: { map: 'piste', x: 1, y: 3, facing: 'right' } },
     ],
     signs: [{ x: 2, y: 12, text: L('JARDIN-GOUACHE\nIci, même l’herbe est peinte à la main.\nAtelier de Basile', 'GOUACHE GARDEN\nHere, even the grass is hand-painted.\nBasil’s Atelier') }],
     items: [{ x: 1, y: 13, item: 'page-10', hidden: true }],

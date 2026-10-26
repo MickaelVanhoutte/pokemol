@@ -21,6 +21,9 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
 | `gift:calque` | Prof. Fusain's aide (Healing Center) | Tracing Paper given |
 | `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
+| `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
+| `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
+| `static:<species>` | a one-time battle (`echoShadow`) | A Bestiole met once was caught or beaten |
 | `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |

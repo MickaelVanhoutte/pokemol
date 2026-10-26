@@ -450,6 +450,52 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [L('Le patron prépare la Grande Gomme. Bientôt, tout sera blanc !', 'The boss is preparing the Big Rub. Soon everything will be white!')],
     after: [L('Pas si vite, alors…', 'Not so fast, then…')],
   }),
+  // ---------------------------------------------------------------- Phare de l’Encrier (lighthouse)
+  T({
+    id: 'ph1a', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 35 }, { species: '007', level: 35 }], money: 880, grey: true,
+    before: [L('Le capitaine ne veut personne dans son phare. Demi-tour !', 'The captain wants nobody in his lighthouse. Turn back!')],
+    after: [L('Le capitaine va être fâché…', 'The captain is going to be cross…')],
+  }),
+  T({
+    id: 'ph1b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '004', level: 35 }, { species: '008', level: 36 }], money: 880, grey: true,
+    before: [L('L’Encre de Minuit, c’est pour éteindre toutes les étoiles du dessin !', 'The Midnight Ink is for putting out every star in the drawing!')],
+    after: [L('Bon, peut-être pas toutes les étoiles…', 'Well, maybe not all the stars…')],
+  }),
+  T({
+    id: 'ph2a', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '013', level: 36 }, { species: '010', level: 36 }], money: 900, grey: true,
+    before: [L('Tu as poussé nos blocs de gomme ? Tu vas le regretter !', 'You pushed our eraser blocks? You’ll regret it!')],
+    after: [L('Pfff… Ils étaient lourds, en plus.', 'Phew… They were heavy, too.')],
+  }),
+  T({
+    id: 'buvard', name: L('Capitaine Buvard', 'Captain Blotter'), money: 4200, grey: true, afterScript: 'phareEnd', storyFlag: 'a3.phare',
+    party: [{ species: '006', level: 35 }, { species: '003', level: 35 }, { species: '010', level: 36 }, { species: '008', level: 36, item: 'baie-doree' }],
+    before: [
+      L('Ho ho ! Une petite artiste dans mon phare ?', 'Ho ho! A little artist in my lighthouse?'),
+      L('Le buvard boit tout : l’encre, les couleurs, et la nuit de Nocturne. Je garde l’Encre de Minuit pour le Grand Effaceur !', 'A blotter soaks up everything: ink, colours, and Nocturne’s night. I’m keeping the Midnight Ink for the Great Eraser!'),
+    ],
+    after: [L('Mon buvard est tout mouillé… Reprends ton encre, va !', 'My blotter is all soggy… Take your ink back, go on!')],
+  }),
+  // ---------------------------------------------------------------- Piste Cyclable
+  T({
+    id: 'pc1', name: L('Cycliste Léa', 'Cyclist Lea'), party: [{ species: '004', level: 33 }, { species: '013', level: 34 }], money: 820,
+    before: [L('Tu roules à quelle vitesse ? Moi, plus vite que le vent !', 'How fast do you ride? Me, faster than the wind!')],
+    after: [L('Crevaison !', 'Flat tyre!')],
+  }),
+  T({
+    id: 'pc2', name: L('Cycliste Bastien', 'Cyclist Bastien'), party: [{ species: '016', level: 34 }, { species: '002', level: 34 }], money: 840,
+    before: [L('Sur la Piste, on se dépasse… et on se bat !', 'On the Track, we overtake… and we battle!')],
+    after: [L('Je descends de mon vélo pour réfléchir.', 'I’m getting off my bike to think.')],
+  }),
+  T({
+    id: 'pc3', name: L('Cycliste Inès', 'Cyclist Ines'), party: [{ species: '005', level: 34 }, { species: '006', level: 35 }], money: 860,
+    before: [L('Attention, virage ! Et combat !', 'Watch the bend! And battle!')],
+    after: [L('J’ai raté le virage…', 'I missed the bend…')],
+  }),
+  T({
+    id: 'pc4', name: L('Cycliste Noé', 'Cyclist Noah'), party: [{ species: '013', level: 34 }, { species: '019', level: 35 }], money: 900,
+    before: [L('Mon Toufoudre et moi, on est les plus rapides de la Piste !', 'My Fluffbolt and I are the fastest on the Track!')],
+    after: [L('Plus rapide que nous… c’est possible, alors.', 'Faster than us… so it is possible.')],
+  }),
   // ---------------------------------------------------------------- Atelier Encre
   T({
     id: 'encreT1', name: L('Calligraphe Saki', 'Calligrapher Saki'), party: [{ species: '009', level: 35 }, { species: '009', level: 35 }], money: 880,

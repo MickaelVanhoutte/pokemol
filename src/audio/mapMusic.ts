@@ -5,6 +5,7 @@ const BY_MAP: Record<string, TrackId> = {
   routeBlanche: 'edge', bordPage: 'edge', chambre: 'ending',
   entrepot1: 'gomme', entrepot2: 'gomme', usine1: 'gomme', usine2: 'gomme', usine3: 'gomme',
   centre: 'center', boutique: 'center', tombola: 'center',
+  phare1: 'gomme', phare2: 'gomme', phare3: 'gomme',
 };
 
 /** Which tune plays on a map: towns and houses, routes, caves and towers, Team Gomme hideouts… */

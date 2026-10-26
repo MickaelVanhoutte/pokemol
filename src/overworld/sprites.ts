@@ -218,6 +218,13 @@ export const LOOKS = {
   papa: { hair: '#c8c8d0', shirt: '#7ab0e0', pants: '#5a8ad6' },
   /** Admin Rature: Team Gomme officer, darker grey with a red eraser cap. */
   rature: { hair: '#5a5470', shirt: '#7a7488', pants: '#3a3448', hat: '#d64545' },
+  /** Captain Buvard (Blotter): Team Gomme's sea captain, ink-blue coat and a pink eraser cap. */
+  buvard: { hair: '#2a2238', shirt: '#3a4a7a', pants: '#2a2a4a', hat: '#f2a0b0' },
+  /** Ferryman of Port-Aquarelle. */
+  passeur: { hair: '#8a6a4a', shirt: '#3a6ab0', pants: '#4a3a2a', hat: '#2a3a5a' },
+  /** Cyclists on the Piste Cyclable: bright jerseys. */
+  cyclist: { hair: '#2a2238', shirt: '#f2c14e', pants: '#2a2238', hat: '#e04848' },
+  cyclistF: { hair: '#c0582a', shirt: '#5bd6a0', pants: '#2a2238', hat: '#4a7ee0', longHair: true },
 } satisfies Record<string, Look>;
 
 const lookCache = new Map<string, string>();
