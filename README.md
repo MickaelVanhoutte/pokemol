@@ -7,6 +7,7 @@ Every creature ("Bestiole") is a real pencil drawing, cut out of a photo.
 drawn on a giant sheet of paper. Prof. Fusain photographs every Bestiole "so none ever gets lost".
 Team Gomme rubs out the scenery and greys out Bestioles for their boss, the Great Eraser: the little
 voice that says your drawings aren't good enough. Beat him at the Edge of the Page… and wake up.
+The story without spoilers, in French and English: [docs/histoire.md](docs/histoire.md).
 
 - 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, an ending.
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,

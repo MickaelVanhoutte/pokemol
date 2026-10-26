@@ -7,6 +7,7 @@ child's real pencil drawings. Each creature ("Bestiole", EN "Critter") is a phot
 by `tools/cut-drawings.ts`. The repo is public and the game is live at
 https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every push to `main`).
 
+- [docs/histoire.md](docs/histoire.md): the story for the family, spoiler-free (French, then English).
 - [docs/story.md](docs/story.md): story, region, cast, flags, level curve.
 - [docs/content.md](docs/content.md): how to add maps, NPCs, trainers, scripts, items, creatures and music.
 - [docs/testing.md](docs/testing.md): unit tests, balance sims, headless playtests on phone sizes, deploy check.
@@ -34,6 +35,10 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - **Balance with simulations** before shipping changes to teams or stats (`npm run balance`).
   The owner asked for a gentle start: see [docs/story.md](docs/story.md#level-curve-and-difficulty).
 - Ship each milestone separately, then check that the deploy is live (see [docs/testing.md](docs/testing.md)).
+- **Keep [docs/histoire.md](docs/histoire.md) up to date, without spoilers.** Any change to the
+  story, places, characters or side content updates it in the same commit, in French and English.
+  Never reveal the twists or the ending there (who the Prof and the Great Eraser really are, the
+  waking up, the final choice, surprises along the way): those belong in [docs/story.md](docs/story.md).
 
 ## Commands
 
