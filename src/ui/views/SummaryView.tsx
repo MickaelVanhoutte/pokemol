@@ -65,7 +65,32 @@ const natureLabel = (mon: Mon) => {
  * FRLG summary: INFOS / STATS / CAPACITÉS. With `learn`, opens on the moves page with the new
  * move as a 5th row: picking a row forgets it (`null` = give up the new move).
  */
-export function SummaryView({ mon, onClose, learn }: {
+export function SummaryView(props: { mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void } }) {
+  return props.mon.egg ? <EggSummary mon={props.mon} onClose={props.onClose} /> : <SummaryMain {...props} />;
+}
+
+/** An egg: its drawing and a hint of how soon it hatches. */
+function EggSummary({ mon, onClose }: { mon: Mon; onClose: () => void }) {
+  useMenuNav(0, { onSelect: () => undefined, onCancel: onClose });
+  const steps = mon.egg?.steps ?? 0;
+  const hint = steps > 500 ? L('Il ne bouge pas encore. Il faudra marcher longtemps…', 'It doesn’t move yet. You’ll have to walk a long way…')
+    : steps > 150 ? L('Il bouge un peu de temps en temps. Ça avance !', 'It moves a little now and then. Getting there!')
+    : L('Il bouge beaucoup ! Il va bientôt éclore !', 'It moves a lot! It will hatch soon!');
+  return (
+    <div class="frame graph summary">
+      <Window class="summary__head">
+        <div class="summary__art"><img class="mon-art" src={monArtUrl(mon)} alt="" /></div>
+        <div class="summary__id"><b class="summary__name">{monLabel(mon)}</b></div>
+      </Window>
+      <Window seyes class="summary__box"><p>{tr(hint)}</p></Window>
+      <div class="frame__foot summary__foot">
+        <button class="pbtn pbtn--b" onClick={onClose}>{tr(L('Retour', 'Back'))}</button>
+      </div>
+    </div>
+  );
+}
+
+function SummaryMain({ mon, onClose, learn }: {
   mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void };
 }) {
   const [page, setPage] = useState<Page>(learn ? 2 : 0);

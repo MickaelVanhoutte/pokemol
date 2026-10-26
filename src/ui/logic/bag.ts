@@ -16,10 +16,12 @@ export function pocketOf(def: ItemDef): Pocket {
 /** What a stencil can do for a creature (FRLG-style party labels ABLE / NOT ABLE / LEARNED). */
 /** Whether a magic pencil makes this creature evolve (the species it would become, or null). */
 export function evolveWith(itemId: string, m: Mon): string | null {
+  if (m.egg) return null;
   return evolutionFor(creature(m.species), m, { kind: 'item', item: itemId });
 }
 
 export function stencilStatus(stencilId: string, m: Mon): 'able' | 'unable' | 'learned' {
+  if (m.egg) return 'unable';
   const mv = item(stencilId).move;
   if (m.moves.some((s) => s.id === mv)) return 'learned';
   return creature(m.species).stencils.includes(stencilId) ? 'able' : 'unable';
@@ -32,6 +34,7 @@ export function pocketItems(bag: Record<string, number>, pocket: Pocket): ItemDe
 
 /** Same rules as in battle (`itemUsable`): heal a hurt one, cure a status, revive a fainted one, eat a berry. */
 export function canUseOn(itemId: string, m: Mon): boolean {
+  if (m.egg) return false;
   const def = item(itemId);
   if (def.kind === 'heal') return m.hp > 0 && m.hp < maxHp(m);
   if (def.kind === 'status') return m.hp > 0 && !!m.status;

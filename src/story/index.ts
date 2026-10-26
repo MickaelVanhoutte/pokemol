@@ -4,3 +4,4 @@ import './act1';
 import './act2';
 import './act3';
 import './field';
+import './daycare';

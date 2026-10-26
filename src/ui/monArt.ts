@@ -97,8 +97,43 @@ function makeShiny(id: string): Promise<string> {
   });
 }
 
-/** Image of a particular creature: its sparkly version when it is one. */
-export function monArtUrl(m: { species: string; shiny?: boolean }): string {
+let eggUrl = '';
+
+/** A paper egg with coloured-pencil spots, drawn once. */
+function eggArt(): string {
+  if (eggUrl || typeof document === 'undefined') return eggUrl;
+  const c = document.createElement('canvas');
+  c.width = 240;
+  c.height = 300;
+  const g = c.getContext('2d')!;
+  g.beginPath();
+  g.ellipse(120, 160, 92, 126, 0, 0, Math.PI * 2);
+  g.fillStyle = '#fffaf0';
+  g.fill();
+  g.lineWidth = 7;
+  g.strokeStyle = '#2b2536';
+  g.stroke();
+  g.save();
+  g.clip();
+  // coloured-pencil spots and a zigzag band
+  const spots: [number, number, number, string][] = [[80, 90, 22, '#9ad978'], [160, 120, 18, '#f2c14e'], [95, 200, 26, '#e07aa6'], [170, 225, 20, '#5b9be0'], [130, 60, 12, '#f08a3a']];
+  for (const [x, y, r, col] of spots) {
+    g.fillStyle = col;
+    for (let k = 0; k < 9; k++) g.fillRect(x - r + k * (r / 4.5), y - r * 0.7 + (k % 2) * 3, r / 6, r * 1.4);
+  }
+  g.beginPath();
+  for (let x = 20; x <= 230; x += 20) g.lineTo(x, 160 + (x / 20) % 2 * 18 - 9);
+  g.lineWidth = 6;
+  g.strokeStyle = '#7a5ad6';
+  g.stroke();
+  g.restore();
+  eggUrl = c.toDataURL('image/png');
+  return eggUrl;
+}
+
+/** Image of a particular creature: its sparkly version when it is one, a paper egg for an egg. */
+export function monArtUrl(m: { species: string; shiny?: boolean; egg?: unknown }): string {
+  if (m.egg) return eggArt();
   const sp = creature(m.species);
   if (!m.shiny) return artUrl(sp);
   // reading the signal re-renders the component once the sparkly version is ready

@@ -104,7 +104,9 @@ export interface SpeciesDef {
 export type HoldEffect =
   | 'regen' | 'shareXp' | 'typeBoost'
   | 'lockAtk' | 'lockSpe' | 'lockSpa' | 'powerCost' | 'specialGuard' | 'spikes' | 'holdOn'
-  | 'quickStart' | 'critUp' | 'flinchUp' | 'drainHit';
+  | 'quickStart' | 'critUp' | 'flinchUp' | 'drainHit'
+  /** Everstone: no evolution, and an egg takes this parent's nature. */
+  | 'everstone';
 
 /**
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;

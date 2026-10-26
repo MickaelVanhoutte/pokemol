@@ -57,6 +57,7 @@ export function repair(s: SaveData): SaveData {
   }
   s.party.forEach(repairMon);
   s.boxes.forEach((b) => b.forEach(repairMon));
+  s.daycare?.slots.forEach((x) => repairMon(x.mon));
   // older versions saved a win before what it unlocks: closing the app during the cut-scene left
   // the road blocked (a grunt in the woods, Zélie never freed…) or the badge missing
   for (const t of Object.values(TRAINERS)) {
@@ -262,7 +263,8 @@ export function healParty(s: SaveData) {
   s.party.forEach(healMon);
 }
 
-export const partyAlive = (s: SaveData) => s.party.some((m) => m.hp > 0);
+/** Someone in the party can fight (eggs can't). */
+export const partyAlive = (s: SaveData) => s.party.some((m) => m.hp > 0 && !m.egg);
 
 export function addItem(s: SaveData, id: string, n = 1) {
   s.bag[id] = (s.bag[id] ?? 0) + n;

@@ -247,7 +247,8 @@ export function typesOf(id: string): TypeId[] {
 }
 
 /** How a particular creature is called: its nickname, or its species' name. */
-export function monLabel(m: { species: string; nickname?: string }): string {
+export function monLabel(m: { species: string; nickname?: string; egg?: unknown }): string {
+  if (m.egg) return tr(L('Œuf', 'Egg'));
   return m.nickname || tr(creature(m.species).name);
 }
 

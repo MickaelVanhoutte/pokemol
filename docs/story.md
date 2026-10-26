@@ -70,6 +70,16 @@ Route 6.
 | Strong Gloves | Smith, Village-Braise | badge 5 |
 | Super Rod | Fisher, Jardin-Gouache | — |
 
+**Pension Crayonnée** (Pencil Day Care, `pension` map, house on Route 2, `src/story/daycare.ts`,
+rules in `src/state/daycare.ts`): Mamie Pension keeps up to 2 Bestioles in `save.daycare`. They
+gain 1 XP per step (level-up moves replace the oldest one) and cost 100 ₽ + 100 ₽ per level gained
+to take back. Two of the same evolution family (`familyRoot`) have a 50% chance every 256 steps to
+leave an egg (`daycare.egg`), collected from her: the base form at L5, 3 IVs from the parents, the
+nature of a parent holding the Pierre Immuable (Everstone, pickup in the Pension), the hidden
+talent half the time if a parent has it. An egg is a `Mon` with `egg.steps` (600–1200): it can't
+fight (`partyAlive`, battles and the repel ignore it), counts down per step in the party and
+hatches in `HatchView` with the nickname prompt.
+
 They open optional pockets with the new stencils: Route 2 garden, Scribble Cave nook, Port islets
 (by boat), Mont Fusain boulder, Route 6, Route 7 and Route 8.
 

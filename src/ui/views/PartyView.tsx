@@ -23,9 +23,9 @@ function Slot({ m, i, lead, active, cursor, disabled, swapping, tag, onClick }: 
     >
       <img class="mon-art pslot__art" src={monArtUrl(m)} alt="" />
       <span class="pslot__info">
-        <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦"> ✦</i>}</b>
-        <span class="pslot__lv">{lv(m.level)} {m.status && <StatusTag s={m.status} />}{m.item && <span class="pslot__held" title={tr(item(m.item).name)}><PixelIcon id={m.item} size={16} /></span>}</span>
-        {tag ? <span class="pslot__tag">{tag}</span> : (
+        <b>{monLabel(m)}{m.shiny && !m.egg && <i class="shiny-mark" aria-label="✦"> ✦</i>}</b>
+        {!m.egg && <span class="pslot__lv">{lv(m.level)} {m.status && <StatusTag s={m.status} />}{m.item && <span class="pslot__held" title={tr(item(m.item).name)}><PixelIcon id={m.item} size={16} /></span>}</span>}
+        {m.egg ? <span class="pslot__tag">{tr(L('Il éclora en marchant…', 'It will hatch as you walk…'))}</span> : tag ? <span class="pslot__tag">{tag}</span> : (
           <>
             <HpBar hp={m.hp} max={maxHp(m)} />
             <span class="pslot__hp">{m.hp}/{maxHp(m)}</span>
@@ -89,7 +89,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
   const sub: MenuItem[] = menuFor === null ? [] : mode === 'field'
     ? [
       { label: tr(L('RÉSUMÉ', 'SUMMARY')), onSelect: () => { setSummary(menuFor); setMenuFor(null); } },
-      ...(onGive ? [{ label: tr(L('OBJET', 'ITEM')), onSelect: () => { setItemFor(menuFor); setMenuFor(null); } }] : []),
+      ...(onGive && !party[menuFor].egg ? [{ label: tr(L('OBJET', 'ITEM')), onSelect: () => { setItemFor(menuFor); setMenuFor(null); } }] : []),
       { label: tr(L('ORDRE', 'SWITCH')), disabled: n < 2, onSelect: () => { setSwapFrom(menuFor); setMenuFor(null); } },
       { label: tr(L('ANNULER', 'CANCEL')), onSelect: () => setMenuFor(null) },
     ]

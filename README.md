@@ -15,6 +15,9 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
 - Field tools: scissors, foam mallet and strong gloves for bushes, rocks and boulders, a paper
   boat to sail, three fishing rods, a pencil bike; the Bestiodex tells where each Bestiole lives.
+- The Pencil Day Care on Route 2: leave two Bestioles to gain XP while you walk; two of one
+  family sometimes leave an egg, which hatches as you carry it (inheriting IVs, the hidden talent,
+  and the nature of a parent holding the Everstone).
 - Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
   Rememberer and a Move Forgetter in every Healing Center.
 - Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,

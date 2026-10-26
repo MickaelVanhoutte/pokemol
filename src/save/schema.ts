@@ -33,6 +33,8 @@ export interface SaveData {
   repel?: number;
   /** Steps walked in all (friendship, eggs…). */
   steps?: number;
+  /** The Pension Crayonnée: up to 2 Bestioles (with their level when left), and an egg waiting. */
+  daycare?: { slots: { mon: Mon; level: number }[]; egg: boolean };
   bag: Record<string, number>;
   money: number;
   dex: { seen: string[]; caught: string[] };

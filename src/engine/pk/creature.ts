@@ -40,6 +40,8 @@ export interface Mon {
   met?: { level: number; map: string; how: MetHow };
   /** 0–255: grows when it levels up and walks with you, shrinks a little when it faints. */
   friendship?: number;
+  /** Still an egg: it hatches after this many steps carried in the party (it can't fight). */
+  egg?: { steps: number };
   /** Held item id (berries are eaten in battle). */
   item: string | null;
   hp: number;
@@ -217,6 +219,8 @@ export function evolutionFor(sp: SpeciesDef, m: Pick<Mon, 'level' | 'friendship'
 }
 
 export function evolutionOf(m: Mon): string | null {
+  // eggs don't evolve, nor does a Bestiole holding the Everstone
+  if (m.egg || m.item === 'pierre-immuable') return null;
   return evolutionFor(creature(m.species), m, { kind: 'level' });
 }
 

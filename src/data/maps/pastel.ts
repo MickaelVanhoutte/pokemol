@@ -108,6 +108,9 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       'T..""""......*.........T',
       'TTTTTTTTTTTTTTTTTTTTTTTT',
     ],
+    buildings: [
+      { kind: 'house', x: 12, y: 1, w: 4, h: 4, door: 1, roof: '#e6a23a', to: { map: 'pension', x: 4, y: 6, facing: 'up' } },
+    ],
     obstacles: [{ x: 21, y: 3, kind: 'bush' }],
     warps: [
       { x: 23, y: 6, to: { map: 'ville', x: 1, y: 9, facing: 'right' } },
@@ -115,12 +118,12 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { x: 0, y: 6, to: { map: 'bois', x: 20, y: 7, facing: 'left' } },
       { x: 0, y: 7, to: { map: 'bois', x: 20, y: 8, facing: 'left' } },
     ],
-    signs: [{ x: 16, y: 3, text: L('ROUTE DES CRAIES\n← Bois Brumeux   → Ville-Pastel', 'CHALK LANE\n← Misty Woods   → Pastel City') }],
+    signs: [{ x: 11, y: 4, text: L('PENSION CRAYONNÉE\nOn garde vos Bestioles !', 'PENCIL DAY CARE\nWe look after your Critters!') }, { x: 16, y: 3, text: L('ROUTE DES CRAIES\n← Bois Brumeux   → Ville-Pastel', 'CHALK LANE\n← Misty Woods   → Pastel City') }],
     npcs: [
       { id: 'pierrot', x: 10, y: 4, look: LOOKS.kid, facing: 'down', trainer: 'pierrot', sight: 2 },
       { id: 'ninon', x: 14, y: 9, look: LOOKS.girl, facing: 'up', trainer: 'ninon', sight: 2 },
     ],
-    items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }, { x: 13, y: 2, item: 'pochoir-12' }, { x: 6, y: 5, item: 'crayon-vert' }, { x: 22, y: 1, item: 'pochoir-19' }, { x: 21, y: 1, item: 'baie-doree', count: 2 }],
+    items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }, { x: 17, y: 1, item: 'pochoir-12' }, { x: 6, y: 5, item: 'crayon-vert' }, { x: 22, y: 1, item: 'pochoir-19' }, { x: 21, y: 1, item: 'baie-doree', count: 2 }],
     berries: [{ x: 19, y: 9, item: 'baie-peche' }],
     encounters: {
       rate: 0.13,
@@ -134,6 +137,31 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         { id: '015', w: 6, min: 7, max: 8 },
       ],
     },
+  },
+
+  pension: {
+    id: 'pension',
+    name: L('Pension Crayonnée', 'Pencil Day Care'),
+    indoor: true,
+    border: 'void',
+    backdrop: 'lab',
+    rows: [
+      'WWwWWWwWW',
+      'bbffffffv',
+      'fffCCCfff',
+      'fffffffff',
+      'pfffffftt',
+      'fffffffff',
+      'fffffffff',
+      'WWWWXWWWW',
+    ],
+    warps: [{ x: 4, y: 7, to: { map: 'route2', x: 13, y: 5, facing: 'down' } }],
+    npcs: [
+      { id: 'mamiePension', x: 4, y: 1, look: LOOKS.granny, facing: 'down', script: 'pension' },
+      { id: 'papiPension', x: 1, y: 3, look: LOOKS.hiker, facing: 'right',
+        text: [L('Deux Bestioles de la même famille, laissées ensemble ici… parfois, on trouve un œuf ! Personne ne sait d’où il vient.', 'Two Critters of the same family left here together… sometimes, an egg turns up! Nobody knows where it comes from.')] },
+    ],
+    items: [{ x: 7, y: 6, item: 'pierre-immuable' }],
   },
 
   bois: {

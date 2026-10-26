@@ -64,7 +64,7 @@ and resume when the player returns to the world. `App` is keyed on the locale, s
 re-renders everything.
 
 **State.**
-- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, 8 PC `boxes` of 30, bag, flags…; localStorage key
+- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, 8 PC `boxes` of 30, bag, flags, `steps`, `daycare`…; localStorage key
   `atelier-bestioles.save`). `update(fn)` mutates it; it is written to storage only by SAUVER in the
   start menu (`persist()`), or after every change when the player turned on the auto-save option
   (`autosave()`, off by default, GBA style). `migrate` and `migrateV2` load older
@@ -147,6 +147,8 @@ excluded from `tsc`).
 - In dev only, `window.__ab` (save, `update`, `warpTo`, `runScript`, `setFlag`, `fight`,
   `trainerBattle`, `createMon`…) and `window.__battle` (`dispatch`, `state`) exist for playtesting.
   See [docs/testing.md](docs/testing.md).
+- Eggs are `Mon`s in the party with `egg: { steps }`. Anything that picks fighters, heals, evolves,
+  teaches or names must skip them (`partyAlive`, `fight()`, `canUseOn`, `evolutionOf`, `monLabel`).
 - Shared interiors: one `centre` (Healing Center) and one `boutique` (shop) map serve every town
   (`generic: true`). Their exits warp `to: 'back'`, which uses `player.returnTo`. Per-town NPCs use
   `fromMap`. The shop sells the `STOCK` list in `ShopScreen.tsx`, each item after a number of badges.

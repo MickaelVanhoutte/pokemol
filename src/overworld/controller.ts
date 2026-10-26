@@ -21,6 +21,7 @@ import { applyPatches } from './patches';
 import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
 import { berryFlag, isRipe, localDay } from './berries';
+import { daycareStep } from '../state/daycare';
 import { sfx } from '../audio/sfx';
 
 let game: Game | null = null;
@@ -185,6 +186,15 @@ function onStep(x: number, y: number): boolean {
     save.value.steps = (save.value.steps ?? 0) + 1;
     // walking together makes friends
     if (save.value.steps % 128 === 0) for (const m of save.value.party) m.friendship = Math.min(255, (m.friendship ?? 70) + 1);
+    // the Pension: XP for the Bestioles left there, and sometimes an egg
+    if (daycareStep(save.value, save.value.steps, { rng: newSeed() })) showToast(tr(L('La Pension Crayonnée a une surprise pour toi !', 'The Pencil Day Care has a surprise for you!')));
+    // eggs carried in the party hatch after enough steps
+    for (const m of save.value.party) if (m.egg) m.egg.steps--;
+    const ready = save.value.party.find((m) => m.egg && m.egg.steps <= 0);
+    if (ready) {
+      void locked(() => hatch(ready.uid));
+      return true;
+    }
     if (save.value.repel) {
       save.value.repel--;
       if (!save.value.repel) {
@@ -219,7 +229,7 @@ function onStep(x: number, y: number): boolean {
     const e = pickWeighted(st, enc.table, (r) => r.w);
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));
     // the spray keeps away wild Bestioles weaker than the first one able to fight
-    const lead = s().party.find((m) => m.hp > 0);
+    const lead = s().party.find((m) => m.hp > 0 && !m.egg);
     if (s().repel && lead && level < lead.level) return false;
     void locked(() => wildBattle(e.id, level));
     return true;
@@ -516,7 +526,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       props: {
         setup: {
           kind, seed: newSeed(),
-          player: { name: L(d.player.name, d.player.name), party: d.party, isAI: false },
+          // eggs stay out of battles
+          player: { name: L(d.player.name, d.player.name), party: d.party.filter((m) => !m.egg), isAI: false },
           enemy: { name: enemyName, party: enemy, isAI: true },
         },
         bag: d.bag,
@@ -538,7 +549,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   });
   update((x) => {
     // the battle worked on copies: bring back HP, XP, levels, moves and statuses
-    x.party = res.state.sides[0].party.map((m) => ({ ...m }));
+    const fought = new Map(res.state.sides[0].party.map((m) => [m.uid, m]));
+    x.party = x.party.map((m) => (fought.has(m.uid) ? { ...fought.get(m.uid)! } : m));
     x.stats.battles++;
     if (res.result === 'win') x.money += money;
     if (res.result === 'capture') {
@@ -563,6 +575,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
 }
 
 /** Evolution scene shown over the world (or null). */
+/** An egg hatching, drawn over the world. */
+export const hatchOverlay = signal<{ mon: Mon; resolve: () => void } | null>(null);
 export const evoOverlay = signal<{ mon: Mon; to: string; resolve: (evolved: boolean) => void } | null>(null);
 
 export async function checkEvolutions() {
@@ -731,6 +745,23 @@ function placeHere(x: SaveData): string {
   return MAPS[x.player.map]?.generic ? x.player.returnTo?.map ?? x.player.map : x.player.map;
 }
 
+/** An egg in the party hatches: a little scene, then the Bestiole joins (and can get a nickname). */
+async function hatch(uid: string) {
+  const egg = save.value?.party.find((p) => p.uid === uid);
+  if (!egg) return;
+  await new Promise<void>((resolve) => (hatchOverlay.value = { mon: egg, resolve }));
+  hatchOverlay.value = null;
+  update((x) => {
+    const m = x.party.find((p) => p.uid === uid);
+    if (!m) return;
+    delete m.egg;
+    m.met = { level: m.level, map: placeHere(x), how: 'egg' };
+    see(x, m.species);
+    if (!x.dex.caught.includes(m.species)) x.dex.caught.push(m.species);
+  });
+  await offerNickname(uid);
+}
+
 /** « Donner un surnom ? », then the nickname entry. `askFirst: false` goes straight to the entry. */
 export async function offerNickname(uid: string, askFirst = true) {
   const m = save.value && allMons(save.value).find((x) => x.uid === uid);
@@ -755,5 +786,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, nameOverlay, offerNickname, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, hatchOverlay, nameOverlay, offerNickname, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }
