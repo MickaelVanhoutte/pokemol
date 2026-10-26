@@ -22,7 +22,7 @@ function resetConcours() {
 
 scripts.concoursDoor = async () => {
   await sayAll([
-    L('Voici le Grand Concours ! Quatre Grands Maîtres, puis un dernier artiste, t’attendent l’un après l’autre.', 'This is the Grand Contest! Four Grand Masters, then one last artist, await you one after the other.'),
+    L('Voici le Grand Concours ! Quatre Grandes Maîtresses, puis un dernier artiste, t’attendent l’un après l’autre.', 'This is the Grand Contest! Four Grand Masters, then one last artist, await you one after the other.'),
     L('Une fois entré, pas de Centre de soin : seulement ton sac. Si tes Bestioles tombent, tout recommence depuis le début.', 'Once inside, no Healing Center: only your bag. If your Critters faint, it all starts again from the beginning.'),
   ], USHER);
   if (!partyAlive(save.value!)) {
@@ -57,7 +57,7 @@ for (const st of CONCOURS.slice(0, -1)) {
   scripts[`gc${st.n}`] = async () => {
     if (!(await concoursBattle(st.n))) return;
     await sayAll(st.trainer.after.slice(1), st.trainer.name);
-    await say(L('(Le Grand Maître s’écarte pour te laisser passer.)', '(The Grand Master steps aside to let you through.)'));
+    await say(L('(La Grande Maîtresse s’écarte pour te laisser passer.)', '(The Grand Master steps aside to let you through.)'));
     getGame().remove(`gc${st.n}`);
   };
 }
@@ -79,7 +79,7 @@ scripts.gc5 = async () => {
   update((d) => healParty(d));
   resetConcours();
   await warpTo({ map: 'galerie', x: 11, y: 6, facing: 'down' });
-  if (first) await say(L('Le Grand Concours reste ouvert : reviens défier les Grands Maîtres quand tu veux !', 'The Grand Contest stays open: come back and challenge the Grand Masters any time!'));
+  if (first) await say(L('Le Grand Concours reste ouvert : reviens défier les Grandes Maîtresses quand tu veux !', 'The Grand Contest stays open: come back and challenge the Grand Masters any time!'));
 };
 
 scripts.pantheon = async () => {

@@ -121,7 +121,7 @@ checks every step's flags are set somewhere and its target is on the map.
 
 **Grand Concours** (`concours` hall, scripts in `src/story/postgame.ts`, teams in
 `src/data/postgame.ts` `CONCOURS`): the door script (`concoursDoor`) clears `gc:1`…`gc:4` and warps
-in. Four Grands Maîtres (Marine, Ambre, Célestine, Nocturne at L45–48) stand in doorways and step
+in. Four Grandes Maîtresses (Marine, Ambre, Célestine, Nocturne at L45–48) stand in doorways and step
 aside once beaten (`gc:<n>`, NPC `hideIf`), then Prof. Fusain (6 Bestioles, L47–50). No healing in
 between, the bag is allowed; a loss is a normal blackout and the next attempt starts over. Winning
 sets `champion`, appends a `save.hallOfFame` entry (`hallEntry`: species, nickname, level, sparkle)

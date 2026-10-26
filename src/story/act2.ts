@@ -102,6 +102,6 @@ scripts.feutreRestore = async () => {
 scripts.braiseNorth = async () => {
   const g = getGame();
   await say(L('Un panneau : « Route des Paillettes — fermée pour cause de gribouillage géant. Réouverture bientôt ! »', 'A sign: “Glitter Road — closed due to giant scribbling. Reopening soon!”'));
-  await say(L('(La suite de l’aventure arrive bientôt !)', '(The rest of the adventure is coming soon!)'));
+  await say(L('(Il faudrait d’abord gagner le Badge Braise d’Ambre, à l’Atelier du village.)', '(You should first win Amber’s Ember Badge at the village Atelier.)'));
   await g.walk(g.player, ['down'], 160);
 };

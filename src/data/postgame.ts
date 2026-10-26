@@ -32,7 +32,7 @@ export const CONCOURS: ConcoursStage[] = [
       { species: '017', level: 46, item: 'crayon-bleu' }, { species: '003', level: 47, item: 'baie-doree' },
     ],
     before: [
-      L('Bienvenue au Grand Concours ! Ici, quatre Grands Maîtres et un dernier artiste t’attendent, l’un après l’autre.', 'Welcome to the Grand Contest! Four Grand Masters and one last artist are waiting for you, one after the other.'),
+      L('Bienvenue au Grand Concours ! Ici, quatre Grandes Maîtresses et un dernier artiste t’attendent, l’un après l’autre.', 'Welcome to the Grand Contest! Four Grand Masters and one last artist are waiting for you, one after the other.'),
       L('Pas de Centre de soin entre nous : seulement ton sac et ton courage. Que l’aquarelle déborde !', 'No Healing Center between us: only your bag and your courage. Let the watercolours run!'),
     ],
     after: [L('Quelle vague ! Passe, la suite t’attend.', 'What a wave! Go on, the next one is waiting.')],
@@ -56,7 +56,7 @@ export const CONCOURS: ConcoursStage[] = [
     after: [L('Éblouissant ! Il ne reste plus que Nocturne… et lui.', 'Dazzling! Only Nocturne is left… and him.')],
   }),
   stage(4, 'leaderEncre', {
-    id: 'gcNocturne', name: L('Grand Maître Nocturne', 'Grand Master Nocturne'),
+    id: 'gcNocturne', name: L('Grande Maîtresse Nocturne', 'Grand Master Nocturne'),
     party: [
       { species: '006', level: 45 }, { species: '010', level: 45 }, { species: '008', level: 45, item: 'baie-menthe' },
       { species: '007', level: 45, item: 'echarpe-tetue' }, { species: '011', level: 46, item: 'baie-doree' },
