@@ -79,7 +79,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Je vais redessiner mes Bestioles en plus fortes !', 'I’ll redraw my Critters stronger!')],
   }),
   T({
-    id: 'pastelT2', name: L('Apprenti Malo', 'Apprentice Malo'), party: [{ species: '016', level: 6 }, { species: '012', level: 6 }], money: 240,
+    id: 'pastelT2', name: L('Apprenti Malo', 'Apprentice Malo'), party: [{ species: '012', level: 6 }, { species: '016', level: 4 }], money: 240,
     before: [L('Mireille m’a appris à colorier sans dépasser. Toi, tu dépasses ?', 'Mireille taught me to colour inside the lines. Do you go over them?')],
     after: [L('Bon… j’ai un peu dépassé.', 'Well… I went a bit over the lines.')],
   }),
@@ -468,7 +468,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'buvard', name: L('Capitaine Buvard', 'Captain Blotter'), money: 4200, grey: true, afterScript: 'phareEnd', storyFlag: 'a3.phare',
-    party: [{ species: '006', level: 35 }, { species: '042', level: 35 }, { species: '010', level: 36 }, { species: '008', level: 36, item: 'baie-doree' }],
+    party: [{ species: '006', level: 35 }, { species: '042', level: 34 }, { species: '010', level: 35 }, { species: '008', level: 36, item: 'baie-doree' }],
     before: [
       L('Ho ho ! Une petite artiste dans mon phare ?', 'Ho ho! A little artist in my lighthouse?'),
       L('Le buvard boit tout : l’encre, les couleurs, et la nuit de Nocturne. Je garde l’Encre de Minuit pour le Grand Effaceur !', 'A blotter soaks up everything: ink, colours, and Nocturne’s night. I’m keeping the Midnight Ink for the Great Eraser!'),
@@ -548,14 +548,14 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'blanche2', name: L('Admin Blanche', 'Admin Whiteout'), money: 4400, grey: true, afterScript: 'usineEnd', storyFlag: 'a3.usine',
-    party: [{ species: '043', level: 37 }, { species: '010', level: 38 }, { species: '007', level: 37 }, { species: '008', level: 38 }],
+    party: [{ species: '043', level: 37 }, { species: '010', level: 36 }, { species: '007', level: 37 }, { species: '008', level: 37 }],
     before: [L('Le patron est juste derrière moi. Il ne faut pas le déranger… Il prépare la page blanche.', 'The boss is right behind me. He mustn’t be disturbed… He is preparing the blank page.')],
     after: [L('Même mon blanc… a des couleurs, maintenant.', 'Even my white… has colours in it now.')],
   }),
   // ---------------------------------------------------------------- the end of the page
   T({
     id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true,
-    party: [{ species: '008', level: 39 }, { species: '007', level: 38 }, { species: '004', level: 41 }, { species: '010', level: 41 }, { species: '011', level: 39, item: 'baie-doree' }],
+    party: [{ species: '008', level: 39 }, { species: '007', level: 38 }, { species: '004', level: 38 }, { species: '010', level: 39 }, { species: '011', level: 39, item: 'baie-doree' }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
   }),

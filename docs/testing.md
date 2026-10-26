@@ -22,7 +22,8 @@ Vitest in a node environment, with no DOM. What they guard:
 
 `tools/balance.ts` simulates trainer fights in story order: the trainer AI plays both sides, with no
 items. It prints the win rate for each starter (Minousse / Braisou / Clapotin) with a typical team for
-that point of the story. Pass a difficulty and a fight count, e.g. `npm run balance -- easy 100`.
+that point of the story. Pass a difficulty and a fight count, e.g. `npm run balance -- easy 100`, and optionally
+some row ids to run only those: `npm run balance -- normal 300 effaceur,gcFusain`.
 
 Run it before and after any change to levels, teams, stats, learnsets or the type chart. Numbers
 depend heavily on the team used, so compare runs rather than chasing exact values. For quick

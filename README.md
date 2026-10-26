@@ -27,6 +27,8 @@ English: [docs/histoire.md](docs/histoire.md).
   and Ariadne Thread.
 - 18 types with dual-type Bestioles, weather (rain, sun, sandstorm, hail), freeze, bad poison,
   shields, two-turn moves, ties, greedy seeds and paper dolls.
+- Every family has a power of its own, a talent or a signature move, so each Bestiole has its place
+  in a team up to level 100 ([docs/bestioles.md](docs/bestioles.md)).
 - Deeper battles, GBA style: talents (one or two per species plus a hidden one, 1 chance in 4),
   25 natures (+10% / −10%), IVs graded E to S next to each stat in the summary, effort points;
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the
@@ -95,9 +97,11 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
    miniature, add `"mini": { "saturation": 3, "colors": 8 }` to the entry.
 5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
-   evolution level if it evolves, Bestiodex text, talents, and `faces: 'left'` or `'right'` if the drawing
+   evolution level if it evolves, Bestiodex text, talents (with the family's power), and `faces: 'left'` or `'right'` if the drawing
    looks sideways (battles mirror it so both Bestioles face each other). The `id` is only a key: the
    Bestiodex number is the creature's place in the list, so put an evolution right after its earlier form.
+   [docs/bestioles.md](docs/bestioles.md) gives the stat bands, catch rates, base XP, powers and moves;
+   `src/data/bestioles.test.ts` checks them.
 6. Put it in a map's `encounters` (`src/data/maps/<area>.ts`) or a trainer party (`src/data/trainers.ts`).
    Every creature can also come out of the Tombola.
 7. `npm test`, commit, push: GitHub Pages redeploys.

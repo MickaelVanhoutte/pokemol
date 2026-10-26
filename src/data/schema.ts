@@ -62,6 +62,9 @@ export interface MoveDef {
   pp: number;
   priority?: number;
   effects?: MoveEffect[];
+  /** A punch (Poings d’Acier) or a cutting move (Ciseaux Affûtés). */
+  punch?: true;
+  cut?: true;
   desc: LText;
 }
 

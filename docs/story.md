@@ -326,6 +326,22 @@ Teams retuned with the sims:
 - the Great Eraser's Ronflon L39 and Papivole L38;
 - Prof. Fusain's team L44 except his last one.
 
+**Family powers (iteration 8).** Every family got a power, a talent or a signature move
+([docs/bestioles.md](bestioles.md) lists them). Trainers use talent slot 0, so their Bestioles always have
+it. Retuned with the sims:
+- Passe-Muraille first let the whole first attack through, which gave Team Gomme's ghosts a free turn and
+  dropped Nocturne, the late admins and the Great Eraser by 20–40 points. It now halves that attack.
+- Apprenti Malo leads with Chenillou and his Touffou is L4: Fourrure Douce halves the physical moves a
+  young Minousse has, and the row fell from 88% to 37%.
+- Captain Buvard's Banquisette L34 and Grimouille L35 (Patinoire's hail chips the whole team).
+- Admin Blanche's second fight: Grimouille L36, Ronflon L37.
+- The Great Eraser: Zigzou L38, Grimouille L39.
+- Prof. Fusain at the Grand Concours keeps L44 but his Lamacorne and last Bestiole hold no berry.
+
+On Normal, most rows stayed within 10 points; Zélie with Clapotin went from 24% to 41%, Basile with
+Minousse from 86% to 70%. Hard got harder late in the game. Piafurie on the Prof's team (Premier Envol)
+dropped that row to 22–38%, so it stayed out.
+
 **Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
 Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
 includes them; each was kept only if the leader's row stayed within about 10 points of the version

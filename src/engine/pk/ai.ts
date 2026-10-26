@@ -1,9 +1,8 @@
 import { typesOf } from '../../data/creatures';
 import { move } from '../../data/moves';
-import { effectiveness } from '../../data/types';
 import { talentEffect } from '../../data/talents';
 import { nextRandom, randomInt } from '../rng';
-import { activeMon, stageMult, usableSlots, type Action, type BattleState } from './battle';
+import { activeMon, moveEffectiveness, stabOf, stageMult, talentPowerMult, usableSlots, type Action, type BattleState } from './battle';
 import { maxHp } from './creature';
 
 /**
@@ -20,10 +19,9 @@ export function aiChoose(st: BattleState, slip = 0): Action {
   if (st.kind === 'wild' || (slip > 0 && nextRandom(st) < slip)) return { type: 'move', slot: slots[randomInt(st, slots.length)] };
 
   const myTypes = typesOf(m.species);
-  const foeType = typesOf(target.species);
 
   // stuck against an immune foe (e.g. Normal vs Ghost)? send a teammate that can hit it (not when tied up)
-  const canHurt = (mon: typeof m) => mon.moves.some((sl) => sl.pp > 0 && move(sl.id).cat !== 'status' && effectiveness(move(sl.id).type, foeType) > 0);
+  const canHurt = (mon: typeof m) => mon.moves.some((sl) => sl.pp > 0 && move(sl.id).cat !== 'status' && moveEffectiveness(mon, move(sl.id), target) > 0);
   if (!canHurt(m) && !me.vol.trap && !me.vol.charging) {
     const mate = me.party.findIndex((p, i) => i !== me.active && p.hp > 0 && canHurt(p));
     if (mate >= 0) return { type: 'switch', to: mate };
@@ -49,7 +47,10 @@ export function aiChoose(st: BattleState, slip = 0): Action {
         if (e.kind === 'onlyAsleep' && m.status !== 'sleep') power = 0;
       }
       const atk = mv.cat === 'phys' ? stageMult(me.vol.stages.atk) : stageMult(me.vol.stages.spa);
-      score = power * effectiveness(mv.type, foeType) * (myTypes.includes(mv.type) ? 1.5 : 1) * ((mv.acc ?? 100) / 100) * atk;
+      // its own power counts too (Arc-en-ciel, Poings d’Acier, Foudre Têtue…)
+      score = power * talentPowerMult(m, mv) * moveEffectiveness(m, mv, target) * stabOf(m, mv) * ((mv.acc ?? 100) / 100) * atk;
+      // a move that goes first finishes a weakened foe before it can hit back
+      if ((mv.priority ?? 0) > 0 && target.hp / maxHp(target) < 0.3) score *= 1.5;
       // a two-turn move is slower to pay off; ties and seeds are better on a foe that stays
       if (mv.effects?.some((e) => e.kind === 'charge' && !(e.sunSkips && st.weather?.kind === 'soleil'))) score *= 0.7;
       if (mv.effects?.some((e) => e.kind === 'trap') && !foe.vol.trap && !doll) score += 15;

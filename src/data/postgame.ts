@@ -67,8 +67,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(5, 'prof', {
     id: 'gcFusain', name: L('Prof. Fusain', 'Prof. Charcoal'), money: 20000,
     party: [
-      { species: '008', level: 44 }, { species: '014', level: 44, item: 'baie-doree' }, { species: '007', level: 44 },
-      { species: '024', level: 44 }, { species: '023', level: 44 }, { species: '025', level: 45, item: 'baie-doree' },
+      { species: '008', level: 44 }, { species: '014', level: 44 }, { species: '007', level: 44 },
+      { species: '024', level: 44 }, { species: '023', level: 44 }, { species: '025', level: 45 },
     ],
     before: [
       L('Te voilà, {name}. Clic-clac : je voulais une photo de toi ici, au sommet du Concours.', 'Here you are, {name}. Click-clack: I wanted a picture of you here, at the top of the Contest.'),

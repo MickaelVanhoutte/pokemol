@@ -11,6 +11,9 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - [docs/story.md](docs/story.md): story, region, cast, flags, level curve.
 - [docs/content.md](docs/content.md): how to add maps, NPCs, trainers, scripts, items, creatures and music.
 - [docs/testing.md](docs/testing.md): unit tests, balance sims, headless playtests on phone sizes, deploy check.
+- [docs/bestioles.md](docs/bestioles.md): design rules for a Bestiole (stat bands, catch rate, base XP, the
+  family's power, moves), checked by `src/data/bestioles.test.ts`. The project skill `new-bestiole`
+  (`.claude/skills/new-bestiole/SKILL.md`) walks through adding a drawing or a brouillon.
 
 ## Standing rules from the project owner
 
@@ -51,7 +54,7 @@ npx vitest run src/data/maps.test.ts          # one file
 npx vitest run -t "difficulty"                # tests whose name matches
 npm run typecheck                             # tsc --noEmit (src + tools, excludes tools/out)
 npm run build                                 # typecheck + vite build to dist/ (PWA service worker included)
-npm run balance -- [easy|normal|hard] [n]     # simulated trainer fights along the story
+npm run balance -- [easy|normal|hard] [n] [rows] # simulated trainer fights along the story (rows: ids, comma-separated)
 npm run cards -- 013                          # cut out one drawing (see README "Add a new drawing")
 npm run icons                                 # regenerate public/icon-*.png
 ```
@@ -84,8 +87,9 @@ re-renders everything.
   speed, sound, music) so Options also work from the title screen.
 
 **Data** (`src/data`) is plain TypeScript objects with `L()` texts:
-- creatures (`faces` marks sideways drawings; `talents` + `hiddenTalent` index `src/data/talents.ts`;
-  `evolutions` rules by level, item or friendship; `grownForm(id, level)` for trainer teams), natures;
+- creatures (`faces` marks sideways drawings; `talents` + `hiddenTalent` index `src/data/talents.ts`,
+  the first talent being the family's power; `evolutions` rules by level, item or friendship;
+  `grownForm(id, level)` for trainer teams), natures;
 - moves, the type chart, items (`kind: 'key'` for story items);
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in

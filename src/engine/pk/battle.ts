@@ -35,6 +35,8 @@ export interface Volatile {
   sub: number;
   /** Badly poisoned: the poison hurts n/16 this turn (0 = ordinary poison). */
   toxic: number;
+  /** Passe-Muraille: the next attack passes through it (set when it comes in). */
+  phase: boolean;
 }
 
 export interface SideState {
@@ -62,6 +64,8 @@ export interface BattleState {
   escapes: number;
   /** Rain, sunshine, sandstorm or hail, with the turns left. */
   weather: { kind: Weather; turns: number } | null;
+  /** Night in Papeterre (Pleine Lune). */
+  night?: boolean;
 }
 
 export type Action =
@@ -141,7 +145,7 @@ export type BattleEvent =
   | { t: 'frozen'; side: Side }
   | { t: 'thaw'; side: Side }
   /** A talent acts. `note`: it endured a knockout, cured its status, or made a move useless. */
-  | { t: 'talent'; side: Side; talent: string; note?: 'endure' | 'cured' | 'immune' }
+  | { t: 'talent'; side: Side; talent: string; note?: 'endure' | 'cured' | 'immune' | 'phased' }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
   | { t: 'blocked' }
   | { t: 'run'; ok: boolean }
@@ -165,6 +169,7 @@ export interface BattleSetup {
   seed: number;
   player: SideSetup;
   enemy: SideSetup;
+  night?: boolean;
 }
 
 export class IllegalAction extends Error {}
@@ -187,7 +192,7 @@ const STRUGGLE = 'lutte';
 const other = (s: Side): Side => (s === 0 ? 1 : 0);
 export const freshVol = (): Volatile => ({
   stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false, lock: null,
-  protect: false, protectChain: 0, charging: null, invuln: null, trap: 0, seeded: false, sub: 0, toxic: 0,
+  protect: false, protectChain: 0, charging: null, invuln: null, trap: 0, seeded: false, sub: 0, toxic: 0, phase: false,
 });
 /** Effect of the item a creature holds (undefined if none or not a held item). */
 const held = (m: Mon): HoldEffect | undefined => (m.item ? ITEM_BY_ID[m.item]?.hold : undefined);
@@ -209,7 +214,7 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   });
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
-    needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: null,
+    needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: null, night: !!setup.night,
   };
   const out = new Recorder(state, withSnaps);
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
@@ -235,7 +240,7 @@ function accMult(s: number) {
  * A stat in battle (Gen 3): stages, paralysis and held items, floored after each step. On a critical
  * hit the attacker ignores its own drops and the defender its own raises (`crit`).
  */
-export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd' | 'spe', crit?: 'attacker' | 'defender'): number {
+export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd' | 'spe', crit?: 'attacker' | 'defender', night = false): number {
   const m = activeMon(side);
   let stage = side.vol.stages[key];
   if ((crit === 'attacker' && stage < 0) || (crit === 'defender' && stage > 0)) stage = 0;
@@ -243,7 +248,30 @@ export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd
   if (key === 'spe' && m.status === 'paralyze') v = Math.floor(v / 4);
   const h = held(m);
   if (h) v = Math.floor(v * (HELD_STAT[h]?.[key] ?? 1));
+  // Pleine Lune
+  if (night && (key === 'spa' || key === 'spd') && talentEffect(m, 'nightBoost')) v = Math.floor(v * 1.3);
   return v;
+}
+
+/** Type effectiveness of a move used by `user` on `defender`, with Foudre Têtue (immunities ignored). */
+export function moveEffectiveness(user: Mon, mv: MoveDef, defender: Mon): number {
+  const types = typesOf(defender.species);
+  const through = talentEffect(user, 'ignoreImmunity');
+  if (through && through.type === mv.type) return types.reduce((e, t) => e * (effectiveness(mv.type, [t]) || 1), 1);
+  return effectiveness(mv.type, types);
+}
+
+/** Same-type bonus of a move for `user` (Trait Assuré ×2, Arc-en-ciel: every move). */
+export function stabOf(user: Mon, mv: MoveDef): number {
+  if (mv.id === STRUGGLE) return 1;
+  const own = typesOf(user.species).includes(mv.type) || !!talentEffect(user, 'allStab');
+  return own ? (talentEffect(user, 'adaptability') ? 2 : 1.5) : 1;
+}
+
+/** Power multiplier from the user's talent for this move (Poings d’Acier, Ciseaux Affûtés). */
+export function talentPowerMult(user: Mon, mv: MoveDef): number {
+  const f = talentEffect(user, 'flagBoost');
+  return f && mv[f.flag] ? f.mult : 1;
 }
 
 /**
@@ -398,11 +426,19 @@ function switchIn(st: BattleState, side: Side, to: number, out: Out) {
   checkBerry(st, side, out);
 }
 
-/** Talents that act as soon as the creature is sent out (Stink Eye, Thick Mist). */
+/** Talents that act as soon as the creature is sent out (Stink Eye, Thick Mist, Patinoire…). */
 function onEntry(st: BattleState, side: Side, out: Out) {
   const m = activeMon(st.sides[side]);
+  if (!alive(m)) return;
+  if (talentEffect(m, 'phaseFirst')) st.sides[side].vol.phase = true;
+  const w = talentEffect(m, 'entryWeather');
+  if (w && st.weather?.kind !== w.weather) {
+    out.push({ t: 'talent', side, talent: talentOf(m).id });
+    st.weather = { kind: w.weather, turns: 5 };
+    out.push({ t: 'weather', kind: w.weather, on: true });
+  }
   const e = talentEffect(m, 'entryStage');
-  if (!e || !alive(m)) return;
+  if (!e) return;
   const targetSide = e.target === 'self' ? side : other(side);
   if (!alive(activeMon(st.sides[targetSide]))) return;
   out.push({ t: 'talent', side, talent: talentOf(m).id });
@@ -421,7 +457,7 @@ function onLeave(m: Mon) {
 // ------------------------------------------------------------------ damage
 
 /** Gen 3 style damage for one hit. */
-export function computeDamage(st: { rng: number; weather?: BattleState['weather'] }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean) {
+export function computeDamage(st: { rng: number; weather?: BattleState['weather']; night?: boolean }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean) {
   const a = activeMon(atkSide), d = activeMon(defSide);
   const phys = mv.cat === 'phys';
   const h = held(a);
@@ -433,9 +469,11 @@ export function computeDamage(st: { rng: number; weather?: BattleState['weather'
   if (at.kind === 'technician' && mv.id !== STRUGGLE && power <= 60) power = Math.floor(power * 1.5);
   // coloured pencils: +20% power for their type
   if (h === 'typeBoost' && mv.id !== STRUGGLE && ITEM_BY_ID[a.item!]?.type === mv.type) power = Math.floor(power * 1.2);
+  // Poings d’Acier, Ciseaux Affûtés
+  power = Math.floor(power * talentPowerMult(a, mv));
   const crit = forceCrit ?? nextRandom(st) < critChance;
-  const A = Math.floor(effectiveStat(atkSide, phys ? 'atk' : 'spa', crit ? 'attacker' : undefined) * (phys && a.status === 'burn' ? 0.5 : 1));
-  const D = effectiveStat(defSide, phys ? 'def' : 'spd', crit ? 'defender' : undefined);
+  const A = Math.floor(effectiveStat(atkSide, phys ? 'atk' : 'spa', crit ? 'attacker' : undefined, st.night) * (phys && a.status === 'burn' ? 0.5 : 1));
+  const D = effectiveStat(defSide, phys ? 'def' : 'spd', crit ? 'defender' : undefined, st.night);
   // Gen 3 order: base damage, weather, +2, then crit, same-type bonus, type, random
   let dmg = Math.floor(Math.floor((Math.floor((2 * a.level) / 5 + 2) * power * A) / D) / 50);
   // rain helps Water and dampens Fire; sunshine does the opposite
@@ -446,10 +484,16 @@ export function computeDamage(st: { rng: number; weather?: BattleState['weather'
   if (crit) dmg *= 2;
   // Struggle is typeless: no STAB, hits everything
   const typeless = mv.id === STRUGGLE;
-  if (!typeless && typesOf(a.species).includes(mv.type)) dmg = Math.floor(dmg * (at.kind === 'adaptability' ? 2 : 1.5));
-  const eff = typeless ? 1 : effectiveness(mv.type, typesOf(d.species));
+  dmg = Math.floor(dmg * stabOf(a, mv));
+  const eff = typeless ? 1 : moveEffectiveness(a, mv, d);
   dmg = Math.floor(dmg * eff);
   if (!typeless && dt.kind === 'halve' && dt.types.includes(mv.type)) dmg = Math.floor(dmg / 2);
+  // the defender's power: Ailes Prisme, Carapace Pleine, Gros Dodo, Fourrure Douce, Passe-Muraille
+  if (dt.kind === 'prism' && eff > 1) dmg = Math.floor(dmg / 2);
+  if (dt.kind === 'fullHpGuard' && d.hp >= maxHp(d)) dmg = Math.floor(dmg / 2);
+  if (dt.kind === 'sleepTank' && d.status === 'sleep') dmg = Math.floor(dmg / 2);
+  if (dt.kind === 'fluffy' && phys) dmg = Math.floor(dmg / 2);
+  if (defSide.vol.phase) dmg = Math.floor(dmg / 2);
   if (dt.kind === 'filter' && eff > 1) dmg = Math.floor(dmg * 0.75);
   dmg = Math.floor((dmg * (85 + randomInt(st, 16))) / 100);
   if (h === 'powerCost' && mv.id !== STRUGGLE) dmg = Math.floor(dmg * 1.3);
@@ -559,7 +603,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     return;
   }
   // type immunity is announced before any accuracy roll
-  if (mv.cat !== 'status' && moveId !== STRUGGLE && effectiveness(mv.type, typesOf(target.species)) === 0) {
+  if (mv.cat !== 'status' && moveId !== STRUGGLE && moveEffectiveness(user, mv, target) === 0) {
     out.push({ t: 'noEffect', side: foeSide });
     return;
   }
@@ -577,7 +621,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     return;
   }
   // accuracy
-  if (mv.acc !== null && targetsFoe) {
+  if (mv.acc !== null && targetsFoe && !(mv.cat === 'status' && talentEffect(user, 'prism'))) {
     const eyes = talentEffect(user, 'compoundEyes') ? 1.3 : 1;
     const chance = (mv.acc / 100) * eyes * accMult(Math.max(-6, Math.min(6, s.vol.stages.acc - foe.vol.stages.eva)));
     if (nextRandom(st) >= chance) {
@@ -591,15 +635,18 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     return;
   }
 
-  // damaging move
+  // damaging move: Passe-Muraille lets the first attack after it came in only half lands
+  if (foe.vol.phase) out.push({ t: 'talent', side: foeSide, talent: talentOf(target).id, note: 'phased' });
   let power = mv.power;
   for (const e of mv.effects ?? []) if (e.kind === 'boostIfFoeAsleep' && target.status === 'sleep') power *= e.mult;
   const hits = hitCount(st, mv);
+  // Bébé Poche: the little one hits again, at a quarter of the power
+  const extra = hits === 1 && moveId !== STRUGGLE && talentEffect(user, 'parentalBond') ? 1 : 0;
   let total = 0;
   let done = 0;
   const behindDoll = foe.vol.sub > 0;
-  for (let h = 0; h < hits && alive(target) && alive(user); h++) {
-    const { dmg, crit, eff } = computeDamage(st, s, foe, mv, power);
+  for (let h = 0; h < hits + extra && alive(target) && alive(user); h++) {
+    const { dmg, crit, eff } = computeDamage(st, s, foe, mv, h >= hits ? Math.max(1, Math.floor(power / 4)) : power);
     // a paper doll takes the hit instead
     if (foe.vol.sub > 0) {
       const taken = Math.min(foe.vol.sub, dmg);
@@ -625,8 +672,15 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
       out.push({ t: 'talent', side: foeSide, talent: talentOf(target).id });
       setStatus(st, side, touch.status, out, false);
     }
+    // Venin Frais: its own physical hits may poison
+    const venom = talentEffect(user, 'touchStatus');
+    if (venom && dealt > 0 && mv.cat === 'phys' && moveId !== STRUGGLE && alive(target) && !target.status && nextRandom(st) * 100 < venom.chance) {
+      out.push({ t: 'talent', side, talent: talentOf(user).id });
+      setStatus(st, foeSide, venom.status, out, false);
+    }
   }
-  if (hits > 1) out.push({ t: 'hits', count: done });
+  foe.vol.phase = false;
+  if (hits + extra > 1) out.push({ t: 'hits', count: done });
   const mine = held(user);
   if (total > 0 && mine === 'drainHit') itemHp(st, side, user.item!, Math.max(1, Math.floor(total / 8)), out);
   if (total > 0 && mine === 'powerCost' && moveId !== STRUGGLE) itemHp(st, side, user.item!, -Math.max(1, Math.floor(maxHp(user) / 10)), out);
@@ -899,6 +953,15 @@ function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: nu
   return party.filter(({ i }) => gain.has(i)).map(({ m, i }) => ({ m, i, amount: m.ot ? Math.floor(gain.get(i)! * 1.5) : gain.get(i)! }));
 }
 
+/** Feu de Joie: the Bestiole that knocked a foe out gets a stage up. */
+function koBoost(st: BattleState, side: Side, out: Out) {
+  const m = activeMon(st.sides[side]);
+  const e = talentEffect(m, 'statOnKO');
+  if (!e || !alive(m) || st.sides[side].vol.stages[e.stat] >= 6) return;
+  out.push({ t: 'talent', side, talent: talentOf(m).id });
+  changeStage(st, side, e.stat, 1, out);
+}
+
 /** Handles fainted actives: XP, level-ups, replacements, end of battle. */
 function checkFaints(st: BattleState, out: Out) {
   if (st.result) return;
@@ -907,6 +970,7 @@ function checkFaints(st: BattleState, out: Out) {
   const foeMon = activeMon(foe);
   if (!alive(foeMon)) {
     out.push({ t: 'faint', side: 1, idx: foe.active });
+    koBoost(st, 0, out);
     for (const { m, i, amount } of xpShares(st, foeMon)) {
       gainEvs(m, foeMon.species);
       out.push({ t: 'xp', idx: i, amount });
@@ -930,6 +994,7 @@ function checkFaints(st: BattleState, out: Out) {
   const mine = activeMon(me);
   if (!alive(mine) && !st.needSwitch) {
     out.push({ t: 'faint', side: 0, idx: me.active });
+    koBoost(st, 1, out);
     mine.friendship = Math.max(0, (mine.friendship ?? 70) - 1);
     st.participants = st.participants.filter((u) => u !== mine.uid);
     if (!me.party.some(alive)) finish(st, 'lose', out);
@@ -1093,6 +1158,14 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
       m.sleepTurns = 0;
       out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'cured' });
     }
+    // Jardin Secret, Gros Dodo: a little healing each turn
+    const regen = talentEffect(m, 'regen');
+    const nap = talentEffect(m, 'sleepTank') && m.status === 'sleep';
+    if ((regen || nap) && m.hp < maxHp(m)) {
+      const pct = regen ? (st.weather?.kind === 'soleil' ? regen.sunPct : regen.pct) : 1 / 8;
+      out.push({ t: 'talent', side, talent: talentOf(m).id });
+      healSide(st, side, Math.max(1, Math.floor(maxHp(m) * pct)), out);
+    }
   }
   // end of turn: the varnish wears off
   for (const side of [0, 1] as Side[]) {
@@ -1113,7 +1186,10 @@ function plan(st: BattleState, side: Side, a: Action): Planned {
   const id = slot >= 0 && m.moves[slot] ? m.moves[slot].id : STRUGGLE;
   // Swift Quill: 20% chance to go first among moves of the same priority
   const quick = held(m) === 'quickStart' && nextRandom(st) < 0.2;
-  return { side, action: a, prio: move(id).priority ?? 0, speed: effectiveStat(s, 'spe'), uid: m.uid, quick };
+  // Premier Envol: its moves of that type go first while it has full HP
+  const wings = talentEffect(m, 'galeWings');
+  const prio = (move(id).priority ?? 0) + (wings && move(id).type === wings.type && m.hp >= maxHp(m) ? 1 : 0);
+  return { side, action: a, prio, speed: effectiveStat(s, 'spe'), uid: m.uid, quick };
 }
 
 function validate(st: BattleState, a: Action) {

@@ -146,6 +146,7 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       if (e.note === 'endure') lines.push(f(L('{n} tient bon !', '{n} endured the hit!'), { n: nm(e.side) }));
       if (e.note === 'cured') lines.push(f(L('{n} retrouve la forme !', '{n} is back in shape!'), { n: nm(e.side) }));
       if (e.note === 'immune') lines.push(f(L('Ça n’a aucun effet sur {n}.', 'It doesn’t affect {n}.'), { n: nm(e.side) }));
+      if (e.note === 'phased') lines.push(f(L('L’attaque passe à moitié à travers {n} !', 'The attack half passes through {n}!'), { n: nm(e.side) }));
       return lines;
     }
     case 'weather':

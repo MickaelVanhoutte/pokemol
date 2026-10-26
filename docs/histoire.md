@@ -47,6 +47,8 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 ## À côté de l’aventure
 
 - Attrape les Bestioles et remplis ton **Bestiodex**.
+- Chaque Bestiole a **un pouvoir bien à elle** (un talent ou une attaque que personne d’autre n’a) :
+  même la plus petite a sa place dans ton équipe, jusqu’au niveau 100.
 - Retrouve les **12 pages déchirées** d’un cahier, cachées un peu partout.
 - Certaines Bestioles grandissent avec toi : entraîne-les bien, elles te réservent des surprises.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
@@ -116,6 +118,8 @@ where every drawing is alive: the **Critters** (Bestioles).
 ## Besides the adventure
 
 - Catch Critters and fill your **Critterdex**.
+- Every Critter has **a power of its own** (a talent or a move nobody else has): even the smallest
+  one has its place in your team, all the way to level 100.
 - Find the **12 torn pages** of a sketchbook, hidden all over the place.
 - Some Critters grow up with you: train them well, they have surprises in store.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…

@@ -208,6 +208,10 @@ Scripts run one at a time and lock player input. To change an existing script af
 
   A new effect kind needs its hook in `battle.ts`, a test in `src/engine/pk/talents.test.ts` and,
   if it makes moves useless, a check in `ai.ts`.
+
+  Every family has a **power**: a power talent as its only regular talent, or a signature move.
+  [docs/bestioles.md](bestioles.md) lists them, with the stat bands, catch rates and base XP a new
+  Bestiole should follow; `src/data/bestioles.test.ts` checks those rules.
 - **Natures** (`src/data/natures.ts`): 25 kid-like personalities. Twenty raise one stat by 10% and
   lower another by 10%, and five change nothing. `calcStat` applies them in tenths, so rounding is
   exact. New Bestioles draw one at random. Trainers' Bestioles use the neutral `joyeuse`, so their
@@ -231,7 +235,8 @@ Scripts run one at a time and lock player input. To change an existing script af
   The order of `CREATURES` is the Bestiodex order (`dexNo`), and a test keeps evolution lines side by
   side. Ids are keys used by saves, maps and card files, so never renumber them.
 - **Moves** (`src/data/moves.ts`): `type`, `cat` (`phys` / `spec` / `status`), `power`, `acc`
-  (`null` never misses), `pp`, `priority`, and `effects`. The effect kinds (status, confuse, flinch,
+  (`null` never misses), `pp`, `priority`, `effects`, and the flags `punch` / `cut` that Poings d’Acier
+  and Ciseaux Affûtés boost. The effect kinds (status, confuse, flinch,
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.
   Beyond the basics, there are:
   - `toxic` (badly poisoned) and freeze (`status: 'freeze'`);

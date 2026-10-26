@@ -788,7 +788,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       id: 'battle',
       props: {
         setup: {
-          kind, seed: newSeed(),
+          kind, seed: newSeed(), night: dayPhase() === 'night',
           // eggs stay out of battles
           player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false },
           enemy: { name: enemyName, party: enemy, isAI: true },

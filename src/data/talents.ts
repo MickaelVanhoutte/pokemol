@@ -1,6 +1,6 @@
 import { L, type LText } from '../i18n';
 import { creature } from './creatures';
-import type { Major, StageKey, TypeId } from './schema';
+import type { Major, StageKey, TypeId, Weather } from './schema';
 
 /** What a talent does in battle (read by src/engine/pk/battle.ts). */
 export type TalentEffect =
@@ -45,7 +45,38 @@ export type TalentEffect =
   /** Restores a third of its HP when withdrawn. */
   | { kind: 'regenerator' }
   /** Always escapes from wild Bestioles. */
-  | { kind: 'runAway' };
+  | { kind: 'runAway' }
+  // ---- the families' powers (iteration 8)
+  /** Heals this fraction of its HP at the end of each turn (more in sunshine). */
+  | { kind: 'regen'; pct: number; sunPct: number }
+  /** A stage up each time it knocks a foe out. */
+  | { kind: 'statOnKO'; stat: StageKey }
+  /** At full HP it takes half damage. */
+  | { kind: 'fullHpGuard' }
+  /** Super-effective hits do half damage, and its status moves never miss. */
+  | { kind: 'prism' }
+  /** Its moves of that type go first while it has full HP. */
+  | { kind: 'galeWings'; type: TypeId }
+  /** Its moves of that type hit Bestioles normally immune to them. */
+  | { kind: 'ignoreImmunity'; type: TypeId }
+  /** At night, Sp. Atk and Sp. Def ×1.3. */
+  | { kind: 'nightBoost' }
+  /** Asleep, it takes half damage and heals 1/8 of its HP each turn. */
+  | { kind: 'sleepTank' }
+  /** The first attack it receives after coming in passes through it. */
+  | { kind: 'phaseFirst' }
+  /** Every move gets the same-type bonus. */
+  | { kind: 'allStab' }
+  /** Physical moves do half damage to it. */
+  | { kind: 'fluffy' }
+  /** Moves with that flag are this much stronger. */
+  | { kind: 'flagBoost'; flag: 'punch' | 'cut'; mult: number }
+  /** Starts this weather when it comes in. */
+  | { kind: 'entryWeather'; weather: Weather }
+  /** Its physical hits may give the foe a status. */
+  | { kind: 'touchStatus'; status: Major; chance: number }
+  /** Its single-hit attacks hit again at a quarter of the power. */
+  | { kind: 'parentalBond' };
 
 export interface TalentDef {
   id: string;
@@ -135,6 +166,61 @@ export const TALENTS: TalentDef[] = [
   T('papier-epais', L('Papier Épais', 'Thick Paper'),
     L('Dessiné sur du papier épais : les coups super efficaces lui font 25 % de dégâts en moins.', 'Drawn on thick paper: super-effective hits do 25% less damage to it.'),
     { kind: 'filter' }),
+  // ---- the families' powers: one per family, its main talent (docs/bestioles.md)
+  T('jardin-secret', L('Jardin Secret', 'Secret Garden'),
+    L('Récupère 1/16 de ses PV à chaque tour, et 1/8 au soleil.', 'Gets back 1/16 of its HP each turn, and 1/8 in sunshine.'),
+    { kind: 'regen', pct: 1 / 16, sunPct: 1 / 8 }),
+  T('feu-de-joie', L('Feu de Joie', 'Bonfire'),
+    L('Chaque fois qu’il met un adversaire K.O., son Atq. Spé. augmente.', 'Each time it knocks a foe out, its Sp. Atk rises.'),
+    { kind: 'statOnKO', stat: 'spa' }),
+  T('carapace-pleine', L('Carapace Pleine', 'Full Shell'),
+    L('Quand il a tous ses PV, il ne prend que la moitié des dégâts.', 'At full HP, it takes only half the damage.'),
+    { kind: 'fullHpGuard' }),
+  T('ailes-prisme', L('Ailes Prisme', 'Prism Wings'),
+    L('Les coups super efficaces lui font moitié moins mal, et ses capacités de statut ne ratent jamais.', 'Super-effective hits do half the damage, and its status moves never miss.'),
+    { kind: 'prism' }),
+  T('premier-envol', L('Premier Envol', 'First Flight'),
+    L('Quand il a tous ses PV, ses capacités Vol passent en premier.', 'At full HP, its Flying moves go first.'),
+    { kind: 'galeWings', type: 'vol' }),
+  T('foudre-tetue', L('Foudre Têtue', 'Stubborn Bolt'),
+    L('Ses capacités Électrique touchent même les Bestioles Sol.', 'Its Lightning moves even hit Ground Critters.'),
+    { kind: 'ignoreImmunity', type: 'electrique' }),
+  T('pleine-lune', L('Pleine Lune', 'Full Moon'),
+    L('La nuit, son Atq. Spé. et sa Déf. Spé. sont 30 % plus fortes.', 'At night, its Sp. Atk and Sp. Def are 30% higher.'),
+    { kind: 'nightBoost' }),
+  T('gros-dodo', L('Gros Dodo', 'Deep Nap'),
+    L('Quand il dort, il ne prend que la moitié des dégâts et récupère 1/8 de ses PV à chaque tour.', 'While asleep, it takes half the damage and gets back 1/8 of its HP each turn.'),
+    { kind: 'sleepTank' }),
+  T('passe-muraille', L('Passe-Muraille', 'Wall Walker'),
+    L('La première attaque qu’il reçoit après être entré le traverse à moitié : elle ne fait que la moitié des dégâts.', 'The first attack it receives after coming in half passes through it, doing only half the damage.'),
+    { kind: 'phaseFirst' }),
+  T('arc-en-ciel', L('Arc-en-ciel', 'Rainbow'),
+    L('Toutes ses capacités ont le bonus de type, quelle que soit leur couleur.', 'All its moves get the same-type bonus, whatever their colour.'),
+    { kind: 'allStab' }),
+  T('fourrure-douce', L('Fourrure Douce', 'Soft Fur'),
+    L('Les capacités physiques ne lui font que la moitié des dégâts.', 'Physical moves do only half the damage to it.'),
+    { kind: 'fluffy' }),
+  T('poings-d-acier', L('Poings d’Acier', 'Iron Fists'),
+    L('Ses coups de poing sont 30 % plus forts.', 'Its punches are 30% stronger.'),
+    { kind: 'flagBoost', flag: 'punch', mult: 1.3 }),
+  T('peau-de-mousse', L('Peau de Mousse', 'Moss Coat'),
+    L('Les capacités Eau et Plante ne lui font que la moitié des dégâts.', 'Water and Grass moves do only half the damage to it.'),
+    { kind: 'halve', types: ['eau', 'plante'] }),
+  T('patinoire', L('Patinoire', 'Ice Rink'),
+    L('Il fait tomber la grêle quand il entre en combat.', 'It brings hail when it comes in.'),
+    { kind: 'entryWeather', weather: 'grele' }),
+  T('perle-de-pluie', L('Perle de Pluie', 'Rain Pearl'),
+    L('Il fait tomber la pluie quand il entre en combat.', 'It brings rain when it comes in.'),
+    { kind: 'entryWeather', weather: 'pluie' }),
+  T('venin-frais', L('Venin Frais', 'Fresh Venom'),
+    L('Ses capacités physiques empoisonnent l’adversaire 3 fois sur 10.', 'Its physical moves poison the foe 3 times in 10.'),
+    { kind: 'touchStatus', status: 'poison', chance: 30 }),
+  T('ciseaux-affutes', L('Ciseaux Affûtés', 'Sharp Scissors'),
+    L('Ses capacités tranchantes (griffes, ciseaux, feuilles, ailes) sont 50 % plus fortes.', 'Its cutting moves (claws, scissors, leaves, wings) are 50% stronger.'),
+    { kind: 'flagBoost', flag: 'cut', mult: 1.5 }),
+  T('bebe-poche', L('Bébé Poche', 'Pouch Baby'),
+    L('Son petit frappe aussi : chaque attaque touche une deuxième fois, à un quart de la puissance.', 'Its little one joins in: each attack hits a second time, at a quarter of the power.'),
+    { kind: 'parentalBond' }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

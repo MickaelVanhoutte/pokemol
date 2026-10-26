@@ -92,9 +92,12 @@ const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer
 
 const difficulty = (process.argv[2] ?? 'normal') as Difficulty;
 const n = Number(process.argv[3] ?? 300);
+// optional third argument: only these rows, e.g. `npm run balance -- normal 300 effaceur,gcFusain`
+const only = process.argv[4]?.split(',');
 if (!DIFFICULTY[difficulty]) throw new Error(`unknown difficulty ${difficulty} (easy | normal | hard)`);
 console.log(`difficulty ${difficulty}, ${n} fights per cell — Minousse / Braisou / Clapotin`);
 for (const [id, t] of STEPS) {
+  if (only && !only.includes(id)) continue;
   const cells = ['001', '002', '003'].map((starter) => {
     const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? grownForm(starter, lv) : sp, lv, { rng: seed * 13 + i }));
     const rate = winRate(mk, (seed) => partyOf(trainer(id).party, seed, difficulty), DIFFICULTY[difficulty].slip, n);
