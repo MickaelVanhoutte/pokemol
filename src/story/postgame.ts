@@ -45,7 +45,7 @@ async function concoursBattle(n: number): Promise<boolean> {
   }
   await sayAll(st.trainer.before, st.trainer.name);
   const out = await fight('trainer', st.trainer.name, partyOf(st.trainer.party, newSeed()), {
-    trainer: st.trainer, look: LOOKS[st.look as keyof typeof LOOKS], music: n === CONCOURS.length ? 'final' : 'leader', backdrop: 'city',
+    trainer: st.trainer, look: LOOKS[st.look as keyof typeof LOOKS], music: n === CONCOURS.length ? 'champion' : 'leader', backdrop: 'city',
   });
   // a loss already sent the player back to the last Healing Center
   if (out.result !== 'win') return false;

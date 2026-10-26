@@ -170,7 +170,7 @@ scripts.rivalFinal = async () => {
   ], newSeed());
   const out = await fight('trainer', RIVAL, party, {
     trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
-    look: LOOKS.rival, backdrop: 'sketch',
+    look: LOOKS.rival, backdrop: 'sketch', music: 'leader',
   });
   if (out.result !== 'win') return;
   setFlag('tr:rivalFinal');

@@ -89,7 +89,20 @@ A **new tile** needs:
 The map test rejects unknown characters.
 
 **Music** follows the map automatically (`trackForMap` in `src/audio/mapMusic.ts`): towns and
-interiors, routes, caves and towers. Special maps are listed in `BY_MAP`.
+interiors, routes, caves and towers. Special maps are listed in `BY_MAP`. Battles pick theirs in
+`fight()`: `wild`, `trainer`, `gommeBattle` (grey Team Gomme teams), `leader` (Atelier Masters,
+rematches, the rival's last duel, the Grands Maîtres), `final` (the Great Eraser), `champion`
+(Prof. Fusain at the Grand Concours); `opts.music` overrides it.
+
+A tune in `src/audio/music.ts` is a `Track`: `bpm`, `bar` (8 eighths for 4/4, 6 for a waltz or 6/8),
+an optional `swing`, up to three `voices` (melody first) and `drums`. Notes are `C#5:2` (length in
+eighths, `.5` for a sixteenth, `.` for a rest), bars separated by `|`; the test checks that every bar
+of every voice has the right length. Each voice picks a `wave` (`square`, `pulse25`, `pulse12`,
+`triangle`, `sine`, `sawtooth`), a `vol`, a `gate` (short and bouncy below 0.6), `vibrato` (cents),
+`detune` (cents: a wobbly second oscillator, used for Team Gomme) and `echo` (eighths). Drums are
+`k` kick, `s` snare, `h` hat, `o` open hat, `r` rim, `t` tom, `c` crash. Helpers (`arp`, `oct`,
+`drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts. Give every tune its own
+key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`).
 
 ## Story scripts
 

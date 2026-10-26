@@ -542,7 +542,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
         playerLook: AVATARS[d.player.avatar] ?? AVATARS[0],
-        music: opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gomme' : kind === 'trainer' ? 'trainer' : 'wild'),
+        music: opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gommeBattle' : kind === 'trainer' ? 'trainer' : 'wild'),
         trainer: kind === 'trainer' ? {
           title: tr(enemyName),
           look: opts.look ?? LOOKS.kid,

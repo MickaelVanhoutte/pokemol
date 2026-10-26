@@ -16,8 +16,10 @@ const TRACKS: Record<TrackId, { name: LText; where: LText }> = {
   center: { name: L('Pause goûter', 'Snack Break'), where: L('Centres de soin et boutiques', 'Healing Centers and shops') },
   wild: { name: L('Une Bestiole sauvage !', 'A Wild Critter!'), where: L('Combats contre les Bestioles sauvages', 'Wild Critter battles') },
   trainer: { name: L('Duel de dresseurs', 'Trainer Duel'), where: L('Combats de dresseurs', 'Trainer battles') },
-  leader: { name: L('Maître d’Atelier', 'Atelier Master'), where: L('Combats des Ateliers et du Grand Concours', 'Atelier and Grand Contest battles') },
-  final: { name: L('Le Grand Effaceur', 'The Great Eraser'), where: L('Les derniers combats', 'The last battles') },
+  gommeBattle: { name: L('Gommés !', 'Rubbed Out!'), where: L('Combats contre la Team Gomme', 'Team Gomme battles') },
+  leader: { name: L('Maître d’Atelier', 'Atelier Master'), where: L('Ateliers, dernier duel du rival, Grand Concours', 'Ateliers, the rival’s last duel, Grand Contest') },
+  final: { name: L('Le Grand Effaceur', 'The Great Eraser'), where: L('Le dernier combat de l’histoire', 'The story’s last battle') },
+  champion: { name: L('Le Chef-d’Œuvre', 'The Masterpiece'), where: L('Finale du Grand Concours', 'Grand Contest final') },
   ending: { name: L('Bonne nuit, petite artiste', 'Good Night, Little Artist'), where: L('Fin et générique', 'Ending and credits') },
 };
 
