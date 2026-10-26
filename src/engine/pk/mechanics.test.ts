@@ -68,6 +68,20 @@ describe('paper shield, two-turn moves, ties, seeds and dolls', () => {
     expect(second.state.sides[0].party[0].moves[0].pp).toBe(19);
   });
 
+  it('a two-turn move charged with its last PP still goes off', () => {
+    const me = mon('013', 40, ['grand-vol']);
+    me.moves[0].pp = 1;
+    let st = turn(start([me], [mon('002', 20, ['flammeche'])])).state;
+    expect(st.sides[0].vol.charging?.move).toBe('grand-vol');
+    // the player may pick anything, Struggle included: the dive happens
+    for (const slot of [0, -1]) {
+      const step = act(structuredClone(st), { type: 'move', slot }, { type: 'move', slot: 0 });
+      expect(step.events.some((e) => e.t === 'damage' && e.side === 1)).toBe(true);
+    }
+    st = act(st, { type: 'move', slot: 0 }, { type: 'move', slot: 0 }).state;
+    expect(st.sides[0].vol.charging).toBeNull();
+  });
+
   it('a tied-up Bestiole can’t switch or flee, and loses HP each turn', () => {
     let st: BattleState | null = null;
     for (let seed = 1; seed < 40 && !st; seed++) {

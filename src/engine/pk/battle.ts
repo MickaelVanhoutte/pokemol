@@ -1112,6 +1112,8 @@ function validate(st: BattleState, a: Action) {
   const m = activeMon(me);
   switch (a.type) {
     case 'move':
+      // a charged two-turn move goes off whatever was chosen, even if its last PP went into the charge
+      if (me.vol.charging) break;
       if (a.slot >= 0 && (!m.moves[a.slot] || m.moves[a.slot].pp <= 0)) throw new IllegalAction('no PP');
       if (a.slot >= 0 && !usableSlots(m, me.vol).includes(a.slot)) throw new IllegalAction('move not allowed (Stubborn item or Painter’s Apron)');
       if (a.slot < 0 && usableSlots(m, me.vol).length) throw new IllegalAction('struggle only without PP');

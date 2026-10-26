@@ -421,7 +421,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Gouache
   T({
-    id: 'gouaT1', name: L('Jardinière Rosa', 'Gardener Rosa'), party: [{ species: '020', level: 32 }], money: 820,
+    id: 'gouaT1', name: L('Jardinière Rosa', 'Gardener Rosa'), party: [{ species: '024', level: 32 }], money: 820,
     before: [L('Ma Minousse ronronne et les fleurs poussent. Regarde !', 'My Sproutkit purrs and the flowers grow. Look!')],
     after: [L('Les fleurs se sont fanées…', 'The flowers wilted…')],
   }),
@@ -432,7 +432,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache',
-    party: [{ species: '007', level: 35, item: 'baie-menthe' }, { species: '020', level: 36 }, { species: '020', level: 38, item: 'baie-doree' }],
+    party: [{ species: '007', level: 35, item: 'baie-menthe' }, { species: '020', level: 36 }, { species: '024', level: 38, item: 'baie-doree' }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),
@@ -482,7 +482,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Crevaison !', 'Flat tyre!')],
   }),
   T({
-    id: 'pc2', name: L('Cycliste Bastien', 'Cyclist Bastien'), party: [{ species: '016', level: 34 }, { species: '021', level: 34 }], money: 840,
+    id: 'pc2', name: L('Cycliste Bastien', 'Cyclist Bastien'), party: [{ species: '016', level: 34 }, { species: '025', level: 34 }], money: 840,
     before: [L('Sur la Piste, on se dépasse… et on se bat !', 'On the Track, we overtake… and we battle!')],
     after: [L('Je descends de mon vélo pour réfléchir.', 'I’m getting off my bike to think.')],
   }),

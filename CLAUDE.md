@@ -156,7 +156,9 @@ through `tools/cut-drawings.ts` and `src/art/cutout.ts` (paper flattening, ink m
 (`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour palette, a dark outline). The
 miniature is the follower (`Game.follower`, refreshed from the party by `refreshFollower`); a test
 requires one per creature. The contact sheet lands in `tools/out/` (gitignored scratch, also
-excluded from `tsc`).
+excluded from `tsc`). Bestioles she hasn't drawn yet can be *brouillons*: drawn in code by
+`tools/drafts` (`npm run drafts`), marked `draft: true`, replaced by her drawing later (see
+[docs/content.md](docs/content.md#brouillons-drafts)).
 
 ## Gotchas
 

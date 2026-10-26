@@ -78,8 +78,10 @@ describe('grownForm (trainer teams)', () => {
   it('follows level evolutions only', () => {
     expect(grownForm('001', 15)).toBe('001');
     expect(grownForm('001', 16)).toBe('020');
-    expect(grownForm('002', 43)).toBe('021');
-    expect(grownForm('003', 50)).toBe('003');
+    expect(grownForm('002', 20)).toBe('021');
+    expect(grownForm('002', 43)).toBe('025');
+    expect(grownForm('003', 31)).toBe('022');
+    expect(grownForm('003', 50)).toBe('023');
     // Chenillou → Chrysalou (L7) → Papivole (L10)
     expect(grownForm('012', 8)).toBe('015');
     expect(grownForm('012', 10)).toBe('007');

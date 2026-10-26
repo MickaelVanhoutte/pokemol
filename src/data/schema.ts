@@ -98,6 +98,11 @@ export interface SpeciesDef {
   talents: [string] | [string, string];
   /** Rarer talent (1 chance in 4). */
   hiddenTalent: string;
+  /**
+   * A « brouillon »: drawn in code (tools/drafts) until the little artist draws it. The Bestiodex and
+   * the credits say so; her drawing replaces it with the same id and slug.
+   */
+  draft?: true;
 }
 
 /** What a held item does in battle (see `src/engine/pk/battle.ts`). */

@@ -32,8 +32,8 @@ describe('Bestiodex order', () => {
       const fam = CREATURES.filter((x) => root(x.id) === root(c.id)).map((x) => index(x.id));
       for (let i = Math.min(...fam); i <= Math.max(...fam); i++) expect(root(CREATURES[i].id), c.id).toBe(root(c.id));
     }
-    expect(dexNo('012')).toBe('006');
-    expect(dexNo('007')).toBe('008');
+    expect(dexNo('012')).toBe('010');
+    expect(dexNo('007')).toBe('012');
   });
 });
 

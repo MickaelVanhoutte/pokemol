@@ -23,7 +23,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '020', slug: 'minoufleur', faces: 'right', name: L('Minoufleur', 'Bloomkit'), kind: L('Bestiole Bourgeon', 'Bud Critter'),
     type: 'plante', base: { hp: 62, atk: 64, def: 64, spa: 82, spd: 82, spe: 60 },
-    catchRate: 45, baseExp: 142, evYield: { spa: 1, spd: 1 }, rarity: 'uncommon', evolvesFrom: '001',
+    catchRate: 45, baseExp: 142, evYield: { spa: 1, spd: 1 }, rarity: 'uncommon', evolvesFrom: '001', evolutions: [{ to: '024', level: 32 }],
     stencils: ['pochoir-02', 'pochoir-07', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
     talents: ['seve-rebelle'], hiddenTalent: 'grignote-feuilles',
     // its jagged leaves bite: it learns Nibble as Minousse turns into it
@@ -33,6 +33,21 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Le bouton rose sur son dos s’ouvrira un jour. En attendant, ses grandes feuilles dentelées claquent comme des mâchoires quand on embête ses amis.',
       'The pink bud on its back will open one day. Until then, its big jagged leaves snap like jaws at anyone who bothers its friends.',
+    ),
+  },
+  {
+    id: '024', slug: 'bouquetigre', faces: 'right', draft: true, name: L('Bouquétigre', 'Blossomtiger'), kind: L('Bestiole Bouquet', 'Bouquet Critter'),
+    type: 'plante', type2: 'poison', base: { hp: 80, atk: 82, def: 83, spa: 96, spd: 96, spe: 63 },
+    catchRate: 45, baseExp: 208, evYield: { spa: 2, spd: 1 }, rarity: 'uncommon', evolvesFrom: '020',
+    stencils: ['pochoir-02', 'pochoir-07', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
+    talents: ['seve-rebelle'], hiddenTalent: 'grignote-feuilles',
+    // its open flower drips sticky sap: it learns Sticky Paste as Minoufleur turns into it
+    learnset: [[0, 'pate-gluante'], [1, 'griffe'], [1, 'grondement'], [1, 'coup-de-liane'], [1, 'mordillage'], [8, 'graine-gourmande'],
+      [10, 'griffe-pousse'], [13, 'graine-dodo'], [18, 'pas-de-loup'], [22, 'feuille-coupante'], [28, 'ronron-soleil'],
+      [35, 'rafale-de-graines'], [39, 'poudre-toxique'], [44, 'rayon-de-soleil']],
+    dex: L(
+      'La fleur sur son dos s’est enfin ouverte. Son parfum endort les curieux, et ses lianes attrapent ceux qui s’approchent trop.',
+      'The flower on its back has finally opened. Its scent puts nosy Critters to sleep, and its vines grab anyone who comes too close.',
     ),
   },
   {
@@ -52,7 +67,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '021', slug: 'braisaure', faces: 'left', name: L('Braisaure', 'Emberoo'), kind: L('Bestiole Lézard', 'Lizard Critter'),
     type: 'feu', base: { hp: 60, atk: 68, def: 58, spa: 80, spd: 66, spe: 78 },
-    catchRate: 45, baseExp: 142, evYield: { spa: 1, spe: 1 }, rarity: 'uncommon', evolvesFrom: '002',
+    catchRate: 45, baseExp: 142, evYield: { spa: 1, spe: 1 }, rarity: 'uncommon', evolvesFrom: '002', evolutions: [{ to: '025', level: 32 }],
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-16', 'pochoir-19'],
     talents: ['braise-tetue'], hiddenTalent: 'elan',
     learnset: [[0, 'tourbillon-braises'], [1, 'griffe'], [1, 'grondement'], [1, 'flammeche'], [10, 'pas-de-loup'],
@@ -64,9 +79,23 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
+    id: '025', slug: 'dragobraise', faces: 'left', draft: true, name: L('Dragobraise', 'Emberdrake'), kind: L('Bestiole Dragon', 'Dragon Critter'),
+    type: 'feu', type2: 'vol', base: { hp: 75, atk: 82, def: 75, spa: 100, spd: 82, spe: 86 },
+    catchRate: 45, baseExp: 208, evYield: { spa: 3 }, rarity: 'uncommon', evolvesFrom: '021',
+    stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-16', 'pochoir-19', 'pochoir-20'],
+    talents: ['braise-tetue'], hiddenTalent: 'elan',
+    learnset: [[0, 'coup-d-ailes'], [1, 'griffe'], [1, 'grondement'], [1, 'flammeche'], [1, 'tourbillon-braises'], [10, 'pas-de-loup'],
+      [14, 'lueur-brulante'], [25, 'queue-ardente'], [30, 'mordillage'], [34, 'grand-soleil'], [38, 'grand-brasier'],
+      [42, 'grand-vol'], [46, 'griffe-dragon']],
+    dex: L(
+      'Quand il crache du feu, le ciel devient tout orange. Il ne s’envole que pour les amis qui ont besoin de lui.',
+      'When it breathes fire, the sky turns all orange. It only takes off for friends who need it.',
+    ),
+  },
+  {
     id: '003', slug: 'clapotin', faces: 'left', name: L('Clapotin', 'Splashell'), kind: L('Bestiole Flaque', 'Puddle Critter'),
     type: 'eau', base: { hp: 52, atk: 50, def: 64, spa: 62, spd: 62, spe: 44 },
-    catchRate: 45, baseExp: 64, evYield: { def: 1 }, rarity: 'uncommon',
+    catchRate: 45, baseExp: 64, evYield: { def: 1 }, rarity: 'uncommon', evolutions: [{ to: '022', level: 16 }],
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-10', 'pochoir-12', 'pochoir-14', 'pochoir-15', 'pochoir-19'],
     talents: ['grosse-vague'], hiddenTalent: 'eponge',
     learnset: [[1, 'bousculade'], [1, 'fretillement'], [5, 'bulles'], [10, 'carapace-tambour'], [13, 'jet-d-eau'],
@@ -75,6 +104,34 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Il tape sur sa carapace comme sur un tambour, et ses amis dansent dans les flaques.',
       'It drums on its shell, and its friends dance in the puddles.',
+    ),
+  },
+  {
+    id: '022', slug: 'clapoflot', faces: 'left', draft: true, name: L('Clapoflot', 'Splashwave'), kind: L('Bestiole Vague', 'Wave Critter'),
+    type: 'eau', base: { hp: 60, atk: 64, def: 80, spa: 66, spd: 80, spe: 60 },
+    catchRate: 45, baseExp: 142, evYield: { def: 1, spd: 1 }, rarity: 'uncommon', evolvesFrom: '003', evolutions: [{ to: '023', level: 32 }],
+    stencils: ['pochoir-02', 'pochoir-03', 'pochoir-10', 'pochoir-12', 'pochoir-14', 'pochoir-15', 'pochoir-19'],
+    talents: ['grosse-vague'], hiddenTalent: 'eponge',
+    learnset: [[0, 'pluie-d-aquarelle'], [1, 'bousculade'], [1, 'fretillement'], [1, 'bulles'], [10, 'carapace-tambour'], [13, 'jet-d-eau'],
+      [18, 'mordillage'], [20, 'averse'], [24, 'carapace-roulante'], [27, 'souffle-glace'], [30, 'coup-de-boule'], [36, 'grosse-vague']],
+    dex: L(
+      'Ses grandes oreilles ondulent comme des vagues quand il se fâche. Il éclabousse avec sa queue tous ceux qui embêtent ses amis.',
+      'Its big ears ripple like waves when it gets cross. It splashes anyone who bothers its friends with its tail.',
+    ),
+  },
+  {
+    id: '023', slug: 'tortorrent', faces: 'left', draft: true, name: L('Tortorrent', 'Torrentoise'), kind: L('Bestiole Geyser', 'Geyser Critter'),
+    type: 'eau', base: { hp: 78, atk: 80, def: 98, spa: 82, spd: 100, spe: 62 },
+    catchRate: 45, baseExp: 208, evYield: { spd: 3 }, rarity: 'uncommon', evolvesFrom: '022',
+    stencils: ['pochoir-02', 'pochoir-03', 'pochoir-10', 'pochoir-12', 'pochoir-14', 'pochoir-15', 'pochoir-19'],
+    talents: ['grosse-vague'], hiddenTalent: 'eponge',
+    // it punches as it evolves
+    learnset: [[0, 'poing-crayon'], [1, 'bousculade'], [1, 'fretillement'], [1, 'bulles'], [1, 'pluie-d-aquarelle'], [10, 'carapace-tambour'],
+      [13, 'jet-d-eau'], [18, 'mordillage'], [20, 'averse'], [24, 'carapace-roulante'], [27, 'souffle-glace'], [30, 'coup-de-boule'],
+      [38, 'grosse-vague'], [44, 'rayon-givre']],
+    dex: L(
+      'Les deux tuyaux de sa carapace crachent de l’eau si fort qu’elle traverse un mur en carton. Il est lourd, mais il protège toute la mare.',
+      'The two pipes on its shell spray water hard enough to go through a cardboard wall. It’s heavy, but it guards the whole pond.',
     ),
   },
   {

@@ -53,6 +53,8 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
   gants.
+- Quelques Bestioles sont encore des **brouillons** : des dessins provisoires, en attendant que la petite
+  artiste les dessine pour de vrai.
 - Des **énigmes** dans les grottes et les tours, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
 - Dans chaque ville, une **Auberge** : l’aubergiste remet tes Bestioles en forme, et ses lits te
@@ -119,6 +121,8 @@ where every drawing is alive: the **Critters** (Bestioles).
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
+- A few Critters are still **drafts** (brouillons): stand-in sketches until the little artist draws
+  the real ones.
 - **Puzzles** in caves and towers, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.
 - Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let

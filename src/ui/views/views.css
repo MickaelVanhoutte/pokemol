@@ -155,6 +155,7 @@
 .dex__paper img { position: absolute; inset: 6%; width: 88%; height: 88%; }
 .dex__facts { min-width: 0; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; font-size: 1.1rem; }
 /* long names stay whole on narrow phones with large text */
+.dex__draft { font-size: 0.85rem; color: #c0392b; border: 3px solid transparent; border-image: var(--frame-thin-pink) 16 / 3px stretch; padding: 0 4px; transform: rotate(-4deg); }
 .dex__name { font-weight: 400; font-size: min(1.5rem, 6.5vw); overflow-wrap: anywhere; }
 .dex__text { font-size: 1.1rem; }
 .dex__text p { margin: 0; }

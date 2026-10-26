@@ -272,6 +272,16 @@ Scripts run one at a time and lock player input. To change an existing script af
   - The shop sells the list in `STOCK` (`ShopScreen.tsx`), each item after a number of badges.
   - Item icons are pixel art in `src/ui/icons.ts` (`ROWS`, or a painter in `PAINTED`).
 
+### Brouillons (drafts)
+
+A Bestiole the little artist hasn't drawn yet can be drawn in code as a *brouillon*: a module in
+`tools/drafts/` (`<slug>.ts`, listed in `DRAFTS` in `tools/drafts/make.ts`) that draws with the kid kit
+(`tools/drafts/kid.ts`: potato shapes, pencil lines gone over twice, zig-zag colouring; `layered: true`
+makes front parts hide back ones, which reads better for busy designs). `npm run drafts [-- <id>]` cuts it
+out like a photo and writes its card and miniature. Its creature entry gets `draft: true`. When she draws
+it: add her photo to `tools/cards-manifest.json` with the same id and slug, run `npm run cards -- <id>`,
+remove it from `DRAFTS` and drop `draft: true`.
+
 ## UI
 
 - **A particular Bestiole** is shown with `monLabel(m)` (its nickname, or the species name) and

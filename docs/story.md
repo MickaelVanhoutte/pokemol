@@ -207,7 +207,7 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Route 4, Ville-Feutre | L17–21 | Rature L18–20, Zélie L22–24 |
 | Mont Fusain, Braise | L22–24 | Ambre L23–24 |
 | Paillette, Tour | L27–31 | Célestine L31–34, Blanche L30–31 (×4) |
-| Gouache, Encre, Factory | L31–38 | Basile L35–38, Nocturne L35–38 |
+| Gouache, Encre, Factory | L31–38 | Basile L35–38 (Bouquétigre ace), Nocturne L35–38 |
 | Finale | — | Rival L40–43 (6), Great Eraser L39–41 (5) |
 
 Run `npm run balance` for the current numbers instead of trusting this table.
@@ -251,6 +251,14 @@ level has reached: the balance sim uses it for the player's starter, and the fin
 ace (L24, berry), Jardinière Rosa, both of Basile's, Cycliste Bastien and Prof. Fusain at the Grand
 Concours. Grande Maîtresse Ambre keeps her Braisou: an evolved ace there dropped the Grass and Water
 teams from about 75% to 40%.
+
+**Starter finals and brouillons (Oct 2026).** Clapotin → Clapoflot (L16) → Tortorrent (L32), Minoufleur →
+Bouquétigre (Grass/Poison, L32), Braisaure → Dragobraise (Fire/Flying, L32): about 410 then 500 base stats.
+These four are *brouillons* (`draft: true`), drawn in code by `tools/drafts` until the little artist draws
+them; the Bestiodex stamps them BROUILLON and the credits list them apart. Teams from L32 use the finals
+(Rosa, Basile's ace, Bastien, the final rival through `grownForm`, Prof. Fusain at L45 so the Concours
+finale stays around 50–75% on Normal). The finals made Nocturne and the Great Eraser a bit easier
+(Normal: about 94% and 60–75%).
 
 **Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
 Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
