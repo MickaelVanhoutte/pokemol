@@ -140,6 +140,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   usine1: {
     id: 'usine1',
+    dungeon: true,
     name: L('Usine à Gommes', 'Eraser Factory'),
     indoor: true,
     border: 'void',
@@ -173,6 +174,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   usine2: {
     id: 'usine2',
+    dungeon: true,
     name: L('Usine à Gommes — atelier', 'Eraser Factory — workshop'),
     indoor: true,
     border: 'void',
@@ -203,6 +205,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   usine3: {
     id: 'usine3',
+    dungeon: true,
     name: L('Usine à Gommes — sommet', 'Eraser Factory — top'),
     indoor: true,
     border: 'void',

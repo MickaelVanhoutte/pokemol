@@ -1,18 +1,23 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { artUrl, creature } from '../../data/creatures';
+import { monLabel } from '../../data/creatures';
+import { monArtUrl } from '../monArt';
 import type { Mon } from '../../engine/pk/creature';
 import { Frame, MenuList, Window, lv, type MenuItem } from '../paper';
 import { canDeposit, canWithdraw } from '../logic/pc';
+import { BOX_SIZE } from '../../save/schema';
 import { SummaryView } from './SummaryView';
 import './views.css';
 
 type Pick = { where: 'party' | 'box'; i: number };
 
-/** PC storage: the box as a grid of drawings, the party as a column. */
-export function PcView({ party, box, onDeposit, onWithdraw, onClose }: {
-  party: Mon[]; box: Mon[]; onDeposit: (i: number) => void; onWithdraw: (i: number) => void; onClose: () => void;
+/** PC storage: one box at a time as a grid of drawings (◀ ▶ between boxes), the party as a column. */
+export function PcView({ party, boxes, onDeposit, onWithdraw, onClose }: {
+  party: Mon[]; boxes: Mon[][]; onDeposit: (i: number, box: number) => void; onWithdraw: (box: number, i: number) => void; onClose: () => void;
 }) {
+  const [b, setB] = useState(0);
+  const box = boxes[b] ?? [];
+  const turn = (d: 1 | -1) => { setPick(null); setB((x) => (x + d + boxes.length) % boxes.length); };
   const [pick, setPick] = useState<Pick | null>(null);
   const [summary, setSummary] = useState<Mon | null>(null);
   const [note, setNote] = useState('');
@@ -25,8 +30,9 @@ export function PcView({ party, box, onDeposit, onWithdraw, onClose }: {
         onSelect: () => {
           setPick(null);
           if (!canDeposit(party, pick.i)) return setNote(tr(L('C’est ta dernière Bestiole en forme !', 'That’s your last Critter able to battle!')));
-          onDeposit(pick.i);
-          setNote(tr(L('{n} est rangé dans la boîte.', '{n} was stored in the box.'), { n: tr(creature(mon.species).name) }));
+          if (box.length >= BOX_SIZE) return setNote(tr(L('Cette boîte est pleine : choisis-en une autre avec ◀ ▶.', 'This box is full: pick another one with ◀ ▶.')));
+          onDeposit(pick.i, b);
+          setNote(tr(L('{n} est rangé dans la boîte.', '{n} was stored in the box.'), { n: monLabel(mon) }));
         },
       }
       : {
@@ -34,8 +40,8 @@ export function PcView({ party, box, onDeposit, onWithdraw, onClose }: {
         onSelect: () => {
           setPick(null);
           if (!canWithdraw(party)) return setNote(tr(L('Ton équipe est complète !', 'Your party is full!')));
-          onWithdraw(pick.i);
-          setNote(tr(L('{n} rejoint ton équipe.', '{n} joined your party.'), { n: tr(creature(mon.species).name) }));
+          onWithdraw(b, pick.i);
+          setNote(tr(L('{n} rejoint ton équipe.', '{n} joined your party.'), { n: monLabel(mon) }));
         },
       },
     { label: tr(L('RÉSUMÉ', 'SUMMARY')), onSelect: () => { setSummary(mon); setPick(null); } },
@@ -44,7 +50,7 @@ export function PcView({ party, box, onDeposit, onWithdraw, onClose }: {
 
   const cell = (m: Mon, where: Pick['where'], i: number) => (
     <button class={`pccell ${m.hp <= 0 ? 'is-ko' : ''}`} onClick={() => { setNote(''); setPick({ where, i }); }}>
-      <img class="mon-art" src={artUrl(creature(m.species))} alt="" />
+      <img class="mon-art" src={monArtUrl(m)} alt="" />
       <small>{lv(m.level)}</small>
     </button>
   );
@@ -53,7 +59,11 @@ export function PcView({ party, box, onDeposit, onWithdraw, onClose }: {
     <Frame title={tr(L('PC de Papeterre', 'Papeterra PC'))} onBack={onClose} backLabel={tr(L('Éteindre', 'Log off'))}>
       <div class="pc">
         <Window class="pc__box">
-          <p class="pc__label">{tr(L('BOÎTE', 'BOX'))} · {box.length}</p>
+          <div class="pc__boxnav">
+            <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>
+            <p class="pc__label">{tr(L('BOÎTE {n}', 'BOX {n}'), { n: b + 1 })} · {box.length}/{BOX_SIZE}</p>
+            <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
+          </div>
           <div class="pc__grid">
             {box.map((m, i) => cell(m, 'box', i))}
             {!box.length && <p class="pc__empty">{tr(L('La boîte est vide.', 'The box is empty.'))}</p>}
@@ -69,7 +79,7 @@ export function PcView({ party, box, onDeposit, onWithdraw, onClose }: {
         <div class="view-modal" onClick={() => setPick(null)}>
           <div onClick={(e) => e.stopPropagation()}>
             <Window class="party__sub">
-              <p class="party__subtitle">{tr(creature(mon.species).name)} · {lv(mon.level)}</p>
+              <p class="party__subtitle">{monLabel(mon)} · {lv(mon.level)}</p>
               <MenuList items={actions} onCancel={() => setPick(null)} />
             </Window>
           </div>

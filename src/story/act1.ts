@@ -6,7 +6,7 @@ import { LOOKS } from '../overworld/sprites';
 import type { Dir } from '../save/schema';
 import { healParty, save, update } from '../state/game';
 import {
-  ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, say, sayAll, scripts, setFlag, showMons, showToast, wait,
+  ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
 } from '../overworld/controller';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
@@ -117,9 +117,10 @@ scripts.labTable = async () => {
   if (!flag('intro')) setFlag('intro');
   const i = await showMons([...STARTERS], tr(L('Choisis ta première Bestiole !', 'Choose your first Critter!')), true);
   const pick = STARTERS[i];
-  giveMon(pick, 5);
+  const starter = giveMon(pick, 5, 'starter');
   setFlag('rivalStarter', Number(RIVAL_COUNTER[pick]));
   await say(L('{starter} rejoint ton équipe !', '{starter} joined your team!'), undefined, { starter: tr(creature(pick).name) });
+  await offerNickname(starter.uid);
 
   const g = getGame();
   const counter = RIVAL_COUNTER[pick];
@@ -221,9 +222,10 @@ scripts.touffouGift = async () => {
     return;
   }
   const full = (save.value?.party.length ?? 0) >= 6;
-  giveMon('016', 8);
+  const touffou = giveMon('016', 8);
   setFlag('gift:touffou');
   await say(full ? L('{name} reçoit Touffou ! Il est envoyé dans le PC.', '{name} received Fuzzkit! It was sent to the PC.') : L('{name} reçoit Touffou !', '{name} received Fuzzkit!'));
+  await offerNickname(touffou.uid);
   await say(L('Prends-en bien soin ! On dit qu’un jour, il pourra changer de forme…', 'Take good care of it! They say that one day it could change its shape…'), who);
 };
 

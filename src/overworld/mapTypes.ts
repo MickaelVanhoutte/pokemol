@@ -122,6 +122,8 @@ export interface MapDef {
   onEnter?: string;
   /** Shared interior (Healing Center, shop…): its exits lead back to the door used to enter. */
   generic?: boolean;
+  /** Cave, tower or hideout: the Ariadne Thread works here. */
+  dungeon?: boolean;
   /** Parts of the map redrawn while story flags are set (erased or restored areas). */
   patches?: PatchDef[];
   interact?: InteractDef[];

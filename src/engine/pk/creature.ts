@@ -10,6 +10,11 @@ export interface MoveSlot {
   pp: number;
 }
 
+export type MetHow = 'starter' | 'caught' | 'gift' | 'tombola' | 'egg';
+
+/** Chance (out of 1) for a new creature to be a sparkly ("pailleté") variant. */
+export const SHINY_CHANCE = 1 / 100;
+
 /** One creature owned by someone (party, box, wild or trainer). */
 export interface Mon {
   uid: string;
@@ -24,6 +29,12 @@ export interface Mon {
   nature: string;
   /** Talent slot of its species (src/data/talents.ts): 0 or 1 regular, 2 hidden. */
   talent: TalentSlot;
+  /** Sparkly variant: recoloured drawing with glitter (1 chance in 100). */
+  shiny?: boolean;
+  /** Name the player gave it (shown instead of the species name). */
+  nickname?: string;
+  /** Where and how it joined the player (empty for older saves). */
+  met?: { level: number; map: string; how: MetHow };
   /** Held item id (berries are eaten in battle). */
   item: string | null;
   hp: number;
@@ -88,6 +99,7 @@ export function createMon(speciesId: string, level: number, st: { rng: number },
     uid: newUid(st),
     nature: NATURES[randomInt(st, NATURES.length)].id,
     talent: nextRandom(st) < HIDDEN_TALENT_CHANCE ? 2 : (randomInt(st, 2) as TalentSlot),
+    shiny: nextRandom(st) < SHINY_CHANCE,
     species: speciesId,
     level,
     xp: xpAt(level),

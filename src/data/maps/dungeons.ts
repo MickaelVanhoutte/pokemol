@@ -19,6 +19,7 @@ const TOWER_ENCOUNTERS = {
 export const DUNGEON_MAPS: Record<string, MapDef> = {
   grotte1: {
     id: 'grotte1',
+    dungeon: true,
     name: L('Grotte Gribouillis', 'Scribble Cave'),
     indoor: true,
     border: 'cavewall',
@@ -68,6 +69,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
 
   grotte2: {
     id: 'grotte2',
+    dungeon: true,
     name: L('Grotte Gribouillis — fond', 'Scribble Cave — depths'),
     indoor: true,
     border: 'cavewall',
@@ -114,6 +116,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
 
   tour1: {
     id: 'tour1',
+    dungeon: true,
     name: L('Tour Brumeuse', 'Misty Tower'),
     indoor: true,
     border: 'void',
@@ -150,6 +153,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
 
   tour2: {
     id: 'tour2',
+    dungeon: true,
     name: L('Tour Brumeuse — 2e étage', 'Misty Tower — 2F'),
     indoor: true,
     border: 'void',
@@ -185,6 +189,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
 
   tour3: {
     id: 'tour3',
+    dungeon: true,
     name: L('Tour Brumeuse — sommet', 'Misty Tower — top'),
     indoor: true,
     border: 'void',

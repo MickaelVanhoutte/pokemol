@@ -25,7 +25,7 @@ describe('save migration', () => {
     expect(s.version).toBe(SAVE_VERSION);
     expect(s.party[0].evs).toEqual({ hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 });
     expect(s.party[0].item).toBeNull();
-    expect(s.box[0].evs.hp).toBe(0);
+    expect(s.boxes[0][0].evs.hp).toBe(0);
     expect(s.party[0].level).toBe(12);
     expect(s.bag.potion).toBe(2);
     expect(s.bag.carte).toBe(1);
@@ -40,8 +40,8 @@ describe('save migration', () => {
       party: [oldMon('002', 9)], box: [], bag: {}, money: 100, dex: { seen: ['002'], caught: ['002'] }, stats: { battles: 1, captures: 0 },
     })!;
     expect(s.version).toBe(SAVE_VERSION);
-    expect(s.box[0].species).toBe('002');
-    expect(s.box[0].item).toBeNull();
+    expect(s.boxes[0][0].species).toBe('002');
+    expect(s.boxes[0][0].item).toBeNull();
   });
 
   it('hands out the stencils of badges won before stencils existed', () => {

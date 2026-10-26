@@ -1,5 +1,5 @@
 import { L, tr, type LText } from '../../i18n';
-import { creature } from '../../data/creatures';
+import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
 import { move } from '../../data/moves';
 import { talent } from '../../data/talents';
@@ -16,7 +16,7 @@ const statName = (k: StageKey) => tr(k === 'acc' || k === 'eva' ? ACC[k] : STAT_
 export function monName(st: BattleState, side: Side, idx = st.sides[side].active): string {
   const m = st.sides[side].party[idx];
   if (!m) return '';
-  const n = tr(creature(m.species).name);
+  const n = monLabel(m);
   if (side === 0) return n;
   return st.kind === 'wild' ? f(L('{n} sauvage', 'Wild {n}'), { n }) : f(L('{n} ennemi', 'Foe {n}'), { n });
 }
@@ -24,12 +24,12 @@ export function monName(st: BattleState, side: Side, idx = st.sides[side].active
 /** Text lines for one battle event. */
 export function describe(e: BattleEvent, st: BattleState): string[] {
   const nm = (side: Side) => monName(st, side);
-  const mine = (idx: number) => tr(creature(st.sides[0].party[idx].species).name);
+  const mine = (idx: number) => monLabel(st.sides[0].party[idx]);
   switch (e.t) {
     case 'sendOut':
       if (e.side === 1) {
-        if (st.kind === 'wild') return [f(L('Un {n} sauvage apparaît !', 'A wild {n} appeared!'), { n: tr(creature(st.sides[1].party[e.idx].species).name) })];
-        return [f(L('{t} envoie {n} !', '{t} sent out {n}!'), { t: tr(st.sides[1].name), n: tr(creature(st.sides[1].party[e.idx].species).name) })];
+        if (st.kind === 'wild') return [f(L('Un {n} sauvage apparaît !', 'A wild {n} appeared!'), { n: monLabel(st.sides[1].party[e.idx]) })];
+        return [f(L('{t} envoie {n} !', '{t} sent out {n}!'), { t: tr(st.sides[1].name), n: monLabel(st.sides[1].party[e.idx]) })];
       }
       return [f(L('Vas-y, {n} !', 'Go, {n}!'), { n: mine(e.idx) })];
     case 'withdraw':
@@ -159,7 +159,7 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       return [f(L('{n} grignote son {i} et récupère des PV.', '{n} restored a little HP using its {i}!'), { n: nm(e.side), i: tr(item(e.item).name) })];
     case 'ball':
       return e.caught
-        ? [f(L('Hop ! {n} est attrapé !', 'Gotcha! {n} was caught!'), { n: tr(creature(st.sides[1].party[st.sides[1].active].species).name) })]
+        ? [f(L('Hop ! {n} est attrapé !', 'Gotcha! {n} was caught!'), { n: monLabel(st.sides[1].party[st.sides[1].active]) })]
         : [[tr(L('Oh non ! Il s’est libéré !', 'Oh no! It broke free!')), tr(L('Raah ! Presque !', 'Aargh! Almost had it!')), tr(L('Mince ! Si près du but !', 'Shoot! It was so close!')), tr(L('Mince ! Si près du but !', 'Shoot! It was so close!'))][e.shakes]];
     case 'blocked':
       return [tr(L('Le dresseur bloque la balle ! On ne vole pas les Bestioles des autres !', 'The trainer blocked the ball! Don’t be a thief!'))];

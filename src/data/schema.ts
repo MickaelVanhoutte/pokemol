@@ -91,7 +91,7 @@ export type HoldEffect =
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
  * `battle`: boosts the creature fighting (syrups, sharpener, varnish), only in battle.
  */
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil';
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil' | 'field';
 
 export interface ItemDef {
   id: string;
@@ -111,4 +111,6 @@ export interface ItemDef {
   boost?: StageKey | 'crit' | 'guard';
   /** Stencils: the move they teach (never used up). */
   move?: string;
+  /** Field items (used from the bag on the map): Shoo Spray (`amount` steps) or Ariadne Thread. */
+  field?: 'repel' | 'escape';
 }

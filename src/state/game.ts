@@ -1,9 +1,9 @@
 import { effect, signal } from '@preact/signals';
 import { gender, locale, setGlobalVars } from '../i18n';
-import { healMon, noStats, type Mon } from '../engine/pk/creature';
+import { healMon, noStats, type MetHow, type Mon } from '../engine/pk/creature';
 import { natureFromUid } from '../data/natures';
 import { talentFromUid } from '../data/talents';
-import { PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
+import { BOX_COUNT, BOX_SIZE, PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
 import { prefs } from './prefs';
@@ -35,7 +35,7 @@ function readRaw(): unknown {
 export function migrate(raw: unknown): SaveData | null {
   if (!raw || typeof raw !== 'object') return null;
   const v = (raw as { version?: number }).version;
-  const s = v === 2 ? migrateV2(raw as V2Save) : v === 3 || v === SAVE_VERSION ? (raw as SaveData) : null;
+  const s = v === 2 ? migrateV2(raw as V2Save) : v === 3 || v === 4 || v === SAVE_VERSION ? (raw as SaveData) : null;
   if (!s) return null;
   s.version = SAVE_VERSION;
   return repair(s);
@@ -47,8 +47,16 @@ export function migrate(raw: unknown): SaveData | null {
  * on every load.
  */
 export function repair(s: SaveData): SaveData {
+  // v5: several PC boxes instead of one
+  const legacy = (s as SaveData & { box?: Mon[] }).box;
+  s.boxes ??= [];
+  while (s.boxes.length < BOX_COUNT) s.boxes.push([]);
+  if (legacy) {
+    for (const m of legacy) storeInBox(s, m);
+    delete (s as SaveData & { box?: Mon[] }).box;
+  }
   s.party.forEach(repairMon);
-  s.box.forEach(repairMon);
+  s.boxes.forEach((b) => b.forEach(repairMon));
   // older versions saved a win before what it unlocks: closing the app during the cut-scene left
   // the road blocked (a grunt in the woods, Zélie never freed…) or the badge missing
   for (const t of Object.values(TRAINERS)) {
@@ -103,11 +111,12 @@ export function migrateV2(old: V2Save): SaveData {
   const s = freshSave(old.player.name, old.player.avatar, old.player.avatar % 2 === 0 ? 'f' : 'm', '');
   s.createdAt = old.createdAt;
   s.playMs = old.playMs;
-  s.box = [...old.party, ...old.box].map((m) => ({ ...m }));
-  s.box.forEach((m) => {
-    repairMon(m);
-    healMon(m);
-  });
+  for (const m of [...old.party, ...old.box]) {
+    const copy = { ...m };
+    repairMon(copy);
+    healMon(copy);
+    storeInBox(s, copy);
+  }
   s.money = Math.max(s.money, old.money);
   s.dex = { seen: [...old.dex.seen], caught: [...old.dex.caught] };
   s.stats = { ...old.stats };
@@ -171,7 +180,7 @@ function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: s
     respawn: { map: 'maison', x: 4, y: 5 },
     flags: {},
     party: [],
-    box: [],
+    boxes: Array.from({ length: BOX_COUNT }, () => []),
     bag: { potion: 1 },
     money: 3000,
     dex: { seen: [], caught: [] },
@@ -222,15 +231,29 @@ export function see(s: SaveData, species: string) {
   if (!s.dex.seen.includes(species)) s.dex.seen.push(species);
 }
 
-/** Puts a new creature in the party, or in the PC box when the party is full. Returns where it went. */
-export function addMon(s: SaveData, m: Mon): 'party' | 'box' {
+/** Puts a creature in the first PC box with room (a new box after the last one if all are full). */
+export function storeInBox(s: SaveData, m: Mon) {
+  const box = s.boxes.find((b) => b.length < BOX_SIZE);
+  if (box) box.push(m);
+  else s.boxes.push([m]);
+}
+
+/** Every creature the player owns (party first, then the boxes). */
+export const allMons = (s: SaveData): Mon[] => [...s.party, ...s.boxes.flat()];
+
+/**
+ * Puts a new creature in the party, or in the PC when the party is full, and notes where and how
+ * it was met. Returns where it went.
+ */
+export function addMon(s: SaveData, m: Mon, how: MetHow = 'caught', place = s.player.map): 'party' | 'box' {
   see(s, m.species);
   if (!s.dex.caught.includes(m.species)) s.dex.caught.push(m.species);
+  m.met ??= { level: m.level, map: place, how };
   if (s.party.length < PARTY_MAX) {
     s.party.push(m);
     return 'party';
   }
-  s.box.push(m);
+  storeInBox(s, m);
   return 'box';
 }
 

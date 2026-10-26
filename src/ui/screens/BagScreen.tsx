@@ -1,8 +1,8 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { creature } from '../../data/creatures';
+import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
-import { backToWorld } from '../../overworld/controller';
+import { backToWorld, fieldItemProblem, useFieldItem } from '../../overworld/controller';
 import { save, takeItem, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { canUseOn, stencilStatus, useOn } from '../logic/bag';
@@ -30,7 +30,7 @@ export function BagScreen() {
   if (map) return <TownMapView save={d} avatar={avatarImage(d.player.avatar)} onClose={() => setMap(false)} />;
   if (teaching) {
     const mv = item(teaching).move!;
-    const vars = (i: number) => ({ n: tr(creature(d.party[i].species).name), m: tr(move(mv).name) });
+    const vars = (i: number) => ({ n: monLabel(d.party[i]), m: tr(move(mv).name) });
     const learn = (i: number, slot: number | null) => {
       if (slot === null) setNote(tr(L('{n} n’apprend pas {m}.', '{n} did not learn {m}.'), vars(i)));
       else {
@@ -94,7 +94,7 @@ export function BagScreen() {
             if (takeItem(x, using)) useOn(using, x.party[i]);
           });
           sfx.heal();
-          setNote(tr(L('Tu utilises {i} sur {n}.', 'You used {i} on {n}.'), { i: tr(item(using).name), n: tr(creature(d.party[i].species).name) }));
+          setNote(tr(L('Tu utilises {i} sur {n}.', 'You used {i} on {n}.'), { i: tr(item(using).name), n: monLabel(d.party[i]) }));
           setUsing(null);
         }}
         onClose={() => setUsing(null)}
@@ -106,7 +106,16 @@ export function BagScreen() {
       bag={d.bag}
       context="field"
       note={note}
-      onUse={(id) => { setNote(''); if (item(id).kind === 'stencil') setTeaching(id); else setUsing(id); }}
+      onUse={(id) => {
+        setNote('');
+        const def = item(id);
+        if (def.kind === 'field') {
+          const no = fieldItemProblem(id);
+          if (no) setNote(tr(no));
+          else void useFieldItem(id);
+        } else if (def.kind === 'stencil') setTeaching(id);
+        else setUsing(id);
+      }}
       onGive={d.party.length ? (id) => { setNote(''); setGiving(id); } : undefined}
       onRead={(id) => (id.startsWith('page-') ? setReading(Number(id.slice(5))) : id === 'carte' ? setMap(true) : setNote(tr(item(id).desc)))}
       onClose={backToWorld}

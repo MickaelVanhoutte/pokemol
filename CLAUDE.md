@@ -64,7 +64,7 @@ and resume when the player returns to the world. `App` is keyed on the locale, s
 re-renders everything.
 
 **State.**
-- `src/state/game.ts`: the `save` signal (`SaveData` v4 from `src/save/schema.ts`, localStorage key
+- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, 8 PC `boxes` of 30, bag, flags…; localStorage key
   `atelier-bestioles.save`). `update(fn)` mutates it; it is written to storage only by SAUVER in the
   start menu (`persist()`), or after every change when the player turned on the auto-save option
   (`autosave()`, off by default, GBA style). `migrate` and `migrateV2` load older

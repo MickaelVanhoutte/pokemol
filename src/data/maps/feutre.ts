@@ -118,6 +118,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
 
   entrepot1: {
     id: 'entrepot1',
+    dungeon: true,
     name: L('Entrepôt Gomme', 'Eraser Warehouse'),
     indoor: true,
     border: 'void',
@@ -151,6 +152,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
 
   entrepot2: {
     id: 'entrepot2',
+    dungeon: true,
     name: L('Entrepôt Gomme — étage', 'Eraser Warehouse — upstairs'),
     indoor: true,
     border: 'void',

@@ -13,6 +13,9 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
+- Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,
+  recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray
+  and Ariadne Thread.
 - Deeper battles, GBA style: talents (one or two per species plus a hidden one, 1 chance in 4),
   25 natures (+10% / −10%), IVs graded E to S next to each stat in the summary, effort points;
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the

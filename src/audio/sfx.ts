@@ -48,7 +48,57 @@ function play(notes: Note[]) {
   }
 }
 
+/** A short breath of filtered noise (the rough part of a cry). */
+function noise(at: number, dur: number, freq: number, vol = 0.03) {
+  const a = audio();
+  if (!a) return;
+  const len = Math.max(1, Math.floor(a.sampleRate * dur));
+  const buf = a.createBuffer(1, len, a.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+  const src = a.createBufferSource();
+  src.buffer = buf;
+  const bp = a.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = freq;
+  const g = a.createGain();
+  const t0 = a.currentTime + at;
+  g.gain.setValueAtTime(vol, t0);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  src.connect(bp).connect(g).connect(a.destination);
+  src.start(t0);
+}
+
+function hashId(s: string): number {
+  let h = 2166136261;
+  for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
+  return h;
+}
+
+/**
+ * Each species' cry, made up from its id so it never changes: 2 to 4 gliding chirps on one
+ * waveform, plus a breath of noise.
+ */
+function cry(species: string) {
+  const h = hashId(`cry:${species}`);
+  const base = 230 + (h % 9) * 52;
+  const type = (['square', 'triangle', 'sawtooth'] as OscillatorType[])[(h >>> 4) % 3];
+  const rising = ((h >>> 7) & 1) === 0;
+  const count = 2 + ((h >>> 9) % 3);
+  const notes: Note[] = [];
+  let t = 0;
+  for (let i = 0; i < count; i++) {
+    const f = base * (1 + ((h >>> (11 + i * 3)) % 6) / 8);
+    const dur = 0.07 + ((h >>> (13 + i)) % 3) * 0.035;
+    notes.push({ f, to: f * (rising ? 1.4 : 0.68), at: t, dur, type, vol: 0.05 });
+    t += dur * 0.85;
+  }
+  play(notes);
+  noise(0, Math.min(0.25, t), base * 3, 0.025);
+}
+
 export const sfx = {
+  cry,
   blip: () => play([{ f: 880, dur: 0.05, vol: 0.035 }]),
   confirm: () => play([{ f: 660, dur: 0.06 }, { f: 990, at: 0.06, dur: 0.08 }]),
   hit: () => play([{ f: 220, to: 70, dur: 0.18, type: 'sawtooth', vol: 0.07 }]),

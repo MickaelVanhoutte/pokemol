@@ -1,6 +1,7 @@
 import { L } from '../i18n';
 import { healParty, save, update } from '../state/game';
-import { ask, flag, getGame, giveItem, openScreen, say, scripts, setFlag, wait } from '../overworld/controller';
+import { ask, flag, getGame, giveItem, offerNickname, openScreen, say, scripts, setFlag, wait } from '../overworld/controller';
+import { monLabel } from '../data/creatures';
 import { NURSE } from './cast';
 
 /** Healing Center (shared by every town). */
@@ -37,6 +38,21 @@ scripts.calqueAide = async () => {
   setFlag('gift:calque');
   await say(L('{name} reçoit le Papier Calque !', '{name} received the Tracing Paper!'));
   await say(L('Fais-le tenir à une Bestiole (menu BESTIOLES, OBJET) : elle gagnera la moitié de l’expérience de chaque combat, même sans se battre !', 'Have a Critter hold it (CRITTERS menu, ITEM): it gets half the experience of every battle, even without fighting!'), AIDE);
+};
+
+/** Healing Center: the Calligraphe writes (or rubs out) nicknames. */
+scripts.calligraphe = async () => {
+  const who = L('Calligraphe', 'Calligrapher');
+  const party = save.value?.party ?? [];
+  if (!party.length) {
+    await say(L('Je calligraphie les surnoms des Bestioles. Reviens avec une Bestiole !', 'I write Critters’ nicknames in my best handwriting. Come back with a Critter!'), who);
+    return;
+  }
+  const c = await ask(L('Je calligraphie les surnoms des Bestioles. Laquelle veux-tu renommer ?', 'I write Critters’ nicknames in my best handwriting. Which one should I rename?'),
+    [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
+  if (c >= party.length) return;
+  await offerNickname(party[c].uid, false);
+  await say(L('Et voilà, écrit avec mes plus belles lettres !', 'There, written in my finest letters!'), who);
 };
 
 scripts.clerk = async () => {

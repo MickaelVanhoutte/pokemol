@@ -76,6 +76,15 @@
 .summary__art img { position: absolute; inset: 5%; width: 90%; height: 90%; }
 .summary__id { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .summary__name { font-weight: 400; font-size: 1.5rem; }
+.summary__species { color: var(--ink-soft); font-size: 0.9rem; }
+/* sparkly Bestiole marker */
+.shiny-mark { font-style: normal; color: #d9a520; }
+/* nickname entry */
+.nickname { justify-content: center; align-items: center; background: rgba(43, 37, 54, 0.45); }
+.nickname__box { width: min(440px, 100%); display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+.nickname__art { width: min(140px, 32vw, 22dvh); height: min(140px, 32vw, 22dvh); align-self: center; object-fit: contain; }
+.nickname__none { align-self: flex-end; }
+.summary__met { margin: 6px 0 0; font-size: 0.9rem; color: var(--ink-soft); }
 .summary__page { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .summary__box { font-size: 1.1rem; }
 .summary__held { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
@@ -151,6 +160,9 @@
 .pc__box { flex: 1; min-width: 0; overflow-y: auto; }
 .pc__party { flex: none; width: 92px; overflow-y: auto; }
 .pc__label { margin: 0 0 4px; color: var(--ink-soft); font-size: 0.95rem; }
+.pc__boxnav { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px; }
+.pc__boxnav .pc__label { margin: 0; text-align: center; flex: 1; }
+.pc__boxnav .pbtn { padding: 2px 8px; }
 .pc__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); gap: 4px; }
 .pc__col { display: flex; flex-direction: column; gap: 4px; }
 .pccell {

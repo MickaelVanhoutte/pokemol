@@ -6,7 +6,8 @@ import { ShopView } from '../views/ShopView';
 
 /** What every shop sells, and how many badges each item needs. */
 const STOCK: Record<string, number> = {
-  'crayon-ball': 0, potion: 0, retouche: 0,
+  'crayon-ball': 0, potion: 0, retouche: 0, spray: 0,
+  'fil-ariane': 1, 'super-spray': 2,
   'super-crayon-ball': 1, 'super-potion': 1, rappel: 1,
   'sirop-attaque': 2, 'sirop-defense': 2, 'sirop-vitesse': 2, 'sirop-special': 2, 'sirop-precision': 2,
   'taille-crayon': 3, 'vernis': 3,

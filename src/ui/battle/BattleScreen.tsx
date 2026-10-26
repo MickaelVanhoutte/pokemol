@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { creature } from '../../data/creatures';
+import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
 import { move } from '../../data/moves';
 import { aiChoose } from '../../engine/pk/ai';
@@ -93,11 +93,17 @@ export function BattleScreen(props: BattleProps) {
       // the trainer (or the player) steps aside and throws the ball
       if (e.side === 1) setCast((c) => ({ ...c, foe: false }));
       if (e.side === 0) setCast((c) => ({ ...c, me: false }));
+      const sent = snap.sides[e.side].party[e.idx];
+      if (sent) {
+        setTimeout(() => sfx.cry(sent.species), 250 * speed.current);
+        // a sparkly Bestiole twinkles as it comes out
+        if (sent.shiny) setTimeout(() => { sfx.sparkle(); pulse(e.side, 'shiny', 1000); }, 650 * speed.current);
+      }
     }
     if (e.t === 'faint' && e.side === 1 && props.trainer?.grey) {
       const uid = activeMon(snap.sides[1]).uid;
       setRecolored((r) => [...r, uid]);
-      setMsg(tr(L('{n} retrouve ses couleurs !', '{n} got its colours back!'), { n: tr(creature(activeMon(snap.sides[1]).species).name) }));
+      setMsg(tr(L('{n} retrouve ses couleurs !', '{n} got its colours back!'), { n: monLabel(activeMon(snap.sides[1])) }));
       sfx.sparkle();
       await sleep(1300 * speed.current);
     }
@@ -207,10 +213,10 @@ export function BattleScreen(props: BattleProps) {
 
   const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
   const beaten = ended && st.result === 'win' && !!props.trainer;
-  const name = tr(creature(active.species).name);
+  const name = monLabel(active);
   const text = mode === 'continue' ? (beaten ? [props.trainer!.quote, ...rewardLines] : [msg, ...rewardLines]).filter(Boolean).join('\n')
     : mode === 'coach' ? tr(COACH[coach === 0 ? 0 : 1])
-    : mode === 'learnAsk' && learner && learn ? tr(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. En oublier une ?', '{n} wants to learn {m}, but already knows 4 moves. Forget one?'), { n: tr(creature(learner.species).name), m: tr(move(learn.move).name) })
+    : mode === 'learnAsk' && learner && learn ? tr(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. En oublier une ?', '{n} wants to learn {m}, but already knows 4 moves. Forget one?'), { n: monLabel(learner), m: tr(move(learn.move).name) })
     : forced ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?'))
     : mode === 'fight' ? tr(L('Quelle capacité ?', 'Which move?'))
     : mode === 'command' ? tr(L('Que doit faire {n} ?', 'What will {n} do?'), { n: name })

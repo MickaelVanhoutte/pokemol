@@ -186,6 +186,12 @@ Scripts run one at a time and lock player input. To change an existing script af
 
 ## UI
 
+- **A particular Bestiole** is shown with `monLabel(m)` (its nickname, or the species name) and
+  `monArtUrl(m)` (`src/ui/monArt.ts`: the sparkly recoloured drawing when `m.shiny`). Plain
+  `tr(creature(id).name)` and `artUrl` are only for species: the Bestiodex, pickers, credits.
+- **Nicknames** are offered with `offerNickname(uid)` from a script, after a capture, a gift or the
+  starter. The `NicknameView` entry is drawn over the map through `nameOverlay`. New Bestioles get
+  `met` through `addMon(s, m, how, place)` / `giveMon(species, level, how)`.
 - Build screens from the paper kit (`src/ui/paper`): `Frame` (title strip and back button),
   `Window`, `TextBox`, `MenuList` with `useMenuNav`, `YesNo`, `QtyPicker`. That keeps the FRLG layout
   and the keyboard, touch and B-button behaviour consistent.

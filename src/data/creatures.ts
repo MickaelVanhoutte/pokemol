@@ -1,4 +1,4 @@
-import { L } from '../i18n';
+import { L, tr } from '../i18n';
 import type { SpeciesDef } from './schema';
 
 /**
@@ -227,6 +227,11 @@ export function creature(id: string): SpeciesDef {
  */
 export function dexNo(id: string): string {
   return String(CREATURES.findIndex((c) => c.id === id) + 1).padStart(3, '0');
+}
+
+/** How a particular creature is called: its nickname, or its species' name. */
+export function monLabel(m: { species: string; nickname?: string }): string {
+  return m.nickname || tr(creature(m.species).name);
 }
 
 export const STARTERS = ['001', '002', '003'] as const;

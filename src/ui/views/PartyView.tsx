@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { artUrl, creature } from '../../data/creatures';
+import { monLabel } from '../../data/creatures';
+import { monArtUrl } from '../monArt';
 import { maxHp, type Mon } from '../../engine/pk/creature';
 import { HpBar, MenuList, PixelIcon, StatusTag, Window, lv, type MenuItem } from '../paper';
 import { item } from '../../data/items';
@@ -13,7 +14,6 @@ export type PartyMode = 'field' | 'battle' | 'forced' | 'target';
 function Slot({ m, i, lead, active, cursor, disabled, swapping, tag, onClick }: {
   m: Mon; i: number; lead: boolean; active: boolean; cursor: boolean; disabled: boolean; swapping: boolean; tag?: string; onClick: () => void;
 }) {
-  const sp = creature(m.species);
   return (
     <button
       class={`pslot ${lead ? 'pslot--lead' : ''} ${cursor ? 'is-on' : ''} ${m.hp <= 0 ? 'is-ko' : ''} ${active ? 'is-active' : ''} ${swapping ? 'is-swap' : ''}`}
@@ -21,9 +21,9 @@ function Slot({ m, i, lead, active, cursor, disabled, swapping, tag, onClick }: 
       onClick={onClick}
       aria-label={`${i + 1}`}
     >
-      <img class="mon-art pslot__art" src={artUrl(sp)} alt="" />
+      <img class="mon-art pslot__art" src={monArtUrl(m)} alt="" />
       <span class="pslot__info">
-        <b>{tr(sp.name)}</b>
+        <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦"> ✦</i>}</b>
         <span class="pslot__lv">{lv(m.level)} {m.status && <StatusTag s={m.status} />}{m.item && <span class="pslot__held" title={tr(item(m.item).name)}><PixelIcon id={m.item} size={16} /></span>}</span>
         {tag ? <span class="pslot__tag">{tag}</span> : (
           <>
@@ -99,8 +99,8 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
         onSelect: () => {
           const i = menuFor;
           setMenuFor(null);
-          if (i === active) setNote(tr(L('{n} est déjà au combat !', '{n} is already in battle!'), { n: tr(creature(party[i].species).name) }));
-          else if (party[i].hp <= 0) setNote(tr(L('{n} n’a plus la force de se battre !', '{n} has no energy left to battle!'), { n: tr(creature(party[i].species).name) }));
+          if (i === active) setNote(tr(L('{n} est déjà au combat !', '{n} is already in battle!'), { n: monLabel(party[i]) }));
+          else if (party[i].hp <= 0) setNote(tr(L('{n} n’a plus la force de se battre !', '{n} has no energy left to battle!'), { n: monLabel(party[i]) }));
           else if (canPick(i)) onPick?.(i);
         },
       },
@@ -116,7 +116,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
         const i = itemFor;
         setItemFor(null);
         const m = party[i];
-        const n = tr(creature(m.species).name);
+        const n = monLabel(m);
         if (!m.item) return setNote(tr(L('{n} ne tient rien.', '{n} isn’t holding anything.'), { n }));
         setNote(tr(L('Tu reprends {i} à {n}.', 'Received the {i} from {n}.'), { i: tr(item(m.item).name), n }));
         onTake?.(i);
@@ -153,7 +153,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
         <div class="view-modal" onClick={() => setMenuFor(null)}>
           <div onClick={(e) => e.stopPropagation()}>
             <Window class="party__sub">
-              <p class="party__subtitle">{tr(creature(party[menuFor].species).name)}</p>
+              <p class="party__subtitle">{monLabel(party[menuFor])}</p>
               <MenuList items={sub} onCancel={() => setMenuFor(null)} />
             </Window>
           </div>
@@ -165,8 +165,8 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
             <Window class="party__sub">
               <p class="party__subtitle">
                 {party[itemFor].item
-                  ? tr(L('{n} tient : {i}', '{n} holds: {i}'), { n: tr(creature(party[itemFor].species).name), i: tr(item(party[itemFor].item!).name) })
-                  : tr(creature(party[itemFor].species).name)}
+                  ? tr(L('{n} tient : {i}', '{n} holds: {i}'), { n: monLabel(party[itemFor]), i: tr(item(party[itemFor].item!).name) })
+                  : monLabel(party[itemFor])}
               </p>
               <MenuList items={itemMenu} onCancel={() => setItemFor(null)} />
             </Window>

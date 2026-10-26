@@ -2,14 +2,15 @@ import { signal } from '@preact/signals';
 import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
 import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
-import { creature } from '../data/creatures';
+import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
 import { createMon, evolutionOf, evolve, learnMove, type Mon } from '../engine/pk/creature';
-import { addItem, addMon, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
+import { addItem, addMon, allMons, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
+import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
@@ -27,6 +28,8 @@ let stepsSinceSave = 0;
 
 /** Creatures shown big over the world (starter pick, evolutions, gifts). */
 export const monOverlay = signal<{ ids: string[]; title?: string; pick: boolean; resolve: (i: number) => void } | null>(null);
+/** Nickname entry shown over the world (resolves with the name, or null for none). */
+export const nameOverlay = signal<{ mon: Mon; resolve: (name: string | null) => void } | null>(null);
 export const menuOpen = signal(false);
 export const toast = signal<string | null>(null);
 
@@ -173,6 +176,16 @@ function onStep(x: number, y: number): boolean {
     save.value.player.y = y;
     save.value.player.facing = g.player.dir;
   }
+  if (save.value) {
+    save.value.steps = (save.value.steps ?? 0) + 1;
+    if (save.value.repel) {
+      save.value.repel--;
+      if (!save.value.repel) {
+        void locked(() => say(L('L’effet du Spray Anti-Gribouille s’est dissipé.', 'The Shoo Spray wore off.')));
+        return true;
+      }
+    }
+  }
   const wp = g.map.warps.get(y * g.map.w + x);
   if (wp) {
     void warpTo(wp.to);
@@ -196,6 +209,9 @@ function onStep(x: number, y: number): boolean {
     const st = { rng: newSeed() };
     const e = pickWeighted(st, enc.table, (r) => r.w);
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));
+    // the spray keeps away wild Bestioles weaker than the first one able to fight
+    const lead = s().party.find((m) => m.hp > 0);
+    if (s().repel && lead && level < lead.level) return false;
     void locked(() => wildBattle(e.id, level));
     return true;
   }
@@ -402,6 +418,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   update((x) => enemy.forEach((m) => see(x, m.species)));
   const g = getGame();
   await g.wipeTo(1, kind === 'wild' ? 480 : 620, opts.grey ? 'eraser' : 'pencil');
+  let caught: string | null = null;
   const res = await new Promise<{ result: BattleResult; state: BattleState }>((resolve) => {
     go({
       id: 'battle',
@@ -436,9 +453,10 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
     if (res.result === 'capture') {
       const wild = res.state.sides[1].party[res.state.sides[1].active];
       wild.sleepTurns = wild.status === 'sleep' ? wild.sleepTurns : 0;
-      const where = addMon(x, { ...wild });
+      caught = wild.uid;
+      const where = addMon(x, { ...wild }, 'caught', g.map.def.id);
       x.stats.captures++;
-      if (where === 'box') showToast(tr(L('{n} est envoyé dans le PC.', '{n} was sent to the PC.'), { n: tr(creature(wild.species).name) }));
+      if (where === 'box') showToast(tr(L('{n} est envoyé dans le PC.', '{n} was sent to the PC.'), { n: monLabel(wild) }));
     }
   });
   go({ id: 'overworld' });
@@ -446,6 +464,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   g.fade = 1;
   void g.fadeTo(0, 320, 'black');
   await wait(250);
+  if (caught) await offerNickname(caught);
   await checkEvolutions();
   if (res.result === 'lose' && !opts.friendly) await blackout();
   if (opts.friendly) update((x) => healParty(x));
@@ -453,7 +472,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
 }
 
 /** Evolution scene shown over the world (or null). */
-export const evoOverlay = signal<{ from: string; to: string; resolve: (evolved: boolean) => void } | null>(null);
+export const evoOverlay = signal<{ mon: Mon; to: string; resolve: (evolved: boolean) => void } | null>(null);
 
 export async function checkEvolutions() {
   for (let i = 0; i < s().party.length; i++) {
@@ -461,7 +480,7 @@ export async function checkEvolutions() {
     const into = evolutionOf(m);
     // stopped with B: asked again at the next level
     if (!into || s().flags[`noevo:${m.uid}`] === m.level) continue;
-    const evolved = await new Promise<boolean>((resolve) => (evoOverlay.value = { from: m.species, to: into, resolve }));
+    const evolved = await new Promise<boolean>((resolve) => (evoOverlay.value = { mon: m, to: into, resolve }));
     evoOverlay.value = null;
     if (!evolved) {
       setFlag(`noevo:${m.uid}`, m.level);
@@ -482,7 +501,7 @@ export async function checkEvolutions() {
 
 async function teachMove(i: number, id: string) {
   const m = s().party[i];
-  const vars = { n: tr(creature(m.species).name), m: tr(move(id).name) };
+  const vars = { n: monLabel(m), m: tr(move(id).name) };
   if (m.moves.length < 4) {
     update((x) => learnMove(x.party[i], x.party[i].moves.length, id));
     sfx.levelUp();
@@ -567,6 +586,35 @@ export function openScreen(sc: Screen): Promise<void> {
   });
 }
 let returnResolver: (() => void) | null = null;
+/** Why a field item can't be used right now (null when it can). */
+export function fieldItemProblem(id: string): LText | null {
+  const def = ITEM_BY_ID[id];
+  if (def?.field === 'escape' && !getGame().map?.def.dungeon) return L('Le Fil d’Ariane ne sert que dans les grottes, les tours et les repaires.', 'The Ariadne Thread only works in caves, towers and hideouts.');
+  if (def?.field === 'repel' && (save.value?.repel ?? 0) > 0) return L('Un Spray fait encore effet.', 'A Shoo Spray is still working.');
+  return null;
+}
+
+/** Uses a field item from the bag: back to the map, then its effect. */
+export async function useFieldItem(id: string) {
+  const def = ITEM_BY_ID[id];
+  if (!def?.field || fieldItemProblem(id)) return;
+  update((x) => void takeItem(x, id));
+  backToWorld();
+  await locked(async () => {
+    await wait(200);
+    if (def.field === 'repel') {
+      update((x) => void (x.repel = def.amount));
+      sfx.heal();
+      await say(L('Pschitt ! Les Bestioles sauvages plus faibles t’éviteront pendant {n} pas.', 'Pssht! Weaker wild Critters will stay away for {n} steps.'), undefined, { n: def.amount });
+    } else {
+      await say(L('Tu suis le Fil d’Ariane jusqu’au dernier Centre de soin…', 'You follow the Ariadne Thread back to the last Healing Center…'));
+      const d = s();
+      if (save.value) save.value.player.returnTo = d.respawn.returnTo;
+      await warpTo({ map: d.respawn.map, x: d.respawn.x, y: d.respawn.y, facing: 'down' });
+    }
+  });
+}
+
 export function backToWorld() {
   go({ id: 'overworld' });
   const r = returnResolver;
@@ -579,11 +627,34 @@ export { ask, say, sayAll };
 // story scripts register themselves here (see src/story/scripts.ts)
 export const scripts: Record<string, () => Promise<void>> = {};
 
-/** Gives a new creature (party first, then PC). */
-export function giveMon(species: string, level: number): Mon {
+/** Gives a new creature (party first, then PC), noting where it was received. */
+export function giveMon(species: string, level: number, how: MetHow = 'gift'): Mon {
   const m = createMon(species, level, { rng: newSeed() });
-  update((x) => void addMon(x, m));
+  update((x) => void addMon(x, m, how, placeHere(x)));
   return m;
+}
+
+/** The place to remember for an event here: the town outside when inside a shared interior. */
+function placeHere(x: SaveData): string {
+  return MAPS[x.player.map]?.generic ? x.player.returnTo?.map ?? x.player.map : x.player.map;
+}
+
+/** « Donner un surnom ? », then the nickname entry. `askFirst: false` goes straight to the entry. */
+export async function offerNickname(uid: string, askFirst = true) {
+  const m = save.value && allMons(save.value).find((x) => x.uid === uid);
+  if (!m) return;
+  if (askFirst) {
+    const c = await ask(L('Donner un surnom à {n} ?', 'Give a nickname to {n}?'), [L('Oui', 'Yes'), L('Non', 'No')], undefined, { n: tr(creature(m.species).name) });
+    if (c !== 0) return;
+  }
+  const name = await new Promise<string | null>((resolve) => (nameOverlay.value = { mon: m, resolve }));
+  nameOverlay.value = null;
+  update((x) => {
+    const t = allMons(x).find((y) => y.uid === uid);
+    if (!t) return;
+    if (name) t.nickname = name;
+    else delete t.nickname;
+  });
 }
 
 export function giveItem(id: string, n = 1) {
@@ -592,5 +663,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, nameOverlay, offerNickname, useFieldItem, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }

@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
-import { artUrl, creature, dexNo } from '../../data/creatures';
+import { creature, dexNo, monLabel } from '../../data/creatures';
+import { monArtUrl } from '../monArt';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
@@ -9,12 +10,29 @@ import { item } from '../../data/items';
 import { ivGrade } from '../../engine/pk/judge';
 import { nature } from '../../data/natures';
 import { talentOf } from '../../data/talents';
+import { MAPS } from '../../data/maps';
+import type { MetHow } from '../../engine/pk/creature';
 import type { StatKey } from '../../data/schema';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
 
 type Page = 0 | 1 | 2;
 const PAGES = [L('INFOS', 'INFO'), L('STATS', 'SKILLS'), L('CAPACITÉS', 'MOVES')];
+
+const MET: Record<MetHow, ReturnType<typeof L>> = {
+  starter: L('Choisi au N.{l} — {p}', 'Chosen at Lv{l} — {p}'),
+  caught: L('Attrapé au N.{l} — {p}', 'Caught at Lv{l} — {p}'),
+  gift: L('Reçu au N.{l} — {p}', 'Received at Lv{l} — {p}'),
+  tombola: L('Gagné au N.{l} — {p}', 'Won at Lv{l} — {p}'),
+  egg: L('Éclos au N.{l} — {p}', 'Hatched at Lv{l} — {p}'),
+};
+
+/** « Attrapé au N.5 — Chemin des Crayons » (nothing for Bestioles from older saves). */
+function metLine(mon: Mon): string | null {
+  if (!mon.met) return null;
+  const place = MAPS[mon.met.map] ? tr(MAPS[mon.met.map].name) : '???';
+  return tr(MET[mon.met.how], { l: mon.met.level, p: place });
+}
 
 /** Letter for what the Bestiole was born with in a stat (E to S). */
 function Grade({ mon, k }: { mon: Mon; k: StatKey }) {
@@ -77,9 +95,10 @@ export function SummaryView({ mon, onClose, learn }: {
         {!learn && <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>}
       </div>
       <Window class="summary__head">
-        <div class="summary__art"><img class="mon-art" src={artUrl(sp)} alt="" /></div>
+        <div class="summary__art"><img class="mon-art" src={monArtUrl(mon)} alt="" /></div>
         <div class="summary__id">
-          <b class="summary__name">{tr(sp.name)}</b>
+          <b class="summary__name">{monLabel(mon)}{mon.shiny && <i class="shiny-mark" title={tr(L('Bestiole pailletée', 'Sparkly Critter'))}> ✦</i>}</b>
+          {mon.nickname && <small class="summary__species">{tr(sp.name)}</small>}
           <span>{lv(mon.level)} {mon.status && <StatusTag s={mon.status} />}</span>
           <TypeBadge type={sp.type} />
         </div>
@@ -104,6 +123,7 @@ export function SummaryView({ mon, onClose, learn }: {
                 <><dt>{tr(L('Évolution', 'Evolves'))}</dt><dd>{tr(L('{n} au N.{l}', '{n} at Lv{l}'), { n: tr(creature(sp.evolvesTo).name), l: sp.evolveLevel })}</dd></>
               )}
             </dl>
+            {metLine(mon) && <p class="summary__met">{metLine(mon)}</p>}
             <p class="summary__talent"><b>{tr(talentOf(mon).name)}</b>{locale.value === 'fr' ? '\u00a0: ' : ': '}{tr(talentOf(mon).desc)}</p>
             <p class="summary__dex">{tr(sp.dex)}</p>
           </Window>

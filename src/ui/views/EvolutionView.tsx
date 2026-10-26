@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { artUrl, creature } from '../../data/creatures';
+import { creature, monLabel } from '../../data/creatures';
+import type { Mon } from '../../engine/pk/creature';
+import { monArtUrl } from '../monArt';
 import { sfx } from '../../audio/sfx';
 import { TextBox } from '../paper';
 import './views.css';
@@ -11,12 +13,13 @@ type Phase = 'intro' | 'morph' | 'done' | 'stopped';
  * FRLG evolution: the drawing turns into a white silhouette that swaps with the new one,
  * faster and faster, then the new Bestiole appears. B (or the button) stops it.
  */
-export function EvolutionView({ from, to, onEnd }: { from: string; to: string; onEnd: (evolved: boolean) => void }) {
+export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd: (evolved: boolean) => void }) {
   const [phase, setPhase] = useState<Phase>('intro');
   const [showNew, setShowNew] = useState(false);
   const [flash, setFlash] = useState(false);
   const stop = useRef(false);
-  const a = creature(from), b = creature(to);
+  const b = creature(to);
+  const name = monLabel(mon);
 
   useEffect(() => {
     if (phase !== 'morph') return;
@@ -58,17 +61,17 @@ export function EvolutionView({ from, to, onEnd }: { from: string; to: string; o
     return () => window.removeEventListener('keydown', onKey, true);
   }, [phase]);
 
-  const text = phase === 'intro' ? tr(L('Quoi ? {n} évolue !', 'What? {n} is evolving!'), { n: tr(a.name) })
+  const text = phase === 'intro' ? tr(L('Quoi ? {n} évolue !', 'What? {n} is evolving!'), { n: name })
     : phase === 'morph' ? '…'
-    : phase === 'done' ? tr(L('Félicitations ! Ton {n} a évolué en {m} !', 'Congratulations! Your {n} evolved into {m}!'), { n: tr(a.name), m: tr(b.name) })
-    : tr(L('Hein ? {n} a arrêté d’évoluer !', 'Huh? {n} stopped evolving!'), { n: tr(a.name) });
+    : phase === 'done' ? tr(L('Félicitations ! Ton {n} a évolué en {m} !', 'Congratulations! Your {n} evolved into {m}!'), { n: name, m: tr(b.name) })
+    : tr(L('Hein ? {n} a arrêté d’évoluer !', 'Huh? {n} stopped evolving!'), { n: name });
 
   return (
     <div class={`evo ${flash ? 'is-flash' : ''}`}>
       <div class="evo__stage">
         <img
           class={`mon-art evo__mon ${phase === 'morph' ? 'is-silhouette' : ''}`}
-          src={artUrl(showNew ? b : a)}
+          src={monArtUrl(showNew ? { species: to, shiny: mon.shiny } : mon)}
           alt=""
         />
       </div>

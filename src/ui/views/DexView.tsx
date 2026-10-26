@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { CREATURES, artUrl, creature, dexNo } from '../../data/creatures';
 import { Frame, MenuList, PixelIcon, TypeBadge, Window } from '../paper';
+import { sfx } from '../../audio/sfx';
 import './views.css';
 
 /** Bestiodex: numbered list, then an entry page (drawing on paper, kind, type, text). */
@@ -58,6 +59,7 @@ function DexEntry({ index, isSeen, isCaught, onMove, onClose }: {
           <b class="dex__name">{tr(sp.name)}</b>
           <span>{tr(sp.kind)}</span>
           <TypeBadge type={sp.type} />
+          {isCaught(sp.id) && <button class="pbtn dex__cry" onClick={() => sfx.cry(sp.id)}>♪ {tr(L('Cri', 'Cry'))}</button>}
         </div>
       </Window>
       <Window seyes class="dex__text">

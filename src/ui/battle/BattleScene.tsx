@@ -1,5 +1,6 @@
 import { L, tr } from '../../i18n';
-import { artUrl, creature, mirrored } from '../../data/creatures';
+import { creature, mirrored, monLabel } from '../../data/creatures';
+import { monArtUrl } from '../monArt';
 import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
 import { maxHp, xpAt, MAX_LEVEL } from '../../engine/pk/creature';
 import { HpBar, PixelIcon, StatusTag, XpBar, lv } from '../paper';
@@ -18,7 +19,7 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
   return (
     <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
       <div class="pk-hp__top">
-        <b>{side === 0 ? tr(creature(m.species).name) : monName(st, 1)}</b>
+        <b>{side === 0 ? monLabel(m) : monName(st, 1)}</b>
         {m.status && <StatusTag s={m.status} />}
         <span>{lv(m.level)}</span>
       </div>
@@ -52,7 +53,7 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
         ) : (
           <img
             class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
-            src={artUrl(foeSp)}
+            src={monArtUrl(foe)}
             alt=""
           />
         )}
@@ -68,7 +69,7 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
         ) : (
           <img
             class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
-            src={artUrl(mySp)}
+            src={monArtUrl(mine)}
             alt=""
           />
         )}

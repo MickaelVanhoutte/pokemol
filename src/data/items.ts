@@ -45,6 +45,19 @@ export const ITEMS: ItemDef[] = [
     id: 'rappel', name: L('Rappel', 'Revive'), price: 1500, kind: 'revive', amount: 50,
     desc: L('Réveille une Bestiole K.O. avec la moitié de ses PV.', 'Revives a fainted Critter with half its HP.'),
   },
+  // ---------------------------------------------------------------- field items (used on the map)
+  {
+    id: 'spray', name: L('Spray Anti-Gribouille', 'Shoo Spray'), price: 350, kind: 'field', amount: 100, field: 'repel',
+    desc: L('Pendant 100 pas, les Bestioles sauvages plus faibles que la première de ton équipe t’évitent.', 'For 100 steps, wild Critters weaker than the first one in your party stay away.'),
+  },
+  {
+    id: 'super-spray', name: L('Super Spray', 'Super Shoo Spray'), price: 500, kind: 'field', amount: 200, field: 'repel',
+    desc: L('Pendant 200 pas, les Bestioles sauvages plus faibles que la première de ton équipe t’évitent.', 'For 200 steps, wild Critters weaker than the first one in your party stay away.'),
+  },
+  {
+    id: 'fil-ariane', name: L('Fil d’Ariane', 'Ariadne Thread'), price: 550, kind: 'field', amount: 0, field: 'escape',
+    desc: L('Dans une grotte, une tour ou un repaire : suis le fil jusqu’au dernier Centre de soin.', 'In a cave, tower or hideout: follow the thread back to the last Healing Center.'),
+  },
   // ---------------------------------------------------------------- battle items (on the creature fighting)
   {
     id: 'sirop-attaque', name: L('Sirop d’Attaque', 'Attack Syrup'), price: 500, kind: 'battle', amount: 0, boost: 'atk',
