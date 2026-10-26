@@ -283,6 +283,33 @@ Trainers using them:
 
 Zélie keeps her old team: with Boulonnet or Zigzéclair, Water and Grass teams fell to 1–10%. Spéléo Max keeps his too: any rock or ground there dropped Fire teams to 40%.
 
+**Fifteen more brouillons (Oct 2026), 50 Bestioles in all.** They finish the gen-1 style lines:
+- Piaflèche → Piafurie (L36);
+- Boxouille → Musclouille (L28) → Quadripoing (L40);
+- Cailloutou → Rocailloux (L25) → Montagnoc (L38);
+- Taupinou → Taupitrio (L26);
+- Givrinou → Banquisette (L34);
+- Sifflasse → Cobrasse (L30);
+- Dragounet → Dragondine (L30) → Dragopataud (Dragon/Flying, L45);
+- Boulonnet → Triboulon (L30);
+- Chantouille → Chantouffe (friendship 220).
+
+Three never evolve: Ciseaumante (Bug/Flying, Route 7, new move Coup de ciseaux), Poupochette
+(Normal, Route 6) and Ptérocaille (Rock/Flying, Grotte des Échos).
+
+Where to meet the middle forms:
+- the Grotte des Échos: Musclouille, Rocailloux, Taupitrio;
+- Route 8: Cobrasse, and Piafurie by day;
+- the Piste Cyclable: Triboulon;
+- around Inkwell Isle: Banquisette surfing, Dragondine on the Super Rod.
+
+Trainers using them:
+- Admin Blanche (Cobrasse, both fights) and the Factory grunts (Cobrasse, Triboulon);
+- Captain Buvard (Banquisette) and Admin Rature's second fight (Piafurie);
+- Randonneur Jules (Rocailloux) and Cycliste Inès (Chantouffe).
+
+These Team Gomme fights went from about 55–97% to 53–92% on Normal.
+
 **Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
 Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
 includes them; each was kept only if the leader's row stayed within about 10 points of the version

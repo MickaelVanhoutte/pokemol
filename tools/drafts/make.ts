@@ -25,11 +25,29 @@ import givrinou from './givrinou.ts';
 import sifflasse from './sifflasse.ts';
 import dragounet from './dragounet.ts';
 import boulonnet from './boulonnet.ts';
+import piafurie from './piafurie.ts';
+import musclouille from './musclouille.ts';
+import quadripoing from './quadripoing.ts';
+import rocailloux from './rocailloux.ts';
+import montagnoc from './montagnoc.ts';
+import taupitrio from './taupitrio.ts';
+import banquisette from './banquisette.ts';
+import cobrasse from './cobrasse.ts';
+import dragondine from './dragondine.ts';
+import dragopataud from './dragopataud.ts';
+import triboulon from './triboulon.ts';
+import chantouffe from './chantouffe.ts';
+import ciseaumante from './ciseaumante.ts';
+import poupochette from './poupochette.ts';
+import pterocaille from './pterocaille.ts';
 
 export const DRAFTS: Draft[] = [
   clapoflot, tortorrent, bouquetigre, dragobraise,
   piafleche, zigzeclair, luneclat, boxouille, cailloutou,
   taupinou, givrinou, sifflasse, dragounet, boulonnet,
+  piafurie, musclouille, quadripoing, rocailloux, montagnoc,
+  taupitrio, banquisette, cobrasse, dragondine, dragopataud,
+  triboulon, chantouffe, ciseaumante, poupochette, pterocaille,
 ];
 
 const root = new URL('../..', import.meta.url).pathname;
