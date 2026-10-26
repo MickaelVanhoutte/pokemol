@@ -318,6 +318,9 @@ remove it from `DRAFTS` and drop `draft: true`.
   - B answers with the last choice.
 
   In scripts use `ask()`. In the prologue use `Ask`.
+- Lists where an entry has a description (bag, shop) use `MenuList` with `tapFocus`: on touch, the
+  first tap only moves the cursor (the description shows), a second tap picks. Exits are buttons
+  beside the list, not entries in it.
 - Back buttons: `pbtn--b` shows a "B" hint and must really answer to X/B (`Frame` and menus do).
   Use `pbtn--back` (a plain ◀) where B means something else. Touch screens always get the ◀,
   because their only B button is on the map.

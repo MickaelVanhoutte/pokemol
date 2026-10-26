@@ -38,6 +38,7 @@ export function ShopView({ money, stock, bag, onBuy, onClose, title, priceOf = (
           active={!picked}
           onCursor={setCursor}
           onCancel={onClose}
+          tapFocus
           items={stock.map((it) => ({ label: tr(it.name), icon: it.id, side: fmt(priceOf(it)), onSelect: () => choose(it) }))}
         />
       </Window>

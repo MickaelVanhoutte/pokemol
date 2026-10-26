@@ -82,9 +82,12 @@ export interface MenuItem {
   onSelect: () => void;
 }
 
-/** Vertical GBA menu with the pencil cursor. Keyboard: ↑↓ A B; touch: tap an entry. */
-export function MenuList({ items, onCancel, active = true, class: cls = '', onCursor }: {
-  items: MenuItem[]; onCancel?: () => void; active?: boolean; class?: string; onCursor?: (i: number) => void;
+/**
+ * Vertical GBA menu with the pencil cursor. Keyboard: ↑↓ A B; touch: tap an entry. With `tapFocus`, a
+ * tap on another entry only moves the cursor there (to read its description) and a second tap picks it.
+ */
+export function MenuList({ items, onCancel, active = true, class: cls = '', onCursor, tapFocus }: {
+  items: MenuItem[]; onCancel?: () => void; active?: boolean; class?: string; onCursor?: (i: number) => void; tapFocus?: boolean;
 }) {
   const pick = (i: number) => {
     if (items[i]?.disabled) return;
@@ -101,7 +104,12 @@ export function MenuList({ items, onCancel, active = true, class: cls = '', onCu
           role="menuitem"
           disabled={it.disabled}
           onPointerEnter={(e) => e.pointerType === 'mouse' && setCur(i)}
-          onClick={() => { setCur(i); pick(i); }}
+          onClick={(e) => {
+            // a mouse already moved the cursor on hover; a finger shows the description first
+            if (tapFocus && i !== cur && (e as unknown as PointerEvent).pointerType !== 'mouse') return setCur(i);
+            setCur(i);
+            pick(i);
+          }}
         >
           {it.icon && (sketchIconUrl(it.icon) ? <img class="sicon" src={sketchIconUrl(it.icon)!} alt="" /> : <img class="picon" src={iconUrl(it.icon)} alt="" />)}
           <span>{it.label}</span>

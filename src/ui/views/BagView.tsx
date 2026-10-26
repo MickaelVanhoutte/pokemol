@@ -1,8 +1,9 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { canHold, item } from '../../data/items';
 import { MenuList, PixelIcon, Window, type MenuItem } from '../paper';
 import { POCKETS, pocketItems, type Pocket } from '../logic/bag';
+import { sketchIconUrl } from '../sketchIcons';
 import './views.css';
 
 const POCKET_NAMES: Record<Pocket, ReturnType<typeof L>> = {
@@ -34,10 +35,20 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
   const [cursor, setCursor] = useState(0);
   const [action, setAction] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
+  // a message from outside ("X learned Y") stays until the cursor moves
+  const [noteOn, setNoteOn] = useState(true);
+  useEffect(() => setNoteOn(true), [note]);
+  const lastCursor = useRef(0);
+  const moveCursor = (i: number) => {
+    if (i !== lastCursor.current) { setMsg(''); setNoteOn(false); }
+    lastCursor.current = i;
+    setCursor(i);
+  };
   const list = pocketItems(bag, pocket).filter((it) => context !== 'give' || canHold(it));
   const turn = (d: 1 | -1) => {
     setPocket((p) => pockets[(pockets.indexOf(p) + d + pockets.length) % pockets.length]);
     setMsg('');
+    setNoteOn(false);
   };
   const focused = list[cursor];
   const why = (id: string): string | null => {
@@ -55,9 +66,8 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
       label: tr(it.name),
       icon: it.id,
       side: it.kind === 'key' || it.kind === 'stencil' ? '' : `×${bag[it.id]}`,
-      onSelect: () => { setMsg(''); setAction(it.id); },
+      onSelect: () => { setMsg(''); setNoteOn(false); setAction(it.id); },
     })),
-    { label: tr(L('FERMER LE SAC', 'CLOSE BAG')), onSelect: onClose },
   ];
 
   const def = action ? item(action) : null;
@@ -86,20 +96,22 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
       <div class="bag__head">
         <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>
         <Window class="bag__pocket">
-          <PixelIcon id="bag" size={32} />
+          <img class="sicon" src={sketchIconUrl('bag')!} width={38} height={38} alt="" />
           <span>{tr(POCKET_NAMES[pocket])}</span>
           <span class="bag__dots">{pockets.map((p) => <i class={p === pocket ? 'is-on' : ''} />)}</span>
         </Window>
         <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
       </div>
       <Window class="bag__list">
-        <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={setCursor} />
-        {!list.length && <p class="bag__empty">{tr(L('Cette poche est vide.', 'This pocket is empty.'))}</p>}
+        <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={moveCursor} tapFocus />
       </Window>
-      <Window seyes class="bag__desc">
-        {focused && <PixelIcon id={focused.id} size={36} />}
-        <p>{msg || note || (focused ? tr(focused.desc) : tr(L('Ferme le sac et retourne à l’aventure.', 'Close the bag and get back to the adventure.')))}</p>
-      </Window>
+      <div class="bag__foot">
+        <Window seyes class="bag__desc">
+          {focused && <PixelIcon id={focused.id} size={36} />}
+          <p>{msg || (noteOn && note) || (focused ? tr(focused.desc) : tr(L('Cette poche est vide.', 'This pocket is empty.')))}</p>
+        </Window>
+        <button class="pbtn pbtn--b bag__close" onClick={onClose}>{tr(L('Fermer', 'Close'))}</button>
+      </div>
       {action && (
         <div class="view-modal" onClick={() => setAction(null)}>
           <div onClick={(e) => e.stopPropagation()}>

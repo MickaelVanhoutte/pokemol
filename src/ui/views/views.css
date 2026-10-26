@@ -137,7 +137,9 @@
 .bag__dots i.is-on { background: var(--cursor); }
 .bag__list { flex: 1; min-height: 0; overflow-y: auto; }
 .bag__empty { margin: 4px 0 0 1.7em; color: var(--ink-soft); }
-.bag__desc { flex: none; display: flex; gap: 10px; align-items: center; min-height: 4.4em; font-size: 1.05rem; }
+.bag__foot { flex: none; display: flex; gap: 6px; align-items: stretch; }
+.bag__close { flex: none; }
+.bag__desc { flex: 1; min-width: 0; display: flex; gap: 10px; align-items: center; min-height: 4.4em; font-size: 1.05rem; }
 .bag__desc p { margin: 0; }
 .bag__actions { min-width: 10em; }
 

@@ -212,6 +212,8 @@
   .pk-plat--foe { width: min(30vw, 34dvh, 230px); height: min(26vw, 30dvh, 200px); }
   .pk-plat--me { width: min(34vw, 40dvh, 260px); height: min(30vw, 36dvh, 230px); }
   .pk-hp { width: min(42%, 270px); }
+  /* the scene is wide and short: your box goes in the empty middle, clear of both drawings */
+  .pk-hp--me { right: auto; left: calc(50% - min(21%, 135px)); }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
   /* two rows of moves fit the low panel, even with large text */
