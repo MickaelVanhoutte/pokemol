@@ -83,7 +83,7 @@ export function frame(seed: number, fill: string, o: FrameOptions = {}): string 
     const t0 = 1 + r() * 4, t1 = S - 1 - r() * 4;
     // pressure changes along the line; it repeats with the middle slice, so the edge has no seam
     const look: { w: number; o: number }[] = Array.from({ length: segs }, () => ({ w: w * (0.75 + r() * 0.3), o: 0.72 + r() * 0.28 }));
-    const lookAt = (t: number) => (t >= C && t < S - C ? look[Math.floor((t - C) / seg) % segs] : { w: w * (0.75 + r() * 0.3), o: 0.62 + r() * 0.33 });
+    const lookAt = (t: number) => (t >= C && t < S - C ? look[Math.floor((t - C) / seg) % segs] : { w: w * (0.75 + r() * 0.3), o: 0.72 + r() * 0.28 });
     // the lead lifts off at both ends
     const taper = (t: number) => Math.min(1, 0.35 + Math.min(t - t0, t1 - t) / 18);
     for (let t = t0; t < t1; t += seg) {
