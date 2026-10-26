@@ -1,10 +1,12 @@
 import { L, tr } from '../i18n';
 import { creature, STARTERS } from '../data/creatures';
+import { item } from '../data/items';
 import { partyOf, RIVAL_COUNTER } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
 import type { Dir } from '../save/schema';
-import { healParty, save, update } from '../state/game';
+import { addItem, healParty, save, update } from '../state/game';
+import { sfx } from '../audio/sfx';
 import {
   ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
 } from '../overworld/controller';
@@ -205,6 +207,21 @@ scripts.momShoes = async () => {
 scripts.touffouGift = async () => {
   const who = L('Fillette Capucine', 'Lass Capucine');
   if (flag('gift:touffou')) {
+    // with four badges, she has finished three new drawings… and a magic pencil to spare
+    if (save.value!.badges.length >= 4 && !flag('gift:crayonMagique')) {
+      await sayAll([
+        L('Regarde ! J’ai dessiné Touffou en Bestiole Eau, en Bestiole Feu et en Bestiole Électrique !', 'Look! I drew Fuzzkit as a Water Critter, a Fire Critter and a Lightning Critter!'),
+        L('Il suffit de le redessiner avec un Crayon Magique pour qu’il change. Tiens, je t’en donne un !', 'You just redraw it with a Magic Pencil and it changes. Here, I’ll give you one!'),
+      ], who);
+      const kinds = ['crayon-magique-eau', 'crayon-magique-feu', 'crayon-magique-electrique'];
+      const c = await ask(L('Lequel veux-tu ?', 'Which one would you like?'), kinds.map((k) => item(k).name), who);
+      update((d) => addItem(d, kinds[c], 1));
+      setFlag('gift:crayonMagique');
+      sfx.confirm();
+      await say(L('{name} reçoit {i} !', '{name} received the {i}!'), undefined, { i: tr(item(kinds[c]).name) });
+      await say(L('Utilise-le depuis ton Sac sur Touffou. Les autres Crayons Magiques se vendent dans les boutiques !', 'Use it on Fuzzkit from your Bag. The other Magic Pencils are sold in shops!'), who);
+      return;
+    }
     await say(L('Mon Touffou va bien ? On dit qu’en grandissant, il pourra devenir plein de choses différentes !', 'Is my Fuzzkit doing well? They say that as it grows, it could become lots of different things!'), who);
     return;
   }

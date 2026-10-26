@@ -486,6 +486,110 @@
         "inkChroma": 0.06,
         "close": 8
       }
+    },
+    {
+      "id": "017",
+      "slug": "touflot",
+      "photo": "touflot.jpeg",
+      "box": [
+        60,
+        460,
+        2900,
+        3760
+      ],
+      "scale": 0.5,
+      "erase": [
+        [
+          [
+            594,
+            512
+          ],
+          [
+            942,
+            512
+          ],
+          [
+            958,
+            655
+          ],
+          [
+            1004,
+            922
+          ],
+          [
+            1034,
+            1229
+          ],
+          [
+            901,
+            1413
+          ],
+          [
+            594,
+            1413
+          ]
+        ]
+      ],
+      "options": {
+        "paperChroma": 0.26,
+        "inkChroma": 0.06,
+        "close": 8
+      }
+    },
+    {
+      "id": "018",
+      "slug": "toufeu",
+      "photo": "toufeu.jpeg",
+      "box": [
+        60,
+        180,
+        2380,
+        3500
+      ],
+      "scale": 0.5,
+      "options": {
+        "paperChroma": 0.26,
+        "inkChroma": 0.06,
+        "close": 8,
+        "saturate": 1.7
+      },
+      "erase": [
+        [
+          [
+            60,
+            3000
+          ],
+          [
+            200,
+            3060
+          ],
+          [
+            240,
+            3500
+          ],
+          [
+            60,
+            3500
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "019",
+      "slug": "toufoudre",
+      "photo": "toufoudre.jpeg",
+      "box": [
+        160,
+        440,
+        2930,
+        3080
+      ],
+      "scale": 0.5,
+      "options": {
+        "paperChroma": 0.26,
+        "inkChroma": 0.06,
+        "close": 8
+      }
     }
   ]
 }

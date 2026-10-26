@@ -53,9 +53,13 @@ they are used.
 town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).
 Holding B runs only once you own them. Older saves already past Bourg get them in `repair()`.
 
-**Touffou** (EN Fuzzkit, Eevee-like, no evolution yet: future drawings will add several). Capucine
-in Ville-Pastel gives one at L8 (`touffouGift`, flag `gift:touffou`); it is also a rare wild find on
-Route 6.
+**Touffou** (EN Fuzzkit, Eevee-like). Capucine in Ville-Pastel gives one at L8 (`touffouGift`, flag
+`gift:touffou`); it is also a rare wild find on Route 6. It evolves with a magic pencil used from the
+bag: Water → **Touflot** (Fluffin), Fire → **Toufeu** (Flufflame), Lightning → **Toufoudre**
+(Fluffbolt). The three pencils are sold in shops from 4 badges, and Capucine gives one of the
+player's choice once they have 4 badges (`gift:crayonMagique`). The new form learns a move of its
+type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Touflot and
+Toufeu, and all three are in the battle tower pool.
 
 **Field tools** (key items, each given once by someone, `src/story/field.ts`):
 

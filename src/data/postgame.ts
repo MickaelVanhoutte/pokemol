@@ -29,7 +29,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcMarine', name: L('Grande Maîtresse Marine', 'Grand Master Marine'),
     party: [
       { species: '005', level: 45 }, { species: '006', level: 45, item: 'clochette' }, { species: '014', level: 46 },
-      { species: '003', level: 46, item: 'crayon-bleu' }, { species: '003', level: 47, item: 'baie-doree' },
+      { species: '017', level: 46, item: 'crayon-bleu' }, { species: '003', level: 47, item: 'baie-doree' },
     ],
     before: [
       L('Bienvenue au Grand Concours ! Ici, quatre Grands Maîtres et un dernier artiste t’attendent, l’un après l’autre.', 'Welcome to the Grand Contest! Four Grand Masters and one last artist are waiting for you, one after the other.'),
@@ -41,7 +41,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcAmbre', name: L('Grande Maîtresse Ambre', 'Grand Master Amber'),
     party: [
       { species: '013', level: 45 }, { species: '004', level: 45 }, { species: '008', level: 46 },
-      { species: '016', level: 46, item: 'plume-vive' }, { species: '002', level: 48, item: 'bille-ardente' },
+      { species: '018', level: 45, item: 'plume-vive' }, { species: '002', level: 48, item: 'bille-ardente' },
     ],
     before: [L('Tu as éteint l’aquarelle de Marine ? Voyons si tu tiens la chaleur de mon crayon rouge !', 'You put out Marine’s watercolours? Let’s see if you can take the heat of my red crayon!')],
     after: [L('Mes braises sont froides… Bravo !', 'My embers have gone cold… Well done!')],
@@ -102,7 +102,7 @@ export const TOWER_TEAM = 3;
 export const TOWER_LEVEL = 50;
 
 /** Bestioles strong enough for the tower (first forms that evolve are left out). */
-export const TOWER_POOL = ['001', '002', '003', '004', '005', '006', '007', '008', '010', '013', '014', '016'];
+export const TOWER_POOL = ['001', '002', '003', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019'];
 const LEGENDS = ['011'];
 const TOWER_ITEMS = [
   'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'plume-vive', 'loupe', 'clochette', 'ruban-tenace',

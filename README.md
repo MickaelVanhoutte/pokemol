@@ -18,7 +18,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
 - The Pencil Day Care on Route 2: leave two Bestioles to gain XP while you walk; two of one
   family sometimes leave an egg, which hatches as you carry it (inheriting IVs, the hidden talent,
   and the nature of a parent holding the Everstone).
-- Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
+- Friendship (hearts in the summary), evolutions by level, magic pencil (Touffou becomes Touflot,
+  Toufeu or Toufoudre) or friendship, a Move
   Rememberer and a Move Forgetter in every Healing Center.
 - Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,
   recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray

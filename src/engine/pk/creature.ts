@@ -90,6 +90,14 @@ export function rememberableMoves(m: Pick<Mon, 'species' | 'level' | 'moves'>): 
   return out.reverse();
 }
 
+/**
+ * Moves a Bestiole learns the moment it evolves into `to` at `level`: the new form's evolution
+ * moves (learnset level 0, like the later games) and its moves of that very level.
+ */
+export function evolutionMoves(to: string, level: number): string[] {
+  return creature(to).learnset.filter(([lvl]) => lvl === 0 || lvl === level).map(([, id]) => id);
+}
+
 /** Moves known at a level: the last four learnt by level-up. */
 export function movesAt(speciesId: string, level: number): string[] {
   const learnt: string[] = [];

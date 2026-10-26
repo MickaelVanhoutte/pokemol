@@ -20,6 +20,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
 | `gift:calque` | Prof. Fusain's aide (Healing Center) | Tracing Paper given |
+| `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
 | `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
@@ -200,11 +201,13 @@ Scripts run one at a time and lock player input. To change an existing script af
   creature to `src/data/creatures.ts`. For a creature that evolves, list its ways to evolve in
   `evolutions: [{ to, level? | item? | friendship? }]` on the base form, and set `evolvesFrom` on each
   evolved form. Several rules make a branching evolution (Touffou's future forms):
-  - `item` is a Crayon Magique used from the bag (`crayon-magique-<type>`, not sold or placed until
-    an evolution uses one: put it in a shop's `STOCK` or as a pickup when you add one);
+  - `item` is a Crayon Magique used from the bag (`crayon-magique-<type>`). Water, Fire and Lightning
+    are in the shops' `STOCK` (Touffou); put another one there, or as a pickup, when a drawing needs it;
   - `friendship: 220` evolves on levelling up with a great friendship;
   - `level` is the usual one.
 
+  A learnset entry at level 0 is an evolution move, learned the moment the Bestiole evolves into
+  that form (`evolutionMoves`), so a form reached by a pencil at any level gets a move of its type.
   `evolutionFor()` in `src/engine/pk/creature.ts` applies the rules. Set `faces` for sideways drawings, and
   `rarity`, which weights the Tombola. Put it in an `encounters` table or a trainer party.
   The order of `CREATURES` is the Bestiodex order (`dexNo`), and a test keeps evolution lines side by

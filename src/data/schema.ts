@@ -84,7 +84,7 @@ export interface SpeciesDef {
   stencils: string[];
   /** Weight in the creature machine. */
   rarity: Rarity;
-  /** [level, move id]; level 1 moves are known from the start. */
+  /** [level, move id]; level 1 moves are known from the start, level 0 ones are learned on evolving into it. */
   learnset: [number, string][];
   /** How it evolves (several rules = a branching evolution; none = final form). */
   evolutions?: EvolutionRule[];

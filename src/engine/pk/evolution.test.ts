@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { creature } from '../../data/creatures';
 import { ITEM_BY_ID } from '../../data/items';
 import type { SpeciesDef } from '../../data/schema';
-import { addXp, BASE_FRIENDSHIP, createMon, evolutionFor, evolutionOf, rememberableMoves, xpAt } from './creature';
+import { addXp, BASE_FRIENDSHIP, createMon, evolutionFor, evolutionMoves, evolutionOf, movesAt, rememberableMoves, xpAt } from './creature';
 
-// a made-up branching species, like Touffou will be once its evolutions are drawn
+// a made-up branching species mixing every kind of rule
 const branching = {
   ...creature('016'),
   evolutions: [
@@ -35,8 +35,25 @@ describe('evolution rules', () => {
     expect(evolutionFor(branching, { level: 30, friendship: 10 }, { kind: 'level' })).toBe('008');
   });
 
-  it('has the magic pencils (not sold in shops yet)', () => {
+  it('has the magic pencils', () => {
     expect(ITEM_BY_ID['crayon-magique-feu'].kind).toBe('evo');
+  });
+
+  it('turns Touffou into Touflot, Toufeu or Toufoudre with the water, fire or lightning pencil', () => {
+    const touffou = createMon('016', 20, { rng: 3 });
+    const by = (item: string) => evolutionFor(creature('016'), touffou, { kind: 'item', item });
+    expect([by('crayon-magique-eau'), by('crayon-magique-feu'), by('crayon-magique-electrique')]).toEqual(['017', '018', '019']);
+    expect(by('crayon-magique-plante')).toBeNull();
+    expect(evolutionOf({ ...touffou, level: 50 })).toBeNull();
+    for (const id of ['017', '018', '019']) expect(creature(id).evolvesFrom).toBe('016');
+  });
+
+  it('teaches a move of the new type the moment Touffou evolves, at any level', () => {
+    expect(evolutionMoves('017', 24)).toEqual(['jet-d-eau']);
+    expect(evolutionMoves('018', 30)).toEqual(['flammeche', 'coup-de-boule']);
+    expect(evolutionMoves('019', 9)).toEqual(['petite-etincelle']);
+    // wild or trainer ones know it too
+    expect(movesAt('017', 5)).toContain('jet-d-eau');
   });
 });
 

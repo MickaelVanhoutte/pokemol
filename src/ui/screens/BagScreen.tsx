@@ -1,13 +1,13 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { creature, monLabel } from '../../data/creatures';
+import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
 import { backToWorld, fieldItemProblem, toggleBike, useFieldItem } from '../../overworld/controller';
 import { save, see, takeItem, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { canUseOn, evolveWith, stencilStatus, useOn } from '../logic/bag';
 import { move } from '../../data/moves';
-import { evolve, learnMove } from '../../engine/pk/creature';
+import { evolutionMoves, evolve, learnMove } from '../../engine/pk/creature';
 import { EvolutionView } from '../views/EvolutionView';
 import { SummaryView } from '../views/SummaryView';
 import { BagView } from '../views/BagView';
@@ -28,6 +28,8 @@ export function BagScreen() {
   const [teaching, setTeaching] = useState<string | null>(null);
   const [forgetFor, setForgetFor] = useState<number | null>(null);
   const [evolving, setEvolving] = useState<{ item: string; i?: number; to?: string } | null>(null);
+  // moves a freshly evolved Bestiole wants to learn while it already knows four
+  const [evoLearn, setEvoLearn] = useState<{ i: number; moves: string[] } | null>(null);
   if (reading !== null) return <PageView n={reading} onClose={() => setReading(null)} />;
   if (map) return <TownMapView save={d} avatar={avatarImage(d.player.avatar)} onClose={() => setMap(false)} />;
   if (teaching) {
@@ -65,6 +67,32 @@ export function BagScreen() {
       />
     );
   }
+  if (evoLearn) {
+    const { i, moves } = evoLearn;
+    const mv = moves[0];
+    const next = () => setEvoLearn(moves.length > 1 ? { i, moves: moves.slice(1) } : null);
+    const skip = () => {
+      setNote(tr(L('{n} n’apprend pas {m}.', '{n} did not learn {m}.'), { n: monLabel(d.party[i]), m: tr(move(mv).name) }));
+      next();
+    };
+    return (
+      <SummaryView
+        mon={d.party[i]}
+        onClose={skip}
+        learn={{
+          move: mv,
+          onPick: (slot) => {
+            if (slot === null) return skip();
+            const old = d.party[i].moves[slot]?.id;
+            update((x) => learnMove(x.party[i], slot, mv));
+            sfx.levelUp();
+            setNote(tr(L('{n} oublie {o} et apprend {m} !', '{n} forgot {o} and learned {m}!'), { n: monLabel(d.party[i]), o: old ? tr(move(old).name) : '', m: tr(move(mv).name) }));
+            next();
+          },
+        }}
+      />
+    );
+  }
   if (evolving) {
     const pencil = evolving.item;
     const { i, to } = evolving;
@@ -77,24 +105,27 @@ export function BagScreen() {
           onEnd={(done) => {
             if (done) {
               const learned: string[] = [];
+              const waiting: string[] = [];
               update((x) => {
                 if (!takeItem(x, pencil)) return;
                 const m = x.party[i];
                 evolve(m, to);
                 see(x, to);
                 if (!x.dex.caught.includes(to)) x.dex.caught.push(to);
-                // the new form learns its moves of the current level, while there is room
-                for (const [lvl, id] of creature(to).learnset) {
-                  if (lvl === m.level && !m.moves.some((s) => s.id === id) && m.moves.length < 4) {
+                // the new form learns its evolution moves and those of its level; past four moves, it asks
+                for (const id of evolutionMoves(to, m.level)) {
+                  if (m.moves.some((s) => s.id === id)) continue;
+                  if (m.moves.length < 4) {
                     learnMove(m, m.moves.length, id);
                     learned.push(id);
-                  }
+                  } else waiting.push(id);
                 }
               });
               sfx.levelUp();
               setNote(learned.length
                 ? tr(L('{n} apprend {m} !', '{n} learned {m}!'), { n: monLabel(save.value!.party[i]), m: learned.map((id) => tr(move(id).name)).join(', ') })
                 : '');
+              if (waiting.length) setEvoLearn({ i, moves: waiting });
             }
             setEvolving(null);
           }}

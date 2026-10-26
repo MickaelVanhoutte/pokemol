@@ -8,7 +8,7 @@ import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { createMon, evolutionOf, evolve, learnMove, type Mon } from '../engine/pk/creature';
+import { createMon, evolutionMoves, evolutionOf, evolve, learnMove, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, allMons, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
@@ -738,10 +738,9 @@ export async function checkEvolutions() {
       see(x, into);
       if (!x.dex.caught.includes(into)) x.dex.caught.push(into);
     });
-    // like the GBA games, the new form learns its moves of the current level right away
-    const lvl = s().party[i].level;
-    for (const [at, id] of creature(into).learnset) {
-      if (at === lvl && !s().party[i].moves.some((mv) => mv.id === id)) await teachMove(i, id);
+    // the new form learns its evolution moves and its moves of the current level right away
+    for (const id of evolutionMoves(into, s().party[i].level)) {
+      if (!s().party[i].moves.some((mv) => mv.id === id)) await teachMove(i, id);
     }
   }
 }

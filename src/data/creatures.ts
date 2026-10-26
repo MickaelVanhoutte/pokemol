@@ -212,6 +212,8 @@ export const CREATURES: SpeciesDef[] = [
     id: '016', slug: 'touffou', faces: 'left', name: L('Touffou', 'Fuzzkit'), kind: L('Bestiole Ébouriffée', 'Scruffy Critter'),
     type: 'normal', base: { hp: 55, atk: 55, def: 50, spa: 45, spd: 65, spe: 55 },
     catchRate: 45, baseExp: 65, evYield: { spd: 1 }, rarity: 'rare',
+    // three magic pencils, three drawings: water, fire and lightning
+    evolutions: [{ to: '017', item: 'crayon-magique-eau' }, { to: '018', item: 'crayon-magique-feu' }, { to: '019', item: 'crayon-magique-electrique' }],
     stencils: ['pochoir-02', 'pochoir-06', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-17', 'pochoir-19'],
     talents: ['pieds-legers', 'trait-assure'], hiddenTalent: 'bonne-etoile',
     learnset: [[1, 'bousculade'], [1, 'fretillement'], [6, 'grondement'], [10, 'pas-de-loup'],
@@ -220,6 +222,46 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Sa fourrure ébouriffée change un peu chaque fois qu’on le redessine. On raconte qu’un jour, il pourra devenir bien des choses différentes.',
       'Its scruffy fur changes a little every time someone redraws it. They say that one day it could become many different things.',
+    ),
+  },
+  {
+    id: '017', slug: 'touflot', faces: 'right', name: L('Touflot', 'Fluffin'), kind: L('Bestiole Nageoire', 'Fin Critter'),
+    type: 'eau', base: { hp: 108, atk: 54, def: 50, spa: 92, spd: 80, spe: 56 },
+    catchRate: 45, baseExp: 170, evYield: { hp: 2 }, rarity: 'rare', evolvesFrom: '016',
+    stencils: ['pochoir-02', 'pochoir-03', 'pochoir-06', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-14', 'pochoir-15', 'pochoir-17', 'pochoir-19'],
+    talents: ['eponge', 'trait-assure'], hiddenTalent: 'grosse-vague',
+    // [0, …]: learned the moment Touffou turns into it
+    learnset: [[0, 'jet-d-eau'], [1, 'bousculade'], [1, 'fretillement'], [1, 'bulles'], [22, 'averse'],
+      [26, 'pantin-papier'], [30, 'pluie-d-aquarelle'], [36, 'grosse-vague'], [42, 'bouclier-papier']],
+    dex: L(
+      'Quand Touffou touche un Crayon Magique Eau, sa fourrure devient lisse comme une vague. Il nage en tirant la langue et chante sous la pluie.',
+      'When Fuzzkit touches a Magic Water Pencil, its fur turns smooth as a wave. It swims with its tongue out and sings in the rain.',
+    ),
+  },
+  {
+    id: '018', slug: 'toufeu', name: L('Toufeu', 'Flufflame'), kind: L('Bestiole Bouillotte', 'Hot-Water-Bottle Critter'),
+    type: 'feu', base: { hp: 55, atk: 108, def: 50, spa: 80, spd: 92, spe: 55 },
+    catchRate: 45, baseExp: 170, evYield: { atk: 2 }, rarity: 'rare', evolvesFrom: '016',
+    stencils: ['pochoir-02', 'pochoir-05', 'pochoir-06', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-17', 'pochoir-19'],
+    talents: ['braise-tetue', 'trait-assure'], hiddenTalent: 'bonne-etoile',
+    learnset: [[0, 'flammeche'], [1, 'bousculade'], [1, 'fretillement'], [1, 'grondement'], [16, 'mordillage'], [22, 'lueur-brulante'],
+      [26, 'tourbillon-braises'], [30, 'coup-de-boule'], [36, 'queue-ardente'], [42, 'grand-brasier']],
+    dex: L(
+      'Assis dans son nid de flammes, il ne brûle jamais ses amis : sa fourrure est douce et tiède comme une bouillotte.',
+      'Sitting in its nest of flames, it never burns its friends: its fur is soft and warm like a hot-water bottle.',
+    ),
+  },
+  {
+    id: '019', slug: 'toufoudre', faces: 'left', name: L('Toufoudre', 'Fluffbolt'), kind: L('Bestiole Pétillante', 'Fizzy Critter'),
+    type: 'electrique', base: { hp: 55, atk: 55, def: 50, spa: 92, spd: 80, spe: 108 },
+    catchRate: 45, baseExp: 170, evYield: { spe: 2 }, rarity: 'rare', evolvesFrom: '016',
+    stencils: ['pochoir-02', 'pochoir-04', 'pochoir-06', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-17', 'pochoir-19'],
+    talents: ['pile-rechargeable', 'trait-assure'], hiddenTalent: 'poils-electriques',
+    learnset: [[0, 'petite-etincelle'], [1, 'bousculade'], [1, 'fretillement'], [1, 'grondement'], [16, 'zap-zap'], [22, 'frisson'],
+      [26, 'agilite-zigzag'], [30, 'eclair-fluo'], [36, 'queue-eclair'], [42, 'grand-zigzag']],
+    dex: L(
+      'Ses poils se dressent en pointes pleines d’étincelles. Il court si vite qu’on ne voit qu’un trait jaune sur la page.',
+      'Its fur stands up in spikes full of sparks. It runs so fast you only see a yellow streak across the page.',
     ),
   },
 ];
