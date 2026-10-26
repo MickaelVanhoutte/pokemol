@@ -1,4 +1,4 @@
-import { signal } from '@preact/signals';
+import { effect, signal } from '@preact/signals';
 import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
 import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
@@ -8,7 +8,7 @@ import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { createMon, evolutionMoves, evolutionOf, evolve, learnMove, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, learnMove, maxHp, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, allMons, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
@@ -23,6 +23,7 @@ import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
+import { prefs } from '../state/prefs';
 import { sfx } from '../audio/sfx';
 import { playJingle, playMusic, type TrackId } from '../audio/music';
 import { trackForMap } from '../audio/mapMusic';
@@ -46,8 +47,14 @@ export function showToast(msg: string) {
 
 export function getGame(): Game {
   if (!game) {
-    game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true), onPush, onDrop, canFall });
+    game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true), onPush, onDrop, canFall, onFollower: () => void locked(talkFollower) });
     game.canRun = () => !!save.value?.bag.baskets;
+    // the follower changes with the party's first Bestiole (and the option)
+    effect(() => {
+      void save.value;
+      void prefs.value;
+      refreshFollower();
+    });
   }
   return game;
 }
@@ -131,6 +138,8 @@ export function enterWorld() {
   const d = s();
   g.setPlayer(AVATARS[d.player.avatar] ?? AVATARS[0], d.player.x, d.player.y, d.player.facing);
   loadMap(d.player.map);
+  refreshFollower();
+  g.placeFollower();
   g.lock = 0;
   g.fade = 0;
   go({ id: 'overworld' });
@@ -168,6 +177,7 @@ export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boole
   g.player.fromY = to.y;
   g.player.moving = false;
   if (to.facing) g.player.dir = to.facing;
+  g.placeFollower();
   savePosition();
   if (!opts.keepFade) await g.fadeTo(0, 180);
   g.lock--;
@@ -340,6 +350,73 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
   if (target.tileId === 'pc') return void runScript('pc');
   if (target.tileId === 'bookshelf') return void locked(() => say(L('Des livres pleins de dessins de Bestioles.', 'Books full of Critter drawings.')));
   if (target.tileId === 'tv') return void locked(() => say(L('À la télé : « Les Bestioles dessinées envahissent le pays ! »', 'On TV: "Drawn Critters are taking over the country!"')));
+}
+
+// ------------------------------------------------------------------ the Bestiole that follows you
+
+const minis = new Map<string, HTMLImageElement>();
+/** The overworld miniature of a drawing (public/minis, made by `npm run minis`). */
+function miniImage(id: string): HTMLImageElement {
+  let img = minis.get(id);
+  if (!img) {
+    const sp = creature(id);
+    img = new Image();
+    img.src = `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
+    minis.set(id, img);
+  }
+  return img;
+}
+
+const followerLead = () => save.value?.party.find((m) => !m.egg && m.hp > 0);
+
+/** Keeps the follower in step with the first Bestiole of the party able to walk. */
+export function refreshFollower() {
+  const g = game;
+  if (!g?.player) return;
+  const lead = followerLead();
+  if (!prefs.value.follower || !lead) {
+    g.follower = null;
+    return;
+  }
+  const img = miniImage(lead.species);
+  if (g.follower?.img === img) return;
+  const p = g.player;
+  const had = g.follower;
+  g.follower = had ? { ...had, img, faces: creature(lead.species).faces } : { x: p.x, y: p.y, fromX: p.x, fromY: p.y, t: 0, ms: 200, moving: false, dir: p.dir, img, faces: creature(lead.species).faces };
+  if (!had) g.placeFollower();
+}
+
+/** Things the follower might find on a walk (once a day). */
+const FOLLOWER_FINDS = ['baie-bleue', 'baie-cerise', 'potion', 'crayon-ball', 'baie-menthe', 'baie-doree'];
+
+async function talkFollower() {
+  const lead = followerLead();
+  if (!lead) return;
+  sfx.cry(lead.species);
+  const vars = { n: monLabel(lead) };
+  // once a day, it may have found something
+  if (save.value!.flags.followerFind !== localDay() && Math.random() < 0.2) {
+    const id = FOLLOWER_FINDS[Math.floor(Math.random() * FOLLOWER_FINDS.length)];
+    update((d) => {
+      addItem(d, id, 1);
+      d.flags.followerFind = localDay();
+    });
+    playJingle('item', { fallback: sfx.confirm });
+    return say(L('Oh ? {n} tient quelque chose dans sa bouche… Tu trouves {i} !', 'Oh? {n} is holding something in its mouth… You found {i}!'), undefined, { ...vars, i: tr(item(id).name) });
+  }
+  const def = getGame().map.def;
+  const fr = lead.friendship ?? BASE_FRIENDSHIP;
+  const lines: LText[] = lead.hp * 3 < maxHp(lead)
+    ? [L('{n} a besoin de repos… Un petit tour au Centre de soin ?', '{n} needs a rest… A quick visit to the Healing Center?')]
+    : fr >= 200
+      ? [L('{n} se blottit contre toi, débordant de bonheur.', '{n} snuggles up to you, overflowing with happiness.'), L('{n} danse autour de toi de joie !', '{n} dances around you with joy!'), L('{n} te regarde avec des cœurs plein les yeux.', '{n} looks at you with hearts in its eyes.')]
+      : fr >= 120
+        ? [L('{n} te sourit.', '{n} smiles at you.'), L('{n} sautille à côté de toi.', '{n} hops along beside you.'), L('{n} renifle l’air avec curiosité.', '{n} sniffs the air curiously.')]
+        : [L('{n} te regarde, un peu timide.', '{n} looks at you, a little shy.'), L('{n} te suit en silence.', '{n} follows you quietly.')];
+  if (def.backdrop === 'cave' || def.border === 'cavewall') lines.push(L('{n} se serre contre toi : il fait un peu noir ici…', '{n} huddles close to you: it’s a little dark in here…'));
+  else if (def.onEnter === 'visitTown') lines.push(L('{n} regarde les maisons avec de grands yeux.', '{n} stares at the houses with big eyes.'));
+  else if (!def.indoor) lines.push(L('{n} hume l’odeur de l’herbe et des crayons.', '{n} breathes in the smell of grass and crayons.'));
+  await say(lines[Math.floor(Math.random() * lines.length)], undefined, vars);
 }
 
 // ------------------------------------------------------------------ puzzles

@@ -13,10 +13,12 @@ export interface Prefs {
   music: boolean;
   /** Write the save after every change. Off: only SAUVER in the menu writes it (GBA style). */
   autosave: boolean;
+  /** The first Bestiole of the party walks behind the player. */
+  follower: boolean;
 }
 
 const KEY = 'atelier-bestioles.prefs';
-const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, sound: true, music: true, autosave: false };
+const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, sound: true, music: true, autosave: false, follower: true };
 
 function read(): Prefs {
   try {

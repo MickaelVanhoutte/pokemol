@@ -146,7 +146,10 @@ conventions are in [docs/content.md](docs/content.md#flags).
 
 **Drawings → cards.** `tools/cards-manifest.json` (crop box, erase polygons, `scale`, `options`) goes
 through `tools/cut-drawings.ts` and `src/art/cutout.ts` (paper flattening, ink mask) to produce
-`public/cards/<id>-<slug>.webp`. The contact sheet lands in `tools/out/` (gitignored scratch, also
+`public/cards/<id>-<slug>.webp`, and its overworld miniature `public/minis/<id>-<slug>.png`
+(`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour palette, a dark outline). The
+miniature is the follower (`Game.follower`, refreshed from the party by `refreshFollower`); a test
+requires one per creature. The contact sheet lands in `tools/out/` (gitignored scratch, also
 excluded from `tsc`).
 
 ## Gotchas

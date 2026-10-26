@@ -36,6 +36,8 @@ English: [docs/histoire.md](docs/histoire.md).
 - Dungeon puzzles: crayon-barrier switches, glossy paper to slide on, eraser blocks and boulders
   to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
+- Your first Bestiole walks behind you, as a little pixel version of its drawing; talk to it to see
+  how it feels (it sometimes finds things). It can be switched off in Options.
 - A music box in the title menu (MUSIQUES) to listen to every original tune.
 - A late game with detours and back-and-forth, a cycling track that loops back south, and a cave
   where something breathes in the dark.
@@ -82,6 +84,8 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
    Tweak `"options": { "inkLum": 0.8, "inkChroma": 0.11 }` if pale colours disappear.
    Big phone photos: add `"scale": 0.5`. Beige paper or yellow lamp light: add `"paperChroma": 0.26` to `options`.
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
+   It also makes the little overworld sprite of the Bestiole that follows you (`public/minis/`; review
+   them all with `npm run minis` and `tools/out/minis-sheet.png`).
 5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
    evolution level if it evolves, Bestiodex text, talents, and `faces: 'left'` or `'right'` if the drawing

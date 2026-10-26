@@ -43,6 +43,22 @@ export interface Actor {
   sliding?: boolean;
 }
 
+/** The first Bestiole of the party, walking one step behind the player (drawn from its miniature). */
+export interface Follower {
+  x: number;
+  y: number;
+  fromX: number;
+  fromY: number;
+  t: number;
+  ms: number;
+  moving: boolean;
+  jumping?: boolean;
+  dir: Dir;
+  img: HTMLImageElement;
+  /** Which way the drawing looks, to turn it towards where it walks. */
+  faces?: 'left' | 'right';
+}
+
 export interface LoadedMap {
   def: MapDef;
   w: number;
@@ -67,6 +83,8 @@ export interface GameHooks {
   onDrop?(o: ObstacleDef, x: number, y: number): void;
   /** Whether the player may step into the pit at (x, y) and fall to the floor below. */
   canFall?(x: number, y: number): boolean;
+  /** A talk to the Bestiole that follows. */
+  onFollower?(): void;
 }
 
 export class Input {
@@ -170,6 +188,8 @@ export class Game {
   biking = false;
   /** Strong Gloves on: walking into a boulder pushes it (until the next map). */
   strength = false;
+  /** The Bestiole walking behind the player (null: none, or switched off). */
+  follower: Follower | null = null;
   /** Obstacles still standing on this map (cut bushes and broken rocks are gone until it is entered again). */
   obstacles: ObstacleDef[] = [];
   map!: LoadedMap;
@@ -238,6 +258,35 @@ export class Game {
 
   removePickup(p: PickupDef) {
     this.pickups = this.pickups.filter((q) => q !== p);
+  }
+
+  /** The follower is in its Crayon-ball while sailing or riding the bike. */
+  followerShown(): boolean {
+    return !!this.follower && !this.surfing && !this.biking;
+  }
+
+  /** Puts the follower one step behind the player (on the player when there is no room). */
+  placeFollower() {
+    const f = this.follower, p = this.player;
+    if (!f || !p) return;
+    const [dx, dy] = DIRS[p.dir];
+    const bx = p.x - dx, by = p.y - dy;
+    const free = this.inside(bx, by) && !this.map.solid[by * this.map.w + bx] && !this.actorAt(bx, by, p);
+    Object.assign(f, { x: free ? bx : p.x, y: free ? by : p.y, fromX: free ? bx : p.x, fromY: free ? by : p.y, t: 0, moving: false, jumping: false, dir: p.dir });
+  }
+
+  /** The follower steps into the tile the player just left. */
+  private follow(tx: number, ty: number, ms: number, jumping: boolean) {
+    const f = this.follower;
+    if (!f) return;
+    // too far (after a warp or a slide): it just appears behind
+    if (Math.abs(f.x - tx) + Math.abs(f.y - ty) > 2) {
+      Object.assign(f, { x: tx, y: ty, fromX: tx, fromY: ty, moving: false, t: 0 });
+      return;
+    }
+    if (f.x === tx && f.y === ty) return;
+    f.dir = tx > f.x ? 'right' : tx < f.x ? 'left' : ty > f.y ? 'down' : 'up';
+    Object.assign(f, { fromX: f.x, fromY: f.y, x: tx, y: ty, t: 0, ms, moving: true, jumping });
   }
 
   resize(cssW: number, cssH: number) {
@@ -322,6 +371,7 @@ export class Game {
     } else if (!fall && this.blocked(nx, ny, a)) {
       return false;
     }
+    if (a === this.player) this.follow(a.x, a.y, jumping ? ms * 2 : ms, jumping);
     a.fromX = a.x;
     a.fromY = a.y;
     a.x = nx;
@@ -392,6 +442,11 @@ export class Game {
     // leftover time only carries into a step that starts in this same frame
     p.carry = 0;
     const finished = this.updateActor(p, dt);
+    const fw = this.follower;
+    if (fw?.moving) {
+      fw.t += dt / fw.ms;
+      if (fw.t >= 1) Object.assign(fw, { t: 0, moving: false, jumping: false, fromX: fw.x, fromY: fw.y });
+    }
     // landing on the shore puts the boat away
     if (finished && this.surfing && this.tileAt(p.x, p.y) !== 'water') this.surfing = false;
     if (finished) {
@@ -430,6 +485,10 @@ export class Game {
       // talk across counters
       if (this.tileAt(fx, fy) === 'counter') { tx += fx - p.x; ty += fy - p.y; }
       const npc = this.actorAt(tx, ty, p) ?? this.actorAt(fx, fy, p);
+      if (!npc && this.followerShown() && this.follower!.x === fx && this.follower!.y === fy && !this.follower!.moving) {
+        this.hooks.onFollower?.();
+        return;
+      }
       const sign = this.map.signs.get(fy * this.map.w + fx);
       const pickup = this.pickups.find((q) => q.x === fx && q.y === fy);
       this.hooks.onInteract({ npc, sign, pickup, obstacle: this.obstacleAt(fx, fy), tileId: this.tileAt(fx, fy), x: fx, y: fy });
@@ -470,6 +529,32 @@ export class Game {
     let y = (a.fromY + (a.y - a.fromY) * t) * TILE;
     if (a.jumping) y -= Math.sin(t * Math.PI) * 8;
     return [x, y];
+  }
+
+  private followerPos(f: Follower): [number, number] {
+    const t = f.moving ? f.t : 1;
+    let y = (f.fromY + (f.y - f.fromY) * t) * TILE;
+    if (f.jumping) y -= Math.sin(t * Math.PI) * 8;
+    return [(f.fromX + (f.x - f.fromX) * t) * TILE, y];
+  }
+
+  private drawFollower(ctx: CanvasRenderingContext2D, f: Follower, camX: number, camY: number) {
+    if (!f.img.complete || !f.img.naturalWidth) return;
+    const [fx, fy] = this.followerPos(f);
+    const w = f.img.naturalWidth, h = f.img.naturalHeight;
+    const bob = f.moving && f.t > 0.25 && f.t < 0.75 ? 1 : 0;
+    const x = Math.round(fx - camX + (TILE - w) / 2), y = Math.round(fy - camY + TILE - h - 1 - bob);
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
+    ctx.fillRect(Math.round(fx - camX) + 3, Math.round(fy - camY) + 13, 10, 3);
+    // turn the drawing towards where it walks
+    const flip = (f.dir === 'left' && f.faces === 'right') || (f.dir === 'right' && f.faces === 'left') || (f.dir === 'left' && !f.faces);
+    if (flip) {
+      ctx.save();
+      ctx.translate(x + w, y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(f.img, 0, 0);
+      ctx.restore();
+    } else ctx.drawImage(f.img, x, y);
   }
 
   render() {
@@ -522,7 +607,15 @@ export class Game {
       ctx.drawImage(fieldSprite(o.kind), Math.round(ox), Math.round(oy));
     }
     const actors = [...this.npcs, this.player].sort((a, b) => this.pos(a)[1] - this.pos(b)[1]);
+    // the follower is drawn in its place among the people (behind whoever is lower on screen)
+    const fw = this.followerShown() ? this.follower! : null;
+    const fwY = fw ? this.followerPos(fw)[1] : 0;
+    let fwDrawn = !fw;
     for (const a of actors) {
+      if (!fwDrawn && fwY <= this.pos(a)[1]) {
+        this.drawFollower(ctx, fw!, camX, camY);
+        fwDrawn = true;
+      }
       const [ax, ay] = this.pos(a);
       const sx = Math.round(ax - camX), sy = Math.round(ay - camY);
       if (sx < -16 || sy < -16 || sx > this.viewW || sy > this.viewH) continue;
@@ -541,6 +634,7 @@ export class Game {
       }
       if (a.bubble) this.drawBubble(ctx, a.bubble, sx, sy);
     }
+    if (!fwDrawn) this.drawFollower(ctx, fw!, camX, camY);
     for (const r of this.rustle) {
       const k = r.t / 260;
       ctx.fillStyle = '#2c6f2a';

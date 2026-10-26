@@ -43,6 +43,12 @@ const ROWS: Row<unknown>[] = [
     set: (v) => { setPref('music', v as boolean); if (!v) stopMusic(); },
   },
   {
+    label: L('BESTIOLE QUI SUIT', 'FOLLOWING CRITTER'),
+    values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
+    get: () => prefs.value.follower,
+    set: (v) => setPref('follower', v as boolean),
+  },
+  {
     label: L('SAUVEGARDE AUTO', 'AUTO-SAVE'),
     values: [{ v: false, label: L('NON', 'OFF') }, { v: true, label: L('OUI', 'ON') }],
     get: () => prefs.value.autosave,

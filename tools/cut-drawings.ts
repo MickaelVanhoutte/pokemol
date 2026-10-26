@@ -1,12 +1,14 @@
 /**
  * npm run cards [-- <id> ...]
  * Cuts every drawing listed in tools/cards-manifest.json out of its photo and writes
- * public/cards/<id>-<slug>.webp, plus tools/out/contact-sheet.png for visual review.
+ * public/cards/<id>-<slug>.webp and its overworld miniature public/minis/<id>-<slug>.png, plus
+ * tools/out/contact-sheet.png for visual review.
  */
 import { mkdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp, { type OverlayOptions } from 'sharp';
 import { cutout, type CutoutOptions, type Point } from '../src/art/cutout.ts';
+import { makeMini } from './minis.ts';
 
 interface Entry {
   id: string;
@@ -50,6 +52,8 @@ for (const e of manifest.drawings) {
     .png({ compressionLevel: 9, palette: false })
     .toBuffer();
   await sharp(png).webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(join(outDir, `${e.id}-${e.slug}.webp`));
+  await mkdir(join(root, 'public/minis'), { recursive: true });
+  await makeMini(join(outDir, `${e.id}-${e.slug}.webp`), join(root, 'public/minis', `${e.id}-${e.slug}.png`));
   console.log(`✓ ${e.id} ${e.slug} ${res.width}x${res.height}`);
   tiles.push({ input: png, label: `${e.id} ${e.slug}` });
 }
