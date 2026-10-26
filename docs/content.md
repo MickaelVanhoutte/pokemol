@@ -90,8 +90,8 @@ their doors) resolves to a place.
   They stand on walkable ground and come back when the map is entered again. They are used to
   hide optional pockets with items (stencils 13–20), never the main road.
 - `surf: { rate, table }` and `fishing: { old, good, super }` (tables like `encounters`): water
-  encounters while sailing (Paper Boat) or fishing with each rod. Today only Clapotin lives in
-  water: add new water drawings to these tables.
+  encounters while sailing (Paper Boat) or fishing with each rod. Water tables hold Clapotin,
+  Givrinou (surfing) and Dragounet (Super Rod): add new water drawings there.
 
 A **new tile** needs:
 - a `TileDef` in `src/overworld/tiles.ts` (`paint` with the `Painter`; flags `solid`, `encounter`,

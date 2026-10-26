@@ -53,6 +53,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
         { id: '009', w: 8, min: 14, max: 16 },
         { id: '003', w: 4, min: 14, max: 16 },
         { id: '014', w: 5, min: 14, max: 16 },
+        { id: '031', w: 8, min: 13, max: 16 },
       ],
     },
   },
@@ -92,8 +93,8 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       '~~~~~sss~~~~~~~~~~~ssss~~~',
       '~~~~~~~~~~~~~~~~~~~~~~~~~~',
     ],
-    surf: { rate: 0.1, table: [{ id: '003', w: 45, min: 18, max: 24 }, { id: '013', w: 35, min: 18, max: 24 }, { id: '007', w: 20, min: 19, max: 24 }] },
-    fishing: { old: [{ id: '003', w: 100, min: 8, max: 12 }], good: [{ id: '003', w: 100, min: 16, max: 22 }], super: [{ id: '003', w: 100, min: 26, max: 32 }] },
+    surf: { rate: 0.1, table: [{ id: '003', w: 45, min: 18, max: 24 }, { id: '013', w: 35, min: 18, max: 24 }, { id: '007', w: 20, min: 19, max: 24 }, { id: '032', w: 15, min: 18, max: 22 }] },
+    fishing: { old: [{ id: '003', w: 100, min: 8, max: 12 }], good: [{ id: '003', w: 100, min: 16, max: 22 }], super: [{ id: '003', w: 100, min: 26, max: 32 }, { id: '034', w: 8, min: 26, max: 30 }] },
     buildings: [
       { kind: 'gym', x: 9, y: 1, w: 6, h: 4, door: 3, roof: '#5b9be0', to: { map: 'atelierAquarelle', x: 5, y: 10, facing: 'up' } },
       { kind: 'cave', x: 1, y: 6, w: 5, h: 4, door: 2, to: { map: 'grotte2', x: 8, y: 10, facing: 'up' } },

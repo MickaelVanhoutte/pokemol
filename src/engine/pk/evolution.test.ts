@@ -89,3 +89,22 @@ describe('grownForm (trainer teams)', () => {
     expect(grownForm('016', 50)).toBe('016');
   });
 });
+
+describe('the brouillons’ evolutions', () => {
+  it('Piafou at 18, Zigzou with the Electric Magic Pencil, Lunelle by friendship', () => {
+    expect(evolutionFor(creature('013'), { level: 17 }, { kind: 'level' })).toBeNull();
+    expect(evolutionFor(creature('013'), { level: 18 }, { kind: 'level' })).toBe('026');
+    expect(evolutionFor(creature('004'), { level: 50 }, { kind: 'level' })).toBeNull();
+    expect(evolutionFor(creature('004'), { level: 5 }, { kind: 'item', item: 'crayon-magique-electrique' })).toBe('027');
+    expect(evolutionFor(creature('006'), { level: 30, friendship: 200 }, { kind: 'level' })).toBeNull();
+    expect(evolutionFor(creature('006'), { level: 30, friendship: 230 }, { kind: 'level' })).toBe('028');
+  });
+  it('every draft has its card and miniature', async () => {
+    const { existsSync } = await import('node:fs');
+    const { CREATURES } = await import('../../data/creatures');
+    for (const c of CREATURES.filter((x) => x.draft)) {
+      expect(existsSync(`public/cards/${c.id}-${c.slug}.webp`), c.slug).toBe(true);
+      expect(existsSync(`public/minis/${c.id}-${c.slug}.png`), c.slug).toBe(true);
+    }
+  });
+});

@@ -137,6 +137,17 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
     out.push(path[path.length - 1]);
     return out;
   }
+  /** The outline of a thick line along a path (tails, snakes, arms), from width w0 to w1. */
+  function band(path: P[], w0: number, w1 = w0): P[] {
+    const a: P[] = [], b: P[] = [];
+    path.forEach((p, i) => {
+      const q = path[Math.min(path.length - 1, i + 1)], o = path[Math.max(0, i - 1)];
+      const dx = q[0] - o[0], dy = q[1] - o[1], l = Math.hypot(dx, dy) || 1, w = w0 + ((w1 - w0) * i) / Math.max(1, path.length - 1);
+      a.push([p[0] - (dy / l) * w, p[1] + (dx / l) * w]);
+      b.push([p[0] + (dy / l) * w, p[1] - (dx / l) * w]);
+    });
+    return [...a, ...b.reverse()];
+  }
   /** Straight-ish polygon with sharp corners (spikes) drawn with the pencil. */
   const sharpLine = (pts: P[], w = 6) => {
     let d = '';
@@ -154,7 +165,7 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
       + `</defs><rect width='${W}' height='${H}' fill='#f7f3ea'/><g transform='translate(${dx} ${dy}) rotate(${r1(tilt + j(4))} ${cx} ${cy})'>${colours}${lines}${seq}</g></svg>`;
   }
   const outline = (pts: P[], closed: boolean, w: number) => put('l', line(pts, closed, w));
-  return { rnd, j, potato, shake, densify, shape, colourOnly, stroke, outline, dot, raw, bumps, spikes, sharpLine, svg, smooth };
+  return { rnd, j, potato, shake, densify, band, shape, colourOnly, stroke, outline, dot, raw, bumps, spikes, sharpLine, svg, smooth };
 }
 
 /** One brouillon: where its card goes, how it is drawn and framed. */

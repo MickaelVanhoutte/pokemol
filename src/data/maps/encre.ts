@@ -60,6 +60,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
         { id: '004', w: 12, min: 33, max: 36 },
         { id: '007', w: 12, min: 33, max: 36 },
         { id: '011', w: 2, min: 36, max: 37 },
+        { id: '026', w: 14, min: 33, max: 36 },
       ],
     },
   },

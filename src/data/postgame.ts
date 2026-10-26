@@ -102,7 +102,7 @@ export const TOWER_TEAM = 3;
 export const TOWER_LEVEL = 50;
 
 /** Bestioles strong enough for the tower (first forms that evolve are left out). */
-export const TOWER_POOL = ['001', '020', '002', '021', '003', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019'];
+export const TOWER_POOL = ['001', '020', '024', '002', '021', '025', '003', '022', '023', '027', '028', '029', '030', '031', '032', '033', '034', '035', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019'];
 const LEGENDS = ['011'];
 const TOWER_ITEMS = [
   'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'plume-vive', 'loupe', 'clochette', 'ruban-tenace',

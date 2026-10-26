@@ -260,6 +260,29 @@ them; the Bestiodex stamps them BROUILLON and the credits list them apart. Teams
 finale stays around 50–75% on Normal). The finals made Nocturne and the Great Eraser a bit easier
 (Normal: about 94% and 60–75%).
 
+**Ten more brouillons (Oct 2026)**, after the gen-1 ideas, to fill the missing types and evolutions:
+- Piaflèche (Normal/Flying, Piafou at L18);
+- Zigzéclair (Electric, Zigzou with the Electric Magic Pencil);
+- Lunéclat (Fairy, Lunelle at 220 friendship);
+- Boxouille (Fighting: Grotte Gribouillis depths, Mont Fusain, Grotte des Échos);
+- Cailloutou (Rock/Ground: both cave floors, Mont Fusain, Grotte des Échos);
+- Taupinou (Ground: Route 3, the cave entrance);
+- Givrinou (Ice/Water: surfing at Port-Aquarelle and Inkwell Isle);
+- Sifflasse (Poison: Route 4);
+- Dragounet (Dragon: Super Rod at Port-Aquarelle and Inkwell Isle);
+- Boulonnet (Electric/Steel: Route 4).
+
+New moves: Balayette, Gros poing, Tête de fer, Tremblement, Crochet venin, Crocs givrés.
+
+Trainers using them:
+- Mineur Bob (Cailloutou), Gamin Tim and Électricienne Volta (Boulonnet);
+- Mont Fusain's Olga (Boxouille) and Rémi (Cailloutou);
+- Team Gomme's Sifflasse (Route 4 grunt, Admin Blanche) and Buvard's Givrinou;
+- Célestine's ace (Lunéclat) and Cycliste Léa (Zigzéclair);
+- Piaflèche for trainers from L27.
+
+Zélie keeps her old team: with Boulonnet or Zigzéclair, Water and Grass teams fell to 1–10%. Spéléo Max keeps his too: any rock or ground there dropped Fire teams to 40%.
+
 **Held items on trainers.** From badge 4, a few leaders' aces hold a berry (Zélie, Ambre, Célestine,
 Basile), and the Great Eraser's last Bestiole and the final rival hold one too. `npm run balance`
 includes them; each was kept only if the leader's row stayed within about 10 points of the version

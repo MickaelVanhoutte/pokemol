@@ -15,8 +15,22 @@ import clapoflot from './clapoflot.ts';
 import tortorrent from './tortorrent.ts';
 import bouquetigre from './bouquetigre.ts';
 import dragobraise from './dragobraise.ts';
+import piafleche from './piafleche.ts';
+import zigzeclair from './zigzeclair.ts';
+import luneclat from './luneclat.ts';
+import boxouille from './boxouille.ts';
+import cailloutou from './cailloutou.ts';
+import taupinou from './taupinou.ts';
+import givrinou from './givrinou.ts';
+import sifflasse from './sifflasse.ts';
+import dragounet from './dragounet.ts';
+import boulonnet from './boulonnet.ts';
 
-export const DRAFTS: Draft[] = [clapoflot, tortorrent, bouquetigre, dragobraise];
+export const DRAFTS: Draft[] = [
+  clapoflot, tortorrent, bouquetigre, dragobraise,
+  piafleche, zigzeclair, luneclat, boxouille, cailloutou,
+  taupinou, givrinou, sifflasse, dragounet, boulonnet,
+];
 
 const root = new URL('../..', import.meta.url).pathname;
 

@@ -63,6 +63,8 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
         { id: '007', w: 14, min: 17, max: 20 },
         { id: '009', w: 12, min: 17, max: 19 },
         { id: '008', w: 6, min: 19, max: 20 },
+        { id: '033', w: 10, min: 16, max: 19 },
+        { id: '035', w: 10, min: 17, max: 19 },
       ],
     },
   },

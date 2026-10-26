@@ -52,6 +52,8 @@ export const ECHOS_MAPS: Record<string, MapDef> = {
         { id: '010', w: 30, min: 34, max: 37 },
         { id: '008', w: 20, min: 34, max: 36 },
         { id: '006', w: 10, min: 33, max: 35 },
+        { id: '030', w: 15, min: 33, max: 36 },
+        { id: '029', w: 10, min: 33, max: 35 },
       ],
     },
   },
