@@ -74,12 +74,12 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Pastel
   T({
-    id: 'pastelT1', name: L('Apprentie Lou', 'Apprentice Lou'), party: [{ species: '012', level: 5 }, { species: '013', level: 5 }], money: 210,
+    id: 'pastelT1', name: L('Apprentie Lou', 'Apprentice Lou'), party: [{ species: '012', level: 5 }, { species: '013', level: 4 }], money: 210,
     before: [L('Ici on dessine des ailes, des antennes et des pattes partout !', 'Here we draw wings, antennae and legs everywhere!')],
     after: [L('Je vais redessiner mes Bestioles en plus fortes !', 'I’ll redraw my Critters stronger!')],
   }),
   T({
-    id: 'pastelT2', name: L('Apprenti Malo', 'Apprentice Malo'), party: [{ species: '013', level: 6 }, { species: '012', level: 6 }], money: 240,
+    id: 'pastelT2', name: L('Apprenti Malo', 'Apprentice Malo'), party: [{ species: '016', level: 6 }, { species: '012', level: 6 }], money: 240,
     before: [L('Mireille m’a appris à colorier sans dépasser. Toi, tu dépasses ?', 'Mireille taught me to colour inside the lines. Do you go over them?')],
     after: [L('Bon… j’ai un peu dépassé.', 'Well… I went a bit over the lines.')],
   }),

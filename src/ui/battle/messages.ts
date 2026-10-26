@@ -59,7 +59,9 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
         paralyze: L('{n} est paralysé ! Il aura du mal à attaquer !', '{n} is paralyzed! It may be unable to move!'),
         poison: L('{n} est empoisonné !', '{n} was poisoned!'),
         burn: L('{n} est brûlé !', '{n} was burned!'),
+        freeze: L('{n} est gelé !', '{n} was frozen solid!'),
       }[e.status];
+      if (e.bad) return [f(L('{n} est gravement empoisonné !', '{n} was badly poisoned!'), { n: nm(e.side) })];
       return [f(t, { n: nm(e.side) })];
     }
     case 'already':
@@ -126,6 +128,7 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
           paralyze: L('{n} n’est plus paralysé !', '{n} is no longer paralyzed!'),
           poison: L('{n} n’est plus empoisonné !', '{n} is cured of its poison!'),
           burn: L('{n} n’est plus brûlé !', '{n}’s burn was healed!'),
+          freeze: L('{n} n’est plus gelé !', '{n} thawed out!'),
         }[e.cured];
         lines.push(f(t, { n: nm(e.side) }));
       }
@@ -145,6 +148,46 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       if (e.note === 'immune') lines.push(f(L('Ça n’a aucun effet sur {n}.', 'It doesn’t affect {n}.'), { n: nm(e.side) }));
       return lines;
     }
+    case 'weather':
+      return [tr((e.on ? { pluie: L('Il commence à pleuvoir des gouttes d’aquarelle !', 'Watercolour raindrops start to fall!'), soleil: L('Le soleil tape fort, comme un gros crayon jaune !', 'The sun shines bright, like a big yellow pencil!'), sable: L('Une tempête de sable se lève !', 'A sandstorm kicked up!'), grele: L('Il commence à grêler !', 'It started to hail!') } : { pluie: L('La pluie s’arrête.', 'The rain stopped.'), soleil: L('Le soleil se cache.', 'The sunlight faded.'), sable: L('La tempête de sable se calme.', 'The sandstorm subsided.'), grele: L('La grêle s’arrête.', 'The hail stopped.') })[e.kind])];
+    case 'weatherHurt':
+      return [f(e.kind === 'sable' ? L('{n} est fouetté par le sable !', '{n} is buffeted by the sandstorm!') : L('{n} est frappé par la grêle !', '{n} is pelted by hail!'), { n: nm(e.side) })];
+    case 'protect':
+      return [f(L('{n} se cache derrière un bouclier de papier !', '{n} hid behind a paper shield!'), { n: nm(e.side) })];
+    case 'protected':
+      return [f(L('{n} est protégé !', '{n} protected itself!'), { n: nm(e.side) })];
+    case 'charge': {
+      const k = move(e.move).effects?.find((x) => x.kind === 'charge');
+      const how = k && k.kind === 'charge' && k.invuln === 'air' ? L('{n} s’envole très haut !', '{n} flew up high!')
+        : k && k.kind === 'charge' && k.invuln === 'ground' ? L('{n} creuse une galerie !', '{n} dug a hole!')
+        : L('{n} prend son élan…', '{n} is gathering its strength…');
+      return [f(how, { n: nm(e.side) })];
+    }
+    case 'trapped':
+      return [f(L('{n} est ligoté !', '{n} is tied up!'), { n: nm(e.side) })];
+    case 'trapHurt':
+      return [f(L('{n} est serré par les fils !', '{n} is squeezed by the threads!'), { n: nm(e.side) })];
+    case 'freed':
+      return [f(L('{n} se libère !', '{n} broke free!'), { n: nm(e.side) })];
+    case 'cantEscape':
+      return [f(L('{n} est ligoté : impossible de fuir !', '{n} is tied up: it can’t get away!'), { n: nm(e.side) })];
+    case 'seeded':
+      return [f(L('{n} est couvert de graines gourmandes !', '{n} was covered in greedy seeds!'), { n: nm(e.side) })];
+    case 'seedDrain':
+      return [f(L('Les graines gourmandes grignotent {n} !', 'The greedy seeds nibble at {n}!'), { n: nm(e.side) })];
+    case 'sub':
+      return [f(L('{n} découpe un pantin de papier !', '{n} cut out a paper doll!'), { n: nm(e.side) })];
+    case 'subHit': {
+      const lines = [f(L('Le pantin de papier prend le coup à la place de {n} !', 'The paper doll took the hit for {n}!'), { n: nm(e.side) })];
+      if (e.crit) lines.unshift(tr(L('Coup critique !', 'A critical hit!')));
+      return lines;
+    }
+    case 'subBroke':
+      return [f(L('Le pantin de {n} se déchire !', '{n}’s paper doll tore apart!'), { n: nm(e.side) })];
+    case 'frozen':
+      return [f(L('{n} est gelé ! Il ne peut pas bouger !', '{n} is frozen solid!'), { n: nm(e.side) })];
+    case 'thaw':
+      return [f(L('{n} dégèle !', '{n} thawed out!'), { n: nm(e.side) })];
     case 'guarded':
       return [f(L('Le vernis protège {n} : ses stats ne baissent pas !', '{n} is protected by the varnish!'), { n: nm(e.side) })];
     case 'itemHeal':

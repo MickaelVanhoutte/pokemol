@@ -53,6 +53,6 @@ describe('move rememberer', () => {
   it('lists level-up moves it could know but doesn’t, newest first', () => {
     const m = createMon('016', 20, { rng: 2 });
     m.moves = [{ id: 'bousculade', pp: 35 }];
-    expect(rememberableMoves(m)).toEqual(['mordillage', 'pas-de-loup', 'grondement', 'fretillement']);
+    expect(rememberableMoves(m)).toEqual(['mordillage', 'bouclier-papier', 'pas-de-loup', 'grondement', 'fretillement']);
   });
 });

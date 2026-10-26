@@ -40,7 +40,7 @@ describe('data', () => {
 
   it('stencils teach real moves, and each one fits someone', () => {
     const stencils = Object.values(ITEM_BY_ID).filter((i) => i.kind === 'stencil');
-    expect(stencils).toHaveLength(12);
+    expect(stencils).toHaveLength(20);
     for (const st of stencils) {
       expect(MOVES.some((m) => m.id === st.move), st.id).toBe(true);
       expect(CREATURES.some((c) => c.stencils.includes(st.id)), `nobody learns ${st.id}`).toBe(true);
@@ -76,12 +76,12 @@ describe('creatures', () => {
   });
 
   it('levels up, learns moves and keeps missing HP', () => {
-    const m = mon('001', 9);
+    const m = mon('001', 7);
     m.hp -= 5;
     const before = maxHp(m) - m.hp;
-    const ups = addXp(m, xpAt(10) - m.xp);
-    expect(m.level).toBe(10);
-    expect(ups[0].learned).toEqual(['griffe-pousse']);
+    const ups = addXp(m, xpAt(8) - m.xp);
+    expect(m.level).toBe(8);
+    expect(ups[0].learned).toEqual(['graine-gourmande']);
     expect(maxHp(m) - m.hp).toBe(before);
   });
 

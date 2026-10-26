@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { CREATURES, artUrl, dexNo } from '../../data/creatures';
-import { Frame, MenuList, PixelIcon, TypeBadge, Window } from '../paper';
+import { Frame, MenuList, PixelIcon, TypeBadges, Window } from '../paper';
 import { sfx } from '../../audio/sfx';
 import { evolutionHints } from '../evolutionText';
 import './views.css';
@@ -59,7 +59,7 @@ function DexEntry({ index, isSeen, isCaught, onMove, onClose }: {
         <div class="dex__facts">
           <b class="dex__name">{tr(sp.name)}</b>
           <span>{tr(sp.kind)}</span>
-          <TypeBadge type={sp.type} />
+          <TypeBadges species={sp.id} />
           {isCaught(sp.id) && <button class="pbtn dex__cry" onClick={() => sfx.cry(sp.id)}>♪ {tr(L('Cri', 'Cry'))}</button>}
         </div>
       </Window>

@@ -7,6 +7,7 @@ import type { ItemDef } from './schema';
 export const STENCIL_MOVES = [
   'rayon-d-ailes', 'coup-de-boule', 'pluie-d-aquarelle', 'eclair-fluo', 'queue-ardente', 'eclat-de-lune',
   'rafale-de-graines', 'ombre-farceuse', 'reve-eveille', 'poing-crayon', 'tache-d-encre', 'gros-baillement',
+  'eboulis', 'rayon-givre', 'secousse', 'griffe-dragon', 'aile-d-acier', 'pate-gluante', 'bouclier-papier', 'grand-vol',
 ];
 export const stencilId = (n: number) => `pochoir-${String(n).padStart(2, '0')}`;
 
@@ -139,13 +140,20 @@ export const ITEMS: ItemDef[] = [
     ['crayon-violet', 'spectre', L('Crayon Violet', 'Purple Pencil'), L('violet', 'purple')],
     ['crayon-orange', 'combat', L('Crayon Orange', 'Orange Pencil'), L('orange', 'orange')],
     ['crayon-noir', 'tenebres', L('Crayon Noir', 'Black Pencil'), L('noir', 'black')],
+    ['crayon-ciel', 'vol', L('Crayon Bleu Ciel', 'Sky Blue Pencil'), L('bleu ciel', 'sky blue')],
+    ['crayon-marron', 'sol', L('Crayon Marron', 'Brown Pencil'), L('marron', 'brown')],
+    ['crayon-ocre', 'roche', L('Crayon Ocre', 'Ochre Pencil'), L('ocre', 'ochre')],
+    ['crayon-blanc', 'glace', L('Crayon Blanc', 'White Pencil'), L('blanc', 'white')],
+    ['crayon-lilas', 'poison', L('Crayon Lilas', 'Lilac Pencil'), L('lilas', 'lilac')],
+    ['crayon-indigo', 'dragon', L('Crayon Indigo', 'Indigo Pencil'), L('indigo', 'indigo')],
+    ['crayon-argent', 'acier', L('Crayon Argenté', 'Silver Pencil'), L('argenté', 'silver')],
   ] as const).map(([id, type, name, colour]): ItemDef => ({
     id, name, price: 0, kind: 'hold', amount: 0, hold: 'typeBoost', type,
     desc: L(`Un crayon de couleur ${colour.fr} bien taillé. À faire tenir : les capacités de type ${TYPES[type].name.fr} font 20 % de dégâts en plus.`,
       `A sharp ${colour.en} colouring pencil. To hold: ${TYPES[type].name.en}-type moves do 20% more damage.`),
   })),
   // magic pencils: some Bestioles evolve when redrawn with one (used from the bag)
-  ...(['feu', 'eau', 'electrique', 'plante', 'fee', 'psy', 'tenebres'] as const).map((type): ItemDef => ({
+  ...(['feu', 'eau', 'electrique', 'plante', 'glace', 'fee', 'psy', 'tenebres'] as const).map((type): ItemDef => ({
     id: `crayon-magique-${type}`, name: L(`Crayon Magique ${TYPES[type].name.fr}`, `Magic ${TYPES[type].name.en} Pencil`),
     price: 2100, kind: 'evo', amount: 0, type,
     desc: L(`Un crayon qui scintille, couleur ${TYPES[type].name.fr}. Certaines Bestioles évoluent quand on les redessine avec.`,

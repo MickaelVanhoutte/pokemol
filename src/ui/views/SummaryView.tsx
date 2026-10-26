@@ -6,7 +6,7 @@ import { evolutionHints } from '../evolutionText';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
-import { HpBar, MenuList, PixelIcon, StatusTag, TypeBadge, Window, XpBar, YesNo, lv } from '../paper';
+import { HpBar, MenuList, PixelIcon, StatusTag, TypeBadge, TypeBadges, Window, XpBar, YesNo, lv } from '../paper';
 import { item } from '../../data/items';
 import { ivGrade } from '../../engine/pk/judge';
 import { nature } from '../../data/natures';
@@ -107,7 +107,7 @@ export function SummaryView({ mon, onClose, learn }: {
           <b class="summary__name">{monLabel(mon)}{mon.shiny && <i class="shiny-mark" title={tr(L('Bestiole pailletée', 'Sparkly Critter'))}> ✦</i>}</b>
           {mon.nickname && <small class="summary__species">{tr(sp.name)}</small>}
           <span>{lv(mon.level)} {mon.status && <StatusTag s={mon.status} />}</span>
-          <TypeBadge type={sp.type} />
+          <TypeBadges species={sp.id} />
         </div>
       </Window>
 
@@ -117,7 +117,7 @@ export function SummaryView({ mon, onClose, learn }: {
             <dl class="kv">
               <dt>{tr(L('N° Dex', 'Dex No.'))}</dt><dd>{dexNo(sp.id)}</dd>
               <dt>{tr(L('Espèce', 'Kind'))}</dt><dd>{tr(sp.kind)}</dd>
-              <dt>{tr(L('Type', 'Type'))}</dt><dd><TypeBadge type={sp.type} /></dd>
+              <dt>{tr(L('Type', 'Type'))}</dt><dd><TypeBadges species={sp.id} /></dd>
               <dt>{tr(L('Nature', 'Nature'))}</dt><dd>{tr(nature(mon.nature).name)}</dd>
               <dt>{tr(L('Talent', 'Talent'))}</dt>
               <dd>

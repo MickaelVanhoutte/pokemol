@@ -1,8 +1,8 @@
 import type { LText } from '../../i18n';
-import { creature } from '../../data/creatures';
+import { creature, typesOf } from '../../data/creatures';
 import { ITEM_BY_ID, item } from '../../data/items';
 import { move } from '../../data/moves';
-import type { HoldEffect, Major, MoveDef, StageKey } from '../../data/schema';
+import type { HoldEffect, Major, MoveDef, StageKey, Weather } from '../../data/schema';
 import { effectiveness } from '../../data/types';
 import { talentEffect, talentOf } from '../../data/talents';
 import { nextRandom, randomInt } from '../rng';
@@ -20,6 +20,21 @@ export interface Volatile {
   focus: boolean;
   /** Stubborn items: the only move allowed until the creature is withdrawn. */
   lock: string | null;
+  /** Shielded this turn (Paper Shield), and how many shields in a row (each one works less often). */
+  protect: boolean;
+  protectChain: number;
+  /** A two-turn move charged on the last turn: it is used again (for free) this turn. */
+  charging: { move: string; slot: number } | null;
+  /** Out of reach while charging (up in the air, under the ground). */
+  invuln: 'air' | 'ground' | null;
+  /** Turns left tied up (Coil Thread): no fleeing, no switching, 1/16 HP lost each turn. */
+  trap: number;
+  /** A greedy seed drains 1/8 of its HP each turn. */
+  seeded: boolean;
+  /** HP left in its paper doll (0 = none). */
+  sub: number;
+  /** Badly poisoned: the poison hurts n/16 this turn (0 = ordinary poison). */
+  toxic: number;
 }
 
 export interface SideState {
@@ -45,6 +60,8 @@ export interface BattleState {
   /** Player creatures that fought the current enemy (they share the XP). */
   participants: string[];
   escapes: number;
+  /** Rain, sunshine, sandstorm or hail, with the turns left. */
+  weather: { kind: Weather; turns: number } | null;
 }
 
 export type Action =
@@ -66,7 +83,7 @@ export type BattleEvent =
   | { t: 'damage'; side: Side; amount: number; crit?: boolean; eff?: number }
   | { t: 'hits'; count: number }
   | { t: 'heal'; side: Side; amount: number }
-  | { t: 'status'; side: Side; status: Major }
+  | { t: 'status'; side: Side; status: Major; bad?: boolean }
   | { t: 'already'; side: Side; status: Major }
   | { t: 'stage'; side: Side; stat: StageKey; delta: number; capped: boolean }
   | { t: 'confuse'; side: Side }
@@ -104,6 +121,25 @@ export type BattleEvent =
   | { t: 'guard'; side: Side; on: boolean }
   /** A foe's stat drop was blocked by the varnish. */
   | { t: 'guarded'; side: Side }
+  | { t: 'weather'; kind: Weather; on: boolean }
+  | { t: 'weatherHurt'; side: Side; kind: Weather; amount: number }
+  | { t: 'protect'; side: Side }
+  /** The move hit a shield (`side`: the shielded creature). */
+  | { t: 'protected'; side: Side }
+  | { t: 'charge'; side: Side; move: string }
+  | { t: 'trapped'; side: Side }
+  | { t: 'trapHurt'; side: Side; amount: number }
+  | { t: 'freed'; side: Side }
+  /** Tied up: it can't get away. */
+  | { t: 'cantEscape'; side: Side }
+  | { t: 'seeded'; side: Side }
+  /** The seed drains `side` (the other side heals with a `heal` event). */
+  | { t: 'seedDrain'; side: Side; amount: number }
+  | { t: 'sub'; side: Side }
+  | { t: 'subHit'; side: Side; crit?: boolean; eff?: number }
+  | { t: 'subBroke'; side: Side }
+  | { t: 'frozen'; side: Side }
+  | { t: 'thaw'; side: Side }
   /** A talent acts. `note`: it endured a knockout, cured its status, or made a move useless. */
   | { t: 'talent'; side: Side; talent: string; note?: 'endure' | 'cured' | 'immune' }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
@@ -149,7 +185,10 @@ class Recorder implements Out {
 
 const STRUGGLE = 'lutte';
 const other = (s: Side): Side => (s === 0 ? 1 : 0);
-const freshVol = (): Volatile => ({ stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false, lock: null });
+export const freshVol = (): Volatile => ({
+  stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false, lock: null,
+  protect: false, protectChain: 0, charging: null, invuln: null, trap: 0, seeded: false, sub: 0, toxic: 0,
+});
 /** Effect of the item a creature holds (undefined if none or not a held item). */
 const held = (m: Mon): HoldEffect | undefined => (m.item ? ITEM_BY_ID[m.item]?.hold : undefined);
 const LOCKING: HoldEffect[] = ['lockAtk', 'lockSpa', 'lockSpe'];
@@ -170,7 +209,7 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   });
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
-    needSwitch: false, learnQueue: [], participants: [], escapes: 0,
+    needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: null,
   };
   const out = new Recorder(state, withSnaps);
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
@@ -205,7 +244,9 @@ export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd
  * Moves the creature may pick: some PP left, only the locked move after a Stubborn item was used,
  * and only attacking moves with the Painter’s Apron. Empty = Struggle.
  */
-export function usableSlots(m: Mon, vol?: Pick<Volatile, 'lock'>): number[] {
+export function usableSlots(m: Mon, vol?: Pick<Volatile, 'lock'> & Partial<Pick<Volatile, 'charging'>>): number[] {
+  // a two-turn move charged last turn must be released now
+  if (vol?.charging && m.moves[vol.charging.slot]?.id === vol.charging.move) return [vol.charging.slot];
   let slots = m.moves.map((_, i) => i).filter((i) => m.moves[i].pp > 0);
   if (held(m) === 'specialGuard') slots = slots.filter((i) => move(m.moves[i].id).cat !== 'status');
   const lock = vol?.lock && m.moves.some((s) => s.id === vol.lock) ? vol.lock : null;
@@ -292,7 +333,10 @@ function healSide(st: BattleState, side: Side, amount: number, out: Out): number
   return h;
 }
 
-function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMove: boolean): boolean {
+/** Types that can't get a status: Fire isn't burned, Ice isn't frozen, Poison and Metal aren't poisoned, Electric isn't paralysed. */
+const STATUS_IMMUNE: Partial<Record<Major, string[]>> = { burn: ['feu'], freeze: ['glace'], poison: ['poison', 'acier'], paralyze: ['electrique'] };
+
+function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMove: boolean, bad = false): boolean {
   const m = activeMon(st.sides[side]);
   if (!alive(m)) return false;
   if (m.status) {
@@ -303,9 +347,14 @@ function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMov
     if (fromMove) out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'immune' });
     return false;
   }
+  if (typesOf(m.species).some((t) => STATUS_IMMUNE[status]?.includes(t)) || (status === 'freeze' && st.weather?.kind === 'soleil')) {
+    if (fromMove) out.push({ t: 'noEffect', side });
+    return false;
+  }
   m.status = status;
+  if (status === 'poison' && bad) st.sides[side].vol.toxic = 1;
   if (status === 'sleep') m.sleepTurns = 1 + randomInt(st, 3);
-  out.push({ t: 'status', side, status });
+  out.push({ t: 'status', side, status, bad: bad || undefined });
   checkBerry(st, side, out);
   return true;
 }
@@ -366,7 +415,7 @@ function onLeave(m: Mon) {
 // ------------------------------------------------------------------ damage
 
 /** Gen 3 style damage for one hit. */
-export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean) {
+export function computeDamage(st: { rng: number; weather?: BattleState['weather'] }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean) {
   const a = activeMon(atkSide), d = activeMon(defSide);
   const phys = mv.cat === 'phys';
   const A = effectiveStat(atkSide, phys ? 'atk' : 'spa') * (phys && a.status === 'burn' ? 0.5 : 1);
@@ -385,10 +434,14 @@ export function computeDamage(st: { rng: number }, atkSide: SideState, defSide: 
   if (crit) dmg *= 2;
   // Struggle is typeless: no STAB, hits everything
   const typeless = mv.id === STRUGGLE;
-  if (!typeless && creature(a.species).type === mv.type) dmg = Math.floor(dmg * (at.kind === 'adaptability' ? 2 : 1.5));
-  const eff = typeless ? 1 : effectiveness(mv.type, creature(d.species).type);
+  if (!typeless && typesOf(a.species).includes(mv.type)) dmg = Math.floor(dmg * (at.kind === 'adaptability' ? 2 : 1.5));
+  const eff = typeless ? 1 : effectiveness(mv.type, typesOf(d.species));
   dmg = Math.floor(dmg * eff);
   if (!typeless && dt.kind === 'halve' && dt.types.includes(mv.type)) dmg = Math.floor(dmg / 2);
+  // rain helps Water and dampens Fire; sunshine does the opposite
+  const w = st.weather?.kind;
+  if ((w === 'pluie' && mv.type === 'eau') || (w === 'soleil' && mv.type === 'feu')) dmg = Math.floor(dmg * 1.5);
+  if ((w === 'pluie' && mv.type === 'feu') || (w === 'soleil' && mv.type === 'eau')) dmg = Math.floor(dmg / 2);
   if (dt.kind === 'filter' && eff > 1) dmg = Math.floor(dmg * 0.75);
   dmg = Math.floor((dmg * (85 + randomInt(st, 16))) / 100);
   if (h === 'powerCost' && mv.id !== STRUGGLE) dmg = Math.floor(dmg * 1.3);
@@ -418,8 +471,21 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
   const moveId = slot < 0 ? STRUGGLE : user.moves[slot]?.id ?? STRUGGLE;
   const mv = move(moveId);
   const onlyAsleep = mv.effects?.some((e) => e.kind === 'onlyAsleep');
+  // second turn of a two-turn move (a lost turn also drops the charge)
+  const releasing = s.vol.charging?.move === moveId;
+  s.vol.charging = null;
+  s.vol.invuln = null;
 
   // can the user act?
+  if (user.status === 'freeze') {
+    if (mv.type === 'feu' || nextRandom(st) < 0.2) {
+      user.status = null;
+      out.push({ t: 'thaw', side });
+    } else {
+      out.push({ t: 'frozen', side });
+      return;
+    }
+  }
   if (user.status === 'sleep') {
     if (user.sleepTurns <= 0) {
       user.status = null;
@@ -458,21 +524,34 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     return;
   }
 
-  if (slot >= 0 && user.moves[slot]) user.moves[slot].pp = Math.max(0, user.moves[slot].pp - 1);
+  if (slot >= 0 && user.moves[slot] && !releasing) user.moves[slot].pp = Math.max(0, user.moves[slot].pp - 1);
   out.push({ t: 'move', side, move: moveId });
   if (moveId !== STRUGGLE && !s.vol.lock && LOCKING.includes(held(user)!)) s.vol.lock = moveId;
+  if (!mv.effects?.some((e) => e.kind === 'protect')) s.vol.protectChain = 0;
+  // two-turn moves charge first (no charge for a sun move in sunshine)
+  const charge = mv.effects?.find((e) => e.kind === 'charge');
+  if (charge && charge.kind === 'charge' && !releasing && !(charge.sunSkips && st.weather?.kind === 'soleil')) {
+    s.vol.charging = { move: moveId, slot };
+    s.vol.invuln = charge.invuln ?? null;
+    out.push({ t: 'charge', side, move: moveId });
+    return;
+  }
 
   if (onlyAsleep && user.status !== 'sleep') {
     out.push({ t: 'fail', side });
     return;
   }
-  const targetsFoe = mv.cat !== 'status' || (mv.effects ?? []).some((e) => e.kind === 'status' || e.kind === 'confuse' || (e.kind === 'stage' && e.target === 'foe'));
+  const targetsFoe = mv.cat !== 'status' || (mv.effects ?? []).some((e) => e.kind === 'status' || e.kind === 'confuse' || e.kind === 'toxic' || e.kind === 'seed' || (e.kind === 'stage' && e.target === 'foe'));
   if (targetsFoe && !alive(target)) {
     out.push({ t: 'fail', side });
     return;
   }
+  if (targetsFoe && foe.vol.protect) {
+    out.push({ t: 'protected', side: foeSide });
+    return;
+  }
   // type immunity is announced before any accuracy roll
-  if (mv.cat !== 'status' && moveId !== STRUGGLE && effectiveness(mv.type, creature(target.species).type) === 0) {
+  if (mv.cat !== 'status' && moveId !== STRUGGLE && effectiveness(mv.type, typesOf(target.species)) === 0) {
     out.push({ t: 'noEffect', side: foeSide });
     return;
   }
@@ -482,6 +561,11 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     const full = target.hp >= maxHp(target);
     out.push({ t: 'talent', side: foeSide, talent: talentOf(target).id, note: full ? 'immune' : undefined });
     if (!full) healSide(st, foeSide, maxHp(target) / 4, out);
+    return;
+  }
+  // out of reach: up in the air or under the ground
+  if (targetsFoe && foe.vol.invuln) {
+    out.push({ t: 'miss', side });
     return;
   }
   // accuracy
@@ -505,9 +589,24 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
   const hits = hitCount(st, mv);
   let total = 0;
   let done = 0;
+  const behindDoll = foe.vol.sub > 0;
   for (let h = 0; h < hits && alive(target) && alive(user); h++) {
     const { dmg, crit, eff } = computeDamage(st, s, foe, mv, power);
+    // a paper doll takes the hit instead
+    if (foe.vol.sub > 0) {
+      const taken = Math.min(foe.vol.sub, dmg);
+      foe.vol.sub -= taken;
+      out.push({ t: 'subHit', side: foeSide, crit, eff });
+      if (foe.vol.sub <= 0) out.push({ t: 'subBroke', side: foeSide });
+      total += taken;
+      done++;
+      continue;
+    }
     const dealt = hurt(st, foeSide, dmg, out, { crit, eff });
+    if (dealt > 0 && mv.type === 'feu' && target.status === 'freeze' && alive(target)) {
+      target.status = null;
+      out.push({ t: 'thaw', side: foeSide });
+    }
     total += dealt;
     done++;
     // Spiky Helmet: hitting its holder up close hurts
@@ -524,7 +623,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
   if (total > 0 && mine === 'drainHit') itemHp(st, side, user.item!, Math.max(1, Math.floor(total / 8)), out);
   if (total > 0 && mine === 'powerCost' && moveId !== STRUGGLE) itemHp(st, side, user.item!, -Math.max(1, Math.floor(maxHp(user) / 10)), out);
   // Dust Coat keeps the foe's added effects away; Lucky Star doubles their chances
-  const dust = !!talentEffect(target, 'shieldDust');
+  const dust = !!talentEffect(target, 'shieldDust') || behindDoll;
   const grace = talentEffect(user, 'sereneGrace') ? 2 : 1;
   if (total > 0 && mine === 'flinchUp' && !dust && alive(target) && !mv.effects?.some((e) => e.kind === 'flinch') && nextRandom(st) < 0.1) foe.vol.flinch = true;
 
@@ -544,6 +643,15 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
       }
       case 'status':
         if (!dust && alive(target) && nextRandom(st) * 100 < e.chance * grace) setStatus(st, foeSide, e.status, out, false);
+        break;
+      case 'toxic':
+        if (!dust && alive(target) && nextRandom(st) * 100 < e.chance * grace) setStatus(st, foeSide, 'poison', out, false, true);
+        break;
+      case 'trap':
+        if (!behindDoll && alive(target) && !foe.vol.trap) {
+          foe.vol.trap = 4 + randomInt(st, 2);
+          out.push({ t: 'trapped', side: foeSide });
+        }
         break;
       case 'confuse':
         if (!dust && alive(target) && foe.vol.confusion === 0 && nextRandom(st) * 100 < e.chance * grace) {
@@ -576,17 +684,50 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
   for (const e of mv.effects ?? []) {
     switch (e.kind) {
       case 'status':
-        if (setStatus(st, foeSide, e.status, out, true)) anything = true;
+      case 'toxic':
+        if (foe.vol.sub > 0) break;
+        if (setStatus(st, foeSide, e.kind === 'toxic' ? 'poison' : e.status, out, true, e.kind === 'toxic')) anything = true;
         else reported = true;
         break;
+      case 'weather':
+        if (st.weather?.kind === e.weather) break;
+        st.weather = { kind: e.weather, turns: 5 };
+        out.push({ t: 'weather', kind: e.weather, on: true });
+        anything = true;
+        break;
+      case 'protect':
+        // each shield in a row works a third as often
+        if (nextRandom(st) < 1 / 3 ** s.vol.protectChain) {
+          s.vol.protect = true;
+          s.vol.protectChain++;
+          out.push({ t: 'protect', side });
+          anything = true;
+        } else s.vol.protectChain = 0;
+        break;
+      case 'seed':
+        if (foe.vol.sub > 0 || foe.vol.seeded || typesOf(activeMon(foe).species).includes('plante')) break;
+        foe.vol.seeded = true;
+        out.push({ t: 'seeded', side: foeSide });
+        anything = true;
+        break;
+      case 'substitute': {
+        const cost = Math.floor(maxHp(user) / 4);
+        if (s.vol.sub > 0 || user.hp <= cost) break;
+        user.hp -= cost;
+        s.vol.sub = cost;
+        out.push({ t: 'sub', side });
+        anything = true;
+        break;
+      }
       case 'confuse':
-        if (foe.vol.confusion > 0) break;
+        if (foe.vol.sub > 0 || foe.vol.confusion > 0) break;
         foe.vol.confusion = 2 + randomInt(st, 4);
         out.push({ t: 'confuse', side: foeSide });
         checkBerry(st, foeSide, out);
         anything = true;
         break;
       case 'stage':
+        if (e.target !== 'self' && foe.vol.sub > 0) break;
         changeStage(st, e.target === 'self' ? side : foeSide, e.stat, e.stages, out, e.target !== 'self');
         anything = true;
         break;
@@ -611,7 +752,7 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
 
 export function catchChance(target: Mon, ballBonus: number): { a: number; p: number } {
   const max = maxHp(target);
-  const statusBonus = target.status === 'sleep' ? 2 : target.status ? 1.5 : 1;
+  const statusBonus = target.status === 'sleep' || target.status === 'freeze' ? 2 : target.status ? 1.5 : 1;
   const a = Math.floor((((3 * max - 2 * target.hp) * creature(target.species).catchRate * ballBonus) / (3 * max)) * statusBonus);
   if (a >= 255) return { a, p: 1 };
   const b = Math.floor(1048560 / Math.sqrt(Math.sqrt(16711680 / Math.max(1, a))));
@@ -640,6 +781,10 @@ function throwBall(st: BattleState, ballId: string, out: Out) {
 function tryRun(st: BattleState, out: Out): boolean {
   if (st.kind !== 'wild') {
     out.push({ t: 'cantRun' });
+    return false;
+  }
+  if (st.sides[0].vol.trap > 0 && !talentEffect(activeMon(st.sides[0]), 'runAway')) {
+    out.push({ t: 'cantEscape', side: 0 });
     return false;
   }
   st.escapes++;
@@ -819,6 +964,11 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
   st.turn++;
   me.vol.flinch = false;
   st.sides[1].vol.flinch = false;
+  me.vol.protect = false;
+  st.sides[1].vol.protect = false;
+  // a charged two-turn move goes off whatever was chosen
+  if (me.vol.charging && action.type === 'move') action = { type: 'move', slot: me.vol.charging.slot };
+  if (st.sides[1].vol.charging) enemy = { type: 'move', slot: st.sides[1].vol.charging.slot };
 
   // non-move actions resolve first
   if (action.type === 'run') {
@@ -832,7 +982,7 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     if (st.result) return { state: st, events: out.events, snaps: out.snaps };
   }
 
-  if (enemy.type === 'switch' && st.sides[1].party[enemy.to] && alive(st.sides[1].party[enemy.to])) switchIn(st, 1, enemy.to, out);
+  if (enemy.type === 'switch' && !st.sides[1].vol.trap && st.sides[1].party[enemy.to] && alive(st.sides[1].party[enemy.to])) switchIn(st, 1, enemy.to, out);
 
   const plans: Planned[] = [];
   if (action.type === 'move') plans.push(plan(st, 0, action));
@@ -859,12 +1009,56 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     const s = st.sides[side];
     const m = activeMon(s);
     if (alive(m) && (m.status === 'poison' || m.status === 'burn')) {
-      const amount = Math.min(m.hp, Math.max(1, Math.floor(maxHp(m) / 8)));
+      const part = m.status === 'poison' && s.vol.toxic ? s.vol.toxic++ / 16 : 1 / 8;
+      if (s.vol.toxic > 15) s.vol.toxic = 15;
+      const amount = Math.min(m.hp, Math.max(1, Math.floor(maxHp(m) * part)));
       m.hp -= amount;
       out.push({ t: 'residual', side, status: m.status, amount });
       checkBerry(st, side, out);
       checkFaints(st, out);
     }
+  }
+  // end of turn: sandstorm and hail hurt, then the weather may end
+  if (st.weather && !st.result) {
+    const w = st.weather.kind;
+    const safe: Record<Weather, string[] | null> = { sable: ['sol', 'roche', 'acier'], grele: ['glace'], pluie: null, soleil: null };
+    for (const side of [0, 1] as Side[]) {
+      const m = activeMon(st.sides[side]);
+      const ok = safe[w];
+      if (st.result || !ok || !alive(m) || typesOf(m.species).some((t) => ok.includes(t))) continue;
+      const amount = Math.min(m.hp, Math.max(1, Math.floor(maxHp(m) / 16)));
+      m.hp -= amount;
+      out.push({ t: 'weatherHurt', side, kind: w, amount });
+      checkBerry(st, side, out);
+      checkFaints(st, out);
+    }
+    if (st.weather && --st.weather.turns <= 0) {
+      out.push({ t: 'weather', kind: w, on: false });
+      st.weather = null;
+    }
+  }
+  // end of turn: greedy seeds drain, ties squeeze
+  for (const side of [0, 1] as Side[]) {
+    if (st.result) break;
+    const s = st.sides[side];
+    const m = activeMon(s);
+    if (alive(m) && s.vol.seeded) {
+      const amount = Math.min(m.hp, Math.max(1, Math.floor(maxHp(m) / 8)));
+      m.hp -= amount;
+      out.push({ t: 'seedDrain', side, amount });
+      const o = other(side);
+      if (alive(activeMon(st.sides[o]))) healSide(st, o, amount, out);
+      checkBerry(st, side, out);
+      checkFaints(st, out);
+    }
+    if (st.result || !alive(activeMon(s)) || !s.vol.trap) continue;
+    const t = activeMon(s);
+    const amount = Math.min(t.hp, Math.max(1, Math.floor(maxHp(t) / 16)));
+    t.hp -= amount;
+    out.push({ t: 'trapHurt', side, amount });
+    if (--s.vol.trap <= 0) out.push({ t: 'freed', side });
+    checkBerry(st, side, out);
+    checkFaints(st, out);
   }
   // end of turn: held snacks heal a little
   for (const side of [0, 1] as Side[]) {
@@ -924,6 +1118,7 @@ function validate(st: BattleState, a: Action) {
       break;
     case 'switch':
       if (a.to === me.active || !me.party[a.to] || !alive(me.party[a.to])) throw new IllegalAction('cannot switch');
+      if (me.vol.trap > 0) throw new IllegalAction('tied up');
       break;
     case 'item':
       if (!itemUsable(st, a.item, a.target)) throw new IllegalAction('cannot use item');

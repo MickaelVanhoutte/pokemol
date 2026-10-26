@@ -165,8 +165,21 @@ Scripts run one at a time and lock player input. To change an existing script af
 - **Moves** (`src/data/moves.ts`): `type`, `cat` (`phys` / `spec` / `status`), `power`, `acc`
   (`null` never misses), `pp`, `priority`, and `effects`. The effect kinds (status, confuse, flinch,
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.
-  Add the matching text in `src/ui/battle/messages.ts` if a new event appears.
-- **Types**: the chart is in `src/data/types.ts` (attacker → defender multipliers).
+  Beyond the basics, there are:
+  - `toxic` (badly poisoned) and freeze (`status: 'freeze'`);
+  - `weather` (rain, sun, sand, hail for 5 turns);
+  - `protect`;
+  - `charge` (two-turn moves, `invuln: 'air' | 'ground'`, `sunSkips`);
+  - `trap`, `seed` and `substitute`.
+
+  Their per-creature state lives in `Volatile`, and the weather in `BattleState.weather`. Add the
+  matching text in `src/ui/battle/messages.ts` if a new event appears, and a score in
+  `src/engine/pk/ai.ts`.
+- **Types**: there are 18. The chart in `src/data/types.ts` is the classic one (attacker → defender
+  multipliers). Species may have a `type2`: use `typesOf(id)` and `effectiveness(moveType, types)`,
+  which multiplies both, and the `TypeBadges` component. Each type has a held coloured pencil (a test
+  checks it). Some types can't get a status: Fire can't be burned, Ice can't be frozen, Poison and
+  Metal can't be poisoned, Electric can't be paralysed.
 - **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil'`.
   Key items (pages, golden ticket) go in the OBJETS RARES pocket and are never sold.
   - `berry`: a Bestiole holding it eats it in battle as soon as it helps (`amount` HP at half HP or

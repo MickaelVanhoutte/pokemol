@@ -46,6 +46,7 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
   const isGrey = grey && !recolored.includes(foe.uid);
   return (
     <div class={`pk-scene ${intro ? 'is-intro' : ''}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
+      {view.weather && <div class={`pk-weather pk-weather--${view.weather.kind}`} aria-hidden="true" />}
       {!foeTrainer && !intro && <HpBox st={view} side={1} />}
       <div class="pk-plat pk-plat--foe">
         {foeTrainer ? (

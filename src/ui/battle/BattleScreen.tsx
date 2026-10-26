@@ -116,7 +116,10 @@ export function BattleScreen(props: BattleProps) {
       case 'withdraw': pulse(e.side, 'out', 600); break;
       case 'move': pulse(e.side, e.side === 0 ? 'lunge-me' : 'lunge-foe', 450); break;
       case 'damage': if (e.amount) { pulse(e.side, 'hit', 600); sfx.hit(); } break;
-      case 'confusedHit': case 'recoil': pulse(e.side, 'hit', 600); sfx.hit(); break;
+      case 'confusedHit': case 'recoil': case 'weatherHurt': case 'trapHurt': case 'seedDrain': pulse(e.side, 'hit', 600); sfx.hit(); break;
+      case 'subHit': sfx.hit(); break;
+      case 'protect': case 'sub': sfx.confirm(); break;
+      case 'frozen': pulse(e.side, 'status', 700); break;
       case 'faint': pulse(e.side, 'faint', 2000); sfx.ko(); break;
       case 'heal': case 'useItem': case 'berry': case 'regen': case 'itemHeal': sfx.heal(); break;
       case 'itemHurt': pulse(e.side, 'hit', 600); sfx.hit(); break;
@@ -200,6 +203,14 @@ export function BattleScreen(props: BattleProps) {
     })();
   }, []);
 
+  // a charged two-turn move goes off by itself on the next turn
+  useEffect(() => {
+    const s = stRef.current;
+    const c = s?.sides[0].vol.charging;
+    if (!s || busy || s.result || blocked(s) || !c) return;
+    void dispatch({ type: 'move', slot: c.slot });
+  }, [busy, st]);
+
   if (!st || !view) return <div class="battle" />;
 
   const me = st.sides[0];
@@ -207,9 +218,10 @@ export function BattleScreen(props: BattleProps) {
   const learn = !busy && st.learnQueue.length ? st.learnQueue[0] : null;
   const learner = learn ? me.party.find((m) => m.uid === learn.uid) ?? null : null;
   const forced = !busy && !!st.needSwitch;
-  const idle = !busy && !st.result && !blocked(st);
+  const charging = !!me.vol.charging;
+  const idle = !busy && !st.result && !blocked(st) && !charging;
   const coaching = coach === 0 || coach === 2;
-  const mode = panelMode({ busy: busy || (!!st.result && !ended && !learner), ended, coach: coaching && idle, learnPending: !!learner, forced, menu });
+  const mode = panelMode({ busy: busy || charging || (!!st.result && !ended && !learner), ended, coach: coaching && idle, learnPending: !!learner, forced, menu });
 
   const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
   const beaten = ended && st.result === 'win' && !!props.trainer;
@@ -285,7 +297,8 @@ export function BattleScreen(props: BattleProps) {
           party={me.party}
           mode={forced ? 'forced' : 'battle'}
           active={me.active}
-          canPick={(i) => i !== me.active && me.party[i].hp > 0}
+          canPick={(i) => i !== me.active && me.party[i].hp > 0 && (forced || !me.vol.trap)}
+          refuse={!forced && me.vol.trap ? () => tr(L('{n} est ligoté : impossible de changer de Bestiole !', '{n} is tied up: it can’t be switched out!'), { n: monLabel(active) }) : undefined}
           message={forced ? tr(L('Quelle Bestiole envoyer ?', 'Which Critter will you send out?')) : undefined}
           onPick={(i) => dispatch(forced ? { type: 'replace', to: i } : { type: 'switch', to: i })}
           onClose={() => setOverlay(null)}

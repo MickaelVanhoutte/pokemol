@@ -2,12 +2,15 @@ import type { LText } from '../i18n';
 
 export type TypeId =
   | 'plante' | 'feu' | 'eau' | 'electrique' | 'fee' | 'insecte'
-  | 'normal' | 'spectre' | 'psy' | 'combat' | 'tenebres';
+  | 'normal' | 'spectre' | 'psy' | 'combat' | 'tenebres'
+  | 'vol' | 'sol' | 'roche' | 'glace' | 'poison' | 'dragon' | 'acier';
 /** Battle background, drawn with colouring pencils (src/ui/battle/backdrops.ts). */
 export type Backdrop = 'grass' | 'forest' | 'cave' | 'tower' | 'lab' | 'beach' | 'city' | 'volcano' | 'sketch';
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'legendary';
 /** Major status, kept outside battles like in the GBA games. */
-export type Major = 'sleep' | 'paralyze' | 'poison' | 'burn';
+export type Major = 'sleep' | 'paralyze' | 'poison' | 'burn' | 'freeze';
+/** Battle weather, set by moves for 5 turns. */
+export type Weather = 'pluie' | 'soleil' | 'sable' | 'grele';
 export type StatKey = 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe';
 /** Stats that can be raised/lowered by stages in battle. */
 export type StageKey = 'atk' | 'def' | 'spa' | 'spd' | 'spe' | 'acc' | 'eva';
@@ -32,7 +35,21 @@ export type MoveEffect =
   | { kind: 'highCrit' }
   | { kind: 'boostIfFoeAsleep'; mult: number }
   /** Only works while the user is asleep. */
-  | { kind: 'onlyAsleep' };
+  | { kind: 'onlyAsleep' }
+  /** Badly poisons: the poison hurts more every turn (chance in %). */
+  | { kind: 'toxic'; chance: number }
+  /** Sets the weather for 5 turns. */
+  | { kind: 'weather'; weather: Weather }
+  /** Shields the user this turn (works less often when used again and again). */
+  | { kind: 'protect' }
+  /** Charges on the first turn and hits on the second; `invuln`: out of reach meanwhile; `sunSkips`: no charge in sunshine. */
+  | { kind: 'charge'; invuln?: 'air' | 'ground'; sunSkips?: boolean }
+  /** Ties up the target for 4–5 turns: it can't flee or switch and loses 1/16 of its HP each turn. */
+  | { kind: 'trap' }
+  /** Plants a greedy seed: the target loses 1/8 of its HP each turn, given to the other side. */
+  | { kind: 'seed' }
+  /** Spends a quarter of the user's HP on a paper doll that takes the hits for it. */
+  | { kind: 'substitute' };
 
 export interface MoveDef {
   id: string;
@@ -53,6 +70,8 @@ export interface SpeciesDef {
   slug: string;
   name: LText;
   type: TypeId;
+  /** Second type (dual-type Bestioles). */
+  type2?: TypeId;
   base: Stats;
   /** 0–255, higher is easier (Gen 3 scale). */
   catchRate: number;

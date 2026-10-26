@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { creature, CREATURES, monLabel } from '../../data/creatures';
+import { CREATURES, monLabel } from '../../data/creatures';
 import { monArtUrl } from '../monArt';
 import { RARITIES } from '../../data/types';
 import { createMon, type Mon } from '../../engine/pk/creature';
@@ -9,7 +9,7 @@ import { backToWorld } from '../../overworld/controller';
 import { addMon, allMons, save, update } from '../../state/game';
 import { NicknameView } from '../views/NicknameView';
 import { sfx } from '../../audio/sfx';
-import { Frame, TypeBadge, Window } from '../paper';
+import { Frame, TypeBadges, Window } from '../paper';
 import '../screens.css';
 
 export const MACHINE_PRICE = 1000;
@@ -57,7 +57,7 @@ export function MachineScreen() {
             {tr(L('{n} (N.{l}) rejoint {w} !', '{n} (Lv{l}) joins {w}!'), {
               n: monLabel(got.mon), l: got.mon.level,
               w: got.where === 'party' ? tr(L('ton équipe', 'your party')) : tr(L('le PC', 'the PC')),
-            })} <TypeBadge type={creature(got.mon.species).type} />
+            })} <TypeBadges species={got.mon.species} />
           </p>
         )}
         {got && !spinning && <button class="pbtn" onClick={() => setNaming(true)}>{tr(L('Donner un surnom', 'Give a nickname'))}</button>}

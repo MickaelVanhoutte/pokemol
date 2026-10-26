@@ -2,6 +2,7 @@ import type { ComponentChildren } from 'preact';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { move } from '../../data/moves';
+import { typesOf } from '../../data/creatures';
 import { STATUSES, TYPES } from '../../data/types';
 import type { TypeId } from '../../data/schema';
 import type { Mon } from '../../engine/pk/creature';
@@ -61,6 +62,11 @@ export function StatusTag({ s }: { s: NonNullable<Mon['status']> }) {
 
 export function TypeBadge({ type }: { type: TypeId }) {
   return <span class="type-badge" style={{ background: TYPES[type].color }}>{tr(TYPES[type].name)}</span>;
+}
+
+/** The type badge(s) of a species: one, or two for dual-type Bestioles. */
+export function TypeBadges({ species }: { species: string }) {
+  return <>{typesOf(species).map((t) => <TypeBadge type={t} />)}</>;
 }
 
 export const lv = (l: number) => tr(L('N.{l}', 'Lv{l}'), { l });

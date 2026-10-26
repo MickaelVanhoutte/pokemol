@@ -16,6 +16,26 @@
 }
 /* ---------- scene */
 .pk-scene { position: relative; z-index: 0; min-height: 0; background: #fbf6ea center 42% / cover no-repeat; }
+/* weather, drawn like pencil strokes over the scene */
+.pk-weather { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.pk-weather--pluie {
+  background: repeating-linear-gradient(105deg, transparent 0 14px, rgba(70, 120, 210, 0.35) 14px 16px, transparent 16px 34px);
+  background-size: 120px 120px; animation: rainFall 0.5s linear infinite;
+}
+@keyframes rainFall { to { background-position: -30px 120px; } }
+.pk-weather--soleil { background: radial-gradient(circle at 85% 8%, rgba(255, 214, 80, 0.55), rgba(255, 214, 80, 0.12) 35%, transparent 60%); animation: sunPulse 2.4s ease-in-out infinite alternate; }
+@keyframes sunPulse { to { opacity: 0.7; } }
+.pk-weather--sable {
+  background: repeating-linear-gradient(170deg, rgba(196, 154, 82, 0.28) 0 3px, transparent 3px 22px), rgba(214, 180, 120, 0.22);
+  background-size: 200px 60px; animation: sandBlow 0.9s linear infinite;
+}
+@keyframes sandBlow { to { background-position: 200px 30px, 0 0; } }
+.pk-weather--grele {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2px, transparent 3px) 0 0 / 34px 34px,
+    radial-gradient(circle, rgba(200, 236, 250, 0.9) 0 2px, transparent 3px) 17px 12px / 34px 34px;
+  animation: hailFall 0.8s linear infinite;
+}
+@keyframes hailFall { to { background-position: -10px 68px, 7px 80px; } }
 .pk-plat { position: absolute; display: grid; place-items: end center; }
 .pk-plat::after {
   content: '';

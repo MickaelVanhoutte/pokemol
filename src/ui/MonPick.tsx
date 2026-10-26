@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, tr } from '../i18n';
 import { artUrl, creature } from '../data/creatures';
 import { TYPES } from '../data/types';
-import { TypeBadge, Window, YesNo } from './paper';
+import { TypeBadges, Window, YesNo } from './paper';
 import { useMenuNav } from './paper/nav';
 import './screens.css';
 
@@ -25,7 +25,7 @@ export function MonPick({ ids, title, pick, onChoose }: { ids: string[]; title?:
           <div class="monpick__art" style={{ '--type': TYPES[sp.type].color }}>
             <img class="mon-art" src={artUrl(sp)} alt="" />
           </div>
-          <p class="monpick__name">{tr(sp.name)} <TypeBadge type={sp.type} /></p>
+          <p class="monpick__name">{tr(sp.name)} <TypeBadges species={sp.id} /></p>
           <p class="monpick__dex"><b>{tr(sp.kind)}</b> — {tr(sp.dex)}</p>
         </Window>
         {pick ? (
@@ -51,7 +51,7 @@ export function MonPick({ ids, title, pick, onChoose }: { ids: string[]; title?:
           <button class={`monpick__cell ${i === cur ? 'is-on' : ''}`} onClick={() => { setCur(i); setFocus(i); }}>
             <img class="mon-art" src={artUrl(creature(id))} alt="" />
             <b>{tr(creature(id).name)}</b>
-            <TypeBadge type={creature(id).type} />
+            <TypeBadges species={id} />
           </button>
         ))}
       </div>

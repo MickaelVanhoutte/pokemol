@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CREATURES, dexNo } from '../../data/creatures';
 import { HIDDEN_TALENT_CHANCE, TALENTS, talent, talentOf, talentFromUid } from '../../data/talents';
 import { partyOf } from '../../data/trainers';
-import { act, computeDamage, createBattle, type BattleState } from './battle';
+import { act, computeDamage, createBattle, freshVol, type BattleState } from './battle';
 import { createMon, maxHp, type Mon } from './creature';
 
 const L = (s: string) => ({ fr: s, en: s });
@@ -114,7 +114,7 @@ describe('talents in battle', () => {
     const full = structuredClone(low);
     low.hp = Math.floor(maxHp(low) / 4);
     const foe = mon('013', 20, 0);
-    const side = (m: Mon) => ({ name: L('x'), party: [m], active: 0, isAI: false, vol: { stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false, lock: null }, guard: 0 });
+    const side = (m: Mon) => ({ name: L('x'), party: [m], active: 0, isAI: false, vol: freshVol(), guard: 0 });
     const hit = (m: Mon) => computeDamage({ rng: 9 }, side(m), side(foe), { id: 'coup-de-liane', name: L('x'), type: 'plante', cat: 'phys', power: 45, acc: 100, pp: 25, desc: L('x') }, 45, false).dmg;
     expect(hit(low)).toBeGreaterThan(hit(full));
   });
