@@ -482,7 +482,9 @@
       ],
       "scale": 0.5,
       "options": {
-        "paperChroma": 0.26
+        "paperChroma": 0.26,
+        "inkChroma": 0.06,
+        "close": 8
       }
     }
   ]
