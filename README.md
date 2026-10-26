@@ -128,5 +128,5 @@ src/ui/           paper kit (windows, notebook text boxes, menus), battle, FRLG 
 - Every Bestiole: drawn by the little artist, except a few *brouillons* (drafts) sketched in code while
   she draws the real ones (`npm run drafts`); the Bestiodex and the credits mark them.
 - Tiles, sprites, buildings, icons and battle backdrops: drawn in code for this project.
-- Fonts: Inter and Jersey 15 (SIL Open Font License), via Fontsource.
+- Fonts: Patrick Hand and Inter (SIL Open Font License), via Fontsource.
 - A fan project inspired by the Game Boy Advance pocket-monster games; not affiliated with any brand.

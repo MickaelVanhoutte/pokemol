@@ -303,6 +303,10 @@ remove it from `DRAFTS` and drop `draft: true`.
   `background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box`. Keep
   `stretch`: tiled (`round`/`repeat`) SVG borders leave a thin gap in Chrome. No flat fills, radii or
   clean CSS borders on new UI.
+- **Font and menu icons.** The interface font is Patrick Hand (handwriting; CSS `var(--pixel)`, a
+  name kept from the pixel font it replaced). Menu entries get pencil doodles from
+  `src/ui/sketchIcons.ts` (`MenuList` items with an `icon` that has a doodle there); items keep
+  their pixel icons (`src/ui/icons.ts`).
 - Pure views go in `src/ui/views`. A screen wrapper in `src/ui/screens` connects a view to the save.
   A new screen also needs a `Screen` variant in `src/state/router.ts` and a case in `src/app.tsx`.
 - The battle panel never changes height. If something doesn't fit, it pages (`TextBox`) or opens an

@@ -119,11 +119,11 @@ function SummaryMain({ mon, onClose, learn }: {
   const xpPct = mon.level >= MAX_LEVEL ? 100 : ((mon.xp - xpAt(mon.level)) / (xpAt(mon.level + 1) - xpAt(mon.level))) * 100;
 
   return (
-    <div class="frame graph summary" style={{ '--type': color }} onPointerDown={down} onPointerUp={up}>
+    <div class="frame graph summary" style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
       <div class="summary__tabs">
         {!learn && <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>}
         <div class="summary__tabnames">
-          {PAGES.map((p, i) => <span class={i === page ? 'is-on' : ''} onClick={() => !learn && setPage(i as Page)}>{tr(p)}</span>)}
+          {PAGES.map((p, i) => <button class={`summary__tab ${i === page ? 'is-on' : ''}`} onClick={() => !learn && setPage(i as Page)}>{tr(p)}</button>)}
         </div>
         {!learn && <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>}
       </div>
@@ -132,8 +132,7 @@ function SummaryMain({ mon, onClose, learn }: {
         <div class="summary__id">
           <b class="summary__name">{monLabel(mon)}{mon.shiny && <i class="shiny-mark" title={tr(L('Bestiole pailletée', 'Sparkly Critter'))}> ✦</i>}</b>
           {mon.nickname && <small class="summary__species">{tr(sp.name)}</small>}
-          <span>{lv(mon.level)} {mon.status && <StatusTag s={mon.status} />}</span>
-          <TypeBadges species={sp.id} />
+          <span class="summary__lvl">{lv(mon.level)} {mon.status && <StatusTag s={mon.status} />} <TypeBadges species={sp.id} /></span>
         </div>
       </Window>
 

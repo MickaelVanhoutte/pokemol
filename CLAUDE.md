@@ -135,6 +135,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - Backdrops are drawn in coloured pencil on a canvas (`backdrops.ts`).
 
 **UI kit** (`src/ui/paper`):
+- the font is Patrick Hand (handwriting); menu entries use pencil doodles (`src/ui/sketchIcons.ts`),
+  item icons stay pixel art;
 - `sketch.ts` draws the hand-drawn look at start-up (pencil frames, pastel crayon hatching, sketched
   round buttons) into CSS variables; boxes pick a crayon with `sk-<crayon>` classes. See
   [docs/content.md](docs/content.md#ui);

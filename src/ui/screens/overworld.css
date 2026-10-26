@@ -70,7 +70,7 @@
   animation: fade-in 0.12s ease;
 }
 .startmenu__list { min-width: 11em; max-width: 72vw; }
-.startmenu__list .mlist__item { font-size: 1.25rem; }
+.startmenu__list .mlist__item { font-size: 1.35rem; }
 .startmenu__desc { align-self: stretch; }
 .startmenu__text { font-size: 1.15rem; min-height: 3.2em; display: flex; align-items: center; }
 .startmenu__save { display: flex; gap: 6px; align-items: flex-end; }
@@ -132,7 +132,10 @@
   .startmenu { flex-direction: row-reverse; align-items: stretch; gap: 8px; }
   .startmenu > div:first-child { display: flex; flex-direction: column; min-height: 0; }
   .startmenu__list { overflow-y: auto; min-height: 0; }
-  .startmenu__list .mlist__item { min-height: 1.75em; font-size: 1.1rem; }
+  /* two columns, so every entry fits the low screen */
+  .startmenu__list { max-width: 62vw; }
+  .startmenu__list .mlist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 6px; }
+  .startmenu__list .mlist__item { min-height: 1.9em; font-size: 1.15rem; }
   .startmenu__desc { flex: 1; align-self: flex-end; }
   /* the dialog leaves room for the floating buttons */
   .dialog-layer { padding-right: 150px; }

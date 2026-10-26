@@ -9,6 +9,7 @@ import type { Mon } from '../../engine/pk/creature';
 import { textPace } from '../../state/prefs';
 import { sfx } from '../../audio/sfx';
 import { iconUrl } from '../icons';
+import { sketchIconUrl } from '../sketchIcons';
 import { useMenuNav } from './nav';
 import { paginate } from './paginate';
 import './paper.css';
@@ -102,7 +103,7 @@ export function MenuList({ items, onCancel, active = true, class: cls = '', onCu
           onPointerEnter={(e) => e.pointerType === 'mouse' && setCur(i)}
           onClick={() => { setCur(i); pick(i); }}
         >
-          {it.icon && <img class="picon" src={iconUrl(it.icon)} alt="" />}
+          {it.icon && (sketchIconUrl(it.icon) ? <img class="sicon" src={sketchIconUrl(it.icon)!} alt="" /> : <img class="picon" src={iconUrl(it.icon)} alt="" />)}
           <span>{it.label}</span>
           {it.side && <small>{it.side}</small>}
         </button>

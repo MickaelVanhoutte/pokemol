@@ -29,7 +29,7 @@ export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
           </>
         )}
         <p>{tr(L('Jeu, décors et pixels faits maison.', 'Game, scenery and pixels made at home.'))}</p>
-        <p>{tr(L('Polices : Inter et Jersey 15 (SIL Open Font License).', 'Fonts: Inter and Jersey 15 (SIL Open Font License).'))}</p>
+        <p>{tr(L('Polices : Patrick Hand et Inter (SIL Open Font License).', 'Fonts: Patrick Hand and Inter (SIL Open Font License).'))}</p>
         {ended && <p class="credits__end">{tr(L('Fin… ou presque. Les Bestioles t’attendent à Papeterre !', 'The end… almost. The Critters are waiting for you in Papeterra!'))}</p>}
         <p class="credits__small">{tr(L('Un jeu de fans, inspiré des jeux de monstres de poche sur Game Boy Advance. Aucun lien avec une marque existante.', 'A fan game inspired by the Game Boy Advance pocket-monster games. Not affiliated with any existing brand.'))}</p>
       </Window>
