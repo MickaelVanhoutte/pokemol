@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CREATURES } from '../../data/creatures';
+import { CREATURES, creature } from '../../data/creatures';
 import { MOVES } from '../../data/moves';
 import { ITEM_BY_ID } from '../../data/items';
 import { TRAINERS, partyOf } from '../../data/trainers';
@@ -267,12 +267,20 @@ describe('battle', () => {
     const st = battle([fighter, benched], [foe], 'wild');
     const r = act(st, { type: 'move', slot: slotOf(fighter, 'flammeche') }, { type: 'move', slot: 0 });
     const xp = r.events.filter((e) => e.t === 'xp');
-    const full = Math.floor((62 * 3) / 7);
+    const full = Math.floor((creature('013').baseExp * 3) / 7);
     expect(xp).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(full / 2) }, { t: 'xp', idx: 1, amount: Math.floor(full / 2) }]);
     expect(r.state.sides[0].party[1].evs.spe).toBe(1);
     // without it, the fighter gets everything
     const solo = act(battle([fighter, mon('001', 5)], [foe], 'wild'), { type: 'move', slot: slotOf(fighter, 'flammeche') }, { type: 'move', slot: 0 });
     expect(solo.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: full }]);
+  });
+
+  it('a Bestiole received in a trade gets ×1.5 XP (Gen 3)', () => {
+    const traded = mon('002', 20);
+    traded.ot = 'Hugo';
+    const r = act(battle([traded], [mon('013', 3)], 'wild'), { type: 'move', slot: slotOf(traded, 'flammeche') }, { type: 'move', slot: 0 });
+    const full = Math.floor((creature('013').baseExp * 3) / 7);
+    expect(r.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(full * 1.5) }]);
   });
 
   it('berries can be eaten from the bag in battle', () => {
@@ -346,7 +354,7 @@ describe('battle', () => {
   it('Stubborn items boost a stat and lock the first move used', () => {
     const me = mon('002', 20, 1, { item: 'bandeau-tetu' });
     const st = battle([me], [mon('008', 30)]);
-    expect(effectiveStat(st.sides[0], 'atk')).toBe(Math.floor(statsOf(me).atk) * 1.5);
+    expect(effectiveStat(st.sides[0], 'atk')).toBe(Math.floor(statsOf(me).atk * 1.5));
     const slot = slotOf(me, 'flammeche');
     const r = act(st, { type: 'move', slot }, { type: 'move', slot: 0 });
     expect(r.state.sides[0].vol.lock).toBe('flammeche');
@@ -354,14 +362,14 @@ describe('battle', () => {
     const other = r.state.sides[0].party[0].moves.findIndex((m) => m.id !== 'flammeche');
     expect(() => act(r.state, { type: 'move', slot: other }, { type: 'move', slot: 0 })).toThrow(IllegalAction);
     const scarf = battle([mon('002', 20, 1, { item: 'echarpe-tetue' })], [mon('008', 30)]);
-    expect(effectiveStat(scarf.sides[0], 'spe')).toBe(statsOf(scarf.sides[0].party[0]).spe * 1.5);
+    expect(effectiveStat(scarf.sides[0], 'spe')).toBe(Math.floor(statsOf(scarf.sides[0].party[0]).spe * 1.5));
   });
 
   it('Painter’s Apron: Sp. Def ×1.5 and no status moves', () => {
     const me = mon('001', 10, 1, { item: 'tablier-peintre' }); // Griffe, Grondement (status), Coup de liane, Griffe-pousse
     const st = battle([me], [mon('002', 10)]);
     expect(usableSlots(me)).not.toContain(slotOf(me, 'grondement'));
-    expect(effectiveStat(st.sides[0], 'spd')).toBe(statsOf(me).spd * 1.5);
+    expect(effectiveStat(st.sides[0], 'spd')).toBe(Math.floor(statsOf(me).spd * 1.5));
   });
 
   it('the Fierce Marble hits harder and costs 1/10 of max HP per attack', () => {

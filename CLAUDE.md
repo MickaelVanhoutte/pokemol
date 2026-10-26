@@ -125,7 +125,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
   - randomness comes from `state.rng`;
   - `blocked()` means waiting for a forced switch or a move-learn choice;
   - `ai.ts` has `aiChoose(st, slip)`;
-  - `creature.ts` covers stats, XP (`level³`, Gen 3 yield) and evolutions; the level cap is 50.
+  - `creature.ts` covers stats, XP (`level³`, Gen 3 yield, ×1.5 for traded Bestioles) and evolutions; the level cap is 100
+    (`MAX_LEVEL`; the Challenge Tower still battles at 50);
 - `src/ui/battle/BattleScreen.tsx` dispatches actions:
   - it plays the events as text (`messages.ts`) and animations (`BattleScene.tsx`);
   - it keeps the bag, party and learn-move overlays inside itself, because the router would unmount
@@ -181,7 +182,7 @@ excluded from `tsc`). Bestioles she hasn't drawn yet can be *brouillons*: drawn 
 - Dungeon puzzles (pushable blocks and boulders, holes to the floor below, weight plates, crayon
   barriers, glossy paper, fresques) are map data, explained in [docs/content.md](docs/content.md#puzzles);
   `src/data/puzzles.test.ts` solves each one on the real maps.
-- After the ending (`ending` flag), Atelier Masters offer rematches at +12 levels (capped at 50).
+- After the ending (`ending` flag), Atelier Masters offer rematches at +12 levels.
 - New Bestioles strong enough for the battle tower go in `TOWER_POOL` (`src/data/postgame.ts`).
   `fight({ borrowed })` battles with copies that never come back to the save (tower).
 - The web app manifest `id` in `vite.config.ts` (`/pokemol/?app=atelier-bestioles`) is the app's

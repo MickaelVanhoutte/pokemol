@@ -597,7 +597,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '044', slug: 'dragondine', draft: true, name: L('Dragondine', 'Dragonflow'), kind: L('Bestiole Ondine', 'Water-Sprite Critter'),
     type: 'dragon', base: { hp: 75, atk: 100, def: 80, spa: 90, spd: 80, spe: 85 },
-    catchRate: 45, baseExp: 147, evYield: { atk: 2 }, rarity: 'rare', evolvesFrom: '034', evolutions: [{ to: '045', level: 45 }],
+    catchRate: 45, baseExp: 147, evYield: { atk: 2 }, rarity: 'rare', evolvesFrom: '034', evolutions: [{ to: '045', level: 55 }],
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-14', 'pochoir-16', 'pochoir-19', 'pochoir-20'],
     talents: ['nouvelle-peau'], hiddenTalent: 'bonne-etoile',
     learnset: [[1, 'bousculade'], [1, 'grondement'], [5, 'fil-enroule'], [10, 'souffle-dragon'], [15, 'jet-d-eau'],

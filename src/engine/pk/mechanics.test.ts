@@ -27,6 +27,26 @@ describe('types', () => {
   });
 });
 
+describe('critical hits (Gen 3)', () => {
+  it('ignore the attacker’s drops and the defender’s raises, not the other way round', () => {
+    const st = start([mon('002', 30, ['flammeche'])], [mon('001', 30, ['griffe'])]);
+    const fire = { id: 'flammeche', name: L('x'), type: 'feu' as const, cat: 'spec' as const, power: 40, acc: 100, pp: 25, desc: L('x') };
+    const dmg = (s: BattleState, crit: boolean) => computeDamage({ rng: 3 }, s.sides[0], s.sides[1], fire, 40, crit).dmg;
+    const tweak = (mine: number, theirs: number) => {
+      const s = structuredClone(st);
+      s.sides[0].vol.stages.spa = mine;
+      s.sides[1].vol.stages.spd = theirs;
+      return s;
+    };
+    // a crit through a −2 Sp. Atk and a +2 Sp. Def hits like a crit with no stages
+    expect(dmg(tweak(-2, 2), true)).toBe(dmg(st, true));
+    // but a raised Sp. Atk still counts
+    expect(dmg(tweak(2, 0), true)).toBeGreaterThan(dmg(st, true));
+    // without a crit, the stages count
+    expect(dmg(tweak(-2, 2), false)).toBeLessThan(dmg(st, false));
+  });
+});
+
 describe('weather', () => {
   it('lasts 5 turns and makes Water moves stronger in the rain', () => {
     let st = start([mon('003', 30, ['averse', 'bulles'])], [mon('008', 30, ['gros-baillement'])]);

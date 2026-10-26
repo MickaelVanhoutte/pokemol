@@ -2,14 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { TRAINERS, partyOf, trainerLevel } from './trainers';
 
 describe('difficulty', () => {
-  it('shifts trainer levels in proportion, within 2..50', () => {
+  it('shifts trainer levels in proportion, within 2..100', () => {
     expect(trainerLevel(10, 'normal')).toBe(10);
     expect(trainerLevel(4, 'easy')).toBe(3);
     expect(trainerLevel(40, 'easy')).toBe(34);
     expect(trainerLevel(2, 'easy')).toBe(2);
     expect(trainerLevel(4, 'hard')).toBe(4);
     expect(trainerLevel(30, 'hard')).toBe(33);
-    expect(trainerLevel(49, 'hard')).toBe(50);
+    expect(trainerLevel(49, 'hard')).toBe(54);
+    expect(trainerLevel(98, 'hard')).toBe(100);
   });
 
   it('builds teams with the shifted levels', () => {

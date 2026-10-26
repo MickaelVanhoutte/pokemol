@@ -74,6 +74,20 @@ describe('move rememberer', () => {
   });
 });
 
+describe('level cap', () => {
+  it('goes up to 100 (level³ XP), and stops there', () => {
+    const m = createMon('003', 50, { rng: 1 });
+    addXp(m, xpAt(100) - m.xp + 5000);
+    expect(m.level).toBe(100);
+    expect(m.xp).toBe(xpAt(100));
+    expect(addXp(m, 1000)).toEqual([]);
+  });
+  it('Dragondine grows into Dragopataud at 55, like the GBA games', () => {
+    expect(grownForm('034', 54)).toBe('044');
+    expect(grownForm('034', 55)).toBe('045');
+  });
+});
+
 describe('grownForm (trainer teams)', () => {
   it('follows level evolutions only', () => {
     expect(grownForm('001', 15)).toBe('001');

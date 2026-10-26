@@ -22,7 +22,7 @@ const stage = (n: number, look: string, t: Omit<TrainerDef, 'money'> & { money?:
 
 /**
  * Four Atelier Masters at their best, then Prof. Fusain. Levels are for Normal (Easy and Hard
- * shift them like any trainer, never above 50).
+ * shift them like any trainer).
  */
 export const CONCOURS: ConcoursStage[] = [
   stage(1, 'leaderAqua', {

@@ -53,7 +53,7 @@ export interface Mon {
   moves: MoveSlot[];
 }
 
-export const MAX_LEVEL = 50;
+export const MAX_LEVEL = 100;
 export const STAT_KEYS: StatKey[] = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 
 /** Total XP needed to reach a level (medium-fast: n³). */

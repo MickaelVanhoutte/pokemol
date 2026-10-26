@@ -1,5 +1,5 @@
 import { L, type LText } from '../i18n';
-import { createMon, type Mon } from '../engine/pk/creature';
+import { createMon, MAX_LEVEL, type Mon } from '../engine/pk/creature';
 import { prefs, type Difficulty } from '../state/prefs';
 import { NEUTRAL_NATURE } from './natures';
 
@@ -45,7 +45,7 @@ export const DIFFICULTY: Record<Difficulty, { levels: number; iv: number; slip: 
 export function trainerLevel(level: number, difficulty: Difficulty): number {
   const k = DIFFICULTY[difficulty].levels;
   const shift = k < 0 ? -Math.max(1, Math.round(-k * level)) : Math.round(k * level);
-  return Math.min(50, Math.max(2, level + shift));
+  return Math.min(MAX_LEVEL, Math.max(2, level + shift));
 }
 
 export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty): Mon[] {

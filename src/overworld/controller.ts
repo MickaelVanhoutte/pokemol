@@ -8,7 +8,7 @@ import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, learnMove, maxHp, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, learnMove, MAX_LEVEL, maxHp, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, allMons, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
@@ -722,7 +722,7 @@ async function routeRematch(id: string, actor: Actor) {
     return;
   }
   const top = REMATCH_LEVEL[Math.min(REMATCH_LEVEL.length - 1, s().badges.length)];
-  const party = t.party.map((m, i) => ({ ...m, level: Math.min(50, Math.max(m.level, top - (t.party.length - 1 - i))) }));
+  const party = t.party.map((m, i) => ({ ...m, level: Math.min(MAX_LEVEL, Math.max(m.level, top - (t.party.length - 1 - i))) }));
   const strong: TrainerDef = { ...t, id: `${id}:re`, money: Math.round(t.money * 1.5), party };
   const out = await fight('trainer', t.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
   if (out.result !== 'win') return;
@@ -745,7 +745,7 @@ async function rematch(id: string, actor: Actor) {
     await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), tdef.name);
     return;
   }
-  const party = tdef.party.map((m) => ({ ...m, level: Math.min(50, m.level + 12) }));
+  const party = tdef.party.map((m) => ({ ...m, level: Math.min(MAX_LEVEL, m.level + 12) }));
   const strong: TrainerDef = { ...tdef, id: `${id}:rematch`, badge: undefined, afterScript: undefined, money: tdef.money * 2, party };
   const out = await fight('trainer', tdef.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
   if (out.result === 'win') {

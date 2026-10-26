@@ -231,12 +231,18 @@ function accMult(s: number) {
   return s >= 0 ? (3 + s) / 3 : 3 / (3 - s);
 }
 
-export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd' | 'spe'): number {
+/**
+ * A stat in battle (Gen 3): stages, paralysis and held items, floored after each step. On a critical
+ * hit the attacker ignores its own drops and the defender its own raises (`crit`).
+ */
+export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd' | 'spe', crit?: 'attacker' | 'defender'): number {
   const m = activeMon(side);
-  let v = statsOf(m)[key] * stageMult(side.vol.stages[key]);
-  if (key === 'spe' && m.status === 'paralyze') v *= 0.25;
+  let stage = side.vol.stages[key];
+  if ((crit === 'attacker' && stage < 0) || (crit === 'defender' && stage > 0)) stage = 0;
+  let v = Math.floor(statsOf(m)[key] * stageMult(stage));
+  if (key === 'spe' && m.status === 'paralyze') v = Math.floor(v / 4);
   const h = held(m);
-  if (h) v *= HELD_STAT[h]?.[key] ?? 1;
+  if (h) v = Math.floor(v * (HELD_STAT[h]?.[key] ?? 1));
   return v;
 }
 
@@ -418,8 +424,6 @@ function onLeave(m: Mon) {
 export function computeDamage(st: { rng: number; weather?: BattleState['weather'] }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean) {
   const a = activeMon(atkSide), d = activeMon(defSide);
   const phys = mv.cat === 'phys';
-  const A = effectiveStat(atkSide, phys ? 'atk' : 'spa') * (phys && a.status === 'burn' ? 0.5 : 1);
-  const D = effectiveStat(defSide, phys ? 'def' : 'spd');
   const h = held(a);
   const at = talentOf(a).effect, dt = talentOf(d).effect;
   const critStage = (mv.effects?.some((e) => e.kind === 'highCrit') ? 1 : 0) + (atkSide.vol.focus ? 1 : 0) + (h === 'critUp' ? 1 : 0) + (at.kind === 'superLuck' ? 1 : 0);
@@ -430,7 +434,15 @@ export function computeDamage(st: { rng: number; weather?: BattleState['weather'
   // coloured pencils: +20% power for their type
   if (h === 'typeBoost' && mv.id !== STRUGGLE && ITEM_BY_ID[a.item!]?.type === mv.type) power = Math.floor(power * 1.2);
   const crit = forceCrit ?? nextRandom(st) < critChance;
-  let dmg = Math.floor(Math.floor((Math.floor((2 * a.level) / 5 + 2) * power * A) / D) / 50) + 2;
+  const A = Math.floor(effectiveStat(atkSide, phys ? 'atk' : 'spa', crit ? 'attacker' : undefined) * (phys && a.status === 'burn' ? 0.5 : 1));
+  const D = effectiveStat(defSide, phys ? 'def' : 'spd', crit ? 'defender' : undefined);
+  // Gen 3 order: base damage, weather, +2, then crit, same-type bonus, type, random
+  let dmg = Math.floor(Math.floor((Math.floor((2 * a.level) / 5 + 2) * power * A) / D) / 50);
+  // rain helps Water and dampens Fire; sunshine does the opposite
+  const w = st.weather?.kind;
+  if ((w === 'pluie' && mv.type === 'eau') || (w === 'soleil' && mv.type === 'feu')) dmg = Math.floor(dmg * 1.5);
+  if ((w === 'pluie' && mv.type === 'feu') || (w === 'soleil' && mv.type === 'eau')) dmg = Math.floor(dmg / 2);
+  dmg += 2;
   if (crit) dmg *= 2;
   // Struggle is typeless: no STAB, hits everything
   const typeless = mv.id === STRUGGLE;
@@ -438,10 +450,6 @@ export function computeDamage(st: { rng: number; weather?: BattleState['weather'
   const eff = typeless ? 1 : effectiveness(mv.type, typesOf(d.species));
   dmg = Math.floor(dmg * eff);
   if (!typeless && dt.kind === 'halve' && dt.types.includes(mv.type)) dmg = Math.floor(dmg / 2);
-  // rain helps Water and dampens Fire; sunshine does the opposite
-  const w = st.weather?.kind;
-  if ((w === 'pluie' && mv.type === 'eau') || (w === 'soleil' && mv.type === 'feu')) dmg = Math.floor(dmg * 1.5);
-  if ((w === 'pluie' && mv.type === 'feu') || (w === 'soleil' && mv.type === 'eau')) dmg = Math.floor(dmg / 2);
   if (dt.kind === 'filter' && eff > 1) dmg = Math.floor(dmg * 0.75);
   dmg = Math.floor((dmg * (85 + randomInt(st, 16))) / 100);
   if (h === 'powerCost' && mv.id !== STRUGGLE) dmg = Math.floor(dmg * 1.3);
@@ -887,7 +895,8 @@ function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: nu
     for (const { i } of fighters) gain.set(i, part(Math.floor(full / 2), fighters.length));
     for (const { i } of holders) gain.set(i, (gain.get(i) ?? 0) + part(Math.floor(full / 2), holders.length));
   }
-  return party.filter(({ i }) => gain.has(i)).map(({ m, i }) => ({ m, i, amount: gain.get(i)! }));
+  // a Bestiole received in a trade learns faster (Gen 3: ×1.5)
+  return party.filter(({ i }) => gain.has(i)).map(({ m, i }) => ({ m, i, amount: m.ot ? Math.floor(gain.get(i)! * 1.5) : gain.get(i)! }));
 }
 
 /** Handles fainted actives: XP, level-ups, replacements, end of battle. */
