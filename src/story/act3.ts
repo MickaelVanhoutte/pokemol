@@ -1,4 +1,5 @@
 import { L, tr } from '../i18n';
+import { playMusic } from '../audio/music';
 import { CREATURES } from '../data/creatures';
 import { partyOf } from '../data/trainers';
 import { TOWNS } from '../data/worldmap';
@@ -7,7 +8,7 @@ import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
 import { sfx } from '../audio/sfx';
 import {
-  ask, bubble, fight, flag, flash, getGame, openScreen, say, sayAll, scripts, setFlag, shake, showToast,
+  mapMusic, ask, bubble, fight, flag, flash, getGame, openScreen, say, sayAll, scripts, setFlag, shake, showToast,
   trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
@@ -63,6 +64,7 @@ scripts.gateTour = async () => {
 };
 
 scripts.rivalTower = async () => {
+  playMusic('rival');
   await sayAll([
     L('{name} ! Toi aussi tu viens chasser les Gomme ? Ils ont grisé tous les fantômes de la tour…', '{name}! You came to chase out Team Gomme too? They greyed out every ghost in the tower…'),
     L('Tiens, laisse-moi soigner tes Bestioles. Cette fois, on fait équipe !', 'Here, let me heal your Critters. This time, we’re a team!'),
@@ -72,6 +74,7 @@ scripts.rivalTower = async () => {
   await getGame().fadeTo(0, 300);
   showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
   await say(L('L’Admin est tout en haut. Je surveille l’entrée. Vas-y !', 'The Admin is at the very top. I’ll guard the entrance. Go!'), RIVAL);
+  mapMusic();
 };
 
 scripts.towerFreed = async () => {
@@ -253,6 +256,7 @@ scripts.usineEnd = async () => {
 
 scripts.rivalFinal = async () => {
   const g = getGame();
+  playMusic('rival');
   const r = g.npc('rivalEnd');
   if (r) {
     for (let i = 0; i < 3 && Math.abs(r.y - g.player.y) > 1; i++) await g.walk(r, ['down'], 160);
@@ -269,7 +273,7 @@ scripts.rivalFinal = async () => {
   ], newSeed());
   const out = await fight('trainer', RIVAL, party, {
     trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
-    look: LOOKS.rival, backdrop: 'sketch', music: 'leader',
+    look: LOOKS.rival, backdrop: 'sketch', music: 'rival',
   });
   if (out.result !== 'win') return;
   setFlag('tr:rivalFinal');

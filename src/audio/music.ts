@@ -10,8 +10,12 @@
 import { prefs } from '../state/prefs';
 
 export type TrackId =
-  | 'title' | 'town' | 'route' | 'cave' | 'gomme' | 'edge' | 'center'
+  | 'title' | 'bourg' | 'pastel' | 'plume' | 'port' | 'feutre' | 'braise' | 'paillette' | 'gouache' | 'encre' | 'galerie'
+  | 'town' | 'route' | 'cave' | 'gomme' | 'edge' | 'center' | 'atelier' | 'rival'
   | 'wild' | 'trainer' | 'gommeBattle' | 'leader' | 'final' | 'champion' | 'ending';
+
+/** Short tunes played once over the music, which comes back after them. */
+export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal';
 
 /** Square waves of different widths sound thinner (12%) or rounder (50%). */
 type Wave = 'square' | 'pulse25' | 'pulse12' | 'triangle' | 'sine' | 'sawtooth';
@@ -74,6 +78,11 @@ const gallop = (r: string) => {
   const o = transpose(r, 12);
   return `${r} ${r}:.5 ${r}:.5 ${o} ${r} ${r} ${r}:.5 ${r}:.5 ${o} ${r}`;
 };
+/** Root, then its fifth and octave: a strummed bass for one bar. */
+const strum = (r: string) => {
+  const f = transpose(r, 7), o = transpose(r, 12);
+  return `${r}:3 ${f} ${o}:2 ${f}:2`;
+};
 /** Off-beat chord stabs for one bar. */
 const stab = (a: string, b = a) => `. ${a} . ${a} . ${b} ${b} .`;
 
@@ -113,6 +122,129 @@ const TRACKS: Record<TrackId, Track> = {
       },
     ],
     drums: `${rep('k.h.s.h.', 7)} k.h.s.ss | ${rep('k.hos.ho', 7)} k.s.sscc`,
+  },
+
+  // ------------------------------------------------------------ one theme per town
+  // Bourg-Gribouille: home, a warm music-box tune in G with a light swing
+  bourg: {
+    bpm: 92, swing: 0.2,
+    voices: [
+      { wave: 'pulse12', vibrato: 10, gate: 0.8, vol: 0.2,
+        notes: bars('B4:3 D5 G5:2 F#5 E5', 'E5:3 G5 B5:2 A5 G5', 'E5:2 C5:2 D5 E5 G5:2', 'F#5:4 A5:2 .:2', 'B5:3 A5 G5:2 D5:2', 'E5 F#5 G5 B5 A5:2 G5:2', 'C5 E5 A5 G5 F#5 D5 E5 F#5', 'G5:6 .:2') },
+      { wave: 'triangle', gate: 0.8, notes: bars(strum('G2'), strum('E2'), strum('C3'), strum('D3'), strum('G2'), strum('E2'), 'A2:2 E3:2 D3:2 A3:2', 'G2:4 D3:4') },
+      { wave: 'triangle', vol: 0.18, gate: 0.7, notes: bars(arp('G4 B4 D5 B4', 8, 1), arp('E4 G4 B4 G4', 8, 1), arp('C4 E4 G4 E4', 8, 1), arp('D4 F#4 A4 F#4', 8, 1), arp('G4 B4 D5 B4', 8, 1), arp('E4 G4 B4 G4', 8, 1), `${arp('A4 C5 E5 C5', 4, 1)} ${arp('D4 F#4 A4 F#4', 4, 1)}`, arp('G4 B4 D5 G5', 8, 1)) },
+    ],
+    drums: 'k.h.r.h.k.h.r.hh',
+  },
+
+  // Ville-Pastel: bouncy and bright, D major
+  pastel: {
+    bpm: 116,
+    voices: [
+      { wave: 'pulse25', gate: 0.5,
+        notes: bars('A4 D5 F#5 A5 . F#5 A5:2', 'B5 . A5 F#5 D5:2 F#5:2', 'G5 . B5 G5 D5 G5 B5:2', 'A5:2 C#6:2 E5:4', 'F#5 A5 D6 . C#6 D6 A5:2', 'C#6 A5 F#5 . A5:2 C#6:2', 'B5 A5 G5 B5 A5 G5 E5 C#5', 'D5:4 .:2 A4:2') },
+      { wave: 'triangle', gate: 0.5, notes: bars(oct('D3'), oct('B2'), oct('G2'), oct('A2'), oct('D3'), oct('F#2'), `${oct('G2', 4)} ${oct('A2', 4)}`, oct('D3')) },
+      { wave: 'pulse12', gate: 0.35, vol: 0.07, notes: bars(stab('F#4', 'A4'), stab('D4', 'F#4'), stab('B4', 'D5'), stab('C#5', 'E4'), stab('F#4', 'A4'), stab('A4', 'C#5'), stab('B4', 'C#5'), stab('F#4', 'D4')) },
+    ],
+    drums: 'k.h.s.hkk.h.s.h.',
+  },
+
+  // Village-Plume: airy, with birds chirping in sixteenths (6/8)
+  plume: {
+    bpm: 100, bar: 6,
+    voices: [
+      { wave: 'triangle', vibrato: 14, gate: 0.9, vol: 0.45,
+        notes: bars('E5:2 A5 C#6:3', 'D6:2 C#6 A5:3', 'B5:2 G#5 E5:3', 'A5:6', 'C#6:2 B5 A5:2 F#5', 'D5:2 F#5 A5:3', 'G#5:2 B5 E6:2 D6', 'C#6:3 A5:3') },
+      { wave: 'triangle', vol: 0.4, gate: 0.9, notes: bars('A2:3 E3:3', 'D3:3 A3:3', 'E3:3 B3:3', 'A2:3 E3:3', 'F#2:3 C#3:3', 'D3:3 A3:3', 'E3:3 B2:3', 'A2:6') },
+      { wave: 'pulse12', vol: 0.05, gate: 0.6,
+        notes: bars('.:3 E6:.5 F#6:.5 E6:.5 C#6:.5 .', '.:6', '.:3 B6:.5 A6:.5 G#6:.5 E6:.5 .', '.:6', '.:3 C#6:.5 D6:.5 C#6:.5 A5:.5 .', '.:6', '.:3 E6:.5 F#6:.5 G#6:.5 E6:.5 .', '.:6') },
+    ],
+    drums: 'k..h..',
+  },
+
+  // Port-Aquarelle: a jaunty sea shanty (6/8, A minor)
+  port: {
+    bpm: 120, bar: 6,
+    voices: [
+      { wave: 'square', gate: 0.6, vol: 0.17,
+        notes: bars('A4 C5 E5 A5:2 G5', 'B5:2 A5 G5:2 D5', 'C5 E5 A5 C6:2 B5', 'G#5:3 E5:3', 'A5 B5 C6 E6:2 D6', 'C6:2 B5 G5:2 E5', 'D5 G5 B5 G#5 B5 E6', 'A5:3 A4:3') },
+      { wave: 'triangle', gate: 0.6,
+        notes: bars('A2 E3 A3 E3 A2 E3', 'G2 D3 G3 D3 G2 D3', 'A2 E3 A3 E3 A2 E3', 'E2 B2 E3 B2 E2 G#2', 'A2 E3 A3 E3 A2 E3', 'C3 G3 C4 G3 C3 G3', 'G2 D3 G3 E2 B2 E3', 'A2 E3 A3 A2:3') },
+      { wave: 'pulse25', vol: 0.06, gate: 0.9, notes: bars('E4:6', 'D4:6', 'E4:6', 'E4:6', 'C5:6', 'E4:6', 'D4:3 E4:3', 'E4:6') },
+    ],
+    drums: 'k.hs.h',
+  },
+
+  // Ville-Feutre: a funky neon city (E dorian), sixteenth hats and a slap bass
+  feutre: {
+    bpm: 118,
+    voices: [
+      { wave: 'pulse25', gate: 0.7, vol: 0.36,
+        notes: bars('.:2 B4 D5 . E5 .:2', '.:2 C#5 E5 . G5 F#5 E5', '.:2 B4 D5 . E5 G5 A5', 'B5:2 A5 G5 E5:2 .:2', 'E5 G5 B5 . B5 A5 G5 E5', 'D5 F#5 A5 . A5 G5 F#5 D5', 'C5 E5 A5 G5 F#5 A5 D6 C6', 'B5:4 .:4') },
+      { wave: 'sawtooth', gate: 0.6, vol: 0.2,
+        notes: bars('E2 . E3 E2 . E2 D3 B2', 'A2 . A3 A2 . A2 G3 E3', 'E2 . E3 E2 . E2 D3 B2', 'A2 . A3 A2 . A2 G3 E3', 'C3 . C4 C3 . C3 B3 G3', 'B2 . B3 B2 . B2 A3 F#3', 'A2 . A3 A2 D3 . D4 C4', 'E2 . E3 E2 B2 D3 E3 .') },
+      { wave: 'pulse12', gate: 0.35, vol: 0.09, notes: bars('.:2 G4 .:3 G4 .', '.:2 C#5 .:3 C#5 .', '.:2 G4 .:3 G4 .', '.:2 C#5 .:3 C#5 .', '.:2 E4 .:3 E4 .', '.:2 D5 .:3 D5 .', '.:2 C5 .:3 F#4 .', '.:2 B4 .:3 B4 .') },
+    ],
+    drums: 'k.h.s.h.k.hks.ho', drumStep: 0.5,
+  },
+
+  // Village-Braise: warm and Spanish-tinged at the foot of the volcano, castanets
+  braise: {
+    bpm: 104,
+    voices: [
+      { wave: 'pulse25', gate: 0.7, vibrato: 10,
+        notes: bars('A5 B5 C6 B5 A5:2 E5:2', 'G5 A5 B5 A5 G5:2 D5:2', 'F5 G5 A5 G5 F5 E5 F5 A5', 'G#5:4 E5:2 .:2', 'E6:2 D6 C6 B5 C6 A5:2', 'D6:2 C6 B5 A5 B5 G5:2', 'C6 B5 A5 G5 F5 G5 A5 F5', 'E5:2 F5 E5 G#5:4') },
+      { wave: 'triangle', gate: 0.7,
+        notes: bars('A2:2 E3 A3 A2:2 E3:2', 'G2:2 D3 G3 G2:2 D3:2', 'F2:2 C3 F3 F2:2 C3:2', 'E2:2 B2 E3 E2:2 G#2:2', 'A2:2 E3 A3 A2:2 E3:2', 'G2:2 D3 G3 G2:2 D3:2', 'F2:2 C3 F3 F2:2 C3:2', 'E2:2 B2 E3 E2:4') },
+    ],
+    drums: 'k.r.rrr.k.r.rrrr',
+  },
+
+  // Bourg-Paillette: twinkling stars, F lydian, celesta over a slow bass
+  paillette: {
+    bpm: 96,
+    voices: [
+      { wave: 'sine', vibrato: 12, echo: 2, gate: 0.9, vol: 0.34,
+        notes: bars('C6:3 A5 F5:2 G5:2', 'B5:3 G5 D5:2 B4:2', 'C6:2 E6:2 A5:4', 'B5:4 D6:4', 'F6:3 E6 C6:2 A5:2', 'D6:3 B5 G5:2 D6:2', 'E6 D6 B5 G5 A5 C6 E6:2', 'F6:6 .:2') },
+      { wave: 'sine', vol: 0.3, gate: 0.95, notes: bars('F2:8', 'G2:8', 'A2:8', 'G2:8', 'F2:8', 'G2:8', 'E2:4 A2:4', 'F2:8') },
+      { wave: 'pulse12', vol: 0.045, gate: 0.6, notes: bars(arp('F5 A5 C6 E6', 16), arp('G5 B5 D6 G6', 16), arp('A5 C6 E6 A6', 16), arp('G5 B5 D6 G6', 16), arp('F5 A5 C6 E6', 16), arp('G5 B5 D6 G6', 16), `${arp('E5 G5 B5 E6', 8)} ${arp('A5 C6 E6 A6', 8)}`, arp('F5 A5 C6 F6', 16)) },
+    ],
+  },
+
+  // Jardin-Gouache: a calm garden stroll, flowing arpeggios
+  gouache: {
+    bpm: 84, swing: 0.15,
+    voices: [
+      { wave: 'pulse12', vibrato: 10, gate: 0.9, vol: 0.2,
+        notes: bars('A5:3 C6 F5:4', 'D5 F5 A5 D6 C6:2 A5:2', 'A#5:3 A5 G5:2 F5:2', 'E5:3 F5 G5:4', 'C6:3 A5 F5:2 C6:2', 'E6:2 C6 A5 E5:2 A5:2', 'D6 C6 A#5 A5 G5 A5 A#5 G5', 'F5:6 .:2') },
+      { wave: 'triangle', gate: 0.8, vol: 0.4, notes: bars(arp('F3 C4 A4 C4', 8, 1), arp('D3 A3 F4 A3', 8, 1), arp('A#2 F3 D4 F3', 8, 1), arp('C3 G3 E4 G3', 8, 1), arp('F3 C4 A4 C4', 8, 1), arp('A2 E3 C4 E3', 8, 1), `${arp('A#2 F3 D4 F3', 4, 1)} ${arp('C3 G3 E4 G3', 4, 1)}`, arp('F3 C4 A4 F4', 8, 1)) },
+    ],
+    drums: 'k...h...',
+  },
+
+  // Cité-Encre: night jazz with a walking bass and a swing
+  encre: {
+    bpm: 96, swing: 0.33,
+    voices: [
+      { wave: 'pulse25', gate: 0.6, vibrato: 8,
+        notes: bars('.:2 A4 C5 D5:2 F5 E5', 'D5:3 B4 G4:2 .:2', '.:2 E5 G5 B5:2 A5 G5', 'C#5:4 E5:2 .:2', '.:2 F5 A5 C6:2 A5 F5', 'D5:3 F5 G#5:2 .:2', 'G5 E5 A#4 G5 C#5 E5 G5 A5', 'D5:6 .:2') },
+      { wave: 'triangle', gate: 0.9,
+        notes: bars('D3:2 F3:2 A3:2 C4:2', 'G2:2 B2:2 D3:2 F3:2', 'C3:2 E3:2 G3:2 B3:2', 'A2:2 C#3:2 E3:2 G3:2', 'D3:2 E3:2 F3:2 A3:2', 'A#2:2 D3:2 F3:2 G#3:2', 'E3:2 A#2:2 A2:2 C#3:2', 'D3:2 A2:2 D3:4') },
+      { wave: 'pulse12', vol: 0.045, gate: 0.95, notes: bars('F4:8', 'F4:8', 'E4:8', 'E4:8', 'F4:8', 'F4:8', 'D4:4 C#4:4', 'F4:8') },
+    ],
+    drums: 'k.h.r.hhk.h.r.hh',
+  },
+
+  // Place des Chefs-d’Œuvre: a grand march in C
+  galerie: {
+    bpm: 104,
+    voices: [
+      { wave: 'square', gate: 0.85, vol: 0.18,
+        notes: bars('C5:2 E5 G5 C6:3 G5', 'A5:2 F5 A5 C6:4', 'B5:2 D6:2 G5:4', 'E6:3 D6 C6:4', 'C6:2 E6 C6 A5:3 E5', 'F5:2 A5 C6 A5:4', 'G5 B5 D6 F6 D6:2 B5:2', 'C6:6 .:2') },
+      { wave: 'triangle', gate: 0.7, notes: bars('C3:2 G2:2 C3:2 G2:2', 'F2:2 C3:2 F2:2 C3:2', 'G2:2 D3:2 G2:2 D3:2', 'C3:2 G2:2 C3:2 G2:2', 'A2:2 E3:2 A2:2 E3:2', 'F2:2 C3:2 F2:2 C3:2', 'G2:2 D3:2 G2:2 B2:2', 'C3:4 G2:2 C3:2') },
+      { wave: 'sawtooth', vol: 0.05, gate: 0.95, notes: bars('E4:8', 'F4:8', 'D4:8', 'E4:8', 'E4:8', 'F4:8', 'F4:4 D4:4', 'E4:8') },
+    ],
+    drums: `${rep('k.s.k.s.', 7)} k.ssk.ss`,
   },
 
   // F major with a shuffle: bouncy staccato tune, boom-chick bass, off-beat chords
@@ -252,6 +384,29 @@ const TRACKS: Record<TrackId, Track> = {
       },
     ],
     drums: 'k.h.h.',
+  },
+
+  // inside the Ateliers: driving, but not a battle yet
+  atelier: {
+    bpm: 128,
+    voices: [
+      { wave: 'pulse25', gate: 0.55,
+        notes: bars('E5 A5 C6 A5 E5 A5 C6 E6', 'F5 A5 C6 A5 F5 A5 C6 F6', 'E5 G5 C6 G5 E5 G5 C6 E6', 'D5 G5 B5 G5 D6:2 B5:2', 'A5:2 C6:2 E6:2 A5:2', 'F5:2 A5:2 C6:2 F5:2', 'G#5 B5 E6 B5 G#5 E5 G#5 B5', 'E6:4 .:2 E5:2') },
+      { wave: 'triangle', gate: 0.6, notes: bars(oct('A2'), oct('F2'), oct('C3'), oct('G2'), oct('A2'), oct('F2'), oct('E2'), oct('E2')) },
+    ],
+    drums: 'k.h.s.hkk.h.s.h.',
+  },
+
+  // the rival: cheeky and sure of himself, E major
+  rival: {
+    bpm: 152,
+    voices: [
+      { wave: 'pulse25', gate: 0.8,
+        notes: bars('B4 E5 G#5 B5:2 G#5 E5:2', 'C#6:2 B5 G#5 E5:2 C#5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'D#6:3 C#6 B5:4', 'E6 D#6 E6 B5 G#5:2 E5:2', 'D#5 F#5 B5 D#6 C#6:2 B5:2', 'A5 G#5 F#5 E5 F#5 G#5 A5 B5', 'E6:4 B5:2 E5:2') },
+      { wave: 'triangle', gate: 0.6, notes: bars(gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('E2'), gallop('G#2'), `${oct('A2', 4)} ${oct('B2', 4)}`, 'E2 E2:.5 E2:.5 E3 E2 E2:4') },
+      { wave: 'pulse12', gate: 0.35, vol: 0.07, notes: bars(stab('G#4', 'B4'), stab('E4', 'G#4'), stab('C#5', 'E5'), stab('D#5', 'F#4'), stab('G#4', 'B4'), stab('D#5', 'B4'), stab('C#5', 'D#5'), stab('G#4', 'E4')) },
+    ],
+    drums: 'k.hsk.hsk.hsk.ss',
   },
 
   // B minor, fast: a burst of sixteenths, syncopated stabs
@@ -440,6 +595,62 @@ const TRACKS: Record<TrackId, Track> = {
   },
 };
 
+/** Jingles: two bars at most, played once. */
+const JINGLES: Record<JingleId, Track> = {
+  // a new badge: a proud fanfare
+  badge: {
+    bpm: 120,
+    voices: [
+      { wave: 'square', gate: 0.85, vol: 0.18, notes: bars('C5 E5 G5 C6:2 G5 C6:2', 'E6:6 .:2') },
+      { wave: 'triangle', notes: bars('C3:2 G3:2 C3:2 G3:2', 'C3:6 .:2') },
+      { wave: 'sawtooth', vol: 0.05, notes: bars('E4:4 G4:4', 'G4:6 .:2') },
+    ],
+    drums: 'k.s.k.ssc.......',
+  },
+  // something found
+  item: {
+    bpm: 160,
+    voices: [
+      { wave: 'pulse25', gate: 0.8, notes: 'G5 B5 D6 G6:4 .' },
+      { wave: 'triangle', notes: 'G3:3 D4:4 .' },
+    ],
+  },
+  // a Bestiole caught
+  caught: {
+    bpm: 140,
+    voices: [
+      { wave: 'pulse25', gate: 0.8, notes: bars('C5 E5 G5 E5 C6:2 G5:2', 'E6:4 .:4') },
+      { wave: 'triangle', notes: bars('C3:2 E3:2 G3:2 E3:2', 'C3:4 .:4') },
+    ],
+    drums: 'k.h.k.h.c.......',
+  },
+  // a trainer (or a wild Bestiole) beaten
+  victory: {
+    bpm: 150,
+    voices: [
+      { wave: 'pulse25', gate: 0.8, notes: bars('G5 A5 B5 D6 C6 B5 A5 G5', 'C6:2 E6:2 G6:4') },
+      { wave: 'triangle', notes: bars('G2:2 D3:2 G2:2 D3:2', 'C3:2 G3:2 C4:4') },
+    ],
+    drums: 'k.hsk.hsk.s.c...',
+  },
+  // an evolution
+  evolved: {
+    bpm: 132,
+    voices: [
+      { wave: 'pulse12', vibrato: 10, vol: 0.2, notes: bars('E5 G#5 B5 E6 D#6 B5 G#5 B5', 'E6:6 .:2') },
+      { wave: 'triangle', notes: bars('E3:4 B3:4', 'E3:6 .:2') },
+    ],
+  },
+  // Healing Center: everyone feels better
+  heal: {
+    bpm: 110,
+    voices: [
+      { wave: 'pulse12', vol: 0.2, notes: bars('G5:2 C6 E6 G6:2 E6:2', 'C6:4 .:4') },
+      { wave: 'triangle', notes: bars('C4:4 E4:4', 'G3:4 .:4') },
+    ],
+  },
+};
+
 /** "C#5" → frequency; "." → null. */
 function freq(n: string): number | null {
   if (n === '.') return null;
@@ -467,9 +678,13 @@ const drumHits = (t: Track) => (t.drums ?? '').replace(/[\s|]/g, '');
 export function trackIds(): TrackId[] {
   return Object.keys(TRACKS) as TrackId[];
 }
+export function jingleIds(): JingleId[] {
+  return Object.keys(JINGLES) as JingleId[];
+}
+const tune = (id: TrackId | JingleId): Track => (id in TRACKS ? TRACKS[id as TrackId] : JINGLES[id as JingleId]);
 /** Lengths in eighths of each voice and of the drum loop, plus the bar length (tests). */
-export function trackLengths(id: TrackId): { voices: number[]; drums: number; bar: number; bars: number[][] } {
-  const t = TRACKS[id];
+export function trackLengths(id: TrackId | JingleId): { voices: number[]; drums: number; bar: number; bars: number[][] } {
+  const t = tune(id);
   return {
     voices: t.voices.map((v) => lengthOf(v.notes)),
     drums: drumHits(t).length * (t.drumStep ?? 1),
@@ -478,8 +693,8 @@ export function trackLengths(id: TrackId): { voices: number[]; drums: number; ba
   };
 }
 /** Notes used by a tune (tests: every one must be readable). */
-export function trackNotes(id: TrackId): string[] {
-  return TRACKS[id].voices.flatMap((v) => v.notes.split(/[\s|]+/).filter(Boolean).map((t) => t.split(':')[0]));
+export function trackNotes(id: TrackId | JingleId): string[] {
+  return tune(id).voices.flatMap((v) => v.notes.split(/[\s|]+/).filter(Boolean).map((t) => t.split(':')[0]));
 }
 
 let ctx: AudioContext | null = null;
@@ -602,8 +817,8 @@ function drum(c: AudioContext, kind: string, t: number) {
 }
 
 /** Length of one loop of a tune, in seconds. */
-export function trackSeconds(id: TrackId): number {
-  const t = TRACKS[id];
+export function trackSeconds(id: TrackId | JingleId): number {
+  const t = tune(id);
   return (lengthOf(t.voices[0].notes) * 60) / t.bpm / 2;
 }
 
@@ -678,6 +893,47 @@ export function stopMusic() {
     master = null;
   }
 }
+
+let jingleTimer: ReturnType<typeof setTimeout> | null = null;
+
+/**
+ * Plays a jingle once over the music (which stops), then brings the music back (unless `resume` is
+ * false or something else started meanwhile). With the music off, `fallback` (a short sound effect)
+ * plays instead.
+ */
+export function playJingle(id: JingleId, opts: { fallback?: () => void; resume?: boolean; force?: boolean } = {}) {
+  if (!opts.force && (!prefs.value.music || !prefs.value.sound)) {
+    opts.fallback?.();
+    return;
+  }
+  const back = opts.resume === false ? null : current ?? resumeAfter;
+  stopMusic();
+  const c = audio();
+  if (!c) return;
+  const tr = JINGLES[id];
+  const eighth = 60 / tr.bpm / 2;
+  const start = c.currentTime + 0.05;
+  for (const v of tr.voices) {
+    let pos = 0;
+    const vol = v.vol ?? VOL[v.wave ?? 'square'];
+    for (const [f, len] of parse(v.notes)) {
+      if (f) tone(c, v, f, start + pos * eighth, len * eighth, vol);
+      pos += len;
+    }
+  }
+  const hits = drumHits(tr);
+  for (let i = 0; i < hits.length; i++) if (hits[i] !== '.') drum(c, hits[i], start + i * (tr.drumStep ?? 1) * eighth);
+  resumeAfter = back;
+  if (jingleTimer) clearTimeout(jingleTimer);
+  jingleTimer = setTimeout(() => {
+    jingleTimer = null;
+    const again = resumeAfter;
+    resumeAfter = null;
+    if (!current && again) playMusic(again);
+  }, (trackSeconds(id) + 0.4) * 1000);
+}
+/** The tune to bring back once the jingle is over. */
+let resumeAfter: TrackId | null = null;
 
 // browsers only start sound after a touch or a key press
 if (typeof window !== 'undefined') {

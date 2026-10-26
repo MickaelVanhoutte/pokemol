@@ -4,6 +4,7 @@ import { creature, monLabel } from '../../data/creatures';
 import type { Mon } from '../../engine/pk/creature';
 import { monArtUrl } from '../monArt';
 import { sfx } from '../../audio/sfx';
+import { playJingle } from '../../audio/music';
 import { TextBox } from '../paper';
 import './views.css';
 
@@ -39,7 +40,7 @@ export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd:
         setShowNew(alt);
       }
       setFlash(true);
-      sfx.levelUp();
+      playJingle('evolved', { fallback: sfx.levelUp });
       await new Promise((r) => setTimeout(r, 450));
       if (!alive) return;
       setShowNew(true);

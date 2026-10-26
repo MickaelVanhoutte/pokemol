@@ -92,8 +92,14 @@ A **new tile** needs:
 
 The map test rejects unknown characters.
 
-**Music** follows the map automatically (`trackForMap` in `src/audio/mapMusic.ts`): towns and
-interiors, routes, caves and towers. Special maps are listed in `BY_MAP`. Battles pick theirs in
+**Music** follows the map automatically (`trackForMap` in `src/audio/mapMusic.ts`): every town has
+its own theme (`TOWN_THEMES`), also played in its houses; the Ateliers play `atelier`; then routes,
+caves and towers. Special maps are listed in `BY_MAP`. A new town needs a theme there. The rival's
+scenes call `playMusic('rival')` and `mapMusic()` to come back.
+
+**Jingles** (`playJingle` in `src/audio/music.ts`) play once and bring the music back: `badge`,
+`item` (pick-ups), `caught`, `victory` (battle won, no resume), `evolved`, `heal`. Each takes a
+sound effect as `fallback` for players with the music off. Battles pick theirs in
 `fight()`: `wild`, `trainer`, `gommeBattle` (grey Team Gomme teams), `leader` (Atelier Masters,
 rematches, the rival's last duel, the Grands Maîtres), `final` (the Great Eraser), `champion`
 (Prof. Fusain at the Grand Concours); `opts.music` overrides it.

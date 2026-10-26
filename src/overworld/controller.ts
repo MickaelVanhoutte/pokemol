@@ -24,7 +24,8 @@ import { tile } from './tiles';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
 import { sfx } from '../audio/sfx';
-import type { TrackId } from '../audio/music';
+import { playJingle, playMusic, type TrackId } from '../audio/music';
+import { trackForMap } from '../audio/mapMusic';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -290,7 +291,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
         d.flags[pickupFlag(g.map.def.id, p)] = 1;
       });
       g.removePickup(p);
-      sfx.confirm();
+      playJingle('item', { fallback: sfx.confirm });
       await say(L('Tu trouves {i}{n} !', 'You found {i}{n}!'), undefined, { i: tr(item(p.item).name), n: n > 1 ? ` ×${n}` : '' });
     });
   }
@@ -324,7 +325,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
         addItem(d, hidden.item, n);
         d.flags[pickupFlag(g.map.def.id, hidden)] = 1;
       });
-      sfx.sparkle();
+      playJingle('item', { fallback: sfx.sparkle });
       await say(L('Tiens ? Il y a quelque chose ici… Tu trouves {i} !', 'Huh? There’s something here… You found {i}!'), undefined, { i: tr(item(hidden.item).name) });
       if (hidden.item.startsWith('page-')) await runScript('pageFound');
     });
@@ -596,7 +597,7 @@ export async function trainerBattle(id: string, actor?: Actor) {
     // the first defeat line is said in battle, like the GBA games
     await sayAll(tdef.after.slice(1, tdef.badge ? 1 : undefined), tdef.name);
     if (newBadge && tdef.badge) {
-      sfx.victory();
+      playJingle('badge', { fallback: sfx.victory });
       await say(L('{name} reçoit le {b} de {l} !', '{name} received the {b} from {l}!'), undefined, { b: tr(badgeDef(tdef.badge)?.name ?? L('Badge', 'Badge')), l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name) });
       // like FireRed, the leader adds a move to teach: a stencil
       const stencil = badgeDef(tdef.badge)?.stencil;
@@ -804,6 +805,12 @@ export async function flash(color: 'white' | 'black' = 'white', ms = 140) {
   await g.fadeTo(0, ms);
 }
 
+/** Back to the current map's tune (after a scene with its own music). */
+export function mapMusic() {
+  const g = getGame();
+  if (g.map) playMusic(trackForMap(g.map.def, save.value?.player.returnTo));
+}
+
 export async function shake(ms = 500) {
   getGame().shakeUntil = performance.now() + ms;
   await wait(ms);
@@ -852,7 +859,7 @@ export async function useFieldItem(id: string) {
     await wait(200);
     if (def.field === 'repel') {
       update((x) => void (x.repel = def.amount));
-      sfx.heal();
+      playJingle('heal', { fallback: sfx.heal });
       await say(L('Pschitt ! Les Bestioles sauvages plus faibles t’éviteront pendant {n} pas.', 'Pssht! Weaker wild Critters will stay away for {n} steps.'), undefined, { n: def.amount });
     } else {
       await say(L('Tu suis le Fil d’Ariane jusqu’au dernier Centre de soin…', 'You follow the Ariadne Thread back to the last Healing Center…'));

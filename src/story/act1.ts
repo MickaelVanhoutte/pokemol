@@ -1,4 +1,5 @@
 import { L, tr } from '../i18n';
+import { playMusic } from '../audio/music';
 import { creature, STARTERS } from '../data/creatures';
 import { item } from '../data/items';
 import { partyOf, RIVAL_COUNTER } from '../data/trainers';
@@ -8,7 +9,7 @@ import type { Dir } from '../save/schema';
 import { addItem, healParty, save, update } from '../state/game';
 import { sfx } from '../audio/sfx';
 import {
-  ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
+  mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
 } from '../overworld/controller';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
@@ -137,7 +138,7 @@ scripts.labTable = async () => {
   ], RIVAL, { c: tr(creature(counter).name) });
   if (rival) g.faceToward(g.player, rival);
   await say(L('Oh oh, un premier combat ! Je vais te guider.', 'Oh ho, a first battle! I’ll guide you.'), PROF);
-  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 4 }], newSeed(), 'normal'), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival });
+  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 4 }], newSeed(), 'normal'), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival, music: 'rival' });
   if (out.result === 'win') await say(L('Quoi ?! J’ai perdu… C’était de la chance !', 'What?! I lost… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);
   await say(L('Je vais devenir le meilleur dresseur de Papeterre ! Salut !', 'I’ll become the greatest trainer in Papeterra! Bye!'), RIVAL);
@@ -277,6 +278,7 @@ scripts.boisRestore = async () => {
     g.remove('gomme2');
   }
   const px = g.player.x, py = g.player.y;
+  playMusic('rival');
   const rival = g.spawn('rivalBois', LOOKS.rival, px, Math.min(g.map.h - 2, py + 3), 'up');
   for (let i = 0; i < 2 && !(rival.x === px && rival.y === py + 1); i++) await g.walk(rival, ['up'], 180);
   g.faceToward(g.player, rival);
@@ -292,6 +294,7 @@ scripts.boisRestore = async () => {
   ], RIVAL);
   await g.walk(rival, ['right'], 160);
   g.remove('rivalBois');
+  mapMusic();
 };
 
 scripts.plumeBridge = async () => {

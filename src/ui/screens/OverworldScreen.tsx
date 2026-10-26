@@ -73,7 +73,7 @@ export function OverworldScreen() {
     const g = getGame();
     if (!g.map) return;
     setMapName(tr(g.map.def.name));
-    playMusic(trackForMap(g.map.def));
+    playMusic(trackForMap(g.map.def, save.value?.player.returnTo));
     const id = setTimeout(() => setMapName(null), 1800);
     return () => clearTimeout(id);
   }, [currentMap]);
