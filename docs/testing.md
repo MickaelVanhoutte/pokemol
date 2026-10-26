@@ -78,11 +78,13 @@ await page.screenshot({ path: 'shot.png' });
 1. `npm test` and `npm run build`. The build runs `tsc`, which also checks `tools/`.
 2. Commit with `git -c user.email=51904030+MickaelVanhoutte@users.noreply.github.com commit …`, then
    push `main`.
-3. Wait for the Pages workflow (`gh run watch <id> --exit-status`), then check that the live bundle is
-   the one you built:
+3. Check `git log origin/main` first: other sessions push to `main` too, so rebase on it before
+   pushing. Then wait for the Pages workflow (`gh run watch <id> --exit-status`) and check that the
+   live bundle contains your change. Every build stamps its time into the bundle (`__APP_BUILD__`),
+   so the CI hash never equals your local one. Grep for a string your change added instead:
    ```bash
-   ls dist/assets | grep -E '^index-.*\.js$'
-   curl -s https://mickaelvanhoutte.github.io/pokemol/ | grep -oE 'index-[A-Za-z0-9_-]+\.js' | head -1
+   JS=$(curl -s https://mickaelvanhoutte.github.io/pokemol/ | grep -oE 'index-[A-Za-z0-9_-]+\.js' | head -1)
+   curl -s "https://mickaelvanhoutte.github.io/pokemol/assets/$JS" | grep -c 'some-new-class-or-text'
    ```
 4. The PWA never reloads a running game (`registerType: 'prompt'`, `src/state/pwa.ts`). It checks for
    a new version on start, every hour, when the app comes back to the foreground and when the network
