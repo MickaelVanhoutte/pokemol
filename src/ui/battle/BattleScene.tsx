@@ -28,8 +28,8 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
       <div class="pk-hp__bar">
         <span class="hp-label">{tr(L('PV', 'HP'))}</span>
         <HpBar hp={m.hp} max={max} numbers={side === 0} />
-        {side === 1 && st.kind === 'trainer' && <TeamBalls st={st} />}
       </div>
+      {side === 1 && st.kind === 'trainer' && <TeamBalls st={st} />}
       {side === 0 && <XpLine key={m.uid} xp={m.xp} pct={xpPct} level={m.level} />}
     </div>
   );

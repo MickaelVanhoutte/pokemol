@@ -15,7 +15,8 @@
   font-family: var(--pixel); font-synthesis: none;
 }
 /* ---------- scene */
-.pk-scene { position: relative; z-index: 0; min-height: 0; background: #fbf6ea center 42% / cover no-repeat; }
+/* clipped: your Bestiole is drawn close to you, its feet below the edge */
+.pk-scene { position: relative; z-index: 0; min-height: 0; overflow: hidden; background: #fbf6ea center 42% / cover no-repeat; }
 /* weather, drawn like pencil strokes over the scene */
 .pk-weather { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .pk-weather--pluie {
@@ -43,7 +44,8 @@
  */
 .pk-side { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
 .pk-side--foe { right: 4px; top: 6px; bottom: 47%; width: min(52%, 250px); align-items: stretch; }
-.pk-side--me { left: 4px; bottom: 6px; width: min(56%, 270px); align-items: stretch; }
+/* yours is big and runs past the bottom edge: close to you, while the foe stands further away */
+.pk-side--me { left: 4px; top: 55%; bottom: -10%; width: min(66%, 300px); align-items: stretch; }
 /* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
 .pk-plat { position: relative; display: grid; grid-template: 100% / 100%; place-items: end center; container-type: size; }
 .pk-plat::after {
@@ -60,7 +62,7 @@
   opacity: 0.8;
 }
 .pk-plat--foe { flex: none; margin-top: auto; height: min(36vw, 26dvh, 200px); }
-.pk-plat--me { flex: none; height: min(42vw, 30dvh, 230px); }
+.pk-plat--me { flex: 1 1 0; min-height: 0; }
 .pk-sprite {
   max-width: 100%;
   max-height: 100%;
@@ -151,9 +153,9 @@
 .pk-hp__xp.is-on { opacity: 1; }
 .pk-hp__xp .xpbar { height: 5px; border: 0; border-image: none; background: rgba(255, 255, 255, 0.7); border-radius: 3px; }
 .pk-hp__xp .xpbar span { background: #4a90e2; }
-/* a trainer's team: little Crayon-balls after the HP bar */
-.pk-team { flex: none; display: flex; gap: 1px; }
-.pk-team img { width: 13px; height: 13px; }
+/* a trainer's team: little Crayon-balls just under the foe's box, from its left edge */
+.pk-team { position: absolute; left: 6px; top: calc(100% + 9px); display: flex; gap: 2px; pointer-events: none; }
+.pk-team img { width: 16px; height: 16px; }
 .pk-team img.is-status { filter: grayscale(1) opacity(0.75); }
 .pk-team img.is-ko { filter: brightness(0) opacity(0.8); }
 
@@ -235,7 +237,7 @@
   /* short scene: both columns go down to the bottom, so each drawing gets the whole height left
      under its box (the horizon is at about 52–56% of a wide scene, well above the feet) */
   .pk-side--foe { bottom: 6px; width: min(36%, 260px); }
-  .pk-side--me { top: 6px; width: min(40%, 280px); }
+  .pk-side--me { top: 6px; bottom: -22%; width: min(44%, 320px); }
   .pk-plat--foe, .pk-plat--me { flex: 1 1 0; min-height: 0; height: auto; }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
