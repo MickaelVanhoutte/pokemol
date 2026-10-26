@@ -22,11 +22,13 @@ export function PixelIcon({ id, size = 24 }: { id: string; size?: number }) {
   return <img class="picon" src={iconUrl(id)} width={size} height={size} alt="" />;
 }
 
-export function HpBar({ hp, max }: { hp: number; max: number }) {
+/** HP bar; `numbers` writes "hp/max" inside it (battle boxes). */
+export function HpBar({ hp, max, numbers }: { hp: number; max: number; numbers?: boolean }) {
   const pct = Math.max(0, (hp / max) * 100);
   return (
-    <span class={`hpbar hpbar--${pct > 50 ? 'ok' : pct > 20 ? 'mid' : 'low'}`}>
+    <span class={`hpbar hpbar--${pct > 50 ? 'ok' : pct > 20 ? 'mid' : 'low'} ${numbers ? 'hpbar--num' : ''}`}>
       <span style={{ width: `${pct}%` }} />
+      {numbers && <i class="hpbar__num">{hp}/{max}</i>}
     </span>
   );
 }

@@ -36,20 +36,32 @@
   animation: hailFall 0.8s linear infinite;
 }
 @keyframes hailFall { to { background-position: -10px 68px, 7px 80px; } }
-.pk-plat { position: absolute; display: grid; place-items: end center; }
+/* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
+/*
+ * Each side is a column: the foe's HP box above its drawing (top right), yours under your drawing
+ * (bottom left). The foe's column ends at 53% of the scene, below the backdrop's horizon (46% of
+ * the picture), so its feet are always on the ground.
+ */
+.pk-side { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
+.pk-side--foe { right: 4px; top: 6px; bottom: 47%; width: min(52%, 250px); align-items: stretch; }
+.pk-side--me { left: 4px; bottom: 6px; width: min(56%, 270px); align-items: stretch; }
+/* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
+.pk-plat { position: relative; display: grid; grid-template: 100% / 100%; place-items: end center; container-type: size; }
 .pk-plat::after {
   content: '';
   position: absolute;
   z-index: -1;
   left: 50%;
   bottom: -8%;
-  width: 125%;
+  /* as wide as the drawing is tall, not as its column: a patch of ground under its feet */
+  width: min(125%, 115cqh);
   height: 28%;
   transform: translateX(-50%);
   background: var(--plat) center / 100% 100% no-repeat;
+  opacity: 0.8;
 }
-.pk-plat--foe { right: 4%; bottom: 47%; width: min(40vw, 30dvh, 230px); height: min(36vw, 26dvh, 200px); }
-.pk-plat--me { left: 3%; bottom: 7%; width: min(46vw, 34dvh, 260px); height: min(42vw, 30dvh, 230px); }
+.pk-plat--foe { flex: none; margin-top: auto; height: min(36vw, 26dvh, 200px); }
+.pk-plat--me { flex: none; height: min(42vw, 30dvh, 230px); }
 .pk-sprite {
   max-width: 100%;
   max-height: 100%;
@@ -117,22 +129,34 @@
 
 /* ---------- HP boxes (paper windows) */
 .pk-hp {
-  position: absolute;
-  width: min(56%, 270px);
+  position: relative;
+  flex: none;
   color: var(--ink);
   background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box;
-  border: 9px solid transparent;
-  border-image: var(--pencil-frame) 24 / 9px stretch;
-  padding: 0 6px 2px;
+  border: 7px solid transparent;
+  border-image: var(--pencil-frame) 24 / 7px stretch;
+  padding: 0 4px 3px;
   z-index: 2;
 }
-.pk-hp--foe { left: 6px; top: 6px; }
-.pk-hp--me { right: 6px; bottom: 4px; }
-.pk-hp__top { display: flex; align-items: baseline; gap: 6px; font-size: clamp(1rem, 4.2vw, 1.25rem); }
+/* name and level on one line, the bar under it: two short rows */
+.pk-hp__top { display: flex; align-items: baseline; gap: 6px; font-size: clamp(0.9rem, 3.6vw, 1.1rem); line-height: 1.15; }
 .pk-hp__top b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
-.pk-hp__bar { display: flex; align-items: center; gap: 6px; }
+.pk-hp__bar { display: flex; align-items: center; gap: 4px; }
 .pk-hp__bar .hpbar { flex: 1; }
-.pk-hp__num { text-align: right; font-size: 1.05rem; line-height: 1.2; }
+.pk-hp__bar .hp-label { font-size: 0.65rem; }
+/* your HP written inside the bar */
+.hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
+.hpbar__num { position: absolute; inset: 0 6px 0 0; display: flex; align-items: center; justify-content: flex-end; font-style: normal; font-size: 0.8rem; line-height: 1; color: var(--ink); text-shadow: 0 0 2px #fffaf0, 0 0 2px #fffaf0; }
+/* experience: a thin blue line along the top of the box, only while it fills */
+.pk-hp__xp { position: absolute; left: 6px; right: 6px; top: -9px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.pk-hp__xp.is-on { opacity: 1; }
+.pk-hp__xp .xpbar { height: 5px; border: 0; border-image: none; background: rgba(255, 255, 255, 0.7); border-radius: 3px; }
+.pk-hp__xp .xpbar span { background: #4a90e2; }
+/* a trainer's team: little Crayon-balls after the HP bar */
+.pk-team { flex: none; display: flex; gap: 1px; }
+.pk-team img { width: 13px; height: 13px; }
+.pk-team img.is-status { filter: grayscale(1) opacity(0.75); }
+.pk-team img.is-ko { filter: brightness(0) opacity(0.8); }
 
 /* ---------- bottom panel: fixed height, one mode at a time */
 .battle__panel {
@@ -209,11 +233,11 @@
 /* landscape phones: a lower panel so the scene keeps room (it stays a fixed height) */
 @media (orientation: landscape) and (max-height: 540px) {
   .battle { --bp-h: clamp(112px, 36dvh, 200px); max-width: none; }
-  .pk-plat--foe { width: min(30vw, 34dvh, 230px); height: min(26vw, 30dvh, 200px); }
-  .pk-plat--me { width: min(34vw, 40dvh, 260px); height: min(30vw, 36dvh, 230px); }
-  .pk-hp { width: min(42%, 270px); }
-  /* the scene is wide and short: your box goes in the empty middle, clear of both drawings */
-  .pk-hp--me { right: auto; left: calc(50% - min(21%, 135px)); }
+  /* short scene: each drawing takes what its column has left; the foe's feet stay at 74%, under
+     the horizon (about 52–56% of a wide scene) and level with yours */
+  .pk-side--foe { bottom: 26%; width: min(36%, 260px); }
+  .pk-side--me { top: 6px; width: min(40%, 280px); }
+  .pk-plat--foe, .pk-plat--me { flex: 1 1 0; min-height: 0; height: auto; }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
   /* two rows of moves fit the low panel, even with large text */
