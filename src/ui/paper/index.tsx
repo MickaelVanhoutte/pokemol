@@ -108,9 +108,17 @@ export function TextBox({ text, speaker, onAdvance, onDone, arrow = true, keys =
 }) {
   const textRef = useRef<HTMLParagraphElement>(null);
   const measureRef = useRef<HTMLParagraphElement>(null);
-  const [pages, setPages] = useState<string[]>([text]);
-  const [page, setPage] = useState(0);
-  // split into pages that fit the box (again whenever its size changes)
+  // Pages, page number and typed characters are all tagged with the text (and page) they belong to,
+  // so a new message starts empty in the very first render. Resetting them in an effect instead
+  // painted one frame of the new text at the old length before it was typed again.
+  const [paged, setPaged] = useState({ text, pages: [text] });
+  const pages = paged.text === text ? paged.pages : [text];
+  const [pg, setPg] = useState({ text, i: 0 });
+  const page = Math.min(pg.text === text ? pg.i : 0, pages.length - 1);
+  const current = pages[page] ?? '';
+  const [typed, setTyped] = useState({ text, page, n: instant ? Infinity : 0 });
+  const shown = typed.text === text && typed.page === page ? Math.min(typed.n, current.length) : instant ? current.length : 0;
+  // split into pages that fit the box (again whenever its size changes, keeping what is typed)
   useLayoutEffect(() => {
     const el = textRef.current, m = measureRef.current;
     if (!el || !m) return;
@@ -122,46 +130,40 @@ export function TextBox({ text, speaker, onAdvance, onDone, arrow = true, keys =
         m.textContent = candidate;
         return m.scrollHeight <= maxH;
       });
-      setPages((prev) => (prev.length === out.length && prev.every((x, i) => x === out[i]) ? prev : out));
+      setPaged((prev) => (prev.text === text && prev.pages.length === out.length && prev.pages.every((x, i) => x === out[i]) ? prev : { text, pages: out }));
     };
     compute();
     const ro = new ResizeObserver(compute);
     ro.observe(el);
     return () => ro.disconnect();
   }, [text]);
-  useEffect(() => setPage(0), [text]);
 
-  const current = pages[Math.min(page, pages.length - 1)] ?? '';
-  const [shown, setShown] = useState(instant ? current.length : 0);
   useEffect(() => {
-    if (instant) return setShown(current.length);
-    setShown(0);
+    if (instant || shown >= current.length) return;
     const { chars, ms } = textPace();
-    let n = 0;
     const id = setInterval(() => {
-      n += chars;
-      setShown(n);
-      if (n >= current.length) clearInterval(id);
+      setTyped((t) => ({ text, page, n: (t.text === text && t.page === page ? t.n : 0) + chars }));
     }, ms);
     return () => clearInterval(id);
-  }, [current, instant]);
+  }, [text, page, current, instant, shown >= current.length]);
   const last = page >= pages.length - 1;
   const pageDone = shown >= current.length;
   const done = last && pageDone;
   useEffect(() => {
     if (done) onDone?.();
   }, [done, text]);
+  const nextPage = () => setPg({ text, i: page + 1 });
   // battle messages turn their pages by themselves
   useEffect(() => {
     if (!autoPage || onAdvance || !pageDone || last) return;
-    const id = setTimeout(() => setPage((p) => p + 1), autoPage);
+    const id = setTimeout(nextPage, autoPage);
     return () => clearTimeout(id);
-  }, [autoPage, pageDone, last, page]);
+  }, [autoPage, pageDone, last, page, text]);
   const tap = () => {
-    if (!pageDone) return setShown(current.length);
+    if (!pageDone) return setTyped({ text, page, n: Infinity });
     if (!last) {
       sfx.blip();
-      return setPage((p) => p + 1);
+      return nextPage();
     }
     if (onAdvance) {
       sfx.blip();

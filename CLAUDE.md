@@ -162,3 +162,6 @@ excluded from `tsc`).
 - Progress must be saved before a cut-scene's dialog, not after: a trainer's `storyFlag` is set with
   its win, and the final scenes resume from their map's `onEnter` (`bordPage`, `ending`) if the app was
   closed midway.
+- `TextBox` tags its pages, page number and typed count with the text they belong to, so a new
+  message starts empty in the same render. Don't reset them in an effect: that painted one frame
+  of the new text at the old length (the "text shows then rolls back" flash).

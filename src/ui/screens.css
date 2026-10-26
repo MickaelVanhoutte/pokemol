@@ -74,7 +74,9 @@
 .prologue__avatars .newgame__avatar { width: 96px; height: 96px; }
 .prologue__bottom { display: flex; flex-direction: column; gap: 6px; }
 .prologue__ask { display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
-.prologue__ask > .pbtn { align-self: flex-end; }
+.prologue__answers { display: contents; }
+.prologue__answers.is-waiting { visibility: hidden; }
+.prologue__answers > .pbtn { align-self: flex-end; }
 .prologue__choices { align-self: flex-end; min-width: 10em; }
 .prologue__input { display: flex; gap: 8px; align-items: center; }
 .prologue__input input { flex: 1; min-width: 0; }

@@ -99,6 +99,12 @@
 .pbtn:disabled { opacity: 0.45; cursor: default; }
 .pbtn--accent { background-color: #ffe9a8; }
 .pbtn--b::before { content: 'B'; display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; margin-right: 6px; border-radius: 50%; background: #e6a23a; color: #fff; font-size: 0.8em; }
+/* a back button with no B key behind it (and every back button on touch screens, where the only
+   B button is on the map) shows a plain arrow */
+.pbtn--back::before { content: '◀'; margin-right: 6px; font-size: 0.8em; }
+@media (hover: none) and (pointer: coarse) {
+  .pbtn--b::before { content: '◀'; display: inline; width: auto; height: auto; border-radius: 0; background: none; color: inherit; }
+}
 
 /* ---------- small widgets */
 .hpbar { display: block; height: 7px; border-radius: 1em; background: #4a4458; overflow: hidden; border: 1.5px solid var(--ink); }

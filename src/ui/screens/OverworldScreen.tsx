@@ -14,6 +14,8 @@ import { MonPick } from '../MonPick';
 import { DialogBox } from '../DialogBox';
 import './overworld.css';
 
+const DIR_KEY: Record<Dir, string> = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
+
 const KEY_DIR: Record<string, Dir> = {
   ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
   w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right',
@@ -159,6 +161,7 @@ const JOY_R = 44;
 /**
  * Floating joystick: touching anywhere on the map makes it appear under the finger.
  * Drag to walk, drag far to run, a quick tap is the A button (talk, read, next line).
+ * While a question waits for an answer, each push moves the choice cursor instead.
  */
 function useJoystick() {
   const [joy, setJoy] = useState<{ x: number; y: number; kx: number; ky: number } | null>(null);
@@ -166,6 +169,11 @@ function useJoystick() {
   const setDir = (dir: Dir | null) => {
     const c = cur.current;
     if (!c || c.dir === dir) return;
+    if (dialog.value?.choices) {
+      if (dir) { key(DIR_KEY[dir], true); key(DIR_KEY[dir], false); }
+      c.dir = dir;
+      return;
+    }
     const g = getGame();
     if (c.dir) g.input.release(c.dir);
     if (dir) g.input.press(dir);
@@ -176,8 +184,8 @@ function useJoystick() {
     if (!c || c.id !== e.pointerId) return;
     setDir(null);
     getGame().input.run = false;
-    // a tap is A, except while a question waits for an answer (tap the choices instead)
-    if (!c.moved && performance.now() - c.t < 350 && !dialog.value?.choices) {
+    // a tap is A (in a question: picks the choice under the cursor)
+    if (!c.moved && performance.now() - c.t < 350) {
       key('z', true);
       key('z', false);
     }

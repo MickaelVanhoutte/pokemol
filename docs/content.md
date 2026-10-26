@@ -171,5 +171,15 @@ Scripts run one at a time and lock player input. To change an existing script af
   A new screen also needs a `Screen` variant in `src/state/router.ts` and a case in `src/app.tsx`.
 - The battle panel never changes height. If something doesn't fit, it pages (`TextBox`) or opens an
   overlay inside `BattleScreen`.
+- Questions work like the GBA games everywhere:
+  - the question is typed first, then the choice window appears;
+  - ↑↓ (or the joystick on touch) moves the cursor;
+  - A (or a tap on the map) picks;
+  - B answers with the last choice.
+
+  In scripts use `ask()`. In the prologue use `Ask`.
+- Back buttons: `pbtn--b` shows a "B" hint and must really answer to X/B (`Frame` and menus do).
+  Use `pbtn--back` (a plain ◀) where B means something else. Touch screens always get the ◀,
+  because their only B button is on the map.
 - Per-device options go in `src/state/prefs.ts` and get a row in `ROWS` in
   `src/ui/views/OptionsView.tsx`.

@@ -1,3 +1,4 @@
+import type { ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
 import { L, gender, setGlobalVars, tr, type LText } from '../../i18n';
 import { artUrl, creature } from '../../data/creatures';
@@ -70,9 +71,7 @@ export function NewGameScreen() {
   }
 
   const chooser = (label: string, value: string, set: (v: string) => void, presets: LText[], done: () => void) => (
-    <div class="prologue__ask">
-      <TextBox text={label} arrow={false} instant />
-      {typing ? (
+    <Ask key={i} text={label}>{(ready) => typing ? (
         <Window class="prologue__input">
           <input
             class="newgame__input"
@@ -87,6 +86,7 @@ export function NewGameScreen() {
       ) : (
         <Window class="prologue__choices">
           <MenuList
+            active={ready}
             items={[
               ...presets.map((p) => ({ label: tr(p), onSelect: () => { set(tr(p)); done(); } })),
               { label: tr(L('AUTRE NOM…', 'NEW NAME…')), onSelect: () => setTyping(true) },
@@ -94,7 +94,7 @@ export function NewGameScreen() {
           />
         </Window>
       )}
-    </div>
+    </Ask>
   );
 
   // the names chosen so far are used by the next lines
@@ -121,27 +121,39 @@ export function NewGameScreen() {
       <div class="prologue__bottom">
         {step.kind === 'say' && <TextBox key={i} text={tr(step.text)} keys onAdvance={next} />}
         {step.kind === 'gender' && (
-          <div class="prologue__ask">
-            <TextBox text={tr(L('Es-tu une fille ou un garçon ?', 'Are you a girl or a boy?'))} arrow={false} instant />
+          <Ask key={i} text={tr(L('Es-tu une fille ou un garçon ?', 'Are you a girl or a boy?'))}>{(ready) => (
             <Window class="prologue__choices">
-              <MenuList items={[
+              <MenuList active={ready} items={[
                 { label: tr(L('FILLE', 'GIRL')), onSelect: () => { setG('f'); setAvatar(0); next(); } },
                 { label: tr(L('GARÇON', 'BOY')), onSelect: () => { setG('m'); setAvatar(1); next(); } },
               ]} />
             </Window>
-          </div>
+          )}</Ask>
         )}
         {step.kind === 'avatar' && (
-          <div class="prologue__ask">
-            <TextBox text={tr(L('Lequel de ces portraits te ressemble ?', 'Which of these looks like you?'))} arrow={false} instant />
+          <Ask key={i} text={tr(L('Lequel de ces portraits te ressemble ?', 'Which of these looks like you?'))}>{() => (
             <button class="pbtn pbtn--accent" onClick={next}>OK ▶</button>
-          </div>
+          )}</Ask>
         )}
         {step.kind === 'name' && chooser(tr(L('Comment t’appelles-tu ?', 'What is your name?')), name, setName, NAMES[g], next)}
         {step.kind === 'rival' && chooser(tr(L('Son nom ?', 'His name?')), rival, setRival, RIVALS, next)}
         {step.kind === 'end' && <TextBox text="… … …" keys onAdvance={finish} />}
       </div>
-      <button class="prologue__skip pbtn pbtn--b" onClick={() => go({ id: 'title' })}>{tr(L('Retour', 'Back'))}</button>
+      <button class="prologue__skip pbtn pbtn--back" onClick={() => go({ id: 'title' })}>{tr(L('Retour', 'Back'))}</button>
+    </div>
+  );
+}
+
+/**
+ * A question typed in the text box like any other line (A finishes it); its answers keep their
+ * place but only appear, and take the keys, once the question is typed.
+ */
+function Ask({ text, children }: { text: string; children: (ready: boolean) => ComponentChildren }) {
+  const [ready, setReady] = useState(false);
+  return (
+    <div class="prologue__ask">
+      <TextBox text={text} arrow={false} keys={!ready} onDone={() => setReady(true)} />
+      <div class={`prologue__answers ${ready ? '' : 'is-waiting'}`}>{children(ready)}</div>
     </div>
   );
 }
