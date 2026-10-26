@@ -67,8 +67,8 @@ export interface SpeciesDef {
   rarity: Rarity;
   /** [level, move id]; level 1 moves are known from the start. */
   learnset: [number, string][];
-  evolvesTo?: string;
-  evolveLevel?: number;
+  /** How it evolves (several rules = a branching evolution; none = final form). */
+  evolutions?: EvolutionRule[];
   evolvesFrom?: string;
   dex: LText;
   /** Kind of creature shown in the Bestiodex ("Bestiole Chaton"). */
@@ -91,7 +91,18 @@ export type HoldEffect =
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
  * `battle`: boosts the creature fighting (syrups, sharpener, varnish), only in battle.
  */
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil' | 'field';
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil' | 'field' | 'evo';
+
+/** One way to evolve. A rule with an `item` only works with that item; others work on levelling up. */
+export interface EvolutionRule {
+  to: string;
+  /** Reaching this level. */
+  level?: number;
+  /** Using this item from the bag (the Crayons Magiques). */
+  item?: string;
+  /** At least this much friendship (0–255) when levelling up. */
+  friendship?: number;
+}
 
 export interface ItemDef {
   id: string;

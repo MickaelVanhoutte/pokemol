@@ -1,6 +1,6 @@
 import { effect, signal } from '@preact/signals';
 import { gender, locale, setGlobalVars } from '../i18n';
-import { healMon, noStats, type MetHow, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, healMon, noStats, type MetHow, type Mon } from '../engine/pk/creature';
 import { natureFromUid } from '../data/natures';
 import { talentFromUid } from '../data/talents';
 import { BOX_COUNT, BOX_SIZE, PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
@@ -89,6 +89,7 @@ function repairMon(m: Mon) {
   m.nature ??= natureFromUid(m.uid);
   // and talents too (1 in 4 hidden)
   m.talent ??= talentFromUid(m.uid);
+  m.friendship ??= BASE_FRIENDSHIP;
 }
 
 interface V2Save {

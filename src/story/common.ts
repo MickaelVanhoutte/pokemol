@@ -1,6 +1,8 @@
-import { L } from '../i18n';
+import { L, tr } from '../i18n';
 import { healParty, save, update } from '../state/game';
-import { ask, flag, getGame, giveItem, offerNickname, openScreen, say, scripts, setFlag, wait } from '../overworld/controller';
+import { ask, flag, getGame, giveItem, offerNickname, openScreen, say, scripts, setFlag, teachMove, wait } from '../overworld/controller';
+import { move } from '../data/moves';
+import { rememberableMoves } from '../engine/pk/creature';
 import { monLabel } from '../data/creatures';
 import { NURSE } from './cast';
 
@@ -53,6 +55,53 @@ scripts.calligraphe = async () => {
   if (c >= party.length) return;
   await offerNickname(party[c].uid, false);
   await say(L('Et voilà, écrit avec mes plus belles lettres !', 'There, written in my finest letters!'), who);
+};
+
+/** Healing Center: the Move Rememberer teaches back level-up moves a Bestiole forgot or skipped. */
+scripts.souvenirs = async () => {
+  const who = L('Mémoire des Pochoirs', 'Move Rememberer');
+  const party = save.value?.party ?? [];
+  if (!party.length) {
+    await say(L('Je me souviens de toutes les capacités oubliées… mais il te faut une Bestiole !', 'I remember every forgotten move… but you need a Critter!'), who);
+    return;
+  }
+  const c = await ask(L('Je me souviens de toutes les capacités oubliées. Pour quelle Bestiole ?', 'I remember every forgotten move. For which Critter?'),
+    [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
+  if (c >= party.length) return;
+  const m = party[c];
+  // newest first, at most six so the list fits on a phone
+  const moves = rememberableMoves(m).slice(0, 6);
+  if (!moves.length) {
+    await say(L('{n} n’a rien oublié du tout !', '{n} hasn’t forgotten anything at all!'), who, { n: monLabel(m) });
+    return;
+  }
+  const k = await ask(L('Quelle capacité rappeler à {n} ?', 'Which move should {n} remember?'), [...moves.map((id) => move(id).name), L('Annuler', 'Cancel')], who, { n: monLabel(m) });
+  if (k >= moves.length) return;
+  await teachMove(c, moves[k]);
+};
+
+/** Healing Center: Madame Trou-de-Mémoire makes a Bestiole forget a move. */
+scripts.oubli = async () => {
+  const who = L('Mme Trou-de-Mémoire', 'Mrs Forgetful');
+  const party = save.value?.party ?? [];
+  if (!party.length) {
+    await say(L('Hein ? Qu’est-ce que je disais ? Ah oui : je fais oublier des capacités aux Bestioles.', 'Huh? What was I saying? Ah yes: I make Critters forget moves.'), who);
+    return;
+  }
+  const c = await ask(L('Je fais oublier des capacités. Quelle Bestiole ?', 'I make Critters forget moves. Which one?'), [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
+  if (c >= party.length) return;
+  const m = party[c];
+  if (m.moves.length <= 1) {
+    await say(L('{n} doit garder au moins une capacité !', '{n} must keep at least one move!'), who, { n: monLabel(m) });
+    return;
+  }
+  const k = await ask(L('Quelle capacité doit-il oublier ?', 'Which move should it forget?'), [...m.moves.map((s) => move(s.id).name), L('Annuler', 'Cancel')], who);
+  if (k >= m.moves.length) return;
+  const sure = await ask(L('{n} va oublier {m}. C’est sûr ?', '{n} will forget {m}. Are you sure?'), [L('Oui', 'Yes'), L('Non', 'No')], who, { n: monLabel(m), m: tr(move(m.moves[k].id).name) });
+  if (sure !== 0) return;
+  const gone = tr(move(m.moves[k].id).name);
+  update((x) => void x.party[c].moves.splice(k, 1));
+  await say(L('Pouf ! {n} a oublié {m}. Hihi, moi aussi je l’ai déjà oublié !', 'Poof! {n} forgot {m}. Hee hee, I’ve forgotten it already too!'), who, { n: monLabel(m), m: gone });
 };
 
 scripts.clerk = async () => {

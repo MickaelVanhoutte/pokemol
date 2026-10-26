@@ -1,13 +1,14 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { monLabel } from '../../data/creatures';
+import { creature, monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
 import { backToWorld, fieldItemProblem, useFieldItem } from '../../overworld/controller';
-import { save, takeItem, update } from '../../state/game';
+import { save, see, takeItem, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
-import { canUseOn, stencilStatus, useOn } from '../logic/bag';
+import { canUseOn, evolveWith, stencilStatus, useOn } from '../logic/bag';
 import { move } from '../../data/moves';
-import { learnMove } from '../../engine/pk/creature';
+import { evolve, learnMove } from '../../engine/pk/creature';
+import { EvolutionView } from '../views/EvolutionView';
 import { SummaryView } from '../views/SummaryView';
 import { BagView } from '../views/BagView';
 import { PartyView } from '../views/PartyView';
@@ -26,6 +27,7 @@ export function BagScreen() {
   const [ask, setAsk] = useState<number | null>(null);
   const [teaching, setTeaching] = useState<string | null>(null);
   const [forgetFor, setForgetFor] = useState<number | null>(null);
+  const [evolving, setEvolving] = useState<{ item: string; i?: number; to?: string } | null>(null);
   if (reading !== null) return <PageView n={reading} onClose={() => setReading(null)} />;
   if (map) return <TownMapView save={d} avatar={avatarImage(d.player.avatar)} onClose={() => setMap(false)} />;
   if (teaching) {
@@ -60,6 +62,56 @@ export function BagScreen() {
         message={tr(L('Apprendre {m} à quelle Bestiole ?', 'Teach {m} to which Critter?'), { m: tr(move(mv).name) })}
         onPick={(i) => (d.party[i].moves.length < 4 ? learn(i, d.party[i].moves.length) : setForgetFor(i))}
         onClose={() => setTeaching(null)}
+      />
+    );
+  }
+  if (evolving) {
+    const pencil = evolving.item;
+    const { i, to } = evolving;
+    if (i !== undefined && to) {
+      return (
+        <EvolutionView
+          key={d.party[i].uid}
+          mon={d.party[i]}
+          to={to}
+          onEnd={(done) => {
+            if (done) {
+              const learned: string[] = [];
+              update((x) => {
+                if (!takeItem(x, pencil)) return;
+                const m = x.party[i];
+                evolve(m, to);
+                see(x, to);
+                if (!x.dex.caught.includes(to)) x.dex.caught.push(to);
+                // the new form learns its moves of the current level, while there is room
+                for (const [lvl, id] of creature(to).learnset) {
+                  if (lvl === m.level && !m.moves.some((s) => s.id === id) && m.moves.length < 4) {
+                    learnMove(m, m.moves.length, id);
+                    learned.push(id);
+                  }
+                }
+              });
+              sfx.levelUp();
+              setNote(learned.length
+                ? tr(L('{n} apprend {m} !', '{n} learned {m}!'), { n: monLabel(save.value!.party[i]), m: learned.map((id) => tr(move(id).name)).join(', ') })
+                : '');
+            }
+            setEvolving(null);
+          }}
+        />
+      );
+    }
+    const TAG = { able: L('APTE', 'ABLE'), unable: L('PAS APTE', 'NOT ABLE') };
+    return (
+      <PartyView
+        party={d.party}
+        mode="target"
+        tag={(k) => tr(evolveWith(pencil, d.party[k]) ? TAG.able : TAG.unable)}
+        canPick={(k) => !!evolveWith(pencil, d.party[k])}
+        refuse={(k) => tr(L('Ça n’a aucun effet sur {n}.', 'It won’t have any effect on {n}.'), { n: monLabel(d.party[k]) })}
+        message={tr(L('Utiliser {i} sur quelle Bestiole ?', 'Use the {i} on which Critter?'), { i: tr(item(pencil).name) })}
+        onPick={(k) => setEvolving({ item: pencil, i: k, to: evolveWith(pencil, d.party[k])! })}
+        onClose={() => setEvolving(null)}
       />
     );
   }
@@ -109,7 +161,8 @@ export function BagScreen() {
       onUse={(id) => {
         setNote('');
         const def = item(id);
-        if (def.kind === 'field') {
+        if (def.kind === 'evo') setEvolving({ item: id });
+        else if (def.kind === 'field') {
           const no = fieldItemProblem(id);
           if (no) setNote(tr(no));
           else void useFieldItem(id);

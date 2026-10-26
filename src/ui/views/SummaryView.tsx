@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
 import { creature, dexNo, monLabel } from '../../data/creatures';
 import { monArtUrl } from '../monArt';
+import { evolutionHints } from '../evolutionText';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
@@ -33,6 +34,12 @@ function metLine(mon: Mon): string | null {
   const place = MAPS[mon.met.map] ? tr(MAPS[mon.met.map].name) : '???';
   return tr(MET[mon.met.how], { l: mon.met.level, p: place });
 }
+
+/** Friendship as five hearts (♥ full, ♡ empty). */
+const hearts = (f: number) => {
+  const n = Math.min(5, Math.round(f / 51));
+  return '♥'.repeat(n) + '♡'.repeat(5 - n);
+};
 
 /** Letter for what the Bestiole was born with in a stat (E to S). */
 function Grade({ mon, k }: { mon: Mon; k: StatKey }) {
@@ -119,9 +126,10 @@ export function SummaryView({ mon, onClose, learn }: {
               </dd>
               <dt>{tr(L('Objet tenu', 'Item'))}</dt>
               <dd class="summary__held">{mon.item ? <><PixelIcon id={mon.item} size={18} /> {tr(item(mon.item).name)}</> : tr(L('Aucun', 'None'))}</dd>
-              {sp.evolvesTo && sp.evolveLevel && (
-                <><dt>{tr(L('Évolution', 'Evolves'))}</dt><dd>{tr(L('{n} au N.{l}', '{n} at Lv{l}'), { n: tr(creature(sp.evolvesTo).name), l: sp.evolveLevel })}</dd></>
+              {evolutionHints(sp).length > 0 && (
+                <><dt>{tr(L('Évolution', 'Evolves'))}</dt><dd>{evolutionHints(sp).join(' · ')}</dd></>
               )}
+              <dt>{tr(L('Amitié', 'Friendship'))}</dt><dd class="summary__hearts">{hearts(mon.friendship ?? 70)}</dd>
             </dl>
             {metLine(mon) && <p class="summary__met">{metLine(mon)}</p>}
             <p class="summary__talent"><b>{tr(talentOf(mon).name)}</b>{locale.value === 'fr' ? '\u00a0: ' : ': '}{tr(talentOf(mon).desc)}</p>

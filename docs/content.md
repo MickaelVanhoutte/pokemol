@@ -150,8 +150,15 @@ Scripts run one at a time and lock player input. To change an existing script af
 
 - **New drawing**: follow README "Add a new drawing". It covers the photo in `img-source/`, the
   manifest entry, `npm run cards -- <id>`, checking `tools/out/contact-sheet.png`, then adding the
-  creature to `src/data/creatures.ts`. For a creature that evolves, set `evolvesTo` and `evolveLevel`
-  on the base form and `evolvesFrom` on the evolved one. Set `faces` for sideways drawings, and
+  creature to `src/data/creatures.ts`. For a creature that evolves, list its ways to evolve in
+  `evolutions: [{ to, level? | item? | friendship? }]` on the base form, and set `evolvesFrom` on each
+  evolved form. Several rules make a branching evolution (Touffou's future forms):
+  - `item` is a Crayon Magique used from the bag (`crayon-magique-<type>`, not sold or placed until
+    an evolution uses one: put it in a shop's `STOCK` or as a pickup when you add one);
+  - `friendship: 220` evolves on levelling up with a great friendship;
+  - `level` is the usual one.
+
+  `evolutionFor()` in `src/engine/pk/creature.ts` applies the rules. Set `faces` for sideways drawings, and
   `rarity`, which weights the Tombola. Put it in an `encounters` table or a trainer party.
   The order of `CREATURES` is the Bestiodex order (`dexNo`), and a test keeps evolution lines side by
   side. Ids are keys used by saves, maps and card files, so never renumber them.

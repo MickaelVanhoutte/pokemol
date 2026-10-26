@@ -1,6 +1,6 @@
 import { ITEMS, item } from '../../data/items';
 import type { ItemDef } from '../../data/schema';
-import { maxHp, type Mon } from '../../engine/pk/creature';
+import { evolutionFor, maxHp, type Mon } from '../../engine/pk/creature';
 import { creature } from '../../data/creatures';
 
 export type Pocket = 'items' | 'balls' | 'berries' | 'stencils' | 'key';
@@ -14,6 +14,11 @@ export function pocketOf(def: ItemDef): Pocket {
 }
 
 /** What a stencil can do for a creature (FRLG-style party labels ABLE / NOT ABLE / LEARNED). */
+/** Whether a magic pencil makes this creature evolve (the species it would become, or null). */
+export function evolveWith(itemId: string, m: Mon): string | null {
+  return evolutionFor(creature(m.species), m, { kind: 'item', item: itemId });
+}
+
 export function stencilStatus(stencilId: string, m: Mon): 'able' | 'unable' | 'learned' {
   const mv = item(stencilId).move;
   if (m.moves.some((s) => s.id === mv)) return 'learned';

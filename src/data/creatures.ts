@@ -48,7 +48,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '012', slug: 'chenillou', faces: 'left', name: L('Chenillou', 'Wigglet'), kind: L('Bestiole Chenille', 'Caterpillar Critter'),
     type: 'insecte', base: { hp: 45, atk: 32, def: 38, spa: 22, spd: 22, spe: 46 },
-    catchRate: 255, baseExp: 50, evYield: { hp: 1 }, wildItem: { id: 'baie-bleue', pct: 5 }, rarity: 'common', evolvesTo: '015', evolveLevel: 7,
+    catchRate: 255, baseExp: 50, evYield: { hp: 1 }, wildItem: { id: 'baie-bleue', pct: 5 }, rarity: 'common', evolutions: [{ to: '015', level: 7 }],
     stencils: ['pochoir-01', 'pochoir-12'],
     talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'pieds-legers',
     learnset: [[1, 'bousculade'], [1, 'fil-de-soie']],
@@ -60,7 +60,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '015', slug: 'chrysalou', faces: 'right', name: L('Chrysalou', 'Cocoonap'), kind: L('Bestiole Chrysalide', 'Chrysalis Critter'),
     type: 'insecte', base: { hp: 50, atk: 20, def: 60, spa: 25, spd: 30, spe: 25 },
-    catchRate: 120, baseExp: 72, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '012', evolvesTo: '007', evolveLevel: 10,
+    catchRate: 120, baseExp: 72, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '012', evolutions: [{ to: '007', level: 10 }],
     stencils: ['pochoir-01', 'pochoir-12'],
     talents: ['poudre-bouclier', 'nouvelle-peau'], hiddenTalent: 'increvable',
     learnset: [[1, 'bousculade'], [1, 'cocon-serre'], [7, 'cocon-serre']],
@@ -150,7 +150,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '009', slug: 'brumouille', name: L('Brumouille', 'Mistchief'), kind: L('Bestiole Brume', 'Mist Critter'),
     type: 'spectre', base: { hp: 32, atk: 35, def: 32, spa: 95, spd: 37, spe: 80 },
-    catchRate: 190, baseExp: 95, evYield: { spa: 1 }, wildItem: { id: 'baie-givree', pct: 5 }, rarity: 'rare', evolvesTo: '010', evolveLevel: 16,
+    catchRate: 190, baseExp: 95, evYield: { spa: 1 }, wildItem: { id: 'baie-givree', pct: 5 }, rarity: 'rare', evolutions: [{ to: '010', level: 16 }],
     stencils: ['pochoir-04', 'pochoir-08', 'pochoir-09', 'pochoir-11', 'pochoir-12'],
     talents: ['regard-noir', 'brume-epaisse'], hiddenTalent: 'petits-traits',
     learnset: [[1, 'bouh'], [1, 'brouillard'], [5, 'langue-fantome'], [8, 'coup-en-douce'], [9, 'regard-hypnotique'], [13, 'grimace'],
@@ -163,7 +163,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '010', slug: 'grimouille', name: L('Grimouille', 'Grimist'), kind: L('Bestiole Brume', 'Mist Critter'),
     type: 'spectre', base: { hp: 47, atk: 55, def: 45, spa: 110, spd: 55, spe: 95 },
-    catchRate: 90, baseExp: 126, evYield: { spa: 2 }, rarity: 'rare', evolvesFrom: '009', evolvesTo: '011', evolveLevel: 28,
+    catchRate: 90, baseExp: 126, evYield: { spa: 2 }, rarity: 'rare', evolvesFrom: '009', evolutions: [{ to: '011', level: 28 }],
     stencils: ['pochoir-04', 'pochoir-08', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12'],
     talents: ['regard-noir', 'brume-epaisse'], hiddenTalent: 'petits-traits',
     learnset: [[1, 'bouh'], [1, 'brouillard'], [5, 'langue-fantome'], [8, 'coup-en-douce'], [9, 'regard-hypnotique'], [13, 'grimace'],

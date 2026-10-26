@@ -1,8 +1,9 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { CREATURES, artUrl, creature, dexNo } from '../../data/creatures';
+import { CREATURES, artUrl, dexNo } from '../../data/creatures';
 import { Frame, MenuList, PixelIcon, TypeBadge, Window } from '../paper';
 import { sfx } from '../../audio/sfx';
+import { evolutionHints } from '../evolutionText';
 import './views.css';
 
 /** Bestiodex: numbered list, then an entry page (drawing on paper, kind, type, text). */
@@ -66,8 +67,8 @@ function DexEntry({ index, isSeen, isCaught, onMove, onClose }: {
         {isCaught(sp.id) ? (
           <>
             <p>{tr(sp.dex)}</p>
-            {sp.evolvesTo && sp.evolveLevel && (
-              <p class="dex__evo">{tr(L('Évolue en {n} au niveau {l}.', 'Evolves into {n} at level {l}.'), { n: tr(creature(sp.evolvesTo).name), l: sp.evolveLevel })}</p>
+            {evolutionHints(sp).length > 0 && (
+              <p class="dex__evo">{tr(L('Évolution : {h}.', 'Evolves: {h}.'), { h: evolutionHints(sp).join(' · ') })}</p>
             )}
           </>
         ) : <p>{tr(L('Attrape cette Bestiole pour en savoir plus !', 'Catch this Critter to learn more about it!'))}</p>}

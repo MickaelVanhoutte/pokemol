@@ -89,6 +89,13 @@ function stencilCard(p: Painter, color: string) {
   ], PAL);
 }
 
+/** A magic pencil (evolution items): a coloured pencil with gold sparkles. */
+function magicPencil(p: Painter, color: string) {
+  pencil(p, color);
+  for (const [x, y] of [[3, 1], [2, 2], [3, 2], [4, 2], [3, 3], [12, 9], [13, 10], [11, 10], [12, 11]] as const) p.px(x, y, PAL.Y);
+  p.px(3, 2, PAL.W);
+}
+
 /** A coloured pencil (type boosters), its wood and lead in the colour of its type. */
 function pencil(p: Painter, color: string) {
   p.at(0, 0).sprite([
@@ -114,6 +121,7 @@ function painterFor(id: string): ((p: Painter) => void) | undefined {
   const def = ITEM_BY_ID[id];
   const mv = def?.kind === 'stencil' ? MOVE_BY_ID[def.move ?? ''] : undefined;
   if (mv) return (p) => stencilCard(p, TYPES[mv.type].color);
+  if (def?.kind === 'evo' && def.type) return (p) => magicPencil(p, TYPES[def.type!].color);
   return def?.hold === 'typeBoost' && def.type ? (p) => pencil(p, TYPES[def.type!].color) : undefined;
 }
 

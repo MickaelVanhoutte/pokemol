@@ -13,6 +13,8 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
+- Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
+  Rememberer and a Move Forgetter in every Healing Center.
 - Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,
   recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray
   and Ariadne Thread.

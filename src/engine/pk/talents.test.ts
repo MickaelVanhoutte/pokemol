@@ -17,10 +17,21 @@ const battle = (me: Mon, foe: Mon, kind: 'wild' | 'trainer' = 'trainer', seed = 
   createBattle({ kind, seed, player: { name: L('a'), party: [me], isAI: false }, enemy: { name: L('b'), party: [foe], isAI: true } });
 
 describe('Bestiodex order', () => {
-  it('keeps every evolution line together, in order', () => {
-    CREATURES.forEach((c, i) => {
-      if (c.evolvesTo) expect(CREATURES[i + 1]?.id, `${c.id} → ${c.evolvesTo}`).toBe(c.evolvesTo);
-    });
+  it('keeps every evolution family together, each form after the one it comes from', () => {
+    const index = (id: string) => CREATURES.findIndex((c) => c.id === id);
+    const root = (id: string): string => {
+      const from = CREATURES.find((c) => c.id === id)?.evolvesFrom;
+      return from ? root(from) : id;
+    };
+    for (const c of CREATURES) {
+      for (const r of c.evolutions ?? []) {
+        expect(index(r.to), `${c.id} → ${r.to}`).toBeGreaterThan(index(c.id));
+        expect(CREATURES.find((x) => x.id === r.to)?.evolvesFrom, r.to).toBe(c.id);
+      }
+      // everything between a family's first and last member belongs to that family
+      const fam = CREATURES.filter((x) => root(x.id) === root(c.id)).map((x) => index(x.id));
+      for (let i = Math.min(...fam); i <= Math.max(...fam); i++) expect(root(CREATURES[i].id), c.id).toBe(root(c.id));
+    }
     expect(dexNo('012')).toBe('004');
     expect(dexNo('007')).toBe('006');
   });
@@ -36,9 +47,8 @@ describe('talents data', () => {
   });
 
   it('keeps the talent slot through evolution', () => {
-    for (const c of CREATURES.filter((x) => x.evolvesTo)) {
-      const next = CREATURES.find((x) => x.id === c.evolvesTo)!;
-      expect(next.talents.length, c.id).toBe(c.talents.length);
+    for (const c of CREATURES) {
+      for (const r of c.evolutions ?? []) expect(CREATURES.find((x) => x.id === r.to)!.talents.length, c.id).toBe(c.talents.length);
     }
   });
 

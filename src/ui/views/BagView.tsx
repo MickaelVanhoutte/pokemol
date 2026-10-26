@@ -42,7 +42,7 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
   const focused = list[cursor];
   const why = (id: string): string | null => {
     const def = item(id);
-    if (context === 'battle' && (def.kind === 'key' || def.kind === 'hold' || def.kind === 'stencil')) return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
+    if (context === 'battle' && (def.kind === 'key' || def.kind === 'hold' || def.kind === 'stencil' || def.kind === 'evo')) return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
     if (context === 'battle' && def.kind === 'ball' && !wild) return tr(L('On ne lance pas de Crayon-ball sur la Bestiole d’un dresseur !', 'You can’t throw a Pencil Ball at a trainer’s Critter!'));
     if (context === 'battle' && def.kind === 'field') return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
     if (context === 'field' && def.kind === 'battle') return tr(L('Cet objet ne s’utilise qu’en combat, sur la Bestiole qui se bat.', 'This item only works in battle, on the Critter fighting.'));

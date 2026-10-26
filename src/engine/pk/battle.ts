@@ -776,6 +776,7 @@ function checkFaints(st: BattleState, out: Out) {
   const mine = activeMon(me);
   if (!alive(mine) && !st.needSwitch) {
     out.push({ t: 'faint', side: 0, idx: me.active });
+    mine.friendship = Math.max(0, (mine.friendship ?? 70) - 1);
     st.participants = st.participants.filter((u) => u !== mine.uid);
     if (!me.party.some(alive)) finish(st, 'lose', out);
     else st.needSwitch = true;

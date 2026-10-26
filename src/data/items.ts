@@ -144,6 +144,13 @@ export const ITEMS: ItemDef[] = [
     desc: L(`Un crayon de couleur ${colour.fr} bien taillé. À faire tenir : les capacités de type ${TYPES[type].name.fr} font 20 % de dégâts en plus.`,
       `A sharp ${colour.en} colouring pencil. To hold: ${TYPES[type].name.en}-type moves do 20% more damage.`),
   })),
+  // magic pencils: some Bestioles evolve when redrawn with one (used from the bag)
+  ...(['feu', 'eau', 'electrique', 'plante', 'fee', 'psy', 'tenebres'] as const).map((type): ItemDef => ({
+    id: `crayon-magique-${type}`, name: L(`Crayon Magique ${TYPES[type].name.fr}`, `Magic ${TYPES[type].name.en} Pencil`),
+    price: 2100, kind: 'evo', amount: 0, type,
+    desc: L(`Un crayon qui scintille, couleur ${TYPES[type].name.fr}. Certaines Bestioles évoluent quand on les redessine avec.`,
+      `A shimmering ${TYPES[type].name.en}-coloured pencil. Some Critters evolve when they are redrawn with it.`),
+  })),
   // stronger held items
   {
     id: 'bandeau-tetu', name: L('Bandeau Têtu', 'Stubborn Band'), price: 6000, kind: 'hold', amount: 0, hold: 'lockAtk',

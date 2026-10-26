@@ -2,7 +2,7 @@ import { creature } from '../../data/creatures';
 import { move } from '../../data/moves';
 import { NATURES, natureTenths } from '../../data/natures';
 import { HIDDEN_TALENT_CHANCE, type TalentSlot } from '../../data/talents';
-import type { Major, StatKey, Stats } from '../../data/schema';
+import type { Major, SpeciesDef, StatKey, Stats } from '../../data/schema';
 import { nextRandom, randomInt } from '../rng';
 
 export interface MoveSlot {
@@ -11,6 +11,9 @@ export interface MoveSlot {
 }
 
 export type MetHow = 'starter' | 'caught' | 'gift' | 'tombola' | 'egg';
+
+/** Friendship of a new creature (0–255); 220 or more counts as "a great friendship". */
+export const BASE_FRIENDSHIP = 70;
 
 /** Chance (out of 1) for a new creature to be a sparkly ("pailleté") variant. */
 export const SHINY_CHANCE = 1 / 100;
@@ -35,6 +38,8 @@ export interface Mon {
   nickname?: string;
   /** Where and how it joined the player (empty for older saves). */
   met?: { level: number; map: string; how: MetHow };
+  /** 0–255: grows when it levels up and walks with you, shrinks a little when it faints. */
+  friendship?: number;
   /** Held item id (berries are eaten in battle). */
   item: string | null;
   hp: number;
@@ -74,6 +79,15 @@ export function statsOf(m: Mon): Stats {
 
 export const maxHp = (m: Mon) => statsOf(m).hp;
 
+/** Level-up moves it could have learnt by now but doesn't know (newest first), for the Move Rememberer. */
+export function rememberableMoves(m: Pick<Mon, 'species' | 'level' | 'moves'>): string[] {
+  const out: string[] = [];
+  for (const [lvl, id] of creature(m.species).learnset) {
+    if (lvl <= m.level && !m.moves.some((s) => s.id === id) && !out.includes(id)) out.push(id);
+  }
+  return out.reverse();
+}
+
 /** Moves known at a level: the last four learnt by level-up. */
 export function movesAt(speciesId: string, level: number): string[] {
   const learnt: string[] = [];
@@ -100,6 +114,7 @@ export function createMon(speciesId: string, level: number, st: { rng: number },
     nature: NATURES[randomInt(st, NATURES.length)].id,
     talent: nextRandom(st) < HIDDEN_TALENT_CHANCE ? 2 : (randomInt(st, 2) as TalentSlot),
     shiny: nextRandom(st) < SHINY_CHANCE,
+    friendship: BASE_FRIENDSHIP,
     species: speciesId,
     level,
     xp: xpAt(level),
@@ -158,6 +173,8 @@ export function addXp(m: Mon, amount: number): LevelUp[] {
     const before = maxHp(m);
     m.level++;
     if (m.hp > 0) m.hp += maxHp(m) - before;
+    const f = m.friendship ?? BASE_FRIENDSHIP;
+    m.friendship = Math.min(255, f + (f < 100 ? 5 : f < 200 ? 3 : 2));
     const up: LevelUp = { level: m.level, learned: [], pending: [] };
     for (const [lvl, id] of creature(m.species).learnset) {
       if (lvl !== m.level || m.moves.some((s) => s.id === id)) continue;
@@ -179,9 +196,28 @@ export function learnMove(m: Mon, slot: number, id: string) {
   m.moves[slot] = { id, pp: move(id).pp };
 }
 
+export type EvolutionTrigger = { kind: 'level' } | { kind: 'item'; item: string };
+
+/**
+ * The species a creature evolves into from this trigger, or null. Pure: it only reads the rules of
+ * `sp`. Item rules need their item; level and friendship rules work on levelling up.
+ */
+export function evolutionFor(sp: SpeciesDef, m: Pick<Mon, 'level' | 'friendship'>, trigger: EvolutionTrigger): string | null {
+  for (const r of sp.evolutions ?? []) {
+    if (trigger.kind === 'item') {
+      if (r.item === trigger.item) return r.to;
+      continue;
+    }
+    if (r.item || (r.level === undefined && r.friendship === undefined)) continue;
+    if (r.level !== undefined && m.level < r.level) continue;
+    if (r.friendship !== undefined && (m.friendship ?? BASE_FRIENDSHIP) < r.friendship) continue;
+    return r.to;
+  }
+  return null;
+}
+
 export function evolutionOf(m: Mon): string | null {
-  const sp = creature(m.species);
-  return sp.evolvesTo && sp.evolveLevel && m.level >= sp.evolveLevel ? sp.evolvesTo : null;
+  return evolutionFor(creature(m.species), m, { kind: 'level' });
 }
 
 /** Turns the creature into its evolution, keeping level, XP, moves and missing HP. */

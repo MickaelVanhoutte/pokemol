@@ -178,6 +178,8 @@ function onStep(x: number, y: number): boolean {
   }
   if (save.value) {
     save.value.steps = (save.value.steps ?? 0) + 1;
+    // walking together makes friends
+    if (save.value.steps % 128 === 0) for (const m of save.value.party) m.friendship = Math.min(255, (m.friendship ?? 70) + 1);
     if (save.value.repel) {
       save.value.repel--;
       if (!save.value.repel) {
@@ -499,7 +501,8 @@ export async function checkEvolutions() {
   }
 }
 
-async function teachMove(i: number, id: string) {
+/** Teaches a move to the party creature `i` (asks which move to forget when it knows four). */
+export async function teachMove(i: number, id: string) {
   const m = s().party[i];
   const vars = { n: monLabel(m), m: tr(move(id).name) };
   if (m.moves.length < 4) {
