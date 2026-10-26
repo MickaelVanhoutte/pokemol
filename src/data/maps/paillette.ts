@@ -50,11 +50,11 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       rate: 0.13,
       table: [
         { id: '005', w: 20, min: 26, max: 29 },
-        { id: '006', w: 20, min: 26, max: 29 },
-        { id: '013', w: 16, min: 26, max: 29 },
+        { id: '006', w: 32, min: 26, max: 29, time: 'night' },
+        { id: '013', w: 16, min: 26, max: 29, time: 'day' },
         { id: '007', w: 16, min: 27, max: 30 },
         { id: '004', w: 14, min: 27, max: 30 },
-        { id: '010', w: 8, min: 28, max: 30 },
+        { id: '010', w: 14, min: 28, max: 30, time: 'night' },
         { id: '008', w: 6, min: 28, max: 30 },
         { id: '014', w: 8, min: 27, max: 30 },
         { id: '016', w: 3, min: 26, max: 28 },
@@ -99,6 +99,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
     signs: [{ x: 2, y: 12, text: L('BOURG-PAILLETTE\nTout ce qui brille vient d’ici.\nAtelier de Célestine', 'GLIMMERTON\nEverything that sparkles comes from here.\nCelestine’s Atelier') }],
     items: [{ x: 18, y: 14, item: 'page-8', hidden: true }],
     npcs: [
+      { id: 'tradePaillette', x: 3, y: 13, look: LOOKS.ghostgirl, facing: 'right', script: 'trade_paillette' },
       { id: 'block1', x: 9, y: 1, look: LOOKS.gomme, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },
       { id: 'block2', x: 10, y: 1, look: LOOKS.gommeF, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },
       { id: 'paillGirl', x: 16, y: 13, look: LOOKS.girl, facing: 'left', wander: true, script: 'paillGirl' },

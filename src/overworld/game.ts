@@ -7,6 +7,7 @@ import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
 import { SpriteSheet, type Look } from './sprites';
 import { tile } from './tiles';
+import { creature } from '../data/creatures';
 
 export const TILE = 16;
 const MARGIN = 9;
@@ -41,6 +42,8 @@ export interface Actor {
   carry?: number;
   /** Sliding on glossy paper (no walking animation, no control). */
   sliding?: boolean;
+  /** A Bestiole standing on the map: drawn from its miniature. */
+  mini?: HTMLImageElement;
 }
 
 /** The first Bestiole of the party, walking one step behind the player (drawn from its miniature). */
@@ -123,6 +126,19 @@ export class Input {
 }
 
 const sheetCache = new Map<string, SpriteSheet>();
+const minis = new Map<string, HTMLImageElement>();
+/** A Bestiole's overworld miniature (public/minis, made by `npm run minis`). */
+export function miniFor(species: string): HTMLImageElement {
+  let img = minis.get(species);
+  if (!img) {
+    const sp = creature(species);
+    img = new Image();
+    img.src = `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
+    minis.set(species, img);
+  }
+  return img;
+}
+
 export function sheetFor(look: Look): SpriteSheet {
   const key = JSON.stringify(look);
   let s = sheetCache.get(key);
@@ -169,7 +185,7 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
     layers.push(c);
   }
   const npcs: Actor[] = (def.npcs ?? []).filter(visibleNpc).map((n) => ({
-    id: n.id, x: n.x, y: n.y, dir: n.facing, sheet: sheetFor(n.look), moving: false, t: 0,
+    id: n.id, x: n.x, y: n.y, dir: n.facing, sheet: sheetFor(n.look), moving: false, t: 0, mini: n.mon ? miniFor(n.mon) : undefined,
     fromX: n.x, fromY: n.y, ms: WALK_MS * 1.3, step: 0, npc: n, homeX: n.x, homeY: n.y,
     wanderIn: 1500 + Math.random() * 2500,
   }));
@@ -188,6 +204,8 @@ export class Game {
   biking = false;
   /** Strong Gloves on: walking into a boulder pushes it (until the next map). */
   strength = false;
+  /** Colour wash for the time of day (evening, night), outdoors only. */
+  timeTint: string | null = null;
   /** The Bestiole walking behind the player (null: none, or switched off). */
   follower: Follower | null = null;
   /** Obstacles still standing on this map (cut bushes and broken rocks are gone until it is entered again). */
@@ -624,7 +642,9 @@ export class Game {
         ctx.fillRect(sx + 3, Math.round((a.fromY + (a.y - a.fromY) * a.t) * TILE - camY) + 13, 10, 3);
       }
       if (a === this.player && this.biking) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
-      a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
+      if (a.mini) {
+        if (a.mini.complete && a.mini.naturalWidth) ctx.drawImage(a.mini, Math.round(sx + (TILE - a.mini.naturalWidth) / 2), sy + TILE - a.mini.naturalHeight - 1);
+      } else a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
       // sailing: the paper boat hides the legs
       if (a === this.player && this.surfing) ctx.drawImage(fieldSprite('boat'), sx, sy + 9 + Math.round(Math.sin(performance.now() / 300)));
       // tall grass hides the legs
@@ -646,6 +666,13 @@ export class Game {
     if (def.tint) {
       ctx.fillStyle = def.tint;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
+    }
+    // evening and night outdoors: multiplied, so colours darken without going grey
+    if (this.timeTint && !def.indoor) {
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.fillStyle = this.timeTint;
+      ctx.fillRect(0, 0, this.viewW, this.viewH);
+      ctx.globalCompositeOperation = 'source-over';
     }
     if (def.fog) {
       const t = performance.now() / 1000;

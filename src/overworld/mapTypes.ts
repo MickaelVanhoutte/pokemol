@@ -38,6 +38,8 @@ export interface NpcDef {
   hideIf?: string;
   /** In a shared interior: only there when entered from one of these maps. */
   fromMap?: string[];
+  /** A Bestiole standing there, drawn as its miniature instead of a person (`look` is then unused). */
+  mon?: string;
 }
 
 export interface SignDef {
@@ -112,7 +114,8 @@ export interface EncounterTable {
   rate: number;
   /** Encounters on every walkable tile (caves), not only tall grass. */
   anyTile?: boolean;
-  table: { id: string; w: number; min: number; max: number }[];
+  /** `time`: only by day (evening included) or only at night. */
+  table: { id: string; w: number; min: number; max: number; time?: 'day' | 'night' }[];
 }
 
 /** An item lying on the ground (picked up once). */

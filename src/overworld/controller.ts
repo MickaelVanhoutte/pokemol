@@ -15,7 +15,7 @@ import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
-import { DIRS, Game, type Actor } from './game';
+import { DIRS, Game, miniFor, type Actor } from './game';
 import type { FresqueDef, MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, WarpTarget } from './mapTypes';
 import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
@@ -24,6 +24,7 @@ import { tile } from './tiles';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
 import { prefs } from '../state/prefs';
+import { hourNow, meetsTime, phaseAt, type DayPhase } from '../state/clock';
 import { sfx } from '../audio/sfx';
 import { playJingle, playMusic, type TrackId } from '../audio/music';
 import { trackForMap } from '../audio/mapMusic';
@@ -49,6 +50,8 @@ export function getGame(): Game {
   if (!game) {
     game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true), onPush, onDrop, canFall, onFollower: () => void locked(talkFollower) });
     game.canRun = () => !!save.value?.bag.baskets;
+    // the sky follows the clock
+    setInterval(updateTime, 30000);
     // the follower changes with the party's first Bestiole (and the option)
     effect(() => {
       void save.value;
@@ -60,6 +63,13 @@ export function getGame(): Game {
 }
 
 const s = (): SaveData => save.value!;
+
+const TIME_TINT: Record<DayPhase, string | null> = { day: null, evening: 'rgb(255, 200, 165)', night: 'rgb(105, 120, 200)' };
+/** Morning, evening or night in Papeterre (the device's clock, shifted by naps at home). */
+export const dayPhase = (): DayPhase => phaseAt(hourNow(save.value?.clockShift ?? 0));
+export function updateTime() {
+  if (game) game.timeTint = TIME_TINT[dayPhase()];
+}
 export const flag = (name: string) => !!save.value?.flags[name];
 /** Set when a flag changes, so the map (patches, NPCs) is rebuilt once the script ends. */
 let mapDirty = false;
@@ -114,6 +124,8 @@ function loadMap(id: string) {
   hiddenPickups = (def.items ?? []).filter((p) => p.hidden && free(p));
   // places visited (the Bestiodex only names habitats you have been to)
   if (save.value) save.value.flags[`seen:${def.id}`] = 1;
+  updateTime();
+  markRematches();
 }
 
 /** Rebuilds the current map after story flags changed (erased areas, people coming and going). */
@@ -267,7 +279,11 @@ function onStep(x: number, y: number): boolean {
   const grassy = enc && (onWater || enc.anyTile || tile(g.map.tiles[y * g.map.w + x]).encounter);
   if (enc && grassy && partyAlive(s()) && Math.random() < enc.rate) {
     const st = { rng: newSeed() };
-    const e = pickWeighted(st, enc.table, (r) => r.w);
+    // some Bestioles only come out at night (or by day)
+    const phase = dayPhase();
+    const table = enc.table.filter((r) => meetsTime(r.time, phase));
+    if (!table.length) return false;
+    const e = pickWeighted(st, table, (r) => r.w);
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));
     // the spray keeps away wild Bestioles weaker than the first one able to fight
     const lead = s().party.find((m) => m.hp > 0 && !m.egg);
@@ -287,6 +303,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     if (!def) return;
     if (def.trainer && !flag(`tr:${def.trainer}`)) return void locked(() => trainerBattle(def.trainer!, npc));
     if (def.trainer && TRAINERS[def.trainer].badge && flag('ending')) return void locked(() => rematch(def.trainer!, npc));
+    if (def.trainer && routeRematchReady(def.trainer)) return void locked(() => routeRematch(def.trainer!, npc));
     if (def.trainer) return void locked(() => sayAll(TRAINERS[def.trainer!].after, TRAINERS[def.trainer!].name));
     if (def.script && scripts[def.script]) return void runScript(def.script);
     if (def.text) return void locked(() => sayAll(def.text!));
@@ -354,19 +371,6 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
 
 // ------------------------------------------------------------------ the Bestiole that follows you
 
-const minis = new Map<string, HTMLImageElement>();
-/** The overworld miniature of a drawing (public/minis, made by `npm run minis`). */
-function miniImage(id: string): HTMLImageElement {
-  let img = minis.get(id);
-  if (!img) {
-    const sp = creature(id);
-    img = new Image();
-    img.src = `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
-    minis.set(id, img);
-  }
-  return img;
-}
-
 const followerLead = () => save.value?.party.find((m) => !m.egg && m.hp > 0);
 
 /** Keeps the follower in step with the first Bestiole of the party able to walk. */
@@ -378,7 +382,7 @@ export function refreshFollower() {
     g.follower = null;
     return;
   }
-  const img = miniImage(lead.species);
+  const img = miniFor(lead.species);
   if (g.follower?.img === img) return;
   const p = g.player;
   const had = g.follower;
@@ -664,6 +668,8 @@ export async function trainerBattle(id: string, actor?: Actor) {
     const newBadge = !!tdef.badge && !s().badges.includes(tdef.badge);
     update((d) => {
       d.flags[`tr:${id}`] = 1;
+      // route trainers want a rematch from tomorrow on
+      d.flags[`re:${id}`] = localDay();
       if (tdef.storyFlag) d.flags[tdef.storyFlag] = 1;
       if (newBadge) {
         d.badges.push(tdef.badge!);
@@ -690,6 +696,44 @@ export async function trainerBattle(id: string, actor?: Actor) {
     }
     if (tdef.afterScript && scripts[tdef.afterScript]) await scripts[tdef.afterScript]();
   }
+}
+
+/** Top level of a route trainer's rematch team, by badges owned. */
+const REMATCH_LEVEL = [7, 13, 19, 24, 28, 33, 37, 41, 47];
+
+/**
+ * Route and cave trainers already beaten want a rematch once a day (not Atelier trainers, Team
+ * Gomme or story fights), with a team that keeps up with the player's badges.
+ */
+export function routeRematchReady(id: string): boolean {
+  const t = TRAINERS[id];
+  const map = game?.map?.def.id ?? '';
+  if (!t || t.badge || t.grey || t.storyFlag || t.afterScript || !flag(`tr:${id}`)) return false;
+  if (map.startsWith('atelier') || map === 'concours') return false;
+  return s().flags[`re:${id}`] !== localDay();
+}
+
+async function routeRematch(id: string, actor: Actor) {
+  const t = TRAINERS[id];
+  const c = await ask(L('Hé ! J’ai entraîné mes Bestioles depuis la dernière fois. Une revanche ?', 'Hey! I’ve been training my Critters since last time. A rematch?'), [L('Oui', 'Yes'), L('Non', 'No')], t.name);
+  if (c !== 0) return;
+  if (!partyAlive(s())) {
+    await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), t.name);
+    return;
+  }
+  const top = REMATCH_LEVEL[Math.min(REMATCH_LEVEL.length - 1, s().badges.length)];
+  const party = t.party.map((m, i) => ({ ...m, level: Math.min(50, Math.max(m.level, top - (t.party.length - 1 - i))) }));
+  const strong: TrainerDef = { ...t, id: `${id}:re`, money: Math.round(t.money * 1.5), party };
+  const out = await fight('trainer', t.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
+  if (out.result !== 'win') return;
+  update((d) => (d.flags[`re:${id}`] = localDay()));
+  actor.bubble = undefined;
+  await say(L('Tu progresses vite ! On remet ça demain ?', 'You’re improving fast! Same time tomorrow?'), t.name);
+}
+
+/** A ♪ over the route trainers who want a rematch today. */
+function markRematches() {
+  for (const a of game?.npcs ?? []) if (a.npc?.trainer && routeRematchReady(a.npc.trainer)) a.bubble = '♪';
 }
 
 /** After the ending, Atelier Masters accept rematches with stronger teams. */

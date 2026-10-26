@@ -45,6 +45,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
     items: [{ x: 20, y: 1, item: 'page-5', hidden: true }],
     signs: [{ x: 6, y: 11, text: L('VILLAGE-PLUME\nOn y fait la sieste au chant des oiseaux.', 'FEATHERBY\nNaps to the sound of birdsong.') }],
     npcs: [
+      { id: 'papiPlume', x: 14, y: 15, look: { hair: '#e8e8f0', shirt: '#8a5a32', pants: '#5a4a3a', hat: '#e0a030' }, facing: 'left', script: 'papiPlume' },
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },
       { id: 'birdKid', x: 3, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')] },
       { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!')] },

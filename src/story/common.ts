@@ -53,6 +53,11 @@ scripts.calligraphe = async () => {
   const c = await ask(L('Je calligraphie les surnoms des Bestioles. Laquelle veux-tu renommer ?', 'I write Critters’ nicknames in my best handwriting. Which one should I rename?'),
     [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
   if (c >= party.length) return;
+  // a traded Bestiole keeps the name its first trainer gave it
+  if (party[c].ot) {
+    await say(L('{n} vient de {o}. Son surnom est un cadeau de son premier dresseur : je ne peux pas le changer.', '{n} comes from {o}. Its nickname is a gift from its first trainer: I can’t change it.'), who, { n: monLabel(party[c]), o: party[c].ot! });
+    return;
+  }
   await offerNickname(party[c].uid, false);
   await say(L('Et voilà, écrit avec mes plus belles lettres !', 'There, written in my finest letters!'), who);
 };

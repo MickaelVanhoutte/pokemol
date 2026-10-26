@@ -26,13 +26,14 @@ const MET: Record<MetHow, ReturnType<typeof L>> = {
   gift: L('Reçu au N.{l} — {p}', 'Received at Lv{l} — {p}'),
   tombola: L('Gagné au N.{l} — {p}', 'Won at Lv{l} — {p}'),
   egg: L('Éclos au N.{l} — {p}', 'Hatched at Lv{l} — {p}'),
+  trade: L('Échangé au N.{l} — {p} (de {o})', 'Traded at Lv{l} — {p} (from {o})'),
 };
 
 /** « Attrapé au N.5 — Chemin des Crayons » (nothing for Bestioles from older saves). */
 function metLine(mon: Mon): string | null {
   if (!mon.met) return null;
   const place = MAPS[mon.met.map] ? tr(MAPS[mon.met.map].name) : '???';
-  return tr(MET[mon.met.how], { l: mon.met.level, p: place });
+  return tr(MET[mon.met.how], { l: mon.met.level, p: place, o: mon.ot ?? '?' });
 }
 
 /** Friendship as five hearts (♥ full, ♡ empty). */

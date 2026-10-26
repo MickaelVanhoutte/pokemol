@@ -48,6 +48,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     items: [{ x: 22, y: 1, item: 'page-3', hidden: true }],
     signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Centre · Boutique', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Center · Shop') }],
     npcs: [
+      { id: 'tradeVille', x: 4, y: 17, look: LOOKS.kid, facing: 'up', script: 'trade_ville' },
       { id: 'westGuard', x: 2, y: 8, look: LOOKS.hiker, facing: 'down', script: 'pastelWestGuard' },
       { id: 'caveGuard', x: 19, y: 15, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'down', hideIf: 'badge:plume',
         text: [L('La Grotte Gribouillis est fermée : on entend des bruits de gomme là-dedans…', 'Scribble Cave is closed: you can hear erasers scrubbing in there…'), L('Reviens quand tu auras le badge de Village-Plume, je te laisserai passer.', 'Come back with the Featherby badge and I’ll let you through.')] },
@@ -128,10 +129,10 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 0.13,
       table: [
-        { id: '013', w: 28, min: 5, max: 8 },
+        { id: '013', w: 28, min: 5, max: 8, time: 'day' },
         { id: '012', w: 20, min: 5, max: 7 },
         { id: '004', w: 18, min: 6, max: 8 },
-        { id: '006', w: 16, min: 6, max: 8 },
+        { id: '006', w: 28, min: 6, max: 8, time: 'night' },
         { id: '005', w: 14, min: 6, max: 8 },
         { id: '008', w: 4, min: 8, max: 8 },
         { id: '015', w: 6, min: 7, max: 8 },
@@ -208,7 +209,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 0.14,
       table: [
-        { id: '009', w: 30, min: 7, max: 10 },
+        { id: '009', w: 45, min: 7, max: 10, time: 'night' },
         { id: '007', w: 14, min: 8, max: 11 },
         { id: '012', w: 8, min: 7, max: 8 },
         { id: '013', w: 12, min: 7, max: 10 },

@@ -114,6 +114,8 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     ],
     signs: [{ x: 2, y: 12, text: L('VILLE-FEUTRE\nLa ville fluo qui ne dort jamais.\nAtelier de Zélie · Mont Fusain au nord', 'FELT CITY\nThe neon city that never sleeps.\nZelie’s Atelier · Mount Charcoal to the north') }],
     npcs: [
+      { id: 'tradeFeutre', x: 21, y: 16, look: LOOKS.girl, facing: 'left', script: 'trade_feutre' },
+      { id: 'theo', x: 2, y: 17, look: LOOKS.kid, facing: 'right', script: 'theo' },
       { id: 'feutreMan', x: 8, y: 16, look: LOOKS.hiker, facing: 'right', script: 'feutreMan' },
       { id: 'feutreKid', x: 18, y: 17, look: LOOKS.kid, facing: 'left', wander: true, script: 'feutreKid' },
       { id: 'velociste', x: 5, y: 16, look: { hair: '#3a2a1a', shirt: '#d64545', pants: '#2a2238', hat: '#5b8ad6' }, facing: 'right', script: 'velociste' },

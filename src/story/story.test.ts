@@ -97,3 +97,17 @@ describe('next objective (Town Map)', () => {
     expect(new Set(OBJECTIVES.map((o) => o.id)).size).toBe(OBJECTIVES.length);
   });
 });
+
+describe('trades', async () => {
+  const { TRADES } = await import('./world');
+  const { creature } = await import('../data/creatures');
+  it('swap real Bestioles, once per town, each with a person to talk to', () => {
+    for (const t of TRADES) {
+      expect(() => [creature(t.want), creature(t.give)], t.id).not.toThrow();
+      expect(t.want, t.id).not.toBe(t.give);
+      expect(t.nick.length, t.id).toBeLessThanOrEqual(10);
+      expect(Object.values(MAPS).some((m) => m.npcs?.some((n) => n.script === `trade_${t.id}`)), t.id).toBe(true);
+    }
+    expect(new Set(TRADES.map((t) => t.id)).size).toBe(TRADES.length);
+  });
+});

@@ -25,6 +25,10 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
 | `static:<species>` | a one-time battle (`echoShadow`) | A Bestiole met once was caught or beaten |
 | `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
+| `re:<trainerId>` | `trainerBattle()` on a first win, `routeRematch()` | Local day of a route trainer's last battle: the next day they want a rematch (a ♪ bubble) |
+| `trade:<id>` | `trade()` in `src/story/world.ts` | In-game trade done (`TRADES`, one per town) |
+| `quest:<id>`, `quest:<id>.<step>` | side-quest scripts in `src/story/world.ts` | Favours for townspeople: `lulu` (`.asked`, `.found`), `feu`, `amitie`, `lettre` (`.sent`) |
+| `followerFind` | `talkFollower` | Local day the following Bestiole last found an item |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
 | `gc:<1-4>` | Grand Concours scripts | Grand Maître beaten in the current attempt (cleared at the door) |
@@ -56,6 +60,8 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   - `text: LText[]` for simple talkers, `script` for story NPCs;
   - `trainer` plus `sight` (tiles) for trainers who spot the player;
   - `wander`, `showIf` / `hideIf`, and `fromMap` in shared interiors.
+  - `mon: '<creature id>'` draws the NPC as that Bestiole's little overworld sprite (`public/minis/`),
+    for Bestioles living on the map (Lulu).
 - `signs`, `triggers` (an area that runs a script when stepped on), `interact` (A on a tile runs a
   script).
 - `items`: pick-ups. `hidden: true` is invisible and found with A (used for the sketchbook pages).
@@ -64,6 +70,9 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   once per local day (`src/overworld/berries.ts`).
 - `encounters`: `{ rate, table: [{ id, w, min, max }] }`, where `w` is the weight. Add
   `anyTile: true` in caves.
+  An entry with `time: 'night'` (or `'day'`) only shows up then (evening counts as day): the clock
+  is the device's, shifted by naps in the bed at home (`save.clockShift`, `src/state/clock.ts`).
+  Keep at least one entry for each time in every table. The Bestiodex habitats say « la nuit ».
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
   sketch`).
 - `indoor`, `tint`, `fog`, `onEnter` (towns use `'visitTown'`).

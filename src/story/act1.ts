@@ -7,9 +7,10 @@ import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
 import type { Dir } from '../save/schema';
 import { addItem, healParty, save, update } from '../state/game';
+import { shiftTo } from '../state/clock';
 import { sfx } from '../audio/sfx';
 import {
-  mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
+  dayPhase, updateTime, mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
 } from '../overworld/controller';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
@@ -24,8 +25,26 @@ scripts.intro = async () => {
   await say(L('Maman a l’air de vouloir te parler.', 'Mom seems to want to talk to you.'));
 };
 
+/** Your bed: a nap until the evening or until the morning (day and night follow it). */
 scripts.bed = async () => {
-  await say(L('Ton lit. Il sent le papier et les crayons de couleur… Tu n’as plus sommeil.', 'Your bed. It smells of paper and coloured pencils… You’re not sleepy anymore.'));
+  const night = dayPhase() === 'night';
+  const c = await ask(night
+    ? L('Ton lit. Il fait nuit dehors… Dormir jusqu’au matin ?', 'Your bed. It’s night outside… Sleep until the morning?')
+    : L('Ton lit. Il sent le papier et les crayons de couleur… Faire une sieste jusqu’à la nuit ?', 'Your bed. It smells of paper and coloured pencils… Take a nap until nightfall?'),
+  [L('Oui', 'Yes'), L('Non', 'No')]);
+  if (c !== 0) return;
+  const g = getGame();
+  await g.fadeTo(1, 600);
+  update((d) => {
+    d.clockShift = shiftTo(night ? 8 : 22);
+    healParty(d);
+  });
+  await wait(900);
+  updateTime();
+  await g.fadeTo(0, 600);
+  await say(night
+    ? L('Bonjour ! Le soleil se lève sur Papeterre. Tes Bestioles sont en pleine forme.', 'Good morning! The sun is rising over Papeterra. Your Critters are in top shape.')
+    : L('Bonsoir ! La nuit est tombée sur Papeterre… Certaines Bestioles ne sortent qu’à cette heure-ci.', 'Good evening! Night has fallen over Papeterra… Some Critters only come out at this time.'));
 };
 
 scripts.homeTv = async () => {

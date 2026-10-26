@@ -38,6 +38,9 @@ English: [docs/histoire.md](docs/histoire.md).
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
 - Your first Bestiole walks behind you, as a little pixel version of its drawing; talk to it to see
   how it feels (it sometimes finds things). It can be switched off in Options.
+- A living world: day and night on the device's clock (a nap in your bed at home changes it), with
+  Bestioles that only come out at night; a trade in each town; townspeople asking small favours;
+  route trainers who want a rematch the next day.
 - A music box in the title menu (MUSIQUES) to listen to every original tune.
 - A late game with detours and back-and-forth, a cycling track that loops back south, and a cave
   where something breathes in the dark.

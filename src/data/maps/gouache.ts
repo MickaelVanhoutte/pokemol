@@ -101,6 +101,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     items: [{ x: 1, y: 13, item: 'page-10', hidden: true }],
     berries: [{ x: 2, y: 8, item: 'baie-doree' }],
     npcs: [
+      { id: 'rosalie', x: 16, y: 13, look: LOOKS.granny, facing: 'left', script: 'rosalie' },
       { id: 'gouaGardener', x: 18, y: 5, look: LOOKS.granny, facing: 'down', wander: true, text: [L('La gouache, c’est épais : quand Basile peint une fleur, elle pousse vraiment !', 'Gouache is thick: when Basil paints a flower, it really grows!')] },
       { id: 'gouaKid', x: 5, y: 13, look: LOOKS.kid, facing: 'right', text: [L('Au nord, la Cité-Encre est toute noire… On dit que le chef des Gomme s’y cache.', 'Up north, Ink City is all black… They say the Team Gomme boss hides there.')] },
       { id: 'pecheuseGouache', x: 2, y: 14, look: LOOKS.girl, facing: 'right', script: 'superCanne' },

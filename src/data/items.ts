@@ -255,6 +255,14 @@ export const ITEMS: ItemDef[] = [
     desc: L('Toute la région dessinée sur une feuille. Choisis LIRE pour voir où tu es et où aller ensuite.', 'The whole region drawn on one sheet. Choose READ to see where you are and where to go next.'),
   },
   {
+    id: 'lettre-mamie', name: L('Lettre de Mamie Encre', 'Granny Ink’s Letter'), price: 0, kind: 'key', amount: 0,
+    desc: L('Une lettre écrite à l’encre de nuit, pour Papi Plume, à Village-Plume.', 'A letter written in night ink, for Grandpa Feather in Featherby.'),
+  },
+  {
+    id: 'lettre-papi', name: L('Lettre de Papi Plume', 'Grandpa Feather’s Letter'), price: 0, kind: 'key', amount: 0,
+    desc: L('La réponse de Papi Plume, pour Mamie Encre, à la Cité-Encre.', 'Grandpa Feather’s reply, for Granny Ink in Ink City.'),
+  },
+  {
     id: 'ticket-or', name: L('Ticket d’or', 'Golden Ticket'), price: 0, kind: 'key', amount: 0,
     desc: L('Un ticket brillant tombé de la poche du monsieur de la tombola, à Port-Aquarelle.', 'A shiny ticket dropped by the fair man of Port Aquarelle.'),
   },

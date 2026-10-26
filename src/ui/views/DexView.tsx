@@ -56,7 +56,8 @@ function Habitats({ species, visited }: { species: string; visited: (map: string
   const lines = habitatsOf(species).map((h) => {
     const place = visited(h.map) && MAPS[h.map] ? tr(MAPS[h.map].name) : '???';
     const lv = h.min !== undefined ? ` · N.${h.min}${h.max !== h.min ? `–${h.max}` : ''}` : '';
-    return `${place} (${tr(HOW[h.how])})${lv}`;
+    const when = h.time === 'night' ? tr(L(', la nuit', ', at night')) : h.time === 'day' ? tr(L(', le jour', ', by day')) : '';
+    return `${place} (${tr(HOW[h.how])}${when})${lv}`;
   });
   return (
     <div class="dex__where">

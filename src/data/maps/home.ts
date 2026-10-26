@@ -184,10 +184,11 @@ export const HOME_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 0.13,
       table: [
+        { id: '009', w: 8, min: 3, max: 4, time: 'night' },
         { id: '004', w: 24, min: 2, max: 4 },
         { id: '012', w: 24, min: 2, max: 4 },
-        { id: '013', w: 24, min: 2, max: 4 },
-        { id: '006', w: 14, min: 3, max: 4 },
+        { id: '013', w: 24, min: 2, max: 4, time: 'day' },
+        { id: '006', w: 30, min: 3, max: 4, time: 'night' },
         { id: '005', w: 10, min: 3, max: 4 },
         { id: '008', w: 4, min: 4, max: 4 },
       ],

@@ -10,7 +10,7 @@ export interface MoveSlot {
   pp: number;
 }
 
-export type MetHow = 'starter' | 'caught' | 'gift' | 'tombola' | 'egg';
+export type MetHow = 'starter' | 'caught' | 'gift' | 'tombola' | 'egg' | 'trade';
 
 /** Friendship of a new creature (0–255); 220 or more counts as "a great friendship". */
 export const BASE_FRIENDSHIP = 70;
@@ -38,6 +38,8 @@ export interface Mon {
   nickname?: string;
   /** Where and how it joined the player (empty for older saves). */
   met?: { level: number; map: string; how: MetHow };
+  /** Its first trainer, when it came from a trade (its nickname can't be changed then). */
+  ot?: string;
   /** 0–255: grows when it levels up and walks with you, shrinks a little when it faints. */
   friendship?: number;
   /** Still an egg: it hatches after this many steps carried in the party (it can't fight). */

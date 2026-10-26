@@ -78,6 +78,8 @@ re-renders everything.
   saves (v2 parties go to the PC); `repair()` then fills in what newer versions added (it runs on every
   load, so it must stay idempotent). Changing the save shape means bumping `SAVE_VERSION`, adding a
   migration or repair step and a test (`src/state/game.test.ts`).
+- `src/state/clock.ts`: day, evening and night from the device's clock plus `save.clockShift` (naps in the
+  bed at home). Encounter entries can be `time: 'night'`; outdoor maps get a multiplied tint.
 - `src/state/prefs.ts`: per-device preferences outside the save (text speed, difficulty, battle
   speed, sound, music) so Options also work from the title screen.
 
@@ -102,7 +104,8 @@ re-renders everything.
   - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, evolutions, rematches;
   - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask`.
 
-**Story** (`src/story`): async functions registered as `scripts.<id>`. Maps reference script ids from:
+**Story** (`src/story`): async functions registered as `scripts.<id>`. `world.ts` holds the town trades
+(`TRADES`) and the side quests (`quest:*` flags). Maps reference script ids from:
 - NPCs (`script`), triggers, `interact` spots;
 - building doors (`script`), `onEnter`;
 - a trainer's `afterScript`.

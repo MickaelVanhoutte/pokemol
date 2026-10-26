@@ -35,6 +35,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     ],
     signs: [{ x: 2, y: 11, text: L('ROUTE DES AQUARELLES\n↑ Village-Plume   ↓ Port-Aquarelle', 'WATERCOLOUR WAY\n↑ Featherby   ↓ Port Aquarelle') }],
     npcs: [
+      { id: 'lulu', x: 18, y: 4, look: LOOKS.kid, mon: '006', facing: 'left', script: 'lulu', showIf: 'quest:lulu.asked', hideIf: 'quest:lulu.found' },
       { id: 'r3gus', x: 15, y: 10, look: LOOKS.sailor, facing: 'left', trainer: 'r3gus', sight: 3 },
       { id: 'r3lise', x: 6, y: 5, look: LOOKS.girl, facing: 'right', trainer: 'r3lise', sight: 4 },
     ],
@@ -109,6 +110,9 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     signs: [{ x: 3, y: 12, text: L('PORT-AQUARELLE\nLà où la mer se peint toute seule.\nAtelier de Marine · Tombola', 'PORT AQUARELLE\nWhere the sea paints itself.\nMarine’s Atelier · Fair') }],
     items: [{ x: 22, y: 18, item: 'page-6', hidden: true }, { x: 6, y: 22, item: 'pochoir-14' }, { x: 21, y: 24, item: 'crayon-blanc' }],
     npcs: [
+      { id: 'tradePort', x: 23, y: 13, look: LOOKS.sailor, facing: 'left', script: 'trade_port' },
+      { id: 'margaux', x: 2, y: 15, look: LOOKS.girl, facing: 'right', script: 'margaux' },
+      { id: 'luluHome', x: 3, y: 15, look: LOOKS.kid, mon: '006', facing: 'left', showIf: 'quest:lulu', text: [L('Lulu fait la ronde autour de Margaux en chantonnant.', 'Lulu dances around Margaux, humming.')] },
       { id: 'passeur', x: 20, y: 16, look: LOOKS.passeur, facing: 'left', script: 'passeur', showIf: 'a3.note' },
       { id: 'portSailor', x: 21, y: 15, look: LOOKS.sailor, facing: 'down', wander: true, text: [L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!')] },
       { id: 'portKid', x: 14, y: 12, look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le monsieur de la tombola a perdu son Ticket d’or sur la route du nord. Il est tout triste.', 'The fair man lost his Golden Ticket on the north road. He’s so sad.')] },

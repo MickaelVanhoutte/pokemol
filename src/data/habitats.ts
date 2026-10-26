@@ -7,6 +7,8 @@ export interface Habitat {
   how: HabitatHow;
   min?: number;
   max?: number;
+  /** Only by day or only at night there. */
+  time?: 'day' | 'night';
 }
 
 /** Bestioles given by someone (not found in the wild). */
@@ -20,10 +22,11 @@ const STATIC: Record<string, [string, number][]> = { '011': [['grotteEchos', 45]
  */
 export function habitatsOf(species: string): Habitat[] {
   const out: Habitat[] = [];
-  const add = (map: string, how: HabitatHow, rows: { id: string; min: number; max: number }[] | undefined) => {
+  const add = (map: string, how: HabitatHow, rows: { id: string; min: number; max: number; time?: 'day' | 'night' }[] | undefined) => {
     const mine = (rows ?? []).filter((r) => r.id === species);
     if (!mine.length) return;
-    out.push({ map, how, min: Math.min(...mine.map((r) => r.min)), max: Math.max(...mine.map((r) => r.max)) });
+    const time = mine.every((r) => r.time === mine[0].time) ? mine[0].time : undefined;
+    out.push({ map, how, min: Math.min(...mine.map((r) => r.min)), max: Math.max(...mine.map((r) => r.max)), ...(time ? { time } : {}) });
   };
   for (const m of Object.values(MAPS)) {
     add(m.id, m.encounters?.anyTile ? 'cave' : 'grass', m.encounters?.table);

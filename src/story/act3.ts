@@ -207,10 +207,6 @@ scripts.encreNorth = async () => {
   await g.walk(g.player, ['down'], 160);
 };
 
-scripts.encreOld = async () => {
-  await say(L('Tu sais, on raconte que le monde a un bord. Comme une page de cahier. Et que tout au bout, quelqu’un dort…', 'You know, they say the world has an edge. Like a notebook page. And that at the very end, someone is sleeping…'), L('Mamie Encre', 'Granny Ink'));
-};
-
 scripts.rature2Stop = async () => {
   const g = getGame();
   const r = g.npc('rature2');

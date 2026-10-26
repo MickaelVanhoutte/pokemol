@@ -34,6 +34,8 @@ export interface SaveData {
   repel?: number;
   /** Steps walked in all (friendship, eggs…). */
   steps?: number;
+  /** Hours added to the device's clock by naps in the bed at home (day and night). */
+  clockShift?: number;
   /** The Pension Crayonnée: up to 2 Bestioles (with their level when left), and an egg waiting. */
   daycare?: { slots: { mon: Mon; level: number }[]; egg: boolean };
   /** Teams that won the Grand Concours, oldest first. */

@@ -3,8 +3,12 @@ import { badgeDef } from '../../data/badges';
 import { TYPES } from '../../data/types';
 import type { SaveData } from '../../save/schema';
 import { Frame, Window } from '../paper';
+import { hourNow, phaseAt } from '../../state/clock';
 import { useMenuNav } from '../paper/nav';
 import './views.css';
+
+/** Papeterre’s hour, with a sun or a moon. */
+const clock = (h: number) => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.floor((h % 1) * 60)).padStart(2, '0')} ${phaseAt(h) === 'night' ? '☾' : '☼'}`;
 
 const time = (ms: number) => {
   const m = Math.floor(ms / 60000);
@@ -35,6 +39,7 @@ export function TrainerCardView({ save, avatar, onClose }: { save: SaveData; ava
             <dt>{tr(L('ARGENT', 'MONEY'))}</dt><dd>{save.money} ₽</dd>
             <dt>{tr(L('BESTIODEX', 'CRITTERDEX'))}</dt><dd>{save.dex.caught.length}</dd>
             <dt>{tr(L('TEMPS', 'TIME'))}</dt><dd>{time(save.playMs)}</dd>
+            <dt>{tr(L('HEURE', 'CLOCK'))}</dt><dd>{clock(hourNow(save.clockShift ?? 0))}</dd>
             {!!save.hallOfFame?.length && <><dt>{tr(L('CONCOURS', 'CONTEST'))}</dt><dd>×{save.hallOfFame.length}</dd></>}
             {!!save.tower?.best && <><dt>{tr(L('TOUR', 'TOWER'))}</dt><dd title={tr(L('Meilleure série', 'Best streak'))}>{save.tower.best}</dd></>}
           </dl>

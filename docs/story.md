@@ -112,6 +112,31 @@ is shown, from talking to Mom to the Great Eraser, then the post-game (Bestiodex
 `rematch:<trainerId>` set on a rematch win). A story step means a new entry there; the story test
 checks every step's flags are set somewhere and its target is on the map.
 
+**Living world** (`src/story/world.ts`).
+- *Day and night* follow the device's clock (day 7–19 h, evening 19–21 h, night). Outdoors get a
+  warm or blue tint (`TIME_TINT` in the controller, multiplied). The bed at home offers a nap until
+  night or until morning (it heals the party). At night: Lunelle on Routes 1, 2 and 6, Brumouille on
+  Route 1 and more often in the Misty Woods, Grimouille on Route 6; Piafou only comes out by day.
+  The trainer card shows the time.
+- *Trades*, one per town (`TRADES`): Hugo in Ville-Pastel (Chenillou → Piafou « Plumette »), Yves in
+  Port-Aquarelle (Zigzou → Clapotin « Bouée »), Nina in Ville-Feutre (Lunelle → Touffou « Frisette »),
+  Paul in Village-Braise (Brumouille → Braisou « Étincelle »), Maëlle in Bourg-Paillette
+  (Chantouille → Minousse « Brindille »). Between them, every starter. Traded Bestioles keep their
+  first trainer (`ot`), show « Échangé » in their summary, and the Calligrapher won't rename them.
+- *Favours*:
+  - Margaux (Port-Aquarelle) lost her Lunelle Lulu on Route 3: Lulu hides behind the rocks
+    (an NPC drawn as her mini); bring the news back for a Greedy Bell and 2 Golden Berries, and Lulu
+    is then home next to Margaux.
+  - Théo (Ville-Feutre) has never seen a Fire Bestiole: show him one for a Fierce Marble.
+  - Rosalie (Jardin-Gouache) wants a Bestiole at 220+ friendship: a Snack and a Prism Berry.
+  - Mamie Encre (Cité-Encre) sends a letter to her brother Papi Plume (Village-Plume): he gives
+    5 Super Crayon-balls and a reply; bringing it back gives a Spiky Helmet.
+- *Route rematches*: once beaten, route trainers want a rematch the next day (a ♪ bubble), with
+  their team raised to `REMATCH_LEVEL[badges]` (L7 with no badge up to L47 after the ending). Prize
+  as usual.
+- *The following Bestiole* has lines for each place and for its friendship, and once a day it may
+  find an item.
+
 **Post-game** (`ending` set):
 - the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);
 - Atelier Masters offer rematches at +12 levels;
