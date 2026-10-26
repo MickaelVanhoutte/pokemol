@@ -28,9 +28,9 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     tint: 'rgba(30, 20, 20, 0.22)',
     rows: [
       'KKKKKKKKKKKKKKKKKKKK',
-      'KkkkkkKKKkkkkkkkkkUK',
-      'KkkrkkKKKkkkkrkkkkkK',
-      'KkkkkkkkkkkkkkkKKkkK',
+      'Kk@k@kKKKkkkkkkkkkUK',
+      'KkkkkkKKKkkkkrkkkkkK',
+      'KKKkKKkkkkkkkkkKKkkK',
       'KKKkkkkKKKkkkkkKKkkK',
       'KkkkkrkkkkkkkkkkkkkK',
       'KKkkkkkkKKKKkkkrkkkK',
@@ -42,7 +42,15 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       'KKKKKKKKkkkkKKKKKKKK',
       'KKKKKKKKKEEKKKKKKKKK',
     ],
-    obstacles: [{ x: 1, y: 9, kind: 'boulder' }],
+    // the vault: two boulders dropped from the crater above land on its plates and open the gate
+    obstacles: [
+      { x: 1, y: 9, kind: 'boulder' },
+      { x: 2, y: 1, kind: 'boulder', showIf: 'hole:montFusain2:12,1' },
+      { x: 4, y: 1, kind: 'boulder', showIf: 'hole:montFusain2:15,1' },
+    ],
+    puzzles: [{ flag: 'puzzle:mfVault', plates: [[2, 1], [4, 1]] }],
+    patches: [{ id: 'mfVault', x: 3, y: 3, rows: ['G'], unless: 'puzzle:mfVault' }],
+    signs: [{ x: 4, y: 3, text: L('Une plaque gravée : « Deux poids tombés d’en haut ouvriront cette grille. »', 'An engraved plate: “Two weights falling from above will open this gate.”') }],
     warps: [
       { x: 9, y: 13, to: { map: 'feutre', x: 11, y: 4, facing: 'down' } },
       { x: 10, y: 13, to: { map: 'feutre', x: 11, y: 4, facing: 'down' } },
@@ -53,7 +61,10 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'mfRemi', x: 13, y: 9, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'up', trainer: 'mfRemi', sight: 3 },
       { id: 'mineur', x: 13, y: 10, look: LOOKS.hiker, facing: 'down', script: 'mineur' },
     ],
-    items: [{ x: 1, y: 10, item: 'super-potion' }, { x: 3, y: 1, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }, { x: 2, y: 8, item: 'pochoir-13' }],
+    items: [
+      { x: 1, y: 10, item: 'super-potion' }, { x: 4, y: 10, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }, { x: 2, y: 8, item: 'pochoir-13' },
+      { x: 1, y: 1, item: 'bille-ardente' }, { x: 5, y: 2, item: 'baie-doree', count: 2 },
+    ],
     encounters: FUSAIN_ENCOUNTERS,
   },
 
@@ -67,7 +78,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     tint: 'rgba(120, 40, 20, 0.18)',
     rows: [
       'KKKKKKKKKKKKKKKKKK',
-      'KkkkkkkkkkkkkkkkDK',
+      'KkkkkkkkkkkkOkkODK',
       'KkkrkkkkKKKkkkkkkK',
       'KkkkkkkkKKKkkrkkkK',
       'KKKKkkkkkkkkkkkKKK',
@@ -75,17 +86,30 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       'KkkrkkkKKKKkkkkkkK',
       'KkkkkkkkkkkkkkkrkK',
       'KKKKKKkkkkkkKKKKKK',
-      'KKKKKKkkkkkkKKKKKK',
-      'KKKKKKkkkkkkKKKKKK',
+      'KKkkkkkkkkkkKKKKKK',
+      'KKkkkKkkkkkkKKKKKK',
       'KKKKKKKKEEKKKKKKKK',
     ],
+    // two boulders (Strong Gloves) for the two holes by the stairs: they land in the vault below
+    obstacles: [{ id: 'mfA', x: 12, y: 3, kind: 'boulder' }, { id: 'mfB', x: 14, y: 2, kind: 'boulder' }],
+    holes: [
+      { x: 12, y: 1, to: { map: 'montFusain1', x: 2, y: 1 } },
+      { x: 15, y: 1, to: { map: 'montFusain1', x: 4, y: 1 } },
+    ],
+    signs: [{ x: 13, y: 3, text: L('Gravé dans la roche : « Deux trous, deux rochers… Un trésor dort juste en dessous. Coincé ? Redescends l’escalier et remonte : tout se remet en place. »', 'Carved in the rock: “Two holes, two boulders… A treasure sleeps right below. Stuck? Go down the stairs and back up: everything goes back in place.”') }],
+    // the fresque of Braisou hides a little room by the way out
+    patches: [{ id: 'montFresque', x: 2, y: 9, rows: ['KKKF', 'KKK'], unless: 'fresque:mont' }],
+    fresques: [{ x: 5, y: 9, id: 'mont', species: '002' }],
     warps: [
       { x: 16, y: 1, to: { map: 'montFusain1', x: 18, y: 2, facing: 'down' } },
       { x: 8, y: 11, to: { map: 'braise', x: 8, y: 14, facing: 'up' } },
       { x: 9, y: 11, to: { map: 'braise', x: 9, y: 14, facing: 'up' } },
     ],
     npcs: [{ id: 'mfErmite', x: 12, y: 5, look: { hair: '#e8e8f0', shirt: '#3a3448', pants: '#2a2238', hat: '#5a5470' }, facing: 'left', trainer: 'mfErmite', sight: 4 }],
-    items: [{ x: 1, y: 7, item: 'rappel' }, { x: 16, y: 7, item: 'gouter', hidden: true }],
+    items: [
+      { x: 1, y: 7, item: 'rappel' }, { x: 16, y: 7, item: 'gouter', hidden: true },
+      { x: 2, y: 9, item: 'tablier-peintre', showIf: 'fresque:mont' }, { x: 3, y: 10, item: 'super-potion', count: 2, showIf: 'fresque:mont' },
+    ],
     encounters: FUSAIN_ENCOUNTERS,
   },
 

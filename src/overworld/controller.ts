@@ -16,7 +16,8 @@ import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
 import { DIRS, Game, type Actor } from './game';
-import type { MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, WarpTarget } from './mapTypes';
+import type { FresqueDef, MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, WarpTarget } from './mapTypes';
+import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
 import { AVATARS, LOOKS, type Look } from './sprites';
 import { tile } from './tiles';
@@ -44,7 +45,7 @@ export function showToast(msg: string) {
 
 export function getGame(): Game {
   if (!game) {
-    game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true) });
+    game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true), onPush, onDrop, canFall });
     game.canRun = () => !!save.value?.bag.baskets;
   }
   return game;
@@ -70,9 +71,26 @@ const pickupFlag = (map: string, p: PickupDef) => `item:${map}:${p.x},${p.y}`;
 /** Hidden items of the current map, found with A. */
 let hiddenPickups: PickupDef[] = [];
 
+/** Pushables that only exist while a flag is (not) set; one that fell through a pit is gone for good. */
+function visibleObstacle(o: ObstacleDef): boolean {
+  if (o.showIf && !flag(o.showIf)) return false;
+  if (o.hideIf && flag(o.hideIf)) return false;
+  return !(o.id && flag(`fell:${o.id}`));
+}
+
+export const holeFlag = (map: string, x: number, y: number) => `hole:${map}:${x},${y}`;
+/** Crayon barriers: flipped by a switch for the rest of the visit (they reset on the next one). */
+let barriersFlipped = false;
+let visiting = '';
+
 function patched(def: MapDef): MapDef {
   let out = def;
   if (def.patches?.length) out = { ...out, rows: applyPatches(def.rows, def.patches, flag) };
+  // pits a boulder or block fell into are filled for good
+  const filled = (def.holes ?? []).filter((h) => flag(holeFlag(def.id, h.x, h.y)));
+  if (filled.length) out = { ...out, rows: out.rows.map((r, y) => [...r].map((c, x) => (filled.some((h) => h.x === x && h.y === y) ? '0' : c)).join('')) };
+  if (barriersFlipped) out = { ...out, rows: flipBarriers(out.rows, true) };
+  if (def.obstacles?.some((o) => o.showIf || o.hideIf || o.id)) out = { ...out, obstacles: def.obstacles.filter(visibleObstacle) };
   if (def.tintUnless && flag(def.tintUnless)) out = { ...out, tint: undefined };
   return out;
 }
@@ -80,7 +98,10 @@ function patched(def: MapDef): MapDef {
 function loadMap(id: string) {
   const g = getGame();
   const def = MAPS[id] ?? MAPS.maison;
-  const free = (p: PickupDef) => !flag(pickupFlag(def.id, p));
+  // a new visit puts the crayon barriers back (a refresh of the same map keeps them)
+  if (def.id !== visiting) barriersFlipped = false;
+  visiting = def.id;
+  const free = (p: PickupDef) => !flag(pickupFlag(def.id, p)) && (!p.showIf || flag(p.showIf));
   g.setMap(patched(def), visibleNpc, (p) => !p.hidden && free(p), (b) => isRipe(save.value?.flags[berryFlag(def.id, b)]));
   hiddenPickups = (def.items ?? []).filter((p) => p.hidden && free(p));
   // places visited (the Bestiodex only names habitats you have been to)
@@ -204,6 +225,12 @@ function onStep(x: number, y: number): boolean {
       }
     }
   }
+  // stepped into a pit: down to the floor below
+  const pit = g.tileAt(x, y) === 'hole' && g.map.def.holes?.find((h) => h.x === x && h.y === y && h.to && h.fall);
+  if (pit && pit.to) {
+    void locked(() => fallTo(pit.to!));
+    return true;
+  }
   const wp = g.map.warps.get(y * g.map.w + x);
   if (wp) {
     void warpTo(wp.to);
@@ -216,6 +243,8 @@ function onStep(x: number, y: number): boolean {
     void runScript(trig.script);
     return true;
   }
+  // sliding on glossy paper: nothing jumps out until the slide ends
+  if (g.tileAt(x, y) === 'glossy') return false;
   const spotter = trainerSpotting();
   if (spotter) {
     void locked(() => trainerApproach(spotter));
@@ -301,10 +330,114 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     });
   }
   if (target.obstacle) return void locked(() => clearObstacle(target.obstacle!));
+  const fresque = g.map.def.fresques?.find((f) => f.x === target.x && f.y === target.y);
+  if (fresque) return void locked(() => examineFresque(fresque));
+  if (target.tileId === 'leverred' || target.tileId === 'leverblue') return void locked(toggleBarriers);
+  const look = PUZZLE_LOOKS[target.tileId ?? ''];
+  if (look) return void locked(() => say(look));
   if (target.tileId === 'water') return void locked(waterSide);
   if (target.tileId === 'pc') return void runScript('pc');
   if (target.tileId === 'bookshelf') return void locked(() => say(L('Des livres pleins de dessins de Bestioles.', 'Books full of Critter drawings.')));
   if (target.tileId === 'tv') return void locked(() => say(L('À la télé : « Les Bestioles dessinées envahissent le pays ! »', 'On TV: "Drawn Critters are taking over the country!"')));
+}
+
+// ------------------------------------------------------------------ puzzles
+
+const PUZZLE_LOOKS: Record<string, LText> = {
+  hole: L('Un trou tout noir. On ne voit pas le fond…', 'A pitch-black hole. You can’t see the bottom…'),
+  plate: L('Une dalle de pierre avec un dessin de poids. Elle ne bouge pas : tu es trop {g:légère|léger} !', 'A stone plate with a weight drawn on it. It doesn’t budge: you’re too light!'),
+  gate: L('Une grille bien fermée. Un mécanisme doit l’ouvrir, quelque part…', 'A gate, shut tight. Some mechanism must open it, somewhere…'),
+  redup: L('Des crayons rouges géants plantés dans le sol. Un interrupteur doit les abaisser.', 'Giant red pencils stuck in the ground. A switch must lower them.'),
+  blueup: L('Des crayons bleus géants plantés dans le sol. Un interrupteur doit les abaisser.', 'Giant blue pencils stuck in the ground. A switch must lower them.'),
+  glossy: L('Du papier glacé, tout lisse et tout brillant. Attention, ça glisse !', 'Glossy paper, all smooth and shiny. Careful, it’s slippery!'),
+};
+
+const pushName = (o: ObstacleDef) => (o.kind === 'block' ? L('Le bloc de gomme', 'The eraser block') : L('Le rocher', 'The boulder'));
+
+/** A pushed boulder or block: maybe every plate of a mechanism is covered now. */
+function onPush() {
+  const g = getGame();
+  const done = solvedPuzzles(g.map.def, g.obstacles).filter((f) => !flag(f));
+  if (!done.length) return;
+  void locked(async () => {
+    for (const f of done) setFlag(f);
+    await shake(400);
+    sfx.sparkle();
+    await say(L('Clac ! Un mécanisme s’est déclenché !', 'Clunk! A mechanism was set off!'));
+  });
+}
+
+/** A boulder or block fell into a pit: the pit is filled, the pushable lands on the floor below. */
+function onDrop(o: ObstacleDef, x: number, y: number) {
+  const def = getGame().map.def;
+  const hole = def.holes?.find((h) => h.x === x && h.y === y);
+  update((d) => {
+    d.flags[holeFlag(def.id, x, y)] = 1;
+    if (o.id) d.flags[`fell:${o.id}`] = 1;
+  });
+  mapDirty = true;
+  void locked(async () => {
+    sfx.hit();
+    await shake(350);
+    const name = tr(pushName(o));
+    await say(hole?.to
+      ? L('{o} tombe dans le trou… BOUM ! Il a atterri à l’étage du dessous.', '{o} drops into the hole… THUD! It landed on the floor below.')
+      : L('{o} bouche le trou. On peut passer dessus !', '{o} fills the hole. You can walk over it now!'), undefined, { o: name });
+    // the floor below may have a mechanism waiting for it
+    const below = hole?.to && MAPS[hole.to.map];
+    if (!below) return;
+    const done = solvedPuzzles(below, (below.obstacles ?? []).filter(visibleObstacle)).filter((f) => !flag(f));
+    if (!done.length) return;
+    for (const f of done) setFlag(f);
+    sfx.sparkle();
+    await say(L('Quelque part en dessous, un mécanisme s’est déclenché…', 'Somewhere below, a mechanism was set off…'));
+  });
+}
+
+function canFall(x: number, y: number): boolean {
+  return !!getGame().map.def.holes?.some((h) => h.x === x && h.y === y && h.to && h.fall);
+}
+
+async function fallTo(to: WarpTarget) {
+  const g = getGame();
+  sfx.hit();
+  await g.fadeTo(1, 260);
+  await warpTo(to, { keepFade: true });
+  await g.fadeTo(0, 200);
+  await shake(250);
+  showToast(tr(L('Aïe ! Tu es {g:tombée|tombé} à l’étage du dessous.', 'Ouch! You fell to the floor below.')));
+}
+
+/** A switch: the red and blue crayon barriers swap (until the next visit). */
+async function toggleBarriers() {
+  barriersFlipped = !barriersFlipped;
+  sfx.blip();
+  refreshMap();
+  await shake(150);
+  await say(barriersFlipped
+    ? L('Clac ! Les crayons rouges s’abaissent… et les bleus se dressent !', 'Click! The red pencils drop… and the blue ones spring up!')
+    : L('Clac ! Les crayons bleus s’abaissent… et les rouges se dressent !', 'Click! The blue pencils drop… and the red ones spring up!'));
+}
+
+/** A fresque: put the pieces of the drawing back to open a secret passage. */
+async function examineFresque(f: FresqueDef) {
+  const n = tr(creature(f.species).name);
+  if (flag(`fresque:${f.id}`)) return say(L('La fresque de {n} est complète. On dirait qu’elle sourit.', 'The fresque of {n} is complete. It seems to be smiling.'), undefined, { n });
+  if ((await ask(L('Une fresque peinte sur la paroi… mais les morceaux sont tout mélangés ! Les remettre en place ?', 'A fresque painted on the wall… but the pieces are all mixed up! Put them back in place?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
+  let solved = false;
+  await openScreen({ id: 'fresque', species: f.species, size: f.size ?? 3, onEnd: (ok) => (solved = ok) });
+  if (!solved) return;
+  setFlag(`fresque:${f.id}`);
+  sfx.sparkle();
+  if (f.reward) {
+    const { item: id, count = 1 } = f.reward;
+    update((d) => addItem(d, id, count));
+    await say(L('C’est {n} ! … Derrière la toile, tu trouves {i}{c} !', 'It’s {n}! … Behind the canvas, you find {i}{c}!'), undefined, { n, i: tr(item(id).name), c: count > 1 ? ` ×${count}` : '' });
+  } else {
+    await shake(500);
+    await say(L('C’est {n} ! … La paroi tremble : un passage secret s’ouvre !', 'It’s {n}! … The wall rumbles: a secret passage opens!'), undefined, { n });
+  }
+  if (scripts.fresqueDone) await scripts.fresqueDone();
 }
 
 // ------------------------------------------------------------------ field tools
@@ -329,6 +462,7 @@ async function clearObstacle(o: ObstacleDef) {
     g.removeObstacle(o);
     return say(L('Bong ! Le rocher tombe en miettes.', 'Bonk! The rock crumbles.'));
   }
+  if (o.kind === 'block') return say(L('Un gros bloc de gomme rose. Il a l’air léger : marche dedans pour le pousser !', 'A big pink eraser block. It looks light: walk into it to push it!'));
   if (g.strength) return say(L('Tu as les Gants Costauds : marche dans le rocher pour le pousser !', 'You have the Strong Gloves on: walk into the boulder to push it!'));
   if (!has('gants')) return say(L('Un gros rocher rond. Il est bien trop lourd à pousser…', 'A big round boulder. It’s far too heavy to push…'));
   if ((await ask(L('Un gros rocher rond. Enfiler les Gants Costauds ?', 'A big round boulder. Put on the Strong Gloves?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;

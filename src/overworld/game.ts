@@ -13,6 +13,8 @@ const MARGIN = 9;
 const WALK_MS = 210;
 const RUN_MS = 120;
 const BIKE_MS = 85;
+/** One tile slid on glossy paper. */
+const SLIDE_MS = 95;
 
 export const DIRS: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 
@@ -37,6 +39,8 @@ export interface Actor {
   resolveMove?: () => void;
   /** Time (ms) left over from the step that just ended, so the next step continues smoothly. */
   carry?: number;
+  /** Sliding on glossy paper (no walking animation, no control). */
+  sliding?: boolean;
 }
 
 export interface LoadedMap {
@@ -57,6 +61,12 @@ export interface GameHooks {
   onInteract(target: { npc?: Actor; sign?: SignDef; pickup?: PickupDef; obstacle?: ObstacleDef; tileId?: string; x: number; y: number }): void;
   onDoor(b: MapBuilding): void;
   onMenu(): void;
+  /** A boulder or block was pushed one tile. */
+  onPush?(o: ObstacleDef): void;
+  /** A boulder or block was pushed into the pit at (x, y) (it is already off the map). */
+  onDrop?(o: ObstacleDef, x: number, y: number): void;
+  /** Whether the player may step into the pit at (x, y) and fall to the floor below. */
+  canFall?(x: number, y: number): boolean;
 }
 
 export class Input {
@@ -282,25 +292,34 @@ export class Game {
 
   // ------------------------------------------------------------ movement
 
-  /** Starts a one-tile move (or ledge jump). Returns false when blocked. */
-  tryMove(a: Actor, dir: Dir, ms = a === this.player ? (this.biking ? BIKE_MS : this.input.run && this.canRun() ? RUN_MS : WALK_MS) : a.ms): boolean {
+  /** Starts a one-tile move (or ledge jump). Returns false when blocked. `push`: may push a boulder or block. */
+  tryMove(a: Actor, dir: Dir, ms = a === this.player ? (this.biking ? BIKE_MS : this.input.run && this.canRun() ? RUN_MS : WALK_MS) : a.ms, push = true): boolean {
     a.dir = dir;
     const [dx, dy] = DIRS[dir];
     let nx = a.x + dx, ny = a.y + dy;
-    // with the Strong Gloves on, walking into a boulder pushes it one tile (if there is room)
-    const boulder = a === this.player && this.strength ? this.obstacleAt(nx, ny) : undefined;
-    if (boulder?.kind === 'boulder') {
+    // walking into a Gomme block, or a boulder with the Strong Gloves on, pushes it one tile (if
+    // there is room); pushed into a pit, it falls to the floor below
+    const o = a === this.player && push ? this.obstacleAt(nx, ny) : undefined;
+    if (o && (o.kind === 'block' || (o.kind === 'boulder' && this.strength))) {
       const bx = nx + dx, by = ny + dy;
-      if (this.blocked(bx, by) || this.tileAt(bx, by) === 'water' || tile(this.tileAt(bx, by)).ledge || this.map.warps.has(by * this.map.w + bx)) return false;
-      boulder.x = bx;
-      boulder.y = by;
+      if (this.tileAt(bx, by) === 'hole' && !this.actorAt(bx, by)) {
+        this.removeObstacle(o);
+        this.hooks.onDrop?.(o, bx, by);
+      } else {
+        if (this.blocked(bx, by) || this.tileAt(bx, by) === 'water' || tile(this.tileAt(bx, by)).ledge || this.map.warps.has(by * this.map.w + bx)) return false;
+        o.x = bx;
+        o.y = by;
+        this.hooks.onPush?.(o);
+      }
     }
+    // a pit with a floor below: the player steps in and falls through
+    const fall = a === this.player && this.tileAt(nx, ny) === 'hole' && !this.obstacleAt(nx, ny) && !!this.hooks.canFall?.(nx, ny);
     let jumping = false;
     if (this.inside(nx, ny) && tile(this.tileAt(nx, ny)).ledge) {
       if (dir !== 'down' || this.blocked(nx, ny + 1, a)) return false;
       ny += 1;
       jumping = true;
-    } else if (this.blocked(nx, ny, a)) {
+    } else if (!fall && this.blocked(nx, ny, a)) {
       return false;
     }
     a.fromX = a.x;
@@ -379,6 +398,8 @@ export class Game {
       if (tile(this.tileAt(p.x, p.y)).encounter) this.rustle.push({ x: p.x, y: p.y, t: 0 });
       const stop = this.hooks.onStep(p.x, p.y);
       if (stop) this.input.clear();
+      // glossy paper: keep sliding the same way until something is in the way
+      p.sliding = !stop && this.lock === 0 && this.tileAt(p.x, p.y) === 'glossy' && this.tryMove(p, p.dir, SLIDE_MS, false);
     }
     for (const n of this.npcs) {
       n.carry = 0;
@@ -510,7 +531,7 @@ export class Game {
         ctx.fillRect(sx + 3, Math.round((a.fromY + (a.y - a.fromY) * a.t) * TILE - camY) + 13, 10, 3);
       }
       if (a === this.player && this.biking) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
-      a.sheet.draw(ctx, a.dir, a.moving && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
+      a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
       // sailing: the paper boat hides the legs
       if (a === this.player && this.surfing) ctx.drawImage(fieldSprite('boat'), sx, sy + 9 + Math.round(Math.sin(performance.now() / 300)));
       // tall grass hides the legs

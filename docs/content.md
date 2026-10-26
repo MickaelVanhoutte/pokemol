@@ -104,6 +104,30 @@ of every voice has the right length. Each voice picks a `wave` (`square`, `pulse
 `drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts. Give every tune its own
 key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`).
 
+### Puzzles
+
+Puzzles are map data; `src/data/puzzles.test.ts` solves each one on the real maps with small
+searches (and caps pushes, slides and presses), so a new puzzle needs a case there too.
+
+- **Pushables**: `obstacles` of `kind: 'boulder'` (needs the Strong Gloves) or `'block'` (a Gomme
+  eraser block anyone can push). Give an `id` to one that can fall down a hole. They go back to
+  their place each time the map is entered: keep puzzle rooms next to a door or stairs.
+- **Holes** (`O`) and `holes: [{ x, y, to?, fall? }]`: a pushable pushed in fills the hole for good
+  (`hole:<map>:<x>,<y>`, and `fell:<id>`). With `to`, it lands on that floor below: add an obstacle
+  there with `showIf: 'hole:<map>:<x>,<y>'`. With `fall: true` the player falls through too.
+- **Plates** (`@`) and `puzzles: [{ flag, plates }]`: once boulders or blocks cover all the plates
+  (on this map, or by landing from above), `flag` is set; a patch with `unless: flag` drawing `G`
+  is the gate it opens.
+- **Crayon barriers**: `Z` red standing, `j` blue lying (and `z`, `J` for the opposite); a switch
+  `L` swaps them until the player leaves. Never put a barrier next to a switch.
+- **Glossy paper** (`I`): the player slides until something is in the way (`slideFrom` in
+  `src/overworld/puzzles.ts`). No wild Bestioles while sliding; keep people off it.
+- **Fresques** (`F`) and `fresques: [{ x, y, id, species, size?, reward? }]`: a sliding picture
+  puzzle of a drawing. Solving it sets `fresque:<id>`; patches with `unless` hide the secret room,
+  and `items` with `showIf` fill it (or `reward` gives an item directly). The four fresques count
+  towards a reward in `src/story/puzzles.ts`.
+- **Signs** must sit on something solid (`S`, a wall, a rock): a test checks it.
+
 ## Story scripts
 
 Add `scripts.myId = async () => { … }` in the act file (`src/story/act1.ts`…`act3.ts`, or `common.ts`

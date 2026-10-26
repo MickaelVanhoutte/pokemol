@@ -164,7 +164,10 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       'WWWWXWWWW',
     ],
     warps: [{ x: 4, y: 7, to: { map: 'port', x: 20, y: 14, facing: 'down' } }],
-    npcs: [{ id: 'tombolaKeeper', x: 6, y: 2, look: LOOKS.ghostgirl, facing: 'left', script: 'tombolaKeeper' }],
+    npcs: [
+      { id: 'tombolaKeeper', x: 6, y: 2, look: LOOKS.ghostgirl, facing: 'left', script: 'tombolaKeeper' },
+      { id: 'memoKeeper', x: 1, y: 2, look: LOOKS.clerk, facing: 'right', script: 'memo' },
+    ],
     interact: [{ x: 4, y: 1, script: 'tombolaMachine' }],
   },
 };

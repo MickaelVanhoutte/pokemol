@@ -24,6 +24,14 @@ function flagIsSet(name: string): boolean {
   if (name.startsWith('visit:')) return MAPS[name.slice(6)]?.onEnter === 'visitTown';
   if (name.startsWith('rematch:')) return !!TRAINERS[name.slice(8)]?.badge && source.includes('setFlag(`rematch:${id}`)');
   if (name.startsWith('gc:')) return source.includes('setFlag(`gc:${n}`)');
+  // puzzles: set by the generic code from the map data
+  if (name.startsWith('fresque:')) return Object.values(MAPS).some((m) => m.fresques?.some((f) => `fresque:${f.id}` === name)) && source.includes('setFlag(`fresque:${f.id}`)');
+  if (name.startsWith('puzzle:')) return Object.values(MAPS).some((m) => m.puzzles?.some((pz) => pz.flag === name)) && source.includes('solvedPuzzles(');
+  if (name.startsWith('hole:')) {
+    const [, map, at] = name.split(':');
+    const [x, y] = at.split(',').map(Number);
+    return !!MAPS[map]?.holes?.some((h) => h.x === x && h.y === y) && source.includes('holeFlag(def.id, x, y)');
+  }
   const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return new RegExp(`setFlag\\(\\s*'${esc}'|flags\\.${esc}\\s*=|flags\\['${esc}'\\]\\s*=`).test(source);
 }
@@ -45,6 +53,8 @@ describe('story wiring', () => {
         ...(map.npcs ?? []).flatMap((n) => [n.showIf, n.hideIf]),
         ...(map.triggers ?? []).flatMap((t) => [t.if, t.unless]),
         ...(map.patches ?? []).flatMap((p) => [p.if, p.unless]),
+        ...(map.obstacles ?? []).flatMap((o) => [o.showIf, o.hideIf]),
+        ...(map.items ?? []).map((p) => p.showIf),
         map.tintUnless,
       ].filter(Boolean) as string[];
       // flags of later acts (a2., a3.…) are allowed to be set by content not written yet

@@ -461,6 +461,147 @@ export const TILES: Record<string, TileDef> = {
   towerfloor: { paint: (p, _f, _n, x, y) => { p.fill('#6b6a8c'); for (let i = 0; i < 16; i += 8) { p.rect(0, i, 16, 1, '#55547a'); p.rect(i + ((y % 2) * 4), 0, 1, 16, '#55547a'); } p.noise(0.03, '#8584a8', x + y); } },
 };
 
+// ---------- puzzles: drawn over whatever floor surrounds them
+
+const FLOORS = ['towerfloor', 'floor', 'cavefloor', 'paper', 'path', 'grass', 'sand'];
+const WALLS = ['cavewall', 'towerwall', 'wall'];
+/** Paints the floor (or wall) the neighbours are made of, so puzzle tiles fit any dungeon. */
+function under(p: Painter, n: Near, x: number, y: number, kinds = FLOORS) {
+  const around = [n(-1, 0), n(1, 0), n(0, -1), n(0, 1), n(-1, -1), n(1, 1)];
+  const id = kinds.find((k) => around.includes(k)) ?? (kinds === FLOORS ? 'cavefloor' : kinds[0]);
+  TILES[id].paint(p, 0, n, x, y);
+  return id;
+}
+/** A coloured-pencil stub standing up (raised barrier). */
+function pencil(p: Painter, x: number, col: string, dark: string) {
+  p.rect(x, 4, 5, 11, col);
+  p.rect(x, 4, 1, 11, dark);
+  p.rect(x + 3, 4, 1, 11, '#ffffff55');
+  p.rect(x + 1, 2, 3, 2, '#e8c89a');
+  p.px(x + 2, 1, dark);
+  p.rect(x, 14, 5, 1, C.outline);
+}
+const BARRIER = { red: ['#e04848', '#9a2a2a'], blue: ['#4a7ee0', '#2a4a9a'] } as const;
+function barrierUp(p: Painter, n: Near, x: number, y: number, c: keyof typeof BARRIER) {
+  under(p, n, x, y);
+  p.rect(1, 12, 14, 3, '#00000033');
+  pencil(p, 1, BARRIER[c][0], BARRIER[c][1]);
+  pencil(p, 6, BARRIER[c][0], BARRIER[c][1]);
+  pencil(p, 11, BARRIER[c][0], BARRIER[c][1]);
+}
+function barrierDown(p: Painter, n: Near, x: number, y: number, c: keyof typeof BARRIER) {
+  under(p, n, x, y);
+  // only a dashed outline on the floor where the pencils will pop up
+  for (let i = 1; i < 15; i += 3) {
+    p.rect(i, 1, 2, 1, BARRIER[c][1]);
+    p.rect(i, 14, 2, 1, BARRIER[c][1]);
+    p.rect(1, i, 1, 2, BARRIER[c][1]);
+    p.rect(14, i, 1, 2, BARRIER[c][1]);
+  }
+  p.disc(8, 8, 1.5, BARRIER[c][0]);
+}
+function lever(p: Painter, n: Near, x: number, y: number, c: keyof typeof BARRIER) {
+  under(p, n, x, y);
+  p.rect(2, 9, 12, 6, C.outline);
+  p.rect(3, 10, 10, 4, '#8a8494');
+  p.rect(3, 10, 10, 1, '#b8b0c4');
+  // the stick leans towards the colour that stands up
+  const lean = c === 'red' ? -1 : 1;
+  for (let i = 0; i < 6; i++) p.rect(7 + Math.round(lean * i * 0.6), 9 - i, 2, 1, '#5a5470');
+  p.disc(8 + lean * 4, 3, 2.6, C.outline);
+  p.disc(8 + lean * 4, 3, 2, BARRIER[c][0]);
+  p.px(7 + lean * 4, 2, '#ffffff');
+}
+
+Object.assign(TILES, {
+  hole: {
+    solid: true,
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      under(p, n, x, y);
+      p.disc(8, 8.5, 7, '#3a2a1e');
+      p.disc(8, 9, 6, '#120c18');
+      p.disc(8, 10, 3.5, '#000000');
+      for (let a = 0; a < 8; a++) p.px(Math.round(8 + Math.cos(a) * 6.5), Math.round(8.5 + Math.sin(a) * 6.5), '#5e4838');
+    },
+  },
+  holefilled: {
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      under(p, n, x, y);
+      p.disc(8, 8.5, 7, '#5e4838');
+      p.disc(8, 8.5, 6, '#9a9488');
+      p.disc(6.5, 7, 2.5, '#b8b2a6');
+      p.noise(0.1, '#7a746a', x * 7 + y);
+    },
+  },
+  plate: {
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      under(p, n, x, y);
+      p.rect(1, 1, 14, 14, C.outline);
+      p.rect(2, 2, 12, 12, '#b8b0a4');
+      p.rect(2, 2, 12, 1, '#d8d0c4');
+      p.rect(2, 13, 12, 1, '#8a8478');
+      // a crayon-drawn weight sign
+      p.rect(5, 6, 6, 5, '#6a6478');
+      p.rect(7, 4, 2, 2, '#6a6478');
+      p.rect(6, 7, 4, 3, '#f2c14e');
+    },
+  },
+  gate: {
+    solid: true,
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      const floor = under(p, n, x, y);
+      const metal = floor !== 'cavefloor';
+      const [bar, band] = metal ? ['#8a8ea8', '#5a5e78'] : ['#9a6a3a', '#5a3a20'];
+      p.rect(0, 1, 16, 14, C.outline);
+      for (let i = 1; i < 16; i += 3) p.rect(i, 2, 2, 12, bar);
+      p.rect(0, 4, 16, 2, band);
+      p.rect(0, 10, 16, 2, band);
+      if (metal) p.rect(5, 6, 6, 4, '#f2c14e');
+      else p.disc(8, 8, 2, '#f2c14e');
+    },
+  },
+  redup: { solid: true, paint: (p: Painter, _f: number, n: Near, x: number, y: number) => barrierUp(p, n, x, y, 'red') },
+  reddown: { paint: (p: Painter, _f: number, n: Near, x: number, y: number) => barrierDown(p, n, x, y, 'red') },
+  blueup: { solid: true, paint: (p: Painter, _f: number, n: Near, x: number, y: number) => barrierUp(p, n, x, y, 'blue') },
+  bluedown: { paint: (p: Painter, _f: number, n: Near, x: number, y: number) => barrierDown(p, n, x, y, 'blue') },
+  leverred: { solid: true, paint: (p: Painter, _f: number, n: Near, x: number, y: number) => lever(p, n, x, y, 'red') },
+  leverblue: { solid: true, paint: (p: Painter, _f: number, n: Near, x: number, y: number) => lever(p, n, x, y, 'blue') },
+  // « papier glacé »: glossy paper you slide on
+  glossy: {
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      p.fill('#e6f0fb');
+      p.noise(0.03, '#ffffff', x * 3 + y * 5);
+      for (let i = 0; i < 16; i++) {
+        const k = (i + x * 5 + y * 3 + f * 4) % 16;
+        if (k < 3) p.px(i, (i + 6) % 16, '#ffffff');
+      }
+      p.rect(0, 15, 16, 1, '#c4d4ea');
+      p.rect(15, 0, 1, 16, '#c4d4ea');
+    },
+  },
+  // a wall painting cut into pieces: the sliding picture puzzle
+  fresque: {
+    solid: true,
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      // on a cave or tower wall, or on an easel outdoors
+      const on = under(p, n, x, y, [...WALLS, ...FLOORS]);
+      if (!WALLS.includes(on)) { p.rect(3, 12, 2, 4, '#7a5230'); p.rect(11, 12, 2, 4, '#7a5230'); }
+      p.rect(1, 1, 14, 13, '#7a5230');
+      p.rect(2, 2, 12, 11, '#fff3c4');
+      const cols = ['#e07aa6', '#5b9be0', '#9ad978', '#f2c14e', '#b48ad6', '#f08a3a'];
+      for (let i = 0; i < 9; i++) {
+        const cx = 2 + (i % 3) * 4, cy = 2 + Math.floor(i / 3) * 4;
+        p.rect(cx + 1, cy + 1, 2, 2, cols[(i * 5 + x + y) % cols.length]);
+      }
+      p.rect(2, 6, 12, 1, '#c8b48a');
+      p.rect(2, 9, 12, 1, '#c8b48a');
+      p.rect(6, 2, 1, 11, '#c8b48a');
+      p.rect(10, 2, 1, 11, '#c8b48a');
+    },
+  },
+});
+
 export function tile(id: string): TileDef {
   return TILES[id] ?? TILES.void;
 }

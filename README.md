@@ -32,6 +32,9 @@ voice that says your drawings aren't good enough. Beat him at the Edge of the Pa
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
   battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 12 Pochoirs: stencils that
   teach a move as often as you like, one from each Atelier Master.
+- Dungeon puzzles: crayon-barrier switches, glossy paper to slide on, eraser blocks and boulders
+  to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the
+  drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
 - A music box in the title menu (MUSIQUES) to listen to every original tune.
 - Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then
   the Hall of Fame) and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to

@@ -69,7 +69,40 @@ export interface InteractDef {
 export interface ObstacleDef {
   x: number;
   y: number;
-  kind: 'bush' | 'boulder' | 'rock';
+  /** `block`: a big Gomme eraser block, light enough to push without gloves. */
+  kind: 'bush' | 'boulder' | 'rock' | 'block';
+  /** Pushables that can fall through a hole need one (`fell:<id>` keeps them from coming back). */
+  id?: string;
+  /** Only there while this flag is set / not set (a boulder that fell from the floor above). */
+  showIf?: string;
+  hideIf?: string;
+}
+
+/** A pit (`O`): a boulder or block pushed in falls to `to` on the floor below; the player falls through when there is a `to`. */
+export interface HoleDef {
+  x: number;
+  y: number;
+  to?: WarpTarget;
+  /** The player can fall through too (only where the landing is a normal place to be). */
+  fall?: boolean;
+}
+
+/** Weight plates (`@`): once boulders or blocks cover all of them, `flag` is set for good (gates are patches with `unless: flag`). */
+export interface PuzzleDef {
+  flag: string;
+  plates: [number, number][];
+}
+
+/** A fresque (`F`): a sliding picture puzzle examined with A; solving it sets `fresque:<id>`. */
+export interface FresqueDef {
+  x: number;
+  y: number;
+  id: string;
+  species: string;
+  /** Pieces per side (3 by default). */
+  size?: number;
+  /** Given when solved (otherwise a patch with `unless: 'fresque:<id>'` opens a passage). */
+  reward?: { item: string; count?: number };
 }
 
 /** What bites with each fishing rod (Old, Good, Super). */
@@ -90,6 +123,8 @@ export interface PickupDef {
   count?: number;
   /** Not drawn: found by pressing A in front of it (torn pages…). */
   hidden?: boolean;
+  /** Only there once this flag is set (behind a secret passage). */
+  showIf?: string;
 }
 
 /** A bush on a solid tile that gives a few berries once a day (press A in front of it). */
@@ -144,6 +179,11 @@ export interface MapDef {
   /** Parts of the map redrawn while story flags are set (erased or restored areas). */
   patches?: PatchDef[];
   interact?: InteractDef[];
+  /** Pits boulders and blocks fall into. */
+  holes?: HoleDef[];
+  /** Weight-plate mechanisms. */
+  puzzles?: PuzzleDef[];
+  fresques?: FresqueDef[];
 }
 
 export const LEGEND: Record<string, string> = {
@@ -153,4 +193,8 @@ export const LEGEND: Record<string, string> = {
   't': 'table', 'p': 'plant', 'P': 'pc', 'h': 'bed', 'v': 'tv', 'm': 'machine', 'H': 'healer', 'U': 'stairs',
   'K': 'cavewall', 'k': 'cavefloor', 'r': 'caverock', 'o': 'towerfloor', 'Q': 'towerwall', 'D': 'stairsdown', 'E': 'caveexit', ' ': 'void',
   'e': 'erased', '=': 'bridge', 'n': 'paper', 'Y': 'sketchtree', '|': 'margin',
+  // puzzles: pits, plates, gates, crayon barriers (red/blue, up/down) and their switch, glossy paper, fresques
+  'O': 'hole', '0': 'holefilled', '@': 'plate', 'G': 'gate',
+  'Z': 'redup', 'z': 'reddown', 'J': 'blueup', 'j': 'bluedown', 'L': 'leverred', 'l': 'leverblue',
+  'I': 'glossy', 'F': 'fresque',
 };

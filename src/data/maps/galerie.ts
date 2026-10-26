@@ -22,13 +22,13 @@ export const GALERIE_MAPS: Record<string, MapDef> = {
       'T....................T',
       'T..:::::::::::::::...T',
       'T..:.......:.........T',
-      'T..:.......:.........T',
+      'T..:..F....:.........T',
       'T*.:.......:.........T',
       'T..:.......:.........T',
       'T..:.......:.........T',
       'T..:.......:.........T',
       'T..::::::::::::::::..T',
-      'T*........::.......*.T',
+      'T*.......S::.......*.T',
       'T.........::.........T',
       'T.........::.........T',
       'TTTTTTTTTT::TTTTTTTTTT',
@@ -46,6 +46,8 @@ export const GALERIE_MAPS: Record<string, MapDef> = {
     signs: [
       { x: 9, y: 14, text: L('PLACE DES CHEFS-D’ŒUVRE\n↑ Grand Concours   → Tour des Défis', 'MASTERPIECE SQUARE\n↑ Grand Contest   → Challenge Tower') },
     ],
+    // the last fresque, bigger (4×4), painted on an easel
+    fresques: [{ x: 6, y: 8, id: 'galerie', species: '011', size: 4, reward: { item: 'bandeau-tetu' } }],
     npcs: [
       { id: 'pantheon', x: 14, y: 7, look: LOOKS.grandma, facing: 'left', script: 'pantheon' },
       { id: 'galerieKid', x: 6, y: 10, look: LOOKS.kid, facing: 'down', wander: true,

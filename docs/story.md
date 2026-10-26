@@ -123,6 +123,25 @@ Bestiodex diploma, the 12 pages and a tower streak of 21.
 These work by wrapping the Act 1 scripts: `const prev = scripts.prof; scripts.prof = …`. That is why
 `src/story/index.ts` imports the acts in order.
 
+**Puzzles and mini-games** (rules in [content.md](content.md#puzzles)). Story puzzles never need
+the optional Strong Gloves; every puzzle room sits next to its stairs or door, and leaving and
+coming back resets it (a mechanism once triggered stays open).
+
+| Where | Puzzle | Needed? |
+|---|---|---|
+| Scribble Cave depths (`grotte2`) | Fresque of Clapotin by the exit: a secret room (Loupe, Super Crayon-balls) | optional |
+| Eraser Warehouse 1F (`entrepot1`) | Crayon barriers: the south switch opens the red gate, the north one the blue line to the stairs | story (Act 2) |
+| Mount Charcoal crater (`montFusain2`) | Two boulders (gloves) into two holes; they land on the plates of the vault in `montFusain1` (Bille Ardente, Golden Berries) | optional |
+| Mount Charcoal crater | Fresque of Braisou by the exit: a secret room (Painter’s Apron, Super Potions) | optional |
+| Misty Tower 2F (`tour2`) | Glossy paper hall: 4 slides from the 1F stairs to the top stairs; a hole drops you back to 1F | story (Act 3) |
+| Misty Tower top (`tour3`) | Fresque of Grimouille: lifts the gate of an alcove (Stubborn Specs) | optional |
+| Eraser Factory 2F (`usine2`) | Two eraser blocks on two plates raise the shutter to the stairs; a third block down the hole opens the 1F storeroom (Stubborn Scarf, Super Potions) | shutter: story; storeroom: optional |
+| Masterpiece Square (`galerie`) | 4×4 fresque of Ombrouille on an easel (Stubborn Band) | post-game |
+| Fair tent, Port-Aquarelle (`tombola`) | Mémo-Bestioles: 6 pairs, a prize a day by tries (≤10 gold, ≤14 silver) | optional |
+
+Completing the four fresques (`fresqueDone`) gives 10 Super Crayon-balls and 3 Prism Berries
+(`fresquesReward`).
+
 **Page locations**: pages 1–2 in `home.ts`, 3–4 in `pastel.ts`, 5 in `plume.ts`, 6 in `aquarelle.ts`,
 7–8 in `paillette.ts`, 9 in `dungeons.ts`, 10 in `gouache.ts`, 11 in `encre.ts`, 12 in `dream.ts`.
 All are `hidden: true` pickups, found by pressing A in front of them (`pageFound` counts them).

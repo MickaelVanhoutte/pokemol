@@ -29,6 +29,10 @@ describe('maps', () => {
         });
       });
 
+      it('puts signs on something solid (a sign post, a wall, a rock)', () => {
+        for (const sg of map.signs ?? []) expect(TILES[LEGEND[map.rows[sg.y]?.[sg.x] ?? ' ']]?.solid, `sign ${sg.x},${sg.y}`).toBe(true);
+      });
+
       it('has warps that land on walkable tiles', () => {
         for (const wp of map.warps ?? []) {
           expect(walkable(map, wp.x, wp.y), `warp tile ${wp.x},${wp.y}`).toBe(true);

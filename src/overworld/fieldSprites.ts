@@ -1,9 +1,10 @@
 import { makeCanvas, Painter } from './pixel';
 
-/** Pixel sprites drawn over the map for field obstacles and the player's boat and bike (16 px wide). */
+/** Pixel sprites drawn over the map for field obstacles (bush, boulder, rock, Gomme block) and the player's boat and bike (16 px wide). */
 const PAL: Record<string, string> = {
   K: '#2a2238', g: '#7cc65a', G: '#4f9a3c', b: '#7a5230', w: '#e6e2d8', s: '#b8b0a4', S: '#8a8478',
   c: '#a89878', C: '#7a6a50', W: '#ffffff', P: '#f4ecd8', B: '#5b8ad6', R: '#d64545', Y: '#f2c14e',
+  e: '#f4a6bc', E: '#d97a98', u: '#3a6ac0', U: '#7aa6ee',
 };
 
 const ROWS: Record<string, string[]> = {
@@ -58,6 +59,25 @@ const ROWS: Record<string, string[]> = {
     '.KKCCCCCCCCCCKK.',
     '...KKKKKKKKKK...',
     '................',
+    '................',
+    '................',
+  ],
+  // a big Team Gomme eraser block: pink rubber in a blue paper sleeve
+  block: [
+    '................',
+    '..KKKKKKKKKKKK..',
+    '.KeeeeeeeeeeeeK.',
+    '.KeWWeeeeeeeeEK.',
+    '.KeeeeeeeeeeeEK.',
+    '.KKKKKKKKKKKKKK.',
+    '.KUUUUUUUUUUUuK.',
+    '.KUWWUUUUUUUUuK.',
+    '.KUUUUWWWWUUUuK.',
+    '.KUUUUUUUUUUUuK.',
+    '.KKKKKKKKKKKKKK.',
+    '.KeeeeeeeeeeeEK.',
+    '.KEEEEEEEEEEEEK.',
+    '..KKKKKKKKKKKK..',
     '................',
     '................',
   ],

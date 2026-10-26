@@ -125,16 +125,18 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     border: 'void',
     backdrop: 'city',
     tint: 'rgba(60, 55, 75, 0.2)',
+    // crayon barriers: red ones stand at first, blue ones lie flat; each switch swaps them.
+    // South switch: through the red gate; north switch: through the blue line to the stairs.
     rows: [
       'WWWWWWWWWWWWWW',
-      'WUffCCfffffffW',
-      'WfffCCfffCCffW',
-      'WfffffffffCCfW',
-      'WCCffffCCffffW',
+      'WUffjfffffCCfW',
+      'WfffjfffLffjfW',
+      'WfffjfffffCCfW',
+      'WCCCCffffffffW',
+      'WCCCCZZCCCCCCW',
       'WffffffffffffW',
       'WffCCffffCCffW',
-      'WffCCffffCCffW',
-      'WffffffffffffW',
+      'WfffffffffLffW',
       'WffffffCCffffW',
       'WffffffffffffW',
       'WWWWWWXWWWWWWW',
@@ -145,10 +147,10 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     ],
     npcs: [
       { id: 'e1g1', x: 6, y: 3, look: LOOKS.gomme, facing: 'down', trainer: 'e1g1', sight: 3 },
-      { id: 'e1g2', x: 11, y: 5, look: LOOKS.gommeF, facing: 'left', trainer: 'e1g2', sight: 4 },
+      { id: 'e1g2', x: 11, y: 9, look: LOOKS.gommeF, facing: 'left', trainer: 'e1g2', sight: 4 },
       { id: 'e1g3', x: 3, y: 8, look: LOOKS.gomme, facing: 'right', trainer: 'e1g3', sight: 4 },
     ],
-    items: [{ x: 12, y: 10, item: 'rappel' }],
+    items: [{ x: 12, y: 10, item: 'rappel' }, { x: 12, y: 1, item: 'super-potion' }],
   },
 
   entrepot2: {

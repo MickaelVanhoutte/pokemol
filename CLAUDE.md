@@ -157,6 +157,9 @@ excluded from `tsc`).
 - The pencilize pass skips pure black (`#000`, the void around interiors).
 - `src/story/story.test.ts` checks every script id and every flag a map waits for. Flags starting
   with `a2.` to `a9.` are exempt (a leftover from when later acts weren't written yet).
+- Dungeon puzzles (pushable blocks and boulders, holes to the floor below, weight plates, crayon
+  barriers, glossy paper, fresques) are map data, explained in [docs/content.md](docs/content.md#puzzles);
+  `src/data/puzzles.test.ts` solves each one on the real maps.
 - After the ending (`ending` flag), Atelier Masters offer rematches at +12 levels (capped at 50).
 - New Bestioles strong enough for the battle tower go in `TOWER_POOL` (`src/data/postgame.ts`).
   `fight({ borrowed })` battles with copies that never come back to the save (tower).

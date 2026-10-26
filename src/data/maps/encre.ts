@@ -156,11 +156,15 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'WooCCCCCCooooW',
       'WooooooooooooW',
       'WCCooooooooCCW',
-      'WooooooooooooW',
-      'WooooCCooooooW',
+      'WCCCoooooooooW',
+      'Wo@oCCCooooooW',
       'WooooooooooooW',
       'WWWWWWXWWWWWWW',
     ],
+    // the storeroom: a block dropped through the hole upstairs lands on its plate and lifts the shutter
+    obstacles: [{ x: 2, y: 9, kind: 'block', showIf: 'hole:usine2:1,8' }],
+    puzzles: [{ flag: 'puzzle:usineStore', plates: [[2, 9]] }],
+    patches: [{ id: 'usineStore', x: 4, y: 10, rows: ['G'], unless: 'puzzle:usineStore' }],
     warps: [
       { x: 6, y: 11, to: { map: 'encre', x: 5, y: 10, facing: 'down' } },
       { x: 1, y: 1, to: { map: 'usine2', x: 2, y: 1, facing: 'right' } },
@@ -168,9 +172,9 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'u1g1', x: 4, y: 2, look: LOOKS.gomme, facing: 'down', trainer: 'u1g1', sight: 3 },
       { id: 'u1g2', x: 11, y: 6, look: LOOKS.gommeF, facing: 'left', trainer: 'u1g2', sight: 4 },
-      { id: 'u1g3', x: 3, y: 10, look: LOOKS.gomme, facing: 'right', trainer: 'u1g3', sight: 4 },
+      { id: 'u1g3', x: 8, y: 10, look: LOOKS.gomme, facing: 'left', trainer: 'u1g3', sight: 3 },
     ],
-    items: [{ x: 12, y: 10, item: 'rappel' }],
+    items: [{ x: 12, y: 10, item: 'rappel' }, { x: 1, y: 9, item: 'echarpe-tetue' }, { x: 3, y: 10, item: 'super-potion', count: 2 }],
   },
 
   usine2: {
@@ -181,18 +185,25 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     border: 'void',
     backdrop: 'city',
     tint: 'rgba(60, 55, 75, 0.3)',
+    // the shutter to the stairs opens once two eraser blocks weigh on the two plates; a third block
+    // dropped down the hole lands in the storeroom below
     rows: [
       'WWWWWWWWWWWWWW',
-      'WDooooooooooUW',
-      'WooooooooooooW',
-      'WooCCCCooCCooW',
-      'WooooooooooooW',
-      'WooooooooooooW',
-      'WCCooCCCCooCCW',
-      'WooooooooooooW',
-      'WooooooooooooW',
+      'WDoooooooCooUW',
+      'WooooooooCoooW',
+      'Wooo@ooooCoooW',
+      'WooCCCoooooooW',
+      'WooooooooCoooW',
+      'WooooCoooCoooW',
+      'Wooo@ooooCoooW',
+      'WOoooooooCoooW',
       'WWWWWWWWWWWWWW',
     ],
+    obstacles: [{ id: 'u2a', x: 6, y: 2, kind: 'block' }, { id: 'u2b', x: 6, y: 5, kind: 'block' }, { id: 'u2c', x: 4, y: 6, kind: 'block' }],
+    puzzles: [{ flag: 'puzzle:usineShutter', plates: [[4, 3], [4, 7]] }],
+    patches: [{ id: 'usineShutter', x: 9, y: 4, rows: ['G'], unless: 'puzzle:usineShutter' }],
+    holes: [{ x: 1, y: 8, to: { map: 'usine1', x: 2, y: 9 } }],
+    signs: [{ x: 0, y: 2, text: L('NOTE DE SERVICE : les blocs de gomme vont sur les dalles. Coincé ? Redescends et remonte, tout se remet en place.', 'MEMO: the eraser blocks go on the plates. Stuck? Go downstairs and back up, everything goes back in place.') }],
     warps: [
       { x: 1, y: 1, to: { map: 'usine1', x: 2, y: 1, facing: 'down' } },
       { x: 12, y: 1, to: { map: 'usine3', x: 2, y: 8, facing: 'up' } },
@@ -200,7 +211,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     triggers: [{ x: 10, y: 1, w: 2, h: 2, script: 'rature2Stop', unless: 'tr:rature2' }],
     npcs: [
       { id: 'rature2', x: 11, y: 4, look: LOOKS.rature, facing: 'up', script: 'rature2Stop', hideIf: 'tr:rature2' },
-      { id: 'u2g1', x: 5, y: 7, look: LOOKS.gommeF, facing: 'up', trainer: 'u2g1', sight: 3 },
+      { id: 'u2g1', x: 11, y: 7, look: LOOKS.gommeF, facing: 'up', trainer: 'u2g1', sight: 2 },
     ],
   },
 

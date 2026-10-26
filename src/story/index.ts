@@ -6,3 +6,4 @@ import './act3';
 import './field';
 import './daycare';
 import './postgame';
+import './puzzles';

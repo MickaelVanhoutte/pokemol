@@ -17,6 +17,10 @@ export type Screen =
   | { id: 'townmap' }
   | { id: 'hall'; fresh?: boolean }
   | { id: 'jukebox' }
+  /** Sliding picture puzzle; `onEnd` gets whether it was solved. */
+  | { id: 'fresque'; species: string; size: number; onEnd: (solved: boolean) => void }
+  /** Memory card game; `onEnd` gets the number of tries, or null when given up. */
+  | { id: 'memo'; onEnd: (tries: number | null) => void }
   | { id: 'credits'; fromWorld?: boolean };
 
 export const screen = signal<Screen>({ id: 'title' });
