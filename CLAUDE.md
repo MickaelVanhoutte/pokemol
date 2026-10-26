@@ -35,10 +35,12 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - **Balance with simulations** before shipping changes to teams or stats (`npm run balance`).
   The owner asked for a gentle start: see [docs/story.md](docs/story.md#level-curve-and-difficulty).
 - Ship each milestone separately, then check that the deploy is live (see [docs/testing.md](docs/testing.md)).
-- **Keep [docs/histoire.md](docs/histoire.md) up to date, without spoilers.** Any change to the
-  story, places, characters or side content updates it in the same commit, in French and English.
-  Never reveal the twists or the ending there (who the Prof and the Great Eraser really are, the
-  waking up, the final choice, surprises along the way): those belong in [docs/story.md](docs/story.md).
+- **No spoilers outside the technical docs.** The README and [docs/histoire.md](docs/histoire.md)
+  never reveal the twists or the ending (who the Prof and the Great Eraser really are, the waking up,
+  the final choice, surprises along the way: what solves a mystery, evolution names, legendaries).
+  Those belong in [docs/story.md](docs/story.md) (and flag tables in docs/content.md).
+- **Keep [docs/histoire.md](docs/histoire.md) up to date.** Any change to the story, places,
+  characters or side content updates it in the same commit, in French and English.
 
 ## Commands
 

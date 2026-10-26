@@ -3,11 +3,11 @@
 A small FireRed/LeafGreen-style adventure, made from a child's drawings.
 Every creature ("Bestiole") is a real pencil drawing, cut out of a photo.
 
-**The story.** The little artist falls asleep on the sketchbook and wakes up in Papeterre, a region
-drawn on a giant sheet of paper. Prof. Fusain photographs every Bestiole "so none ever gets lost".
-Team Gomme rubs out the scenery and greys out Bestioles for their boss, the Great Eraser: the little
-voice that says your drawings aren't good enough. Beat him at the Edge of the Page… and wake up.
-The story without spoilers, in French and English: [docs/histoire.md](docs/histoire.md).
+**The story.** One evening, a little artist falls asleep on the sketchbook and opens their eyes in
+Papeterre, a land drawn on a giant sheet of paper where every drawing is alive. Prof. Fusain
+photographs every Bestiole "so none ever gets lost", and Team Gomme rubs out the scenery and greys
+out Bestioles for their mysterious boss, the Great Eraser. More, still without spoilers, in French and
+English: [docs/histoire.md](docs/histoire.md).
 
 - 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, an ending.
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
@@ -19,8 +19,7 @@ The story without spoilers, in French and English: [docs/histoire.md](docs/histo
 - The Pencil Day Care on Route 2: leave two Bestioles to gain XP while you walk; two of one
   family sometimes leave an egg, which hatches as you carry it (inheriting IVs, the hidden talent,
   and the nature of a parent holding the Everstone).
-- Friendship (hearts in the summary), evolutions by level, magic pencil (Touffou becomes Touflot,
-  Toufeu or Toufoudre) or friendship, a Move
+- Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
   Rememberer and a Move Forgetter in every Healing Center.
 - Collecting: nicknames (and a Calligrapher in every Healing Center), sparkly Bestioles (1 in 100,
   recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray
@@ -38,13 +37,13 @@ The story without spoilers, in French and English: [docs/histoire.md](docs/histo
   to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.
 - A music box in the title menu (MUSIQUES) to listen to every original tune.
-- A late game with detours: a ferry to a lighthouse island to help the last Atelier Master, a
-  cycling track that loops back south, and a hidden cave where a legendary shadow waits.
+- A late game with detours and back-and-forth, a cycling track that loops back south, and a cave
+  where something breathes in the dark.
 - Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then
   the Hall of Fame) and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to
   trade for items).
 - Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.
-- Side quests: 12 torn sketchbook pages (memories of the real world), the Tombola at the fair,
+- Side quests: 12 torn sketchbook pages to find, the Tombola at the fair,
   a complete Bestiodex. A Pencil Balloon in every Healing Center flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from
   Options), installable as an app (PWA: the title screen offers it). On phones, touch the screen
