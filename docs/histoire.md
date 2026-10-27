@@ -57,6 +57,8 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
   chemin d’une clairière… et, sur la Route de l’Encre, une grotte toute raturée cache un secret tout au
   fond. On raconte que ce qu’on y trouve a quelque chose à voir avec les rêves.
 - Certaines Bestioles grandissent avec toi : entraîne-les bien, elles te réservent des surprises.
+- Les routes sont longues, pleines d’herbes hautes et de dresseurs : ton équipe s’entraîne en chemin.
+  Attraper une Bestiole rapporte de l’expérience, et les Bestioles en retard rattrapent vite les autres.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
@@ -135,6 +137,8 @@ where every drawing is alive: the **Critters** (Bestioles).
   clearing… and on the Ink Path, a cave full of scribbles hides a secret at the very bottom. They say
   what you find there has something to do with dreams.
 - Some Critters grow up with you: train them well, they have surprises in store.
+- The roads are long, full of tall grass and trainers: your team trains on the way. Catching a Critter
+  gives experience, and Critters that fall behind catch up fast.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.

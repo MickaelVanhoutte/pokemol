@@ -18,11 +18,24 @@ Vitest in a node environment, with no DOM. What they guard:
 | `src/ui/logic/logic.test.ts` | Bag pockets and item use, PC rules, menu cursor movement |
 | `src/audio/music.test.ts` | Note and rest parsing |
 
+## Level curve (`npm run curve`)
+
+`src/data/curve.ts` walks the story path (`CURVE_PATH`) like a player who never grinds:
+- they fight every trainer on the way and the wild Bestioles they can't avoid. That is the fewest
+  tall-grass steps between a route's way in and way out, or every step in a cave, times the
+  encounter rate;
+- they catch a teammate where the path says so;
+- they share the XP evenly, with the catch-up factor.
+
+`npm run curve [-- difficulty]` prints, for each trainer, its strongest Bestiole next to the team's
+levels, and marks the trainers that are ahead. `src/data/curve.test.ts` keeps the Normal curve within
+reach up to `CHECKED_UNTIL`, which moves forward as each act's routes are made longer.
+
 ## Balance (`npm run balance`)
 
 `tools/balance.ts` simulates trainer fights in story order: the trainer AI plays both sides, with no
-items. It prints the win rate for each starter (Minousse / Braisou / Clapotin) with a typical team for
-that point of the story. Pass a difficulty and a fight count, e.g. `npm run balance -- easy 100`, and optionally
+items. It prints the win rate for each starter (Minousse / Braisou / Clapotin), with the team the
+level curve gives at that point of the story (the starter and its best teammates). Pass a difficulty and a fight count, e.g. `npm run balance -- easy 100`, and optionally
 some row ids to run only those: `npm run balance -- normal 300 effaceur,gcFusain`.
 
 Run it before and after any change to levels, teams, stats, learnsets or the type chart. Numbers

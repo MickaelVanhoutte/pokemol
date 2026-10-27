@@ -216,10 +216,10 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 
 | Stage | Trainers | Leader |
 |---|---|---|
-| Route 1 | Iris L4 (1 Bestiole), Léo L3/L4 | — |
+| Route 1 | Margot L3, Iris L4 (1 Bestiole each), Léo L3/L4, Arthur L4/L4; wild L3–4 | — |
 | Atelier Pastel | L5–6 | Mireille L7/L9 (Chrysalou, Papivole) |
-| Route 2, Bois Brumeux | L7–11 | — |
-| Atelier Plume | L11 | Gaspard L10/L10 |
+| Route 2, Bois Brumeux | L7–10 (4 + 6 trainers) | — |
+| Atelier Plume | L11 | Gaspard L10/L8 |
 | Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15) | Marine L16–19 |
 | Route 4, Ville-Feutre | L17–21 | Rature L18–20, Zélie L22–24 |
 | Mont Fusain, Braise | L22–24 | Ambre L23–24 |
@@ -228,6 +228,22 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Finale | — | Rival L40–43 (6), Great Eraser L39–41 (5) |
 
 Run `npm run balance` for the current numbers instead of trusting this table.
+
+**Training on the way (iteration 15, Oct 2026).** The owner had to grind on Normal. `npm run curve`
+showed why: with the XP spread over a team, a player who fought every trainer arrived at each Atelier
+several levels behind, and the routes forced no wild battles at all. The balance sim hid it, because it
+assumed generous hand-written levels. Now the sim fights at the curve's levels.
+
+Changes:
+- Catch-up XP (Gen 5 level factor on the Gen 3 base) and XP on capture.
+- Act 1's routes doubled in size. Bands of tall grass across them force about 3 wild battles per crossing (Route 2 and the
+  woods have a slightly higher encounter rate). New trainers: Margot and Arthur on Route 1, Anouk and Colette on
+  Route 2, Timothée and Maëlle in the woods. Paul, the second grunt, Pierrot's Zigzou and Gaspard's
+  Ronflon went down a level.
+
+On Normal the curve now brings the team to Mireille at L7/6 and to Gaspard at L12/12/11. Gaspard's
+sims went from about 30% to 66–75%. `curve.test.ts` checks Act 1. Acts 2 and 3 follow, together with
+their routes.
 
 **The owner's request (Oct 2026):** the first battles must let players learn the mechanics.
 - The first trainers have one or two low-level Bestioles; the starter alone should win Act 1 route

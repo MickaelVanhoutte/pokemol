@@ -68,9 +68,19 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Oh non… Ma Lunelle a dansé pour rien !', 'Oh no… My Moonbun danced for nothing!')],
   }),
   T({
+    id: 'r1a', name: L('Écolière Margot', 'Schoolgirl Margot'), party: [{ species: '012', level: 3 }], money: 90,
+    before: [L('La maîtresse dit qu’il faut s’entraîner tous les jours. Tu t’entraînes avec moi ?', 'My teacher says you have to practise every day. Will you practise with me?')],
+    after: [L('Bon… je retourne faire mes devoirs.', 'Well… back to my homework.')],
+  }),
+  T({
     id: 'iris', name: L('Fillette Iris', 'Lass Iris'), party: [{ species: '013', level: 4 }], money: 180,
     before: [L('J’ai dessiné ma Bestiole moi-même ! Regarde comme elle est jolie !', 'I drew my Critter myself! Look how pretty it is!')],
     after: [L('Elle est jolie ET forte, la tienne…', 'Yours is pretty AND strong…')],
+  }),
+  T({
+    id: 'r1b', name: L('Gamin Arthur', 'Kid Arthur'), party: [{ species: '004', level: 4 }, { species: '013', level: 4 }], money: 160,
+    before: [L('Ville-Pastel est juste là. Mais pour y entrer, il faut me battre ! … C’est pas vrai, mais on se bat quand même ?', 'Pastel City is right there. But to get in, you have to beat me! … Not really, but shall we battle anyway?')],
+    after: [L('Va voir Mireille, à l’Atelier. Ses insectes piquent !', 'Go and see Mireille at the Atelier. Her bugs sting!')],
   }),
   // ---------------------------------------------------------------- Atelier Pastel
   T({
@@ -97,7 +107,17 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route des Craies
   T({
-    id: 'pierrot', name: L('Gamin Pierrot', 'Kid Pierrot'), party: [{ species: '006', level: 7 }, { species: '004', level: 8 }], money: 180,
+    id: 'r2b', name: L('Campeuse Anouk', 'Camper Anouk'), party: [{ species: '004', level: 7 }, { species: '015', level: 7 }], money: 280,
+    before: [L('Je campe ici pour dessiner les Bestioles qui passent. Toi, tu passes… alors en garde !', 'I camp here to draw the Critters that pass by. You’re passing by… so on guard!')],
+    after: [L('Je vais te dessiner, toi. En vainqueur.', 'I’ll draw you instead. As the winner.')],
+  }),
+  T({
+    id: 'r2a', name: L('Peintre Colette', 'Painter Colette'), party: [{ species: '005', level: 7 }, { species: '062', level: 8 }], money: 300,
+    before: [L('Ne marche pas sur ma peinture fraîche ! … Trop tard. Tu me dois un combat !', 'Don’t step on my wet paint! … Too late. You owe me a battle!')],
+    after: [L('Tant pis, je repeindrai le chemin en rose.', 'Never mind, I’ll repaint the path pink.')],
+  }),
+  T({
+    id: 'pierrot', name: L('Gamin Pierrot', 'Kid Pierrot'), party: [{ species: '006', level: 7 }, { species: '004', level: 7 }], money: 180,
     before: [L('Je dessine à la craie sur le trottoir. Mes Bestioles aussi !', 'I draw with chalk on the pavement. My Critters too!')],
     after: [L('La pluie va tout effacer… mais pas ta victoire.', 'The rain will wash it all away… but not your win.')],
   }),
@@ -108,12 +128,22 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Bois Brumeux
   T({
+    id: 'b4', name: L('Cueilleuse Maëlle', 'Forager Maelle'), party: [{ species: '062', level: 8 }, { species: '009', level: 9 }], money: 330,
+    before: [L('Chut ! Je cherche des champignons dans la brume. Tu m’as fait peur… Tu vas me le payer !', 'Shh! I’m looking for mushrooms in the mist. You scared me… You’ll pay for that!')],
+    after: [L('Des gens en gris effacent les arbres, plus loin. Fais attention.', 'People in grey are rubbing out the trees further in. Be careful.')],
+  }),
+  T({
+    id: 'b3', name: L('Scout Timothée', 'Scout Timothy'), party: [{ species: '015', level: 8 }, { species: '013', level: 9 }], money: 320,
+    before: [L('Les scouts sont toujours prêts ! Prêts à quoi ? À se battre, pardi !', 'Scouts are always prepared! Prepared for what? For a battle, of course!')],
+    after: [L('Je n’étais pas assez prêt.', 'I wasn’t prepared enough.')],
+  }),
+  T({
     id: 'luna', name: L('Médium Luna', 'Medium Luna'), party: [{ species: '009', level: 9 }, { species: '005', level: 10 }], money: 400,
     before: [L('Les esprits de la brume m’ont parlé de toi…', 'The spirits of the mist told me about you…')],
     after: [L('Les esprits n’avaient pas prévu ça.', 'The spirits didn’t see that coming.')],
   }),
   T({
-    id: 'paul', name: L('Randonneur Paul', 'Hiker Paul'), party: [{ species: '006', level: 9 }, { species: '013', level: 10 }], money: 450,
+    id: 'paul', name: L('Randonneur Paul', 'Hiker Paul'), party: [{ species: '006', level: 8 }, { species: '013', level: 9 }], money: 450,
     before: [L('Rien de tel qu’une bonne marche… et un bon combat !', 'Nothing beats a good hike… and a good battle!')],
     after: [L('Ouf ! Une petite sieste et je repars.', 'Phew! A little nap and I’ll be off again.')],
   }),
@@ -126,7 +156,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Quoi ?! Les couleurs reviennent ? Ce n’était pas prévu…', 'What?! The colours are coming back? That wasn’t the plan…')],
   }),
   T({
-    id: 'gomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 10 }, { species: '013', level: 11 }], money: 360, grey: true, afterScript: 'boisRestore', storyFlag: 'a1.bois',
+    id: 'gomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '009', level: 9 }, { species: '013', level: 10 }], money: 360, grey: true, afterScript: 'boisRestore', storyFlag: 'a1.bois',
     before: [
       L('Halte ! Personne ne passe. Le Grand Effaceur dit que ces dessins ne valent rien.', 'Halt! Nobody gets through. The Great Eraser says these drawings are worthless.'),
       L('Un coup de gomme, et pouf ! Plus de bois, plus de Bestioles, plus de bazar !', 'One rub of the eraser, and poof! No more woods, no more Critters, no more mess!'),
@@ -146,7 +176,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'gaspard', name: L('Maître d’Atelier Gaspard', 'Atelier Master Gaspard'), money: 1600, badge: 'plume',
-    party: [{ species: '013', level: 10 }, { species: '008', level: 9 }],
+    party: [{ species: '013', level: 10 }, { species: '008', level: 8 }],
     before: [
       L('Zzz… Mmh ? Quelqu’un a dit « combat » ? Bâââille…', 'Zzz… Mmh? Did someone say “battle”? Yaaawn…'),
       L('Bon. Quand je suis réveillé, je ne rigole plus. Montre-moi ce que tu vaux !', 'Right. When I’m awake, I don’t mess around. Show me what you’ve got!'),

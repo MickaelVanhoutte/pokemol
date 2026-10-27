@@ -55,6 +55,11 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   drawn outside the map.
 - `warps`: tiles that move the player to `{ map, x, y, facing }`. Add the matching warp on the other
   map. Shared interiors use `to: 'back'`.
+- Routes between Ateliers train the team on the way. Bands of tall grass cross the whole route, so
+  about 20–25 grass steps can't be avoided: about 3 wild battles per crossing (the owner's choice).
+  Each route also has 4–6 trainers whose sight crosses the path. `npm run curve` shows the forced
+  battles per route. Keep items, berries and hidden pages at the same coordinates when redrawing a
+  route: the save keys them by `x,y`.
 - `buildings`: drawn over the rows. They take `kind`, a position and size, a `door` column, and a
   `to` target. A `script` instead of `to` gates the door. `kind` is one of `'house' | 'lab' | 'center'
   | 'shop' | 'cave' | 'tower' | 'gym'…`; `roof` sets the colour.

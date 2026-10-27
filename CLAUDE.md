@@ -41,7 +41,8 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
   `git -c user.email=51904030+MickaelVanhoutte@users.noreply.github.com commit …`.
   `package-lock.json` must resolve from `registry.npmjs.org`: this machine may default to a
   corporate registry, so check the `resolved` URLs after `npm install`.
-- **Balance with simulations** before shipping changes to teams or stats (`npm run balance`).
+- **Balance with simulations** before shipping changes to teams or stats (`npm run balance`, and
+  `npm run curve`: on Normal a player who never grinds must keep up, see `src/data/curve.test.ts`).
   The owner asked for a gentle start: see [docs/story.md](docs/story.md#level-curve-and-difficulty).
 - Ship each milestone separately, then check that the deploy is live (see [docs/testing.md](docs/testing.md)).
 - **No spoilers outside the technical docs.** The README and [docs/histoire.md](docs/histoire.md)
@@ -61,6 +62,7 @@ npx vitest run -t "difficulty"                # tests whose name matches
 npm run typecheck                             # tsc --noEmit (src + tools, excludes tools/out)
 npm run build                                 # typecheck + vite build to dist/ (PWA service worker included)
 npm run balance -- [easy|normal|hard] [n] [rows] # simulated trainer fights along the story (rows: ids, comma-separated)
+npm run curve -- [easy|normal|hard]          # the team's levels at each trainer without grinding (src/data/curve.ts)
 npm run redraws -- 013                        # draw a Bestiole in her style (card, mini, tools/out/redraws-sheet.png)
 npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png

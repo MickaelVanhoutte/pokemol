@@ -18,6 +18,7 @@ import { createMon, type Mon } from '../src/engine/pk/creature.ts';
 import { DIFFICULTY, TRAINERS, partyOf } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
 import { CONCOURS } from '../src/data/postgame.ts';
+import { curve } from '../src/data/curve.ts';
 import type { Difficulty } from '../src/state/prefs.ts';
 
 type Team = [species: string, level: number][];
@@ -45,6 +46,12 @@ function winRate(player: (seed: number) => Mon[], enemy: (seed: number) => Mon[]
   return wins / n;
 }
 
+const difficulty = (process.argv[2] ?? 'normal') as Difficulty;
+const n = Number(process.argv[3] ?? 300);
+// optional third argument: only these rows, e.g. `npm run balance -- normal 300 effaceur,gcFusain`
+const only = process.argv[4]?.split(',');
+if (!DIFFICULTY[difficulty]) throw new Error(`unknown difficulty ${difficulty} (easy | normal | hard)`);
+
 /** Starter ('S') at `lv`, then teammates a few levels below it. */
 const MATES = ['013', '009', '004', '006', '007'];
 function team(lv: number, size: number, gap = 3): Team {
@@ -52,49 +59,54 @@ function team(lv: number, size: number, gap = 3): Team {
   return [['S', lv], ...mates];
 }
 
-// [trainer id, player team] in story order. Player levels follow a rough XP estimate: every trainer
-// beaten plus a handful of wild fights per route, the starter taking a bit over half the XP.
+// [trainer id, player team] in story order. The player's levels come from the level curve
+// (src/data/curve.ts): every trainer on the way and the wild battles you can't avoid, no grinding.
+// Trainers off the curve's path (the cycling track, the finale) keep a level written here.
+const CURVE = new Map(curve(difficulty).rows.map((r) => [r.trainer, r]));
+/** The starter and the best `size - 1` teammates at this trainer (`species` replaces the usual mates). */
+function teamAt(id: string, size: number, species = MATES): Team {
+  const r = CURVE.get(id);
+  if (!r) throw new Error(`${id} is not on the curve's path`);
+  const mates = [...r.mates].sort((a, b) => b - a).slice(0, size - 1);
+  return [['S', r.starter], ...mates.map((lv, i): [string, number] => [species[i] === '009' && lv >= 16 ? '010' : species[i], lv])];
+}
+
 const STEPS: [string, Team][] = [
-  ['iris', [['S', 5]]],
-  ['leo', [['S', 6]]],
-  ['pastelT1', [['S', 7]]],
-  ['pastelT2', [['S', 8]]],
-  ['mireille', [['S', 9]]],
-  ['mireille', [['S', 9], ['006', 6]]],
-  ['pierrot', team(10, 2)],
-  ['luna', team(11, 2)],
-  ['gomme2', team(12, 2)],
-  ['gaspard', team(14, 2)],
-  ['max', team(14, 3)],
-  ['tom', team(16, 3)],
-  ['r3lise', team(17, 3)],
-  ['marine', team(18, 4)],
-  ['r4tim', team(19, 4)],
-  ['rature', team(21, 4)],
-  ['zelie', team(22, 5)],
-  ['mfErmite', team(24, 5)],
-  ['ambre', team(25, 5)],
-  ['ambre', [['S', 25], ['003', 22], ['013', 22], ['010', 22], ['004', 22]]],
-  ['celestine', team(32, 5)],
-  ['blanche', team(33, 6)],
-  ['basile', team(36, 6)],
-  ['ph1b', team(38, 6)],
-  ['buvard', team(38, 6)],
+  ['iris', teamAt('iris', 1)],
+  ['leo', teamAt('leo', 1)],
+  ['pastelT1', teamAt('pastelT1', 1)],
+  ['pastelT2', teamAt('pastelT2', 1)],
+  ['mireille', teamAt('mireille', 1)],
+  ['mireille', teamAt('mireille', 2, ['006'])],
+  ['pierrot', teamAt('pierrot', 2)],
+  ['luna', teamAt('luna', 2)],
+  ['gomme2', teamAt('gomme2', 2)],
+  ['gaspard', teamAt('gaspard', 3)],
+  ['max', teamAt('max', 3)],
+  ['tom', teamAt('tom', 3)],
+  ['r3lise', teamAt('r3lise', 3)],
+  ['marine', teamAt('marine', 4)],
+  ['r4tim', teamAt('r4tim', 4)],
+  ['rature', teamAt('rature', 4)],
+  ['zelie', teamAt('zelie', 5)],
+  ['mfErmite', teamAt('mfErmite', 5)],
+  ['ambre', teamAt('ambre', 5)],
+  ['ambre', teamAt('ambre', 5, ['003', '013', '010', '004'])],
+  ['celestine', teamAt('celestine', 5)],
+  ['blanche', teamAt('blanche', 6)],
+  ['basile', teamAt('basile', 6)],
+  ['ph1b', teamAt('ph1b', 6)],
+  ['buvard', teamAt('buvard', 6)],
   ['pc4', team(37, 6)],
-  ['nocturne', team(39, 6)],
-  ['rature2', team(40, 6)],
-  ['blanche2', team(40, 6)],
+  ['nocturne', teamAt('nocturne', 6)],
+  ['rature2', teamAt('rature2', 6)],
+  ['blanche2', teamAt('blanche2', 6)],
   ['effaceur', team(44, 6)],
   // post-game: the Grand Concours, each fight alone with a level 50 team
   ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(50, 6, 0)]),
 ];
 const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer.id === id)!.trainer;
 
-const difficulty = (process.argv[2] ?? 'normal') as Difficulty;
-const n = Number(process.argv[3] ?? 300);
-// optional third argument: only these rows, e.g. `npm run balance -- normal 300 effaceur,gcFusain`
-const only = process.argv[4]?.split(',');
-if (!DIFFICULTY[difficulty]) throw new Error(`unknown difficulty ${difficulty} (easy | normal | hard)`);
 console.log(`difficulty ${difficulty}, ${n} fights per cell — Minousse / Braisou / Clapotin`);
 for (const [id, t] of STEPS) {
   if (only && !only.includes(id)) continue;
