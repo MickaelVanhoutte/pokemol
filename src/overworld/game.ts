@@ -321,6 +321,19 @@ export class Game {
     Object.assign(f, { x: free ? bx : p.x, y: free ? by : p.y, fromX: free ? bx : p.x, fromY: free ? by : p.y, t: 0, moving: false, jumping: false, dir: p.dir });
   }
 
+  /**
+   * Someone in a cut-scene walks onto the following Bestiole: it hops out of the way, to a free tile
+   * next to it (not back towards the walker), or onto the player when there is none.
+   */
+  private dodge(tx: number, ty: number, walker: Actor) {
+    const f = this.follower, p = this.player;
+    if (!f || !p || !this.followerShown() || f.x !== tx || f.y !== ty) return;
+    const spots = (Object.keys(DIRS) as Dir[]).map((d) => [d, f.x + DIRS[d][0], f.y + DIRS[d][1]] as const)
+      .filter(([, x, y]) => !(x === walker.x && y === walker.y) && !(x === p.x && y === p.y) && !this.blocked(x, y) && !this.map.warps.has(y * this.map.w + x));
+    const [dir, x, y] = spots[0] ?? [f.dir, p.x, p.y];
+    Object.assign(f, { fromX: f.x, fromY: f.y, x, y, t: 0, ms: 140, moving: true, jumping: true, dir });
+  }
+
   /** The follower steps into the tile the player just left. */
   private follow(tx: number, ty: number, ms: number, jumping: boolean) {
     const f = this.follower;
@@ -418,6 +431,7 @@ export class Game {
       return false;
     }
     if (a === this.player) this.follow(a.x, a.y, jumping ? ms * 2 : ms, jumping);
+    else this.dodge(nx, ny, a);
     a.fromX = a.x;
     a.fromY = a.y;
     a.x = nx;
