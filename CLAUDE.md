@@ -3,8 +3,9 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 **Atelier Bestioles: le Rêve de Papeterre** is a FireRed/LeafGreen-style browser game built from a
-child's real pencil drawings. Each creature ("Bestiole", EN "Critter") is a photo of a drawing, cut out
-by `tools/cut-drawings.ts`. The repo is public and the game is live at
+child's real pencil drawings. In the game each creature ("Bestiole", EN "Critter") is drawn in code in
+her style (`tools/redraws`); her own drawings are kept as the originals (`public/originals`, cut out of
+photos by `tools/cut-drawings.ts`), shown in the credits. The repo is public and the game is live at
 https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every push to `main`).
 
 - [docs/histoire.md](docs/histoire.md): the story for the family, spoiler-free (French, then English).
@@ -13,7 +14,7 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - [docs/testing.md](docs/testing.md): unit tests, balance sims, headless playtests on phone sizes, deploy check.
 - [docs/bestioles.md](docs/bestioles.md): design rules for a Bestiole (stat bands, catch rate, base XP, the
   family's power, moves), checked by `src/data/bestioles.test.ts`. The project skill `new-bestiole`
-  (`.claude/skills/new-bestiole/SKILL.md`) walks through adding a drawing or a brouillon.
+  (`.claude/skills/new-bestiole/SKILL.md`) walks through adding a Bestiole drawn in her style.
 
 ## Standing rules from the project owner
 
@@ -24,8 +25,8 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
   and shown with `tr()`. Use typographic `’` and `« »`. Gendered French uses `{g:féminin|masculin}`
   (the player picks girl or boy). `{name}` and `{rival}` are global placeholders.
   The space before `! ? : ;` becomes non-breaking automatically.
-- **Drawing photos never leave the machine.** `img-source/` is gitignored; only the cut-out
-  `public/cards/*.webp` is published. Back up `img-source/` before any history rewrite.
+- **Drawing photos never leave the machine.** `img-source/` is gitignored; only her cut-out drawings
+  `public/originals/*.webp` are published. Back up `img-source/` before any history rewrite.
 - **Graphics are drawn in code**: tiles, sprites, buildings, pixel icons, battle backdrops, the pencil
   look. Don't propose downloading tile packs, and don't use emoji as icons.
 - **Phones are the main target.** Check 360 and 412px wide at 100% and 130% root font size
@@ -55,7 +56,8 @@ npx vitest run -t "difficulty"                # tests whose name matches
 npm run typecheck                             # tsc --noEmit (src + tools, excludes tools/out)
 npm run build                                 # typecheck + vite build to dist/ (PWA service worker included)
 npm run balance -- [easy|normal|hard] [n] [rows] # simulated trainer fights along the story (rows: ids, comma-separated)
-npm run cards -- 013                          # cut out one drawing (see README "Add a new drawing")
+npm run redraws -- 013                        # draw a Bestiole in her style (card, mini, tools/out/redraws-sheet.png)
+npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png
 ```
 
@@ -171,15 +173,21 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - `sfx.ts` plays sound effects, and `fxSound(kind)` the sounds of the move animations: each effect
   layer lists its `sounds` (fire whoosh, splash, thunder, slash, stat arpeggios…). Everything respects the prefs.
 
-**Drawings → cards.** `tools/cards-manifest.json` (crop box, erase polygons, `scale`, `options`) goes
-through `tools/cut-drawings.ts` and `src/art/cutout.ts` (paper flattening, ink mask) to produce
-`public/cards/<id>-<slug>.webp`, and its overworld miniature `public/minis/<id>-<slug>.png`
-(`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour palette, a dark outline). The
-miniature is the follower (`Game.follower`, refreshed from the party by `refreshFollower`); a test
-requires one per creature. The contact sheet lands in `tools/out/` (gitignored scratch, also
-excluded from `tsc`). Bestioles she hasn't drawn yet can be *brouillons*: drawn in code by
-`tools/drafts` (`npm run drafts`), marked `draft: true`, replaced by her drawing later (see
-[docs/content.md](docs/content.md#brouillons-drafts)).
+**Drawings → cards.** Every card `public/cards/<id>-<slug>.webp` is drawn in code, as SVG:
+- her Bestioles (and new ones) by `tools/redraws` (`npm run redraws`). The `crayon` kit copies her
+  technique: dense coloured-pencil strokes that run over the line, a second pass across in places,
+  paper specks, one wobbly graphite (or felt-tip) outline, lopsided shapes. It writes
+  `tools/out/redraws-sheet.png`: her drawing, the redraw, battle size and miniature side by side;
+- the *brouillons* by `tools/drafts` (`npm run drafts`, rougher kid kit, `draft: true`, see
+  [docs/content.md](docs/content.md#brouillons-drafts)).
+
+Both go through `src/art/cutout.ts` (paper flattening, ink mask) like a photo and make the overworld
+miniature `public/minis/<id>-<slug>.png` (`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour
+palette, a dark outline). The miniature is the follower (`Game.follower`, refreshed from the party by
+`refreshFollower`); a test requires one per creature. Her own drawings stay as the originals:
+`tools/cards-manifest.json` (crop box, erase polygons, `scale`, `options`) → `tools/cut-drawings.ts` →
+`public/originals/`, listed in `src/data/originals.ts` and shown in the credits. Sheets land in
+`tools/out/` (gitignored scratch, also excluded from `tsc`).
 
 ## Gotchas
 

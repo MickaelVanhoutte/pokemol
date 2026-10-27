@@ -158,7 +158,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'tradeBraise', x: 11, y: 12, look: LOOKS.hiker, facing: 'down', script: 'trade_braise' },
       { id: 'braiseOld', x: 16, y: 8, look: LOOKS.granny, facing: 'left', text: [L('Le volcan ? Il crache des étincelles de crayon orange quand il est content.', 'The volcano? It spits orange crayon sparks when it’s happy.')] },
-      { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embunny. So cool!')] },
+      { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embersal. So cool!')] },
       { id: 'forgeron', x: 17, y: 13, look: { hair: '#2a2238', shirt: '#b5582e', pants: '#4a4458' }, facing: 'left', script: 'forgeron' },
     ],
   },

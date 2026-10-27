@@ -1,14 +1,15 @@
 /**
  * npm run cards [-- <id> ...]
- * Cuts every drawing listed in tools/cards-manifest.json out of its photo and writes
- * public/cards/<id>-<slug>.webp and its overworld miniature public/minis/<id>-<slug>.png, plus
- * tools/out/contact-sheet.png for visual review.
+ * Cuts the little artist's drawings listed in tools/cards-manifest.json out of their photos and writes
+ * them to public/originals/<id>-<slug>.webp (shown in the credits and the museum), plus
+ * tools/out/contact-sheet.png for visual review. In the game, the Bestioles are her drawings redrawn
+ * in code in her style (`npm run redraws`, tools/redraws).
  */
 import { mkdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp, { type OverlayOptions } from 'sharp';
 import { cutout, type CutoutOptions, type Point } from '../src/art/cutout.ts';
-import { makeMini, type MiniTweaks } from './minis.ts';
+import type { MiniTweaks } from './minis.ts';
 
 interface Entry {
   id: string;
@@ -21,14 +22,14 @@ interface Entry {
   /** Resize factor applied to the crop before cutting (big phone photos: 0.5). */
   scale?: number;
   options?: Partial<CutoutOptions>;
-  /** Overworld miniature tweaks (`colors`, `saturation`) when a pale detail gets lost. */
+  /** Overworld miniature tweaks from when her drawing was the card (unused since the redraws). */
   mini?: MiniTweaks;
 }
 
 const root = new URL('..', import.meta.url).pathname;
 const manifest: { drawings: Entry[] } = JSON.parse(await readFile(join(root, 'tools/cards-manifest.json'), 'utf8'));
 const only = process.argv.slice(2);
-const outDir = join(root, 'public/cards');
+const outDir = join(root, 'public/originals');
 await mkdir(outDir, { recursive: true });
 await mkdir(join(root, 'tools/out'), { recursive: true });
 
@@ -54,8 +55,6 @@ for (const e of manifest.drawings) {
     .png({ compressionLevel: 9, palette: false })
     .toBuffer();
   await sharp(png).webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(join(outDir, `${e.id}-${e.slug}.webp`));
-  await mkdir(join(root, 'public/minis'), { recursive: true });
-  await makeMini(join(outDir, `${e.id}-${e.slug}.webp`), join(root, 'public/minis', `${e.id}-${e.slug}.png`), e.mini);
   console.log(`✓ ${e.id} ${e.slug} ${res.width}x${res.height}`);
   tiles.push({ input: png, label: `${e.id} ${e.slug}` });
 }

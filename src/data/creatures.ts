@@ -21,7 +21,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '020', slug: 'minoufleur', faces: 'right', name: L('Minoufleur', 'Bloomkit'), kind: L('Bestiole Bourgeon', 'Bud Critter'),
+    id: '020', slug: 'minoufleur', name: L('Minoufleur', 'Bloomkit'), kind: L('Bestiole Bourgeon', 'Bud Critter'),
     type: 'plante', base: { hp: 62, atk: 64, def: 64, spa: 82, spd: 82, spe: 60 },
     catchRate: 45, baseExp: 142, evYield: { spa: 1, spd: 1 }, rarity: 'uncommon', evolvesFrom: '001', evolutions: [{ to: '024', level: 32 }],
     stencils: ['pochoir-02', 'pochoir-07', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -52,7 +52,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '002', slug: 'braisou', faces: 'left', name: L('Braisou', 'Embunny'), kind: L('Bestiole Braise', 'Ember Critter'),
+    id: '002', slug: 'braisou', name: L('Braisou', 'Embersal'), kind: L('Bestiole Braise', 'Ember Critter'),
     type: 'feu', base: { hp: 45, atk: 58, def: 44, spa: 64, spd: 50, spe: 66 },
     catchRate: 45, baseExp: 64, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '021', level: 16 }],
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-16', 'pochoir-19'],
@@ -148,7 +148,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '015', slug: 'chrysalou', faces: 'right', name: L('Chrysalou', 'Cocoonap'), kind: L('Bestiole Chrysalide', 'Chrysalis Critter'),
+    id: '015', slug: 'chrysalou', name: L('Chrysalou', 'Cocoonap'), kind: L('Bestiole Chrysalide', 'Chrysalis Critter'),
     type: 'insecte', base: { hp: 50, atk: 20, def: 60, spa: 25, spd: 30, spe: 25 },
     catchRate: 120, baseExp: 72, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '012', evolutions: [{ to: '007', level: 10 }],
     stencils: ['pochoir-01', 'pochoir-12', 'pochoir-18'],

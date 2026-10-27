@@ -218,9 +218,9 @@ Scripts run one at a time and lock player input. To change an existing script af
   battles stay the same. Bestioles from older saves get a fixed one from their uid.
   French names agree with « une nature » (feminine).
 
-- **New drawing**: follow README "Add a new drawing". It covers the photo in `img-source/`, the
-  manifest entry, `npm run cards -- <id>`, checking `tools/out/contact-sheet.png`, then adding the
-  creature to `src/data/creatures.ts`. For a creature that evolves, list its ways to evolve in
+- **New Bestiole**: follow README "Add a new Bestiole". It covers her drawing as the original (photo in
+  `img-source/`, manifest entry, `npm run cards -- <id>`, `ORIGINALS`), drawing it in her style with
+  `npm run redraws -- <id>`, then adding the creature to `src/data/creatures.ts`. For a creature that evolves, list its ways to evolve in
   `evolutions: [{ to, level? | item? | friendship? }]` on the base form, and set `evolvesFrom` on each
   evolved form. Several rules make a branching evolution (Touffou's future forms):
   - `item` is a Crayon Magique used from the bag (`crayon-magique-<type>`). Water, Fire and Lightning
@@ -284,13 +284,13 @@ Scripts run one at a time and lock player input. To change an existing script af
 
 ### Brouillons (drafts)
 
-A Bestiole the little artist hasn't drawn yet can be drawn in code as a *brouillon*: a module in
+The *brouillons* are Bestioles drawn in code more roughly than the redraws: a module in
 `tools/drafts/` (`<slug>.ts`, listed in `DRAFTS` in `tools/drafts/make.ts`) that draws with the kid kit
 (`tools/drafts/kid.ts`: potato shapes, pencil lines gone over twice, zig-zag colouring; `layered: true`
 makes front parts hide back ones, which reads better for busy designs). `npm run drafts [-- <id>]` cuts it
-out like a photo and writes its card and miniature. Its creature entry gets `draft: true`. When she draws
-it: add her photo to `tools/cards-manifest.json` with the same id and slug, run `npm run cards -- <id>`,
-remove it from `DRAFTS` and drop `draft: true`.
+out like a photo and writes its card and miniature. Its creature entry gets `draft: true` (a BROUILLON
+stamp in the Bestiodex). New Bestioles use the `crayon` kit of `tools/redraws` instead; to redo a
+brouillon in her style, move it there and drop `draft: true`.
 
 ## UI
 

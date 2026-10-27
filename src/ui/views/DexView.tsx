@@ -95,7 +95,7 @@ function DexEntry({ index, isSeen, isCaught, visited, onMove, onClose }: {
         {isCaught(sp.id) ? (
           <>
             <p>{tr(sp.dex)}</p>
-            {sp.draft && <p class="dex__evo">{tr(L('Un brouillon, en attendant le vrai dessin de la petite artiste.', 'A draft, until the little artist draws the real one.'))}</p>}
+            {sp.draft && <p class="dex__evo">{tr(L('Un brouillon, griffonné vite fait.', 'A draft, scribbled quickly.'))}</p>}
             {evolutionHints(sp).length > 0 && (
               <p class="dex__evo">{tr(L('Évolution : {h}.', 'Evolves: {h}.'), { h: evolutionHints(sp).join(' · ') })}</p>
             )}

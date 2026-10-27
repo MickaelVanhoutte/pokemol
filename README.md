@@ -1,8 +1,9 @@
 # Atelier Bestioles: le Rêve de Papeterre
 
 A small FireRed/LeafGreen-style adventure, made from a child's drawings.
-Every creature ("Bestiole") is a real pencil drawing, cut out of a photo, and the whole interface
-is sketched too: wobbly pencil frames and pastel crayon hatching.
+Every creature ("Bestiole") began as one of her pencil drawings; in the game they are redrawn in code in
+her style, and her originals are kept in the credits. The whole interface is sketched too: wobbly pencil
+frames and pastel crayon hatching.
 
 **The story.** One evening, a little artist falls asleep on the sketchbook and opens their eyes in
 Papeterre, a land drawn on a giant sheet of paper where every drawing is alive. Prof. Fusain
@@ -81,9 +82,12 @@ Controls: arrows/WASD to move, Z/Enter/Space = A, X/Shift = B (hold to run once 
 Zip Sneakers), Esc/M = menu. The game saves when you choose SAUVER (auto-save is an option).
 On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap = A.
 
-## Add a new drawing
+## Add a new Bestiole
 
-1. Take a photo of the drawing on white paper and put it in `img-source/`.
+Bestioles are drawn in code in the little artist's style. If she drew it, her drawing is kept as the
+original (steps 1–4); otherwise start at step 5.
+
+1. Take a photo of the drawing on white paper and put it in `img-source/` (never committed).
 2. Open the photo in any image viewer and note the pixel box around the creature (`[x0, y0, x1, y1]`).
 3. Add an entry to `tools/cards-manifest.json`:
    ```json
@@ -95,17 +99,20 @@ On a phone or tablet: touch and slide anywhere to walk (slide far to run), tap =
    Tweak `"options": { "inkLum": 0.8, "inkChroma": 0.11 }` if pale colours disappear.
    Big phone photos: add `"scale": 0.5`. Beige paper or yellow lamp light: add `"paperChroma": 0.26` to `options`.
 4. Run `npm run cards -- 012` and check `tools/out/contact-sheet.png` (dark background shows leftover paper).
-   It also makes the little overworld sprite of the Bestiole that follows you (`public/minis/`; review
-   them all with `npm run minis` and `tools/out/minis-sheet.png`). If a pale colour disappears from the
-   miniature, add `"mini": { "saturation": 3, "colors": 8 }` to the entry.
-5. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
+   It writes `public/originals/012-mon-nom.webp`; add the id to `ORIGINALS` in `src/data/originals.ts`.
+5. Draw it in her style: a module `tools/redraws/<slug>.ts` listed in `REDRAWS` (`tools/redraws/make.ts`),
+   drawn with the `crayon` kit (`shape`, `paper`, `stroke`, `dot`, `band`, `spikes`…). Keep what makes
+   the creature: its colours, its shape, its signature features (and what inspired it).
+   `npm run redraws -- 012` writes its card, the little overworld sprite that follows you
+   (`public/minis/`), and `tools/out/redraws-sheet.png` next to her drawing.
+6. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
    base stats, catch rate, base XP, learnset (`[level, move id]`, moves live in `src/data/moves.ts`),
    evolution level if it evolves, Bestiodex text, talents (with the family's power), and `faces: 'left'` or `'right'` if the drawing
    looks sideways (battles mirror it so both Bestioles face each other). The `id` is only a key: the
    Bestiodex number is the creature's place in the list, so put an evolution right after its earlier form.
    [docs/bestioles.md](docs/bestioles.md) gives the stat bands, catch rates, base XP, powers and moves;
    `src/data/bestioles.test.ts` checks them.
-6. Put it in a map's `encounters` (`src/data/maps/<area>.ts`) or a trainer party (`src/data/trainers.ts`).
+7. Put it in a map's `encounters` (`src/data/maps/<area>.ts`) or a trainer party (`src/data/trainers.ts`).
    Every creature can also come out of the Tombola.
 7. `npm test`, commit, push: GitHub Pages redeploys.
 
@@ -132,8 +139,9 @@ src/ui/           paper kit (windows, notebook text boxes, menus), battle, FRLG 
 
 ## Credits
 
-- Every Bestiole: drawn by the little artist, except a few *brouillons* (drafts) sketched in code while
-  she draws the real ones (`npm run drafts`); the Bestiodex and the credits mark them.
+- Every Bestiole: born from the little artist's drawings (her originals are in the credits), redrawn in
+  code in her style; a few *brouillons* (drafts) are sketched more roughly (`npm run drafts`), and the
+  Bestiodex and the credits mark them.
 - Tiles, sprites, buildings, icons and battle backdrops: drawn in code for this project.
 - Fonts: Patrick Hand and Inter (SIL Open Font License), via Fontsource.
 - A fan project inspired by the Game Boy Advance pocket-monster games; not affiliated with any brand.

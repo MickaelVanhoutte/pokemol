@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "cards": "tsx tools/cut-drawings.ts",
     "drafts": "tsx tools/drafts/make.ts",
+    "redraws": "tsx tools/redraws/make.ts",
     "minis": "tsx tools/minis.ts",
     "icons": "tsx tools/make-icons.ts",
     "balance": "tsx tools/balance.ts"

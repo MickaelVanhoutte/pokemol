@@ -1,6 +1,6 @@
 ---
 name: new-bestiole
-description: Add a new Bestiole (creature) to Atelier Bestioles, from a photo of the little artist's drawing or as a brouillon drawn in code, with balanced stats, catch rate, base XP, a family power, a learnset, places to meet it, tests, sims and docs. Use when the owner brings a new drawing, asks for a new creature or evolution, or replaces a brouillon with a real drawing.
+description: Add a new Bestiole (creature) to Atelier Bestioles, drawn in code in the little artist's style (from one of her drawings or not), with balanced stats, catch rate, base XP, a family power, a learnset, places to meet it, tests, sims and docs. Use when the owner brings a new drawing, asks for a new creature or evolution, or replaces a brouillon with a real drawing.
 ---
 
 # Adding a Bestiole
@@ -11,17 +11,19 @@ drawing photos never leave the machine, phones first, balance with sims, docs up
 
 ## 1. The picture
 
-- **A drawing**: the photo goes in `img-source/` (gitignored, never committed). Add an entry to
-  `tools/cards-manifest.json` (crop box, erase polygons; newer phone photos need `scale: 0.5` and
-  `paperChroma: 0.26`), run `npm run cards -- <id>`, and check `tools/out/contact-sheet.png` and
-  `tools/out/minis-sheet.png` (README "Add a new drawing").
-- **A brouillon** (not drawn yet): a module in `tools/drafts/<slug>.ts` listed in `DRAFTS`
-  (`tools/drafts/make.ts`), drawn with the kid kit in `tools/drafts/kid.ts`, then `npm run drafts -- <id>`.
-  It must look like a quick drawing by a six-year-old: simple shapes, front parts hiding back ones
-  (`layered: true`), saturated colours, lines gone over twice. Evolutions need bigger features and a fiercer
-  pose than the earlier form. Show the owner the card before going on. Set `draft: true` on the creature.
-- **A drawing replacing a brouillon**: same id and slug in the manifest, `npm run cards -- <id>`, remove it
-  from `DRAFTS`, drop `draft: true`.
+Every Bestiole is drawn in code in the little artist's style; she no longer has to draw them.
+- **If she drew it**: her drawing is the original. The photo goes in `img-source/` (gitignored, never
+  committed). Add an entry to `tools/cards-manifest.json` (crop box, erase polygons; newer phone photos need
+  `scale: 0.5` and `paperChroma: 0.26`), run `npm run cards -- <id>` (writes `public/originals/`), check
+  `tools/out/contact-sheet.png`, and add the id to `ORIGINALS` in `src/data/originals.ts`.
+- **Draw it in her style**: a module in `tools/redraws/<slug>.ts` listed in `REDRAWS`
+  (`tools/redraws/make.ts`), drawn with the `crayon` kit (`tools/redraws/crayon.ts`): lopsided shapes,
+  stick legs, zig-zag fur, oval eyes, dense coloured-pencil colouring that runs over one wobbly line.
+  Ask the owner what inspired it and keep its signature features (a bulb on the back, a flame on the tail…):
+  her drawings don't always show them. Then `npm run redraws -- <id>` and check
+  `tools/out/redraws-sheet.png` (her drawing, the redraw, battle size, miniature). Show the owner the sheet
+  before going on. Set `faces` from the new pose.
+- The 29 *brouillons* of `tools/drafts` (`draft: true`) are the rough kit; don't add new ones there.
 
 ## 2. The model
 

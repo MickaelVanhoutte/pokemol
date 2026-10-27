@@ -308,7 +308,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   // ---------------------------------------------------------------- Atelier Braise
   T({
     id: 'braiseT1', name: L('Jongleur Paco', 'Juggler Paco'), party: [{ species: '002', level: 23 }, { species: '013', level: 23 }], money: 600,
-    before: [L('Je jongle avec des braises ! Enfin, mon Braisou jongle.', 'I juggle embers! Well, my Embunny does.')],
+    before: [L('Je jongle avec des braises ! Enfin, mon Braisou jongle.', 'I juggle embers! Well, my Embersal does.')],
     after: [L('Aïe, ça brûle…', 'Ouch, that burns…')],
   }),
   T({
