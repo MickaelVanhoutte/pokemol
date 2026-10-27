@@ -107,3 +107,51 @@ describe('natures and running shoes in older saves', () => {
     expect(atHome.bag.baskets).toBeUndefined();
   });
 });
+
+describe('several games on one device', async () => {
+  // a small in-memory localStorage for node
+  const store = new Map<string, string>();
+  (globalThis as unknown as { localStorage: Storage }).localStorage = {
+    getItem: (k: string) => store.get(k) ?? null,
+    setItem: (k: string, v: string) => void store.set(k, v),
+    removeItem: (k: string) => void store.delete(k),
+    clear: () => store.clear(),
+    key: () => null,
+    length: 0,
+  } as Storage;
+  const { DEFAULT_LOOKS } = await import('../data/appearance');
+  const { deleteSave, hasSave, loadSave, newGame, peekSlot, persist, savedSlots, slot } = await import('./game');
+  const { prefs, setPref } = await import('./prefs');
+
+  it('keeps each game in its own slot, game 1 where the single save always was', () => {
+    store.clear();
+    slot.value = 1;
+    setPref('difficulty', 'normal');
+    newGame('Papa', DEFAULT_LOOKS.m, 'm', 'Feutre');
+    persist();
+    slot.value = 2;
+    setPref('difficulty', 'easy');
+    newGame('Lili', DEFAULT_LOOKS.f, 'f', 'Crayon');
+    persist();
+    expect(store.has('atelier-bestioles.save')).toBe(true);
+    expect(store.has('atelier-bestioles.save.2')).toBe(true);
+    expect(savedSlots()).toEqual([1, 2]);
+    expect(peekSlot(1)?.player.name).toBe('Papa');
+    expect(peekSlot(3)).toBeNull();
+    expect(hasSave()).toBe(true);
+  });
+
+  it('plays each game at its own difficulty', () => {
+    loadSave(1);
+    expect(prefs.value.difficulty).toBe('normal');
+    loadSave(2);
+    expect(prefs.value.difficulty).toBe('easy');
+    expect(slot.value).toBe(2);
+  });
+
+  it('deletes only the slot asked for', () => {
+    deleteSave(1);
+    expect(savedSlots()).toEqual([2]);
+    expect(peekSlot(2)?.player.name).toBe('Lili');
+  });
+});

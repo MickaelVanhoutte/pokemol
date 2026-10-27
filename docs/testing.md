@@ -9,8 +9,10 @@ Vitest in a node environment, with no DOM. What they guard:
 | `src/engine/pk/pk.test.ts` | Data completeness (learnsets, type chart), Gen 3 stats with effort points, level-ups and move learning, evolution, damage range, immunities, faints and replacements, catching, items, Struggle, AI-vs-AI fights always end |
 | `src/engine/pk/judge.test.ts` | IV grades (E–S) and natures (+10% / −10%, never HP) |
 | `src/engine/pk/talents.test.ts` | Every species' talents exist, slots survive evolution, about 1 in 4 hidden, talent effects in battle |
-| `src/state/game.test.ts` | Save migration and repair (older versions load without losing anything) |
-| `src/data/maps.test.ts` | Every map has rectangular rows of known tiles; warps land on walkable tiles; NPCs and triggers stand on free tiles; patches stay in bounds; encounters only list known creatures |
+| `src/state/game.test.ts` | Save migration and repair (older versions load without losing anything); the three game slots and each game's own difficulty |
+| `src/story/choices.test.ts` | The ending's tally (the final answer counts double, a tie goes to it), Coconfus never evolving by level, finding Coconfus in the party, PC or daycare |
+| `src/data/curve.test.ts` | The no-grind level curve down to the Great Eraser: route trainers never ahead of the team, bosses at most five levels above, the team reaching the finale at L42 or more |
+| `src/data/maps.test.ts` | Every map has rectangular rows of known tiles; warps land on walkable tiles; NPCs and triggers stand on free tiles; patches stay in bounds; encounters only list known creatures; wild levels never above the weakest trainer's ace on the same map |
 | `src/story/story.test.ts` | Every script id a map references exists; every flag a map waits for is set somewhere; `afterScript`s exist |
 | `src/data/trainers.test.ts` | Difficulty level shifts and a gentle first two trainers |
 | `src/ui/battle/panelMode.test.ts` | Each battle state maps to one panel mode |
@@ -63,6 +65,12 @@ __ab.update((d) => { d.party = [__ab.createMon('002', 12, { rng: 1 })]; d.flags.
 __ab.warpTo({ map: 'atelierPastel', x: 5, y: 4, facing: 'up' });
 __ab.trainerBattle('mireille');
 ```
+
+A new game opens with the falling-asleep scene (`SleepIntroView`, about 19 s): click `.sleepintro` to
+skip a beat. Reach the game's modules through these handles rather than `import('/pokemol/src/…')` from the
+page: after a hot reload the app imports them with a `?t=` suffix, and a bare import gets a second copy with
+its own state (an empty `save`). Saves live in `localStorage` under `atelier-bestioles.save` (game 1),
+`atelier-bestioles.save.2` and `.3`.
 
 Don't `await` a script promise from a page-evaluate call: scripts wait for dialog input, so the call
 deadlocks. Start the script, then close dialogs in a loop

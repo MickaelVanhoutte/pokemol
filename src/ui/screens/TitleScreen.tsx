@@ -3,22 +3,14 @@ import { effect } from '@preact/signals';
 import { L, t, tr } from '../../i18n';
 import { CREATURES, artUrl, dexNo } from '../../data/creatures';
 import { enterWorld } from '../../overworld/controller';
-import { hasSave, loadSave, migrate, outdatedSave } from '../../state/game';
+import { hasSave, loadSave, outdatedSave, peekSlot, savedSlots, slot, SLOTS } from '../../state/game';
 import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
+import { personUrl } from '../personArt';
 import { MenuList, Window, YesNo } from '../paper';
 import { playMusic } from '../../audio/music';
 import { firstOfflineReady, install, installLater, installToastDue, installWay } from '../../state/pwa';
 import './title.css';
-
-function peek(): SaveData | null {
-  try {
-    const raw = localStorage.getItem('atelier-bestioles.save');
-    return raw ? migrate(JSON.parse(raw)) : null;
-  } catch {
-    return null;
-  }
-}
 
 /** Offers to install the game, over the logo. « Plus tard » hides it for a week. */
 function InstallToast() {
@@ -92,11 +84,30 @@ const time = (ms: number) => {
   return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
 };
 
+/** One saved game on the title screen: who plays it, how far, for how long. */
+function SlotCard({ n, s, onPick }: { n: number; s: SaveData | null; onPick: () => void }) {
+  return (
+    <button class={`title__slot ${s ? '' : 'is-empty'}`} onClick={onPick}>
+      {s?.player.look && <img class="title__slot-pic" src={personUrl(s.player.look)} alt="" />}
+      <span class="title__slot-text">
+        <b>{tr(L('Partie {n}', 'Game {n}'), { n })}</b>
+        {s ? (
+          <span>{s.player.name} · {s.badges.length} {tr(s.badges.length > 1 ? L('badges', 'badges') : L('badge', 'badge'))} · {tr(L('Bestiodex', 'Critterdex'))} {s.dex.caught.length} · {time(s.playMs)}</span>
+        ) : (
+          <span>{tr(L('— vide —', '— empty —'))}</span>
+        )}
+      </span>
+    </button>
+  );
+}
+
 /** FRLG title: logo, the sketchbook turning its pages, "touch the screen", then the main menu. */
 export function TitleScreen() {
   const exists = hasSave();
   const [phase, setPhase] = useState<'press' | 'menu'>('press');
-  const [confirmNew, setConfirmNew] = useState(false);
+  /** Picking a game to continue, or a slot for a new one; then confirming a slot to overwrite. */
+  const [picking, setPicking] = useState<'continue' | 'new' | null>(null);
+  const [confirmNew, setConfirmNew] = useState<number | null>(null);
   const [hero, setHero] = useState(() => Math.floor(Math.random() * CREATURES.length));
   const [offlineNote, setOfflineNote] = useState(false);
   // said once per device, when every file has been downloaded
@@ -114,10 +125,12 @@ export function TitleScreen() {
     window.addEventListener('keydown', go, { once: true });
     return () => window.removeEventListener('keydown', go);
   }, [phase]);
-  const s = exists ? peek() : null;
+  const saved = exists ? savedSlots() : [];
+  const startNew = (n: number) => { slot.value = n; go({ id: 'newgame' }); };
   const items = [
-    ...(exists ? [{ label: t('menu.continue'), onSelect: () => { if (loadSave()) enterWorld(); } }] : []),
-    { label: t('menu.newGame'), onSelect: () => (exists ? setConfirmNew(true) : go({ id: 'newgame' })) },
+    // one game: straight in; several: pick whose
+    ...(exists ? [{ label: t('menu.continue'), onSelect: () => (saved.length === 1 ? loadSave(saved[0]) && enterWorld() : setPicking('continue')) }] : []),
+    { label: t('menu.newGame'), onSelect: () => (exists ? setPicking('new') : startNew(1)) },
     { label: tr(L('BESTIODEX', 'CRITTERDEX')), onSelect: () => go({ id: 'dex', all: true }) },
     { label: tr(L('MUSIQUES', 'MUSIC')), onSelect: () => go({ id: 'jukebox' }) },
     { label: t('menu.settings'), onSelect: () => go({ id: 'settings', back: { id: 'title' } }) },
@@ -143,19 +156,22 @@ export function TitleScreen() {
           {offlineNote && (
             <Window seyes class="title__note">{tr(L('Le jeu est maintenant sur ton appareil : tu peux jouer même sans Internet !', 'The game is now on your device: you can play even without the Internet!'))}</Window>
           )}
-          {s && (
-            <Window class="title__save">
-              <span>{tr(L('JOUEUR', 'PLAYER'))}</span><b>{s.player.name}</b>
-              <span>{tr(L('BADGES', 'BADGES'))}</span><b>{s.badges.length}</b>
-              <span>{tr(L('BESTIODEX', 'CRITTERDEX'))}</span><b>{s.dex.caught.length}</b>
-              <span>{tr(L('TEMPS', 'TIME'))}</span><b>{time(s.playMs)}</b>
-            </Window>
-          )}
-          {confirmNew ? (
+          {confirmNew !== null ? (
             <>
-              <Window seyes class="title__note">{tr(L('Commencer une nouvelle partie efface l’ancienne. Continuer ?', 'Starting a new game erases the old one. Continue?'))}</Window>
-              <YesNo onAnswer={(yes) => (yes ? go({ id: 'newgame' }) : setConfirmNew(false))} />
+              <Window seyes class="title__note">{tr(L('La partie {n} ({p}) sera effacée. Continuer ?', 'Game {n} ({p}) will be erased. Continue?'), { n: confirmNew, p: peekSlot(confirmNew)?.player.name ?? '' })}</Window>
+              <YesNo onAnswer={(yes) => (yes ? startNew(confirmNew) : setConfirmNew(null))} />
             </>
+          ) : picking ? (
+            <Window class="title__slots">
+              <p class="title__slots-title">{picking === 'continue' ? tr(L('Quelle partie ?', 'Which game?')) : tr(L('Où commencer la nouvelle partie ?', 'Where should the new game go?'))}</p>
+              {Array.from({ length: SLOTS }, (_, i) => i + 1)
+                .filter((n) => picking === 'new' || saved.includes(n))
+                .map((n) => {
+                  const g = peekSlot(n);
+                  return <SlotCard n={n} s={g} onPick={() => (picking === 'continue' ? loadSave(n) && enterWorld() : g ? setConfirmNew(n) : startNew(n))} />;
+                })}
+              <button class="pbtn pbtn--back" onClick={() => setPicking(null)}>{tr(L('Retour', 'Back'))}</button>
+            </Window>
           ) : (
             <Window class="title__list"><MenuList items={items} /></Window>
           )}

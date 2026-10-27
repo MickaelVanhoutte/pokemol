@@ -205,6 +205,7 @@
 .opts__save { font-size: 1rem; }
 .opts__save p { margin: 0 0 6px; }
 .opts__row { display: flex; flex-wrap: wrap; gap: 6px; }
+.opts__slot { flex: 1; min-width: 0; align-self: center; text-align: center; overflow-wrap: anywhere; }
 .opts__msg { color: #2a8a3a; }
 .opts__app { font-size: 0.95rem; }
 .opts__app p { margin: 0 0 6px; }

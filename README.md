@@ -12,7 +12,8 @@ out Bestioles for their mysterious boss, the Great Eraser. More, still without s
 English: [docs/histoire.md](docs/histoire.md).
 
 - 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, and choices along the
-  way that lead to one of two endings.
+  way that lead to one of two endings. Up to three saved games on one device, each with its own
+  difficulty.
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - Attacks animated in coloured pencil, FireRed style: fireballs, lightning, water jets, waves,

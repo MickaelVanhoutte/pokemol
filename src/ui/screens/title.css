@@ -75,8 +75,18 @@
 .title__press { position: relative; flex: none; margin: 0 0 8px; color: #fff; font-size: 1.4rem; letter-spacing: 0.1em; }
 .title__menu { position: relative; flex: none; width: min(100%, 420px); display: flex; flex-direction: column; gap: 6px; cursor: default; }
 .title__list .mlist__item { font-size: 1.35rem; text-transform: uppercase; }
-.title__save { display: grid; grid-template-columns: auto 1fr; gap: 0 12px; font-size: 1.1rem; }
-.title__save b { font-weight: 400; text-align: right; color: #2a6ad6; }
+.title__slots > div, .title__slots { display: flex; flex-direction: column; gap: 6px; }
+.title__slots-title { margin: 0; font-size: 1.15rem; }
+.title__slot {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; text-align: left;
+  font: inherit; color: inherit; background: rgba(255, 255, 255, 0.55); border: 2px solid #3f3b46; border-radius: 10px; cursor: pointer;
+}
+.title__slot:focus-visible { outline: 3px solid #2a6ad6; outline-offset: 2px; }
+.title__slot.is-empty { border-style: dashed; color: #7a7488; }
+.title__slot-pic { height: 3.2em; flex: none; }
+.title__slot-text { display: flex; flex-direction: column; min-width: 0; font-size: 1rem; line-height: 1.25; overflow-wrap: anywhere; }
+.title__slot-text b { font-weight: 400; font-size: 1.15rem; color: #2a6ad6; }
+.title__slots .pbtn--back { align-self: flex-start; }
 .title__note { font-size: 1rem; }
 /* install offer: a toast over the logo, the menu stays reachable */
 .title__install {

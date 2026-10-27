@@ -42,6 +42,8 @@ Next free `id` (never renumber), `slug`, `name` and `kind` in French and English
 
 - Base-stat total in its band (docs/bestioles.md section 2), keeping the model's spread and role.
 - Catch rate and base XP from the model, harder to catch and more XP at each stage.
+- An evolution only the story triggers uses `{ to, story: 1 | 2 }` (Coconfus at the ending): it never
+  fires by level. Legendaries and their cocoon (`rarity: 'legendary'`) never come out of the Tombola machine.
 
 ## 4. The power
 

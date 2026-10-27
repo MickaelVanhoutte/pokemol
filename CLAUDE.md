@@ -43,6 +43,8 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
   corporate registry, so check the `resolved` URLs after `npm install`.
 - **Balance with simulations** before shipping changes to teams or stats (`npm run balance`, and
   `npm run curve`: on Normal a player who never grinds must keep up, see `src/data/curve.test.ts`).
+  The story ends around L42–45 (iteration 16). A wild Bestiole is never stronger than the trainers of its
+  map: its level stays at or under the weakest trainer's ace there (`src/data/maps.test.ts`).
   The owner asked for a gentle start: see [docs/story.md](docs/story.md#level-curve-and-difficulty).
 - Ship each milestone separately, then check that the deploy is live (see [docs/testing.md](docs/testing.md)).
 - **No spoilers outside the technical docs.** The README and [docs/histoire.md](docs/histoire.md)
@@ -77,14 +79,18 @@ CI (`.github/workflows/deploy.yml`) runs `npm ci`, `npm test` and `npm run build
 Stack: Vite + TypeScript + Preact + `@preact/signals`; the overworld is a hand-written canvas engine.
 
 **Shell.** `src/main.tsx` renders `App` and imports `src/story` so every story script registers
-itself. `src/state/router.ts` holds one `screen` signal; `src/app.tsx` switches on it. The overworld,
+itself. A new game opens on `SleepIntroView` (falling asleep at the desk, pencil sounds, the title theme
+fading in) before the Prof's speech in `NewGameScreen`. `src/state/router.ts` holds one `screen` signal; `src/app.tsx` switches on it. The overworld,
 title, new-game prologue, battle and each menu are separate screens. A script can `await openScreen(…)`
 and resume when the player returns to the world. `App` is keyed on the locale, so switching language
 re-renders everything.
 
 **State.**
-- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, 8 PC `boxes` of 30, bag, flags, `steps`, `daycare`…; localStorage key
-  `atelier-bestioles.save`). `update(fn)` mutates it; it is written to storage only by SAUVER in the
+- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, 8 PC `boxes` of 30, bag, flags, `steps`, `daycare`…).
+  Up to `SLOTS` (3) games live side by side (a parent's and a child's): `slot` is the one being played,
+  stored under `atelier-bestioles.save` (game 1, the key of the single save before) or `….save.2` / `.3`;
+  the title screen picks one (`peekSlot`, `savedSlots`), and each game keeps its own `difficulty`, applied by
+  `loadSave`. `update(fn)` mutates it; it is written to storage only by SAUVER in the
   start menu (`persist()`), or after every change when the player turned on the auto-save option
   (`autosave()`, off by default, GBA style). `migrate` and `migrateV2` load older
   saves (v2 parties go to the PC); `repair()` then fills in what newer versions added (it runs on every
@@ -92,12 +98,14 @@ re-renders everything.
   migration or repair step and a test (`src/state/game.test.ts`).
 - `src/state/clock.ts`: day, evening and night from the device's clock plus `save.clockShift` (sleeping
   at an Inn or at home, `sleepUntil`). Encounter entries can be `time: 'night'`; outdoor maps get a multiplied tint.
-- `src/state/prefs.ts`: per-device preferences outside the save (text speed, difficulty, battle
-  speed, sound, music) so Options also work from the title screen.
+- `src/state/prefs.ts`: per-device preferences outside the save (text speed, battle speed, sound, music)
+  so Options also work from the title screen. The difficulty is a pref too, but each game carries its own
+  (`save.difficulty`) and Options writes it into the game being played.
 
 **Data** (`src/data`) is plain TypeScript objects with `L()` texts:
 - creatures (`faces` marks sideways drawings; `talents` + `hiddenTalent` index `src/data/talents.ts`,
-  the first talent being the family's power; `evolutions` rules by level, item or friendship;
+  the first talent being the family's power; `evolutions` rules by level, item or friendship, or
+  `story` (Coconfus becomes Libellune or Noctaile only at the ending);
   `grownForm(id, level)` for trainer teams), natures;
 - moves, the type chart, items (`kind: 'key'` for story items);
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
@@ -237,6 +245,10 @@ by `src/art/shiny.ts`, the same hue turn for the card (`monArtUrl`) and the foll
 - Progress must be saved before a cut-scene's dialog, not after: a trainer's `storyFlag` is set with
   its win, and the final scenes resume from their map's `onEnter` (`bordPage`, `ending`) if the app was
   closed midway.
+- Android Chrome can drop the pixels of canvases when memory runs low (after a battle full of
+  animations): cached drawings must be images, not canvases. Sprite sheets and field sprites draw from a
+  decoded image copy, map layers repaint on `contextrestored`, and the game loop survives a frame that
+  throws. Data-URL caches (`personUrl`, `monArtUrl`) are safe.
 - `TextBox` tags its pages, page number and typed count with the text they belong to, so a new
   message starts empty in the same render. Don't reset them in an effect: that painted one frame
   of the new text at the old length (the "text shows then rolls back" flash).

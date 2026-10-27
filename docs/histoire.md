@@ -101,6 +101,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Les dresseurs des routes veulent leur **revanche** dès le lendemain.
 - La **Tombola**, le jeu de **Mémo-Bestioles**, la **Piste Cyclable**… et une grotte où quelque chose
   respire dans le noir.
+- Jusqu’à **3 parties** sur le même appareil, chacune avec sa difficulté : une pour toi, une pour un
+  frère, une sœur ou un parent.
 - Et après la fin ? Papeterre a encore des surprises.
 
 ---
@@ -201,4 +203,6 @@ The story has **two endings**, and your answers choose which one you will see.
 - Route trainers want a **rematch** the very next day.
 - The **Tombola**, the **Critter Memo** card game, the **Cycling Track**… and a cave where something
   breathes in the dark.
+- Up to **3 games** on one device, each with its own difficulty: one for you, one for a brother, a sister
+  or a parent.
 - And after the ending? Papeterra still has surprises.

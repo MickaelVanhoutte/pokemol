@@ -6,10 +6,15 @@ import { talentFromUid } from '../data/talents';
 import { BOX_COUNT, BOX_SIZE, PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
-import { prefs } from './prefs';
+import { prefs, setPref } from './prefs';
 import { OLD_AVATARS, type Appearance } from '../data/appearance';
 
 const KEY = 'atelier-bestioles.save';
+/** Games that can live side by side on one device (a parent's and a child's…). Game 1 keeps the old key. */
+export const SLOTS = 3;
+const keyOf = (n: number) => (n === 1 ? KEY : `${KEY}.${n}`);
+/** The game being played, or about to be: where SAUVER writes. */
+export const slot = signal(1);
 
 export const save = signal<SaveData | null>(null);
 /** A save from an older version of the game was found (it can't be loaded). */
@@ -23,13 +28,23 @@ effect(() => {
   gender.value = d.player.gender;
 });
 
-function readRaw(): unknown {
+function readRaw(n = slot.value): unknown {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(keyOf(n));
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
+}
+
+/** The game saved in a slot (without loading it), or null when the slot is empty. */
+export function peekSlot(n: number): SaveData | null {
+  return migrate(readRaw(n));
+}
+
+/** The slots that hold a game, in order. */
+export function savedSlots(): number[] {
+  return Array.from({ length: SLOTS }, (_, i) => i + 1).filter((n) => !!peekSlot(n));
 }
 
 /** Upgrades an older save, or returns null if it can't be used. */
@@ -58,6 +73,8 @@ export function repair(s: SaveData): SaveData {
   }
   // the look can be chosen since Oct 2026: older saves keep their portrait
   s.player.look ??= { ...(OLD_AVATARS[s.player.avatar] ?? OLD_AVATARS[0]) };
+  // each game keeps its difficulty since there can be several: older ones take the device's
+  s.difficulty ??= prefs.value.difficulty;
   s.party.forEach(repairMon);
   s.boxes.forEach((b) => b.forEach(repairMon));
   s.daycare?.slots.forEach((x) => repairMon(x.mon));
@@ -129,22 +146,26 @@ export function migrateV2(old: V2Save): SaveData {
   return s;
 }
 
+/** Whether any slot holds a game (and notes a save too old to load). */
 export function hasSave(): boolean {
-  const raw = readRaw();
-  outdatedSave.value = !!raw && !migrate(raw);
-  return !!migrate(raw);
+  const raws = Array.from({ length: SLOTS }, (_, i) => readRaw(i + 1));
+  outdatedSave.value = raws.some((raw) => !!raw && !migrate(raw));
+  return raws.some((raw) => !!migrate(raw));
 }
 
-export function loadSave(): SaveData | null {
-  const s = migrate(readRaw());
+/** Loads a slot's game (the current slot by default) and plays at its difficulty. */
+export function loadSave(n = slot.value): SaveData | null {
+  const s = migrate(readRaw(n));
+  slot.value = n;
   save.value = s;
+  if (s?.difficulty) setPref('difficulty', s.difficulty);
   return s;
 }
 
 export function persist() {
   if (!save.value) return;
   try {
-    localStorage.setItem(KEY, JSON.stringify(save.value));
+    localStorage.setItem(keyOf(slot.value), JSON.stringify(save.value));
   } catch {
     // quota or private mode: the game keeps running in memory
   }
@@ -164,13 +185,13 @@ export function update(fn: (s: SaveData) => void) {
   autosave();
 }
 
-export function deleteSave() {
+export function deleteSave(n = slot.value) {
   try {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(keyOf(n));
   } catch {
     // ignore
   }
-  save.value = null;
+  if (n === slot.value) save.value = null;
   outdatedSave.value = false;
 }
 
@@ -191,6 +212,7 @@ function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: s
     dex: { seen: [], caught: [] },
     badges: [],
     stats: { battles: 0, captures: 0 },
+    difficulty: prefs.value.difficulty,
   };
 }
 

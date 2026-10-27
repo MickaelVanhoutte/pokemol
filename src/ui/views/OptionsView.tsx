@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, locale, setLocale, tr, type LText } from '../../i18n';
-import { prefs, setPref } from '../../state/prefs';
-import { deleteSave, exportSave, hasSave, importSave, loadSave, persist, save } from '../../state/game';
+import { prefs, setPref, type Difficulty } from '../../state/prefs';
+import { deleteSave, exportSave, importSave, loadSave, peekSlot, persist, save, slot, SLOTS, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { stopMusic } from '../../audio/music';
 import { checkForUpdate, install, installWay, offlineReady, pwaActive, updateReady } from '../../state/pwa';
@@ -22,7 +22,11 @@ const ROWS: Row<unknown>[] = [
     label: L('DIFFICULTÉ', 'DIFFICULTY'),
     values: [{ v: 'easy', label: L('FACILE', 'EASY') }, { v: 'normal', label: L('NORMAL', 'NORMAL') }, { v: 'hard', label: L('DIFFICILE', 'HARD') }],
     get: () => prefs.value.difficulty,
-    set: (v) => setPref('difficulty', v as 'normal'),
+    // the game being played keeps it (each game has its own)
+    set: (v) => {
+      setPref('difficulty', v as Difficulty);
+      if (save.value) update((d) => (d.difficulty = v as Difficulty));
+    },
   },
   {
     label: L('COMBATS', 'BATTLE SPEED'),
@@ -111,17 +115,27 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
         </div>
       </Window>
       <Window seyes class="opts__save">
-        <p>{tr(L('La partie est enregistrée dans ce navigateur. Exporte-la de temps en temps pour ne rien perdre.', 'Your game is stored in this browser. Export it now and then so nothing gets lost.'))}</p>
+        <p>{tr(L('Les parties sont enregistrées dans ce navigateur. Exporte-les de temps en temps pour ne rien perdre.', 'Your games are stored in this browser. Export them now and then so nothing gets lost.'))}</p>
+        {/* from the title screen, the tools work on the game picked here; in a game, on that game */}
         <div class="opts__row">
-          <button class="pbtn" disabled={!save.value && !hasSave()} onClick={() => { if (!save.value) loadSave(); exportSave(); }}>{tr(L('Exporter', 'Export'))}</button>
+          {!inGame && (
+            <button class="opt__arrow" onClick={() => { slot.value = (slot.value + SLOTS - 2) % SLOTS + 1; setConfirmDel(false); setMsg(''); }} aria-label="◀">◀</button>
+          )}
+          <span class="opts__slot">{tr(L('Partie {n}', 'Game {n}'), { n: slot.value })} · {(inGame ? save.value : peekSlot(slot.value))?.player.name ?? tr(L('vide', 'empty'))}</span>
+          {!inGame && (
+            <button class="opt__arrow" onClick={() => { slot.value = (slot.value % SLOTS) + 1; setConfirmDel(false); setMsg(''); }} aria-label="▶">▶</button>
+          )}
+        </div>
+        <div class="opts__row">
+          <button class="pbtn" disabled={!save.value && !peekSlot(slot.value)} onClick={() => { if (!inGame) loadSave(slot.value); exportSave(); }}>{tr(L('Exporter', 'Export'))}</button>
           <label class="pbtn">
             {tr(L('Importer', 'Import'))}
             <input type="file" accept="application/json,.json" hidden onChange={onImport} />
           </label>
           {!inGame && (
-            <button class="pbtn" disabled={!hasSave()} onClick={() => {
+            <button class="pbtn" disabled={!peekSlot(slot.value)} onClick={() => {
               if (!confirmDel) return setConfirmDel(true);
-              deleteSave();
+              deleteSave(slot.value);
               setConfirmDel(false);
               setMsg(tr(L('Partie effacée.', 'Save deleted.')));
             }}>
