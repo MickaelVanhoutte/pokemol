@@ -41,7 +41,7 @@ what-ifs, copy it to `tools/out/` (gitignored) and edit freely.
 - `window.__battle` (while a battle is open): `dispatch(action)`, `state()`, `speed`.
   `dispatch` resolves when the whole turn has played: call it without awaiting to watch the turn.
 - `window.__fx` (while a battle is open): `ids()`, `play(moveId, side)`, `freeze(moveId, 0…1, side,
-  charge)` to leave one moment of an animation on screen, `clear()`. Freezing every move at a few
+  charge)` to leave one moment of an animation on screen, `clear()`, `ball(item, shakes, caught)`. Freezing every move at a few
   moments and screenshotting `.pk-scene` gives a contact sheet of all the animations.
 
 Typical setup from the console, after starting a new game:

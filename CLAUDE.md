@@ -146,8 +146,11 @@ conventions are in [docs/content.md](docs/content.md#flags).
     of `doodles.ts`;
   - `stage.ts` plays them on two canvases, `.pk-fx` over the drawings and `.pk-fx-back` under them;
   - `outcome.ts` reads the events after a `move`: only a move that lands animates, as on the GBA;
-  - a new damaging move needs a recipe (`recipes.test.ts` fails without one). The option
-    ANIMATIONS (`prefs.moveFx`) turns them off.
+  - `events.ts` (with the builders of `statusFx.ts`) animates the other events: a status taking hold,
+    stat chevrons, healing, weather arriving, the paper shield and doll (`doll.ts` stands in for the
+    Bestiole while `vol.sub > 0`), talents, held items, send-out and the Crayon-ball (always drawn);
+  - a new move needs a recipe (`recipes.test.ts` fails without one). The option ANIMATIONS
+    (`prefs.moveFx`) turns them off, except the Crayon-ball.
 
 **UI kit** (`src/ui/paper`):
 - the font is Patrick Hand (handwriting); menu entries use pencil doodles (`src/ui/sketchIcons.ts`),

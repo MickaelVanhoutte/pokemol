@@ -4,6 +4,7 @@
  */
 import type { Recipe } from './core';
 import { at, INK, NEON, PAL as C, RAINBOW } from './core';
+import { aura, doll, glare, orbit, powder, pulse, rise, scribble, shield, thread, vines, weatherIn } from './statusFx';
 import {
   beam, bite, blaze, bolt, boo, breath, burrow, buzz, cracks, darken, drain, dust, eyes, fist, flash,
   gather, gust, hands, impactStar, jab, jet, notes, pop, projectile, rainOn, rings, rockfall, shade,
@@ -11,10 +12,46 @@ import {
 } from './effects';
 
 const CLAW = '#fdfdfd';
+/** Status moves: the target doesn't flinch when the animation reaches it. */
+const calm = (r: Recipe): Recipe => ({ hit: 'none', ...r });
 const SKIN = '#f2c69a';
 const BEAK = '#f2b33d';
 
 export const MOVE_FX: Record<string, Recipe> = {
+  // ------------------------------------------------ status moves
+  grondement: { user: 'rear', hit: 'knock', layers: [notes({ colors: [C.normal[2], C.combat[2]], n: 4, size: 0.26 })] },
+  fretillement: calm({ user: 'wiggle', layers: [sparkle({ who: 'user', kind: 'heart', color: C.fee[0], n: 4, size: 0.22 })] }),
+  'gros-baillement': calm({ user: 'hop', layers: [rise({ kind: 'zzz', color: C.vol[2], n: 4 }), at(300, rise({ kind: 'plus', color: C.plante[1], n: 5 }))] }),
+  'bouclier-papier': calm({ layers: [shield()] }),
+  'pantin-papier': calm({ layers: [doll()] }),
+  'cocon-serre': calm({ layers: [wrap({ who: 'user', color: '#f4efe4', loops: 5 })] }),
+  'fil-de-soie': calm({ layers: [thread({ n: 4 }), at(300, wrap({ loops: 3, dur: 640 }))] }),
+  'poudre-dodo': calm({ layers: [powder({ color: '#7aa8e8' })] }),
+  'poudre-piquante': calm({ layers: [powder({ color: C.electrique[1] })] }),
+  'poudre-toxique': calm({ layers: [powder({ color: C.poison[1] })] }),
+  'poudre-arc-en-ciel': calm({ user: 'hop', layers: RAINBOW.slice(0, 5).map((c, i) => at(i * 90, rise({ kind: 'spark', color: c, n: 3, size: 0.2 }))) }),
+  'jet-de-sable': calm({ layers: [breath({ kind: 'clod', colors: ['#c99a4e', '#a8793a'], n: 20, size: 0.2, spread: 0.2 })] }),
+  'tempete-de-sable': calm({ user: 'hop', layers: [weatherIn({ kind: 'sable' })] }),
+  grele: calm({ user: 'hop', layers: [weatherIn({ kind: 'grele' })] }),
+  averse: calm({ user: 'hop', layers: [weatherIn({ kind: 'pluie' })] }),
+  'grand-soleil': calm({ user: 'hop', layers: [weatherIn({ kind: 'soleil' })] }),
+  'carapace-tambour': calm({ user: 'hop', layers: [pulse({ color: C.eau[1], n: 3, dur: 820 }), aura({ color: C.eau[0] })] }),
+  'lueur-brulante': calm({ layers: [darken({ alpha: 0.2 }), projectile({ kind: 'flame', color: C.spectre[1], n: 3, gap: 120, size: 0.42, lift: 0.6, burst: false }), at(460, swirl({ kind: 'flame', color: C.spectre[1], n: 6, dur: 520, size: 0.36 }))] }),
+  'graine-dodo': calm({ layers: [projectile({ kind: 'seed', color: '#7aa8e8', size: 0.32, burst: false }), at(380, rise({ who: 'target', kind: 'zzz', color: C.vol[2], n: 3 }))] }),
+  'ronron-soleil': calm({ layers: [pop({ kind: 'sun', color: C.electrique[1], who: 'user', dy: -0.75, size: 0.5, dur: 820 }), at(200, rise({ kind: 'plus', color: C.plante[1], n: 6 }))] }),
+  'graine-gourmande': calm({ layers: [projectile({ kind: 'seed', color: C.plante[2], size: 0.3, burst: false }), at(380, vines())] }),
+  frisson: calm({ layers: [sparks({ n: 5, dur: 720 })] }),
+  'agilite-zigzag': calm({ user: 'zigzag', layers: [speedLines({ n: 12, dur: 620 }), at(120, speedLines({ n: 8, dur: 500 }))] }),
+  berceuse: calm({ layers: [notes({ colors: [C.fee[1], C.vol[1]], n: 6, size: 0.26, dur: 1000 })] }),
+  'chanson-douce': calm({ layers: [notes({ colors: [C.fee[1], C.fee[2]], kind: 'heart', n: 6, size: 0.24 })] }),
+  'calin-lunaire': calm({ layers: [darken({ color: '#2a3366', alpha: 0.25 }), pop({ kind: 'moon', color: '#f7e6a0', who: 'user', dy: -0.75, size: 0.5, dur: 820 }), at(250, rise({ kind: 'spark', color: '#f7e6a0', n: 6 }))] }),
+  'bisou-magique': calm({ layers: [projectile({ kind: 'heart', color: C.fee[1], n: 3, gap: 100, size: 0.26, lift: 0.4, burst: 'heart' })] }),
+  brouillard: calm({ layers: [breath({ kind: 'puff', colors: ['#cfcad8', '#b9b2c8'], n: 14, size: 0.4, spread: 0.25 })] }),
+  'regard-hypnotique': calm({ layers: [darken({ alpha: 0.25 }), rings({ colors: [C.psy[1], C.spectre[1]], n: 5 }), at(360, eyes({ dur: 600 }))] }),
+  grimace: calm({ layers: [glare()] }),
+  'rire-sinistre': calm({ layers: [darken({ alpha: 0.25 }), scribble({ text: 'hi hi', color: C.spectre[2] }), at(200, orbit({ who: 'target', kind: 'star', color: C.spectre[0], n: 3 }))] }),
+  'encre-toxique': calm({ layers: [projectile({ kind: 'ink', color: C.poison[2], n: 2, gap: 100, size: 0.3, burst: false }), at(360, splat({ color: C.poison[2], size: 0.6 }))] }),
+
   // ------------------------------------------------ Normal
   bousculade: { user: 'dash', layers: [speedLines(), at(170, impactStar())] },
   griffe: { user: 'lunge', layers: [slash({ color: CLAW })] },

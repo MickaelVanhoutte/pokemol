@@ -19,6 +19,7 @@ export function motionFrames(kind: Motion, d: number): Moves {
     case 'dash': return { dur: 460, frames: [{ translate: '0 0' }, { translate: fwd(34, 18), offset: 0.35 }, { translate: fwd(34, 18), offset: 0.5 }, { translate: '0 0' }] };
     case 'roll': return { dur: 620, frames: [{ translate: '0 0', scale: '1 1' }, { translate: fwd(17, 9), scale: '-1 0.9', offset: 0.22 }, { translate: fwd(34, 18), scale: '1 0.9', offset: 0.45 }, { translate: fwd(20, 10), scale: '-1 1', offset: 0.7 }, { translate: '0 0', scale: '1 1' }] };
     case 'shake': return { dur: 520, easing: 'linear', frames: [0, -3, 3, -3, 3, -2, 2, 0].map((x) => ({ translate: `${x}% 0` })) };
+    case 'zigzag': return { dur: 620, easing: 'linear', frames: [0, 12, -10, 12, -10, 8, 0].map((x, i) => ({ translate: `${x}% 0`, opacity: i % 2 ? 0.55 : 1 })) };
     case 'wiggle': return { dur: 620, frames: [0, -10, 10, -10, 10, 0].map((r) => ({ rotate: `${r}deg` })) };
     case 'rise': return { dur: 520, hold: true, frames: [{ translate: '0 0', opacity: 1 }, { translate: '0 8%', offset: 0.2, opacity: 1 }, { translate: '0 -230%', opacity: 0 }] };
     case 'sink': return { dur: 520, hold: true, frames: [{ translate: '0 0', scale: '1 1', opacity: 1 }, { translate: '0 -6%', scale: '1 1', offset: 0.2, opacity: 1 }, { translate: '0 60%', scale: '1.15 0.3', opacity: 0 }] };

@@ -18,6 +18,8 @@ export interface PlayOpts {
   charge?: boolean;
   /** Second and later hits of a multi-hit move: a bit quicker. */
   quick?: boolean;
+  /** Leaves the last frame on screen (a caught Crayon-ball) until the next animation. */
+  keep?: boolean;
   seed?: number;
 }
 
@@ -149,7 +151,8 @@ export class FxStage {
         done = true;
         cancelAnimationFrame(raf);
         clearTimeout(guard);
-        for (const { ctx } of panes) ctx.clearRect(0, 0, s.env.w, s.env.h);
+        if (o.keep) this.render(panes, s.env, s.layers, s.total, 0);
+        else for (const { ctx } of panes) ctx.clearRect(0, 0, s.env.w, s.env.h);
         this.stopCurrent = null;
         resolve();
       };
@@ -187,6 +190,13 @@ export class FxStage {
     this.blinks[side]?.cancel();
     const a = run(spriteOf(scene, side), BLINK, 1);
     if (a) this.blinks[side] = a;
+  }
+
+  /** A drawing flickering like a ghost (Passe-Muraille letting a hit through). */
+  ghost(side: Side, speed: number) {
+    const scene = this.root();
+    if (!scene) return;
+    run(spriteOf(scene, side), { dur: 700, easing: 'linear', frames: [1, 0.3, 0.8, 0.25, 0.9, 1].map((opacity) => ({ opacity })) }, speed);
   }
 
   /** A drawing coming back (switched in, fainted…): forgets it was up in the air. */

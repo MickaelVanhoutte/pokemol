@@ -14,15 +14,15 @@ import {
   INK, PAPER, PAL, SPARK, type Anchor, type Builder, type Env, type P,
 } from './core';
 
-type Who = 'user' | 'target';
+export type Who = 'user' | 'target';
 
-const fixed = (env: Env, salt: number): Rand => seeded(env.seed * 31 + salt * 7717);
-const who = (env: Env, w: Who = 'target'): Anchor => (w === 'user' ? env.user : env.target);
+export const fixed = (env: Env, salt: number): Rand => seeded(env.seed * 31 + salt * 7717);
+export const who = (env: Env, w: Who = 'target'): Anchor => (w === 'user' ? env.user : env.target);
 const S = (env: Env) => env.target.size;
-const feet = (a: Anchor): P => [a.x, Math.min(a.bottom, a.y + (a.bottom - a.top) * 0.42)];
+export const feet = (a: Anchor): P => [a.x, Math.min(a.bottom, a.y + (a.bottom - a.top) * 0.42)];
 
 /** A band along `pts`, `w(u)` wide (claw marks, lashes, water jets). */
-function ribbon(pts: P[], w: (u: number) => number): P[] {
+export function ribbon(pts: P[], w: (u: number) => number): P[] {
   const L: P[] = [], R: P[] = [];
   for (let i = 0; i < pts.length; i++) {
     const a = pts[Math.max(0, i - 1)], c = pts[Math.min(pts.length - 1, i + 1)];
@@ -36,7 +36,7 @@ function ribbon(pts: P[], w: (u: number) => number): P[] {
 }
 
 /** Points on the arc a → c between progress u0 and u1. */
-function along(a: P, c: P, lift: number, u0: number, u1: number, n = 12): P[] {
+export function along(a: P, c: P, lift: number, u0: number, u1: number, n = 12): P[] {
   return Array.from({ length: n + 1 }, (_, i) => arc(a, c, lerp(u0, u1, i / n), lift));
 }
 
@@ -356,12 +356,12 @@ export const twirl = (o: { colors: string[]; dur?: number }): Builder => (env) =
 };
 
 /** A thread winding around the target, then squeezing. */
-export const wrap = (o: { color?: string; loops?: number; dur?: number } = {}): Builder => (env) => {
+export const wrap = (o: { color?: string; loops?: number; dur?: number; who?: Who } = {}): Builder => (env) => {
   const dur = o.dur ?? 900, loops = o.loops ?? 4;
   return {
     start: 0, dur, impact: dur * 0.55,
     draw(b, t) {
-      const T = env.target, s = S(env);
+      const T = who(env, o.who), s = T.size;
       const u = seg(t, 0, 0.5);
       const squeeze = 1 - 0.14 * bell(seg(t, 0.5, 0.8) * 2);
       const pts: P[] = [];
@@ -600,13 +600,13 @@ export const bolt = (o: { color?: string; n?: number; dur?: number; from?: 'sky'
 };
 
 /** Electric crackles popping around the target. */
-export const sparks = (o: { color?: string; dur?: number; radius?: number; n?: number } = {}): Builder => (env) => {
+export const sparks = (o: { color?: string; dur?: number; radius?: number; n?: number; who?: Who } = {}): Builder => (env) => {
   const dur = o.dur ?? 620;
   const color = o.color ?? PAL.electrique[1];
   return {
     start: 0, dur, impact: dur * 0.15,
     draw(b, t) {
-      const T = env.target, s = S(env);
+      const T = who(env, o.who), s = T.size;
       const alpha = fade(t, 0.1, 0.25);
       const r = b.rand(250);
       for (let i = 0; i < (o.n ?? 4); i++) {

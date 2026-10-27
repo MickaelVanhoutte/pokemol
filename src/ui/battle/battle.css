@@ -94,6 +94,10 @@
 .pk-fx, .pk-fx-back { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .pk-fx-back { z-index: 1; }
 .pk-fx { z-index: 3; }
+/* a paper doll stands in for a Bestiole behind a Pantin de papier */
+.pk-sprite.is-doll { max-height: 72%; margin-bottom: 8%; }
+/* yours stands lower in its (clipped) column: lift it so the whole doll shows */
+.pk-plat--me .pk-sprite.is-doll { max-height: 64%; margin-bottom: 30%; }
 .pk-sprite.is-captured { animation: intoBall 0.35s ease forwards; }
 @keyframes intoBall { to { transform: scaleX(var(--flip)) scale(0.05); opacity: 0; } }
 
@@ -113,23 +117,6 @@
 @keyframes lungeFoe { 40% { transform: translate(-14%, 10%) scaleX(var(--flip)); } }
 .fx-status { animation: statusFx 0.7s ease; }
 @keyframes statusFx { 50% { filter: hue-rotate(80deg) brightness(1.3); } }
-
-/* pencil ball */
-.pk-ball {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  line-height: 0;
-  transform-origin: 50% 90%;
-  animation: throw 0.4s ease-out both, shake 0.65s ease-in-out 0.4s;
-}
-.pk-ball.shakes-0 { animation: throw 0.4s ease-out both; }
-.pk-ball.shakes-2 { animation: throw 0.4s ease-out both, shake 0.65s ease-in-out 0.4s 2; }
-.pk-ball.shakes-3 { animation: throw 0.4s ease-out both, shake 0.65s ease-in-out 0.4s 3; }
-.pk-ball img { width: clamp(26px, 8vw, 40px); height: auto; }
-.pk-ball.is-caught::after { content: '✦'; position: absolute; left: 70%; top: -30%; color: #f2c14e; font-size: 1.4rem; line-height: 1; text-shadow: 0 0 4px #fff; animation: fade-in 0.4s 2.3s both; }
-@keyframes throw { from { transform: translate(-260%, 220%) rotate(-200deg); } to { transform: translate(-50%, 0) rotate(0); } }
-@keyframes shake { 25% { transform: translate(-50%, 0) rotate(-22deg); } 75% { transform: translate(-50%, 0) rotate(22deg); } 100% { transform: translate(-50%, 0) rotate(0); } }
 
 /* ---------- HP boxes (paper windows) */
 .pk-hp {

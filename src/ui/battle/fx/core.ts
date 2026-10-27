@@ -52,7 +52,7 @@ export type Builder = (env: Env) => Layer;
 
 export type Motion =
   | 'lunge' | 'hop' | 'spin' | 'rear' | 'dash' | 'roll' | 'shake' | 'wiggle'
-  | 'rise' | 'sink' | 'drop' | 'popUp';
+  | 'rise' | 'sink' | 'drop' | 'popUp' | 'zigzag';
 
 export type Reaction = 'jiggle' | 'knock' | 'squash' | 'none';
 

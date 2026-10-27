@@ -28,8 +28,8 @@ describe('move animations', () => {
     for (const id of Object.keys(MOVE_FX)) expect(ids.has(id), id).toBe(true);
   });
 
-  it('gives every damaging move an animation, and two-turn moves their first turn', () => {
-    for (const m of MOVES.filter((x) => x.cat !== 'status')) {
+  it('gives every move an animation, and two-turn moves their first turn', () => {
+    for (const m of MOVES) {
       expect(MOVE_FX[m.id], `${m.id} has no animation in src/ui/battle/fx/recipes.ts`).toBeDefined();
       if (m.effects?.some((e) => e.kind === 'charge')) expect(MOVE_FX[m.id].charge, `${m.id}: first turn`).toBeDefined();
     }

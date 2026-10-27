@@ -18,11 +18,12 @@ import { BagView } from '../views/BagView';
 import { PartyView } from '../views/PartyView';
 import { SummaryView } from '../views/SummaryView';
 import { describe, eventDuration } from './messages';
-import { BattleScene, type BallFx, type Fx } from './BattleScene';
+import { BattleScene, type Fx } from './BattleScene';
 import { BattlePanel } from './BattlePanel';
 import { FxStage } from './fx/stage';
 import { fxFor, MOVE_FX } from './fx/recipes';
 import { moveOutcome } from './fx/outcome';
+import { ballFx, eventFx } from './fx/events';
 import type { Recipe } from './fx/core';
 import { panelMode } from './panelMode';
 import './battle.css';
@@ -75,7 +76,6 @@ export function BattleScreen(props: BattleProps) {
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [bagNote, setBagNote] = useState('');
   const [fx, setFx] = useState<Fx>({});
-  const [ball, setBall] = useState<BallFx | null>(null);
   const [captured, setCaptured] = useState(false);
   const [bag, setBag] = useState<Record<string, number>>({ ...props.bag });
   const [ended, setEnded] = useState(false);
@@ -92,6 +92,8 @@ export function BattleScreen(props: BattleProps) {
   const stage = stageRef.current;
   // the move whose animation is playing: later hits of a multi-hit move play it again
   const hitting = useRef<{ user: 0 | 1; recipe: Recipe; hits: number } | null>(null);
+  // the move that just played its animation: the events right after it (its shield, its weather…) are already shown
+  const shown = useRef<{ side: 0 | 1; status: boolean; until: number } | null>(null);
 
   const pulse = (side: 0 | 1, kind: string, ms = 500) => {
     setFx((f) => ({ ...f, [side]: kind }));
@@ -130,6 +132,13 @@ export function BattleScreen(props: BattleProps) {
     // the ball shakes first, the result comes after
     if (e.t === 'ball') setMsg(tr(L('Tu lances une {i} !', 'You threw a {i}!'), { i: tr(item(e.item).name) }));
     else if (lines.length) setMsg(lines.join('\n'));
+    if (e.t === 'move') shown.current = null;
+    if (prefs.value.moveFx) {
+      const covered = shown.current && i <= shown.current.until ? shown.current : null;
+      const fxe = eventFx(e, snap, covered);
+      if (fxe) anim = stage.play(fxe.recipe, { side: fxe.side, speed: speed.current });
+      if (e.t === 'talent' && e.note === 'phased') stage.ghost(e.side, speed.current);
+    }
     switch (e.t) {
       case 'sendOut': pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
       case 'withdraw': pulse(e.side, 'out', 600); break;
@@ -142,6 +151,7 @@ export function BattleScreen(props: BattleProps) {
         else if (recipe && out?.lands) {
           anim = stage.play(recipe, opts);
           hitting.current = { user: e.side, recipe, hits: 0 };
+          shown.current = { side: e.side, status: move(e.move).cat === 'status', until: i + 3 };
         } else if (recipe?.charge) anim = stage.play({ user: recipe.user, hit: 'none', layers: [] }, opts);
         else pulse(e.side, e.side === 0 ? 'lunge-me' : 'lunge-foe', 450);
         break;
@@ -156,23 +166,25 @@ export function BattleScreen(props: BattleProps) {
       case 'itemHurt': hurt(e.side); break;
       case 'levelUp': sfx.levelUp(); break;
       case 'status': pulse(e.side, 'status', 700); break;
-      case 'ball':
-        setBall({ shakes: e.shakes, caught: e.caught, key: Date.now() });
-        setCaptured(true);
-        if (e.caught) setTimeout(() => sfx.capture(), 400 + e.shakes * 650);
+      case 'ball': {
+        // the ball flies, opens and swallows the Bestiole, shakes, then holds or bursts open
+        const at = (ms: number, f: () => void) => setTimeout(f, ms * speed.current);
+        anim = stage.play(ballFx(e.item, e.shakes, e.caught), { side: 0, speed: speed.current, keep: e.caught });
+        at(450, () => setCaptured(true));
+        const end = 890 + e.shakes * 650;
+        if (e.caught) at(end, () => sfx.capture());
+        else at(end, () => { setCaptured(false); pulse(1, 'in', 600); });
         break;
+      }
       case 'end': if (e.result === 'win' || e.result === 'capture') { stopMusic(); playJingle(e.result === 'capture' ? 'caught' : 'victory', { fallback: sfx.victory, resume: false }); } break;
     }
-    // an animated move: its animation, and enough time to read the message
-    await (anim ? Promise.all([anim, sleep(600 * speed.current)]) : sleep(eventDuration(e) * speed.current));
+    // an animation, and enough time to read the message
+    const wait = sleep((e.t === 'move' && anim ? 600 : eventDuration(e)) * speed.current);
+    await (anim ? Promise.all([anim, wait]) : wait);
     if (e.t === 'ball') {
       setMsg(lines.join('\n'));
-      if (!e.caught) {
-        setBall(null);
-        setCaptured(false);
-      }
+      if (!e.caught) setCaptured(false);
       await sleep(900 * speed.current);
-      setBall(null);
     }
   };
 
@@ -226,6 +238,7 @@ export function BattleScreen(props: BattleProps) {
       play: (id: string, side: 0 | 1 = 0) => { const r = fxFor(id); return r ? stage.play(r, { side, speed: speed.current }) : null; },
       freeze: (id: string, frac: number, side: 0 | 1 = 0, charge = false) => { const r = fxFor(id); if (r) stage.freeze(r, { side, speed: 1, seed: 7, charge }, frac); return !!r; },
       clear: () => stage.clear(),
+      ball: (item: string, shakes: number, caught: boolean) => stage.play(ballFx(item, shakes, caught), { side: 0, speed: speed.current, keep: caught }),
     };
   }
 
@@ -282,7 +295,7 @@ export function BattleScreen(props: BattleProps) {
   return (
     <div class="battle pk" onDblClick={() => (speed.current = 0.35)}>
       <BattleScene
-        view={view} fx={fx} ball={ball} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
+        view={view} fx={fx} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
         foeTrainer={props.trainer && (cast.foe || beaten) ? props.trainer.look : undefined}
         playerBack={cast.me ? props.playerLook : undefined}
         grey={!!props.trainer?.grey} recolored={recolored} sceneRef={sceneRef}

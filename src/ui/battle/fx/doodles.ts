@@ -9,7 +9,7 @@ import { mix, PAPER, SPARK } from './core';
 export type DoodleKind =
   | 'flame' | 'drop' | 'bubble' | 'rock' | 'leaf' | 'seed' | 'shard' | 'note' | 'star' | 'heart'
   | 'spark' | 'puff' | 'fist' | 'feather' | 'zzz' | 'blob' | 'ink' | 'moon' | 'sun' | 'orb'
-  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot';
+  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'ball' | 'superball' | 'doll' | 'scrap';
 
 const C = 64;
 const circle = (cx: number, cy: number, rx: number, ry: number, r: Rand, n = 22, wob = 0.06): Pt[] =>
@@ -236,4 +236,47 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
     paint(p, circle(C, C + 12, 34, 44, r, 16, 0.1), color);
     for (let i = 0; i < 4; i++) paint(p, circle(C - 27 + i * 18, C - 40 + Math.abs(i - 1.5) * 6, 9, 11, r, 9), color);
   },
+  plus(ctx, color, r) {
+    const p = new Pencil(ctx, r);
+    paint(p, [[C - 14, 14], [C + 14, 14], [C + 14, C - 14], [114, C - 14], [114, C + 14], [C + 14, C + 14], [C + 14, 114], [C - 14, 114], [C - 14, C + 14], [14, C + 14], [14, C - 14], [C - 14, C - 14]], color);
+  },
+  ball(ctx, color, r) {
+    crayonBall(new Pencil(ctx, r), r, color);
+  },
+  superball(ctx, color, r) {
+    crayonBall(new Pencil(ctx, r), r, color, '#e0453a');
+  },
+  doll(ctx, color, r) {
+    const p = new Pencil(ctx, r);
+    const paper = mix(color, PAPER, 0.85);
+    // a paper doll cut out of the sketchbook: arms and legs out, a drawn-on smile
+    paint(p, [[C - 6, 52], [18, 66], [14, 78], [C - 10, 68]], paper, { line: GRAPHITE, gap: 8 });
+    paint(p, [[C + 6, 52], [110, 66], [114, 78], [C + 10, 68]], paper, { line: GRAPHITE, gap: 8 });
+    paint(p, [[C - 14, 92], [C - 26, 124], [C - 12, 126], [C - 2, 96]], paper, { line: GRAPHITE, gap: 8 });
+    paint(p, [[C + 14, 92], [C + 26, 124], [C + 12, 126], [C + 2, 96]], paper, { line: GRAPHITE, gap: 8 });
+    paint(p, [[C - 22, 46], [C + 22, 46], [C + 18, 100], [C - 18, 100]], paper, { line: GRAPHITE, gap: 8 });
+    paint(p, circle(C, 28, 20, 20, r), paper, { line: GRAPHITE, gap: 8 });
+    for (const x of [-7, 7]) paint(p, circle(C + x, 25, 2.5, 3, r, 8), GRAPHITE, { line: GRAPHITE, lw: 1 });
+    line(p, [[C - 8, 34], [C, 39], [C + 8, 34]], GRAPHITE, 2.5);
+    line(p, [[C - 16, 60], [C + 16, 60]], color, 3);
+  },
+  scrap(ctx, color, r) {
+    const p = new Pencil(ctx, r);
+    paint(p, [[30 + r() * 10, 20], [100, 34 + r() * 10], [92 + r() * 10, 100], [24, 90 + r() * 10]], mix(color, PAPER, 0.8), { line: GRAPHITE, gap: 9 });
+  },
 };
+
+/** A Crayon-ball: a coloured top, a graphite band with its button, a white bottom. */
+function crayonBall(p: Pencil, r: Rand, top: string, stripe?: string) {
+  const upper: Pt[] = [], lower: Pt[] = [];
+  for (let i = 0; i <= 14; i++) {
+    const a = Math.PI + (i / 14) * Math.PI;
+    upper.push([C + Math.cos(a) * 50, C + Math.sin(a) * 50]);
+    lower.push([C - Math.cos(a) * 50, C - Math.sin(a) * 50]);
+  }
+  paint(p, upper, top);
+  if (stripe) line(p, [[C - 30, C - 40], [C - 26, C - 8]], stripe, 8), line(p, [[C + 30, C - 40], [C + 26, C - 8]], stripe, 8);
+  paint(p, lower, '#ffffff', { line: GRAPHITE });
+  line(p, [[C - 50, C], [C + 50, C]], GRAPHITE, 8);
+  paint(p, circle(C, C, 13, 13, r, 14), '#ffffff', { line: GRAPHITE, lw: 4 });
+}

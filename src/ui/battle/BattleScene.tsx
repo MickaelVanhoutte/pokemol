@@ -5,14 +5,14 @@ import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
 import { maxHp, xpAt, MAX_LEVEL } from '../../engine/pk/creature';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Ref } from 'preact';
-import { HpBar, PixelIcon, StatusTag, XpBar, lv } from '../paper';
+import { HpBar, StatusTag, XpBar, lv } from '../paper';
 import { sketchIconUrl } from '../sketchIcons';
 import { backdropUrl, platformUrl } from './backdrops';
 import type { Backdrop } from '../../data/schema';
 import { lookImage, type Look } from '../../overworld/sprites';
+import { dollUrl } from './fx/doll';
 
 export type Fx = Partial<Record<Side, string>>;
-export interface BallFx { shakes: number; caught: boolean; key: number }
 
 function HpBox({ st, side }: { st: BattleState; side: Side }) {
   const m = activeMon(st.sides[side]);
@@ -61,8 +61,8 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
 }
 
 /** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
-export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored, sceneRef }: {
-  view: BattleState; fx: Fx; ball: BallFx | null; captured: boolean; backdrop: Backdrop; intro: boolean;
+export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored, sceneRef }: {
+  view: BattleState; fx: Fx; captured: boolean; backdrop: Backdrop; intro: boolean;
   foeTrainer?: Look; playerBack?: Look; grey: boolean; recolored: string[];
   /** The scene element, where the move animations draw. */
   sceneRef?: Ref<HTMLDivElement>;
@@ -74,6 +74,8 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
   const isGrey = grey && !recolored.includes(foe.uid);
   // up in the air or under the ground during a two-turn move
   const away = (side: 0 | 1) => (view.sides[side].vol.invuln ? 'is-away' : '');
+  // behind a paper doll, the doll stands in its place
+  const doll = (side: 0 | 1) => view.sides[side].vol.sub > 0;
   return (
     <div ref={sceneRef} class={`pk-scene ${intro ? 'is-intro' : ''}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
       <canvas class="pk-fx-back" aria-hidden="true" />
@@ -86,15 +88,10 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
           <img class="pk-trainer" src={lookImage(foeTrainer, 'down')} alt="" />
         ) : (
           <img
-            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)}`}
-            src={monArtUrl(foe)}
+            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
+            src={doll(1) ? dollUrl() : monArtUrl(foe)}
             alt=""
           />
-        )}
-        {ball && (
-          <div class={`pk-ball shakes-${ball.shakes} ${ball.caught ? 'is-caught' : ''}`} key={ball.key}>
-            <PixelIcon id="crayon-ball" size={32} />
-          </div>
         )}
       </div>
       </div>
@@ -105,8 +102,8 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
           <img class="pk-trainer pk-trainer--me" src={lookImage(playerBack, 'up')} alt="" />
         ) : (
           <img
-            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)}`}
-            src={monArtUrl(mine)}
+            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
+            src={doll(0) ? dollUrl() : monArtUrl(mine)}
             alt=""
           />
         )}

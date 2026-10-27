@@ -153,6 +153,25 @@ export class Brush {
     ctx.restore();
   }
 
+  /** Handwritten words (a ghost's « hi hi »). */
+  text(str: string, x: number, y: number, size: number, color: string, o: { rot?: number; alpha?: number } = {}) {
+    const { ctx } = this;
+    ctx.save();
+    ctx.globalAlpha = o.alpha ?? 1;
+    ctx.translate(x, y);
+    if (o.rot) ctx.rotate(o.rot);
+    ctx.font = `${Math.round(size)}px 'Patrick Hand', cursive`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = Math.max(2, size * 0.14);
+    ctx.strokeStyle = '#fffdf4';
+    ctx.strokeText(str, 0, 0);
+    ctx.fillStyle = color;
+    ctx.fillText(str, 0, 0);
+    ctx.restore();
+  }
+
   /** A wobbly ellipse outline (rings, ripples). */
   ring(cx: number, cy: number, rx: number, ry: number, color: string, width: number, o: { alpha?: number; seed?: number; from?: number; to?: number } = {}) {
     const from = o.from ?? 0, to = o.to ?? Math.PI * 2;

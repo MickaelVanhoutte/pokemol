@@ -236,9 +236,11 @@ Scripts run one at a time and lock player input. To change an existing script af
   side. Ids are keys used by saves, maps and card files, so never renumber them.
 - **Moves** (`src/data/moves.ts`): `type`, `cat` (`phys` / `spec` / `status`), `power`, `acc`
   (`null` never misses), `pp`, `priority`, `effects`, and the flags `punch` / `cut` that Poings d’Acier
-  and Ciseaux Affûtés boost. Every damaging move also needs an animation in
+  and Ciseaux Affûtés boost. Every move also needs an animation in
   `src/ui/battle/fx/recipes.ts` (`recipes.test.ts` checks it): pick builders from `effects.ts`
-  (projectile, beam, slash, bite, bolt, wave…), a crayon from `PAL` and a motion for the user. The effect kinds (status, confuse, flinch,
+  (projectile, beam, slash, bite, bolt, wave…) or `statusFx.ts` (powder, aura, shield, weatherIn…), a
+  crayon from `PAL` and a motion for the user. A status move's own animation should not repeat what its
+  event shows next (the stat chevrons, the Zzz of sleep): `src/ui/battle/fx/events.ts` plays those. The effect kinds (status, confuse, flinch,
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.
   Beyond the basics, there are:
   - `toxic` (badly poisoned) and freeze (`status: 'freeze'`);
