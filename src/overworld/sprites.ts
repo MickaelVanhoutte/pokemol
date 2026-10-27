@@ -222,8 +222,19 @@ const FRAMES: Record<'down' | 'up' | 'side', [string[], string[]]> = {
 export class SpriteSheet {
   /** 6 frames in a row: down, down-walk, up, up-walk, side, side-walk. */
   canvas: HTMLCanvasElement;
-  constructor(look: Look) {
+  /**
+   * A decoded copy of the frames. Android Chrome can drop a canvas's pixels when memory runs low (after a
+   * battle full of animations, say): an image keeps them, and a restored canvas is painted again.
+   */
+  private img: HTMLImageElement | null = null;
+  constructor(private look: Look) {
     this.canvas = makeCanvas(16 * 6, 16);
+    this.paint();
+    this.canvas.addEventListener('contextrestored', () => this.paint());
+  }
+
+  private paint() {
+    const look = this.look;
     const p = new Painter(this.canvas.getContext('2d')!);
     const pal: Record<string, string> = {
       K: '#2a2238',
@@ -258,21 +269,29 @@ export class SpriteSheet {
         i++;
       }
     }
+    try {
+      const img = new Image();
+      img.src = this.canvas.toDataURL();
+      this.img = img;
+    } catch {
+      this.img = null;
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D, dir: Dir, walking: boolean, step: number, x: number, y: number) {
     const set = dir === 'left' || dir === 'right' ? 'side' : dir;
     const base = set === 'down' ? 0 : set === 'up' ? 2 : 4;
     const frame = walking ? 1 : 0;
+    const src = this.img?.complete && this.img.naturalWidth ? this.img : this.canvas;
     // alternate the walking leg by mirroring every other step (down/up only)
     const mirror = (set !== 'side' && walking && step % 2 === 1) || dir === 'left';
     ctx.save();
     if (mirror) {
       ctx.translate(x + 16, y);
       ctx.scale(-1, 1);
-      ctx.drawImage(this.canvas, (base + frame) * 16, 0, 16, 16, 0, 0, 16, 16);
+      ctx.drawImage(src, (base + frame) * 16, 0, 16, 16, 0, 0, 16, 16);
     } else {
-      ctx.drawImage(this.canvas, (base + frame) * 16, 0, 16, 16, x, y, 16, 16);
+      ctx.drawImage(src, (base + frame) * 16, 0, 16, 16, x, y, 16, 16);
     }
     ctx.restore();
   }

@@ -192,8 +192,7 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
 
   const get = (x: number, y: number) => (x < 0 || y < 0 || x >= w || y >= h ? def.border : tiles[y * w + x]);
   const layers: HTMLCanvasElement[] = [];
-  for (let frame = 0; frame < 2; frame++) {
-    const c = makeCanvas((w + MARGIN * 2) * TILE, (h + MARGIN * 2) * TILE);
+  const paint = (c: HTMLCanvasElement, frame: number) => {
     const ctx = c.getContext('2d')!;
     const p = new Painter(ctx);
     for (let y = -MARGIN; y < h + MARGIN; y++) {
@@ -210,6 +209,12 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
       ctx.filter = 'none';
     }
     pencilize(c);
+  };
+  for (let frame = 0; frame < 2; frame++) {
+    const c = makeCanvas((w + MARGIN * 2) * TILE, (h + MARGIN * 2) * TILE);
+    paint(c, frame);
+    // Android Chrome may drop a canvas's pixels when memory runs low: paint it again when it comes back
+    c.addEventListener('contextrestored', () => paint(c, frame));
     layers.push(c);
   }
   const npcs: Actor[] = (def.npcs ?? []).filter(visibleNpc).map((n) => ({
@@ -269,6 +274,8 @@ export class Game {
     this.canvas = makeCanvas(240, 160);
     this.canvas.className = 'ow-canvas';
     this.ctx = this.canvas.getContext('2d')!;
+    // a restored canvas comes back with default settings: keep the pixels sharp
+    this.canvas.addEventListener('contextrestored', () => (this.ctx.imageSmoothingEnabled = false));
   }
 
   setPlayer(look: Look, x: number, y: number, dir: Dir) {
@@ -364,11 +371,16 @@ export class Game {
     cancelAnimationFrame(this.raf);
     this.last = performance.now();
     const loop = (ts: number) => {
+      // the next frame is asked first: one bad frame must not freeze the world for good
+      this.raf = requestAnimationFrame(loop);
       const dt = Math.min(50, ts - this.last);
       this.last = ts;
-      this.update(dt);
-      this.render();
-      this.raf = requestAnimationFrame(loop);
+      try {
+        this.update(dt);
+        this.render();
+      } catch (e) {
+        console.error(e);
+      }
     };
     this.raf = requestAnimationFrame(loop);
   }

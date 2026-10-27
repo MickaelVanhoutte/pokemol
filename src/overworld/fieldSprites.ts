@@ -97,16 +97,22 @@ const ROWS: Record<string, string[]> = {
   ],
 };
 
-const cache = new Map<string, HTMLCanvasElement>();
+const cache = new Map<string, { canvas: HTMLCanvasElement; img: HTMLImageElement }>();
 
-/** The sprite canvas for an obstacle kind, 'boat' or 'bike'. */
-export function fieldSprite(name: keyof typeof ROWS): HTMLCanvasElement {
+/**
+ * The sprite for an obstacle kind, 'boat' or 'bike': a decoded image once ready (Android Chrome can drop a
+ * canvas's pixels when memory runs low; an image keeps them), the canvas until then.
+ */
+export function fieldSprite(name: keyof typeof ROWS): CanvasImageSource {
   let c = cache.get(name);
   if (!c) {
     const rows = ROWS[name];
-    c = makeCanvas(16, rows.length);
-    new Painter(c.getContext('2d')!).sprite(rows, PAL);
+    const canvas = makeCanvas(16, rows.length);
+    new Painter(canvas.getContext('2d')!).sprite(rows, PAL);
+    const img = new Image();
+    img.src = canvas.toDataURL();
+    c = { canvas, img };
     cache.set(name, c);
   }
-  return c;
+  return c.img.complete && c.img.naturalWidth ? c.img : c.canvas;
 }
