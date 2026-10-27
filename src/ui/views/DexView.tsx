@@ -16,19 +16,19 @@ const HOW: Record<HabitatHow, LText> = {
 import './views.css';
 
 /** Bestiodex: numbered list, then an entry page (drawing on paper, kind, type, text). */
-export function DexView({ seen, caught, all, visited = () => true, onClose }: {
-  seen: string[]; caught: string[]; all?: boolean; visited?: (map: string) => boolean; onClose: () => void;
+export function DexView({ seen, caught, visited = () => true, onClose }: {
+  seen: string[]; caught: string[]; visited?: (map: string) => boolean; onClose: () => void;
 }) {
   const [open, setOpen] = useState<number | null>(null);
-  const isSeen = (id: string) => all || seen.includes(id);
-  const isCaught = (id: string) => all || caught.includes(id);
+  const isSeen = (id: string) => seen.includes(id);
+  const isCaught = (id: string) => caught.includes(id);
 
   if (open !== null) return <DexEntry index={open} isSeen={isSeen} isCaught={isCaught} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
   return (
     <Frame
       title={tr(L('Bestiodex', 'Critterdex'))}
       onBack={onClose}
-      right={!all && <Window class="dex__count"><span>{tr(L('VUS', 'SEEN'))} {seen.length}</span> <span>{tr(L('PRIS', 'OWN'))} {caught.length}</span></Window>}
+      right={<Window class="dex__count"><span>{tr(L('VUS', 'SEEN'))} {seen.length}</span> <span>{tr(L('PRIS', 'OWN'))} {caught.length}</span></Window>}
     >
       <Window class="dex__list">
         <MenuList
@@ -41,7 +41,7 @@ export function DexView({ seen, caught, all, visited = () => true, onClose }: {
                 <span>{isSeen(c.id) ? tr(c.name) : '-----'}</span>
               </span>
             ),
-            side: isCaught(c.id) && !all ? <PixelIcon id="crayon-ball" size={18} /> : undefined,
+            side: isCaught(c.id) ? <PixelIcon id="crayon-ball" size={18} /> : undefined,
             disabled: !isSeen(c.id),
             onSelect: () => setOpen(i),
           }))}

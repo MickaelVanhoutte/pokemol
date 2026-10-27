@@ -193,7 +193,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     backdrop: 'lab',
     rows: [
       'WWwWWWwWW',
-      'bbffffffv',
+      'bbfffffPv',
       'fffCCCfff',
       'fffffffff',
       'pfffffftt',

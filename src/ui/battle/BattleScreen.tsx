@@ -10,7 +10,7 @@ import {
   type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Step,
 } from '../../engine/pk/battle';
 import { sfx } from '../../audio/sfx';
-import { playJingle, playMusic, stopMusic, type TrackId } from '../../audio/music';
+import { playJingle, playMusic, stopMusic, trackSeconds, type TrackId } from '../../audio/music';
 import type { Backdrop } from '../../data/schema';
 import type { Look } from '../../overworld/sprites';
 import type { Appearance } from '../../data/appearance';
@@ -82,6 +82,14 @@ export function BattleScreen(props: BattleProps) {
   const [ended, setEnded] = useState(false);
   // tutorial: -1 off, 0 first page, 1 pulse FIGHT, 2 second page after the first move
   const [coach, setCoach] = useState(props.tutorial ? 0 : -1);
+  /** When the victory (or capture) tune is over; the battle is left only then. */
+  const jingleEnds = useRef(0);
+  const leaving = useRef(false);
+  const leave = () => {
+    if (leaving.current) return;
+    leaving.current = true;
+    setTimeout(() => props.onEnd(stRef.current!.result!, stRef.current!), Math.max(0, jingleEnds.current - performance.now()));
+  };
   const speed = useRef(prefs.value.battleAnim);
   // intro: the trainer and the player stand on the platforms until they send their Bestioles out
   const [cast, setCast] = useState<{ foe: boolean; me: boolean }>({ foe: !!props.trainer, me: !!props.playerLook });
@@ -127,7 +135,10 @@ export function BattleScreen(props: BattleProps) {
       setRecolored((r) => [...r, uid]);
       setMsg(tr(L('{n} retrouve ses couleurs !', '{n} got its colours back!'), { n: monLabel(activeMon(snap.sides[1])) }));
       sfx.sparkle();
-      await sleep(1300 * speed.current);
+      // the colours come back slowly and stay a moment before it falls (the effect keeps the knocked-out
+      // drawing on screen meanwhile)
+      pulse(1, 'recolor', 2700 * speed.current);
+      await sleep(2600 * speed.current);
     }
     const lines = describe(e, snap);
     // the ball shakes first, the result comes after
@@ -177,7 +188,15 @@ export function BattleScreen(props: BattleProps) {
         else at(end, () => { setCaptured(false); pulse(1, 'in', 600); });
         break;
       }
-      case 'end': if (e.result === 'win' || e.result === 'capture') { stopMusic(); playJingle(e.result === 'capture' ? 'caught' : 'victory', { fallback: sfx.victory, resume: false }); } break;
+      case 'end':
+        if (e.result === 'win' || e.result === 'capture') {
+          stopMusic();
+          const tune = e.result === 'capture' ? 'caught' : 'victory';
+          playJingle(tune, { fallback: sfx.victory, resume: false });
+          // leaving the battle waits for the end of the tune
+          if (prefs.value.music && prefs.value.sound) jingleEnds.current = performance.now() + (trackSeconds(tune) + 0.3) * 1000;
+        }
+        break;
     }
     // an animation, and enough time to read the message
     const shinyOut = e.t === 'sendOut' && !!snap.sides[e.side].party[e.idx]?.shiny;
@@ -316,7 +335,7 @@ export function BattleScreen(props: BattleProps) {
         onRun={() => dispatch({ type: 'run' })}
         onMove={(slot) => dispatch({ type: 'move', slot })}
         onBack={() => setMenu('main')}
-        onContinue={() => (mode === 'coach' ? setCoach((c) => (c === 0 ? 1 : -1)) : props.onEnd(st.result!, stRef.current!))}
+        onContinue={() => (mode === 'coach' ? setCoach((c) => (c === 0 ? 1 : -1)) : leave())}
         onLearnAnswer={(yes) => (yes ? setOverlay({ kind: 'learn' }) : dispatch({ type: 'learn', forget: null }))}
       />
 

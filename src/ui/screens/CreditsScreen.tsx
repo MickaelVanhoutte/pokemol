@@ -1,7 +1,6 @@
 import { useEffect } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { playMusic } from '../../audio/music';
-import { CREATURES, artUrl } from '../../data/creatures';
 import { originalUrl, originals } from '../../data/originals';
 import { go } from '../../state/router';
 import { backToWorld } from '../../overworld/controller';
@@ -21,18 +20,6 @@ export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
         <div class="credits__parade">
           {originals().map((c) => <img class="mon-art" src={originalUrl(c)} alt={tr(c.name)} title={tr(c.name)} />)}
         </div>
-        <p>{tr(L('Redessinées pour le jeu, dans son style :', 'Redrawn for the game, in her style:'))}</p>
-        <div class="credits__parade">
-          {CREATURES.filter((c) => !c.draft).map((c) => <img class="mon-art" src={artUrl(c)} alt={tr(c.name)} title={tr(c.name)} />)}
-        </div>
-        {CREATURES.some((c) => c.draft) && (
-          <>
-            <p>{tr(L('Et quelques brouillons griffonnés en plus :', 'And a few extra drafts, scribbled quickly:'))}</p>
-            <div class="credits__parade">
-              {CREATURES.filter((c) => c.draft).map((c) => <img class="mon-art" src={artUrl(c)} alt={tr(c.name)} title={tr(c.name)} />)}
-            </div>
-          </>
-        )}
         <p>{tr(L('Jeu, décors et pixels faits maison.', 'Game, scenery and pixels made at home.'))}</p>
         <p>{tr(L('Polices : Patrick Hand et Inter (SIL Open Font License).', 'Fonts: Patrick Hand and Inter (SIL Open Font License).'))}</p>
         {ended && <p class="credits__end">{tr(L('Fin… ou presque. Les Bestioles t’attendent à Papeterre !', 'The end… almost. The Critters are waiting for you in Papeterra!'))}</p>}

@@ -6,10 +6,13 @@ import { deal, pickSpecies, prizeTier } from './memo';
 const rng = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
 
 describe('fresque', () => {
-  it('slides only a piece next to the gap', () => {
+  it('puts any piece into the gap', () => {
     const b = solvedBoard(3);
     expect(gapOf(b)).toBe(8);
-    expect(slide(b, 0, 3)).toBeNull();
+    expect(slide(b, 8, 3)).toBeNull();
+    const far = slide(b, 0, 3)!;
+    expect(gapOf(far)).toBe(0);
+    expect(far[8]).toBe(0);
     const moved = slide(b, 7, 3)!;
     expect(gapOf(moved)).toBe(7);
     expect(isSolved(moved)).toBe(false);

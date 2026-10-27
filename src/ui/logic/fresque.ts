@@ -1,6 +1,7 @@
 /**
  * The fresque: a sliding picture puzzle. A board lists, for each place (row by row), the piece
- * sitting there; the last piece number is the gap.
+ * sitting there; the last piece number is the gap. Any piece can be put into the gap (the owner found
+ * the neighbours-only rule too hard); the arrow keys still push the piece facing it.
  */
 export type Board = number[];
 
@@ -14,10 +15,10 @@ export function neighbours(pos: number, n: number): number[] {
   return [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]].filter(([a, b]) => a >= 0 && b >= 0 && a < n && b < n).map(([a, b]) => b * n + a);
 }
 
-/** Slides the piece at `pos` into the gap, if they touch (null otherwise). */
+/** Puts the piece at `pos` into the gap, wherever it is (null for the gap itself or off the board). */
 export function slide(b: Board, pos: number, n: number): Board | null {
   const gap = gapOf(b);
-  if (!neighbours(gap, n).includes(pos)) return null;
+  if (pos === gap || pos < 0 || pos >= n * n) return null;
   const out = [...b];
   [out[gap], out[pos]] = [out[pos], out[gap]];
   return out;

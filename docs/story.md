@@ -548,6 +548,17 @@ the summary shows effort points. Magic Lollipops (+1 level) lie off the beaten t
 Mont Fusain to Route Blanche (most of them hidden), and shops sell them for 10 000 ₽ after the ending. The
 level curve assumes a player who picks none up.
 
+**Stronger first Atelier Masters, and smaller things (Oct 2026).** The owner rolled over the first two
+Ateliers, nearly one hit each: Mireille's ace (L7) and Gaspard's (L10) were below their own apprentices
+and the no-grind team, Basile's (L28) too. Now Mireille has Chenillou L7, Chrysalou L8, Papivole L8;
+Gaspard Piafou L11, Ronflon L8, Piaflèche L12 (Ronflon at L9 or more, with Ronflement, won 0–35%);
+Basile L27/27/28/30. Sims on Normal (Minousse / Braisou / Clapotin): Mireille 89/100/99% (was 100), Gaspard
+78/81/89% (was 95/95/98), Basile 56/95/76% (was 37/96/80); Easy 93–100%; Hard Mireille 59/91/85%, Gaspard
+60/28/45%. Also: the title screen and the credits show only her own drawings (no all-Bestiodex from the
+title any more), a PC at the Day Care, the summary's ◀ ▶ switch Bestiole (keeping the page), a Team Gomme
+Bestiole stays on screen while its colours come back, a won battle is left only once the victory tune has
+played, the title theme starts on the first page, and any fresque piece can be put into the gap.
+
 **A music box instead of 8-bit (Oct 2026).** The owner found the GBA square waves out of place next to the
 pencil and pastel look. The tunes stayed note for note; only the instruments changed. They listened to
 four sounds on a test page (8-bit, music box, acoustic workshop with recorder and ukulele, felt piano) and

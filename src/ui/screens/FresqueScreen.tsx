@@ -79,7 +79,7 @@ export function FresqueScreen({ species, size, onEnd }: { species: string; size:
       <Window seyes class="fresque__note">
         {done
           ? tr(L('Bravo ! C’est {n} ! ({m} coups)', 'Well done! It’s {n}! ({m} moves)'), { n: tr(creature(species).name), m: moves })
-          : tr(L('Touche un morceau à côté du trou pour le faire glisser.', 'Tap a piece next to the gap to slide it.'))}
+          : tr(L('Touche un morceau pour le mettre dans le trou.', 'Tap a piece to put it in the gap.'))}
       </Window>
       <div class="fresque__play">
         <div class={`fresque__board ${done ? 'is-done' : ''}`} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>

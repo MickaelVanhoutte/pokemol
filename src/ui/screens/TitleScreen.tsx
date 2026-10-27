@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'preact/hooks';
 import { effect } from '@preact/signals';
 import { L, t, tr } from '../../i18n';
-import { CREATURES, artUrl, dexNo } from '../../data/creatures';
+import { artUrl, dexNo } from '../../data/creatures';
+import { originals } from '../../data/originals';
 import { enterWorld } from '../../overworld/controller';
 import { hasSave, loadSave, outdatedSave, peekSlot, savedSlots, slot, SLOTS } from '../../state/game';
 import { go } from '../../state/router';
@@ -66,9 +67,12 @@ function Sky() {
   );
 }
 
+/** The Bestioles of her own drawings: the title shows only these, players discover the others. */
+const BOOK = originals();
+
 /** The open sketchbook: one drawing at a time, the page turns to the next one. */
 function Sketchbook({ i }: { i: number }) {
-  const c = CREATURES[i];
+  const c = BOOK[i];
   return (
     <div class="title__book" aria-hidden="true">
       <div class="title__page" key={i}>
@@ -108,17 +112,17 @@ export function TitleScreen() {
   /** Picking a game to continue, or a slot for a new one; then confirming a slot to overwrite. */
   const [picking, setPicking] = useState<'continue' | 'new' | null>(null);
   const [confirmNew, setConfirmNew] = useState<number | null>(null);
-  const [hero, setHero] = useState(() => Math.floor(Math.random() * CREATURES.length));
+  const [hero, setHero] = useState(() => Math.floor(Math.random() * BOOK.length));
   const [offlineNote, setOfflineNote] = useState(false);
   // said once per device, when every file has been downloaded
   useEffect(() => effect(() => void (firstOfflineReady() && setOfflineNote(true))), []);
   useEffect(() => {
-    const id = setInterval(() => setHero((h) => (h + 1) % CREATURES.length), 3200);
+    const id = setInterval(() => setHero((h) => (h + 1) % BOOK.length), 3200);
     return () => clearInterval(id);
   }, []);
-  useEffect(() => {
-    if (phase === 'menu') playMusic('title');
-  }, [phase]);
+  // from the first page: an installed app may play right away, a browser tab at the first touch (the
+  // music is ready by then, so the touch itself starts it, even on iPhone)
+  useEffect(() => playMusic('title'), []);
   useEffect(() => {
     if (phase !== 'press') return;
     const go = () => setPhase('menu');
@@ -131,7 +135,6 @@ export function TitleScreen() {
     // one game: straight in; several: pick whose
     ...(exists ? [{ label: t('menu.continue'), onSelect: () => (saved.length === 1 ? loadSave(saved[0]) && enterWorld() : setPicking('continue')) }] : []),
     { label: t('menu.newGame'), onSelect: () => (exists ? setPicking('new') : startNew(1)) },
-    { label: tr(L('BESTIODEX', 'CRITTERDEX')), onSelect: () => go({ id: 'dex', all: true }) },
     { label: tr(L('MUSIQUES', 'MUSIC')), onSelect: () => go({ id: 'jukebox' }) },
     { label: t('menu.settings'), onSelect: () => go({ id: 'settings', back: { id: 'title' } }) },
     { label: tr(L('Crédits', 'Credits')), onSelect: () => go({ id: 'credits' }) },

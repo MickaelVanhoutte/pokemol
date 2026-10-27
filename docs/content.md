@@ -173,7 +173,7 @@ searches (and caps pushes, slides and presses), so a new puzzle needs a case the
 - **Glossy paper** (`I`): the player slides until something is in the way (`slideFrom` in
   `src/overworld/puzzles.ts`). No wild Bestioles while sliding; keep people off it.
 - **Fresques** (`F`) and `fresques: [{ x, y, id, species, size?, reward? }]`: a sliding picture
-  puzzle of a drawing. Solving it sets `fresque:<id>`; patches with `unless` hide the secret room,
+  puzzle of a drawing, where any piece can be put into the gap (`src/ui/logic/fresque.ts`). Solving it sets `fresque:<id>`; patches with `unless` hide the secret room,
   and `items` with `showIf` fill it (or `reward` gives an item directly). The four fresques count
   towards a reward in `src/story/puzzles.ts`.
 - **Signs** must sit on something solid (`S`, a wall, a rock): a test checks it.

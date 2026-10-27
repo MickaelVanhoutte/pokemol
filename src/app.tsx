@@ -32,7 +32,7 @@ export function App() {
       {s.id === 'battle' && <BattleScreen key={s.props.setup.seed} {...s.props} />}
       {s.id === 'party' && <PartyScreen />}
       {s.id === 'bag' && <BagScreen />}
-      {s.id === 'dex' && <DexScreen all={s.all} />}
+      {s.id === 'dex' && <DexScreen />}
       {s.id === 'pc' && <PcScreen />}
       {s.id === 'shop' && <ShopScreen tower={s.tower} />}
       {s.id === 'machine' && <MachineScreen />}

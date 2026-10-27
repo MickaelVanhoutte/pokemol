@@ -6,7 +6,7 @@ import type { Mon } from '../../engine/pk/creature';
 import { Frame, MenuList, Window, lv, type MenuItem } from '../paper';
 import { canDeposit, canWithdraw } from '../logic/pc';
 import { BOX_SIZE } from '../../save/schema';
-import { SummaryView } from './SummaryView';
+import { SummaryView, nextMon } from './SummaryView';
 import './views.css';
 
 type Pick = { where: 'party' | 'box'; i: number };
@@ -85,7 +85,11 @@ export function PcView({ party, boxes, onDeposit, onWithdraw, onClose }: {
           </div>
         </div>
       )}
-      {summary && <SummaryView mon={summary} onClose={() => setSummary(null)} />}
+      {summary && (() => {
+        // the arrows go through the list it was opened from: the party or this box
+        const list = party.includes(summary) ? party : box;
+        return <SummaryView mon={summary} onClose={() => setSummary(null)} onMove={(d) => setSummary(list[nextMon(list, list.indexOf(summary), d)])} />;
+      })()}
     </Frame>
   );
 }

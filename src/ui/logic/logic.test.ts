@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MAX_LEVEL, createMon, growLevel, maxHp, xpAt } from '../../engine/pk/creature';
 import { creature } from '../../data/creatures';
+import { nextMon } from '../views/SummaryView';
 import { canUseOn, pocketItems, stencilStatus, useOn } from './bag';
 import { canDeposit } from './pc';
 import { moveCursor } from '../paper/nav';
@@ -87,6 +88,17 @@ describe('effort items and the Magic Lollipop', () => {
     expect(growLevel(top)).toEqual([]);
     const egg = { ...mon(), egg: { steps: 100 } };
     expect(canUseOn('sucette-magique', egg)).toBe(false);
+  });
+});
+
+describe('summary arrows', () => {
+  it('go to the previous or next Bestiole, round the list, over the eggs', () => {
+    const list = [mon(), { ...mon(), egg: { steps: 9 } }, mon(), mon()];
+    expect(nextMon(list, 0, 1)).toBe(2);
+    expect(nextMon(list, 2, -1)).toBe(0);
+    expect(nextMon(list, 0, -1)).toBe(3);
+    expect(nextMon(list, 3, 1)).toBe(0);
+    expect(nextMon([mon()], 0, 1)).toBe(0);
   });
 });
 

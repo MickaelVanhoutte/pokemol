@@ -6,7 +6,7 @@ import { maxHp, type Mon } from '../../engine/pk/creature';
 import { HpBar, MenuList, PixelIcon, StatusTag, Window, lv, type MenuItem } from '../paper';
 import { item } from '../../data/items';
 import { useMenuNav } from '../paper/nav';
-import { SummaryView } from './SummaryView';
+import { SummaryView, nextMon } from './SummaryView';
 import './views.css';
 
 export type PartyMode = 'field' | 'battle' | 'forced' | 'target';
@@ -175,7 +175,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
           </div>
         </div>
       )}
-      {summary !== null && <SummaryView mon={party[summary]} onClose={() => setSummary(null)} onSwapMoves={onSwapMoves && ((a, b) => onSwapMoves(summary, a, b))} />}
+      {summary !== null && <SummaryView mon={party[summary]} onClose={() => setSummary(null)} onSwapMoves={onSwapMoves && ((a, b) => onSwapMoves(summary, a, b))} onMove={(d) => setSummary(nextMon(party, summary, d))} />}
     </div>
   );
 }

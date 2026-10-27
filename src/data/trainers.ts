@@ -105,7 +105,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'mireille', name: L('Maître d’Atelier Mireille', 'Atelier Master Mireille'), money: 1200, badge: 'pastel',
-    party: [{ species: '015', level: 7 }, { species: '007', level: 7 }],
+    party: [{ species: '012', level: 7 }, { species: '015', level: 8 }, { species: '007', level: 8 }],
     before: [
       L('Bienvenue dans mon atelier ! Ici, chaque papillon a des couleurs qui n’existent pas encore.', 'Welcome to my atelier! Here, every butterfly has colours that don’t exist yet.'),
       L('Montre-moi si tes Bestioles sont aussi bien dessinées que les miennes !', 'Show me if your Critters are drawn as well as mine!'),
@@ -186,7 +186,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'gaspard', name: L('Maître d’Atelier Gaspard', 'Atelier Master Gaspard'), money: 1600, badge: 'plume',
-    party: [{ species: '013', level: 10 }, { species: '008', level: 8 }],
+    party: [{ species: '013', level: 11 }, { species: '008', level: 8 }, { species: '026', level: 12 }],
     before: [
       L('Zzz… Mmh ? Quelqu’un a dit « combat » ? Bâââille…', 'Zzz… Mmh? Did someone say “battle”? Yaaawn…'),
       L('Bon. Quand je suis réveillé, je ne rigole plus. Montre-moi ce que tu vaux !', 'Right. When I’m awake, I don’t mess around. Show me what you’ve got!'),
@@ -519,7 +519,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache',
-    party: [{ species: '007', level: 25, item: 'baie-menthe' }, { species: '020', level: 26 }, { species: '063', level: 27 }, { species: '024', level: 28, item: 'baie-doree' }],
+    party: [{ species: '007', level: 27, item: 'baie-menthe' }, { species: '020', level: 27 }, { species: '063', level: 28 }, { species: '024', level: 30, item: 'baie-doree' }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),

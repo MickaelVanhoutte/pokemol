@@ -9,7 +9,7 @@ export type Screen =
   | { id: 'battle'; props: BattleProps }
   | { id: 'party' }
   | { id: 'bag' }
-  | { id: 'dex'; all?: boolean }
+  | { id: 'dex' }
   | { id: 'pc' }
   | { id: 'shop'; tower?: boolean }
   | { id: 'machine' }

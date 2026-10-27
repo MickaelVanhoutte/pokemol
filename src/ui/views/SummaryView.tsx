@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
 import { creature, dexNo, monLabel } from '../../data/creatures';
 import { monArtUrl } from '../monArt';
@@ -93,6 +93,8 @@ const natureLabel = (mon: Mon) => {
  */
 export function SummaryView(props: {
   mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void }; onSwapMoves?: (a: number, b: number) => void;
+  /** The ◀ ▶ arrows show the previous or next Bestiole (without it they turn the pages). */
+  onMove?: (d: 1 | -1) => void;
 }) {
   return props.mon.egg ? <EggSummary mon={props.mon} onClose={props.onClose} /> : <SummaryMain {...props} />;
 }
@@ -118,8 +120,18 @@ function EggSummary({ mon, onClose }: { mon: Mon; onClose: () => void }) {
   );
 }
 
-function SummaryMain({ mon, onClose, learn, onSwapMoves }: {
+/** Index of the previous or next Bestiole of a list for the summary arrows, skipping eggs. */
+export function nextMon(list: Mon[], i: number, d: 1 | -1): number {
+  for (let k = 1; k < list.length; k++) {
+    const j = (i + d * k + list.length * k) % list.length;
+    if (!list[j].egg) return j;
+  }
+  return i;
+}
+
+function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
   mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void }; onSwapMoves?: (a: number, b: number) => void;
+  onMove?: (d: 1 | -1) => void;
 }) {
   const [page, setPage] = useState<Page>(learn ? 2 : 0);
   const [sel, setSel] = useState<number | null>(null);
@@ -138,6 +150,22 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves }: {
   const sp = creature(mon.species);
   const color = TYPES[sp.type].color;
   const turn = (d: 1 | -1) => !learn && setPage((p) => (((p + d + 3) % 3) as Page));
+  const arrow = (d: 1 | -1) => (onMove ? onMove(d) : turn(d));
+  // another Bestiole: same page, nothing selected
+  useEffect(() => {
+    setSel(null);
+    setMoving(null);
+  }, [mon.uid]);
+  useEffect(() => {
+    if (!onMove || learn) return;
+    const key = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      onMove(e.key === 'ArrowLeft' ? -1 : 1);
+    };
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, [onMove, learn]);
   useMenuNav(0, {
     active: confirm === null,
     onSelect: () => undefined,
@@ -159,11 +187,11 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves }: {
   return (
     <div class="frame graph summary" style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
       <div class="summary__tabs">
-        {!learn && <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>}
+        {!learn && <button class="pbtn" onClick={() => arrow(-1)} aria-label="◀">◀</button>}
         <div class="summary__tabnames">
           {PAGES.map((p, i) => <button class={`summary__tab ${i === page ? 'is-on' : ''}`} onClick={() => !learn && setPage(i as Page)}>{tr(p)}</button>)}
         </div>
-        {!learn && <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>}
+        {!learn && <button class="pbtn" onClick={() => arrow(1)} aria-label="▶">▶</button>}
       </div>
       <Window class="summary__head">
         <div class="summary__art"><img class="mon-art" src={monArtUrl(mon)} alt="" /></div>
