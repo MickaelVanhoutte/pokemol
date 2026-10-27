@@ -151,8 +151,8 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     warps: [
       { x: 8, y: 15, to: { map: 'montFusain2', x: 8, y: 10, facing: 'up' } },
       { x: 9, y: 15, to: { map: 'montFusain2', x: 9, y: 10, facing: 'up' } },
-      { x: 8, y: 0, to: { map: 'route6', x: 8, y: 20, facing: 'up' } },
-      { x: 9, y: 0, to: { map: 'route6', x: 9, y: 20, facing: 'up' } },
+      { x: 8, y: 0, to: { map: 'route6', x: 8, y: 38, facing: 'up' } },
+      { x: 9, y: 0, to: { map: 'route6', x: 9, y: 38, facing: 'up' } },
     ],
     signs: [
       { x: 2, y: 12, text: L('VILLAGE-BRAISE\nAu chaud, au pied du volcan.\nAtelier d’Ambre', 'EMBERVALE\nCosy, at the foot of the volcano.\nAmber’s Atelier') },

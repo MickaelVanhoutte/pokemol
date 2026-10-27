@@ -63,12 +63,21 @@ function team(lv: number, size: number, gap = 3): Team {
 // (src/data/curve.ts): every trainer on the way and the wild battles you can't avoid, no grinding.
 // Trainers off the curve's path (the cycling track, the finale) keep a level written here.
 const CURVE = new Map(curve(difficulty).rows.map((r) => [r.trainer, r]));
+/** How a player's teammate has grown by `lv`: level evolutions, and from L20 the electric Magic Pencil and friendship. */
+function grown(id: string, lv: number): string {
+  const g = grownForm(id, lv);
+  if (lv >= 20 && g === '004') return '027';
+  if (lv >= 20 && g === '006') return '028';
+  return g;
+}
+
 /** The starter and the best `size - 1` teammates at this trainer (`species` replaces the usual mates). */
 function teamAt(id: string, size: number, species = MATES): Team {
   const r = CURVE.get(id);
   if (!r) throw new Error(`${id} is not on the curve's path`);
   const mates = [...r.mates].sort((a, b) => b - a).slice(0, size - 1);
-  return [['S', r.starter], ...mates.map((lv, i): [string, number] => [species[i] === '009' && lv >= 16 ? '010' : species[i], lv])];
+  // teammates have grown like the starter (an evolution stone counts as found by then)
+  return [['S', r.starter], ...mates.map((lv, i): [string, number] => [grown(species[i], lv), lv])];
 }
 
 const STEPS: [string, Team][] = [
@@ -97,11 +106,11 @@ const STEPS: [string, Team][] = [
   ['basile', teamAt('basile', 6)],
   ['ph1b', teamAt('ph1b', 6)],
   ['buvard', teamAt('buvard', 6)],
-  ['pc4', team(37, 6)],
+  ['pc4', teamAt('basile', 6)],
   ['nocturne', teamAt('nocturne', 6)],
   ['rature2', teamAt('rature2', 6)],
   ['blanche2', teamAt('blanche2', 6)],
-  ['effaceur', team(44, 6)],
+  ['effaceur', teamAt('blanche2', 6)],
   // post-game: the Grand Concours, each fight alone with a level 50 team
   ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(50, 6, 0)]),
 ];

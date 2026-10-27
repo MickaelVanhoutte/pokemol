@@ -72,7 +72,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
       'TTTTTTTTTTTTTTTTTTTT',
     ],
     surf: { rate: 0.1, table: [{ id: '003', w: 100, min: 5, max: 8 }] },
-    fishing: { old: [{ id: '003', w: 100, min: 5, max: 8 }], good: [{ id: '003', w: 100, min: 12, max: 16 }], super: [{ id: '003', w: 100, min: 22, max: 28 }] },
+    fishing: { old: [{ id: '003', w: 100, min: 5, max: 8 }], good: [{ id: '003', w: 100, min: 12, max: 16 }], super: [{ id: '003', w: 100, min: 15, max: 21 }] },
     buildings: [
       { kind: 'house', x: 2, y: 2, w: 4, h: 4, door: 1, to: { map: 'maison', x: 4, y: 6, facing: 'up' } },
       { kind: 'house', x: 13, y: 2, w: 4, h: 4, door: 2, roof: '#4a7ad6', to: { map: 'maisonRival', x: 4, y: 6, facing: 'up' } },

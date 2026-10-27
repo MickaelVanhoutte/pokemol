@@ -15,9 +15,9 @@ export interface Habitat {
 const GIFTS: Record<string, string[]> = { '001': ['labo'], '002': ['labo'], '003': ['labo'], '016': ['ville'] };
 /** Bestioles waiting somewhere, met once: where, at what level, in what kind of place, at what time. */
 const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time?: 'night' }[]> = {
-  '011': [{ map: 'grotteEchos', level: 45, how: 'cave' }],
-  '071': [{ map: 'boisPerdu', level: 38, how: 'grass', time: 'night' }],
-  '072': [{ map: 'ratures3', level: 42, how: 'cave' }],
+  '011': [{ map: 'grotteEchos', level: 36, how: 'cave' }],
+  '071': [{ map: 'boisPerdu', level: 30, how: 'grass', time: 'night' }],
+  '072': [{ map: 'ratures3', level: 34, how: 'cave' }],
 };
 
 /**

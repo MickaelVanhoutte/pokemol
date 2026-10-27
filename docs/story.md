@@ -62,20 +62,20 @@ down to Port-Aquarelle and its island), two optional places break the straight l
   at the Gouache end only opens from the Gouache side (`pisteGate`, flag `piste.open`), so it is a
   shortcut back south, never a way to skip ahead.
 - **Grotte des Échos** (`grotteEchos`, door on Route 8): two boulders (Strong Gloves) fill the two
-  pits of the passage; at the back, a red-eyed shadow is **Ombrouille** L45, met once
+  pits of the passage; at the back, a red-eyed shadow is **Ombrouille** L36, met once
   (`echoShadow`, flag `static:ombrouille` when caught or beaten). It no longer appears in the
   Misty Tower. Ombrouille is no longer a legendary (iteration 12): a rare final form, total 520; the
-  Great Eraser's one is L42 and Nocturne's at the Grand Concours L49 to keep their rows where they were.
+  Great Eraser's one is L31 (after iteration 15) and Nocturne's at the Grand Concours L49.
 - **The two legendaries** (iteration 12, `src/story/legends.ts`, maps in `src/data/maps/legendes.ts`),
   the good dream and the bad dream, total 600 each. Each is met once; caught, it is gone
   (`static:<slug>`); knocked out, it comes back after a night of sleep (`sleepUntil` counts
   `nuits`; `ko:<slug>` stores the night it can return, `koDay:<slug>` the real day) — the map's
   `onEnter` sets `away:<slug>`, which hides its NPC.
-  - **Libellune** (Bug/Fairy) L38, in the **Bois Perdu**: a gap in the Misty Woods' southern brambles
+  - **Libellune** (Bug/Fairy) L30, in the **Bois Perdu**: a gap in the Misty Woods' southern brambles
     (`boisPerduGate`, 6th badge) opens on a maze where only the fireflies (`y` tiles) mark the way;
     every wrong turn (`boisPerduLost` triggers) sends you back to the start. Libellune comes to the
     clearing only at night. A kid in the Misty Woods gives the hint.
-  - **Noctaile** (Dark/Psychic) L42, at the bottom of the **Grotte des Ratures** (cave door on Route 8):
+  - **Noctaile** (Dark/Psychic) L34, at the bottom of the **Grotte des Ratures** (cave door on Route 8):
     1F crayon barriers that need both levers, 2F glossy paper whose holes drop you back to 1F, 3F two
     boulders to push into two pits (12 pushes) in front of Noctaile.
 
@@ -223,9 +223,9 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 has 4 trainers | Marine L15/16/18 |
 | Route 4, Ville-Feutre | L15–19 (Route 4 has 5 trainers) | Rature L18/17/19, Zélie L19/19/21 |
 | Mont Fusain, Braise | L18–20 (wild L18–22) | Ambre L21/18/21 |
-| Paillette, Tour | L27–31 | Célestine L31–34, Blanche L30–31 (×4) |
-| Gouache, Encre, Factory | L31–38 | Basile L35–38 (Bouquétigre ace), Nocturne L35–38 |
-| Finale | — | Rival L40–43 (6), Great Eraser L39–41 (5) |
+| Route 6, Paillette, Tour | L20–24 (Route 6 has 4 trainers) | Célestine L24/25/27, Blanche L21/22/21/22 (×4) |
+| Routes 7–8, Gouache, Lighthouse, Encre, Factory | L23–29 (4 trainers per route) | Basile L23/24/26 (Bouquétigre ace), Buvard L25–27, Nocturne L30/31/33, Rature L27–28, Blanche L27–28 |
+| Finale | — | Rival L28–31 (6), Great Eraser L27–31 (5) |
 
 Run `npm run balance` for the current numbers instead of trusting this table.
 
@@ -254,8 +254,24 @@ Act 2 got the same treatment:
   The wild Bestioles of Route 4 and Mont Fusain went down too.
 
 On Normal the sims now give Marine and Zélie 93–100% and Ambre 41–91% (Minousse against Fire).
-`curve.test.ts` checks Acts 1 and 2: route trainers no higher than the team's lead, Atelier Masters
-and admins at most two levels above it. Act 3 follows with its routes.
+Act 3 last:
+- Routes 6, 7 and 8 went to 24×40, with forced bands of tall grass. Each got two more trainers:
+  Jeanne and Pépin, Octave and Agathe, a grunt and Médium Opale.
+- Act 3 used to jump ten levels after Ambre (her ace L24, Célestine's L34) with little in between, so
+  the whole act came down to the curve. Route and Atelier trainers sit at the team's level. The bosses
+  were tuned one by one with the sim, for about 70–90% on Normal without items: Blanche and Basile are
+  the hardest, at 40–95%.
+- The finale came down by about 12 levels (rival L28–31, Great Eraser L27–31). So did the wild Bestioles
+  of Act 3, the Cycling Track, the lighthouse, the echo cave and the legendaries' places (Ombrouille L36,
+  Libellune L30, Noctaile L34), and the Super Rod (−7).
+- Post-game is unchanged: the Grand Concours at L44–49, rematches at +12.
+
+The sim's teammates now grow like a player's: level evolutions, plus the electric Magic Pencil and
+friendship from L20.
+
+`curve.test.ts` checks the whole story: route trainers no higher than the team's lead, Atelier Masters
+and admins at most five levels above it. A boss's strength is mostly its team, so `npm run balance`
+tunes them.
 
 **The owner's request (Oct 2026):** the first battles must let players learn the mechanics.
 - The first trainers have one or two low-level Bestioles; the starter alone should win Act 1 route

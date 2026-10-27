@@ -30,7 +30,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       'TTTTTTTTTTT:TTTTT~~~TT',
     ],
     surf: { rate: 0.1, table: [{ id: '003', w: 60, min: 11, max: 15 }, { id: '013', w: 40, min: 11, max: 15 }] },
-    fishing: { old: [{ id: '003', w: 100, min: 6, max: 10 }], good: [{ id: '003', w: 100, min: 14, max: 18 }], super: [{ id: '003', w: 100, min: 24, max: 30 }] },
+    fishing: { old: [{ id: '003', w: 100, min: 6, max: 10 }], good: [{ id: '003', w: 100, min: 14, max: 18 }], super: [{ id: '003', w: 100, min: 17, max: 23 }] },
     // the bridge to the east was rubbed out by Team Gomme (rebuilt later in the story)
     patches: [{ id: 'plumeBridge', x: 17, y: 9, rows: ['eee'], unless: 'a2.bridge' }],
     buildings: [

@@ -190,7 +190,7 @@ scripts.echoShadow = async () => {
   await say(L('Une ombre gigantesque te fixe de ses yeux rouges…', 'A huge shadow stares at you with red eyes…'));
   await shake(500);
   await say(L('… Elle se jette sur toi !', '… It leaps at you!'));
-  const out = await wildBattle('011', 45, { music: 'final' });
+  const out = await wildBattle('011', 36, { music: 'final' });
   if (out === 'capture' || out === 'win') {
     setFlag('static:ombrouille');
     await say(out === 'capture'
@@ -264,8 +264,8 @@ scripts.rivalFinal = async () => {
   ], RIVAL);
   const starter = grownForm(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0'), 43);
   const party = partyOf([
-    { species: '013', level: 40, item: 'plume-vive' }, { species: '008', level: 40, item: 'gouter' }, { species: '010', level: 41, item: 'lunettes-tetues' },
-    { species: '007', level: 40 }, { species: '004', level: 41 }, { species: starter, level: 43, item: 'baie-doree' },
+    { species: '013', level: 28, item: 'plume-vive' }, { species: '008', level: 28, item: 'gouter' }, { species: '010', level: 29, item: 'lunettes-tetues' },
+    { species: '007', level: 28 }, { species: '004', level: 29 }, { species: starter, level: 31, item: 'baie-doree' },
   ], newSeed());
   const out = await fight('trainer', RIVAL, party, {
     trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },

@@ -61,7 +61,7 @@ scripts.boisPerduLost = async () => {
 scripts.libellune = async () => {
   if (away('libellune', true)) return;
   await meet({
-    id: '071', slug: 'libellune', level: 38,
+    id: '071', slug: 'libellune', level: 30,
     intro: [
       L('Une libellule de vitrail boit au petit étang. Ses ailes brillent de toutes les couleurs…', 'A stained-glass dragonfly is drinking at the little pond. Its wings shine with every colour…'),
       L('Elle se retourne vers toi !', 'It turns towards you!'),
@@ -82,7 +82,7 @@ scripts.ratures3Enter = async () => {
 scripts.noctaile = async () => {
   if (away('noctaile')) return;
   await meet({
-    id: '072', slug: 'noctaile', level: 42,
+    id: '072', slug: 'noctaile', level: 34,
     intro: [
       L('Un grand papillon d’ombre ouvre ses ailes. Des spirales roses y tournent… Tu as la tête qui tourne.', 'A great shadow moth opens its wings. Pink spirals turn on them… Your head is spinning.'),
       L('Noctaile fonce sur toi !', 'Nightmoth swoops at you!'),
