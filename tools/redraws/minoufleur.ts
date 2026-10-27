@@ -9,38 +9,40 @@ export default {
   draw(c) {
     const { shape, stroke, dot, spikes, potato, band } = c;
     const PALE = '#cfe6f7', SPOT = '#3e6fd0', PINK = '#ef5f9e', GREEN = '#6cc23a', RED = '#e8302c';
-    // the body behind, to the left, with its spots and a clawed back foot
-    shape([[140, 520], [300, 430], [460, 470], [480, 700], [360, 780], [170, 760], [100, 650]], PALE, { angle: 85, over: 0.5 });
-    for (const [x, y] of [[200, 560], [300, 640], [380, 540], [220, 690]]) shape(potato(x, y, 26, 22, 6, 0.15), SPOT, { over: 0 }, { w: 3.5 });
-    shape(spikes([[160, 760], [190, 830], [260, 840], [280, 770]], 1, -18), PALE, { over: 0 }, {}, false);
+    // the body behind, to the left, joined to the chest, a clawed back foot
+    shape(spikes([[170, 740], [190, 820], [270, 830], [300, 750]], 1, -18), PALE, { over: 0 }, {}, false);
+    shape([[140, 520], [300, 430], [480, 460], [560, 600], [520, 760], [360, 790], [170, 770], [100, 650]], PALE, { angle: 85, over: 0.5 });
+    for (const [x, y] of [[200, 560], [300, 650], [380, 540], [220, 700]]) shape(potato(x, y, 26, 22, 6, 0.15), SPOT, { over: 0 }, { w: 3.5 });
+    // vines coiled like whips, ready to strike
+    shape(band([[470, 560], [340, 610], [220, 580], [140, 480], [150, 380], [215, 350], [255, 400]], 50, 22), GREEN, { angle: 60, press: 1.1 });
+    shape(band([[680, 560], [800, 610], [910, 560], [975, 450], [950, 360], [885, 345], [860, 400]], 50, 22), GREEN, { angle: 120, press: 1.1 });
+    // front legs, clawed, under a solid chest
+    shape([[440, 680], [530, 680], [535, 880], [445, 885]], PALE, { angle: 90 });
+    shape([[610, 680], [700, 680], [705, 880], [615, 885]], PALE, { angle: 90 });
+    for (const x of [450, 480, 510, 620, 650, 680]) stroke([[x, 885], [x + 6, 915]], { w: 4 });
+    shape([[420, 560], [720, 560], [735, 700], [700, 760], [440, 760], [410, 690]], PALE, { angle: 85, over: 0.4 });
+    shape(potato(660, 700, 20, 18, 6, 0.1), SPOT, { over: 0 }, { w: 3 });
     // the big pink bud
-    shape(potato(520, 230, 160, 150, 13, 0.05), PINK, { angle: 80, over: 0.6, press: 1.1 });
-    stroke([[450, 130], [520, 210], [600, 125]], { w: 4.5 });
+    shape(potato(560, 240, 160, 150, 13, 0.05), PINK, { angle: 80, over: 0.6, press: 1.1 });
+    stroke([[490, 140], [560, 220], [640, 135]], { w: 4.5 });
     // jagged leaves raised like jaws, teeth along their inside edge
-    shape(([[450, 340], [380, 220], [260, 130], [120, 70], [30, 60], [90, 140]] as P[]).concat(spikes([[90, 140], [200, 250], [330, 330], [440, 400]], 6, 30)), GREEN, { angle: 30, press: 1.15, over: 0.5 }, {}, false);
-    shape(([[620, 340], [690, 220], [810, 130], [930, 70], [990, 60], [940, 140]] as P[]).concat(spikes([[940, 140], [830, 250], [720, 330], [620, 400]], 6, -30)), GREEN, { angle: 150, press: 1.15, over: 0.5 }, {}, false);
-    // long leafy vines hanging to the ground
-    shape(band([[400, 420], [300, 560], [250, 760], [240, 930]], 46, 38), GREEN, { angle: 90 });
-    shape(band([[700, 420], [820, 560], [850, 760], [860, 930]], 46, 38), GREEN, { angle: 90 });
-    // front legs, clawed
-    shape([[440, 700], [530, 700], [535, 880], [445, 885]], PALE, { angle: 90 });
-    shape([[600, 700], [690, 700], [695, 880], [605, 885]], PALE, { angle: 90 });
-    for (const x of [450, 480, 510, 610, 640, 670]) stroke([[x, 885], [x + 6, 915]], { w: 4 });
-    shape(potato(650, 780, 18, 18, 6, 0.1), SPOT, { over: 0 }, { w: 3 });
-    // the head in front, cat ears, fierce red eyes, a snarl with fangs
-    shape([[420, 350], [450, 250], [500, 340]], PALE, { angle: 70 }, {}, false);
-    shape([[630, 340], [690, 245], [710, 360]], PALE, { angle: 110 }, {}, false);
-    shape(potato(570, 500, 170, 150, 13, 0.04), PALE, { angle: 80, over: 0.5 });
-    shape(potato(620, 395, 22, 16, 7, 0.1), SPOT, { over: 0 }, { w: 3 });
-    shape([[450, 455], [540, 470], [520, 510], [465, 500]], RED, { over: 0, press: 1.2 }, { w: 4 }, false);
-    shape([[610, 470], [700, 452], [690, 500], [630, 510]], RED, { over: 0, press: 1.2 }, { w: 4 }, false);
-    dot(500, 482, 9, 10);
-    dot(650, 482, 9, 10);
-    stroke([[430, 425], [550, 462]], { w: 7 });
-    stroke([[600, 462], [720, 422]], { w: 7 });
-    shape([[480, 560], [660, 560], [630, 615], [570, 630], [510, 615]], '#7a2430', { over: 0 }, { w: 4.5 });
-    c.paper([[495, 560], [515, 600], [532, 560]], {}, false);
-    c.paper([[610, 560], [627, 600], [645, 560]], {}, false);
-    dot(570, 540, 8, 6);
+    shape(([[470, 350], [400, 230], [280, 140], [140, 80], [50, 70], [110, 150]] as P[]).concat(spikes([[110, 150], [220, 260], [350, 340], [460, 410]], 6, 30)), GREEN, { angle: 30, press: 1.15, over: 0.5 }, {}, false);
+    shape(([[650, 350], [720, 230], [840, 140], [960, 80], [1000, 75], [960, 150]] as P[]).concat(spikes([[960, 150], [850, 260], [740, 340], [650, 410]], 6, -30)), GREEN, { angle: 150, press: 1.15, over: 0.5 }, {}, false);
+    // cat ears, their base hidden in the head
+    shape([[445, 440], [450, 265], [560, 380]], PALE, { angle: 70 }, {}, false);
+    shape([[600, 380], [705, 260], [715, 440]], PALE, { angle: 110 }, {}, false);
+    // the head in front: fierce red eyes under frowning brows, a shut mouth with two fangs
+    shape(potato(580, 500, 170, 150, 13, 0.04), PALE, { angle: 80, over: 0.5 });
+    shape(potato(630, 395, 22, 16, 7, 0.1), SPOT, { over: 0 }, { w: 3 });
+    shape([[460, 455], [550, 470], [530, 510], [475, 500]], RED, { over: 0, press: 1.2 }, { w: 4 }, false);
+    shape([[620, 470], [710, 452], [700, 500], [640, 510]], RED, { over: 0, press: 1.2 }, { w: 4 }, false);
+    dot(510, 482, 9, 10);
+    dot(660, 482, 9, 10);
+    stroke([[440, 425], [560, 462]], { w: 7 });
+    stroke([[610, 462], [730, 422]], { w: 7 });
+    dot(585, 540, 8, 6);
+    c.paper([[512, 588], [528, 628], [544, 590]], {}, false);
+    c.paper([[622, 590], [638, 630], [654, 588]], {}, false);
+    stroke([[480, 575], [535, 592], [585, 582], [635, 592], [690, 572]], { w: 5.5 });
   },
 } satisfies Redraw;
