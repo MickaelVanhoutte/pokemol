@@ -1,0 +1,40 @@
+/* The last page of the sketchbook, awake (DrawingScreen) */
+.drawing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fbf6ea;
+  cursor: pointer;
+}
+.drawing__page {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+.drawing__caption {
+  font-family: var(--pixel);
+  margin: 0;
+  padding: 0.9rem 1.2rem 0.4rem;
+  min-height: 4.6em;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  text-align: center;
+  color: #3f3b46;
+}
+.drawing__next {
+  font-family: var(--pixel);
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #7a7488;
+  animation: drawing-blink 1.4s ease-in-out infinite;
+}
+@keyframes drawing-blink {
+  50% { opacity: 0.35; }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .drawing { flex-direction: row; }
+  .drawing__caption { align-self: center; max-width: 38%; }
+  .drawing__next { position: absolute; bottom: 0.5rem; right: 1rem; margin: 0; }
+}

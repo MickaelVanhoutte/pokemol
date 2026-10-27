@@ -85,7 +85,11 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     // after the ending, the next page opens at the top of the sheet
     patches: [{ id: 'galerieWay', x: 7, y: 0, rows: ['ee'], unless: 'ending' }],
     triggers: [{ x: 1, y: 6, w: 13, h: 1, script: 'finalBoss', unless: 'tr:effaceur' }],
-    npcs: [{ id: 'effaceur', x: 7, y: 3, look: LOOKS.effaceur, facing: 'down', script: 'finalBoss', hideIf: 'tr:effaceur' }],
+    npcs: [
+      { id: 'effaceur', x: 7, y: 3, look: LOOKS.effaceur, facing: 'down', script: 'finalBoss', hideIf: 'tr:effaceur' },
+      // saves that finished the story before Coconfus existed replay the new ending here (src/story/finale.ts)
+      { id: 'coconBord', x: 8, y: 4, look: LOOKS.kid, mon: '073', facing: 'down', script: 'coconBord', showIf: 'ending', hideIf: 'fin' },
+    ],
     items: [{ x: 13, y: 11, item: 'page-12', hidden: true }],
   },
 

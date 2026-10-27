@@ -319,6 +319,14 @@ function head(c: Crayon, a: Appearance, view: View) {
       c.dot(x - 1.8, 87.5, 1.8, 2.2, '#ffffff');
     }
   }
+  if (a.face === 'sad') {
+    // worried brows, a small wobbly frown, a grey smudge on the cheek
+    c.line([[70, 81], [90, 76]], false, { w: 2.4 });
+    c.line([[130, 81], [110, 76]], false, { w: 2.4 });
+    c.line([[90, 111], [96, 107], [104, 107], [110, 111]], false, { w: 1.6 });
+    c.colour(ellipse(132, 104, 9, 5, 10), '#b8b4c4', { over: 0, paper: false, press: 0.6 });
+    return;
+  }
   if (a.face === 'mean') {
     // frowning brows and a smirk
     c.line([[70, 77], [91, 85]], false, { w: 2.8 });

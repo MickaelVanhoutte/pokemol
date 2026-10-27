@@ -28,8 +28,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(1, 'leaderAqua', {
     id: 'gcMarine', name: L('Grande Maîtresse Marine', 'Grand Master Marine'),
     party: [
-      { species: '005', level: 45 }, { species: '006', level: 45, item: 'clochette' }, { species: '060', level: 46 },
-      { species: '017', level: 46, item: 'crayon-bleu' }, { species: '003', level: 47, item: 'baie-doree' },
+      { species: '005', level: 53 }, { species: '006', level: 53, item: 'clochette' }, { species: '060', level: 54 },
+      { species: '017', level: 54, item: 'crayon-bleu' }, { species: '003', level: 55, item: 'baie-doree' },
     ],
     before: [
       L('Bienvenue au Grand Concours ! Ici, quatre Grandes Maîtresses et un dernier artiste t’attendent, l’un après l’autre.', 'Welcome to the Grand Contest! Four Grand Masters and one last artist are waiting for you, one after the other.'),
@@ -40,8 +40,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(2, 'leaderBraise', {
     id: 'gcAmbre', name: L('Grande Maîtresse Ambre', 'Grand Master Amber'),
     party: [
-      { species: '061', level: 44 }, { species: '004', level: 45 }, { species: '008', level: 46 },
-      { species: '018', level: 45, item: 'plume-vive' }, { species: '002', level: 48, item: 'bille-ardente' },
+      { species: '061', level: 52 }, { species: '004', level: 53 }, { species: '008', level: 54 },
+      { species: '018', level: 53, item: 'plume-vive' }, { species: '002', level: 56, item: 'bille-ardente' },
     ],
     before: [L('Tu as éteint l’aquarelle de Marine ? Voyons si tu tiens la chaleur de mon crayon rouge !', 'You put out Marine’s watercolours? Let’s see if you can take the heat of my red crayon!')],
     after: [L('Mes braises sont froides… Bravo !', 'My embers have gone cold… Well done!')],
@@ -49,8 +49,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(3, 'leaderPaillette', {
     id: 'gcCelestine', name: L('Grande Maîtresse Célestine', 'Grand Master Celestine'),
     party: [
-      { species: '005', level: 46, item: 'baie-reveil' }, { species: '007', level: 46 }, { species: '053', level: 44 },
-      { species: '006', level: 47 }, { species: '014', level: 48, item: 'baie-doree' },
+      { species: '005', level: 54, item: 'baie-reveil' }, { species: '007', level: 54 }, { species: '053', level: 52 },
+      { species: '006', level: 55 }, { species: '014', level: 56, item: 'baie-doree' },
     ],
     before: [L('Les paillettes brillent même au fond d’une trousse. Montre-moi les tiennes !', 'Glitter shines even at the bottom of a pencil case. Show me yours!')],
     after: [L('Éblouissant ! Il ne reste plus que Nocturne… et lui.', 'Dazzling! Only Nocturne is left… and him.')],
@@ -58,8 +58,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(4, 'leaderEncre', {
     id: 'gcNocturne', name: L('Grande Maîtresse Nocturne', 'Grand Master Nocturne'),
     party: [
-      { species: '055', level: 45 }, { species: '010', level: 45 }, { species: '008', level: 45, item: 'baie-menthe' },
-      { species: '007', level: 45, item: 'echarpe-tetue' }, { species: '011', level: 49, item: 'baie-doree' },
+      { species: '055', level: 53 }, { species: '010', level: 53 }, { species: '008', level: 53, item: 'baie-menthe' },
+      { species: '007', level: 53, item: 'echarpe-tetue' }, { species: '011', level: 57, item: 'baie-doree' },
     ],
     before: [L('L’encre de minuit efface les hésitations. Tu es là pour la dernière page ? Il faudra passer par moi.', 'Midnight ink washes away doubts. Here for the last page? You’ll have to get past me.')],
     after: [L('Ton trait est sûr. Va. Il t’attend depuis le début.', 'Your line is steady. Go. He has been waiting for you from the start.')],
@@ -67,8 +67,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(5, 'prof', {
     id: 'gcFusain', name: L('Prof. Fusain', 'Prof. Charcoal'), money: 20000,
     party: [
-      { species: '008', level: 44 }, { species: '014', level: 44 }, { species: '007', level: 44 },
-      { species: '024', level: 44 }, { species: '023', level: 44 }, { species: '025', level: 45 },
+      { species: '008', level: 51 }, { species: '014', level: 51 }, { species: '007', level: 51 },
+      { species: '024', level: 51 }, { species: '023', level: 51 }, { species: '025', level: 52 },
     ],
     before: [
       L('Te voilà, {name}. Clic-clac : je voulais une photo de toi ici, au sommet du Concours.', 'Here you are, {name}. Click-clack: I wanted a picture of you here, at the top of the Contest.'),

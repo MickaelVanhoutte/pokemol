@@ -8,14 +8,13 @@ import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
 import { sfx } from '../audio/sfx';
 import {
-  mapMusic, ask, bubble, fight, flag, flash, getGame, openScreen, say, sayAll, scripts, setFlag, shake, showToast,
+  mapMusic, ask, bubble, fight, flag, flash, getGame, say, sayAll, scripts, setFlag, shake, showToast,
   trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
 import { choose, comeUp, findCoconfus, RETOUCHE } from './choices';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
-const PAPA = L('Papa', 'Daddy');
 const GRUNT = L('Sbire Gomme', 'Eraser Grunt');
 
 // ------------------------------------------------------------------ Pencil Balloon (fast travel)
@@ -317,7 +316,11 @@ scripts.rivalFinal = async () => {
   }
   await sayAll([
     L('{name}… Je savais que tu viendrais jusqu’ici.', '{name}… I knew you’d make it here.'),
-    L('Avant d’affronter le Grand Effaceur, montre-moi tout ce que tu as appris. Sans retenue !', 'Before you face the Great Eraser, show me everything you’ve learned. Hold nothing back!'),
+    flag('choix:rival:a')
+      ? L('Je me suis entraîné tous les jours depuis la Tour, comme tu me l’as dit. Montre-moi si ça a servi !', 'I’ve trained every day since the Tower, like you told me. Show me if it paid off!')
+      : flag('choix:rival:b')
+        ? L('Tu m’as dit que j’étais génial comme j’étais. Alors ce combat, je le fais juste pour le plaisir. Sans retenue !', 'You told me I was great just as I am. So this battle is just for fun. Hold nothing back!')
+        : L('Avant d’affronter le Grand Effaceur, montre-moi tout ce que tu as appris. Sans retenue !', 'Before you face the Great Eraser, show me everything you’ve learned. Hold nothing back!'),
   ], RIVAL);
   const party = partyOf(rivalFinalTeam(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0')), newSeed());
   const out = await fight('trainer', RIVAL, party, {
@@ -327,100 +330,14 @@ scripts.rivalFinal = async () => {
   if (out.result !== 'win') return;
   setFlag('tr:rivalFinal');
   await sayAll([
+    flag('choix:rival:a')
+      ? L('Perdu… mais de pas grand-chose ! La prochaine fois, je m’entraînerai encore plus.', 'Beaten… but only just! Next time I’ll train even harder.')
+      : L('Perdu ! Et pourtant, je me sens bien. C’est bizarre, hein ?', 'Beaten! And yet I feel fine. Weird, huh?'),
     L('Tu sais quoi ? Moi, je crois en tes dessins. Depuis toujours.', 'You know what? I believe in your drawings. I always have.'),
     L('Laisse-moi soigner ton équipe. Et va lui montrer de quoi sont faits tes gribouillis !', 'Let me heal your team. And go show him what your scribbles are made of!'),
   ], RIVAL);
   update((d) => healParty(d));
   showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
-};
-
-// ------------------------------------------------------------------ the Great Eraser
-
-scripts.finalBoss = async () => {
-  const g = getGame();
-  const boss = g.npc('effaceur');
-  if (boss) g.faceToward(boss, g.player);
-  await sayAll([
-    L('Te voilà. Regarde autour de toi : ici, plus rien n’est dessiné. C’est calme. C’est propre.', 'Here you are. Look around: nothing is drawn here anymore. It’s calm. It’s clean.'),
-    L('Je suis la petite voix qui chuchote quand tu dessines : « c’est raté », « c’est moche », « ça dépasse ».', 'I am the little voice that whispers while you draw: “it’s wrong”, “it’s ugly”, “it goes over the lines”.'),
-    L('Laisse-moi tout effacer. Une page blanche ne se trompe jamais.', 'Let me rub it all out. A blank page is never wrong.'),
-  ], EFFACEUR);
-  for (;;) {
-    const c = await ask(L('Alors ? Tu me laisses effacer tes dessins ?', 'So? Will you let me rub out your drawings?'), [
-      L('Mes dessins sont beaux parce que ce sont les miens !', 'My drawings are beautiful because they’re mine!'),
-      L('…', '…'),
-    ], EFFACEUR);
-    if (c === 0) break;
-    await say(L('Tu vois ? Même toi, tu n’y crois pas…', 'You see? Even you don’t believe it…'), EFFACEUR);
-  }
-  await shake(600);
-  await say(L('Alors prouve-le !', 'Then prove it!'), EFFACEUR);
-  await trainerBattle('effaceur', boss);
-  if (!flag('tr:effaceur')) return;
-  await sayAll([
-    L('Tant de couleurs… Je ne pensais pas qu’un gribouillis pouvait briller autant.', 'So many colours… I never thought a scribble could shine so bright.'),
-    L('Continue de dessiner… même quand ça dépasse.', 'Keep drawing… even when it goes over the lines.'),
-  ], EFFACEUR);
-  await flash('white', 300);
-  if (boss) g.remove(boss.id);
-  await wakeUp();
-};
-
-/** The page turns white and you wake up at home. */
-async function wakeUp() {
-  await say(L('La page se met à trembler… Tout devient blanc, de plus en plus blanc…', 'The page starts to tremble… Everything turns white, whiter and whiter…'));
-  await getGame().fadeTo(1, 1200, 'white');
-  if (save.value) save.value.player.returnTo = undefined;
-  await warpTo({ map: 'chambre', x: 2, y: 3, facing: 'right' }, { keepFade: true });
-}
-
-/** The Great Eraser is beaten but the app closed before the ending: it starts again from here. */
-scripts.bordPage = async () => {
-  if (flag('tr:effaceur') && !flag('ending')) await wakeUp();
-};
-
-// ------------------------------------------------------------------ waking up
-
-scripts.ending = async () => {
-  // the app closed during the credits: the ending already counted, go home
-  if (flag('ending')) return backHome();
-  const g = getGame();
-  await wait(500);
-  await say(L('… {name} ? Ma puce ?', '… {name}? Sweetie?'), PAPA);
-  await g.fadeTo(0, 1600, 'white');
-  await bubble('player', '?', 800);
-  await sayAll([
-    L('Tu t’es {g:endormie|endormi} sur ton cahier de dessin. Tu as encore les crayons dans la main !', 'You fell asleep on your sketchbook. You’ve still got the pencils in your hand!'),
-    L('Je viens de prendre tes nouveaux dessins en photo, comme toujours. Comme ça, ils ne se perdront jamais.', 'I just took pictures of your new drawings, like always. That way, they’ll never get lost.'),
-  ], PAPA);
-  await say(L('(Papa a les mêmes cheveux gris que le Prof. Fusain. Et le même appareil photo…)', '(Daddy has the same grey hair as Prof. Charcoal. And the same camera…)'));
-  await sayAll([
-    L('Tu sais, la petite voix qui dit que tes dessins sont moches… elle se trompe.', 'You know, that little voice that says your drawings are ugly… it’s wrong.'),
-    L('Ils sont beaux parce que ce sont les tiens.', 'They’re beautiful because they’re yours.'),
-    L('Tu me dessines une nouvelle Bestiole demain ?', 'Will you draw me a new Critter tomorrow?'),
-  ], PAPA);
-  setFlag('ending');
-  await openScreen({ id: 'credits', fromWorld: true });
-  await g.fadeTo(1, 600, 'white');
-  await backHome();
-};
-
-/** After the credits: back to Papeterre, at home. */
-async function backHome() {
-  update((d) => {
-    healParty(d);
-    d.respawn = { map: 'maison', x: 4, y: 5 };
-  });
-  await warpTo({ map: 'maison', x: 6, y: 4, facing: 'down' });
-  await say(L('La nuit suivante, tu retournes à Papeterre… Les Bestioles t’attendaient !', 'The next night, you go back to Papeterra… The Critters were waiting for you!'));
-}
-
-scripts.papa = async () => {
-  await say(L('Allez, au lit. Demain, il y a plein de dessins à faire !', 'Come on, bedtime. Tomorrow there are lots of drawings to do!'), PAPA);
-};
-
-scripts.desk = async () => {
-  await say(L('Tes dessins sont étalés sur le bureau : une chenille, un oiseau, un fantôme qui rigole… Ils ont l’air de te sourire.', 'Your drawings are spread over the desk: a caterpillar, a bird, a laughing ghost… They seem to smile at you.'));
 };
 
 // ------------------------------------------------------------------ after the ending

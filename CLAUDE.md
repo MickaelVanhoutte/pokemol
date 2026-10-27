@@ -123,8 +123,9 @@ re-renders everything.
 
 **Story** (`src/story`): async functions registered as `scripts.<id>`. `world.ts` holds the town trades
 (`TRADES`) and the side quests (`quest:*` flags). `choices.ts` holds the story's choices (`choose`,
-`endingOf`: the two endings) and Coconfus's helpers; `coconfus.ts` wraps other scripts, so it is
-imported last. Maps reference script ids from:
+`endingOf`: the two endings) and Coconfus's helpers; `act4.ts` is beyond the margin; `finale.ts` is the
+Great Eraser (with the player's face, `doubtLook`), waking up, the `drawing` screen (`DrawingScreen`) and the
+evolution; `coconfus.ts` wraps other scripts, so it is imported last. Maps reference script ids from:
 - NPCs (`script`), triggers, `interact` spots;
 - building doors (`script`), `onEnter`;
 - a trainer's `afterScript`.

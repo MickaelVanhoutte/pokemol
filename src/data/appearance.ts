@@ -17,8 +17,8 @@ export interface Appearance {
   extra: Extra;
   /** Colour of the cap, beanie or bow (the top's colour when unset). */
   extraColor?: string;
-  /** Story characters only: a frown and a smirk, or a face rubbed out (the Great Eraser). */
-  face?: 'mean' | 'blank';
+  /** Story characters only: a frown and a smirk, a face rubbed out (the Great Eraser), or worried (him, unmasked). */
+  face?: 'mean' | 'blank' | 'sad';
   /** Team Gomme grunts hide behind a dark mask. */
   mask?: boolean;
   /** Admins and the boss wear a cape with a high collar. */
@@ -79,9 +79,12 @@ export interface LookLike {
   style?: HairStyle; skirt?: boolean;
   /** Team Gomme: masked grunts, caped admins, the boss with no face. */
   gang?: 'grunt' | 'admin' | 'boss'; cape?: string;
+  /** Drawn exactly like this instead (the Great Eraser once his face comes back). */
+  appearance?: Appearance;
 }
 
 export function fromLook(l: LookLike): Appearance {
+  if (l.appearance) return l.appearance;
   if (l.gang) {
     return {
       hair: l.longHair ? 'long' : 'court', hairColor: l.hair, skin: l.skin ?? '#f6c9a0',
@@ -130,3 +133,23 @@ export function randomLook(r: () => number = Math.random): Appearance {
 
 /** A stable key for caches. */
 export const lookKey = (a: Appearance) => [a.hair, a.hairColor, a.skin, a.top, a.topColor, a.bottom, a.bottomColor, a.extra, a.extraColor ?? '', a.face ?? '', a.mask ? 1 : 0, a.cape ?? ''].join('|');
+
+/** A colour washed towards grey (the doubting self's hair and skin). */
+function greyed(hex: string, k: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const r = n >> 16, g = (n >> 8) & 255, b = n & 255, y = 0.3 * r + 0.59 * g + 0.11 * b;
+  const c = (v: number) => Math.round(v + (y - v) * k).toString(16).padStart(2, '0');
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+
+/**
+ * The Great Eraser once his face comes back (src/story/finale.ts): the player's own look, greyed, in the boss's
+ * uniform and cape, with a worried face. The doubt was the player all along.
+ */
+export function doubtLook(a: Appearance): Appearance {
+  return {
+    ...a, hairColor: greyed(a.hairColor, 0.7), skin: greyed(a.skin, 0.45),
+    top: 'uniforme', topColor: '#5a5670', bottom: 'pantalon', bottomColor: '#2e2a3c',
+    extra: 'gomme', extraColor: '#f27fa0', face: 'sad', mask: false, cape: '#3a3448',
+  };
+}

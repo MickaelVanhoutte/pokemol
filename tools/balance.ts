@@ -10,7 +10,7 @@
  * Team make-up changes the numbers a lot, so compare runs before and after a change rather than
  * chasing exact values. Targets on Normal: Act 1 route trainers mostly won by the starter alone,
  * leaders roughly 40–90% with a team, the last fights of the game harder. The Grand Concours rows
- * (post-game) use a level 50 team: each Grand Maître mostly won, the champion around 60–80%.
+ * (post-game) use a level 58 team: each Grand Maître mostly won, the champion around 60–80%.
  */
 import { act, createBattle, type Action, type BattleState } from '../src/engine/pk/battle.ts';
 import { aiChoose } from '../src/engine/pk/ai.ts';
@@ -119,8 +119,8 @@ const STEPS: [string, Team][] = [
   ['blanche3', teamAt('blanche3', 6)],
   ['rivalFinal', teamAt('rivalFinal', 6)],
   ['effaceur', teamAt('effaceur', 6)],
-  // post-game: the Grand Concours, each fight alone with a level 50 team
-  ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(50, 6, 0)]),
+  // post-game: the Grand Concours, each fight alone with a level 58 team
+  ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(58, 6, 0)]),
 ];
 const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer.id === id)!.trainer;
 /** The foe's team against this starter: the final rival picks the starter that beats yours. */

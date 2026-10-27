@@ -24,10 +24,15 @@ where every drawing is alive.
 - **Clues along the way**: the Prof's camera and catch-phrase, a slip where he says "ma puce", a
   notebook-line sky and map margins, and NPCs mentioning crayons. There are also 12 torn sketchbook
   pages (key items `page-1`…`page-12`, texts in `src/data/pages.ts`), each a memory of the real world.
-- **Ending**: the player answers the Great Eraser "Mes dessins sont beaux parce que ce sont les
-  miens !", beats him, and the page turns white. The player wakes up in the real bedroom (`chambre`):
-  Papa took photos of the new drawings "comme ça, ils ne se perdront jamais". Credits follow, then
-  "the next night" the player goes back to the dream for the post-game.
+- **Ending** (iteration 16, `src/story/finale.ts`, see "The two endings"): at the Edge of the Page the
+  Great Eraser's face comes back, and it is the player's own (`doubtLook`: their look, greyed, in his
+  uniform, a worried face): « Je suis toi. Le toi qui doute. » He wants to rub out Coconfus, last night's
+  unfinished butterfly. The last answer, the battle (his battle intro shows that face), then the page turns
+  white and the player wakes up in the real bedroom (`chambre`). Papa took photos of the new drawings, then
+  notices the butterfly on the last page: the drawing screen (`DrawingScreen`, screen `drawing`) shows it
+  rubbed out and drawn again as Libellune, or growing into Noctaile from its smudges. Credits follow, then
+  "the next night" the player goes back to the dream, where Coconfus evolves into that drawing (party, PC or
+  daycare) and stops being pale.
 
 ## The two endings
 
@@ -56,7 +61,19 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 | 6 | `encre` | Atelier Encre, Nocturne after the badge (`encreChoice`): the ink blot on her fresco | rub it out, paint it again (`V` stars) | turn it into a moon (`N`) |
 | 7 | `hameau` | Hameau-Brouillon, the Elder of Sketches (`hameauChoice`): « tu veux bien nous finir ? » | colour the hamlet in (patch `hameauColour`, buildings coloured) | « vous êtes beaux comme ça, pas finis » (it stays sketched) |
 
-Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was.
+| final | `final` (counts double) | Edge of the Page, the Great Eraser with the player's face (`finalBoss`) | « on ne l’efface pas : on le redessine ! » | « il n’est pas parfait, c’est pour ça qu’il est à moi » |
+
+Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was. The rival's
+lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`); his team
+does not change. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
+
+**What the doubt becomes.** After the battle the Great Eraser listens: « je serai ta gomme… pour recommencer »
+(ending 1) or « je serai ton ombre, elle fait partie du dessin » (ending 2), and Papa's words on the last page
+follow the ending too.
+
+**Saves that saw the old ending** (`ending` set, no `fin`): a pale Coconfus waits at the Edge of the Page
+(`coconBord`). Talking to it gives Coconfus if needed, then plays the face reveal, the last answer, a blink of
+waking up with the last page and its drawing, and the evolution, without the battle.
 
 **Coconfus in Acts 2 and 3.** Admin Rature and Admin Blanche say their boss wants « ce cocon raté ». At the end
 of the Eraser Factory (`usineEnd` → `paleCocoon`), the Great Eraser recognises « le dessin raté d’hier soir »
@@ -207,13 +224,14 @@ checks every step's flags are set somewhere and its target is on the map.
 - the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);
 - Atelier Masters offer rematches at +12 levels;
 - Mom has new lines;
+- the dream legendary Coconfus did not become waits in its lair at L55 (`src/story/legends.ts`);
 - a path opens at the top of the Edge of the Page (`bordPage` patch) to **Masterpiece Square**
   (`galerie`, `src/data/maps/galerie.ts`, a balloon stop once visited), with an Inn and a shop.
 
 **Grand Concours** (`concours` hall, scripts in `src/story/postgame.ts`, teams in
 `src/data/postgame.ts` `CONCOURS`): the door script (`concoursDoor`) clears `gc:1`…`gc:4` and warps
-in. Four Grandes Maîtresses (Marine, Ambre, Célestine, Nocturne at L45–48) stand in doorways and step
-aside once beaten (`gc:<n>`, NPC `hideIf`), then Prof. Fusain (6 Bestioles, L47–50). No healing in
+in. Four Grandes Maîtresses (Marine, Ambre, Célestine, Nocturne) stand in doorways and step
+aside once beaten (`gc:<n>`, NPC `hideIf`), then Prof. Fusain (6 Bestioles). No healing in
 between, the bag is allowed; a loss is a normal blackout and the next attempt starts over. Winning
 sets `champion`, appends a `save.hallOfFame` entry (`hallEntry`: species, nickname, level, sparkle)
 and shows the Hall of Fame (`HallView`, screen `hall`); the Hall Keeper on the square shows it again.

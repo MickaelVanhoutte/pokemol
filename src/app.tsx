@@ -18,6 +18,7 @@ import { HallScreen } from './ui/screens/HallScreen';
 import { JukeboxScreen } from './ui/screens/JukeboxScreen';
 import { FresqueScreen } from './ui/screens/FresqueScreen';
 import { MemoScreen } from './ui/screens/MemoScreen';
+import { DrawingScreen } from './ui/screens/DrawingScreen';
 
 export function App() {
   // reading locale.value re-renders everything when the language changes
@@ -36,6 +37,7 @@ export function App() {
       {s.id === 'shop' && <ShopScreen tower={s.tower} />}
       {s.id === 'machine' && <MachineScreen />}
       {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
+      {s.id === 'drawing' && <DrawingScreen ending={s.ending} />}
       {s.id === 'trainercard' && <TrainerCardScreen />}
       {s.id === 'townmap' && <TownMapScreen />}
       {s.id === 'hall' && <HallScreen fresh={s.fresh} />}

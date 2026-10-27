@@ -21,7 +21,9 @@ export type Screen =
   | { id: 'fresque'; species: string; size: number; onEnd: (solved: boolean) => void }
   /** Memory card game; `onEnd` gets the number of tries, or null when given up. */
   | { id: 'memo'; onEnd: (tries: number | null) => void }
-  | { id: 'credits'; fromWorld?: boolean };
+  | { id: 'credits'; fromWorld?: boolean }
+  /** The ending's drawing on the last page of the sketchbook (1: Libellune, 2: Noctaile). */
+  | { id: 'drawing'; ending: 1 | 2 };
 
 export const screen = signal<Screen>({ id: 'title' });
 

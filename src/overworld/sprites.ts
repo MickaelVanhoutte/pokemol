@@ -22,6 +22,8 @@ export interface Look {
   gang?: 'grunt' | 'admin' | 'boss';
   /** Admins' and the boss's cape (drawn characters only). */
   cape?: string;
+  /** Drawn characters only: this exact drawing (the Great Eraser with the player's face). */
+  appearance?: Appearance;
 }
 
 const DOWN = [
