@@ -184,7 +184,7 @@ function hairFront(c: Crayon, a: Appearance, view: View) {
     // from behind the hair covers the head down to the nape (longer styles go further)
     const nape = a.hair === 'carre' ? 120 : a.hair === 'long' ? 176 : a.hair === 'boucles' ? 112 : 106;
     if (a.hair === 'boucles') c.shape(bumpy(100, 74, 62, 11, 7), col, { angle: 60 });
-    else if (a.hair === 'pique') c.shape([...spiky([[47, 92], [45, 62], [60, 36], [100, 26], [140, 36], [155, 62], [153, 92]], -13), [140, nape - 4], [100, nape + 4], [60, nape - 4]], col, { angle: 70, round: false });
+    else if (a.hair === 'pique') c.shape([...spiky([[47, 92], [45, 62], [60, 36], [100, 26], [140, 36], [155, 62], [153, 92]], 17), [140, nape - 4], [100, nape + 4], [60, nape - 4]], col, { angle: 70, round: false });
     else if (a.hair === 'long') c.shape([[46, 96], [44, 62], [60, 36], [100, 26], [140, 36], [156, 62], [154, 96], [150, 140], [146, nape], [100, nape + 6], [54, nape], [50, 140]], col, { angle: 80 });
     else c.shape([[47, 92], [45, 62], [60, 36], [100, 26], [140, 36], [155, 62], [153, 92], [140, nape - 4], [100, nape + 4], [60, nape - 4]], col, { angle: 70 });
     if (a.hair === 'queue') {
@@ -210,7 +210,8 @@ function hairFront(c: Crayon, a: Appearance, view: View) {
     boucles: [[150, 96], [146, 66], [134, 70], [122, 60], [110, 70], [100, 60], [90, 70], [78, 60], [66, 70], [54, 66], [50, 96]],
     chignon: [[146, 84], [146, 62], [124, 54], [100, 58], [76, 54], [54, 62], [54, 84]],
   };
-  if (a.hair === 'pique') c.shape([...spiky(top, -13), ...fringes.pique], col, { angle: 60, round: false });
+  // the spikes stand out from the cap, so its valleys stay over the head (no skull between them)
+  if (a.hair === 'pique') c.shape([...spiky(top, 18), ...fringes.pique], col, { angle: 60, round: false });
   else if (a.hair === 'boucles') c.shape([...bumpy(100, 74, 60, 9, 7, Math.PI * 0.95, Math.PI * 2.05), ...fringes.boucles], col, { angle: 60 });
   else c.shape([...top, ...fringes[a.hair]], col, { angle: 70 });
   // a few strands
