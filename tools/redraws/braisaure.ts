@@ -7,9 +7,11 @@ export default {
     const { shape, stroke, dot, band, spikes } = c;
     const ORANGE = '#f28a2e', CREAM = '#fbe2a6', RED = '#ea3f22', YELLOW = '#f8d23c', BLUE = '#3f74d8';
     // the tail sweeping back and up, a big flame on it
-    shape(band([[560, 700], [700, 760], [820, 720], [880, 610]], 80, 40), ORANGE, { angle: 30 });
-    shape([[850, 640], [820, 520], [860, 420], [880, 300], [930, 400], [970, 340], [975, 470], [940, 600]], RED, { angle: 95, press: 1.15 }, {}, false);
-    shape([[870, 610], [865, 520], [895, 450], [915, 530], [935, 480], [925, 590]], YELLOW, { angle: 95, over: 0 }, { w: 3.5 }, false);
+    c.part('queue', { pivot: [565, 700], motion: 'swing', amp: 5, period: 2.2, behind: true }, () => {
+      shape(band([[560, 700], [700, 760], [820, 720], [880, 610]], 80, 40), ORANGE, { angle: 30 });
+      shape([[850, 640], [820, 520], [860, 420], [880, 300], [930, 400], [970, 340], [975, 470], [940, 600]], RED, { angle: 95, press: 1.15 }, {}, false);
+      shape([[870, 610], [865, 520], [895, 450], [915, 530], [935, 480], [925, 590]], YELLOW, { angle: 95, over: 0 }, { w: 3.5 }, false);
+    });
     // legs, one striding forward, claws
     shape(band([[480, 720], [430, 830], [380, 920]], 92, 70), ORANGE, { angle: 70 });
     shape(band([[600, 720], [640, 830], [680, 920]], 92, 70), ORANGE, { angle: 100 });

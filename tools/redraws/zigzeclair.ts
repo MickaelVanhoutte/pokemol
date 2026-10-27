@@ -12,8 +12,10 @@ export default {
     const bolt = (x: number, y: number, s: number): P[] =>
       [[x, y], [x + 16 * s, y - 42 * s], [x + 4 * s, y - 40 * s], [x + 26 * s, y - 86 * s], [x - 8 * s, y - 30 * s], [x + 6 * s, y - 32 * s]];
     // the long black tail behind, raised in an arc, a big lightning bolt at its tip
-    shape(band([[640, 830], [780, 820], [880, 740], [930, 620], [915, 500], [940, 400]], 36, 24), BLACK, { angle: 60 });
-    shape([[905, 420], [960, 300], [925, 292], [1010, 160], [1075, 70], [1040, 210], [1080, 222], [985, 400]], YEL, { angle: 40, press: 1.1 }, {}, false);
+    c.part('queue', { pivot: [640, 830], motion: 'swing', amp: 5, period: 1.4, behind: true }, () => {
+      shape(band([[640, 830], [780, 820], [880, 740], [930, 620], [915, 500], [940, 400]], 36, 24), BLACK, { angle: 60 });
+      shape([[905, 420], [960, 300], [925, 292], [1010, 160], [1075, 70], [1040, 210], [1080, 222], [985, 400]], YEL, { angle: 40, press: 1.1 }, {}, false);
+    });
     // the far ear, curling out at the tip, and the far arm raised behind
     shape([[300, 330], [235, 180], [205, 85], [250, 70], [320, 150], [400, 290]], ORANGE, { angle: 70 }, {}, false);
     shape([[300, 300], [250, 170], [240, 110], [300, 190], [350, 290]], BROWN, { over: 0 }, { w: 3.5 }, false);
@@ -28,7 +30,9 @@ export default {
     // the near arm up, sparks round its paw
     shape(band([[650, 650], [760, 570], [810, 470]], 64, 56), ORANGE, { angle: 120 });
     shape(potato(820, 450, 38, 34, 8, 0.08), BROWN, { over: 0 });
-    for (const [x, y, s] of [[760, 420, 0.9], [860, 380, 0.8], [880, 500, 0.7], [190, 400, 0.8], [270, 380, 0.7]] as const) shape(bolt(x, y, s), YEL, { over: 0 }, { w: 3.5 }, false);
+    c.part('etincelles', { pivot: [500, 400], motion: 'flicker', period: 1.8 }, () => {
+      for (const [x, y, s] of [[760, 420, 0.9], [860, 380, 0.8], [880, 500, 0.7], [190, 400, 0.8], [270, 380, 0.7]] as const) shape(bolt(x, y, s), YEL, { over: 0 }, { w: 3.5 }, false);
+    });
     // the near ear, long, brown inside, curling out at the tip
     shape([[470, 300], [600, 140], [690, 55], [715, 110], [630, 260], [580, 340]], ORANGE, { angle: 110 }, {}, false);
     shape([[525, 280], [625, 150], [675, 105], [615, 245], [570, 310]], BROWN, { over: 0 }, { w: 3.5 }, false);

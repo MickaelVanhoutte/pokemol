@@ -35,5 +35,12 @@ export default {
     // singing: a small round open mouth, near the front edge, toward the microphone
     shape(potato(330, 640, 38, 34, 9, 0.05), '#b52a3c', { angle: 0, over: 0 }, { w: 4.5 });
     shape(potato(334, 653, 20, 12, 7, 0.05), '#f39ab0', { over: 0 }, { w: 0.1 });
+    // only in battle: music notes floating up as it sings (drawn last, the card stays the same)
+    c.part('notes', { pivot: [200, 300], motion: 'flicker', period: 2.2, extra: true }, () => {
+      for (const [x, y, s] of [[120, 330, 1], [230, 250, 0.8], [70, 220, 0.7]] as const) {
+        dot(x, y, 20 * s, 15 * s);
+        stroke([[x + 18 * s, y - 4 * s], [x + 18 * s, y - 80 * s], [x + 52 * s, y - 64 * s]], { w: 5 });
+      }
+    });
   },
 } satisfies Redraw;

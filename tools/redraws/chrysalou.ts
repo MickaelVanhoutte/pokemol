@@ -18,5 +18,10 @@ export default {
     c.paper([[350, 300], [430, 285], [460, 330], [425, 368], [360, 362]]);
     dot(395, 338, 18, 21);
     stroke([[345, 300], [400, 284], [462, 318]], { w: 6 });
+    // only in battle: a green eyelid closing over its sleepy eye now and then (drawn last, the card stays the same)
+    c.part('paupiere', { pivot: [400, 330], motion: 'blink', extra: true }, () => {
+      shape([[345, 302], [430, 287], [462, 330], [425, 370], [358, 364]], GREEN, { angle: 80, over: 0 });
+      stroke([[352, 336], [405, 350], [455, 334]], { w: 5 });
+    });
   },
 } satisfies Redraw;

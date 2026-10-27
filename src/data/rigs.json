@@ -1,4 +1,51 @@
 {
+  "001": {
+    "slug": "minousse",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 14,
+        "period": 1.8,
+        "left": 87.3,
+        "top": 52.1,
+        "width": 12.7,
+        "height": 12.6,
+        "ox": 10.7,
+        "oy": 90.6
+      },
+      {
+        "name": "vrilles",
+        "motion": "swing",
+        "amp": 9,
+        "period": 2.6,
+        "left": 58.9,
+        "top": 2.9,
+        "width": 25.6,
+        "height": 24.1,
+        "ox": 23,
+        "oy": 81.5
+      }
+    ]
+  },
+  "002": {
+    "slug": "braisou",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2,
+        "behind": true,
+        "left": 46.8,
+        "top": 23.7,
+        "width": 53.2,
+        "height": 60.8,
+        "ox": 9.4,
+        "oy": 84.9
+      }
+    ]
+  },
   "003": {
     "slug": "clapotin",
     "parts": [
@@ -49,6 +96,39 @@
       }
     ]
   },
+  "005": {
+    "slug": "chantouille",
+    "parts": [
+      {
+        "name": "notes",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 0,
+        "top": 4.7,
+        "width": 27.7,
+        "height": 23.7,
+        "ox": 64.4,
+        "oy": 74.5
+      }
+    ]
+  },
+  "006": {
+    "slug": "lunelle",
+    "parts": [
+      {
+        "name": "bras",
+        "motion": "swing",
+        "amp": 14,
+        "period": 1.6,
+        "left": 0,
+        "top": 44.5,
+        "width": 20.7,
+        "height": 18.2,
+        "ox": 87.3,
+        "oy": 79
+      }
+    ]
+  },
   "007": {
     "slug": "papivole",
     "parts": [
@@ -75,6 +155,40 @@
       }
     ]
   },
+  "008": {
+    "slug": "ronflon",
+    "parts": [
+      {
+        "name": "zzz",
+        "motion": "flicker",
+        "period": 3,
+        "left": 62.5,
+        "top": 0,
+        "width": 31.7,
+        "height": 22.8,
+        "ox": 31.5,
+        "oy": 51.8
+      }
+    ]
+  },
+  "012": {
+    "slug": "chenillou",
+    "parts": [
+      {
+        "name": "antenne",
+        "motion": "swing",
+        "amp": 10,
+        "period": 1.8,
+        "behind": true,
+        "left": 12.1,
+        "top": 0,
+        "width": 14.2,
+        "height": 24.8,
+        "ox": 48,
+        "oy": 94.5
+      }
+    ]
+  },
   "013": {
     "slug": "piafou",
     "parts": [
@@ -89,6 +203,152 @@
         "height": 31.2,
         "ox": 73.2,
         "oy": 12.2
+      }
+    ]
+  },
+  "015": {
+    "slug": "chrysalou",
+    "parts": [
+      {
+        "name": "paupiere",
+        "motion": "blink",
+        "left": 0,
+        "top": 26.6,
+        "width": 36.2,
+        "height": 12.7,
+        "ox": 49.5,
+        "oy": 51.8
+      }
+    ]
+  },
+  "016": {
+    "slug": "touffou",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.3,
+        "behind": true,
+        "left": 60.6,
+        "top": 28.6,
+        "width": 39.4,
+        "height": 43.8,
+        "ox": 6.7,
+        "oy": 88.7
+      }
+    ]
+  },
+  "017": {
+    "slug": "touflot",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 1.6,
+        "behind": true,
+        "left": 0,
+        "top": 61.8,
+        "width": 44.4,
+        "height": 26.2,
+        "ox": 90.7,
+        "oy": 48.2
+      }
+    ]
+  },
+  "018": {
+    "slug": "toufeu",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 6,
+        "period": 1.8,
+        "behind": true,
+        "left": 59.4,
+        "top": 35.9,
+        "width": 40.6,
+        "height": 43,
+        "ox": 10.8,
+        "oy": 86.8
+      }
+    ]
+  },
+  "019": {
+    "slug": "toufoudre",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 1.2,
+        "behind": true,
+        "left": 73.4,
+        "top": 26.5,
+        "width": 26.6,
+        "height": 30.5,
+        "ox": 11.7,
+        "oy": 83.1
+      },
+      {
+        "name": "etincelles",
+        "motion": "flicker",
+        "period": 1.6,
+        "left": 0,
+        "top": 12.2,
+        "width": 93.8,
+        "height": 15.3,
+        "ox": 50.2,
+        "oy": 50.4
+      }
+    ]
+  },
+  "020": {
+    "slug": "minoufleur",
+    "parts": [
+      {
+        "name": "liane-loin",
+        "motion": "swing",
+        "amp": 7,
+        "period": 2.2,
+        "behind": true,
+        "left": 59.3,
+        "top": 11.2,
+        "width": 31.4,
+        "height": 40.1,
+        "ox": 9,
+        "oy": 90.4
+      },
+      {
+        "name": "liane",
+        "motion": "swing",
+        "amp": 6,
+        "period": 1.9,
+        "left": 0,
+        "top": 36.3,
+        "width": 32.4,
+        "height": 33.7,
+        "ox": 91.2,
+        "oy": 74.5
+      }
+    ]
+  },
+  "021": {
+    "slug": "braisaure",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 5,
+        "period": 2.2,
+        "behind": true,
+        "left": 44.3,
+        "top": 20,
+        "width": 55.7,
+        "height": 61.8,
+        "ox": 8.6,
+        "oy": 80.5
       }
     ]
   },
@@ -154,6 +414,35 @@
         "height": 48.8,
         "ox": 57.6,
         "oy": 89.1
+      }
+    ]
+  },
+  "027": {
+    "slug": "zigzeclair",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 5,
+        "period": 1.4,
+        "behind": true,
+        "left": 53.8,
+        "top": 3.6,
+        "width": 46.2,
+        "height": 76.7,
+        "ox": 5.6,
+        "oy": 96.2
+      },
+      {
+        "name": "etincelles",
+        "motion": "flicker",
+        "period": 1.8,
+        "left": 7.5,
+        "top": 26.8,
+        "width": 74.6,
+        "height": 19.7,
+        "ox": 44.7,
+        "oy": 53.7
       }
     ]
   },

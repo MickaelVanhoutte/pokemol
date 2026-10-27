@@ -10,7 +10,9 @@ export default {
     const { shape, stroke, dot, spikes, potato, band } = c;
     const PALE = '#cfe6f7', SPOT = '#3e6fd0', PINK = '#ef5f9e', GREEN = '#6cc23a', RED = '#e8302c';
     // the vine raised behind, coiled
-    shape(band([[640, 480], [760, 420], [860, 330], [880, 240], [825, 195], [770, 225], [790, 285]], 48, 22), GREEN, { angle: 120, press: 1.1 });
+    c.part('liane-loin', { pivot: [640, 480], motion: 'swing', amp: 7, period: 2.2, behind: true }, () => {
+      shape(band([[640, 480], [760, 420], [860, 330], [880, 240], [825, 195], [770, 225], [790, 285]], 48, 22), GREEN, { angle: 120, press: 1.1 });
+    });
     // back legs, the body behind on the right with its spots
     shape([[820, 700], [900, 700], [910, 880], [830, 885]], PALE, { angle: 90 });
     shape([[480, 470], [700, 430], [880, 480], [930, 620], [880, 770], [680, 800], [520, 760], [470, 620]], PALE, { angle: 85, over: 0.5 });
@@ -28,7 +30,9 @@ export default {
     shape([[320, 690], [410, 690], [405, 890], [318, 895]], PALE, { angle: 90 });
     for (const x of [325, 355, 385, 485, 515, 545]) stroke([[x, 893], [x - 6, 922]], { w: 4 });
     // the near vine, coiled low in front, ready to whip
-    shape(band([[330, 600], [230, 640], [130, 610], [80, 520], [100, 430], [165, 410], [200, 460]], 50, 22), GREEN, { angle: 60, press: 1.1 });
+    c.part('liane', { pivot: [330, 600], motion: 'swing', amp: 6, period: 1.9 }, () => {
+      shape(band([[330, 600], [230, 640], [130, 610], [80, 520], [100, 430], [165, 410], [200, 460]], 50, 22), GREEN, { angle: 60, press: 1.1 });
+    });
     // ears, their base hidden in the head
     shape([[250, 430], [245, 300], [330, 400]], PALE, { angle: 70 }, {}, false);
     shape([[400, 380], [500, 270], [510, 430]], PALE, { angle: 110 }, {}, false);

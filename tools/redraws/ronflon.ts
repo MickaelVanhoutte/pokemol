@@ -28,5 +28,11 @@ export default {
     stroke([[420, 315], [455, 326], [495, 315]]);
     stroke([[340, 395], [380, 405], [420, 392]]);
     dot(372, 360, 9, 6);
+    // only in battle: Zzz floating over its sleepy head (drawn last, the card stays the same)
+    c.part('zzz', { pivot: [700, 150], motion: 'flicker', period: 3, extra: true }, () => {
+      for (const [x, y, s] of [[640, 190, 1], [740, 110, 0.8], [820, 50, 0.6]] as const) {
+        stroke([[x, y], [x + 50 * s, y], [x, y + 50 * s], [x + 50 * s, y + 50 * s]], { w: 6 * s + 2, col: '#3e6fd0' }, false);
+      }
+    });
   },
 } satisfies Redraw;

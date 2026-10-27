@@ -7,8 +7,10 @@ export default {
     const { shape, stroke, dot, band, spikes, potato } = c;
     const BROWN = '#b2733a', DEEP = '#7c4a22', CREAM = '#f4e2b4';
     // the bushy tail, waving
-    shape([[650, 600], [760, 520], [840, 400], [900, 300], [930, 380], [900, 480], [830, 590], [720, 660]], BROWN, { angle: 50, press: 1.05 });
-    shape(spikes([[880, 330], [905, 280], [935, 350]], 2, 18).concat([[915, 400]]), CREAM, { over: 0 }, {}, false);
+    c.part('queue', { pivot: [660, 630], motion: 'swing', amp: 9, period: 1.3, behind: true }, () => {
+      shape([[650, 600], [760, 520], [840, 400], [900, 300], [930, 380], [900, 480], [830, 590], [720, 660]], BROWN, { angle: 50, press: 1.05 });
+      shape(spikes([[880, 330], [905, 280], [935, 350]], 2, 18).concat([[915, 400]]), CREAM, { over: 0 }, {}, false);
+    });
     // four stick legs
     for (const [x0, x1] of [[350, 330], [440, 450], [580, 600], [660, 690]]) shape(band([[x0, 680], [(x0 + x1) / 2, 800], [x1, 900]], 54, 48), BROWN, { angle: 90 });
     // the body

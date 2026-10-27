@@ -9,7 +9,9 @@ export default {
     // back legs, a spiky tail of lightning fur
     shape(band([[760, 560], [850, 680], [900, 820]], 80, 62), YELLOW, { angle: 70 });
     shape(band([[650, 590], [640, 720], [620, 840]], 74, 60), YELLOW, { angle: 95 });
-    shape(spikes([[820, 420], [950, 300], [1060, 240], [1000, 380], [880, 480]], 4, 45), YELLOW, { angle: 30, press: 1.1 }, {}, false);
+    c.part('queue', { pivot: [840, 450], motion: 'swing', amp: 7, period: 1.2, behind: true }, () => {
+      shape(spikes([[820, 420], [950, 300], [1060, 240], [1000, 380], [880, 480]], 4, 45), YELLOW, { angle: 30, press: 1.1 }, {}, false);
+    });
     // the body, zig-zag fur along the back
     shape(spikes([[330, 470], [470, 400], [640, 380], [820, 420]], 3, 55).concat([[860, 520], [780, 610], [560, 640], [380, 620], [300, 560]]), YELLOW, { angle: 15, over: 0.5 }, {}, false);
     // front legs stretched forward
@@ -29,7 +31,9 @@ export default {
     dot(125, 345, 9, 7);
     stroke([[130, 390], [175, 410], [215, 395]]);
     // sparks
-    stroke([[960, 120], [990, 170], [965, 175], [1000, 230]], { w: 4.5 }, false);
-    stroke([[60, 170], [95, 210], [70, 215], [105, 260]], { w: 4.5 }, false);
+    c.part('etincelles', { pivot: [530, 190], motion: 'flicker', period: 1.6 }, () => {
+      stroke([[960, 120], [990, 170], [965, 175], [1000, 230]], { w: 4.5 }, false);
+      stroke([[60, 170], [95, 210], [70, 215], [105, 260]], { w: 4.5 }, false);
+    });
   },
 } satisfies Redraw;

@@ -7,9 +7,11 @@ export default {
     const { shape, stroke, dot, band, potato, spikes } = c;
     const ORANGE = '#f59a3c', CREAM = '#fbe2a6', RED = '#ee4a2c', YELLOW = '#f8d23c';
     // the tail curling up behind, a flame at its tip
-    shape(band([[580, 760], [710, 780], [800, 710], [830, 610]], 70, 44), ORANGE, { angle: 40 });
-    shape([[790, 620], [770, 520], [805, 450], [820, 370], [855, 440], [895, 390], [900, 490], [885, 600]], RED, { angle: 95, press: 1.1 }, {}, false);
-    shape([[810, 595], [808, 520], [840, 470], [855, 530], [872, 490], [866, 585]], YELLOW, { angle: 95, over: 0 }, { w: 3.5 }, false);
+    c.part('queue', { pivot: [585, 760], motion: 'swing', amp: 6, period: 2, behind: true }, () => {
+      shape(band([[580, 760], [710, 780], [800, 710], [830, 610]], 70, 44), ORANGE, { angle: 40 });
+      shape([[790, 620], [770, 520], [805, 450], [820, 370], [855, 440], [895, 390], [900, 490], [885, 600]], RED, { angle: 95, press: 1.1 }, {}, false);
+      shape([[810, 595], [808, 520], [840, 470], [855, 530], [872, 490], [866, 585]], YELLOW, { angle: 95, over: 0 }, { w: 3.5 }, false);
+    });
     // the far leg and arm, behind
     shape(band([[580, 780], [610, 870], [625, 915]], 76, 70), ORANGE, { angle: 90 });
     shape(band([[590, 570], [650, 520], [680, 455]], 50, 44), ORANGE, { angle: 120 });

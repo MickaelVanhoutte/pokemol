@@ -7,7 +7,9 @@ export default {
     const { shape, stroke, dot, spikes, potato } = c;
     const CORAL = '#f0705a', YELLOW = '#f8cf3a', ORANGE = '#f59a2c', DEEP = '#c84a36';
     // the flame-fur tail curling up behind, on the right
-    shape(spikes([[660, 700], [810, 620], [890, 480], [870, 350]], 3, 50).concat([[790, 420], [750, 560], [630, 640]]), YELLOW, { angle: 60, press: 1.1 }, {}, false);
+    c.part('queue', { pivot: [655, 690], motion: 'swing', amp: 6, period: 1.8, behind: true }, () => {
+      shape(spikes([[660, 700], [810, 620], [890, 480], [870, 350]], 3, 50).concat([[790, 420], [750, 560], [630, 640]]), YELLOW, { angle: 60, press: 1.1 }, {}, false);
+    });
     // the nest of flame-fur it sits in
     shape(spikes([[140, 880], [180, 720], [300, 640], [700, 640], [820, 720], [860, 880]], 3, 60).concat([[500, 930]]), YELLOW, { angle: 15, press: 1.1, over: 0.5 }, {}, false);
     c.tint(potato(500, 820, 280, 70, 10, 0.1), ORANGE, { gap: 3.4, angle: 15 });

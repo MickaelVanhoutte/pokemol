@@ -7,8 +7,10 @@ export default {
     const { shape, stroke, dot, band, spikes, potato } = c;
     const AQUA = '#8cc8ee', BLUE = '#2f5fc8', YELLOW = '#f6d23a', PINK = '#f17a96';
     // the fish tail swishing behind
-    shape(band([[360, 700], [230, 760], [130, 730], [90, 660]], 90, 50), AQUA, { angle: 30 });
-    shape([[100, 680], [20, 600], [60, 690], [10, 760], [110, 720]], AQUA, { angle: 60 }, {}, false);
+    c.part('queue', { pivot: [360, 705], motion: 'swing', amp: 7, period: 1.6, behind: true }, () => {
+      shape(band([[360, 700], [230, 760], [130, 730], [90, 660]], 90, 50), AQUA, { angle: 30 });
+      shape([[100, 680], [20, 600], [60, 690], [10, 760], [110, 720]], AQUA, { angle: 60 }, {}, false);
+    });
     // sitting body and legs
     shape([[400, 480], [600, 420], [700, 560], [720, 760], [640, 880], [430, 880], [340, 760], [340, 600]], AQUA, { angle: 80, over: 0.6 });
     shape(band([[600, 700], [620, 820], [640, 900]], 60, 56), AQUA, { angle: 90 });

@@ -23,7 +23,9 @@ export default {
     shape([[520, 290], [600, 90], [700, 30], [710, 130], [610, 320]], PINK, { angle: 75 });
     shape([[550, 260], [620, 125], [660, 120], [595, 270]], DEEP, { over: 0, press: 0.9 }, { w: 3.5 });
     // the near arm, waving
-    shape(band([[230, 560], [160, 520], [120, 450]], 66, 58), PINK, { angle: 60 });
+    c.part('bras', { pivot: [235, 565], motion: 'swing', amp: 14, period: 1.6 }, () => {
+      shape(band([[230, 560], [160, 520], [120, 450]], 66, 58), PINK, { angle: 60 });
+    });
     // the curl
     stroke([[460, 215], [430, 160], [460, 110], [510, 125], [505, 170], [470, 175]], { w: 5.5 });
     // eyes shifted left (the far one smaller), a closed smile, a cheek

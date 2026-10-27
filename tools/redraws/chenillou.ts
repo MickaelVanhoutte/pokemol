@@ -14,7 +14,9 @@ export default {
       shape(potato(x + r * 0.15, y - r * 0.15, r * 0.3, r * 0.28, 9, 0.05), YELLOW, { over: 0, press: 1.1 }, { w: 3.5 });
     }
     // the red forked feeler
-    shape([[300, 230], [270, 120], [300, 130], [320, 190], [350, 110], [380, 120], [340, 230]], RED, { angle: 80, press: 1.1, over: 0 }, {}, false);
+    c.part('antenne', { pivot: [320, 235], motion: 'swing', amp: 10, period: 1.8, behind: true }, () => {
+      shape([[300, 230], [270, 120], [300, 130], [320, 190], [350, 110], [380, 120], [340, 230]], RED, { angle: 80, press: 1.1, over: 0 }, {}, false);
+    });
     // the head, a cream face, a big eye
     shape(potato(330, 400, 175, 160, 12, 0.04), GREEN, { angle: 80, over: 0.5 });
     shape(potato(260, 450, 90, 80, 10, 0.05), CREAM, { over: 0 });
