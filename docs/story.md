@@ -232,7 +232,9 @@ checks every step's flags are set somewhere and its target is on the map.
 `src/data/postgame.ts` `CONCOURS`): the door script (`concoursDoor`) clears `gc:1`…`gc:4` and warps
 in. Four Grandes Maîtresses (Marine, Ambre, Célestine, Nocturne) stand in doorways and step
 aside once beaten (`gc:<n>`, NPC `hideIf`), then Prof. Fusain (6 Bestioles). No healing in
-between, the bag is allowed; a loss is a normal blackout and the next attempt starts over. Winning
+between, the bag is allowed; a loss is a normal blackout and the next attempt starts over. Since iteration 16
+the Grandes Maîtresses stand at L52–57 and Prof. Fusain at L51–52, above the story's finale; the sims use a
+level 58 team (Normal 31–100%, Prof. Fusain 45–62%). Winning
 sets `champion`, appends a `save.hallOfFame` entry (`hallEntry`: species, nickname, level, sparkle)
 and shows the Hall of Fame (`HallView`, screen `hall`); the Hall Keeper on the square shows it again.
 `npm run balance` has rows for each fight with a level 50 team.
