@@ -18,8 +18,10 @@ export default {
     const { shape, stroke, dot, band, potato } = c;
     const GLOW = '#fbe58a', WARM = '#f7c650', SHADE = '#f4a3c4', DEEP = '#d97aa6', YEL = '#f7dc35', MOON = '#f2c43a';
     // the pull cord tail behind, a little star bead at its end
-    stroke([[620, 640], [720, 660], [790, 610], [800, 520]], { w: 4 });
-    shape(star(800, 500, 34, 0.2), YEL, { over: 0 }, { w: 3.5 }, false);
+    c.part('cordon', { pivot: [620, 640], motion: 'swing', amp: 8, period: 2, behind: true }, () => {
+      stroke([[620, 640], [720, 660], [790, 610], [800, 520]], { w: 4 });
+      shape(star(800, 500, 34, 0.2), YEL, { over: 0 }, { w: 3.5 }, false);
+    });
     // the far foot, behind
     shape(potato(380, 845, 60, 30, 8, 0.06), WARM, { over: 0 });
     // the chubby glowing body, warmer at the bottom
@@ -48,6 +50,8 @@ export default {
     c.tint(potato(260, 600, 28, 18, 8, 0.1), '#f6a7c8', { gap: 3 });
     c.tint(potato(470, 595, 26, 17, 8, 0.1), '#f6a7c8', { gap: 3 });
     // a soft glow round it: little rays
-    for (const [x0, y0, x1, y1] of [[180, 470, 130, 440], [170, 760, 115, 790], [700, 760, 755, 790], [720, 470, 770, 445]] as const) stroke([[x0, y0], [x1, y1]], { w: 5, col: WARM });
+    c.part('rayons', { pivot: [450, 620], motion: 'flicker', period: 2.2 }, () => {
+      for (const [x0, y0, x1, y1] of [[180, 470, 130, 440], [170, 760, 115, 790], [700, 760, 755, 790], [720, 470, 770, 445]] as const) stroke([[x0, y0], [x1, y1]], { w: 5, col: WARM });
+    });
   },
 } satisfies Redraw;

@@ -85,8 +85,10 @@ export default {
     const { shape, stroke, dot, band, potato } = c;
     const { BODY, MANE, ACCENT, CREAM, STAR, DEEP, HORN, STRIPE } = DRAGON;
     // the short accordion body, tail first, and the star charm at the tip of its tail
-    accordion(c, [[880, 380], [810, 470], [690, 520], [470, 480]], 7, 110, 170, [BODY, MANE]);
-    charm(c, 890, 380, 1, STAR, ACCENT);
+    c.part('corps', { pivot: [470, 480], motion: 'swing', amp: 5, period: 1.8, behind: true }, () => {
+      accordion(c, [[880, 380], [810, 470], [690, 520], [470, 480]], 7, 110, 170, [BODY, MANE]);
+      charm(c, 890, 380, 1, STAR, ACCENT);
+    });
     // little paws under it
     shape(band([[620, 560], [630, 640]], 44, 40), MANE, { angle: 90, over: 0 });
     shape(potato(640, 650, 34, 20, 7, 0.06), CREAM, { over: 0 });

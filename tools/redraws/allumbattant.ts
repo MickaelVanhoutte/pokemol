@@ -19,10 +19,12 @@ export default {
       stroke([[x - r * 0.6, y + r * 0.35], [x + r * 0.2, y + r * 0.6]], { w: 3.5, col: '#3e2a20' });
     };
     // the flame mohawk, tongues of fire streaming back behind the head
-    for (const [x, y, w, h, l] of [[630, 290, 120, 140, 180], [550, 210, 140, 180, 180], [445, 170, 140, 160, 140], [340, 175, 110, 150, 80]] as const)
-      shape(flame(x, y, w, h, l), ORANGE, { angle: 60, over: 0.3, press: 1.1 }, {}, false);
-    for (const [x, y, w, h, l] of [[550, 200, 70, 110, 110], [445, 165, 70, 110, 80], [345, 168, 56, 90, 45]] as const)
-      shape(flame(x, y, w, h, l), YEL, { over: 0 }, { w: 3 }, false);
+    c.part('crete', { pivot: [450, 250], motion: 'swing', amp: 4, period: 0.5, behind: true }, () => {
+      for (const [x, y, w, h, l] of [[630, 290, 120, 140, 180], [550, 210, 140, 180, 180], [445, 170, 140, 160, 140], [340, 175, 110, 150, 80]] as const)
+        shape(flame(x, y, w, h, l), ORANGE, { angle: 60, over: 0.3, press: 1.1 }, {}, false);
+      for (const [x, y, w, h, l] of [[550, 200, 70, 110, 110], [445, 165, 70, 110, 80], [345, 168, 56, 90, 45]] as const)
+        shape(flame(x, y, w, h, l), YEL, { over: 0 }, { w: 3 }, false);
+    });
     // the far leg and far glove up by its face, behind
     shape(band([[470, 830], [400, 950], [360, 1060]], 52, 46), WOOD, { angle: 70, over: 0 });
     shape(potato(330, 1075, 62, 28, 7, 0.06), '#5a4030', { over: 0 });
@@ -55,8 +57,10 @@ export default {
     stroke([[410, 272], [490, 248]], { w: 8.5 });
     stroke([[320, 380], [370, 392], [420, 386]], { w: 5.5 });
     // the near arm punching forward to the left, sparks off the glove
-    shape(band([[540, 540], [420, 610], [250, 640]], 56, 50), WOOD, { angle: 160, over: 0 });
-    glove(190, 650, 88, [290, 640]);
-    for (const [x, y, w, h, l] of [[90, 590, 40, 70, -20], [110, 720, 34, 56, -26], [70, 660, 30, 50, -30]] as const) shape(flame(x, y, w, h, l), ORANGE, { over: 0 }, { w: 3 }, false);
+    c.part('poing', { pivot: [540, 540], motion: 'peek', to: [12, 0], period: 1.5 }, () => {
+      shape(band([[540, 540], [420, 610], [250, 640]], 56, 50), WOOD, { angle: 160, over: 0 });
+      glove(190, 650, 88, [290, 640]);
+      for (const [x, y, w, h, l] of [[90, 590, 40, 70, -20], [110, 720, 34, 56, -26], [70, 660, 30, 50, -30]] as const) shape(flame(x, y, w, h, l), ORANGE, { over: 0 }, { w: 3 }, false);
+    });
   },
 } satisfies Redraw;

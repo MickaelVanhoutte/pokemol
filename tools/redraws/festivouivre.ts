@@ -25,16 +25,18 @@ export default {
     const { BODY, MANE, ACCENT, ACCENT2, ACCENT3, CREAM, STAR, DEEP, LEG_FAR, HORN, STRIPE } = DRAGON;
     // ribbons streaming behind, from the back of its head
     shape(band([[560, 300], [700, 250], [840, 290], [960, 210], [1080, 230]], 28, 14), ACCENT2, { over: 0 }, { w: 3 });
-    // the far legs, behind
-    shape(band([[1050, 640], [1030, 820]], 60, 52), LEG_FAR, { angle: 90, over: 0 });
-    shape(band([[560, 660], [540, 840]], 60, 52), LEG_FAR, { angle: 90, over: 0 });
-    // the long thick body dancing in a wave, tail first: rainbow folds, sparkles and stars along it
-    const body: P[] = [[1240, 170], [1200, 420], [1090, 600], [960, 560], [860, 400], [740, 380], [640, 500], [540, 600], [460, 520], [440, 420]];
-    accordion(c, body, 17, 120, 220, [BODY, ACCENT3, ACCENT2, ACCENT, MANE], (k, [x, y], w) => {
-      if (k % 2 === 0) shape(star(x, y, 12, k * 0.4), '#ffffff', { over: 0, wash: 1 }, { w: 2 }, false);
-      if (k % 3 === 2) flower(c, x + 8, y - w / 2 - 8, 40, [BODY, ACCENT, ACCENT2, ACCENT3][((k / 3) | 0) % 4], k % 2 ? STAR : '#ffffff');
+    c.part('corps', { pivot: [440, 420], motion: 'swing', amp: 2.5, period: 2.4, behind: true }, () => {
+      // the far legs, behind
+      shape(band([[1050, 640], [1030, 820]], 60, 52), LEG_FAR, { angle: 90, over: 0 });
+      shape(band([[560, 660], [540, 840]], 60, 52), LEG_FAR, { angle: 90, over: 0 });
+      // the long thick body dancing in a wave, tail first: rainbow folds, sparkles and stars along it
+      const body: P[] = [[1240, 170], [1200, 420], [1090, 600], [960, 560], [860, 400], [740, 380], [640, 500], [540, 600], [460, 520], [440, 420]];
+      accordion(c, body, 17, 120, 220, [BODY, ACCENT3, ACCENT2, ACCENT, MANE], (k, [x, y], w) => {
+        if (k % 2 === 0) shape(star(x, y, 12, k * 0.4), '#ffffff', { over: 0, wash: 1 }, { w: 2 }, false);
+        if (k % 3 === 2) flower(c, x + 8, y - w / 2 - 8, 40, [BODY, ACCENT, ACCENT2, ACCENT3][((k / 3) | 0) % 4], k % 2 ? STAR : '#ffffff');
+      });
+      charm(c, 1240, 170, 1.4, STAR, BODY);
     });
-    charm(c, 1240, 170, 1.4, STAR, BODY);
     // the near legs, cream claws
     for (const [x0, y0, x1, y1] of [[1100, 640, 1120, 860], [610, 640, 620, 870]] as const) {
       shape(band([[x0, y0], [x1, y1]], 70, 62), MANE, { angle: 90, over: 0 });

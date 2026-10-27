@@ -14,10 +14,12 @@ export default {
     const COLS = ['#e2423a', '#4f8fe0', '#f7dc35', '#5bbf6a'];
     const zag = (x: number, y: number, s: number): P[] => [[x, y], [x + 18 * s, y - 34 * s], [x + 6 * s, y - 32 * s], [x + 30 * s, y - 72 * s], [x - 8 * s, y - 24 * s], [x + 6 * s, y - 26 * s]];
     // the long ribbon tail streaming up behind, lightning bows along it
-    const tail: P[] = [[860, 560], [960, 500], [1010, 400], [1060, 300], [1080, 180], [1120, 80]];
-    shape(band(tail, 26, 16), COLS[1], { angle: 60, over: 0 });
-    for (const [x, y, k] of [[955, 505, 0], [1012, 395, 2], [1058, 292, 3], [1082, 178, 0]] as const) shape(zag(x - 16, y + 46, 1.6), COLS[k], { over: 0 }, { w: 4 }, false);
-    bow(c, 1118, 84, 1.6, COLS[2]);
+    c.part('queue', { pivot: [860, 560], motion: 'swing', amp: 5, period: 1.8, behind: true }, () => {
+      const tail: P[] = [[860, 560], [960, 500], [1010, 400], [1060, 300], [1080, 180], [1120, 80]];
+      shape(band(tail, 26, 16), COLS[1], { angle: 60, over: 0 });
+      for (const [x, y, k] of [[955, 505, 0], [1012, 395, 2], [1058, 292, 3], [1082, 178, 0]] as const) shape(zag(x - 16, y + 46, 1.6), COLS[k], { over: 0 }, { w: 4 }, false);
+      bow(c, 1118, 84, 1.6, COLS[2]);
+    });
     // the far legs, long, behind
     shape(band([[480, 700], [450, 860], [470, 1050]], 56, 44), DEEP, { angle: 90 });
     shape(band([[780, 690], [830, 860], [820, 1040]], 56, 44), DEEP, { angle: 90 });
@@ -40,11 +42,13 @@ export default {
     for (const [x, y, r] of [[380, 560, 70], [450, 600, 66], [330, 480, 60], [420, 500, 56]] as const) shape(potato(x, y, r, r * 0.8, 9, 0.12), CLOUD, { angle: 30, over: 0.3 }, { w: 4 });
     shape(zag(360, 620, 0.9), YEL, { over: 0 }, { w: 3 }, false);
     // the key on its string
-    stroke([[330, 470], [340, 560], [360, 640], [365, 690]], { w: 3.5 });
-    shape(potato(368, 708, 22, 22, 8, 0.05), YEL, { over: 0 }, { w: 3.5 });
-    c.paper(potato(368, 708, 8, 8, 7, 0.05), { w: 2.5 });
-    shape(band([[368, 728], [368, 790]], 14, 14), YEL, { over: 0 }, { w: 3 });
-    shape([[368, 760], [392, 760], [392, 778], [368, 778]], YEL, { over: 0 }, { w: 3 }, false);
+    c.part('cle', { pivot: [330, 470], motion: 'swing', amp: 8, period: 1.4 }, () => {
+      stroke([[330, 470], [340, 560], [360, 640], [365, 690]], { w: 3.5 });
+      shape(potato(368, 708, 22, 22, 8, 0.05), YEL, { over: 0 }, { w: 3.5 });
+      c.paper(potato(368, 708, 8, 8, 7, 0.05), { w: 2.5 });
+      shape(band([[368, 728], [368, 790]], 14, 14), YEL, { over: 0 }, { w: 3 });
+      shape([[368, 760], [392, 760], [392, 778], [368, 778]], YEL, { over: 0 }, { w: 3 }, false);
+    });
     // the head turned left, a long muzzle
     shape([[200, 330], [260, 240], [380, 220], [450, 270], [440, 360], [350, 400], [240, 420], [160, 410], [120, 370]], FUR, { angle: 75, over: 0.45 });
     c.tint(potato(150, 395, 40, 28, 8, 0.08), CREAM, { gap: 3.2 });

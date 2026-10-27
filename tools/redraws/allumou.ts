@@ -27,11 +27,15 @@ export default {
     // the near leg and near arm up in a boxer's guard, a little round fist
     shape(band([[420, 770], [480, 860], [500, 935]], 30, 28), WOOD, { angle: 110, over: 0 });
     shape(potato(520, 945, 44, 22, 7, 0.06), GRAIN, { over: 0 });
-    shape(band([[430, 530], [540, 560], [560, 450]], 30, 28), WOOD, { angle: 120, over: 0 });
-    shape(potato(565, 430, 36, 34, 8, 0.08), WOOD, { over: 0.2 });
+    c.part('garde', { pivot: [430, 530], motion: 'swing', amp: 10, period: 0.9 }, () => {
+      shape(band([[430, 530], [540, 560], [560, 450]], 30, 28), WOOD, { angle: 120, over: 0 });
+      shape(potato(565, 430, 36, 34, 8, 0.08), WOOD, { over: 0.2 });
+    });
     // the little flame on top, leaning back
-    shape(flame(400, 140, 120, 150, 40), ORANGE, { angle: 85, press: 1.1, over: 0.2 }, {}, false);
-    shape(flame(405, 128, 60, 80, 20), YEL, { over: 0 }, { w: 3 }, false);
+    c.part('flamme', { pivot: [400, 150], motion: 'swing', amp: 8, period: 0.6, behind: true }, () => {
+      shape(flame(400, 140, 120, 150, 40), ORANGE, { angle: 85, press: 1.1, over: 0.2 }, {}, false);
+      shape(flame(405, 128, 60, 80, 20), YEL, { over: 0 }, { w: 3 }, false);
+    });
     // the round red match head, darker on the far side
     shape(potato(380, 280, 160, 165, 12, 0.04), RED, { angle: 75, over: 0.5 });
     c.tint([[450, 160], [520, 260], [510, 370], [450, 420], [490, 300]], DARK, { gap: 3.6 });

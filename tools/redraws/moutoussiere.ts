@@ -11,9 +11,11 @@ export default {
     const { shape, stroke, dot, band, potato } = c;
     const DUST = '#c4c0c8', DEEP = '#9a95a2', FACE = '#5a5560', HORN = '#8c8794', SOCK = '#e2423a', CRAYON = '#4f8fe0';
     // wisps of dust trailing off behind it, like a ghost's tail
-    shape([[700, 420], [860, 380], [960, 300], [1010, 330], [940, 420], [1020, 470], [930, 520], [990, 600], [880, 600], [760, 600]], DUST, { angle: 20, over: 0.2, press: 0.85 }, { w: 3.5 });
-    stroke([[850, 430], [930, 380]], { w: 3, col: DEEP });
-    stroke([[860, 540], [950, 560]], { w: 3, col: DEEP });
+    c.part('traine', { pivot: [720, 500], motion: 'swing', amp: 6, period: 2.6, behind: true }, () => {
+      shape([[700, 420], [860, 380], [960, 300], [1010, 330], [940, 420], [1020, 470], [930, 520], [990, 600], [880, 600], [760, 600]], DUST, { angle: 20, over: 0.2, press: 0.85 }, { w: 3.5 });
+      stroke([[850, 430], [930, 380]], { w: 3, col: DEEP });
+      stroke([[860, 540], [950, 560]], { w: 3, col: DEEP });
+    });
     // the far front leg, behind
     shape(band([[360, 640], [350, 780]], 34, 30), FACE, { angle: 90, over: 0 });
     // the big fluffball of a body, curly all round

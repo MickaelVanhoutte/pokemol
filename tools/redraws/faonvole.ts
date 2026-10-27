@@ -26,11 +26,13 @@ export default {
     const FUR = '#c98b4f', CREAM = '#f5e3bf', DEEP = '#8a5a30', YEL = '#f7dc35';
     const COLS = ['#e2423a', '#4f8fe0', '#f7dc35'];
     // the kite string floating up behind, bows along it
-    const string: P[] = [[730, 470], [820, 400], [860, 300], [920, 230], [960, 120]];
-    stroke(string, { w: 5 });
-    bow(c, 820, 400, 1.4, COLS[0]);
-    bow(c, 868, 292, 1.3, COLS[1]);
-    bow(c, 935, 190, 1.2, COLS[2]);
+    c.part('queue', { pivot: [730, 470], motion: 'swing', amp: 8, period: 1.6, behind: true }, () => {
+      const string: P[] = [[730, 470], [820, 400], [860, 300], [920, 230], [960, 120]];
+      stroke(string, { w: 5 });
+      bow(c, 820, 400, 1.4, COLS[0]);
+      bow(c, 868, 292, 1.3, COLS[1]);
+      bow(c, 935, 190, 1.2, COLS[2]);
+    });
     // the far legs, behind
     shape(band([[440, 600], [420, 740], [430, 860]], 40, 32), DEEP, { angle: 90 });
     shape(band([[680, 590], [710, 730], [700, 850]], 40, 32), DEEP, { angle: 90 });

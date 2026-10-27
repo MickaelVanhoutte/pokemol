@@ -29,8 +29,10 @@ export default {
     shape([[590, 400], [625, 400], [625, 432], [590, 432]], LIT, { over: 0 }, { w: 3 }, false);
     shape([[640, 425], [665, 425], [665, 470], [640, 470]], '#8a5326', { over: 0 }, { w: 3 }, false);
     c.paper([[548, 385], [620, 322], [692, 385], [680, 372], [620, 336], [560, 374]], { w: 2.5 }, false);
-    for (const [x, y] of [[480, 300], [540, 250], [700, 240], [760, 330], [720, 300], [500, 400], [610, 270], [740, 410], [660, 210]] as const)
-      shape(potato(x, y, 9, 9, 7, 0.1), GLASS, { over: 0 }, { w: 2.5, col: '#7ea2d0' });
+    c.part('neige', { pivot: [615, 320], motion: 'flicker', period: 1.8 }, () => {
+      for (const [x, y] of [[480, 300], [540, 250], [700, 240], [760, 330], [720, 300], [500, 400], [610, 270], [740, 410], [660, 210]] as const)
+        shape(potato(x, y, 9, 9, 7, 0.1), GLASS, { over: 0 }, { w: 2.5, col: '#7ea2d0' });
+    });
     // a shine on the glass
     stroke([[480, 260], [520, 215], [575, 190]], { w: 6, col: '#ffffff' });
     // the near eye stalk and the head, turned left

@@ -12,16 +12,18 @@ export default {
   draw(c) {
     const { shape, stroke, dot, band, potato } = c;
     const { BODY, MANE, ACCENT, CREAM, STAR, DEEP, LEG_FAR, HORN, STRIPE } = DRAGON;
-    // the far legs, behind the body
-    shape(band([[880, 640], [900, 760]], 46, 40), LEG_FAR, { angle: 90, over: 0 });
-    shape(band([[560, 600], [560, 720]], 46, 40), LEG_FAR, { angle: 90, over: 0 });
-    // the long S of folds, tail first, little stars along its back, a star charm at its tail
-    const body: P[] = [[1120, 300], [1090, 470], [960, 610], [770, 650], [610, 590], [510, 470], [440, 380]];
-    accordion(c, body, 12, 110, 170, [BODY, MANE, ACCENT], (k, [x, y], w) => {
-      if (k % 3 === 1) flower(c, x + 6, y - w / 2 - 6, 34, [BODY, ACCENT, MANE][((k / 3) | 0) % 3] === BODY ? ACCENT : BODY, STAR);
-      if (k % 3 === 2) shape(star(x + 4, y - w / 2 - 10, 20, k * 0.3), STAR, { over: 0 }, { w: 2.5 }, false);
+    c.part('corps', { pivot: [440, 380], motion: 'swing', amp: 3, period: 2.2, behind: true }, () => {
+      // the far legs, behind the body
+      shape(band([[880, 640], [900, 760]], 46, 40), LEG_FAR, { angle: 90, over: 0 });
+      shape(band([[560, 600], [560, 720]], 46, 40), LEG_FAR, { angle: 90, over: 0 });
+      // the long S of folds, tail first, little stars along its back, a star charm at its tail
+      const body: P[] = [[1120, 300], [1090, 470], [960, 610], [770, 650], [610, 590], [510, 470], [440, 380]];
+      accordion(c, body, 12, 110, 170, [BODY, MANE, ACCENT], (k, [x, y], w) => {
+        if (k % 3 === 1) flower(c, x + 6, y - w / 2 - 6, 34, [BODY, ACCENT, MANE][((k / 3) | 0) % 3] === BODY ? ACCENT : BODY, STAR);
+        if (k % 3 === 2) shape(star(x + 4, y - w / 2 - 10, 20, k * 0.3), STAR, { over: 0 }, { w: 2.5 }, false);
+      });
+      charm(c, 1120, 300, 1.15, STAR, BODY);
     });
-    charm(c, 1120, 300, 1.15, STAR, BODY);
     // the near legs, cream paws
     for (const [x0, y0, x1, y1] of [[930, 650, 950, 780], [620, 610, 610, 740]] as const) {
       shape(band([[x0, y0], [x1, y1]], 52, 46), MANE, { angle: 90, over: 0 });

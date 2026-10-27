@@ -1405,6 +1405,23 @@
       }
     ]
   },
+  "075": {
+    "slug": "crocagrafe",
+    "parts": [
+      {
+        "name": "machoire",
+        "motion": "nod",
+        "amp": 10,
+        "period": 2.4,
+        "left": 0.6,
+        "top": 18.3,
+        "width": 49.7,
+        "height": 47.8,
+        "ox": 90.8,
+        "oy": 81.8
+      }
+    ]
+  },
   "076": {
     "slug": "ocrinou",
     "parts": [
@@ -1420,6 +1437,279 @@
         "height": 44.1,
         "ox": 64.8,
         "oy": 11.5
+      }
+    ]
+  },
+  "077": {
+    "slug": "mammouchaud",
+    "parts": [
+      {
+        "name": "fumee",
+        "motion": "flicker",
+        "period": 2.6,
+        "behind": true,
+        "left": 50.8,
+        "top": 0,
+        "width": 27,
+        "height": 27.5,
+        "ox": 48.9,
+        "oy": 50.9
+      },
+      {
+        "name": "trompe",
+        "motion": "swing",
+        "amp": 4,
+        "period": 2.4,
+        "left": 3.5,
+        "top": 2.5,
+        "width": 58.2,
+        "height": 49.7,
+        "ox": 21.9,
+        "oy": 90.7
+      }
+    ]
+  },
+  "078": {
+    "slug": "faonvole",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 8,
+        "period": 1.6,
+        "behind": true,
+        "left": 72.6,
+        "top": 0,
+        "width": 27.4,
+        "height": 45.4,
+        "ox": 3.8,
+        "oy": 97.9
+      }
+    ]
+  },
+  "079": {
+    "slug": "cerfoudre",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 5,
+        "period": 1.8,
+        "behind": true,
+        "left": 71.2,
+        "top": 2,
+        "width": 28.8,
+        "height": 49.9,
+        "ox": 7.8,
+        "oy": 95.5
+      },
+      {
+        "name": "cle",
+        "motion": "swing",
+        "amp": 8,
+        "period": 1.4,
+        "left": 24,
+        "top": 42.2,
+        "width": 8.7,
+        "height": 31.2,
+        "ox": 11.4,
+        "oy": 3.1
+      }
+    ]
+  },
+  "080": {
+    "slug": "allumou",
+    "parts": [
+      {
+        "name": "garde",
+        "motion": "swing",
+        "amp": 10,
+        "period": 0.9,
+        "left": 50.6,
+        "top": 38.1,
+        "width": 49.4,
+        "height": 21,
+        "ox": 12.5,
+        "oy": 75.2
+      },
+      {
+        "name": "flamme",
+        "motion": "swing",
+        "amp": 8,
+        "period": 0.6,
+        "behind": true,
+        "left": 25.1,
+        "top": 0,
+        "width": 38.8,
+        "height": 15.9,
+        "ox": 50.7,
+        "oy": 96.8
+      }
+    ]
+  },
+  "081": {
+    "slug": "allumbattant",
+    "parts": [
+      {
+        "name": "crete",
+        "motion": "swing",
+        "amp": 4,
+        "period": 0.5,
+        "behind": true,
+        "left": 28.4,
+        "top": 0,
+        "width": 71.6,
+        "height": 26.8,
+        "ox": 33.9,
+        "oy": 84
+      },
+      {
+        "name": "poing",
+        "motion": "peek",
+        "to": [
+          12,
+          0
+        ],
+        "period": 1.5,
+        "left": 0,
+        "top": 44.7,
+        "width": 69.8,
+        "height": 22.4,
+        "ox": 94,
+        "oy": 14.9
+      }
+    ]
+  },
+  "082": {
+    "slug": "lumignon",
+    "parts": [
+      {
+        "name": "cordon",
+        "motion": "swing",
+        "amp": 8,
+        "period": 2,
+        "behind": true,
+        "left": 69.1,
+        "top": 38.5,
+        "width": 30.9,
+        "height": 29.3,
+        "ox": 3.6,
+        "oy": 87.7
+      },
+      {
+        "name": "rayons",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 0,
+        "top": 35.8,
+        "width": 91.2,
+        "height": 52.9,
+        "ox": 51.3,
+        "oy": 50.8
+      }
+    ]
+  },
+  "083": {
+    "slug": "projetoile",
+    "parts": [
+      {
+        "name": "etoiles",
+        "motion": "flicker",
+        "period": 2.4,
+        "left": 6.1,
+        "top": 27.9,
+        "width": 82.1,
+        "height": 63.8,
+        "ox": 48.4,
+        "oy": 48.3
+      }
+    ]
+  },
+  "084": {
+    "slug": "plissou",
+    "parts": [
+      {
+        "name": "corps",
+        "motion": "swing",
+        "amp": 5,
+        "period": 1.8,
+        "behind": true,
+        "left": 43.2,
+        "top": 17,
+        "width": 51.6,
+        "height": 65.4,
+        "ox": 4.5,
+        "oy": 70.2
+      }
+    ]
+  },
+  "085": {
+    "slug": "plisserpent",
+    "parts": [
+      {
+        "name": "corps",
+        "motion": "swing",
+        "amp": 3,
+        "period": 2.2,
+        "behind": true,
+        "left": 29.7,
+        "top": 9.4,
+        "width": 70.3,
+        "height": 86.1,
+        "ox": 9.1,
+        "oy": 40.8
+      }
+    ]
+  },
+  "086": {
+    "slug": "festivouivre",
+    "parts": [
+      {
+        "name": "corps",
+        "motion": "swing",
+        "amp": 2.5,
+        "period": 2.4,
+        "behind": true,
+        "left": 23.2,
+        "top": 0,
+        "width": 76.8,
+        "height": 93.8,
+        "ox": 13,
+        "oy": 48.8
+      }
+    ]
+  },
+  "087": {
+    "slug": "globargot",
+    "parts": [
+      {
+        "name": "neige",
+        "motion": "flicker",
+        "period": 1.8,
+        "left": 41,
+        "top": 3.6,
+        "width": 38,
+        "height": 35.9,
+        "ox": 48.6,
+        "oy": 55.3
+      }
+    ]
+  },
+  "088": {
+    "slug": "moutoussiere",
+    "parts": [
+      {
+        "name": "traine",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2.6,
+        "behind": true,
+        "left": 60.3,
+        "top": 6.6,
+        "width": 39.7,
+        "height": 56.3,
+        "ox": 10.7,
+        "oy": 64.4
       }
     ]
   }

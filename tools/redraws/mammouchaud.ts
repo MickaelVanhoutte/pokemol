@@ -24,8 +24,10 @@ export default {
     const { shape, stroke, dot, band, potato, spikes } = c;
     const OCHRE = '#a8482a', DEEP = '#7c3219', ROCK = '#4f4650', CRACK = '#f7a12b', TUSK = '#f3e6c4', YEL = '#f7dc35', SMOKE = '#b8b2bd';
     // smoke rising off its back in two curls, behind
-    for (const [x, y, r] of [[730, 215, 48], [705, 155, 40], [735, 100, 32], [880, 280, 46], [905, 218, 38], [888, 162, 30]] as const)
-      shape(potato(x, y, r, r * 0.85, 9, 0.1), SMOKE, { gap: 3.6, press: 0.85, over: 0 }, { w: 3.5 });
+    c.part('fumee', { pivot: [800, 200], motion: 'flicker', period: 2.6, behind: true }, () => {
+      for (const [x, y, r] of [[730, 215, 48], [705, 155, 40], [735, 100, 32], [880, 280, 46], [905, 218, 38], [888, 162, 30]] as const)
+        shape(potato(x, y, r, r * 0.85, 9, 0.1), SMOKE, { gap: 3.6, press: 0.85, over: 0 }, { w: 3.5 });
+    });
     // the blazing tail tuft and the far legs, behind
     shape(band([[1000, 520], [1070, 520], [1110, 470]], 34, 22), OCHRE, { angle: 40 });
     shape([[1080, 500], [1080, 400], [1110, 440], [1125, 350], [1160, 430], [1170, 380], [1185, 470], [1150, 520]], CRACK, { angle: 80, press: 1.1 }, {}, false);
@@ -62,12 +64,14 @@ export default {
     shape(potato(500, 460, 58, 80, 9, 0.06), DEEP, { angle: 90, over: 0.2 });
     shape(spikes([[280, 270], [360, 200], [450, 210], [520, 260]], 3, 40), DEEP, { over: 0 }, {}, false);
     // the trunk raised and curled back over its head, spitting lava onto its own back
-    shape(band([[250, 500], [185, 420], [165, 320], [195, 225], [265, 165], [355, 140], [425, 150]], 92, 46), OCHRE, { angle: 20, over: 0.3 });
-    for (const [x, y, dx, dy] of [[160, 400, 50, 0], [150, 330, 50, -6], [180, 250, 42, 22], [235, 190, 30, 36]] as const) stroke([[x, y], [x + dx, y + dy]], { w: 3.5 });
-    shape(band([[425, 150], [520, 122], [605, 165], [645, 250]], 62, 44), CRACK, { angle: 30, over: 0.2, press: 1.1 });
-    stroke([[440, 148], [520, 136], [592, 176], [628, 236]], { w: 4, col: YEL });
-    for (const [x, y, r] of [[645, 290, 46], [585, 305, 30], [705, 305, 32], [650, 350, 22], [740, 340, 18]] as const) shape(potato(x, y, r, r * 0.8, 8, 0.12), CRACK, { over: 0, press: 1.1 }, { w: 3.5 });
-    for (const [x, y] of [[560, 120], [620, 135], [680, 230]] as const) dot(x, y, 8, 8, CRACK);
+    c.part('trompe', { pivot: [250, 500], motion: 'swing', amp: 4, period: 2.4 }, () => {
+      shape(band([[250, 500], [185, 420], [165, 320], [195, 225], [265, 165], [355, 140], [425, 150]], 92, 46), OCHRE, { angle: 20, over: 0.3 });
+      for (const [x, y, dx, dy] of [[160, 400, 50, 0], [150, 330, 50, -6], [180, 250, 42, 22], [235, 190, 30, 36]] as const) stroke([[x, y], [x + dx, y + dy]], { w: 3.5 });
+      shape(band([[425, 150], [520, 122], [605, 165], [645, 250]], 62, 44), CRACK, { angle: 30, over: 0.2, press: 1.1 });
+      stroke([[440, 148], [520, 136], [592, 176], [628, 236]], { w: 4, col: YEL });
+      for (const [x, y, r] of [[645, 290, 46], [585, 305, 30], [705, 305, 32], [650, 350, 22], [740, 340, 18]] as const) shape(potato(x, y, r, r * 0.8, 8, 0.12), CRACK, { over: 0, press: 1.1 }, { w: 3.5 });
+      for (const [x, y] of [[560, 120], [620, 135], [680, 230]] as const) dot(x, y, 8, 8, CRACK);
+    });
     // the near tusk, long, curving up and forward
     shape(band([[360, 610], [270, 700], [170, 700], [100, 620], [90, 540]], 54, 22), TUSK, { angle: 60, over: 0.1 });
     // a fierce eye under a heavy brow
