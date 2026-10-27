@@ -13,14 +13,16 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 
 ## Les personnages
 
-- **Toi**, la petite artiste : tu choisis fille ou garçon, ton nom et ton portrait.
+- **Toi**, la petite artiste : tu choisis fille ou garçon, ton nom, et tu te dessines : coiffure,
+  couleur des cheveux et de la peau, vêtements, casquette, nœud ou lunettes… Ta carte de dresseur
+  permet de changer de look quand tu veux.
 - **Maman** te donne la Carte de Papeterre, puis des baskets pour courir plus vite.
 - **Le Prof. Fusain** photographie toutes les Bestioles « pour qu’aucune ne se perde jamais ».
   Clic-clac !
 - **Ton voisin**, ton rival : c’est toi qui choisis son nom (Feutre, Crayon, Pinceau…). Un peu
   vantard, il veut devenir le meilleur dresseur de Papeterre.
-- **La Team Gomme**, des gens en gris avec une casquette-gomme rose. Ils effacent les paysages et
-  rendent les Bestioles toutes grises. Leurs chefs sont l’Admin Rature et l’Admin Blanche, et tout en
+- **La Team Gomme**, des gens en uniforme gris, avec une casquette en forme de gomme rose et bleue
+  et un masque noir. Ils effacent les paysages et rendent les Bestioles toutes grises. Leurs chefs sont l’Admin Rature et l’Admin Blanche, et tout en
   haut, le mystérieux **Grand Effaceur**.
 - **Les 8 Maîtres d’Atelier**, un par ville : Mireille (Insecte), Gaspard (Normal), Marine (Eau),
   Zélie (Électrique), Ambre (Feu), Célestine (Fée), Basile (Plante) et Nocturne (Spectre).
@@ -92,13 +94,14 @@ where every drawing is alive: the **Critters** (Bestioles).
 
 ## The characters
 
-- **You**, the little artist: girl or boy, your name and your portrait.
+- **You**, the little artist: girl or boy, your name, and you draw yourself: hairstyle, hair and skin
+  colour, clothes, a cap, a bow or glasses… Your trainer card lets you change your look any time.
 - **Mom** gives you the Map of Papeterra, then sneakers to run faster.
 - **Prof. Charcoal** (Fusain) takes a picture of every Critter “so none ever gets lost”. Click-clack!
 - **Your neighbour**, your rival: you pick his name (Marker, Crayon, Brush…). A bit of a show-off, he
   wants to be the best trainer in Papeterra.
-- **Team Gomme**, people in grey with pink eraser caps. They rub out the scenery and
-  turn Critters grey. Their bosses are Admin Smudge (Rature) and Admin Whiteout (Blanche), and above
+- **Team Gomme**, people in grey uniforms, with caps shaped like pink and blue erasers and black
+  masks. They rub out the scenery and turn Critters grey. Their bosses are Admin Smudge (Rature) and Admin Whiteout (Blanche), and above
   them, the mysterious **Great Eraser**.
 - **The 8 Atelier Masters**, one per town: Mireille (Bug), Gaspard (Normal), Marine (Water), Zelie
   (Electric), Amber (Fire), Celestine (Fairy), Basil (Grass) and Nocturne (Ghost).

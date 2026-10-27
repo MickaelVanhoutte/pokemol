@@ -59,7 +59,8 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   `to` target. A `script` instead of `to` gates the door. `kind` is one of `'house' | 'lab' | 'center'
   | 'shop' | 'cave' | 'tower' | 'gym'…`; `roof` sets the colour.
 - `npcs`:
-  - `look` comes from `LOOKS` in `src/overworld/sprites.ts` or is inline `{ hair, shirt, pants }`;
+  - `look` comes from `LOOKS` in `src/overworld/sprites.ts` or is inline `{ hair, shirt, pants }`
+    (a trainer's look is also drawn in coloured pencil for the battle intro, through `fromLook`);
   - `text: LText[]` for simple talkers, `script` for story NPCs;
   - `trainer` plus `sight` (tiles) for trainers who spot the player;
   - `wander`, `showIf` / `hideIf`, and `fromMap` in shared interiors.

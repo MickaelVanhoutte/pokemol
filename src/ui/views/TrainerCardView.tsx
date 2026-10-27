@@ -21,7 +21,7 @@ export function cardStars(save: SaveData): number {
 }
 
 /** FRLG trainer card: name, ID, money, Bestiodex, play time and the 8 badge slots. */
-export function TrainerCardView({ save, avatar, onClose }: { save: SaveData; avatar: string; onClose: () => void }) {
+export function TrainerCardView({ save, avatar, onLook, onClose }: { save: SaveData; avatar: string; onLook?: () => void; onClose: () => void }) {
   useMenuNav(1, { onSelect: onClose, onCancel: onClose });
   const id = String(save.createdAt % 100000).padStart(5, '0');
   const slots = Array.from({ length: 8 }, (_, i) => save.badges[i]);
@@ -43,7 +43,10 @@ export function TrainerCardView({ save, avatar, onClose }: { save: SaveData; ava
             {!!save.hallOfFame?.length && <><dt>{tr(L('CONCOURS', 'CONTEST'))}</dt><dd>×{save.hallOfFame.length}</dd></>}
             {!!save.tower?.best && <><dt>{tr(L('TOUR', 'TOWER'))}</dt><dd title={tr(L('Meilleure série', 'Best streak'))}>{save.tower.best}</dd></>}
           </dl>
-          <img class="tcard__avatar picon" src={avatar} alt="" />
+          <div class="tcard__me">
+            <img class="tcard__avatar" src={avatar} alt="" />
+            {onLook && <button class="pbtn tcard__look" onClick={onLook}>{tr(L('Mon look', 'My look'))}</button>}
+          </div>
         </div>
         <p class="tcard__label">{tr(L('BADGES', 'BADGES'))}</p>
         <div class="tcard__badges">

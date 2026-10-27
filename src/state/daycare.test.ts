@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createMon, STAT_KEYS } from '../engine/pk/creature';
 import { canBreed, daycareStep, EGG_CHECK_STEPS, familyRoot, makeEgg, withdrawPrice } from './daycare';
 import { newGame, partyAlive } from './game';
+import { DEFAULT_LOOKS } from '../data/appearance';
 
 const st = () => ({ rng: 11 });
 
@@ -59,7 +60,7 @@ describe('Pension Crayonnée', () => {
   });
 
   it('gives 1 XP a step and sometimes an egg every 256 steps', () => {
-    const s = newGame('Lou', 0, 'f', 'Feutre');
+    const s = newGame('Lou', DEFAULT_LOOKS.f, 'f', 'Feutre');
     const r = st();
     const a = createMon('012', 5, r), b = createMon('012', 5, r);
     s.daycare = { slots: [{ mon: a, level: 5 }, { mon: b, level: 5 }], egg: false };
@@ -79,14 +80,14 @@ describe('Pension Crayonnée', () => {
   });
 
   it('never makes an egg from two families', () => {
-    const s = newGame('Lou', 0, 'f', 'Feutre');
+    const s = newGame('Lou', DEFAULT_LOOKS.f, 'f', 'Feutre');
     const r = st();
     s.daycare = { slots: [{ mon: createMon('012', 5, r), level: 5 }, { mon: createMon('013', 5, r), level: 5 }], egg: false };
     for (let step = 1; step <= EGG_CHECK_STEPS * 20; step++) expect(daycareStep(s, step, r)).toBe(false);
   });
 
   it('does not count an egg as able to fight', () => {
-    const s = newGame('Lou', 0, 'f', 'Feutre');
+    const s = newGame('Lou', DEFAULT_LOOKS.f, 'f', 'Feutre');
     const r = st();
     const a = createMon('012', 5, r);
     s.party = [makeEgg(a, a, r)];

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { DEFAULT_LOOKS } from '../data/appearance';
 
 // the story only needs the controller's registry and helpers; the canvas game is never created in tests
 vi.mock('../audio/sfx', () => ({ sfx: new Proxy({}, { get: () => () => undefined }) }));
@@ -72,7 +73,7 @@ const { CREATURES } = await import('../data/creatures');
 const { newGame } = await import('../state/game');
 
 describe('next objective (Town Map)', () => {
-  const fresh = () => newGame('Lou', 0, 'f', 'Feutre');
+  const fresh = () => newGame('Lou', DEFAULT_LOOKS.f, 'f', 'Feutre');
   it('a new game starts with the first step', () => expect(currentObjective(fresh())?.id).toBe(OBJECTIVES[0].id));
   it('every target is a place on the map', () => {
     for (const o of OBJECTIVES) expect(WORLD[o.target], `${o.id} → ${o.target}`).toBeDefined();

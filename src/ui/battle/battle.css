@@ -75,10 +75,10 @@
 .pk-sprite.is-grey { filter: grayscale(1) contrast(0.85) brightness(1.08) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
 /* trainers and the player (from behind) before the Bestioles come out */
 .pk-trainer {
-  height: 92%; width: auto; image-rendering: pixelated; image-rendering: crisp-edges;
+  height: 125%; width: auto; margin-bottom: 6%;
   animation: trainerIn 0.5s ease-out;
 }
-.pk-trainer--me { height: 100%; }
+.pk-trainer--me { height: 108%; margin-bottom: 0; }
 @keyframes trainerIn { from { opacity: 0; transform: translateY(12%); } }
 /* intro: both platforms slide in from the sides, like the GBA games */
 .is-intro .pk-plat--foe { animation: slideFromLeft 0.75s ease-out both; }

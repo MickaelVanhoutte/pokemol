@@ -2,7 +2,10 @@ import type { ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
 import { L, gender, setGlobalVars, tr, type LText } from '../../i18n';
 import { artUrl, creature } from '../../data/creatures';
-import { AVATARS, LOOKS, lookImage } from '../../overworld/sprites';
+import { LOOKS } from '../../overworld/sprites';
+import { DEFAULT_LOOKS, fromLook, type Appearance } from '../../data/appearance';
+import { personUrl } from '../personArt';
+import { LookView } from '../views/LookView';
 import { enterWorld, runScript } from '../../overworld/controller';
 import { newGame } from '../../state/game';
 import { go } from '../../state/router';
@@ -47,19 +50,19 @@ const RIVALS = [L('Feutre', 'Marker'), L('Crayon', 'Crayon'), L('Pinceau', 'Brus
 export function NewGameScreen() {
   const [i, setI] = useState(0);
   const [g, setG] = useState<'f' | 'm'>('f');
-  const [avatar, setAvatar] = useState(0);
+  const [look, setLook] = useState<Appearance>(DEFAULT_LOOKS.f);
   const [name, setName] = useState('');
   const [rival, setRival] = useState('');
   const [typing, setTyping] = useState(false);
   const step = STEPS[i];
   const next = () => setI((n) => Math.min(STEPS.length - 1, n + 1));
   const finish = () => {
-    newGame(name || tr(NAMES[g][0]), avatar, g, rival || tr(RIVALS[0]));
+    newGame(name || tr(NAMES[g][0]), look, g, rival || tr(RIVALS[0]));
     enterWorld();
     void runScript('intro');
   };
 
-  const show = step.kind === 'say' ? step.show : step.kind === 'avatar' || step.kind === 'name' ? 'player' : step.kind === 'rival' ? 'rival' : step.kind === 'gender' ? 'prof' : undefined;
+  const show = step.kind === 'say' ? step.show : step.kind === 'name' ? 'player' : step.kind === 'rival' ? 'rival' : step.kind === 'gender' ? 'prof' : undefined;
 
   if (step.kind === 'night') {
     return (
@@ -68,6 +71,11 @@ export function NewGameScreen() {
         <TextBox class="prologue__hidden" text="" keys onAdvance={next} instant />
       </div>
     );
+  }
+
+  // « Dessine-toi ! »: the whole screen goes to the look picker
+  if (step.kind === 'avatar') {
+    return <LookView look={look} onChange={setLook} onDone={next} title={tr(L('Dessine-toi !', 'Draw yourself!'))} />;
   }
 
   const chooser = (label: string, value: string, set: (v: string) => void, presets: LText[], done: () => void) => (
@@ -104,19 +112,10 @@ export function NewGameScreen() {
   return (
     <div class="prologue graph">
       <div class="prologue__stage">
-        {show === 'prof' && <img class="prologue__pic" src={lookImage(LOOKS.prof, 'down', 10)} alt="" />}
+        {show === 'prof' && <img class="prologue__pic" src={personUrl(fromLook(LOOKS.prof))} alt="" />}
         {show === 'mon' && <img class="prologue__mon mon-art" src={artUrl(creature('001'))} alt="" />}
-        {show === 'player' && <img class="prologue__pic" src={lookImage(AVATARS[avatar], 'down', 10)} alt="" />}
-        {show === 'rival' && <img class="prologue__pic" src={lookImage(LOOKS.rival, 'down', 10)} alt="" />}
-        {step.kind === 'avatar' && (
-          <div class="prologue__avatars">
-            {AVATARS.map((look, k) => k % 2 === (g === 'f' ? 0 : 1) && (
-              <button class={`newgame__avatar ${k === avatar ? 'is-on' : ''}`} onClick={() => setAvatar(k)}>
-                <img src={lookImage(look, 'down', 4)} alt="" />
-              </button>
-            ))}
-          </div>
-        )}
+        {show === 'player' && <img class="prologue__pic" src={personUrl(look)} alt="" />}
+        {show === 'rival' && <img class="prologue__pic" src={personUrl(fromLook(LOOKS.rival))} alt="" />}
       </div>
       <div class="prologue__bottom">
         {step.kind === 'say' && <TextBox key={i} text={tr(step.text)} keys onAdvance={next} />}
@@ -124,15 +123,10 @@ export function NewGameScreen() {
           <Ask key={i} text={tr(L('Es-tu une fille ou un garçon ?', 'Are you a girl or a boy?'))}>{(ready) => (
             <Window class="prologue__choices">
               <MenuList active={ready} items={[
-                { label: tr(L('FILLE', 'GIRL')), onSelect: () => { setG('f'); setAvatar(0); next(); } },
-                { label: tr(L('GARÇON', 'BOY')), onSelect: () => { setG('m'); setAvatar(1); next(); } },
+                { label: tr(L('FILLE', 'GIRL')), onSelect: () => { setG('f'); setLook(DEFAULT_LOOKS.f); next(); } },
+                { label: tr(L('GARÇON', 'BOY')), onSelect: () => { setG('m'); setLook(DEFAULT_LOOKS.m); next(); } },
               ]} />
             </Window>
-          )}</Ask>
-        )}
-        {step.kind === 'avatar' && (
-          <Ask key={i} text={tr(L('Lequel de ces portraits te ressemble ?', 'Which of these looks like you?'))}>{() => (
-            <button class="pbtn pbtn--accent" onClick={next}>OK ▶</button>
           )}</Ask>
         )}
         {step.kind === 'name' && chooser(tr(L('Comment t’appelles-tu ?', 'What is your name?')), name, setName, NAMES[g], next)}

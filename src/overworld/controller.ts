@@ -15,11 +15,12 @@ import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
-import { DIRS, Game, miniFor, type Actor } from './game';
+import { DIRS, Game, miniFor, sheetFor, type Actor } from './game';
 import type { FresqueDef, MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, WarpTarget } from './mapTypes';
 import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
-import { AVATARS, LOOKS, type Look } from './sprites';
+import { LOOKS, lookOf, type Look } from './sprites';
+import { OLD_AVATARS } from '../data/appearance';
 import { tile } from './tiles';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
@@ -148,7 +149,7 @@ export function refreshMap() {
 export function enterWorld() {
   const g = getGame();
   const d = s();
-  g.setPlayer(AVATARS[d.player.avatar] ?? AVATARS[0], d.player.x, d.player.y, d.player.facing);
+  g.setPlayer(lookOf(playerLook()), d.player.x, d.player.y, d.player.facing);
   loadMap(d.player.map);
   refreshFollower();
   g.placeFollower();
@@ -367,6 +368,15 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
   if (target.tileId === 'pc') return void runScript('pc');
   if (target.tileId === 'bookshelf') return void locked(() => say(L('Des livres pleins de dessins de Bestioles.', 'Books full of Critter drawings.')));
   if (target.tileId === 'tv') return void locked(() => say(L('À la télé : « Les Bestioles dessinées envahissent le pays ! »', 'On TV: "Drawn Critters are taking over the country!"')));
+}
+
+/** How the player looks (older saves are repaired on load, this is only a fallback). */
+export const playerLook = () => save.value?.player.look ?? OLD_AVATARS[save.value?.player.avatar ?? 0] ?? OLD_AVATARS[0];
+
+/** Redraws the player's chibi after the look changed (trainer card). */
+export function refreshPlayerLook() {
+  const p = game?.player;
+  if (p) p.sheet = sheetFor(lookOf(playerLook()));
 }
 
 // ------------------------------------------------------------------ the Bestiole that follows you
@@ -798,7 +808,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         onUseItem: (id) => update((x) => void takeItem(x, id)),
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
-        playerLook: AVATARS[d.player.avatar] ?? AVATARS[0],
+        playerLook: playerLook(),
         music: opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gommeBattle' : kind === 'trainer' ? 'trainer' : 'wild'),
         trainer: kind === 'trainer' ? {
           title: tr(enemyName),

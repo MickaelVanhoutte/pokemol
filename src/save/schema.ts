@@ -1,5 +1,6 @@
 import type { Mon } from '../engine/pk/creature';
 import type { HallEntry } from '../data/postgame';
+import type { Appearance } from '../data/appearance';
 
 export type Dir = 'down' | 'up' | 'left' | 'right';
 
@@ -11,7 +12,10 @@ export interface SaveData {
   playMs: number;
   player: {
     name: string;
+    /** One of the four portraits of the first versions (kept to rebuild `look` for old saves). */
     avatar: number;
+    /** How you look (prologue, trainer card): filled in by `repair` for older saves. */
+    look?: Appearance;
     /** French texts agree with it ("endormie" / "endormi"). */
     gender: 'f' | 'm';
     map: string;

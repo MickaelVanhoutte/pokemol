@@ -11,6 +11,10 @@ where every drawing is alive.
 - **Team Gomme** (*Team Eraser*) rubs out the scenery, leaving blank paper (`erased` tiles, `patches`).
   They also grey out Bestioles to control them: Team Gomme trainers have `grey: true`, and their
   Bestioles get their colour back when beaten.
+  - Their look (`gang` in `LOOKS`, drawn by `fromLook`): a charcoal uniform with their sign on the
+    chest (a pink and blue school eraser), a cap shaped like an eraser with a white G, black gloves and
+    boots, a frown and a smirk. Grunts are masked, admins wear a cape with a high collar (Rature red,
+    Blanche white, Captain Buvard ink blue), and the Great Eraser's face is rubbed out.
   - Admins: **Rature** (*Smudge*) and **Blanche** (*Whiteout*); grunts: "Sbire Gomme".
   - Boss: **le Grand Effaceur** (*the Great Eraser*), the little voice that says "your drawings
     aren't good enough".
@@ -32,7 +36,7 @@ they are used.
 
 | # | Maps (ids) | What happens | Flags set |
 |---|---|---|---|
-| 0 | `NewGameScreen` | Night lines, the Prof's speech, girl/boy, avatar, name and rival name | — |
+| 0 | `NewGameScreen` | Night lines, the Prof's speech, girl/boy, the look picker (« Dessine-toi ! »), name and rival name | — |
 | 1 | `maison`, `maisonRival`, `bourg` (Bourg-Gribouille), `labo` | Wake up; starter at the lab (camera clue); tutorial battle against the rival (friendly, coached) | `intro`, `rivalStarter`, `rival1` |
 | 2 | `route1` (Chemin des Crayons) | A grunt erases a patch of grass (`r1Erased`); first trainers; wild L2–4 | `a1.r1seen` |
 | 3 | `ville` (Ville-Pastel), `atelierPastel` | 🏅 **Mireille**, Insect | `badge:pastel` |

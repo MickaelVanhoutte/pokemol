@@ -7,6 +7,7 @@ import { BOX_COUNT, BOX_SIZE, PARTY_MAX, SAVE_VERSION, type SaveData } from '../
 import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
 import { prefs } from './prefs';
+import { OLD_AVATARS, type Appearance } from '../data/appearance';
 
 const KEY = 'atelier-bestioles.save';
 
@@ -55,6 +56,8 @@ export function repair(s: SaveData): SaveData {
     for (const m of legacy) storeInBox(s, m);
     delete (s as SaveData & { box?: Mon[] }).box;
   }
+  // the look can be chosen since Oct 2026: older saves keep their portrait
+  s.player.look ??= { ...(OLD_AVATARS[s.player.avatar] ?? OLD_AVATARS[0]) };
   s.party.forEach(repairMon);
   s.boxes.forEach((b) => b.forEach(repairMon));
   s.daycare?.slots.forEach((x) => repairMon(x.mon));
@@ -171,13 +174,13 @@ export function deleteSave() {
   outdatedSave.value = false;
 }
 
-function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: string): SaveData {
+function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: string, look?: Appearance): SaveData {
   return {
     version: SAVE_VERSION,
     createdAt: Date.now(),
     playMs: 0,
     // you wake up next to your bed
-    player: { name, avatar, gender, map: 'maison', x: 6, y: 4, facing: 'down' },
+    player: { name, avatar, look: look ?? { ...(OLD_AVATARS[avatar] ?? OLD_AVATARS[0]) }, gender, map: 'maison', x: 6, y: 4, facing: 'down' },
     rivalName,
     respawn: { map: 'maison', x: 4, y: 5 },
     flags: {},
@@ -191,8 +194,8 @@ function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: s
   };
 }
 
-export function newGame(name: string, avatar: number, gender: 'f' | 'm', rivalName: string): SaveData {
-  const s = freshSave(name, avatar, gender, rivalName);
+export function newGame(name: string, look: Appearance, gender: 'f' | 'm', rivalName: string): SaveData {
+  const s = freshSave(name, 0, gender, rivalName, look);
   save.value = s;
   outdatedSave.value = false;
   // like the GBA games, a new adventure only replaces the old save once the player saves

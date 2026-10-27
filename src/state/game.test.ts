@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createMon } from '../engine/pk/creature';
 import { SAVE_VERSION } from '../save/schema';
 import { migrate } from './game';
+import { OLD_AVATARS } from '../data/appearance';
 
 /** A creature as saved by version 3 (no effort points, no held item, no nature). */
 function oldMon(species: string, level: number) {
@@ -71,6 +72,16 @@ describe('save migration', () => {
     const noStarter = v3Save({ intro: 1 });
     noStarter.party = [];
     expect(migrate(noStarter)!.flags.rival1).toBeUndefined();
+  });
+
+  it('gives saves made before the look picker their old portrait', () => {
+    const save = v3Save();
+    save.player.avatar = 1;
+    const s = migrate(save)!;
+    expect(s.player.look).toEqual(OLD_AVATARS[1]);
+    // a look already chosen stays
+    const again = migrate({ ...s, player: { ...s.player, look: { ...OLD_AVATARS[1], hair: 'couettes' } } })!;
+    expect(again.player.look?.hair).toBe('couettes');
   });
 
   it('refuses unknown data', () => {

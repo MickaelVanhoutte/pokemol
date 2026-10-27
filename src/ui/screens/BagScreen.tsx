@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
-import { backToWorld, fieldItemProblem, toggleBike, useFieldItem } from '../../overworld/controller';
+import { backToWorld, fieldItemProblem, playerLook, toggleBike, useFieldItem } from '../../overworld/controller';
 import { save, see, takeItem, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { canUseOn, evolveWith, stencilStatus, useOn } from '../logic/bag';
@@ -31,7 +31,7 @@ export function BagScreen() {
   // moves a freshly evolved Bestiole wants to learn while it already knows four
   const [evoLearn, setEvoLearn] = useState<{ i: number; moves: string[] } | null>(null);
   if (reading !== null) return <PageView n={reading} onClose={() => setReading(null)} />;
-  if (map) return <TownMapView save={d} avatar={avatarImage(d.player.avatar)} onClose={() => setMap(false)} />;
+  if (map) return <TownMapView save={d} avatar={avatarImage(playerLook())} onClose={() => setMap(false)} />;
   if (teaching) {
     const mv = item(teaching).move!;
     const vars = (i: number) => ({ n: monLabel(d.party[i]), m: tr(move(mv).name) });

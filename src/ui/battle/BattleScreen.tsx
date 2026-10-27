@@ -13,6 +13,7 @@ import { sfx } from '../../audio/sfx';
 import { playJingle, playMusic, stopMusic, type TrackId } from '../../audio/music';
 import type { Backdrop } from '../../data/schema';
 import type { Look } from '../../overworld/sprites';
+import type { Appearance } from '../../data/appearance';
 import { prefs } from '../../state/prefs';
 import { BagView } from '../views/BagView';
 import { PartyView } from '../views/PartyView';
@@ -43,7 +44,7 @@ export interface BattleProps {
   /** Opponent trainer shown before the battle (and again with the defeat quote). */
   trainer?: BattleTrainer;
   /** Player character, seen from behind at the start. */
-  playerLook?: Look;
+  playerLook?: Appearance;
   music?: TrackId;
 }
 

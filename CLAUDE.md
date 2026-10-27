@@ -109,7 +109,11 @@ re-renders everything.
   fades and wipes, speech bubbles and the "pencilize" post-pass (`pencil.ts`). It also provides the
   cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`, `wipeTo`.
 - `tiles.ts`, `buildings.ts` and `sprites.ts` paint pixel art with the `Painter` from `pixel.ts`
-  (16px tiles). `LOOKS` and `lookImage()` give the trainer and NPC chibis, also used in battle intros.
+  (16px tiles). `LOOKS` gives the trainer and NPC chibis; `lookOf()` turns the player's look into one.
+- Wherever a character shows big (battle intros, the player's back in battle, the prologue, the trainer
+  card) it is drawn in coloured pencil by `personUrl()` (`src/ui/personArt.ts`), from an `Appearance`
+  (`src/data/appearance.ts`: the player's `save.player.look`, or a story character's `Look` through
+  `fromLook`). The player picks it in the prologue and changes it from the trainer card (`LookView`).
 - `controller.ts` is the glue between the save, the maps and the story:
   - movement, interactions, warps (including `to: 'back'` for shared interiors), trainer sight;
   - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, evolutions, rematches;

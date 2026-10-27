@@ -9,7 +9,9 @@ import { HpBar, StatusTag, XpBar, lv } from '../paper';
 import { sketchIconUrl } from '../sketchIcons';
 import { backdropUrl, platformUrl } from './backdrops';
 import type { Backdrop } from '../../data/schema';
-import { lookImage, type Look } from '../../overworld/sprites';
+import type { Look } from '../../overworld/sprites';
+import { fromLook, type Appearance } from '../../data/appearance';
+import { personUrl } from '../personArt';
 import { dollUrl } from './fx/doll';
 
 export type Fx = Partial<Record<Side, string>>;
@@ -63,7 +65,7 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
 /** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
 export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored, sceneRef }: {
   view: BattleState; fx: Fx; captured: boolean; backdrop: Backdrop; intro: boolean;
-  foeTrainer?: Look; playerBack?: Look; grey: boolean; recolored: string[];
+  foeTrainer?: Look; playerBack?: Appearance; grey: boolean; recolored: string[];
   /** The scene element, where the move animations draw. */
   sceneRef?: Ref<HTMLDivElement>;
 }) {
@@ -85,7 +87,7 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
       {!foeTrainer && !intro && <HpBox st={view} side={1} />}
       <div class="pk-plat pk-plat--foe">
         {foeTrainer ? (
-          <img class="pk-trainer" src={lookImage(foeTrainer, 'down')} alt="" />
+          <img class="pk-trainer" src={personUrl(fromLook(foeTrainer))} alt="" />
         ) : (
           <img
             class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
@@ -99,7 +101,7 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
       {!playerBack && !intro && <HpBox st={view} side={0} />}
       <div class="pk-plat pk-plat--me">
         {playerBack ? (
-          <img class="pk-trainer pk-trainer--me" src={lookImage(playerBack, 'up')} alt="" />
+          <img class="pk-trainer pk-trainer--me" src={personUrl(playerBack, 'back')} alt="" />
         ) : (
           <img
             class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
