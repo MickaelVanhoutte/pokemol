@@ -7,13 +7,13 @@ const TOWER_ENCOUNTERS = {
   rate: 0.1,
   anyTile: true,
   table: [
-    { id: '009', w: 45, min: 21, max: 24 },
-    { id: '010', w: 14, min: 22, max: 25 },
-    { id: '005', w: 13, min: 21, max: 24 },
-    { id: '006', w: 13, min: 21, max: 24 },
-    { id: '007', w: 13, min: 22, max: 25 },
-    { id: '065', w: 14, min: 21, max: 24 },
-    { id: '066', w: 4, min: 23, max: 25 },
+    { id: '009', w: 45, min: 24, max: 27 },
+    { id: '010', w: 14, min: 25, max: 28 },
+    { id: '005', w: 13, min: 24, max: 27 },
+    { id: '006', w: 13, min: 24, max: 27 },
+    { id: '007', w: 13, min: 25, max: 28 },
+    { id: '065', w: 14, min: 24, max: 27 },
+    { id: '066', w: 4, min: 26, max: 28 },
   ],
 };
 

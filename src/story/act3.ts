@@ -235,7 +235,7 @@ scripts.echoShadow = async () => {
   await say(L('Une ombre gigantesque te fixe de ses yeux rouges…', 'A huge shadow stares at you with red eyes…'));
   await shake(500);
   await say(L('… Elle se jette sur toi !', '… It leaps at you!'));
-  const out = await wildBattle('011', 36, { music: 'final' });
+  const out = await wildBattle('011', 38, { music: 'final' });
   if (out === 'capture' || out === 'win') {
     setFlag('static:ombrouille');
     await say(out === 'capture'

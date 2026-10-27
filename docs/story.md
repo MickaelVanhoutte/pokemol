@@ -196,7 +196,7 @@ checks every step's flags are set somewhere and its target is on the map.
   - Mamie Encre (Cité-Encre) sends a letter to her brother Papi Plume (Village-Plume): he gives
     5 Super Crayon-balls and a reply; bringing it back gives a Spiky Helmet.
 - *Route rematches*: once beaten, route trainers want a rematch the next day (a ♪ bubble), with
-  their team raised to `REMATCH_LEVEL[badges]` (L7 with no badge up to L47 after the ending). Prize
+  their team raised to `REMATCH_LEVEL[badges]` (L7 with no badge, L42 with eight, L55 after the ending). Prize
   as usual.
 - *The following Bestiole* has lines for each place and for its friendship, and once a day it may
   find an item.
@@ -265,11 +265,11 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Atelier Pastel | L5–6 | Mireille L7/L9 (Chrysalou, Papivole) |
 | Route 2, Bois Brumeux | L7–10 (4 + 6 trainers) | — |
 | Atelier Plume | L11 | Gaspard L10/L8 |
-| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 has 4 trainers | Marine L15/16/18 |
-| Route 4, Ville-Feutre | L15–19 (Route 4 has 5 trainers) | Rature L18/17/19, Zélie L19/19/21 |
-| Mont Fusain, Braise | L18–20 (wild L18–22) | Ambre L21/18/21 |
-| Route 6, Paillette, Tour | L20–24 (Route 6 has 4 trainers) | Célestine L24/25/27, Blanche L21/22/21/22 (×4) |
-| Routes 7–8, Gouache, Lighthouse, Encre, Factory | L23–29 (4 trainers per route) | Basile L23/24/26 (Bouquétigre ace), Buvard L25–27, Nocturne L30/31/33, Rature L27–28, Blanche L27–28 |
+| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 trainers have three Bestioles | Marine L17/18/20 (Clapoflot) |
+| Route 4, Ville-Feutre | L16–20 (Route 4 has 5 trainers) | Rature L20/19/21, Zélie L21/21/23 |
+| Mont Fusain, Braise | L20–23 (wild L19–23) | Ambre L23/20/24 |
+| Route 6, Paillette, Tour | L23–27 | Célestine L26/27/28/29 (Lamacorne added), Blanche L23/24/23/24 |
+| Routes 7–8, Gouache, Lighthouse, Encre, Factory | L27–33 (three Bestioles per trainer) | Basile L27–30 (four), Buvard L29–31, Nocturne L30–33 (five, an Ombrouille ace), Rature L31–32 and Blanche L33–34 (five each) |
 | Finale | — | Rival L28–31 (6), Great Eraser L27–31 (5) |
 
 Run `npm run balance` for the current numbers instead of trusting this table.
@@ -317,6 +317,19 @@ friendship from L20.
 `curve.test.ts` checks the whole story: route trainers no higher than the team's lead, Atelier Masters
 and admins at most five levels above it. A boss's strength is mostly its team, so `npm run balance`
 tunes them.
+
+**A longer game (iteration 16, Oct 2026).** The owner wants the story to end around L45–50, like the
+GBA games. Act 1 is unchanged. From Route 3 on, every trainer with fewer than three Bestioles got one more,
+picked from the wild Bestioles around (in its grown form at that level, `grownForm`), and the leaders and
+admins got bigger teams (Célestine Lamacorne, Basile Clochegueule, Nocturne Ossagarde and Pantharuse with an
+Ombrouille ace, Rature Fumerax, Blanche Triboulon). Levels follow the curve: route trainers at the team's lead,
+then each boss tuned with the sims to about 70–90% on Normal (some sit at the team's level: five Bestioles at
+equal level are a fight). Wild levels rose by 1 (Act 2) to 4 (Act 3), the optional places with them (Piste,
+echo cave L38 Ombrouille, Bois Perdu, Grotte des Ratures, the island, the Super Rod).
+
+The curve now brings the team to Marine at L17, Ambre L23, Célestine L25, Basile L29, Nocturne L32 and the end
+of the Factory at L34 (it was L29). Act 4, beyond the margin, takes it to about L45 before the finale.
+Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Hard 0–100% depending on the starter.
 
 **The owner's request (Oct 2026):** the first battles must let players learn the mechanics.
 - The first trainers have one or two low-level Bestioles; the starter alone should win Act 1 route

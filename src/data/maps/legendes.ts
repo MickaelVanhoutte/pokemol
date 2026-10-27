@@ -20,12 +20,12 @@ const RATURES_ENCOUNTERS = {
   rate: 0.08,
   anyTile: true,
   table: [
-    { id: '010', w: 30, min: 28, max: 31 },
-    { id: '057', w: 20, min: 28, max: 30 },
-    { id: '052', w: 10, min: 27, max: 29 },
-    { id: '066', w: 16, min: 28, max: 30 },
-    { id: '055', w: 14, min: 28, max: 30, time: 'night' as const },
-    { id: '009', w: 20, min: 27, max: 29 },
+    { id: '010', w: 30, min: 32, max: 35 },
+    { id: '057', w: 20, min: 32, max: 34 },
+    { id: '052', w: 10, min: 31, max: 33 },
+    { id: '066', w: 16, min: 32, max: 34 },
+    { id: '055', w: 14, min: 32, max: 34, time: 'night' as const },
+    { id: '009', w: 20, min: 31, max: 33 },
   ],
 };
 
@@ -67,12 +67,12 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 0.12,
       table: [
-        { id: '007', w: 25, min: 24, max: 27 },
-        { id: '063', w: 20, min: 24, max: 27 },
-        { id: '006', w: 25, min: 25, max: 27, time: 'night' },
-        { id: '055', w: 10, min: 25, max: 27, time: 'night' },
-        { id: '047', w: 12, min: 24, max: 26 },
-        { id: '026', w: 15, min: 24, max: 27, time: 'day' },
+        { id: '007', w: 25, min: 27, max: 30 },
+        { id: '063', w: 20, min: 27, max: 30 },
+        { id: '006', w: 25, min: 28, max: 30, time: 'night' },
+        { id: '055', w: 10, min: 28, max: 30, time: 'night' },
+        { id: '047', w: 12, min: 27, max: 29 },
+        { id: '026', w: 15, min: 27, max: 30, time: 'day' },
       ],
     },
   },

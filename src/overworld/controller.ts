@@ -709,8 +709,8 @@ export async function trainerBattle(id: string, actor?: Actor, look?: Look) {
   }
 }
 
-/** Top level of a route trainer's rematch team, by badges owned. */
-const REMATCH_LEVEL = [7, 13, 19, 24, 28, 33, 37, 41, 47];
+/** Top level of a route trainer's rematch team, by badges owned (the last one after the ending). */
+const REMATCH_LEVEL = [7, 13, 19, 22, 25, 29, 32, 36, 42, 55];
 
 /**
  * Route and cave trainers already beaten want a rematch once a day (not Atelier trainers, Team
@@ -732,7 +732,7 @@ async function routeRematch(id: string, actor: Actor) {
     await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), t.name);
     return;
   }
-  const top = REMATCH_LEVEL[Math.min(REMATCH_LEVEL.length - 1, s().badges.length)];
+  const top = REMATCH_LEVEL[Math.min(REMATCH_LEVEL.length - 1, s().badges.length + (flag('ending') ? 1 : 0))];
   const party = t.party.map((m, i) => ({ ...m, level: Math.min(MAX_LEVEL, Math.max(m.level, top - (t.party.length - 1 - i))) }));
   const strong: TrainerDef = { ...t, id: `${id}:re`, money: Math.round(t.money * 1.5), party };
   const out = await fight('trainer', t.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });

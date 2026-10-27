@@ -16,7 +16,7 @@ export interface Habitat {
 const GIFTS: Record<string, string[]> = { '001': ['labo'], '002': ['labo'], '003': ['labo'], '016': ['ville'], '073': ['bois'] };
 /** Bestioles waiting somewhere, met once: where, at what level, in what kind of place, at what time. */
 const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time?: 'night' }[]> = {
-  '011': [{ map: 'grotteEchos', level: 36, how: 'cave' }],
+  '011': [{ map: 'grotteEchos', level: 38, how: 'cave' }],
   // after the ending, the one Coconfus did not become (before it, only visions: src/story/legends.ts)
   '071': [{ map: 'boisPerdu', level: 55, how: 'grass', time: 'night' }],
   '072': [{ map: 'ratures3', level: 55, how: 'cave' }],
