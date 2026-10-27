@@ -7,6 +7,7 @@
 import type { Side } from '../../../engine/pk/battle';
 import type { TypeId } from '../../../data/schema';
 import type { Brush } from './brush';
+import type { FxSound } from '../../../audio/sfx';
 
 /** Where a drawing stands, in scene pixels. */
 export interface Anchor {
@@ -45,6 +46,8 @@ export interface Layer {
   impact?: number;
   /** Painted under the drawings (washes, cracks in the ground). */
   back?: boolean;
+  /** Sounds and when they play (ms from the layer's start). */
+  sounds?: [FxSound, number][];
   draw(b: Brush, t: number): void;
 }
 

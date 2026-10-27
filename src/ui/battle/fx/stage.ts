@@ -3,6 +3,7 @@
  * `.pk-fx-back` under them), the drawings' motions and the hit reactions.
  */
 import type { Side } from '../../../engine/pk/battle';
+import { fxSound } from '../../../audio/sfx';
 import { Brush } from './brush';
 import type { Anchor, Env, Layer, Recipe } from './core';
 import { BLINK, motionFrames, reactionFrames, run, shakeFrames } from './motions';
@@ -141,6 +142,7 @@ export class FxStage {
     const s = this.setup(recipe, o);
     if (!s) return Promise.resolve();
     this.moveAll(s, recipe, o);
+    const sounds = s.layers.flatMap((l) => (l.sounds ?? []).map(([kind, at]) => setTimeout(() => fxSound(kind), (l.start + at) * s.speed)));
     const panes = this.canvases(s.scene, s.env);
     return new Promise((resolve) => {
       const t0 = performance.now();
@@ -151,6 +153,7 @@ export class FxStage {
         done = true;
         cancelAnimationFrame(raf);
         clearTimeout(guard);
+        sounds.forEach(clearTimeout);
         if (o.keep) this.render(panes, s.env, s.layers, s.total, 0);
         else for (const { ctx } of panes) ctx.clearRect(0, 0, s.env.w, s.env.h);
         this.stopCurrent = null;

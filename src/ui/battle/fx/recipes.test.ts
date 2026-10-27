@@ -57,6 +57,7 @@ describe('move animations', () => {
             }
           }
           expect(count.n, `${id} draws nothing`).toBeGreaterThan(0);
+          expect(layers.some((l) => l.sounds?.length), `${id} makes no sound`).toBe(true);
         }
       }
     }

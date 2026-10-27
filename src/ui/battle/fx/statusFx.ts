@@ -4,14 +4,15 @@
  */
 import { GRAPHITE } from '../../paper/pencilCanvas';
 import type { DoodleKind } from './doodles';
-import { along, feet, fixed, who, type Who } from './effects';
+import type { FxSound } from '../../../audio/sfx';
+import { along, feet, fixed, kindSound, who, type Who } from './effects';
 import { arc, bell, centre, easeIn, easeOut, fade, lerp, mix, mouth, seg, PAL, PAPER, SPARK, type Builder, type P } from './core';
 
 /** FRLG-style stat change: chevrons rising (up) or falling (down) over a drawing. */
 export const aura = (o: { color: string; down?: boolean; who?: Who; dur?: number }): Builder => (env) => {
   const dur = o.dur ?? 760;
   return {
-    start: 0, dur,
+    start: 0, sounds: [[o.down ? 'statDown' : 'statUp', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       const alpha = fade(t, 0.12, 0.25) * 0.95;
@@ -31,7 +32,7 @@ export const rise = (o: { kind: DoodleKind; color: string; n?: number; dur?: num
   const R = fixed(env, 83);
   const bits = Array.from({ length: n }, (_, i) => [R() - 0.5, (i / n) * 0.5, R() * 0.6 - 0.3]);
   return {
-    start: 0, dur,
+    start: 0, sounds: [[kindSound(o.kind), 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       bits.forEach(([dx, delay, rot], i) => {
@@ -49,7 +50,7 @@ export const rise = (o: { kind: DoodleKind; color: string; n?: number; dur?: num
 export const orbit = (o: { kind: DoodleKind; color: string; n?: number; dur?: number; size?: number; who?: Who }): Builder => (env) => {
   const n = o.n ?? 3, dur = o.dur ?? 900;
   return {
-    start: 0, dur,
+    start: 0, sounds: [['psychic', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       const cy = A.top + s * 0.08;
@@ -67,7 +68,7 @@ export const powder = (o: { color: string; n?: number; dur?: number }): Builder 
   const R = fixed(env, 89);
   const grains = Array.from({ length: n }, () => [R() - 0.5, R() * 0.5, R()]);
   return {
-    start: 0, dur, impact: dur * 0.35,
+    start: 0, sounds: [['twinkle', 0], ['twinkle', dur * 0.4]], dur, impact: dur * 0.35,
     draw(b, t) {
       const T = env.target, s = T.size;
       const cloud = easeOut(seg(t, 0, 0.25)) * (1 - seg(t, 0.75, 1));
@@ -85,7 +86,7 @@ export const powder = (o: { color: string; n?: number; dur?: number }): Builder 
 export const glare = (o: { color?: string; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 800;
   return {
-    start: 0, dur, impact: dur * 0.5,
+    start: 0, sounds: [['ghost', 0]], dur, impact: dur * 0.5,
     draw(b, t) {
       const U = env.user, T = env.target;
       const u = easeOut(seg(t, 0, 0.5));
@@ -108,7 +109,7 @@ export const scribble = (o: { text: string; color: string; n?: number; dur?: num
   const R = fixed(env, 97);
   const words = Array.from({ length: n }, () => [R() - 0.5, R() - 0.5, R() * 0.4, R() - 0.5]);
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [['ghost', 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const A = who(env, o.who), s = A.size;
       words.forEach(([dx, dy, delay, rot], i) => {
@@ -126,7 +127,7 @@ export const vines = (o: { color?: string; dur?: number; who?: Who } = {}): Buil
   const dur = o.dur ?? 900;
   const color = o.color ?? PAL.plante[1];
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [['wind', 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const A = who(env, o.who), s = A.size;
       const [fx, fy] = feet(A);
@@ -148,7 +149,7 @@ export const vines = (o: { color?: string; dur?: number; who?: Who } = {}): Buil
 export const shield = (o: { who?: Who; dur?: number; flash?: boolean } = {}): Builder => (env) => {
   const dur = o.dur ?? 760;
   return {
-    start: 0, dur,
+    start: 0, sounds: [['shield', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       const facing = A === env.user ? env.dir : -env.dir;
@@ -170,7 +171,7 @@ export const doll = (o: { who?: Who; torn?: boolean; dur?: number } = {}): Build
   const R = fixed(env, 101);
   const scraps = Array.from({ length: 7 }, () => [R() * Math.PI * 2, 0.5 + R() * 0.6, R() * 6]);
   return {
-    start: 0, dur,
+    start: 0, sounds: [[o.torn ? 'slash' : 'pop', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       b.doodle('puff', '#efeae0', A.x, A.y + s * 0.2, s * 0.9 * bell(seg(t, 0, 0.6)), { alpha: 0.8 });
@@ -187,7 +188,7 @@ export const doll = (o: { who?: Who; torn?: boolean; dur?: number } = {}): Build
 export const pulse = (o: { color: string; who?: Who; n?: number; dur?: number }): Builder => (env) => {
   const n = o.n ?? 2, dur = o.dur ?? 640;
   return {
-    start: 0, dur,
+    start: 0, sounds: [['pop', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       for (let i = 0; i < n; i++) {
@@ -216,7 +217,7 @@ export const sweat = (o: { who?: Who; dur?: number } = {}): Builder => (env) => 
 export const popOut = (o: { who?: Who; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 560;
   return {
-    start: 0, dur,
+    start: 0, sounds: [['pop', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       const u = easeOut(t), alpha = 1 - seg(t, 0.5, 1);
@@ -237,7 +238,7 @@ export const popOut = (o: { who?: Who; dur?: number } = {}): Builder => (env) =>
 export const whirl = (o: { who?: Who; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 520;
   return {
-    start: 0, dur,
+    start: 0, sounds: [['wind', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user'), s = A.size;
       const pts: P[] = [];
@@ -258,7 +259,7 @@ export const weatherIn = (o: { kind: WeatherKind; dur?: number }): Builder => (e
   const R = fixed(env, 103);
   const bits = Array.from({ length: 34 }, () => [R(), R(), R()]);
   return {
-    start: 0, dur,
+    start: 0, sounds: [[o.kind === 'pluie' ? 'rain' : o.kind === 'soleil' ? 'shine' : o.kind === 'sable' ? 'wind' : 'ice', 0]], dur,
     draw(b, t) {
       const { w, h } = env;
       const alpha = fade(t, 0.12, 0.3);
@@ -309,7 +310,7 @@ export const crayonBall = (o: { kind: 'ball' | 'superball'; color: string; shake
   const THROW = 450, OPEN = 220, DROP = 220, SHAKE = 650, END = 380;
   const dur = THROW + OPEN + DROP + SHAKE * o.shakes + END;
   return {
-    start: 0, dur, impact: THROW,
+    start: 0, sounds: [['whoosh', 0], ['pop', THROW], ...Array.from({ length: o.shakes }, (_, k) => ['tick', THROW + OPEN + DROP + k * SHAKE + 150] as [FxSound, number]), ...(o.caught ? [] : [['pop', dur - END] as [FxSound, number]])], dur, impact: THROW,
     draw(b, t) {
       const T = env.target, s = T.size, ms = t * dur;
       const size = Math.max(30, s * 0.3);
@@ -375,7 +376,7 @@ export const crumbs = (o: { color: string; who?: Who; dur?: number }): Builder =
 export const thread = (o: { color?: string; n?: number; dur?: number } = {}): Builder => (env) => {
   const n = o.n ?? 3, dur = o.dur ?? 600;
   return {
-    start: 0, dur, impact: dur * 0.45,
+    start: 0, sounds: [['slash', 0]], dur, impact: dur * 0.45,
     draw(b, t) {
       const U = env.user, T = env.target;
       const a = mouth(U, env.dir), c = centre(T);

@@ -239,7 +239,8 @@ Scripts run one at a time and lock player input. To change an existing script af
   and Ciseaux Affûtés boost. Every move also needs an animation in
   `src/ui/battle/fx/recipes.ts` (`recipes.test.ts` checks it): pick builders from `effects.ts`
   (projectile, beam, slash, bite, bolt, wave…) or `statusFx.ts` (powder, aura, shield, weatherIn…), a
-  crayon from `PAL` and a motion for the user. A status move's own animation should not repeat what its
+  crayon from `PAL` and a motion for the user. Builders bring their own sounds (`sounds` on each layer,
+  played by `fxSound` in `src/audio/sfx.ts`); the test also checks that every move makes one. A status move's own animation should not repeat what its
   event shows next (the stat chevrons, the Zzz of sleep): `src/ui/battle/fx/events.ts` plays those. The effect kinds (status, confuse, flinch,
   stage, heal, multi…) are listed in `src/data/schema.ts` and run by `src/engine/pk/battle.ts`.
   Beyond the basics, there are:

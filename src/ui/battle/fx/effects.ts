@@ -7,6 +7,7 @@
  * the wobble of the lines from the brush's flipbook frame.
  */
 import { GRAPHITE, seeded, type Rand } from '../../paper/pencilCanvas';
+import type { FxSound } from '../../../audio/sfx';
 import type { Brush } from './brush';
 import type { DoodleKind } from './doodles';
 import {
@@ -15,6 +16,14 @@ import {
 } from './core';
 
 export type Who = 'user' | 'target';
+
+const KIND_SOUND: Partial<Record<DoodleKind, FxSound>> = {
+  flame: 'fire', drop: 'water', bubble: 'bubble', rock: 'rock', clod: 'rock', leaf: 'wind', seed: 'whoosh', feather: 'wind',
+  blob: 'sludge', ink: 'sludge', spark: 'spark', orb: 'beam', heart: 'twinkle', star: 'twinkle', note: 'song', snow: 'ice',
+  shard: 'ice', puff: 'wind', zzz: 'snore', plus: 'heal',
+};
+/** The sound of a doodle flying or rising. */
+export const kindSound = (k: DoodleKind): FxSound => KIND_SOUND[k] ?? 'whoosh';
 
 export const fixed = (env: Env, salt: number): Rand => seeded(env.seed * 31 + salt * 7717);
 export const who = (env: Env, w: Who = 'target'): Anchor => (w === 'user' ? env.user : env.target);
@@ -58,7 +67,7 @@ export const impactStar = (o: { color?: string; size?: number; dur?: number; cou
   const spots = Array.from({ length: count }, () => [(R() - 0.5) * (o.spread ?? 0.5), (R() - 0.5) * (o.spread ?? 0.5)]);
   const dur = o.dur ?? 300;
   return {
-    start: 0, dur: dur * (1 + (count - 1) * 0.35), impact: 0,
+    start: 0, sounds: [['punch', 0]], dur: dur * (1 + (count - 1) * 0.35), impact: 0,
     draw(b, t) {
       const A = who(env, o.who), s = S(env) * (o.size ?? 0.5) * (env.crit ? 1.3 : 1);
       spots.forEach(([dx, dy], i) => {
@@ -80,7 +89,7 @@ export const slash = (o: { color: string; n?: number; width?: number; len?: numb
   const a = o.angle ?? (env.dir > 0 ? 2.2 : 0.95);
   const dx = Math.cos(a), dy = Math.sin(a);
   return {
-    start: 0, dur, impact: draw * 0.7,
+    start: 0, sounds: [['slash', 0]], dur, impact: draw * 0.7,
     draw(b, t) {
       const T = env.target, s = S(env), L = s * (o.len ?? 0.95);
       const ms = t * dur;
@@ -103,7 +112,7 @@ export const slash = (o: { color: string; n?: number; width?: number; len?: numb
 export const snip = (o: { color?: string; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 560;
   return {
-    start: 0, dur, impact: dur * 0.5,
+    start: 0, sounds: [['bite', dur * 0.5]], dur, impact: dur * 0.5,
     draw(b, t) {
       const T = env.target, L = S(env) * 0.95;
       const open = 0.62 * (1 - easeIn(seg(t, 0.15, 0.5)));
@@ -125,7 +134,7 @@ export const snip = (o: { color?: string; dur?: number } = {}): Builder => (env)
 export const bite = (o: { gum?: string; tooth?: string; n?: number; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 560, n = o.n ?? 4;
   return {
-    start: 0, dur, impact: dur * 0.45,
+    start: 0, sounds: [['bite', dur * 0.45]], dur, impact: dur * 0.45,
     draw(b, t) {
       const T = env.target, s = S(env), half = s * 0.5;
       const close = easeIn(seg(t, 0.1, 0.45));
@@ -157,7 +166,7 @@ export const fist = (o: { color?: string; size?: number; dur?: number; kind?: Do
   const R = fixed(env, 79);
   const [dx, dy] = o.spot ?? [(R() - 0.5) * 0.3, (R() - 0.5) * 0.3];
   return {
-    start: 0, dur, impact: dur * 0.5,
+    start: 0, sounds: [['whoosh', 0]], dur, impact: dur * 0.5,
     draw(b, t) {
       const T = env.target, s = S(env);
       const u = easeIn(seg(t, 0, 0.5));
@@ -173,7 +182,7 @@ export const fist = (o: { color?: string; size?: number; dur?: number; kind?: Do
 export const sweep = (o: { color: string; dur?: number }): Builder => (env) => {
   const dur = o.dur ?? 500;
   return {
-    start: 0, dur, impact: dur * 0.4,
+    start: 0, sounds: [['slash', 0]], dur, impact: dur * 0.4,
     draw(b, t) {
       const T = env.target, s = S(env);
       const [fx, fy] = feet(T);
@@ -191,7 +200,7 @@ export const speedLines = (o: { who?: Who; n?: number; dur?: number; down?: bool
   const R = fixed(env, 13);
   const lines = Array.from({ length: n }, () => [R() - 0.5, R(), 0.5 + R() * 0.5]);
   return {
-    start: 0, dur,
+    start: 0, sounds: [['whoosh', 0]], dur,
     draw(b, t) {
       const A = who(env, o.who ?? 'user');
       const len = A.size * 0.5;
@@ -219,7 +228,7 @@ export const jab = (o: { color: string; n?: number; gap?: number; size?: number;
   const spots = Array.from({ length: n }, () => [(R() - 0.5) * 0.5, (R() - 0.5) * 0.5]);
   const dur = (n - 1) * gap + each + 80;
   return {
-    start: 0, dur, impact: each * 0.4,
+    start: 0, sounds: spots.map((_, i) => ['jab', i * gap + 90] as [FxSound, number]), dur, impact: each * 0.4,
     draw(b, t) {
       const T = env.target, U = env.user, s = S(env);
       const vx = T.x - U.x, vy = T.y - U.y, vl = Math.hypot(vx, vy) || 1;
@@ -249,7 +258,7 @@ export const jab = (o: { color: string; n?: number; gap?: number; size?: number;
 export const whip = (o: { color: string; kind?: 'vine' | 'fire' | 'bolt' | 'plain'; dur?: number; width?: number }): Builder => (env) => {
   const dur = o.dur ?? 560;
   return {
-    start: 0, dur, impact: dur * 0.45,
+    start: 0, sounds: [[o.kind === 'fire' ? 'fire' : o.kind === 'bolt' ? 'thunder' : 'slash', dur * 0.3]], dur, impact: dur * 0.45,
     draw(b, t) {
       const U = env.user, T = env.target, s = S(env);
       const head = easeOut(seg(t, 0, 0.45)), tail = easeIn(seg(t, 0.62, 1));
@@ -277,7 +286,7 @@ export const burrow = (o: { who?: Who; n?: number; dur?: number; color?: string 
   const R = fixed(env, 19);
   const clods = Array.from({ length: n }, () => [(R() - 0.5) * 2, 0.5 + R() * 0.7, R() * 0.25, R() * 6]);
   return {
-    start: 0, dur, impact: dur * 0.15,
+    start: 0, sounds: [['rock', 0]], dur, impact: dur * 0.15,
     draw(b, t) {
       const A = who(env, o.who), s = A.size;
       const [fx, fy] = feet(A);
@@ -297,7 +306,7 @@ export const cracks = (o: { who?: Who; n?: number; dur?: number } = {}): Builder
   const R = fixed(env, 23);
   const rays = Array.from({ length: n }, (_, i) => (i / n) * Math.PI * 2 + R() * 0.6);
   return {
-    start: 0, dur, back: true,
+    start: 0, sounds: [['quake', 0]], dur, back: true,
     draw(b, t) {
       const A = who(env, o.who), s = A.size;
       const [fx, fy] = feet(A);
@@ -339,7 +348,7 @@ export const dust = (o: { who?: Who; n?: number; dur?: number; color?: string } 
 export const twirl = (o: { colors: string[]; dur?: number }): Builder => (env) => {
   const dur = o.dur ?? 800;
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [['wind', 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const T = env.target, s = S(env);
       const alpha = fade(t, 0.1, 0.25);
@@ -359,7 +368,7 @@ export const twirl = (o: { colors: string[]; dur?: number }): Builder => (env) =
 export const wrap = (o: { color?: string; loops?: number; dur?: number; who?: Who } = {}): Builder => (env) => {
   const dur = o.dur ?? 900, loops = o.loops ?? 4;
   return {
-    start: 0, dur, impact: dur * 0.55,
+    start: 0, sounds: [['wind', 0]], dur, impact: dur * 0.55,
     draw(b, t) {
       const T = who(env, o.who), s = T.size;
       const u = seg(t, 0, 0.5);
@@ -405,7 +414,7 @@ export const projectile = (o: ProjectileOpts): Builder => (env) => {
   const dur = (n - 1) * gap + fly + after;
   const colors = Array.isArray(o.color) ? o.color : [o.color];
   return {
-    start: 0, dur, impact: fly,
+    start: 0, sounds: [[kindSound(o.kind), 0]], dur, impact: fly,
     draw(b, t) {
       const U = env.user, T = env.target;
       const a: P = o.from === 'centre' ? centre(U) : mouth(U, env.dir);
@@ -446,7 +455,7 @@ export const projectile = (o: ProjectileOpts): Builder => (env) => {
 export const swirl = (o: { kind: DoodleKind; color: string; n?: number; dur?: number; size?: number }): Builder => (env) => {
   const n = o.n ?? 10, dur = o.dur ?? 900;
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [[kindSound(o.kind), 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const T = env.target, s = S(env);
       const alpha = fade(t, 0.12, 0.2);
@@ -466,7 +475,7 @@ export const blaze = (o: { color?: string; n?: number; dur?: number; size?: numb
   const R = fixed(env, 41);
   const flames = Array.from({ length: n }, (_, i) => [(i / n) * 0.6, R() - 0.5, 0.7 + R() * 0.6]);
   return {
-    start: 0, dur, impact: dur * 0.2,
+    start: 0, sounds: [['fire', 0], ['fire', dur * 0.35]], dur, impact: dur * 0.2,
     draw(b, t) {
       const T = env.target, s = S(env);
       const [fx, fy] = feet(T);
@@ -488,7 +497,7 @@ export const jet = (o: { color?: string; width?: number; dur?: number; drops?: b
   const dur = o.dur ?? 640;
   const color = o.color ?? PAL.eau[1];
   return {
-    start: 0, dur, impact: dur * 0.35,
+    start: 0, sounds: [['water', 0]], dur, impact: dur * 0.35,
     draw(b, t) {
       const U = env.user, T = env.target, s = S(env);
       const head = easeOut(seg(t, 0, 0.35)), tail = easeIn(seg(t, 0.62, 1));
@@ -515,7 +524,7 @@ export const wave = (o: { color?: string; dur?: number } = {}): Builder => (env)
   const dur = o.dur ?? 1100;
   const color = o.color ?? PAL.eau[1];
   return {
-    start: 0, dur, impact: dur * 0.6,
+    start: 0, sounds: [['wave', 0]], dur, impact: dur * 0.6,
     draw(b, t) {
       const { w, h, dir } = env;
       const T = env.target;
@@ -550,7 +559,7 @@ export const rainOn = (o: { colors: string[]; n?: number; dur?: number; kind?: D
   const R = fixed(env, 43);
   const drops = Array.from({ length: n }, () => [R() * 0.6, R() - 0.5, R() * 0.5]);
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [['rain', 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const T = env.target, s = S(env);
       drops.forEach(([delay, dx, dy], i) => {
@@ -570,7 +579,7 @@ export const bolt = (o: { color?: string; n?: number; dur?: number; from?: 'sky'
   const n = o.n ?? 1, dur = o.dur ?? 560;
   const [light, main] = o.color ? [mix(o.color, '#ffffff', 0.6), o.color] : [PAL.electrique[0], PAL.electrique[1]];
   return {
-    start: 0, dur, impact: dur * 0.12 / n,
+    start: 0, sounds: Array.from({ length: n }, (_, i) => ['thunder', (i * dur) / n] as [FxSound, number]), dur, impact: dur * 0.12 / n,
     draw(b, t) {
       const T = env.target, s = S(env);
       for (let i = 0; i < n; i++) {
@@ -604,7 +613,7 @@ export const sparks = (o: { color?: string; dur?: number; radius?: number; n?: n
   const dur = o.dur ?? 620;
   const color = o.color ?? PAL.electrique[1];
   return {
-    start: 0, dur, impact: dur * 0.15,
+    start: 0, sounds: [['spark', 0], ['spark', dur * 0.4]], dur, impact: dur * 0.15,
     draw(b, t) {
       const T = who(env, o.who), s = T.size;
       const alpha = fade(t, 0.1, 0.25);
@@ -626,7 +635,7 @@ export const sparks = (o: { color?: string; dur?: number; radius?: number; n?: n
 export const beam = (o: { colors: string[]; width?: number; dur?: number; glow?: DoodleKind }): Builder => (env) => {
   const dur = o.dur ?? 720;
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [['beam', 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const U = env.user, T = env.target;
       const head = easeOut(seg(t, 0, 0.3)), tail = easeIn(seg(t, 0.7, 1));
@@ -661,7 +670,7 @@ export const breath = (o: { kind: DoodleKind; colors: string[]; n?: number; dur?
   const R = fixed(env, 47);
   const parts = Array.from({ length: n }, (_, i) => [(i / n) * 0.55, R() - 0.5, R() * 6]);
   return {
-    start: 0, dur, impact: dur * 0.42,
+    start: 0, sounds: [[kindSound(o.kind), 0]], dur, impact: dur * 0.42,
     draw(b, t) {
       const U = env.user, T = env.target;
       const a = mouth(U, env.dir), c = centre(T);
@@ -685,7 +694,7 @@ export const gust = (o: { color?: string; n?: number; dur?: number; bits?: Doodl
   const n = o.n ?? 3, dur = o.dur ?? 760;
   const color = o.color ?? '#a9cdf2';
   return {
-    start: 0, dur, impact: dur * 0.55,
+    start: 0, sounds: [['wind', 0]], dur, impact: dur * 0.55,
     draw(b, t) {
       const U = env.user, T = env.target;
       const a = mouth(U, env.dir), c = centre(T);
@@ -715,7 +724,7 @@ export const rockfall = (o: { color?: string; n?: number; dur?: number; size?: n
   const R = fixed(env, 53);
   const rocks = Array.from({ length: n }, (_, i) => [i * (0.5 / n), R() - 0.5, R() * 0.4 - 0.1, 0.7 + R() * 0.6, R() * 6]);
   return {
-    start: 0, dur, impact: dur * 0.28,
+    start: 0, sounds: [['rock', dur * 0.28]], dur, impact: dur * 0.28,
     draw(b, t) {
       const T = env.target, s = S(env);
       rocks.forEach(([delay, dx, dy, sc, rot], i) => {
@@ -739,7 +748,7 @@ export const spikes = (o: { color?: string; n?: number; dur?: number } = {}): Bu
   const R = fixed(env, 59);
   const sp = Array.from({ length: n }, () => [0.6 + R() * 0.45, (R() - 0.5) * 0.2]);
   return {
-    start: 0, dur, impact: dur * 0.28,
+    start: 0, sounds: [['rock', dur * 0.1]], dur, impact: dur * 0.28,
     draw(b, t) {
       const T = env.target, s = S(env);
       const [, fy] = feet(T);
@@ -760,7 +769,7 @@ export const spikes = (o: { color?: string; n?: number; dur?: number } = {}): Bu
 export const rings = (o: { colors: string[]; n?: number; dur?: number; bubbles?: boolean }): Builder => (env) => {
   const n = o.n ?? 4, dur = o.dur ?? 760;
   return {
-    start: 0, dur, impact: dur * 0.5,
+    start: 0, sounds: [['psychic', 0]], dur, impact: dur * 0.5,
     draw(b, t) {
       const U = env.user, T = env.target;
       const a = mouth(U, env.dir), c = centre(T);
@@ -805,7 +814,7 @@ export const flash = (o: { color?: string; alpha?: number; dur?: number } = {}):
 export const pop = (o: { kind: DoodleKind; color: string; who?: Who; size?: number; dur?: number; dx?: number; dy?: number; spin?: number }): Builder => (env) => {
   const dur = o.dur ?? 560;
   return {
-    start: 0, dur, impact: dur * 0.3,
+    start: 0, sounds: [[o.kind === 'magnet' ? 'beam' : 'shine', 0]], dur, impact: dur * 0.3,
     draw(b, t) {
       const A = who(env, o.who), s = A.size;
       const grow = easeOut(seg(t, 0, 0.3));
@@ -821,7 +830,7 @@ export const sparkle = (o: { who?: Who; color?: string; n?: number; dur?: number
   const R = fixed(env, 61);
   const pts = Array.from({ length: n }, () => [R() - 0.5, R() - 0.5, R() * 0.5]);
   return {
-    start: 0, dur,
+    start: 0, sounds: [[!o.kind || o.kind === 'spark' || o.kind === 'star' ? 'twinkle' : kindSound(o.kind), 0]], dur,
     draw(b, t) {
       const A = who(env, o.who), s = A.size;
       pts.forEach(([dx, dy, delay], i) => {
@@ -837,7 +846,7 @@ export const sparkle = (o: { who?: Who; color?: string; n?: number; dur?: number
 export const boo = (o: { dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 720;
   return {
-    start: 0, dur, impact: dur * 0.35,
+    start: 0, sounds: [['ghost', 0]], dur, impact: dur * 0.35,
     draw(b, t) {
       const T = env.target, s = S(env);
       const g = easeOut(seg(t, 0, 0.35)) * (1 + 0.15 * bell(seg(t, 0.3, 0.5)));
@@ -858,7 +867,7 @@ export const hands = (o: { color?: string; dur?: number } = {}): Builder => (env
   const dur = o.dur ?? 820;
   const color = o.color ?? PAL.spectre[1];
   return {
-    start: 0, dur, impact: dur * 0.5,
+    start: 0, sounds: [['ghost', 0]], dur, impact: dur * 0.5,
     draw(b, t) {
       const T = env.target, s = S(env);
       const reach = easeOut(seg(t, 0, 0.45)), close = easeIn(seg(t, 0.4, 0.55));
@@ -882,7 +891,7 @@ export const hands = (o: { color?: string; dur?: number } = {}): Builder => (env
 export const eyes = (o: { color?: string; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 900;
   return {
-    start: 0, dur, impact: dur * 0.4,
+    start: 0, sounds: [['psychic', 0]], dur, impact: dur * 0.4,
     draw(b, t) {
       const T = env.target, s = S(env);
       const alpha = fade(t, 0.15, 0.25);
@@ -904,7 +913,7 @@ export const eyes = (o: { color?: string; dur?: number } = {}): Builder => (env)
 export const tongue = (o: { color?: string; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 640;
   return {
-    start: 0, dur, impact: dur * 0.42,
+    start: 0, sounds: [['sludge', dur * 0.3]], dur, impact: dur * 0.42,
     draw(b, t) {
       const U = env.user, T = env.target;
       const reach = easeOut(seg(t, 0, 0.42)) * (1 - easeIn(seg(t, 0.6, 1)));
@@ -924,7 +933,7 @@ export const shade = (o: { color?: string; dur?: number } = {}): Builder => (env
   const dur = o.dur ?? 880;
   const color = o.color ?? PAL.spectre[2];
   return {
-    start: 0, dur, impact: dur * 0.55,
+    start: 0, sounds: [['ghost', 0]], dur, impact: dur * 0.55,
     draw(b, t) {
       const U = env.user, T = env.target;
       const u = easeInOut(seg(t, 0, 0.55));
@@ -941,7 +950,7 @@ export const shade = (o: { color?: string; dur?: number } = {}): Builder => (env
 export const splat = (o: { color: string; dur?: number; size?: number }): Builder => (env) => {
   const dur = o.dur ?? 640;
   return {
-    start: 0, dur, impact: 0,
+    start: 0, sounds: [['sludge', 0]], dur, impact: 0,
     draw(b, t) {
       const T = env.target, s = S(env) * (o.size ?? 0.7);
       const g = easeOut(seg(t, 0, 0.2));
@@ -961,7 +970,7 @@ export const splat = (o: { color: string; dur?: number; size?: number }): Builde
 export const notes = (o: { colors: string[]; n?: number; dur?: number; kind?: DoodleKind; arcs?: boolean; size?: number }): Builder => (env) => {
   const n = o.n ?? 6, dur = o.dur ?? 920;
   return {
-    start: 0, dur, impact: dur * 0.5,
+    start: 0, sounds: [[o.kind === 'zzz' ? 'snore' : 'song', 0]], dur, impact: dur * 0.5,
     draw(b, t) {
       const U = env.user, T = env.target;
       const a = mouth(U, env.dir), c = centre(T);
@@ -987,7 +996,7 @@ export const notes = (o: { colors: string[]; n?: number; dur?: number; kind?: Do
 export const buzz = (o: { color?: string; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 820;
   return {
-    start: 0, dur, impact: dur * 0.25,
+    start: 0, sounds: [['buzz', 0]], dur, impact: dur * 0.25,
     draw(b, t) {
       const T = env.target, s = S(env);
       const alpha = fade(t, 0.1, 0.25);
@@ -1005,7 +1014,7 @@ export const buzz = (o: { color?: string; dur?: number } = {}): Builder => (env)
 export const drain = (o: { color?: string; n?: number; dur?: number } = {}): Builder => (env) => {
   const n = o.n ?? 5, dur = o.dur ?? 720;
   return {
-    start: 0, dur,
+    start: 0, sounds: [['heal', dur * 0.5]], dur,
     draw(b, t) {
       const U = env.user, T = env.target;
       for (let i = 0; i < n; i++) {
@@ -1026,7 +1035,7 @@ export const gather = (o: { color?: string; n?: number; dur?: number } = {}): Bu
   const R = fixed(env, 71);
   const parts = Array.from({ length: n }, () => [R() * Math.PI * 2, R() * 0.4]);
   return {
-    start: 0, dur,
+    start: 0, sounds: [['charge', 0]], dur,
     draw(b, t) {
       const U = env.user, s = U.size;
       const color = o.color ?? PAL.electrique[0];

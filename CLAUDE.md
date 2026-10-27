@@ -168,7 +168,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
 **Audio.**
 - `src/audio/music.ts` is a small Web Audio sequencer (pulse, triangle, sine and sawtooth voices,
   noise drums) playing original tracks; the title menu's music box (`JukeboxScreen`) plays each one. `mapMusic.ts` picks the track for each map; battles pick theirs in `fight()`.
-- `sfx.ts` plays sound effects. Everything respects the prefs.
+- `sfx.ts` plays sound effects, and `fxSound(kind)` the sounds of the move animations: each effect
+  layer lists its `sounds` (fire whoosh, splash, thunder, slash, stat arpeggios…). Everything respects the prefs.
 
 **Drawings → cards.** `tools/cards-manifest.json` (crop box, erase polygons, `scale`, `options`) goes
 through `tools/cut-drawings.ts` and `src/art/cutout.ts` (paper flattening, ink mask) to produce
