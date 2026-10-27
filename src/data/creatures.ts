@@ -1142,8 +1142,8 @@ export const CREATURES: SpeciesDef[] = [
     learnset: [[1, 'bousculade'], [1, 'grondement'], [5, 'micro-magique'], [9, 'souffle-dragon'], [13, 'pirouette'], [19, 'griffe-dragon'],
       [23, 'calin-lunaire'], [27, 'coup-de-boule'], [29, 'grand-defile']],
     dex: L(
-      'Un petit dragon plié dans une feuille de papier rouge. Il ne sort que les jours de fête et remue ses plis comme un accordéon.',
-      'A little dragon folded from a sheet of red paper. It only comes out on festival days, wiggling its folds like an accordion.',
+      'Un petit dragon plié dans du papier de soie rose. Sa petite corne de licorne fait pousser des fleurs en papier partout où il passe.',
+      'A little dragon folded from pink tissue paper. Its little unicorn horn makes paper flowers grow wherever it goes.',
     ),
   },
   {
@@ -1155,8 +1155,8 @@ export const CREATURES: SpeciesDef[] = [
     learnset: [[0, 'grand-defile'], [1, 'bousculade'], [1, 'grondement'], [5, 'micro-magique'], [9, 'souffle-dragon'], [13, 'pirouette'],
       [19, 'griffe-dragon'], [23, 'calin-lunaire'], [27, 'coup-de-boule'], [35, 'queue-ardente'], [40, 'colere-dragon']],
     dex: L(
-      'Il ondule dans les airs en dépliant son long corps. Chaque fois qu’il grandit, il ajoute un pli.',
-      'It ripples through the air, unfolding its long body. Every time it grows, it adds another fold.',
+      'Il ondule dans les airs en dépliant son long corps. Chaque fois qu’il grandit, il ajoute un pli… et une fleur.',
+      'It ripples through the air, unfolding its long body. Every time it grows, it adds another fold… and a flower.',
     ),
   },
   {

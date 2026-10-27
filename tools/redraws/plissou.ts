@@ -1,4 +1,5 @@
 import type { Crayon, P, Redraw } from './crayon.ts';
+import { star } from './lumignon.ts';
 
 /** Stations evenly spaced along a polyline, with their normal. */
 function stations(path: P[], n: number): { p: P; nx: number; ny: number }[] {
@@ -35,56 +36,80 @@ export function accordion(c: Crayon, path: P[], n: number, w0: number, w1: numbe
   for (const f of after) f();
 }
 
-/** A tassel: a gold knot and a fringe of threads hanging from (x, y). */
-export function tassel(c: Crayon, x: number, y: number, s: number, col: string, thread: string) {
-  const fringe: P[] = [[x - 26 * s, y + 10 * s], [x - 40 * s, y + 90 * s], [x - 20 * s, y + 80 * s], [x - 10 * s, y + 100 * s], [x + 4 * s, y + 82 * s], [x + 20 * s, y + 102 * s], [x + 30 * s, y + 80 * s], [x + 42 * s, y + 92 * s], [x + 26 * s, y + 10 * s]];
-  c.shape(fringe, thread, { angle: 90, over: 0 }, { w: 3 }, false);
-  c.shape(c.potato(x, y, 26 * s, 22 * s, 8, 0.05), col, { over: 0 }, { w: 3.5 });
+/** A star charm hanging from a ribbon at the tip of the tail. */
+export function charm(c: Crayon, x: number, y: number, s: number, col: string, ribbon: string) {
+  c.shape(c.band([[x, y], [x + 18 * s, y - 30 * s], [x + 10 * s, y - 60 * s]], 14 * s, 10 * s), ribbon, { over: 0 }, { w: 3 });
+  c.shape(star(x + 12 * s, y - 92 * s, 40 * s, 0.25), col, { over: 0, press: 1.1 }, { w: 3.5 }, false);
+  c.dot(x + 4 * s, y - 100 * s, 4 * s, 4 * s, '#ffffff');
+}
+
+/** A unicorn's spiral horn from `base` to `tip`, striped like a candy stick. */
+export function horn(c: Crayon, base: P, tip: P, w: number, col: string, stripe: string) {
+  c.shape(c.band([base, tip], w, 6), col, { angle: 60, over: 0 }, { w: 3.5 });
+  const n = 4;
+  for (let k = 1; k <= n; k++) {
+    const t = k / (n + 1), ww = (w * (1 - t) + 6 * t) / 2;
+    const cx = base[0] + (tip[0] - base[0]) * t, cy = base[1] + (tip[1] - base[1]) * t;
+    const dx = tip[0] - base[0], dy = tip[1] - base[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l;
+    c.stroke([[cx - uy * ww - ux * ww * 0.5, cy + ux * ww - uy * ww * 0.5], [cx + uy * ww + ux * ww * 0.5, cy - ux * ww + uy * ww * 0.5]], { w: 4, col: stripe });
+  }
+}
+
+/** A little paper flower: five round petals and a heart. */
+export function flower(c: Crayon, x: number, y: number, r: number, petal: string, heart: string) {
+  for (let k = 0; k < 5; k++) {
+    const a = (k / 5) * Math.PI * 2 - Math.PI / 2;
+    c.shape(c.potato(x + Math.cos(a) * r * 0.62, y + Math.sin(a) * r * 0.62, r * 0.48, r * 0.48, 7, 0.06), petal, { over: 0 }, { w: 2.5 });
+  }
+  c.shape(c.potato(x, y, r * 0.36, r * 0.36, 7, 0.05), heart, { over: 0 }, { w: 2.5 });
 }
 
 /**
- * A baby paper dragon turned to the left, like the ones children fold for a parade: a big round red head with a
- * gold muzzle, two little rolled-paper horns and a pink pompom, a short accordion body of a few folds and a gold
- * tassel for a tail.
+ * A baby fairy dragon folded out of pastel tissue paper, turned to the left: a big round pink head with a cream
+ * muzzle, a little striped unicorn horn, a paper flower by its ear, a soft scalloped mane, big starry eyes, a short
+ * accordion body of pink and lilac folds and a star charm at the end of its tail, like a magic wand.
  */
 export default {
   id: '084', slug: 'plissou', seed: 8401, size: [1000, 880], tilt: -3,
   draw(c) {
     const { shape, stroke, dot, band, potato } = c;
-    const RED = '#e2423a', LIGHT = '#f58a72', GOLD = '#f2c43a', PINK = '#f29ac8';
-    // the tassel tail, then the short accordion body, tail first
-    accordion(c, [[880, 380], [810, 470], [690, 520], [470, 480]], 7, 110, 170, [RED, LIGHT]);
-    tassel(c, 898, 350, 1, GOLD, '#f7a12b');
+    const PINK = '#f28dc0', LILAC = '#b99be8', CREAM = '#fff0d2', SKY = '#8fcdf2', STAR = '#f7dc35', DEEP = '#d0619d';
+    // the short accordion body, tail first, and the star charm at the tip of its tail
+    accordion(c, [[880, 380], [810, 470], [690, 520], [470, 480]], 7, 110, 170, [PINK, LILAC]);
+    charm(c, 890, 380, 1, STAR, SKY);
     // little paws under it
-    shape(band([[620, 560], [630, 640]], 44, 40), LIGHT, { angle: 90, over: 0 });
-    shape(potato(640, 650, 34, 20, 7, 0.06), GOLD, { over: 0 });
-    shape(band([[460, 560], [450, 650]], 48, 44), LIGHT, { angle: 90, over: 0 });
-    shape(potato(440, 660, 38, 22, 7, 0.06), GOLD, { over: 0 });
-    // a ruffled gold mane round the back of its head, and the far horn, behind
-    shape(c.spikes([[420, 560], [530, 470], [550, 340], [480, 230]], 3, 40).concat([[400, 300]]), GOLD, { angle: 60, over: 0 }, {}, false);
-    shape(band([[420, 230], [470, 160], [450, 110]], 34, 22), GOLD, { angle: 90, over: 0 });
-    // the big round head, a gold muzzle
-    shape(potato(340, 400, 200, 175, 12, 0.04), RED, { angle: 75, over: 0.5 });
-    shape([[150, 430], [200, 390], [320, 420], [360, 500], [300, 560], [190, 560], [140, 500]], GOLD, { angle: 80, over: 0.2 }, { w: 4 });
-    dot(175, 440, 9, 7);
-    dot(225, 432, 9, 7);
+    shape(band([[620, 560], [630, 640]], 44, 40), LILAC, { angle: 90, over: 0 });
+    shape(potato(640, 650, 34, 20, 7, 0.06), CREAM, { over: 0 });
+    shape(band([[460, 560], [450, 650]], 48, 44), LILAC, { angle: 90, over: 0 });
+    shape(potato(440, 660, 38, 22, 7, 0.06), CREAM, { over: 0 });
+    // a soft scalloped mane round the back of its head, and the far horn, behind
+    const mane: P[] = [];
+    for (let k = 0; k <= 10; k++) { const a = -1.9 + k * 0.33, r = k % 2 ? 205 : 230; mane.push([360 + Math.cos(a) * r, 400 + Math.sin(a) * r]); }
+    shape([...mane, [360, 400]], LILAC, { angle: 60, over: 0 });
+    // the big round head, a cream muzzle, rosy cheeks
+    shape(potato(340, 400, 200, 175, 12, 0.04), PINK, { angle: 75, over: 0.5 });
+    shape([[150, 430], [200, 390], [320, 420], [360, 500], [300, 560], [190, 560], [140, 500]], CREAM, { angle: 80, over: 0.2 }, { w: 4 });
+    c.tint(potato(395, 470, 34, 22, 8, 0.1), DEEP, { gap: 3 });
+    dot(175, 440, 8, 6);
+    dot(225, 432, 8, 6);
     stroke([[180, 515], [230, 532], [280, 518]], { w: 4.5 });
     // short ribbon whiskers
-    shape(band([[160, 465], [100, 445], [60, 480], [50, 530]], 22, 12), PINK, { over: 0 }, { w: 3 });
-    shape(band([[170, 525], [110, 555], [95, 600], [110, 640]], 22, 12), PINK, { over: 0 }, { w: 3 });
-    // the near horn, a pink pompom on top
-    shape(band([[330, 240], [310, 160], [345, 110]], 38, 24), GOLD, { angle: 90, over: 0 });
-    shape(potato(390, 220, 44, 40, 10, 0.12), PINK, { angle: 60, over: 0.2 }, { w: 3.5 });
-    // big round eyes with gold lids, looking left
+    shape(band([[160, 465], [100, 445], [60, 480], [50, 530]], 22, 12), SKY, { over: 0 }, { w: 3 });
+    shape(band([[170, 525], [110, 555], [95, 600], [110, 640]], 22, 12), SKY, { over: 0 }, { w: 3 });
+    // a little unicorn horn on its brow, a paper flower by its ear
+    horn(c, [300, 250], [270, 130], 46, '#fff6e6', PINK);
+    flower(c, 430, 255, 46, SKY, STAR);
+    // big starry eyes with lashes, looking left
     c.paper(potato(250, 330, 34, 38, 8, 0.05));
     c.paper(potato(360, 320, 38, 42, 8, 0.05));
-    dot(240, 338, 18, 23);
-    dot(350, 329, 20, 25);
-    dot(233, 325, 6, 7, '#ffffff');
-    dot(342, 315, 6.5, 7.5, '#ffffff');
-    stroke([[212, 292], [255, 284], [290, 296]], { w: 5, col: '#c48a1a' });
-    stroke([[318, 280], [362, 270], [402, 285]], { w: 5, col: '#c48a1a' });
+    dot(240, 338, 18, 23, '#5a3f8a');
+    dot(350, 329, 20, 25, '#5a3f8a');
+    shape(star(233, 326, 9, 0.3), '#ffffff', { over: 0, wash: 1 }, { w: 1.5 }, false);
+    shape(star(342, 316, 10, 0.3), '#ffffff', { over: 0, wash: 1 }, { w: 1.5 }, false);
+    for (const [x0, y0, x1, y1] of [[215, 300, 200, 282], [232, 293, 226, 274], [325, 288, 312, 268], [345, 281, 341, 260]] as const) stroke([[x0, y0], [x1, y1]], { w: 3.5 });
     // folds drawn on the head too: it's paper
-    stroke([[450, 300], [470, 420], [455, 520]], { w: 3, col: '#a8302a' });
+    stroke([[450, 300], [470, 420], [455, 520]], { w: 3, col: DEEP });
+    // a few sparkles round it
+    for (const [x, y, r] of [[120, 300, 20], [560, 250, 16], [960, 560, 18]] as const) shape(star(x, y, r, 0.4), STAR, { over: 0 }, { w: 2.5 }, false);
   },
 } satisfies Redraw;

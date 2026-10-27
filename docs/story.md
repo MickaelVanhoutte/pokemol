@@ -510,7 +510,9 @@ a broccoli line (replaced by the stapler crocodile) and asked for the mammoth to
   Allumbattant on Route 9. Juggler Paco (a fourth Bestiole), Hector, Grand Master Ambre (in place of Canarmure).
 - Lumignon → Projétoile (Electric/Psychic, L26): a bedroom night-light, then a star projector. Route 3 and
   Route 4 at night; Projétoile on Route 8 at night. Kid Lise, Medium Opale.
-- Plissou → Plisserpent → Festivouivre (Dragon/Fairy, L30/L44, rare): a folded-paper parade dragon. Route 7
+- Plissou → Plisserpent → Festivouivre (Dragon/Fairy, L30/L44, rare): a fairy parade dragon of folded tissue
+  paper, with a unicorn horn and paper flowers (the owner found the first red-and-gold version not fairy enough,
+  then butterfly wings too close to Libellune). Route 7
   (rare); Plisserpent in the Sketch Forest (rare). Sparkler Mia, Sleepwalker Gaston, Grand Master Célestine.
 - Globargot (Ice/Psychic, rare): a snail with a snow globe for a shell (a tiny house inside: a dream clue).
   Lighthouse island; Dreamer Mila.
