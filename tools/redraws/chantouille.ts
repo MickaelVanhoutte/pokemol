@@ -19,10 +19,6 @@ export default {
     // the curl on top
     stroke([[480, 240], [450, 290], [420, 330], [450, 360], [490, 340], [480, 300]], { w: 5 });
     c.tint([[435, 250], [510, 240], [500, 330], [450, 340], [425, 300]], DEEP, { gap: 3.2 });
-    // the near arm holding the microphone up to sing
-    shape(band([[330, 600], [250, 560], [215, 490]], 52, 46), PINK, { angle: 60 });
-    shape(band([[215, 480], [195, 560]], 26, 20), GREY, { angle: 90, over: 0 });
-    shape(potato(220, 450, 40, 40, 9, 0.05), GREEN, { angle: 60, press: 1.1 });
     shape(band([[790, 600], [850, 650], [860, 710]], 50, 44), PINK, { angle: 130 });
     // big eyes, shifted left (the far one smaller), a little singing mouth
     shape(potato(330, 470, 58, 86, 11, 0.04), '#ffffff', { over: 0, press: 0.3 }, { w: 5 });
@@ -31,6 +27,11 @@ export default {
     shape(potato(495, 482, 42, 56, 9, 0.04), '#3e6fd0', { angle: 90, over: 0, press: 1.2 }, { w: 4 });
     dot(316, 470, 9, 13, '#ffffff');
     dot(484, 460, 12, 15, '#ffffff');
+    // the near arm comes round from the side, its paw holding the microphone up to the mouth
+    shape(band([[300, 690], [282, 610]], 28, 22), GREY, { angle: 90, over: 0 });
+    shape(potato(278, 590, 42, 40, 9, 0.05), GREEN, { angle: 60, press: 1.1 });
+    shape(band([[470, 780], [380, 790], [320, 740]], 58, 50), PINK, { angle: 30 });
+    shape(potato(310, 715, 40, 36, 9, 0.06), PINK, { angle: 30, over: 0 });
     // singing: a small round open mouth, low on the face
     shape(potato(395, 690, 42, 36, 9, 0.05), '#b52a3c', { angle: 0, over: 0 }, { w: 4.5 });
     shape(potato(400, 704, 22, 14, 7, 0.05), '#f39ab0', { over: 0 }, { w: 0.1 });
