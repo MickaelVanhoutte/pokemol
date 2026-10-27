@@ -167,7 +167,9 @@ export interface MapDef {
   backdrop?: Backdrop;
   /** Color wash drawn over the map (e.g. dusk in the woods). */
   tint?: string;
-  /** The tint disappears once this story flag is set (colours brought back). */
+  /** Its colours sucked out by Team Gomme: drawn in greys (the `tint` washed over them). */
+  drained?: boolean;
+  /** The tint (and the drained greys) disappear once this story flag is set (colours brought back). */
   tintUnless?: string;
   /** Drifting fog wisps. */
   fog?: boolean;

@@ -99,8 +99,9 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     name: L('Ville-Feutre', 'Felt City'),
     border: 'tree',
     backdrop: 'city',
-    // Team Gomme sucked the colours out of the city until Admin Rature is beaten
-    tint: 'rgba(110, 110, 125, 0.55)',
+    // Team Gomme sucked the colours out of the city (greys, rubbed pale) until Admin Rature is beaten
+    drained: true,
+    tint: 'rgba(238, 236, 244, 0.28)',
     tintUnless: 'a2.feutre',
     // grey lines kept to remember the night the colours were stolen (the fourth choice)
     patches: [

@@ -47,7 +47,7 @@ Maps react without code:
 - NPC `showIf` / `hideIf`;
 - trigger `if` / `unless`;
 - `patches[].if` / `unless`;
-- `tintUnless`.
+- `tintUnless` (with `drained: true`, the map is drawn in greys until the flag is set: Ville-Feutre).
 
 After a script that changed flags, the map is rebuilt (`refreshMap()`).
 

@@ -742,6 +742,13 @@ export class Game {
       ctx.fillRect(bx + 12 + k * 4, by + 6 - k * 6, 2, 2);
     }
     const def = this.map.def;
+    // colours sucked out: every pixel keeps its lightness and loses its hue
+    if (def.drained) {
+      ctx.globalCompositeOperation = 'saturation';
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, this.viewW, this.viewH);
+      ctx.globalCompositeOperation = 'source-over';
+    }
     if (def.tint) {
       ctx.fillStyle = def.tint;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
