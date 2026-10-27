@@ -322,6 +322,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     party: [{ species: '013', level: 18 }, { species: '009', level: 17 }, { species: '010', level: 19 }],
     before: [
       L('Tiens, tiens. C’est toi qui recolories tout derrière nous ?', 'Well, well. So you’re the one colouring everything back in behind us?'),
+      L('Et c’est toi qui caches ce cocon raté, tout embrouillé… Le patron le veut. Surtout celui-là.', 'And you’re hiding that muddled, failed little cocoon… The boss wants it. That one above all.'),
       L('Le Grand Effaceur a raison : ces gribouillis d’enfant ne valent rien. Je vais t’effacer, toi aussi !', 'The Great Eraser is right: these childish scribbles are worthless. I’ll rub you out too!'),
     ],
     after: [L('Impossible… Les couleurs… elles reviennent toutes !', 'Impossible… The colours… they’re all coming back!')],
@@ -479,6 +480,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [
       L('Chut. Ici, tout est blanc, propre, silencieux. Plus un trait qui dépasse.', 'Shh. Here everything is white, clean, silent. Not a single line out of place.'),
       L('Les fantômes riaient trop fort. Je les ai corrigés. Toi aussi, je vais te corriger.', 'The ghosts laughed too loud. I corrected them. I’ll correct you too.'),
+      L('Et ton cocon pas fini… Ce dessin-là n’aurait jamais dû exister. Le patron s’en occupera lui-même.', 'And your unfinished cocoon… That drawing should never have existed. The boss will deal with it himself.'),
     ],
     after: [L('Tu… tu as fait des taches de couleur partout…', 'You… you got colour stains everywhere…')],
   }),
@@ -602,7 +604,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('…et le jour finit par se lever.', '…and the day finally broke.')],
   }),
   T({
-    id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre',
+    id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre', afterScript: 'encreChoice',
     party: [{ species: '010', level: 30 }, { species: '010', level: 31 }, { species: '010', level: 33 }],
     before: [
       L('Bonsoir. L’encre de nuit cache tout ce qu’on n’ose pas dessiner…', 'Good evening. Night ink hides everything we don’t dare to draw…'),

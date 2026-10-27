@@ -66,6 +66,8 @@ export interface BattleState {
   weather: { kind: Weather; turns: number } | null;
   /** Night in Papeterre (Pleine Lune). */
   night?: boolean;
+  /** A vision (the dream legendaries before the ending): balls go right through it. */
+  noCatch?: boolean;
 }
 
 export type Action =
@@ -149,7 +151,7 @@ export type BattleEvent =
   /** A talent acts. `note`: it endured a knockout, cured its status, or made a move useless. */
   | { t: 'talent'; side: Side; talent: string; note?: 'endure' | 'cured' | 'immune' | 'phased' }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
-  | { t: 'blocked' }
+  | { t: 'blocked'; reflet?: boolean }
   | { t: 'run'; ok: boolean }
   | { t: 'cantRun' }
   | { t: 'end'; result: BattleResult };
@@ -172,6 +174,7 @@ export interface BattleSetup {
   player: SideSetup;
   enemy: SideSetup;
   night?: boolean;
+  noCatch?: boolean;
 }
 
 export class IllegalAction extends Error {}
@@ -217,6 +220,7 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
     needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: null, night: !!setup.night,
+    ...(setup.noCatch ? { noCatch: true } : {}),
   };
   const out = new Recorder(state, withSnaps);
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
@@ -824,8 +828,8 @@ export function catchChance(target: Mon, ballBonus: number): { a: number; p: num
 }
 
 function throwBall(st: BattleState, ballId: string, out: Out) {
-  if (st.kind !== 'wild') {
-    out.push({ t: 'blocked' });
+  if (st.kind !== 'wild' || st.noCatch) {
+    out.push(st.noCatch ? { t: 'blocked', reflet: true } : { t: 'blocked' });
     return;
   }
   const target = activeMon(st.sides[1]);

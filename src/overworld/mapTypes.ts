@@ -204,4 +204,6 @@ export const LEGEND: Record<string, string> = {
   'q': 'cadre', 'y': 'luciole',
   // a legendary Bestiole waiting in the dark
   '%': 'shadow',
+  // the consequences of the story's choices: a bridge left runny, grey lines kept, Nocturne's fresco
+  'u': 'bridgerun', 'x': 'greytrace', 'A': 'inkblot', 'V': 'inkfresco', 'N': 'inkmoon',
 };

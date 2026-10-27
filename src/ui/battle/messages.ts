@@ -211,7 +211,9 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
         ? [f(L('Hop ! {n} est attrapé !', 'Gotcha! {n} was caught!'), { n: monLabel(st.sides[1].party[st.sides[1].active]) })]
         : [[tr(L('Oh non ! Il s’est libéré !', 'Oh no! It broke free!')), tr(L('Raah ! Presque !', 'Aargh! Almost had it!')), tr(L('Mince ! Si près du but !', 'Shoot! It was so close!')), tr(L('Mince ! Si près du but !', 'Shoot! It was so close!'))][e.shakes]];
     case 'blocked':
-      return [tr(L('Le dresseur bloque la balle ! On ne vole pas les Bestioles des autres !', 'The trainer blocked the ball! Don’t be a thief!'))];
+      return e.reflet
+        ? [tr(L('La Crayon-ball passe à travers ! Ce n’est qu’un reflet…', 'The Pencil Ball goes right through it! It’s only a reflection…'))]
+        : [tr(L('Le dresseur bloque la balle ! On ne vole pas les Bestioles des autres !', 'The trainer blocked the ball! Don’t be a thief!'))];
     case 'run':
       return [e.ok ? tr(L('Tu prends la fuite !', 'Got away safely!')) : tr(L('Impossible de fuir !', 'Can’t escape!'))];
     case 'cantRun':

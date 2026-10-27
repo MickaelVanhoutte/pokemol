@@ -188,6 +188,20 @@ describe('battle', () => {
     expect(r2.events.some((e) => e.t === 'blocked')).toBe(true);
   });
 
+  it('lets balls go through a vision (the dream legendaries before the ending)', () => {
+    const foe = { ...mon('071', 30), hp: 1, status: 'sleep' as const };
+    const st = createBattle({
+      kind: 'wild', seed: 3, noCatch: true,
+      player: { name: L('A', 'A'), party: [mon('001', 30)], isAI: false },
+      enemy: { name: L('B', 'B'), party: [foe], isAI: true },
+    }).state;
+    for (let i = 0; i < 5; i++) {
+      const r = act(st, { type: 'ball', item: 'super-crayon-ball' }, { type: 'move', slot: 0 });
+      expect(r.events.some((e) => e.t === 'blocked' && e.reflet)).toBe(true);
+      expect(r.state.result).not.toBe('capture');
+    }
+  });
+
   it('uses Struggle only when no PP is left', () => {
     const me = mon('001', 5);
     me.moves.forEach((s) => (s.pp = 0));

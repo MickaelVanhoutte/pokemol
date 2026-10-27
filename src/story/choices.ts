@@ -8,6 +8,7 @@ import { L, type LText } from '../i18n';
 import type { Mon } from '../engine/pk/creature';
 import type { SaveData } from '../save/schema';
 import type { Actor } from '../overworld/game';
+import type { Look } from '../overworld/sprites';
 import { ask, getGame, giveMon, offerNickname, say, setFlag } from '../overworld/controller';
 import { allMons, save } from '../state/game';
 
@@ -90,4 +91,25 @@ export async function coconfusJoins(level: number, actor?: Actor) {
     ? L('Coconfus rejoint ton équipe ! Il est envoyé dans le PC.', 'Muddlecoon joined your team! It was sent to the PC.')
     : L('Coconfus rejoint ton équipe !', 'Muddlecoon joined your team!'));
   await offerNickname(m.uid);
+}
+
+/**
+ * Someone comes up to the player for a cut-scene: spawned two free tiles away (below first) and walking one
+ * step closer, or right beside the player when there is no room.
+ */
+export async function comeUp(id: string, look: Look, mon?: string): Promise<Actor> {
+  const g = getGame();
+  const { x, y } = g.player;
+  for (const [dx, dy] of [[0, 1], [0, -1], [-1, 0], [1, 0]] as const) {
+    if (g.blocked(x + dx, y + dy) || g.blocked(x + 2 * dx, y + 2 * dy)) continue;
+    const a = g.spawn(id, look, x + 2 * dx, y + 2 * dy, dy > 0 ? 'up' : dy < 0 ? 'down' : dx > 0 ? 'left' : 'right', mon);
+    await g.walk(a, [dy > 0 ? 'up' : dy < 0 ? 'down' : dx > 0 ? 'left' : 'right'], 200);
+    g.faceToward(g.player, a);
+    return a;
+  }
+  const [dx, dy] = ([[0, 1], [0, -1], [-1, 0], [1, 0]] as const).find(([a, b]) => !g.blocked(x + a, y + b)) ?? [0, 1];
+  const a = g.spawn(id, look, x + dx, y + dy, 'up', mon);
+  g.faceToward(a, g.player);
+  g.faceToward(g.player, a);
+  return a;
 }

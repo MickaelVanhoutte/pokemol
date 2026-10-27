@@ -83,6 +83,14 @@ function path(p: Painter, near: Near, x: number, y: number) {
   if (isGrassy(near(1, 0))) edge('r');
 }
 
+/** The night-sky fresco on the Atelier Encre's back wall (three tiles): deep blue with tiny stars. */
+function fresco(p: Painter, x: number) {
+  p.rect(1, 1, 14, 12, '#2c2a5e');
+  p.rect(1, 1, 14, 1, '#d8c27a');
+  p.rect(1, 12, 14, 1, '#d8c27a');
+  for (let k = 0; k < 4; k++) p.px(2 + Math.floor(hash(x, 3, k) * 12), 2 + Math.floor(hash(x, 5, k) * 9), '#f4ecc4');
+}
+
 function water(p: Painter, frame: number, near: Near, x: number, y: number) {
   p.fill(C.w1);
   const off = frame * 3;
@@ -466,6 +474,42 @@ export const TILES: Record<string, TileDef> = {
       for (let i = 1; i < 16; i += 4) p.rect(i, 1, 1, 14, C.wood2);
       p.rect(0, 1, 16, 1, C.wood2);
       p.rect(0, 14, 16, 1, C.wood2);
+    },
+  },
+  // the choices' consequences (src/story/choices.ts): Marine's bridge left with its watercolour runs
+  bridgerun: {
+    paint: (p, _f, n, x, y) => {
+      TILES.bridge.paint(p, 0, n, x, y);
+      const runs = ['#f29ab8', '#8ec6fa', '#f7d76a', '#b7e08a'];
+      for (let k = 0; k < 3; k++) {
+        const cx = 2 + Math.floor(hash(x, y, 40 + k) * 12), col = runs[Math.floor(hash(x, y, 50 + k) * runs.length)];
+        const len = 5 + Math.floor(hash(x, y, 60 + k) * 8);
+        p.rect(cx, 2, 2, 3, col);
+        for (let i = 0; i < len; i++) p.px(cx + (i % 3 === 2 ? 1 : 0), 4 + i, col);
+        p.px(cx, 4 + len, col);
+        p.px(cx + 1, 4 + len, col);
+      }
+    },
+  },
+  // Ville-Feutre kept a few grey lines to remember the night its colours were stolen
+  greytrace: {
+    paint: (p, _f, n, x, y) => {
+      path(p, n, x, y);
+      for (let i = -16; i < 16; i += 4) for (let k = 0; k < 16; k++) if (i + k >= 0 && i + k < 16 && hash(x, y, i * 16 + k) < 0.8) p.px(i + k, 15 - k, '#8e8a9c');
+    },
+  },
+  // Nocturne's fresco: the ink blot, then rubbed out and painted again, or turned into a moon
+  inkblot: { solid: true, paint: (p, _f, n, x, y) => { TILES.towerwall.paint(p, 0, n, x, y); fresco(p, x); p.disc(8, 7, 5, '#100c24'); p.px(3, 12, '#100c24'); p.rect(12, 10, 2, 2, '#100c24'); p.px(9, 13, '#100c24'); } },
+  inkfresco: { solid: true, paint: (p, _f, n, x, y) => { TILES.towerwall.paint(p, 0, n, x, y); fresco(p, x); p.px(8, 6, '#ffffff'); p.px(7, 7, '#ffffff'); p.px(9, 7, '#ffffff'); p.px(8, 8, '#ffffff'); } },
+  inkmoon: {
+    solid: true,
+    paint: (p, _f, n, x, y) => {
+      TILES.towerwall.paint(p, 0, n, x, y);
+      fresco(p, x);
+      p.disc(8, 7, 5, '#f4ecc4');
+      p.disc(10, 6, 4, '#2c2a5e');
+      p.px(3, 12, '#f4ecc4');
+      p.px(13, 11, '#f4ecc4');
     },
   },
   towerfloor: { paint: (p, _f, _n, x, y) => { p.fill('#6b6a8c'); for (let i = 0; i < 16; i += 8) { p.rect(0, i, 16, 1, '#55547a'); p.rect(i + ((y % 2) * 4), 0, 1, 16, '#55547a'); } p.noise(0.03, '#8584a8', x + y); } },

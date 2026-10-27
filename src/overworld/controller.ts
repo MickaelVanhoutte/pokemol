@@ -784,6 +784,8 @@ export interface FightOptions {
    * no bag, no prize money and no blackout.
    */
   borrowed?: Mon[];
+  /** A vision: Crayon-balls go right through it. */
+  noCatch?: boolean;
 }
 
 /** Runs a battle from the world and applies its outcome to the save. */
@@ -799,7 +801,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       id: 'battle',
       props: {
         setup: {
-          kind, seed: newSeed(), night: dayPhase() === 'night',
+          kind, seed: newSeed(), night: dayPhase() === 'night', noCatch: opts.noCatch,
           // eggs stay out of battles
           player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false },
           enemy: { name: enemyName, party: enemy, isAI: true },
@@ -919,7 +921,7 @@ async function blackout() {
 }
 
 /** A wild battle (random encounters, fishing, or a Bestiole waiting somewhere); returns how it ended. */
-export async function wildBattle(species: string, level: number, opts: { music?: TrackId } = {}): Promise<BattleResult | null> {
+export async function wildBattle(species: string, level: number, opts: { music?: TrackId; noCatch?: boolean } = {}): Promise<BattleResult | null> {
   if (!s().party.length) return null;
   sfx.encounter();
   const g = getGame();
@@ -932,7 +934,7 @@ export async function wildBattle(species: string, level: number, opts: { music?:
   // like the GBA games, some wild creatures carry an item (kept when caught)
   const held = creature(species).wildItem;
   if (held && Math.random() * 100 < held.pct) wild.item = held.id;
-  return (await fight('wild', creature(species).name, [wild], { music: opts.music })).result;
+  return (await fight('wild', creature(species).name, [wild], { music: opts.music, noCatch: opts.noCatch })).result;
 }
 
 // ------------------------------------------------------------------ helpers for scripts

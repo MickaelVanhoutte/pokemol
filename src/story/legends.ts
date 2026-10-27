@@ -1,21 +1,45 @@
 /**
- * The two legendary Bestioles (src/data/maps/legendes.ts): Libellune, the good dream, comes to the
- * clearing of the Lost Woods at night; Noctaile, the bad dream, waits at the bottom of the
- * Scribble-Out Cave. Each is met once; caught, it is gone for good; knocked out, it comes back after a
- * night of sleep (or the next real day).
+ * The two dream legendaries (src/data/maps/legendes.ts), the two things Coconfus can become: Libellune
+ * comes to the clearing of the Lost Woods at night, Noctaile waits at the bottom of the Scribble-Out Cave.
+ * Before the ending they are only visions: a battle where balls go through them, met once, with a clue.
+ * After it, the one Coconfus did not become waits there for real: caught, it is gone for good; knocked
+ * out, it comes back after a night of sleep (or the next real day).
  */
 import { L, type LText } from '../i18n';
 import { localDay } from '../overworld/berries';
 import { dayPhase, flag, getGame, say, sayAll, scripts, setFlag, shake, warpTo, wildBattle } from '../overworld/controller';
 import { save } from '../state/game';
+import { findCoconfus } from './choices';
 
 const num = (name: string) => save.value?.flags[name] ?? 0;
 
-/** Whether a legendary is not in its place right now: caught, knocked out and not back yet, or out of its hours. */
+/** The level of the one Coconfus did not become, after the ending. */
+const AFTER_LEVEL = 55;
+
+/** Whether this legendary is the form Coconfus took at the ending (`fin`: 1 Libellune, 2 Noctaile). */
+const chosen = (slug: string) => num('fin') === (slug === 'libellune' ? 1 : 2);
+
+/**
+ * Whether a legendary is not in its place right now: its vision already met (before the ending), the
+ * form Coconfus became, caught, knocked out and not back yet, or out of its hours.
+ */
 function away(slug: string, nightOnly = false) {
   if (flag(`static:${slug}`)) return true;
+  if (!flag('ending') ? flag(`vision:${slug}`) : chosen(slug)) return true;
   const back = num('nuits') >= num(`ko:${slug}`) || localDay() >= num(`koDay:${slug}`);
   return !back || (nightOnly && dayPhase() !== 'night');
+}
+
+/** Before the ending: a vision of what Coconfus could become. */
+async function vision(o: { id: string; slug: string; level: number; intro: LText[]; clue: LText; fades: LText }) {
+  if (flag(`vision:${o.slug}`)) return;
+  await sayAll(o.intro);
+  await shake(500);
+  const out = await wildBattle(o.id, o.level, { music: 'final', noCatch: true });
+  if (out !== 'win' && out !== 'flee') return;
+  setFlag(`vision:${o.slug}`);
+  if (save.value && findCoconfus(save.value)) await say(o.clue);
+  await say(o.fades);
 }
 
 async function meet(o: { id: string; slug: string; level: number; intro: LText[]; caught: LText; gone: LText; waits: LText }) {
@@ -60,8 +84,21 @@ scripts.boisPerduLost = async () => {
 
 scripts.libellune = async () => {
   if (away('libellune', true)) return;
+  if (!flag('ending')) {
+    await vision({
+      id: '071', slug: 'libellune', level: 32,
+      intro: [
+        L('Une libellule de vitrail boit au petit étang. Ses ailes brillent de toutes les couleurs… mais on voit les arbres à travers elle.', 'A stained-glass dragonfly is drinking at the little pond. Its wings shine with every colour… but you can see the trees through it.'),
+        L('Elle se retourne vers toi !', 'It turns towards you!'),
+      ],
+      clue: L('Ces grands yeux doux… Ce sont exactement les yeux de Coconfus !', 'Those big gentle eyes… They are exactly Muddlecoon’s eyes!'),
+      fades: L('La libellule s’efface en mille éclats de lumière. Ce n’était qu’un reflet… le reflet de quoi ?', 'The dragonfly fades into a thousand sparks of light. It was only a reflection… a reflection of what?'),
+    });
+    setFlag('away:libellune', away('libellune', true) ? 1 : 0);
+    return;
+  }
   await meet({
-    id: '071', slug: 'libellune', level: 30,
+    id: '071', slug: 'libellune', level: AFTER_LEVEL,
     intro: [
       L('Une libellule de vitrail boit au petit étang. Ses ailes brillent de toutes les couleurs…', 'A stained-glass dragonfly is drinking at the little pond. Its wings shine with every colour…'),
       L('Elle se retourne vers toi !', 'It turns towards you!'),
@@ -81,8 +118,21 @@ scripts.ratures3Enter = async () => {
 
 scripts.noctaile = async () => {
   if (away('noctaile')) return;
+  if (!flag('ending')) {
+    await vision({
+      id: '072', slug: 'noctaile', level: 38,
+      intro: [
+        L('Un grand papillon d’ombre ouvre ses ailes. Des spirales roses y tournent… mais on voit la roche à travers lui.', 'A great shadow moth opens its wings. Pink spirals turn on them… but you can see the rock through it.'),
+        L('Il fonce sur toi !', 'It swoops at you!'),
+      ],
+      clue: L('Ces spirales roses… Ce sont les mêmes que les taches de Coconfus !', 'Those pink spirals… They are just like Muddlecoon’s smudges!'),
+      fades: L('Le papillon se dissout dans le noir. Ce n’était qu’un reflet… le reflet de quoi ?', 'The moth melts into the dark. It was only a reflection… a reflection of what?'),
+    });
+    setFlag('away:noctaile', away('noctaile') ? 1 : 0);
+    return;
+  }
   await meet({
-    id: '072', slug: 'noctaile', level: 34,
+    id: '072', slug: 'noctaile', level: AFTER_LEVEL,
     intro: [
       L('Un grand papillon d’ombre ouvre ses ailes. Des spirales roses y tournent… Tu as la tête qui tourne.', 'A great shadow moth opens its wings. Pink spirals turn on them… Your head is spinning.'),
       L('Noctaile fonce sur toi !', 'Nightmoth swoops at you!'),

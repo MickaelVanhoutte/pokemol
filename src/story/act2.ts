@@ -4,14 +4,26 @@ import {
   ask, bubble, flag, flash, getGame, openScreen, say, sayAll, scripts, setFlag, showToast, warpTo,
 } from '../overworld/controller';
 import { GRUNT } from './cast';
+import { choose, RETOUCHE } from './choices';
 
 const KEEPER = L('Monsieur Tombola', 'Mr. Raffle');
 const ZELIE = L('Zélie', 'Zelie');
+const MARINE = L('Marine', 'Marine');
 
-/** Marine repaints Featherby's bridge: Watercolour Way becomes a shortcut. */
+/** Marine repaints Featherby's bridge: Watercolour Way becomes a shortcut. The runs are the third choice. */
 scripts.marineAfter = async () => {
   await flash('white', 200);
   showToast(tr(L('Le pont de Village-Plume est redessiné !', 'Featherby’s bridge has been redrawn!')));
+  await sayAll([
+    L('Voilà, j’ai repeint le pont de Village-Plume à l’aquarelle ! Mais il s’est mis à pleuvoir…', 'There, I repainted Featherby’s bridge in watercolour! But then it started to rain…'),
+    L('Les couleurs ont coulé un peu partout. Ça me chiffonne. Je le repeins bien net ?', 'The colours ran all over. It bothers me. Should I paint it again, nice and neat?'),
+  ], MARINE);
+  const way = await choose('pont', L('Que lui conseilles-tu ?', 'What do you tell her?'),
+    L('Repeins-le bien net !', 'Paint it again, nice and neat!'),
+    L('Laisse couler, ça fait des reflets !', 'Let it run, it makes reflections!'), MARINE);
+  await say(way === RETOUCHE
+    ? L('D’accord ! Une deuxième couche, bien propre. Il sera parfait.', 'All right! A second coat, nice and clean. It’ll be perfect.')
+    : L('Tu as raison… Avec les coulures, on dirait qu’il se reflète dans la rivière. Je le laisse comme ça !', 'You’re right… With the runs, it looks like it’s reflected in the river. I’ll leave it like that!'), MARINE);
 };
 
 // ------------------------------------------------------------------ the fair (side quest)
@@ -64,7 +76,9 @@ scripts.fluoDoor = async () => {
 
 scripts.feutreMan = async () => {
   if (flag('a2.feutre')) {
-    await say(L('Les couleurs sont revenues ! Regarde ces néons, ces affiches… Merci !', 'The colours are back! Look at the neon signs, the posters… Thank you!'), L('Habitant', 'Local'));
+    await say(flag('choix:feutre:b')
+      ? L('Les couleurs sont revenues ! On a gardé quelques traits gris par terre, pour se souvenir. Ça rend la ville encore plus jolie, non ?', 'The colours are back! We kept a few grey lines on the ground, to remember. It makes the city even prettier, doesn’t it?')
+      : L('Les couleurs sont revenues ! Regarde ces néons, ces affiches… Merci !', 'The colours are back! Look at the neon signs, the posters… Thank you!'), L('Habitant', 'Local'));
     return;
   }
   await sayAll([
@@ -93,6 +107,15 @@ scripts.feutreRestore = async () => {
   showToast(tr(L('Ville-Feutre retrouve ses couleurs !', 'Felt City gets its colours back!')));
   await sayAll([
     L('Tu m’as libérée ! Et regarde : toutes les couleurs s’envolent vers la ville !', 'You freed me! And look: all the colours are flying back to the city!'),
+    L('Mais les rues gardent des traces grises, là où la gomme est passée. On recolorie tout comme avant ?', 'But the streets still have grey marks where the eraser went. Shall we colour it all back like before?'),
+  ], ZELIE);
+  const way = await choose('feutre', L('Qu’en penses-tu ?', 'What do you think?'),
+    L('Tout comme avant, en encore plus beau !', 'Just like before, even prettier!'),
+    L('Garde quelques traits gris : ça raconte.', 'Keep a few grey lines: they tell a story.'), ZELIE);
+  await sayAll([
+    way === RETOUCHE
+      ? L('Alors on recolorie tout, jusqu’au dernier pavé ! Ville-Feutre va briller comme jamais.', 'Then we colour everything back, down to the last cobblestone! Felt City will shine like never before.')
+      : L('Tu as raison. On gardera quelques traits gris par terre : comme ça, personne n’oubliera.', 'You’re right. We’ll keep a few grey lines on the ground: that way, nobody will forget.'),
     L('Je file rouvrir mon Atelier. Viens m’y défier quand tu veux, je te dois bien ça !', 'I’m off to reopen my Atelier. Come and challenge me whenever you like, I owe you that!'),
   ], ZELIE);
 };

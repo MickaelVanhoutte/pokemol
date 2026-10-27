@@ -12,6 +12,7 @@ import {
   trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
+import { choose, comeUp, findCoconfus, RETOUCHE } from './choices';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const PAPA = L('Papa', 'Daddy');
@@ -89,7 +90,28 @@ scripts.towerFreed = async () => {
   await flash('white', 260);
   showToast(tr(L('Les fantômes de la tour retrouvent leurs couleurs !', 'The tower ghosts get their colours back!')));
   await say(L('Hi hi hi ! Merci ! On peut de nouveau faire des grimaces à tout le monde !', 'Hee hee hee! Thank you! We can pull faces at everyone again!'), L('Fantômes', 'Ghosts'));
+  await rivalDoubts();
 };
+
+/** The rival comes up the tower, beaten downstairs: he doubts himself (the fifth choice). */
+async function rivalDoubts() {
+  const g = getGame();
+  playMusic('rival');
+  const r = await comeUp('rivalTour', LOOKS.rival);
+  await sayAll([
+    L('{name}… Tu l’as battue. Évidemment.', '{name}… You beat her. Of course you did.'),
+    L('Moi, en bas, j’ai perdu contre un simple Sbire. Je perds tout le temps : contre toi, contre eux…', 'Me, downstairs, I lost to a plain grunt. I lose all the time: to you, to them…'),
+    L('Je suis nul, hein ?', 'I’m rubbish, aren’t I?'),
+  ], RIVAL);
+  const way = await choose('rival', L('Que lui réponds-tu ?', 'What do you tell him?'),
+    L('Entraîne-toi, tu vas devenir super fort !', 'Train hard, you’ll get really strong!'),
+    L('T’es pas nul. T’es génial comme t’es !', 'You’re not rubbish. You’re great just as you are!'), RIVAL);
+  await say(way === RETOUCHE
+    ? L('… T’as raison. Je vais m’entraîner comme jamais. La prochaine fois, tu verras !', '… You’re right. I’m going to train like never before. Next time, you’ll see!')
+    : L('… Merci. C’est bizarre, ça me fait du bien. On se retrouve plus loin, d’accord ?', '… Thanks. It’s weird, it actually helps. See you further on, OK?'), RIVAL);
+  g.remove(r.id);
+  mapMusic();
+}
 
 // ------------------------------------------------------------------ Ink City and the factory
 
@@ -159,6 +181,29 @@ scripts.phareEnd = async () => {
   const bv = g.npc('buvard');
   if (bv) g.remove(bv.id);
   await say(L('(Nocturne s’envole dans un tourbillon d’encre.)', '(Nocturne flies away in a swirl of ink.)'));
+};
+
+/** After the Ink Badge: the ink blot on Nocturne's fresco (the sixth choice). */
+scripts.encreChoice = async () => {
+  const who = L('Nocturne', 'Nocturne');
+  await sayAll([
+    L('Tu vois la fresque, au fond ? Le ciel de la Cité-Encre. C’était mon plus beau dessin.', 'See the fresco at the back? The sky over Ink City. It was my finest drawing.'),
+    L('Quand la Team Gomme a volé mon Encre de Minuit, le flacon s’est renversé dessus. Une grosse tache, en plein milieu.', 'When Team Gomme stole my Midnight Ink, the bottle spilled on it. A big blot, right in the middle.'),
+    L('Depuis, je n’ose plus la regarder. Toi, qu’est-ce que tu ferais ?', 'Since then, I can’t bear to look at it. What would you do?'),
+  ], who);
+  const way = await choose('encre', L('Que lui conseilles-tu ?', 'What do you tell her?'),
+    L('Gomme la tache et refais-la, encore plus belle !', 'Rub the blot out and paint it again, even better!'),
+    L('Fais de la tache une lune !', 'Turn the blot into a moon!'), who);
+  await flash('white', 260);
+  await say(way === RETOUCHE
+    ? L('Un coup de gomme, un ciel tout neuf… Regarde ces étoiles ! Elle est plus belle qu’avant.', 'A rub of the eraser, a brand-new sky… Look at those stars! It’s finer than before.')
+    : L('Une lune… Mais oui ! La tache était là pour ça. Ma fresque n’a jamais été aussi belle.', 'A moon… Of course! That’s what the blot was for. My fresco has never looked so good.'), who);
+};
+
+scripts.encreFresque = async () => {
+  if (flag('choix:encre:a')) await say(L('Le ciel de la Cité-Encre, repeint tout neuf. Les étoiles brillent comme si on venait de les poser.', 'The sky over Ink City, freshly repainted. The stars shine as if they had just been put there.'));
+  else if (flag('choix:encre:b')) await say(L('Le ciel de la Cité-Encre. Au milieu, la tache d’encre est devenue une lune. On ne voit plus qu’elle.', 'The sky over Ink City. In the middle, the ink blot has become a moon. It’s all you can see.'));
+  else await say(L('Un ciel de nuit plein d’étoiles… et une grosse tache d’encre en plein milieu.', 'A night sky full of stars… and a big ink blot right in the middle.'));
 };
 
 /** The gate at the top of the Piste Cyclable only opens from the Gouache side. */
@@ -231,6 +276,21 @@ scripts.blanche2Stop = async () => {
   await trainerBattle('blanche2', b);
 };
 
+/** The Great Eraser rubs Coconfus with his giant eraser: it turns pale until the end (`coconPale`). */
+async function paleCocoon() {
+  await sayAll([
+    L('Et voilà donc le fameux cocon. Le dessin raté d’hier soir… Je le reconnaîtrais entre mille.', 'And here is the famous cocoon. Last night’s failed drawing… I’d know it anywhere.'),
+    L('Un dessin pas fini, ça ne se garde pas. Ça se gomme.', 'An unfinished drawing isn’t kept. It’s rubbed out.'),
+  ], EFFACEUR);
+  await shake(400);
+  await flash('white', 400);
+  setFlag('coconPale');
+  await sayAll([
+    L('Le Grand Effaceur frotte Coconfus d’un grand coup de gomme !', 'The Great Eraser gives Muddlecoon a big rub with his eraser!'),
+    L('Coconfus est tout pâle… On voit presque le papier à travers lui !', 'Muddlecoon has gone all pale… You can almost see the paper through it!'),
+  ]);
+}
+
 /** The Great Eraser shows himself for the first time, then runs to the edge of the page. */
 scripts.usineEnd = async () => {
   const g = getGame();
@@ -241,8 +301,9 @@ scripts.usineEnd = async () => {
     L('Assez.', 'Enough.'),
     L('Alors c’est toi, la petite main qui recolorie tout ce que j’efface…', 'So you’re the little hand colouring back everything I rub out…'),
     L('Les dessins, ça dépasse, ça bave, c’est tordu. Une page blanche, elle, n’a jamais tort.', 'Drawings go over the lines, they smudge, they’re crooked. A blank page is never wrong.'),
-    L('Viens donc me trouver au Bord de la Page, là où tout finit. Nous verrons bien ce qu’il restera de tes gribouillis.', 'Come and find me at the Edge of the Page, where everything ends. We’ll see what’s left of your scribbles.'),
   ], EFFACEUR);
+  if (save.value && findCoconfus(save.value)) await paleCocoon();
+  await say(L('Viens donc me trouver au Bord de la Page, là où tout finit. Nous verrons bien ce qu’il restera de tes gribouillis.', 'Come and find me at the Edge of the Page, where everything ends. We’ll see what’s left of your scribbles.'), EFFACEUR);
   await flash('white', 300);
   g.remove(boss.id);
   await say(L('(La brume blanche au nord de la Cité-Encre s’est levée.)', '(The white mist north of Ink City has lifted.)'));

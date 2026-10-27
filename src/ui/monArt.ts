@@ -1,6 +1,7 @@
 import { signal } from '@preact/signals';
 import { artUrl, creature } from '../data/creatures';
 import { shinyHash, shinyRecolour } from '../art/shiny';
+import { save } from '../state/game';
 
 /**
  * Sparkly ("pailleté") drawings: the card is recoloured once per species on a canvas (coloured
@@ -95,10 +96,57 @@ function eggArt(): string {
   return eggUrl;
 }
 
+/** Coconfus after the Great Eraser rubbed it, until the ending (`coconPale`, src/story/act3.ts). */
+const isPale = (species: string) => species === '073' && !!save.value?.flags.coconPale && !save.value.flags.ending;
+
+/** The drawing rubbed half away: colours washed out towards the paper, the dark lines kept a little. */
+function makePale(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const g = c.getContext('2d')!;
+      g.drawImage(img, 0, 0, w, h);
+      const data = g.getImageData(0, 0, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const lum = 0.3 * px[i] + 0.59 * px[i + 1] + 0.11 * px[i + 2];
+        const wash = lum < 80 ? 0.45 : 0.7;
+        for (let j = 0; j < 3; j++) px[i + j] = Math.round((px[i + j] * 0.25 + lum * 0.75) * (1 - wash) + 244 * wash);
+        px[i + 3] = Math.round(px[i + 3] * 0.9);
+      }
+      g.putImageData(data, 0, 0);
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror = () => reject(new Error(`pale ${src}`));
+    img.src = src;
+  });
+}
+
 /** Image of a particular creature: its sparkly version when it is one, a paper egg for an egg. */
 export function monArtUrl(m: { species: string; shiny?: boolean; egg?: unknown }): string {
   if (m.egg) return eggArt();
   const sp = creature(m.species);
+  if (isPale(sp.id)) {
+    void ready.value;
+    const key = `pale:${sp.id}`;
+    const hit = cache.get(key);
+    if (hit) return hit;
+    if (!pending.has(key) && typeof document !== 'undefined') {
+      pending.add(key);
+      makePale(artUrl(sp))
+        .then((url) => {
+          cache.set(key, url);
+          ready.value++;
+        })
+        .catch(() => pending.delete(key));
+    }
+    return artUrl(sp);
+  }
   if (!m.shiny) return artUrl(sp);
   // reading the signal re-renders the component once the sparkly version is ready
   void ready.value;

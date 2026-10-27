@@ -99,6 +99,12 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     // Team Gomme sucked the colours out of the city until Admin Rature is beaten
     tint: 'rgba(110, 110, 125, 0.55)',
     tintUnless: 'a2.feutre',
+    // grey lines kept to remember the night the colours were stolen (the fourth choice)
+    patches: [
+      { id: 'feutreTrace1', x: 5, y: 9, rows: ['xxx'], if: 'choix:feutre:b' },
+      { id: 'feutreTrace2', x: 11, y: 12, rows: ['xx', 'xx'], if: 'choix:feutre:b' },
+      { id: 'feutreTrace3', x: 15, y: 15, rows: ['xxxx'], if: 'choix:feutre:b' },
+    ],
     rows: [
       'TTTTTTTTTTTTTTTTTTTTTTTT',
       'T......................T',

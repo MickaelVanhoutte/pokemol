@@ -50,8 +50,22 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 |---|---|---|---|---|
 | 1 | `tache` | Route 1, after the first grunt | wipe the eraser mark off Coconfus | « elle te va bien » |
 | 2 | `musee` | Ville-Pastel, Apprentice Lison at the Atelier door after the badge | « recommence-le » | « garde-le, il est unique » |
+| 3 | `pont` | Atelier Aquarelle, Marine after her badge (`marineAfter`) | paint the bridge again, neat | keep the watercolour runs (`u` tiles on Featherby's bridge) |
+| 4 | `feutre` | Ville-Feutre's warehouse, Zélie freed (`feutreRestore`) | colour it all back | keep a few grey lines (`x` tiles in the streets, the locals say why) |
+| 5 | `rival` | Misty Tower top, the rival after Blanche (`towerFreed` → `rivalDoubts`): « je suis nul » | « entraîne-toi ! » | « t’es génial comme t’es » |
+| 6 | `encre` | Atelier Encre, Nocturne after the badge (`encreChoice`): the ink blot on her fresco | rub it out, paint it again (`V` stars) | turn it into a moon (`N`) |
 
 Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was.
+
+**Coconfus in Acts 2 and 3.** Admin Rature and Admin Blanche say their boss wants « ce cocon raté ». At the end
+of the Eraser Factory (`usineEnd` → `paleCocoon`), the Great Eraser recognises « le dessin raté d’hier soir »
+and rubs it: flag `coconPale`, and its card is drawn washed out (`monArtUrl`) until the ending.
+
+**The legendaries are visions until the ending** (`src/story/legends.ts`). Libellune (L32, Bois Perdu, at
+night) and Noctaile (L38, Grotte des Ratures) are met once as a battle where Crayon-balls go through them
+(`wildBattle(…, { noCatch })`, the `blocked` event with `reflet`), flag `vision:<slug>`; the player notices
+Coconfus's eyes, or its spirals. After the ending, the one Coconfus did not become waits there for real at L55
+(flag `fin`: 1 Libellune, 2 Noctaile). Older saves that caught them keep them.
 
 **Coconfus in Act 1.** Leaving Bourg-Gribouille, the first grunt (`r1gomme`, a scripted battle, L3) chases it
 down Route 1 (`route1Gomme`, a trigger across the route); it flees north after choice 1. The second grunt of the
@@ -102,11 +116,11 @@ down to Port-Aquarelle and its island), two optional places break the straight l
   (`static:<slug>`); knocked out, it comes back after a night of sleep (`sleepUntil` counts
   `nuits`; `ko:<slug>` stores the night it can return, `koDay:<slug>` the real day) — the map's
   `onEnter` sets `away:<slug>`, which hides its NPC.
-  - **Libellune** (Bug/Fairy) L30, in the **Bois Perdu**: a gap in the Misty Woods' southern brambles
+  - **Libellune** (Bug/Fairy), a vision at L32 before the ending and L55 after it (see "The two endings"), in the **Bois Perdu**: a gap in the Misty Woods' southern brambles
     (`boisPerduGate`, 6th badge) opens on a maze where only the fireflies (`y` tiles) mark the way;
     every wrong turn (`boisPerduLost` triggers) sends you back to the start. Libellune comes to the
     clearing only at night. A kid in the Misty Woods gives the hint.
-  - **Noctaile** (Dark/Psychic) L34, at the bottom of the **Grotte des Ratures** (cave door on Route 8):
+  - **Noctaile** (Dark/Psychic), a vision at L38 before the ending and L55 after it, at the bottom of the **Grotte des Ratures** (cave door on Route 8):
     1F crayon barriers that need both levers, 2F glossy paper whose holes drop you back to 1F, 3F two
     boulders to push into two pits (12 pushes) in front of Noctaile.
 

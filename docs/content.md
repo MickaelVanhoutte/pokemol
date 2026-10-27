@@ -23,7 +23,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
 | `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
 | `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
-| `static:<species>` | a one-time battle (`echoShadow`, `src/story/legends.ts`) | A Bestiole met once was caught (the legendaries) or caught or beaten (Ombrouille) |
+| `static:<species>` | a one-time battle (`echoShadow`, `src/story/legends.ts`) | A Bestiole met once was caught (the legendaries, after the ending) or caught or beaten (Ombrouille) |
 | `nuits` | `sleepUntil` | Nights slept at home or at the Inn |
 | `ko:<slug>`, `koDay:<slug>` | `src/story/legends.ts` | A legendary knocked out: the night count and the real day it comes back |
 | `away:<slug>` | the legendary's map `onEnter` | Its NPC is hidden (caught, not back yet, or Libellune by day) |
@@ -38,6 +38,9 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `choix:<id>` (1 or 2), `choix:<id>:a` / `:b` | `choose()` in `src/story/choices.ts` | A story choice: 1 touches the drawing up (Libellune ending), 2 keeps it as it is (Noctaile ending). Maps use `:a` / `:b` to show its consequence ([story.md](story.md#the-two-endings)) |
 | `gift:coconfus` | `coconfusJoins()` (Misty Woods, or the next town for older saves) | Coconfus joined the team |
 | `prof:coconfus` | the Prof's wrapper in `src/story/coconfus.ts` | The Prof said he never photographed Coconfus |
+| `coconPale` | `usineEnd` (Eraser Factory) | The Great Eraser rubbed Coconfus: its card is washed out until the ending |
+| `vision:<slug>` | `src/story/legends.ts` | The vision of a dream legendary was met (before the ending) |
+| `fin` (1 or 2) | the ending | The form Coconfus took: 1 Libellune, 2 Noctaile; the other one waits in its lair |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
 Maps react without code:

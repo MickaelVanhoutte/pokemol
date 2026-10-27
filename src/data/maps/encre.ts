@@ -161,6 +161,13 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'QQQQQXQQQQQ',
     ],
     warps: [{ x: 5, y: 11, to: { map: 'encre', x: 15, y: 10, facing: 'down' } }],
+    // Nocturne's fresco: an ink blot until the sixth choice, then painted again or turned into a moon
+    patches: [
+      { id: 'encreBlot', x: 4, y: 0, rows: ['VAV'], unless: 'choix:encre' },
+      { id: 'encreRedone', x: 4, y: 0, rows: ['VVV'], if: 'choix:encre:a' },
+      { id: 'encreMoon', x: 4, y: 0, rows: ['VNV'], if: 'choix:encre:b' },
+    ],
+    interact: [{ x: 4, y: 0, script: 'encreFresque' }, { x: 5, y: 0, script: 'encreFresque' }, { x: 6, y: 0, script: 'encreFresque' }],
     npcs: [
       { id: 'nocturne', x: 5, y: 2, look: LOOKS.leaderEncre, facing: 'down', trainer: 'nocturne', sight: 1 },
       { id: 'encreT1', x: 2, y: 5, look: LOOKS.ghostgirl, facing: 'right', trainer: 'encreT1', sight: 3 },

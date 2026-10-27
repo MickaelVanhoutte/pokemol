@@ -1,3 +1,4 @@
+import { creature } from './creatures';
 import { MAPS } from './maps';
 
 export type HabitatHow = 'grass' | 'cave' | 'surf' | 'old' | 'good' | 'super' | 'gift' | 'tombola';
@@ -12,17 +13,18 @@ export interface Habitat {
 }
 
 /** Bestioles given by someone (not found in the wild). */
-const GIFTS: Record<string, string[]> = { '001': ['labo'], '002': ['labo'], '003': ['labo'], '016': ['ville'] };
+const GIFTS: Record<string, string[]> = { '001': ['labo'], '002': ['labo'], '003': ['labo'], '016': ['ville'], '073': ['bois'] };
 /** Bestioles waiting somewhere, met once: where, at what level, in what kind of place, at what time. */
 const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time?: 'night' }[]> = {
   '011': [{ map: 'grotteEchos', level: 36, how: 'cave' }],
-  '071': [{ map: 'boisPerdu', level: 30, how: 'grass', time: 'night' }],
-  '072': [{ map: 'ratures3', level: 34, how: 'cave' }],
+  // after the ending, the one Coconfus did not become (before it, only visions: src/story/legends.ts)
+  '071': [{ map: 'boisPerdu', level: 55, how: 'grass', time: 'night' }],
+  '072': [{ map: 'ratures3', level: 55, how: 'cave' }],
 };
 
 /**
  * Where a species can be met: every encounter table (tall grass or cave, sailing, each fishing
- * rod), gifts, and the Tombola, which can draw any Bestiole.
+ * rod), gifts, and the Tombola, which can draw any Bestiole but the legendaries.
  */
 export function habitatsOf(species: string): Habitat[] {
   const out: Habitat[] = [];
@@ -39,6 +41,7 @@ export function habitatsOf(species: string): Habitat[] {
   }
   for (const map of GIFTS[species] ?? []) out.push({ map, how: 'gift' });
   for (const s of STATIC[species] ?? []) out.push({ map: s.map, how: s.how, min: s.level, max: s.level, ...(s.time ? { time: s.time } : {}) });
-  out.push({ map: 'tombola', how: 'tombola' });
+  // the machine never draws the dream legendaries or their cocoon
+  if (creature(species).rarity !== 'legendary') out.push({ map: 'tombola', how: 'tombola' });
   return out;
 }
