@@ -497,6 +497,34 @@ and the Grand Concours got Glissonde (Marine), Canarmure L44 (Ambre), Psymagus L
 Pantharuse (Nocturne). Those stages, which the sims won 98–100% of the time, now sit at 50–93% on Normal.
 The ten final forms joined `TOWER_POOL`.
 
+**Fifteen more Bestioles (iteration 17), 88 in all.** The owner asked for original ideas (not modelled on
+existing creatures) with double types the game lacked. Drawn with the `crayon` kit; the owner turned down
+a broccoli line (replaced by the stapler crocodile) and asked for the mammoth to spray lava onto its own back.
+- Agrafou → Crocagrafe (Steel/Dark, L30): a crocodile with a stapler for a head, binder clips on its back.
+  Route 4; Crocagrafe on Route 9. Team Gomme grunts use them (Route 4, warehouse, Route 9, fortress).
+- Ocrinou → Mammouchaud (Rock/Fire, L28): a mammoth out of a cave painting. Grotte Gribouillis; Mammouchaud
+  in the echo cave. Miner Bob, Geologist Armand, Painter Victor.
+- Faonvole → Cerfoudre (Electric/Flying, L26): a fawn flying like a kite (*cerf-volant*). Route 4 and Route 6 by
+  day; Cerfoudre on the Piste Cyclable and Route Blanche. Kid Tim, Bastien, Cyclist Léa.
+- Allumou → Allumbattant (Fire/Fighting, L27): a matchstick stick-figure, then a boxer. Mont Fusain;
+  Allumbattant on Route 9. Juggler Paco (a fourth Bestiole), Hector, Grand Master Ambre (in place of Canarmure).
+- Lumignon → Projétoile (Electric/Psychic, L26): a bedroom night-light, then a star projector. Route 3 and
+  Route 4 at night; Projétoile on Route 8 at night. Kid Lise, Medium Opale.
+- Plissou → Plisserpent → Festivouivre (Dragon/Fairy, L30/L44, rare): a folded-paper parade dragon. Route 7
+  (rare); Plisserpent in the Sketch Forest (rare). Sparkler Mia, Sleepwalker Gaston, Grand Master Célestine.
+- Globargot (Ice/Psychic, rare): a snail with a snow globe for a shell (a tiny house inside: a dream clue).
+  Lighthouse island; Dreamer Mila.
+- Moutoussière (Normal/Ghost, rare): the dust sheep under the bed. Misty Tower; Storyteller Rose, Medium Sélène.
+
+Each took the place of one Bestiole in an existing team, at the same level (the ace's level kept, for the
+wild-level rule); Miner Bob got Ocrinou as a second Bestiole, so the curve keeps its XP before Marine (a
+first try swapped Caver Max's Papivole, a final form worth much more XP, and the Marine row fell by 15–26
+points). Lumignon learns Berceuse at L17, not L1: Kid Lise's sleeping powder dropped the Braisou row to 3%.
+On Normal, the rows that moved: Marine 96/93/84% (was 91/88/70), Grand Master Ambre 68/74/95% (was 31/97/88),
+Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Braise Atelier Bestioles for Allumou
+cost the team a level before Ambre (her Hard rows fell to 10–49%): Allumou is an extra Bestiole for Paco
+instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, was 43/2/2). The finals and the two standalones joined `TOWER_POOL`.
+
 **Evolutions redrawn (Oct 2026).** The owner found some evolved forms too close to their earlier form (a
 recolour, a bigger copy). Redrawn with a new silhouette: Clochegueule slimmer, Gloutoflor with vines and a
 flytrap jaw, Ossagarde tall with a raised club, Furisinge punching in iron cuffs, Hippoplume with quills and a

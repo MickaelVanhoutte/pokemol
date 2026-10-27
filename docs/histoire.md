@@ -88,7 +88,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   gants.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
   crédits. Quelques-unes sont des **brouillons**, griffonnés vite fait. On en croise dans les grottes,
-  sur la montagne, au bord de l’eau… Il y en a **73** à découvrir : certaines ne sortent que la nuit,
+  sur la montagne, au bord de l’eau… Il y en a **88** à découvrir : certaines ne sortent que la nuit,
   d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche.
 - Des **énigmes** dans les grottes, les tours et les repaires, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
@@ -190,7 +190,7 @@ The story has **two endings**, and your answers choose which one you will see.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few
   are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…
-  There are **73** to discover: some only come out at night, others hide in the tower, deep in the water
+  There are **88** to discover: some only come out at night, others hide in the tower, deep in the water
   or at the end of a fishing line.
 - **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.

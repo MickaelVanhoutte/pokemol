@@ -40,7 +40,7 @@ export const CONCOURS: ConcoursStage[] = [
   stage(2, 'leaderBraise', {
     id: 'gcAmbre', name: L('Grande Maîtresse Ambre', 'Grand Master Amber'),
     party: [
-      { species: '061', level: 52 }, { species: '004', level: 53 }, { species: '008', level: 54 },
+      { species: '081', level: 52 }, { species: '004', level: 53 }, { species: '008', level: 54 },
       { species: '018', level: 53, item: 'plume-vive' }, { species: '002', level: 56, item: 'bille-ardente' },
     ],
     before: [L('Tu as éteint l’aquarelle de Marine ? Voyons si tu tiens la chaleur de mon crayon rouge !', 'You put out Marine’s watercolours? Let’s see if you can take the heat of my red crayon!')],
@@ -49,7 +49,7 @@ export const CONCOURS: ConcoursStage[] = [
   stage(3, 'leaderPaillette', {
     id: 'gcCelestine', name: L('Grande Maîtresse Célestine', 'Grand Master Celestine'),
     party: [
-      { species: '005', level: 54, item: 'baie-reveil' }, { species: '007', level: 54 }, { species: '053', level: 52 },
+      { species: '005', level: 54, item: 'baie-reveil' }, { species: '086', level: 54 }, { species: '053', level: 52 },
       { species: '006', level: 55 }, { species: '014', level: 56, item: 'baie-doree' },
     ],
     before: [L('Les paillettes brillent même au fond d’une trousse. Montre-moi les tiennes !', 'Glitter shines even at the bottom of a pencil case. Show me yours!')],
@@ -103,7 +103,7 @@ export const TOWER_LEVEL = 50;
 
 /** Bestioles strong enough for the tower (first forms that evolve are left out). */
 export const TOWER_POOL = ['001', '020', '024', '002', '021', '025', '003', '022', '023', '027', '028', '029', '030', '031', '032', '033', '034', '035', '036', '038', '040', '041', '042', '043', '045', '046', '047', '048', '049', '050', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019',
-  '053', '055', '057', '059', '060', '061', '064', '066', '068', '070'];
+  '053', '055', '057', '059', '060', '061', '064', '066', '068', '070', '075', '077', '079', '081', '083', '086', '087', '088'];
 const LEGENDS = ['071', '072'];
 const TOWER_ITEMS = [
   'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'plume-vive', 'loupe', 'clochette', 'ruban-tenace',

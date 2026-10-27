@@ -252,6 +252,22 @@ export const TALENTS: TalentDef[] = [
   T('mauvais-reves', L('Mauvais Rêves', 'Bad Dreams'),
     L('Un adversaire endormi fait des cauchemars : il perd un huitième de ses PV à chaque tour.', 'A sleeping foe has nightmares: it loses an eighth of its HP every turn.'),
     { kind: 'badDreams' }),
+  // iteration 17
+  T('peinture-rupestre', L('Peinture Rupestre', 'Cave Painting'),
+    L('Il est peint sur la roche des grottes : les capacités Eau et Sol ne lui font que la moitié des dégâts.', 'It is painted on cave rock: Water and Ground moves do only half the damage to it.'),
+    { kind: 'halve', types: ['eau', 'sol'] }),
+  T('vent-arriere', L('Vent Arrière', 'Tailwind'),
+    L('Quand il a tous ses PV, ses capacités Électrique passent en premier.', 'At full HP, its Lightning moves go first.'),
+    { kind: 'galeWings', type: 'electrique' }),
+  T('chasse-cauchemar', L('Chasse-Cauchemar', 'Nightmare Chaser'),
+    L('Sa lumière chasse les mauvais rêves : les capacités Spectre et Ténèbres ne lui font que la moitié des dégâts.', 'Its light chases bad dreams away: Ghost and Dark moves do only half the damage to it.'),
+    { kind: 'halve', types: ['spectre', 'tenebres'] }),
+  T('flocons-fous', L('Flocons Fous', 'Snow Flurry'),
+    L('En arrivant, il secoue sa coquille : il se met à grêler.', 'It shakes its shell as it arrives: hail starts to fall.'),
+    { kind: 'entryWeather', weather: 'grele' }),
+  T('atchoum', L('Atchoum', 'Achoo'),
+    L('Il arrive dans un nuage de poussière : la Précision de l’adversaire baisse.', 'It arrives in a cloud of dust: the foe’s accuracy drops.'),
+    { kind: 'entryStage', target: 'foe', stat: 'acc', stages: -1 }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

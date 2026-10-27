@@ -17,6 +17,7 @@ const FUSAIN_ENCOUNTERS = {
     { id: '030', w: 16, min: 19, max: 21 },
     { id: '067', w: 12, min: 19, max: 21 },
     { id: '065', w: 6, min: 19, max: 21 },
+    { id: '080', w: 10, min: 19, max: 21 },
   ],
 };
 

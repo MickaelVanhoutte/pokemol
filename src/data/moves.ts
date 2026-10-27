@@ -355,6 +355,16 @@ export const MOVES: MoveDef[] = [
   M({ id: 'ombre-songe', name: L('Ombre-songe', 'Dream Shadow'), type: 'tenebres', cat: 'spec', power: 95, acc: 90, pp: 10,
     effects: [{ kind: 'status', status: 'sleep', chance: 20 }],
     desc: L('Une ombre qui murmure des cauchemars. Peut endormir.', 'A shadow that whispers nightmares. May put the foe to sleep.') }),
+  // iteration 17
+  M({ id: 'agrafage', name: L('Agrafage', 'Staple Down'), type: 'acier', cat: 'phys', power: 80, acc: 100, pp: 15,
+    effects: [{ kind: 'trap' }],
+    desc: L('Clac ! Il agrafe l’ennemi sur place : il ne peut plus fuir et perd des PV pendant 4 à 5 tours.', 'Clack! It staples the foe in place: it can’t get away and loses HP for 4 to 5 turns.') }),
+  M({ id: 'craque-poing', name: L('Craque-poing', 'Strike Punch'), type: 'feu', cat: 'phys', power: 85, acc: 100, pp: 15, punch: true,
+    effects: [{ kind: 'status', status: 'burn', chance: 20 }],
+    desc: L('Un coup de poing frotté comme une allumette. Peut brûler.', 'A punch struck like a match. May burn.') }),
+  M({ id: 'grand-defile', name: L('Grand défilé', 'Grand Parade'), type: 'dragon', cat: 'phys', power: 95, acc: 100, pp: 10,
+    effects: [{ kind: 'stage', target: 'self', stat: 'atk', stages: 1, chance: 20 }],
+    desc: L('Il fonce en dansant comme un dragon de fête. Peut augmenter son Attaque.', 'It charges, dancing like a parade dragon. May raise its Attack.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

@@ -14,6 +14,7 @@ const TOWER_ENCOUNTERS = {
     { id: '007', w: 13, min: 23, max: 25 },
     { id: '065', w: 14, min: 24, max: 25 },
     { id: '066', w: 4, min: 23, max: 25 },
+    { id: '088', w: 6, min: 23, max: 25 },
   ],
 };
 
@@ -67,6 +68,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
         { id: '008', w: 8, min: 9, max: 11 },
         { id: '030', w: 22, min: 9, max: 11 },
         { id: '031', w: 12, min: 9, max: 11 },
+        { id: '076', w: 12, min: 9, max: 11 },
       ],
     },
   },
@@ -124,6 +126,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
         { id: '006', w: 10, min: 10, max: 12 },
         { id: '030', w: 20, min: 10, max: 12 },
         { id: '029', w: 8, min: 10, max: 12 },
+        { id: '076', w: 12, min: 10, max: 12 },
       ],
     },
   },

@@ -90,6 +90,7 @@ export const PISTE_MAPS: Record<string, MapDef> = {
         { id: '046', w: 8, min: 29, max: 30 },
         { id: '061', w: 8, min: 28, max: 30 },
         { id: '055', w: 8, min: 29, max: 30 },
+        { id: '079', w: 8, min: 28, max: 30 },
       ],
     },
   },

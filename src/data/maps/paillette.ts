@@ -84,6 +84,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
         { id: '055', w: 4, min: 21, max: 23, time: 'night' },
         { id: '061', w: 5, min: 21, max: 23, time: 'day' },
         { id: '063', w: 10, min: 22, max: 23 },
+        { id: '078', w: 10, min: 22, max: 23, time: 'day' },
       ],
     },
   },

@@ -74,6 +74,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
         { id: '031', w: 8, min: 14, max: 15 },
         { id: '054', w: 14, min: 14, max: 15, time: 'night' },
         { id: '051', w: 3, min: 13, max: 15 },
+        { id: '082', w: 12, min: 13, max: 15, time: 'night' },
       ],
     },
   },

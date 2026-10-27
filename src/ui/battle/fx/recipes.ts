@@ -186,6 +186,12 @@ export const MOVE_FX: Record<string, Recipe> = {
   'reve-vitrail': { layers: [sparkle({ who: 'user', kind: 'star', color: '#f2c43a', n: 5 }), at(120, beam({ colors: ['#f6a7c8', '#bfe2fa', '#f7e37a', '#c9ec9a', '#d9ccf5'], width: 0.26, glow: 'star' })), at(560, drain({ color: C.fee[1] }))] },
   'ombre-songe': { layers: [darken({ alpha: 0.45, dur: 1100 }), shade({ color: '#241e40' }), at(500, sparkle({ kind: 'zzz', color: C.spectre[1], n: 3, size: 0.26, dur: 600 }))] },
   'tempete-psy': { layers: [darken({ color: '#3a1a3a', alpha: 0.25, dur: 1000 }), rings({ colors: [C.psy[1], C.psy[0], C.fee[1]], n: 6 }), at(420, sparkle({ kind: 'star', color: C.psy[1], n: 6, size: 0.24 }))] },
+  // the stapler crocodile's jaws clamp shut, then staples pin the foe in place
+  agrafage: { user: 'lunge', hit: 'squash', layers: [bite({ gum: C.acier[2], tooth: '#f4f4f8', n: 6 }), at(380, wrap({ color: C.acier[1], loops: 2, dur: 560 }))] },
+  // a punch struck like a match: sparks, the brown glove, a burst of flame
+  'craque-poing': { user: 'lunge', layers: [sparks({ color: C.feu[1], n: 6, dur: 300 }), at(120, fist({ color: '#6b4a3a' })), at(330, impactStar({ size: 0.6, color: C.feu[1] })), at(330, swirl({ kind: 'flame', color: C.feu[1], n: 5, dur: 460, size: 0.3 }))] },
+  // the paper dragon dances in a shower of colours, then charges
+  'grand-defile': { user: 'dash', shake: 0.5, layers: [...RAINBOW.slice(0, 5).map((c, i) => at(i * 70, rise({ kind: 'spark', color: c, n: 3, size: 0.22, dur: 600 }))), at(420, speedLines({ n: 10, dur: 380 })), at(620, impactStar({ size: 0.75, color: C.dragon[1] }))] },
 };
 
 /** The animation of a move, if it has one. */

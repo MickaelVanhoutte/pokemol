@@ -59,9 +59,24 @@ import zigzeclair from './zigzeclair.ts';
 import banquisette from './banquisette.ts';
 import dragondine from './dragondine.ts';
 import coconfus from './coconfus.ts';
+import agrafou from './agrafou.ts';
+import crocagrafe from './crocagrafe.ts';
+import ocrinou from './ocrinou.ts';
+import mammouchaud from './mammouchaud.ts';
+import faonvole from './faonvole.ts';
+import cerfoudre from './cerfoudre.ts';
+import allumou from './allumou.ts';
+import allumbattant from './allumbattant.ts';
+import lumignon from './lumignon.ts';
+import projetoile from './projetoile.ts';
+import plissou from './plissou.ts';
+import plisserpent from './plisserpent.ts';
+import festivouivre from './festivouivre.ts';
+import globargot from './globargot.ts';
+import moutoussiere from './moutoussiere.ts';
 
 /** Sorted by id when drawn. */
-export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouille, lunelle, papivole, ronflon, brumouille, grimouille, ombrouille, chenillou, piafou, lamacorne, chrysalou, touffou, touflot, toufeu, toufoudre, minoufleur, braisaure, dormipsy, cuillipsy, psymagus, chapardou, pantharuse, fumeron, fumerax, coquilou, coquifort, glissonde, canarmure, clochiflor, clochegueule, gloutoflor, osselot, ossagarde, fachinge, furisinge, hippomine, hippoplume, libellune, noctaile, zigzeclair, banquisette, dragondine, coconfus].sort((a, b) => a.id.localeCompare(b.id));
+export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouille, lunelle, papivole, ronflon, brumouille, grimouille, ombrouille, chenillou, piafou, lamacorne, chrysalou, touffou, touflot, toufeu, toufoudre, minoufleur, braisaure, dormipsy, cuillipsy, psymagus, chapardou, pantharuse, fumeron, fumerax, coquilou, coquifort, glissonde, canarmure, clochiflor, clochegueule, gloutoflor, osselot, ossagarde, fachinge, furisinge, hippomine, hippoplume, libellune, noctaile, zigzeclair, banquisette, dragondine, coconfus, agrafou, crocagrafe, ocrinou, mammouchaud, faonvole, cerfoudre, allumou, allumbattant, lumignon, projetoile, plissou, plisserpent, festivouivre, globargot, moutoussiere].sort((a, b) => a.id.localeCompare(b.id));
 
 const root = new URL('../..', import.meta.url).pathname;
 

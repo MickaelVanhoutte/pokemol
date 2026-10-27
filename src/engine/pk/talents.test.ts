@@ -279,6 +279,31 @@ describe('family powers (docs/bestioles.md)', () => {
     expect(poisoned(2)).toBe(0);
   });
 
+  it('Peinture Rupestre and Chasse-Cauchemar halve their two types', () => {
+    expect(hit(mon('003', 20, 0), mon('076', 20, 0), 'bulles')).toBeLessThan(hit(mon('003', 20, 0), mon('076', 20, 2), 'bulles') * 0.6);
+    expect(hit(mon('031', 20, 0), mon('076', 20, 0), 'secousse')).toBeLessThan(hit(mon('031', 20, 0), mon('076', 20, 2), 'secousse') * 0.6);
+    expect(hit(mon('009', 20, 0), mon('082', 20, 0), 'bouh')).toBeLessThan(hit(mon('009', 20, 0), mon('082', 20, 2), 'bouh') * 0.6);
+    expect(hit(mon('054', 20, 0), mon('082', 20, 0), 'mordillage')).toBeLessThan(hit(mon('054', 20, 0), mon('082', 20, 2), 'mordillage') * 0.6);
+  });
+
+  it('Vent Arrière makes its Electric moves go first at full HP', () => {
+    const order = (hp: 'full' | 'hurt') => {
+      const me = mon('078', 5, 0, ['petite-etincelle']);
+      if (hp === 'hurt') me.hp -= 1;
+      const { events } = act(battle(me, mon('041', 50, 0, ['grondement'])).state, growl, growl);
+      return events.find((e) => e.t === 'move')?.side;
+    };
+    expect(order('full')).toBe(0);
+    expect(order('hurt')).toBe(1);
+  });
+
+  it('Flocons Fous brings hail, Atchoum lowers the foe’s accuracy', () => {
+    expect(battle(mon('013', 20, 0), mon('087', 20, 0)).state.weather?.kind).toBe('grele');
+    expect(battle(mon('013', 20, 0), mon('087', 20, 2)).state.weather).toBeFalsy();
+    expect(battle(mon('013', 20, 0), mon('088', 20, 0)).state.sides[0].vol.stages.acc).toBe(-1);
+    expect(battle(mon('013', 20, 0), mon('088', 20, 2)).state.sides[0].vol.stages.acc).toBe(0);
+  });
+
   it('Bébé Poche hits a second time', () => {
     const { events } = act(battle(mon('049', 20, 0, ['bousculade']), mon('008', 40, 2, ['grondement'])).state, growl, growl);
     expect(events).toContainEqual({ t: 'hits', count: 2 });

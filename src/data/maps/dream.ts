@@ -50,6 +50,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
         { id: '066', w: 16, min: 40, max: 41 },
         { id: '036', w: 16, min: 40, max: 41, time: 'day' },
         { id: '057', w: 16, min: 40, max: 41 },
+        { id: '079', w: 10, min: 40, max: 41 },
       ],
     },
   },
