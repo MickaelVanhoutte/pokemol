@@ -14,7 +14,9 @@ export default {
     const { shape, stroke, dot, potato } = c;
     const PURPLE = '#6a4a96', SPOT = '#b39cd2', GAS = '#93a57a';
     // puffs of gas all around
-    for (const [x, y, r] of [[1000, 200, 60], [1020, 520, 50], [120, 880, 60], [780, 880, 66], [160, 360, 48]] as const) shape(cloud(x, y, r), GAS, { angle: 30, over: 0, press: 0.8 });
+    c.part('gaz', { pivot: [560, 520], motion: 'flicker', period: 2.6, behind: true }, () => {
+      for (const [x, y, r] of [[1000, 200, 60], [1020, 520, 50], [120, 880, 60], [780, 880, 66], [160, 360, 48]] as const) shape(cloud(x, y, r), GAS, { angle: 30, over: 0, press: 0.8 });
+    });
     // the smaller ball behind, up on the right
     shape(potato(760, 330, 200, 190, 14, 0.05), PURPLE, { angle: 75, over: 0.6, press: 1.1 });
     for (const [x, y, r] of [[860, 260, 28], [880, 420, 24], [720, 180, 22]] as const) shape(potato(x, y, r, r * 0.8, 9, 0.12), SPOT, { over: 0 }, { w: 4 });

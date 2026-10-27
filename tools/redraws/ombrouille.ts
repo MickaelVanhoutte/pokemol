@@ -8,8 +8,10 @@ export default {
     const PURPLE = '#8a4ed6', RED = '#f04a40';
     // the far leg and far arm, behind on the right
     shape(band([[600, 640], [650, 790], [690, 910]], 64, 56), PURPLE, { angle: 100 });
-    shape(band([[720, 470], [820, 380], [880, 260]], 50, 44), PURPLE, { angle: 120 });
-    shape([[850, 275], [860, 165], [900, 252], [955, 180], [935, 275], [1000, 290], [905, 302]], PURPLE, { angle: 120, press: 1.1 }, {}, false);
+    c.part('bras-loin', { pivot: [720, 470], motion: 'swing', amp: 8, period: 1.9, behind: true }, () => {
+      shape(band([[720, 470], [820, 380], [880, 260]], 50, 44), PURPLE, { angle: 120 });
+      shape([[850, 275], [860, 165], [900, 252], [955, 180], [935, 275], [1000, 290], [905, 302]], PURPLE, { angle: 120, press: 1.1 }, {}, false);
+    });
     // the head-body: big pointed ears, three spikes on top, face on the left
     shape([[230, 420], [200, 150], [330, 300], [390, 210], [430, 290], [470, 180], [515, 290], [570, 205], [610, 300], [760, 120], [770, 420],
       [730, 580], [610, 660], [420, 670], [290, 600]], PURPLE, { angle: 80, over: 0.7, press: 1.1 }, {}, false);
@@ -25,7 +27,9 @@ export default {
     for (const x of [310, 360, 415, 470, 525]) stroke([[x, 490 + Math.abs(x - 420) * 0.15], [x + 5, 605 - Math.abs(x - 420) * 0.2]], { w: 3.4 });
     stroke([[260, 540], [580, 545]], { w: 3.4 });
     // the near arm thrown forward, three claws
-    shape(band([[300, 500], [190, 470], [90, 450]], 54, 46), PURPLE, { angle: 20 });
-    shape([[100, 415], [15, 360], [70, 440], [5, 465], [75, 478], [30, 540], [115, 490]], PURPLE, { angle: 20, press: 1.1 }, {}, false);
+    c.part('bras', { pivot: [300, 500], motion: 'swing', amp: 8, period: 1.5 }, () => {
+      shape(band([[300, 500], [190, 470], [90, 450]], 54, 46), PURPLE, { angle: 20 });
+      shape([[100, 415], [15, 360], [70, 440], [5, 465], [75, 478], [30, 540], [115, 490]], PURPLE, { angle: 20, press: 1.1 }, {}, false);
+    });
   },
 } satisfies Redraw;

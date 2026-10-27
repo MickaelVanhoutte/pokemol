@@ -12,7 +12,9 @@ export default {
       const a = (i / 14) * Math.PI * 2 + 0.1, r = i % 2 ? 330 : 470;
       spikes.push([520 + Math.cos(a) * r, 520 + Math.sin(a) * r * 0.95]);
     }
-    shape(spikes, SHELL, { angle: 60, over: 0.5, press: 1.05 }, {}, false);
+    c.part('piques', { pivot: [520, 520], motion: 'swing', amp: 5, period: 4, behind: true }, () => {
+      shape(spikes, SHELL, { angle: 60, over: 0.5, press: 1.05 }, {}, false);
+    });
     // the big round shell
     shape(potato(520, 520, 330, 320, 16, 0.03), SHELL, { angle: 80, over: 0.6, press: 1.1 });
     for (let i = 0; i < 7; i++) stroke([[520, 520], [520 + Math.cos(i * 0.9 + 0.3) * 310, 520 + Math.sin(i * 0.9 + 0.3) * 300]], { w: 4, col: DEEP });

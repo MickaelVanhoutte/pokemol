@@ -7,7 +7,9 @@ export default {
     const { shape, stroke, dot, band, potato } = c;
     const FUR = '#8a7aa6', CREAM = '#f3e6c6', GOLD = '#f2c43a', PINK = '#f29ab0', PENCIL = '#e2423a';
     // the curly tail behind, the far leg and far ear
-    shape(band([[600, 760], [740, 760], [820, 660], [800, 560], [740, 560]], 46, 30), FUR, { angle: 40 });
+    c.part('queue', { pivot: [605, 760], motion: 'swing', amp: 8, period: 1.7, behind: true }, () => {
+      shape(band([[600, 760], [740, 760], [820, 660], [800, 560], [740, 560]], 46, 30), FUR, { angle: 40 });
+    });
     shape(band([[440, 760], [420, 860], [400, 930]], 62, 56), CREAM, { angle: 90 });
     shape([[320, 300], [250, 130], [390, 260]], FUR, { angle: 70 }, {}, false);
     // the body and its cream belly

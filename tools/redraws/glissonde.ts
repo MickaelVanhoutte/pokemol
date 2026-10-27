@@ -15,18 +15,22 @@ export default {
     shape([[520, 470], [620, 330], [780, 300], [920, 380], [950, 520], [800, 560], [620, 560]], SHELL, { angle: 70, over: 0.5 });
     for (const [x, y] of [[640, 380], [740, 340], [840, 380], [900, 460], [700, 450], [800, 470]] as const) shape(potato(x, y, 30, 26, 8, 0.1), DEEP, { over: 0 }, { w: 3.5 });
     // the near flipper and a little tail
-    shape([[600, 740], [560, 860], [640, 880], [700, 780]], BLUE, { angle: 80 });
+    c.part('nageoire', { pivot: [640, 750], motion: 'swing', amp: 10, period: 1.6 }, () => {
+      shape([[600, 740], [560, 860], [640, 880], [700, 780]], BLUE, { angle: 80 });
+    });
     shape([[960, 640], [1060, 600], [1040, 680]], BLUE, { angle: 20 }, {}, false);
-    // the long neck curving up and its head looking left
-    shape(band([[460, 560], [400, 420], [370, 300], [380, 220]], 110, 90), BLUE, { angle: 80 });
-    c.tint(band([[440, 580], [390, 440], [360, 320]], 50, 40), CREAM, { gap: 3.4 });
-    shape([[240, 230], [300, 160], [420, 140], [490, 200], [480, 280], [400, 320], [290, 310], [230, 280]], BLUE, { angle: 80, over: 0.5 });
-    shape([[400, 150], [420, 70], [450, 150]], SHELL, { over: 0 }, { w: 4 }, false);
-    shape([[470, 180], [530, 150], [510, 220]], BLUE, { over: 0 }, {}, false);
-    c.paper(potato(305, 220, 18, 22, 8, 0.05));
-    c.paper(potato(385, 215, 26, 28, 8, 0.05));
-    dot(303, 225, 8, 11);
-    dot(382, 222, 11, 14);
-    stroke([[250, 270], [300, 285], [350, 274]], { w: 4.5 });
+    c.part('cou', { pivot: [460, 560], motion: 'swing', amp: 4, period: 3.2 }, () => {
+      // the long neck curving up and its head looking left
+      shape(band([[460, 560], [400, 420], [370, 300], [380, 220]], 110, 90), BLUE, { angle: 80 });
+      c.tint(band([[440, 580], [390, 440], [360, 320]], 50, 40), CREAM, { gap: 3.4 });
+      shape([[240, 230], [300, 160], [420, 140], [490, 200], [480, 280], [400, 320], [290, 310], [230, 280]], BLUE, { angle: 80, over: 0.5 });
+      shape([[400, 150], [420, 70], [450, 150]], SHELL, { over: 0 }, { w: 4 }, false);
+      shape([[470, 180], [530, 150], [510, 220]], BLUE, { over: 0 }, {}, false);
+      c.paper(potato(305, 220, 18, 22, 8, 0.05));
+      c.paper(potato(385, 215, 26, 28, 8, 0.05));
+      dot(303, 225, 8, 11);
+      dot(382, 222, 11, 14);
+      stroke([[250, 270], [300, 285], [350, 274]], { w: 4.5 });
+    });
   },
 } satisfies Redraw;

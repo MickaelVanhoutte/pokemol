@@ -7,7 +7,9 @@ export default {
     const { shape, stroke, dot, band, potato } = c;
     const YELLOW = '#f2c84b', BROWN = '#9a5a2c', DEEP = '#c9962a';
     // the curly tail behind, on the right
-    shape(band([[620, 780], [760, 800], [850, 720], [840, 620], [780, 600]], 70, 40), YELLOW, { angle: 40 });
+    c.part('queue', { pivot: [625, 780], motion: 'swing', amp: 6, period: 2.6, behind: true }, () => {
+      shape(band([[620, 780], [760, 800], [850, 720], [840, 620], [780, 600]], 70, 40), YELLOW, { angle: 40 });
+    });
     // the far ear and the far arm, behind
     shape([[330, 300], [250, 110], [400, 250]], YELLOW, { angle: 70 }, {}, false);
     shape(band([[360, 600], [300, 680], [330, 740]], 56, 48), YELLOW, { angle: 60 });

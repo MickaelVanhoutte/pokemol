@@ -7,10 +7,12 @@ export default {
     const { shape, stroke, dot, band, potato, spikes } = c;
     const YELLOW = '#eeb534', BROWN = '#8a4f26', SILVER = '#b8c2d0', RED = '#e2423a';
     // the far arm, behind: only its hand and spoon show past the left edge
-    shape(band([[400, 520], [280, 520], [200, 470]], 54, 46), YELLOW, { angle: 20 });
-    shape(potato(190, 460, 34, 32, 8, 0.08), YELLOW, { over: 0 });
-    shape(band([[180, 440], [150, 350], [140, 290]], 18, 16), SILVER, { angle: 90, over: 0 });
-    shape(potato(135, 260, 38, 50, 9, 0.05), SILVER, { angle: 60, over: 0 });
+    c.part('cuillere-loin', { pivot: [400, 520], motion: 'swing', amp: -6, period: 2.4, behind: true, phase: 0.5 }, () => {
+      shape(band([[400, 520], [280, 520], [200, 470]], 54, 46), YELLOW, { angle: 20 });
+      shape(potato(190, 460, 34, 32, 8, 0.08), YELLOW, { over: 0 });
+      shape(band([[180, 440], [150, 350], [140, 290]], 18, 16), SILVER, { angle: 90, over: 0 });
+      shape(potato(135, 260, 38, 50, 9, 0.05), SILVER, { angle: 60, over: 0 });
+    });
     // the far leg and far ear
     shape(band([[440, 760], [420, 860], [395, 935]], 70, 64), YELLOW, { angle: 90 });
     shape([[330, 250], [250, 50], [410, 210]], YELLOW, { angle: 70 }, {}, false);
@@ -21,10 +23,12 @@ export default {
     shape(band([[580, 770], [600, 870], [610, 940]], 76, 70), YELLOW, { angle: 90 });
     shape(potato(630, 945, 64, 26, 8, 0.06), YELLOW, { over: 0 });
     // the near arm and its spoon held high
-    shape(band([[650, 500], [760, 440], [800, 340]], 58, 50), YELLOW, { angle: 120 });
-    shape(potato(805, 325, 36, 34, 8, 0.08), YELLOW, { over: 0 });
-    shape(band([[815, 300], [835, 210], [870, 150]], 18, 16), SILVER, { angle: 90, over: 0 });
-    shape(potato(885, 120, 40, 52, 9, 0.05), SILVER, { angle: 60, over: 0 });
+    c.part('cuillere', { pivot: [650, 500], motion: 'swing', amp: 6, period: 2.4, phase: 0 }, () => {
+      shape(band([[650, 500], [760, 440], [800, 340]], 58, 50), YELLOW, { angle: 120 });
+      shape(potato(805, 325, 36, 34, 8, 0.08), YELLOW, { over: 0 });
+      shape(band([[815, 300], [835, 210], [870, 150]], 18, 16), SILVER, { angle: 90, over: 0 });
+      shape(potato(885, 120, 40, 52, 9, 0.05), SILVER, { angle: 60, over: 0 });
+    });
     // the near ear
     shape([[480, 200], [630, 20], [580, 250]], YELLOW, { angle: 110 }, {}, false);
     // the head: a big brow, fierce eyes, a long drooping moustache

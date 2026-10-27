@@ -10,7 +10,9 @@ export default {
     shape(band([[360, 560], [330, 700], [320, 830]], 58, 50), DARK, { angle: 90 });
     shape(band([[760, 560], [790, 700], [800, 830]], 58, 50), DARK, { angle: 90 });
     // the long tail curling up behind
-    shape(band([[850, 500], [960, 460], [1020, 360], [990, 270], [930, 290]], 44, 26), DARK, { angle: 60 });
+    c.part('queue', { pivot: [850, 500], motion: 'swing', amp: 10, period: 1.8, behind: true }, () => {
+      shape(band([[850, 500], [960, 460], [1020, 360], [990, 270], [930, 290]], 44, 26), DARK, { angle: 60 });
+    });
     // the long sleek body, a lighter belly
     shape([[300, 420], [500, 390], [760, 400], [880, 460], [880, 580], [760, 640], [480, 640], [320, 600], [270, 510]], DARK, { angle: 15, over: 0.6, press: 1.05 });
     c.tint([[380, 560], [760, 560], [740, 620], [420, 625]], LIGHT, { gap: 3.4, angle: 15 });

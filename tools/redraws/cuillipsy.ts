@@ -17,10 +17,12 @@ export default {
     shape(band([[560, 760], [580, 860], [590, 935]], 72, 66), YELLOW, { angle: 90 });
     shape(potato(610, 940, 60, 26, 8, 0.06), YELLOW, { over: 0 });
     // the near arm raised, holding a bent spoon
-    shape(band([[620, 520], [720, 470], [760, 380]], 56, 48), YELLOW, { angle: 120 });
-    shape(potato(765, 365, 34, 32, 8, 0.08), YELLOW, { over: 0 });
-    shape(band([[775, 345], [790, 260], [830, 210]], 18, 16), SILVER, { angle: 90, over: 0 });
-    shape(potato(845, 180, 38, 50, 9, 0.05), SILVER, { angle: 60, over: 0 });
+    c.part('cuillere', { pivot: [620, 520], motion: 'swing', amp: 7, period: 2 }, () => {
+      shape(band([[620, 520], [720, 470], [760, 380]], 56, 48), YELLOW, { angle: 120 });
+      shape(potato(765, 365, 34, 32, 8, 0.08), YELLOW, { over: 0 });
+      shape(band([[775, 345], [790, 260], [830, 210]], 18, 16), SILVER, { angle: 90, over: 0 });
+      shape(potato(845, 180, 38, 50, 9, 0.05), SILVER, { angle: 60, over: 0 });
+    });
     // the near ear
     shape([[480, 220], [610, 50], [570, 270]], YELLOW, { angle: 110 }, {}, false);
     // the head turned left, a star on the brow, long whiskers, narrowed eyes
