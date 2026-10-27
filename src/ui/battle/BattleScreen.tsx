@@ -157,7 +157,7 @@ export function BattleScreen(props: BattleProps) {
         break;
       }
       case 'damage': if (e.amount) hurt(e.side); break;
-      case 'confusedHit': case 'recoil': case 'weatherHurt': case 'trapHurt': case 'seedDrain': hurt(e.side); break;
+      case 'confusedHit': case 'recoil': case 'weatherHurt': case 'trapHurt': case 'seedDrain': case 'nightmare': hurt(e.side); break;
       case 'subHit': sfx.hit(); break;
       case 'protect': case 'sub': sfx.confirm(); break;
       case 'frozen': pulse(e.side, 'status', 700); break;

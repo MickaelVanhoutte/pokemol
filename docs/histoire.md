@@ -51,6 +51,9 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 - Chaque Bestiole a **un pouvoir bien à elle** (un talent ou une attaque que personne d’autre n’a) :
   même la plus petite a sa place dans ton équipe, jusqu’au niveau 100.
 - Retrouve les **12 pages déchirées** d’un cahier, cachées un peu partout.
+- Les plus courageux iront plus loin : derrière les ronces du Bois Brumeux, des lucioles montrent le
+  chemin d’une clairière… et, sur la Route de l’Encre, une grotte toute raturée cache un secret tout au
+  fond. On raconte que ce qu’on y trouve a quelque chose à voir avec les rêves.
 - Certaines Bestioles grandissent avec toi : entraîne-les bien, elles te réservent des surprises.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
@@ -125,6 +128,9 @@ where every drawing is alive: the **Critters** (Bestioles).
 - Every Critter has **a power of its own** (a talent or a move nobody else has): even the smallest
   one has its place in your team, all the way to level 100.
 - Find the **12 torn pages** of a sketchbook, hidden all over the place.
+- The bravest will go further: past the brambles of the Misty Woods, fireflies show the way to a
+  clearing… and on the Ink Path, a cave full of scribbles hides a secret at the very bottom. They say
+  what you find there has something to do with dreams.
 - Some Critters grow up with you: train them well, they have surprises in store.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.

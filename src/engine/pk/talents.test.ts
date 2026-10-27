@@ -215,6 +215,18 @@ describe('family powers (docs/bestioles.md)', () => {
     expect(state.sides[0].party[0].hp).toBe(20 + Math.floor(maxHp(napper) / 8));
   });
 
+  it('Mauvais Rêves hurts a sleeping foe each turn, and only a sleeping one', () => {
+    const moth = mon('072', 45, 0, ['grondement']);
+    const sleeper = mon('008', 30, 2, ['grondement']);
+    sleeper.status = 'sleep';
+    sleeper.sleepTurns = 4;
+    const run = act(battle(moth, sleeper).state, growl, growl);
+    expect(run.events.some((e) => e.t === 'nightmare' && e.side === 1)).toBe(true);
+    expect(run.state.sides[1].party[0].hp).toBe(maxHp(sleeper) - Math.floor(maxHp(sleeper) / 8));
+    const awake = act(battle(moth, mon('008', 30, 2, ['grondement'])).state, growl, growl);
+    expect(awake.events.some((e) => e.t === 'nightmare')).toBe(false);
+  });
+
   it('Passe-Muraille halves the first attack after it comes in', () => {
     const me = mon('002', 30, 0, ['flammeche']);
     const ghost = mon('009', 30, 0, ['grondement']);

@@ -59,7 +59,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcNocturne', name: L('Grande Maîtresse Nocturne', 'Grand Master Nocturne'),
     party: [
       { species: '055', level: 45 }, { species: '010', level: 45 }, { species: '008', level: 45, item: 'baie-menthe' },
-      { species: '007', level: 45, item: 'echarpe-tetue' }, { species: '011', level: 46, item: 'baie-doree' },
+      { species: '007', level: 45, item: 'echarpe-tetue' }, { species: '011', level: 49, item: 'baie-doree' },
     ],
     before: [L('L’encre de minuit efface les hésitations. Tu es là pour la dernière page ? Il faudra passer par moi.', 'Midnight ink washes away doubts. Here for the last page? You’ll have to get past me.')],
     after: [L('Ton trait est sûr. Va. Il t’attend depuis le début.', 'Your line is steady. Go. He has been waiting for you from the start.')],
@@ -104,7 +104,7 @@ export const TOWER_LEVEL = 50;
 /** Bestioles strong enough for the tower (first forms that evolve are left out). */
 export const TOWER_POOL = ['001', '020', '024', '002', '021', '025', '003', '022', '023', '027', '028', '029', '030', '031', '032', '033', '034', '035', '036', '038', '040', '041', '042', '043', '045', '046', '047', '048', '049', '050', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019',
   '053', '055', '057', '059', '060', '061', '064', '066', '068', '070'];
-const LEGENDS = ['011'];
+const LEGENDS = ['071', '072'];
 const TOWER_ITEMS = [
   'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'plume-vive', 'loupe', 'clochette', 'ruban-tenace',
   'casque-pointes', 'bandeau-tetu', 'lunettes-tetues', 'echarpe-tetue', 'bille-ardente', 'tablier-peintre',

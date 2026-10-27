@@ -183,6 +183,8 @@ export const MOVE_FX: Record<string, Recipe> = {
   'gueule-piege': { user: 'lunge', hit: 'squash', layers: [bite({ gum: C.plante[2], tooth: '#fffbe0', n: 5 }), at(380, drain({ color: C.plante[1] }))] },
   'os-boomerang': { user: 'rear', layers: [projectile({ kind: 'bone', color: '#f6f1e4', size: 0.36, fly: 340, spin: 3, burst: 'star' })] },
   'griffe-de-nuit': { user: 'dash', layers: [darken({ alpha: 0.32, dur: 700 }), at(120, slash({ color: C.tenebres[1], n: 3, width: 1.4 }))] },
+  'reve-vitrail': { layers: [sparkle({ who: 'user', kind: 'star', color: '#f2c43a', n: 5 }), at(120, beam({ colors: ['#f6a7c8', '#bfe2fa', '#f7e37a', '#c9ec9a', '#d9ccf5'], width: 0.26, glow: 'star' })), at(560, drain({ color: C.fee[1] }))] },
+  'ombre-songe': { layers: [darken({ alpha: 0.45, dur: 1100 }), shade({ color: '#241e40' }), at(500, sparkle({ kind: 'zzz', color: C.spectre[1], n: 3, size: 0.26, dur: 600 }))] },
   'tempete-psy': { layers: [darken({ color: '#3a1a3a', alpha: 0.25, dur: 1000 }), rings({ colors: [C.psy[1], C.psy[0], C.fee[1]], n: 6 }), at(420, sparkle({ kind: 'star', color: C.psy[1], n: 6, size: 0.24 }))] },
 };
 

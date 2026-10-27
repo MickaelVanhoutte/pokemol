@@ -102,6 +102,65 @@ describe('puzzles: solvable and not too hard', () => {
     expect(bfs<S>({ x: 6, y: 10, flip: false }, (s) => `${s.x},${s.y},${s.flip}`, (s) => next(s).filter((n) => n.flip === s.flip), walk([1, 1]))).toBeNull();
   });
 
+  it('Scribble-Out Cave 1F: two levers lead to the stairs down, none is not enough', () => {
+    const def = MAPS.ratures1;
+    const others = busy(def);
+    type S = { x: number; y: number; flip: boolean };
+    const next = (st: S): S[] => {
+      const rows = flipBarriers(def.rows, st.flip);
+      return DIRS.flatMap(([, dx, dy]): S[] => {
+        const nx = st.x + dx, ny = st.y + dy, t = tileOf(rows, nx, ny);
+        if (t === 'leverred' || t === 'leverblue') return [{ ...st, flip: !st.flip }];
+        return !solid(rows, nx, ny) && !others.has(`${nx},${ny}`) ? [{ x: nx, y: ny, flip: st.flip }] : [];
+      });
+    };
+    const at = (x: number, y: number) => (s: S) => s.x === x && s.y === y;
+    expect(bfs<S>({ x: 7, y: 10, flip: false }, (s) => `${s.x},${s.y},${s.flip}`, next, at(1, 1))).not.toBeNull();
+    expect(bfs<S>({ x: 1, y: 2, flip: false }, (s) => `${s.x},${s.y},${s.flip}`, next, at(7, 10))).not.toBeNull();
+    expect(bfs<S>({ x: 7, y: 10, flip: false }, (s) => `${s.x},${s.y},${s.flip}`, (s) => next(s).filter((n) => n.flip === s.flip), at(1, 1))).toBeNull();
+  });
+
+  it('Scribble-Out Cave 2F: the glossy paper leads to the stairs down, its holes to the floor above', () => {
+    const def = MAPS.ratures2;
+    const rows = fresh(def);
+    const holes = new Set((def.holes ?? []).map((h) => `${h.x},${h.y}`));
+    const free = (x: number, y: number) => !solid(rows, x, y) || holes.has(`${x},${y}`);
+    const moves = bfs<[number, number]>([14, 2], (p) => `${p}`, ([x, y]) => DIRS.flatMap(([d, dx, dy]) => {
+      if (!free(x + dx, y + dy)) return [];
+      const [ex, ey] = slideFrom(rows, x + dx, y + dy, d, (a, b) => free(a, b) && !holes.has(`${a},${b}`));
+      return holes.has(`${ex},${ey}`) || holes.has(`${x + dx},${y + dy}`) ? [] : [[ex, ey] as [number, number]];
+    }), ([x, y]) => x === 1 && y === 10);
+    expect(moves).not.toBeNull();
+    expect(moves!).toBeLessThanOrEqual(10);
+    for (const h of def.holes ?? []) expect(h.fall && h.to && !solid(fresh(MAPS[h.to.map]), h.to.x, h.to.y)).toBe(true);
+  });
+
+  it('Scribble-Out Cave 3F: both boulders can fill the pits on the way to the back', () => {
+    const def = MAPS.ratures3;
+    const n = pushes(def, [6, 10], blocksOf(def), (_b, f) => f.size === (def.holes ?? []).length);
+    expect(n).not.toBeNull();
+    expect(n!).toBeLessThanOrEqual(12);
+  });
+
+  it('Lost Woods: following the fireflies reaches the clearing without a wrong turn', () => {
+    const def = MAPS.boisPerdu;
+    const rows = fresh(def);
+    const lost = new Set((def.triggers ?? []).filter((t) => t.script === 'boisPerduLost').map((t) => `${t.x},${t.y}`));
+    const fireflies = new Set<string>();
+    rows.forEach((r, y) => [...r].forEach((c, x) => c === 'y' && fireflies.add(`${x},${y}`)));
+    // the shortest safe way goes over every firefly
+    type S = { x: number; y: number; seen: string[] };
+    const steps = bfs<S>({ x: 10, y: 15, seen: [] }, (s) => `${s.x},${s.y},${s.seen.join(';')}`, (s) => DIRS.flatMap(([, dx, dy]): S[] => {
+      const nx = s.x + dx, ny = s.y + dy, k = `${nx},${ny}`;
+      if (solid(rows, nx, ny) || lost.has(k)) return [];
+      return [{ x: nx, y: ny, seen: fireflies.has(k) && !s.seen.includes(k) ? [...s.seen, k].sort() : s.seen }];
+    }), (s) => s.x === 11 && s.y === 3 && s.seen.length === fireflies.size);
+    expect(steps).not.toBeNull();
+    // every wrong turn is a dead end off the safe way
+    expect(lost.size).toBeGreaterThanOrEqual(5);
+    for (const k of lost) expect(fireflies.has(k)).toBe(false);
+  });
+
   it('Misty Tower 2F: the glossy paper hall leads to the top stairs in a few slides', () => {
     const def = MAPS.tour2;
     const rows = fresh(def);

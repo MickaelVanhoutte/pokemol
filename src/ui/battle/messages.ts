@@ -166,6 +166,8 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
     }
     case 'trapped':
       return [f(L('{n} est ligoté !', '{n} is tied up!'), { n: nm(e.side) })];
+    case 'nightmare':
+      return [f(L('{n} fait un mauvais rêve !', '{n} is having a bad dream!'), { n: nm(e.side) })];
     case 'trapHurt':
       return [f(L('{n} est serré par les fils !', '{n} is squeezed by the threads!'), { n: nm(e.side) })];
     case 'freed':

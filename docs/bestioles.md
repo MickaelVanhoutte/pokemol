@@ -24,7 +24,7 @@ The base-stat total (the sum of the six) must sit in its band, by stage (`band()
 | Middle form | 200–430 | about 400–410 |
 | Final form | 460–545 | 470–530 (starter finals 515, Dragopataud 540) |
 | Never evolves | 450–520 | 470–510, by rarity |
-| `rarity: 'legendary'` | 560–600 | about 580 (Ombrouille) |
+| `rarity: 'legendary'` | 560–600 | 600 (Libellune, Noctaile) |
 
 A line's stage comes from `evolvesFrom` and `evolutions`. Finals are close, not equal: the spread and the
 power make the difference, not 80 points of stats.
@@ -86,6 +86,8 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Osselot → Ossagarde | Os-Boomerang (Ground physical 75) | signature move | Slow |
 | Fâchinge → Furisinge | Colère Noire: +1 Attack after it knocks a foe out | `statOnKO` | — |
 | Hippomine → Hippoplume | Nage Éclair: Water moves go first at full HP | `galeWings` | Fragile |
+| Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
+| Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a
 `touchStatus` that burns…) under a new talent name. A new kind needs:

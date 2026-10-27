@@ -60,7 +60,20 @@ down to Port-Aquarelle and its island), two optional places break the straight l
 - **Grotte des Échos** (`grotteEchos`, door on Route 8): two boulders (Strong Gloves) fill the two
   pits of the passage; at the back, a red-eyed shadow is **Ombrouille** L45, met once
   (`echoShadow`, flag `static:ombrouille` when caught or beaten). It no longer appears in the
-  Misty Tower.
+  Misty Tower. Ombrouille is no longer a legendary (iteration 12): a rare final form, total 520; the
+  Great Eraser's one is L42 and Nocturne's at the Grand Concours L49 to keep their rows where they were.
+- **The two legendaries** (iteration 12, `src/story/legends.ts`, maps in `src/data/maps/legendes.ts`),
+  the good dream and the bad dream, total 600 each. Each is met once; caught, it is gone
+  (`static:<slug>`); knocked out, it comes back after a night of sleep (`sleepUntil` counts
+  `nuits`; `ko:<slug>` stores the night it can return, `koDay:<slug>` the real day) — the map's
+  `onEnter` sets `away:<slug>`, which hides its NPC.
+  - **Libellune** (Bug/Fairy) L38, in the **Bois Perdu**: a gap in the Misty Woods' southern brambles
+    (`boisPerduGate`, 6th badge) opens on a maze where only the fireflies (`y` tiles) mark the way;
+    every wrong turn (`boisPerduLost` triggers) sends you back to the start. Libellune comes to the
+    clearing only at night. A kid in the Misty Woods gives the hint.
+  - **Noctaile** (Dark/Psychic) L42, at the bottom of the **Grotte des Ratures** (cave door on Route 8):
+    1F crayon barriers that need both levers, 2F glossy paper whose holes drop you back to 1F, 3F two
+    boulders to push into two pits (12 pushes) in front of Noctaile.
 
 **Running shoes.** Heading north out of Bourg-Gribouille after the lab (`momShoes`, trigger at the
 town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).

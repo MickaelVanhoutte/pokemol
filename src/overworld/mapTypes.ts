@@ -200,8 +200,8 @@ export const LEGEND: Record<string, string> = {
   'O': 'hole', '0': 'holefilled', '@': 'plate', 'G': 'gate',
   'Z': 'redup', 'z': 'reddown', 'J': 'blueup', 'j': 'bluedown', 'L': 'leverred', 'l': 'leverblue',
   'I': 'glossy', 'F': 'fresque',
-  // a framed drawing (the museum)
-  'q': 'cadre',
+  // a framed drawing (the museum); fireflies showing the way through the Lost Woods
+  'q': 'cadre', 'y': 'luciole',
   // a legendary Bestiole waiting in the dark
   '%': 'shadow',
 };

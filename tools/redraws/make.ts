@@ -53,9 +53,11 @@ import fachinge from './fachinge.ts';
 import furisinge from './furisinge.ts';
 import hippomine from './hippomine.ts';
 import hippoplume from './hippoplume.ts';
+import libellune from './libellune.ts';
+import noctaile from './noctaile.ts';
 
 /** Sorted by id when drawn. */
-export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouille, lunelle, papivole, ronflon, brumouille, grimouille, ombrouille, chenillou, piafou, lamacorne, chrysalou, touffou, touflot, toufeu, toufoudre, minoufleur, braisaure, dormipsy, cuillipsy, psymagus, chapardou, pantharuse, fumeron, fumerax, coquilou, coquifort, glissonde, canarmure, clochiflor, clochegueule, gloutoflor, osselot, ossagarde, fachinge, furisinge, hippomine, hippoplume].sort((a, b) => a.id.localeCompare(b.id));
+export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouille, lunelle, papivole, ronflon, brumouille, grimouille, ombrouille, chenillou, piafou, lamacorne, chrysalou, touffou, touflot, toufeu, toufoudre, minoufleur, braisaure, dormipsy, cuillipsy, psymagus, chapardou, pantharuse, fumeron, fumerax, coquilou, coquifort, glissonde, canarmure, clochiflor, clochegueule, gloutoflor, osselot, ossagarde, fachinge, furisinge, hippomine, hippoplume, libellune, noctaile].sort((a, b) => a.id.localeCompare(b.id));
 
 const root = new URL('../..', import.meta.url).pathname;
 

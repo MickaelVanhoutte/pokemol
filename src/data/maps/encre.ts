@@ -35,7 +35,11 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'TTTTTTTT::TTTTTTTT',
     ],
     // the Grotte des Échos (optional)
-    buildings: [{ kind: 'cave', x: 12, y: 8, w: 5, h: 3, door: 2, to: { map: 'grotteEchos', x: 7, y: 10, facing: 'up' } }],
+    buildings: [
+      { kind: 'cave', x: 12, y: 8, w: 5, h: 3, door: 2, to: { map: 'grotteEchos', x: 7, y: 10, facing: 'up' } },
+      // the Scribble-Out Cave: a three-floor maze
+      { kind: 'cave', x: 2, y: 14, w: 5, h: 3, door: 3, to: { map: 'ratures1', x: 7, y: 10, facing: 'up' } },
+    ],
     obstacles: [{ x: 16, y: 19, kind: 'rock' }],
     warps: [
       { x: 8, y: 21, to: { map: 'gouache', x: 9, y: 1, facing: 'down' } },

@@ -133,6 +133,8 @@ export type BattleEvent =
   | { t: 'charge'; side: Side; move: string }
   | { t: 'trapped'; side: Side }
   | { t: 'trapHurt'; side: Side; amount: number }
+  /** Mauvais Rêves: a sleeping Bestiole loses HP to nightmares (side = the sleeper). */
+  | { t: 'nightmare'; side: Side; amount: number }
   | { t: 'freed'; side: Side }
   /** Tied up: it can't get away. */
   | { t: 'cantEscape'; side: Side }
@@ -1157,6 +1159,18 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
       m.status = null;
       m.sleepTurns = 0;
       out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'cured' });
+    }
+    // Mauvais Rêves: the sleeping foe has nightmares
+    const foeSide = (1 - side) as Side;
+    const sleeper = activeMon(st.sides[foeSide]);
+    if (talentEffect(m, 'badDreams') && alive(sleeper) && sleeper.status === 'sleep') {
+      const amount = Math.min(sleeper.hp, Math.max(1, Math.floor(maxHp(sleeper) / 8)));
+      out.push({ t: 'talent', side, talent: talentOf(m).id });
+      sleeper.hp -= amount;
+      out.push({ t: 'nightmare', side: foeSide, amount });
+      checkBerry(st, foeSide, out);
+      checkFaints(st, out);
+      if (st.result) break;
     }
     // Jardin Secret, Gros Dodo: a little healing each turn
     const regen = talentEffect(m, 'regen');

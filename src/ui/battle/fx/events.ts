@@ -64,6 +64,7 @@ export function eventFx(e: BattleEvent, snap: BattleState, moveShown: { side: Si
     case 'seeded': return on(e.side, [vines({ who: 'user' })]);
     // leech seed: bits of the seeded one flow to the other side
     case 'seedDrain': return on((1 - e.side) as Side, [drain({ color: PAL.plante[1] })]);
+    case 'nightmare': return on(e.side, [rise({ kind: 'zzz', color: PAL.spectre[2], n: 3 }), at(150, sparkle({ who: 'user', kind: 'spark', color: PAL.spectre[1], n: 4, size: 0.2 }))]);
     case 'trapped': case 'trapHurt': return on(e.side, [wrap({ who: 'user', loops: 3, dur: 640 })]);
     case 'talent': return on(e.side, [pulse({ color: typeColor(e.side) }), at(120, sparkle({ who: 'user', color: SPARK, n: 4, size: 0.18, dur: 500 }))]);
     case 'berry': return on(e.side, [crumbs({ color: '#e0453a' }), at(250, HEAL())]);

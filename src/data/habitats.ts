@@ -13,8 +13,12 @@ export interface Habitat {
 
 /** Bestioles given by someone (not found in the wild). */
 const GIFTS: Record<string, string[]> = { '001': ['labo'], '002': ['labo'], '003': ['labo'], '016': ['ville'] };
-/** Bestioles waiting somewhere, met once: [map, level]. */
-const STATIC: Record<string, [string, number][]> = { '011': [['grotteEchos', 45]] };
+/** Bestioles waiting somewhere, met once: where, at what level, in what kind of place, at what time. */
+const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time?: 'night' }[]> = {
+  '011': [{ map: 'grotteEchos', level: 45, how: 'cave' }],
+  '071': [{ map: 'boisPerdu', level: 38, how: 'grass', time: 'night' }],
+  '072': [{ map: 'ratures3', level: 42, how: 'cave' }],
+};
 
 /**
  * Where a species can be met: every encounter table (tall grass or cave, sailing, each fishing
@@ -34,7 +38,7 @@ export function habitatsOf(species: string): Habitat[] {
     for (const rod of ['old', 'good', 'super'] as const) add(m.id, rod, m.fishing?.[rod]);
   }
   for (const map of GIFTS[species] ?? []) out.push({ map, how: 'gift' });
-  for (const [map, level] of STATIC[species] ?? []) out.push({ map, how: 'cave', min: level, max: level });
+  for (const s of STATIC[species] ?? []) out.push({ map: s.map, how: s.how, min: s.level, max: s.level, ...(s.time ? { time: s.time } : {}) });
   out.push({ map: 'tombola', how: 'tombola' });
   return out;
 }

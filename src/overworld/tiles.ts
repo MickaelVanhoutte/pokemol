@@ -591,6 +591,22 @@ Object.assign(TILES, {
       p.rect(5, 11, 6, 1, '#e8e4ec');
     },
   },
+  // fireflies dancing over the grass: they show the way through the Lost Woods
+  luciole: {
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      grass(p, x, y);
+      for (let i = 0; i < 3; i++) {
+        const cx = 3 + Math.round(hash(x + i, y, 31) * 8) + (f ? (i % 2 ? 1 : -1) : 0);
+        const cy = 3 + Math.round(hash(x, y + i, 47) * 8) + (f ? -1 : 0);
+        // a soft halo, then the bright little body
+        p.rect(cx - 2, cy - 1, 5, 3, '#e8f5b0');
+        p.rect(cx - 1, cy - 2, 3, 5, '#e8f5b0');
+        p.rect(cx - 1, cy - 1, 3, 3, '#f6d23a');
+        p.px(cx, cy, '#fffbe0');
+      }
+    },
+  },
   // « papier glacé »: glossy paper you slide on
   glossy: {
     animated: true,

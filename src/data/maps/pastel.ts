@@ -221,11 +221,13 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       'T......BB......*....TT',
       'T..*..........""""..TT',
       'T.............""""..TT',
-      'TTTTTTTTTTTTTTTTTTTTTT',
+      'TTT:TTTTTTTTTTTTTTTTTT',
     ],
     // the grunts rub out the woods; beating them brings the trees back
     patches: [{ id: 'boisErased', x: 8, y: 1, rows: ['eeee?eeee', 'eeee?eeee'], unless: 'a1.bois' }],
     buildings: [{ kind: 'tower', x: 2, y: 1, w: 4, h: 5, door: 1, script: 'gateTour' }],
+    // a gap in the brambles to the south: the Lost Woods (after the 6th badge)
+    triggers: [{ x: 3, y: 15, script: 'boisPerduGate' }],
     items: [{ x: 18, y: 12, item: 'crayon-ball', count: 3 }, { x: 1, y: 14, item: 'super-potion' }, { x: 1, y: 13, item: 'page-4', hidden: true }, { x: 20, y: 4, item: 'baie-cerise' }, { x: 6, y: 3, item: 'crayon-olive' }],
     warps: [
       { x: 21, y: 7, to: { map: 'route2', x: 1, y: 6, facing: 'right' } },
@@ -237,6 +239,8 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'paul', x: 16, y: 12, look: LOOKS.hiker, facing: 'left', trainer: 'paul', sight: 3 },
       { id: 'gomme1', x: 10, y: 9, look: LOOKS.gomme, facing: 'down', trainer: 'gomme1', sight: 3 },
       { id: 'gomme2', x: 18, y: 1, look: LOOKS.gommeF, facing: 'down', trainer: 'gomme2', sight: 4, hideIf: 'a1.bois' },
+      { id: 'lucioleKid', x: 5, y: 13, look: LOOKS.kid, facing: 'left', wander: false,
+        text: [L('Derrière les ronces, au sud, des lucioles dansent la nuit. Ma grande sœur dit qu’elles montrent le chemin d’une clairière… mais il ne faut jamais les perdre de vue !', 'Past the brambles to the south, fireflies dance at night. My big sister says they show the way to a clearing… but you must never lose sight of them!')] },
     ],
     berries: [{ x: 7, y: 12, item: 'baie-reveil' }],
     encounters: {

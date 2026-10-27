@@ -348,6 +348,13 @@ export const MOVES: MoveDef[] = [
   M({ id: 'tempete-psy', name: L('Tempête psy', 'Psy Storm'), type: 'psy', cat: 'spec', power: 90, acc: 100, pp: 10,
     effects: [{ kind: 'confuse', chance: 10 }],
     desc: L('Un tourbillon de pensées qui donne le tournis. Peut rendre confus.', 'A whirl of thoughts that makes heads spin. May confuse.') }),
+  // the legendaries' signature moves
+  M({ id: 'reve-vitrail', name: L('Rêve vitrail', 'Stained Dream'), type: 'fee', cat: 'spec', power: 100, acc: 100, pp: 5,
+    effects: [{ kind: 'drain', pct: 25 }],
+    desc: L('Une lumière de toutes les couleurs, comme à travers un vitrail. Rend un peu de PV.', 'A light of every colour, as if through stained glass. Restores a little HP.') }),
+  M({ id: 'ombre-songe', name: L('Ombre-songe', 'Dream Shadow'), type: 'tenebres', cat: 'spec', power: 95, acc: 90, pp: 10,
+    effects: [{ kind: 'status', status: 'sleep', chance: 20 }],
+    desc: L('Une ombre qui murmure des cauchemars. Peut endormir.', 'A shadow that whispers nightmares. May put the foe to sleep.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

@@ -76,7 +76,9 @@ export type TalentEffect =
   /** Its physical hits may give the foe a status. */
   | { kind: 'touchStatus'; status: Major; chance: number }
   /** Its single-hit attacks hit again at a quarter of the power. */
-  | { kind: 'parentalBond' };
+  | { kind: 'parentalBond' }
+  /** A sleeping foe loses an eighth of its HP at the end of each turn. */
+  | { kind: 'badDreams' };
 
 export interface TalentDef {
   id: string;
@@ -240,6 +242,13 @@ export const TALENTS: TalentDef[] = [
   T('nage-eclair', L('Nage Éclair', 'Dart Swim'),
     L('Quand il a tous ses PV, ses capacités Eau passent en premier.', 'At full HP, its Water moves go first.'),
     { kind: 'galeWings', type: 'eau' }),
+  // the two legendaries
+  T('veilleuse', L('Veilleuse', 'Night-light'),
+    L('La nuit, elle brille : son Atq. Spé. et sa Déf. Spé. sont 30 % plus fortes.', 'At night it glows: its Sp. Atk and Sp. Def are 30% stronger.'),
+    { kind: 'nightBoost' }),
+  T('mauvais-reves', L('Mauvais Rêves', 'Bad Dreams'),
+    L('Un adversaire endormi fait des cauchemars : il perd un huitième de ses PV à chaque tour.', 'A sleeping foe has nightmares: it loses an eighth of its HP every turn.'),
+    { kind: 'badDreams' }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

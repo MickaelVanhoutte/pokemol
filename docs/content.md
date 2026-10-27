@@ -23,7 +23,10 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
 | `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
 | `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
-| `static:<species>` | a one-time battle (`echoShadow`) | A Bestiole met once was caught or beaten |
+| `static:<species>` | a one-time battle (`echoShadow`, `src/story/legends.ts`) | A Bestiole met once was caught (the legendaries) or caught or beaten (Ombrouille) |
+| `nuits` | `sleepUntil` | Nights slept at home or at the Inn |
+| `ko:<slug>`, `koDay:<slug>` | `src/story/legends.ts` | A legendary knocked out: the night count and the real day it comes back |
+| `away:<slug>` | the legendary's map `onEnter` | Its NPC is hidden (caught, not back yet, or Libellune by day) |
 | `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
 | `re:<trainerId>` | `trainerBattle()` on a first win, `routeRematch()` | Local day of a route trainer's last battle: the next day they want a rematch (a ♪ bubble) |
 | `trade:<id>` | `trade()` in `src/story/world.ts` | In-game trade done (`TRADES`, one per town) |

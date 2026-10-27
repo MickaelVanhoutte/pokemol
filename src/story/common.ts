@@ -21,6 +21,8 @@ export async function sleepUntil(morning: boolean) {
   await g.fadeTo(1, 600);
   update((d) => {
     d.clockShift = shiftTo(morning ? 8 : 22);
+    // nights slept: a legendary knocked out comes back after one (src/story/legends.ts)
+    d.flags.nuits = (d.flags.nuits ?? 0) + 1;
     healParty(d);
   });
   await wait(900);

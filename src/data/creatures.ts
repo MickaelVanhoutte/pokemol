@@ -341,8 +341,8 @@ export const CREATURES: SpeciesDef[] = [
   },
   {
     id: '011', slug: 'ombrouille', faces: 'left', name: L('Ombrouille', 'Gloomgrin'), kind: L('Bestiole Ombre', 'Shadow Critter'),
-    type: 'spectre', type2: 'tenebres', base: { hp: 75, atk: 80, def: 70, spa: 145, spd: 90, spe: 120 },
-    catchRate: 45, baseExp: 220, evYield: { spa: 3 }, rarity: 'legendary', evolvesFrom: '010',
+    type: 'spectre', type2: 'tenebres', base: { hp: 65, atk: 70, def: 65, spa: 130, spd: 80, spe: 110 },
+    catchRate: 45, baseExp: 220, evYield: { spa: 3 }, rarity: 'rare', evolvesFrom: '010',
     stencils: ['pochoir-04', 'pochoir-05', 'pochoir-08', 'pochoir-09', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-18', 'pochoir-19'],
     talents: ['passe-muraille'], hiddenTalent: 'petits-traits',
     learnset: [[1, 'bouh'], [1, 'brouillard'], [1, 'coup-en-douce'], [5, 'langue-fantome'], [9, 'regard-hypnotique'],
@@ -958,6 +958,33 @@ export const CREATURES: SpeciesDef[] = [
     dex: L(
       'Ses nageoires piquent comme des plumes taillées. Quand il est fâché, il crache un nuage d’encre et disparaît.',
       'Its fins prick like sharpened quills. When it is cross, it spits a cloud of ink and vanishes.',
+    ),
+  },
+  // ---------------------------------------------------------------- the two legendaries: the good dream and the bad one
+  {
+    id: '071', slug: 'libellune', faces: 'left', name: L('Libellune', 'Glassfly'), kind: L('Bestiole Bon Rêve', 'Sweet Dream Critter'),
+    type: 'insecte', type2: 'fee', base: { hp: 90, atk: 70, def: 90, spa: 125, spd: 125, spe: 100 },
+    catchRate: 25, baseExp: 270, evYield: { spa: 1, spd: 2 }, rarity: 'legendary',
+    stencils: ['pochoir-01', 'pochoir-06', 'pochoir-07', 'pochoir-09', 'pochoir-12', 'pochoir-19'],
+    talents: ['veilleuse'], hiddenTalent: 'ailes-prisme',
+    learnset: [[1, 'dard'], [1, 'poudre-dodo'], [8, 'micro-magique'], [15, 'rayon-d-ailes'], [22, 'calin-lunaire'],
+      [29, 'bourdonnement'], [34, 'eclat-de-lune'], [38, 'reve-vitrail'], [44, 'poudre-arc-en-ciel'], [50, 'rayon-de-soleil']],
+    dex: L(
+      'On dit qu’elle se pose au bord des lits pour souffler les bons rêves. Ses ailes de vitrail brillent toutes seules dans le noir.',
+      'They say it lands at the edge of beds to breathe in sweet dreams. Its stained-glass wings shine all by themselves in the dark.',
+    ),
+  },
+  {
+    id: '072', slug: 'noctaile', faces: 'left', name: L('Noctaile', 'Nightmoth'), kind: L('Bestiole Mauvais Rêve', 'Bad Dream Critter'),
+    type: 'tenebres', type2: 'psy', base: { hp: 85, atk: 90, def: 80, spa: 135, spd: 90, spe: 120 },
+    catchRate: 25, baseExp: 270, evYield: { spa: 2, spe: 1 }, rarity: 'legendary',
+    stencils: ['pochoir-08', 'pochoir-09', 'pochoir-11', 'pochoir-12', 'pochoir-19', 'pochoir-20'],
+    talents: ['mauvais-reves'], hiddenTalent: 'brume-epaisse',
+    learnset: [[1, 'bouh'], [1, 'regard-hypnotique'], [8, 'choc-mental'], [15, 'coup-en-douce'], [22, 'cauchemar'],
+      [29, 'reve-eveille'], [35, 'tache-d-encre'], [40, 'ombre-songe'], [48, 'tempete-psy'], [55, 'ombre-farceuse']],
+    dex: L(
+      'Ses ailes portent des spirales qui donnent le tournis. Quand il passe au-dessus d’une maison, tout le monde y fait le même cauchemar.',
+      'Its wings bear spirals that make heads spin. When it flies over a house, everyone inside has the same nightmare.',
     ),
   },
 ];

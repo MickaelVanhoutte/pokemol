@@ -555,7 +555,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   // ---------------------------------------------------------------- the end of the page
   T({
     id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true,
-    party: [{ species: '008', level: 39 }, { species: '007', level: 38 }, { species: '004', level: 38 }, { species: '010', level: 39 }, { species: '011', level: 39, item: 'baie-doree' }],
+    party: [{ species: '008', level: 39 }, { species: '007', level: 38 }, { species: '004', level: 38 }, { species: '010', level: 39 }, { species: '011', level: 42, item: 'baie-doree' }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
   }),
