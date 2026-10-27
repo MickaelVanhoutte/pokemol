@@ -326,6 +326,25 @@ Teams retuned with the sims:
 - the Great Eraser's Ronflon L39 and Papivole L38;
 - Prof. Fusain's team L44 except his last one.
 
+**Twenty more Bestioles (iteration 11), 70 in all.** Drawn in her style with the `crayon` kit
+(`tools/redraws`), chosen for the types the game lacked (Dark, Psychic, Ice, Steel, then Grass, Poison,
+Ghost, Fighting, Dragon), each line inspired by a gen-1 one with all its gen-1 forms:
+- Dormipsy → Cuillipsy → Psymagus (Psychic, L16/L36, rare): Route 3 and Route 4 (rare), Cuillipsy on Route 7.
+- Chapardou → Pantharuse (Dark, L28): Route 3 and Route 6 at night, Piste Cyclable.
+- Fumeron → Fumerax (Poison/Dark, L35): Route 4, Route 8. Team Gomme grunts use them.
+- Coquilou → Coquifort (Ice/Steel, L30): surfing at Port-Aquarelle, Super Rod and surf at the lighthouse island.
+- Glissonde (Water/Ice, rare): surfing around the lighthouse island.
+- Canarmure (Steel/Flying): Route 6 by day, Piste Cyclable.
+- Clochiflor → Clochegueule → Gloutoflor (Grass, L21/L36): Route 2, Misty Woods, Route 6, Route 7.
+- Osselot → Ossagarde (Ground/Ghost, L28): Mont Fusain, the Misty Tower, the echo cave.
+- Fâchinge → Furisinge (Fighting, L28): Route 4, Mont Fusain, Route 7, the echo cave.
+- Hippomine → Hippoplume (Water/Dragon, L32): Good and Super Rods at Port-Aquarelle, Super Rod at the lighthouse.
+
+26 trainers without a balance row use them (route trainers, Atelier apprentices, Team Gomme grunts),
+and the Grand Concours got Glissonde (Marine), Canarmure L44 (Ambre), Psymagus L44 (Célestine) and
+Pantharuse (Nocturne). Those stages, which the sims won 98–100% of the time, now sit at 50–93% on Normal.
+The ten final forms joined `TOWER_POOL`.
+
 **Family powers (iteration 8).** Every family got a power, a talent or a signature move
 ([docs/bestioles.md](bestioles.md) lists them). Trainers use talent slot 0, so their Bestioles always have
 it. Retuned with the sims:

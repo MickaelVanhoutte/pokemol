@@ -76,6 +76,16 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Boulonnet → Triboulon | Canon Aimant (Steel special 90, 30% paralysis) | signature move | No strong Steel move |
 | Chantouille → Chantouffe | Grand Concert (Fairy special 95, 10% sleep) | signature move | Weak |
 | Ptérocaille | Piqué Fossile (Rock 80, goes first) | signature move | Weak Rock moves |
+| Dormipsy → Psymagus | Pressentiment: the first attack after it comes in does half damage | `phaseFirst` | Fragile |
+| Chapardou → Pantharuse | Griffes Malines: cutting moves ×1.5 | `flagBoost` `cut` | Average stats |
+| Fumeron → Fumerax | Gaz Piquant: hitting it up close poisons 30% of the time | `contactStatus` (listed in `POWER_TALENTS`) | Slow |
+| Coquilou → Coquifort | Coquille de Fer: Fire and Fighting damage halved | `halve` (listed in `POWER_TALENTS`) | Fire and Fighting ×4 |
+| Glissonde | Chant Polaire (Ice special 90, 10% sleep) | signature move | — |
+| Canarmure | Épée-Crayon (Steel physical 90, cut, high crit) | signature move | No strong Steel move |
+| Clochiflor → Gloutoflor | Gueule-Piège (Grass physical 85, drains 30%) | signature move | Fragile |
+| Osselot → Ossagarde | Os-Boomerang (Ground physical 75) | signature move | Slow |
+| Fâchinge → Furisinge | Colère Noire: +1 Attack after it knocks a foe out | `statOnKO` | — |
+| Hippomine → Hippoplume | Nage Éclair: Water moves go first at full HP | `galeWings` | Fragile |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a
 `touchStatus` that burns…) under a new talent name. A new kind needs:
@@ -98,7 +108,7 @@ Moves can carry `punch: true` or `cut: true` (`MoveDef` in `src/data/schema.ts`)
 - The first moves stay weak: Act 1 must stay gentle, so no 80-power move before level 19 (Boulonnet’s
   Tête de fer is the earliest).
 - Gap fillers exist for types that lacked strong moves: Bourdonnement (Bug), Boue Toxique (Poison), Lame
-  de Pierre (Rock), Colère du Dragon (Dragon).
+  de Pierre (Rock), Colère du Dragon (Dragon), Griffe de Nuit (Dark), Tempête Psy (Psychic).
 - A level-0 learnset entry is learned on evolving (see docs/content.md).
 - Stencils (`stencils: [...]`) add coverage the player can choose.
 

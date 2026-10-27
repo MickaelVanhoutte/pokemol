@@ -28,7 +28,7 @@ export const CONCOURS: ConcoursStage[] = [
   stage(1, 'leaderAqua', {
     id: 'gcMarine', name: L('Grande Maîtresse Marine', 'Grand Master Marine'),
     party: [
-      { species: '005', level: 45 }, { species: '006', level: 45, item: 'clochette' }, { species: '014', level: 46 },
+      { species: '005', level: 45 }, { species: '006', level: 45, item: 'clochette' }, { species: '060', level: 46 },
       { species: '017', level: 46, item: 'crayon-bleu' }, { species: '003', level: 47, item: 'baie-doree' },
     ],
     before: [
@@ -40,7 +40,7 @@ export const CONCOURS: ConcoursStage[] = [
   stage(2, 'leaderBraise', {
     id: 'gcAmbre', name: L('Grande Maîtresse Ambre', 'Grand Master Amber'),
     party: [
-      { species: '013', level: 45 }, { species: '004', level: 45 }, { species: '008', level: 46 },
+      { species: '061', level: 44 }, { species: '004', level: 45 }, { species: '008', level: 46 },
       { species: '018', level: 45, item: 'plume-vive' }, { species: '002', level: 48, item: 'bille-ardente' },
     ],
     before: [L('Tu as éteint l’aquarelle de Marine ? Voyons si tu tiens la chaleur de mon crayon rouge !', 'You put out Marine’s watercolours? Let’s see if you can take the heat of my red crayon!')],
@@ -49,7 +49,7 @@ export const CONCOURS: ConcoursStage[] = [
   stage(3, 'leaderPaillette', {
     id: 'gcCelestine', name: L('Grande Maîtresse Célestine', 'Grand Master Celestine'),
     party: [
-      { species: '005', level: 46, item: 'baie-reveil' }, { species: '007', level: 46 }, { species: '016', level: 46, item: 'ruban-tenace' },
+      { species: '005', level: 46, item: 'baie-reveil' }, { species: '007', level: 46 }, { species: '053', level: 44 },
       { species: '006', level: 47 }, { species: '014', level: 48, item: 'baie-doree' },
     ],
     before: [L('Les paillettes brillent même au fond d’une trousse. Montre-moi les tiennes !', 'Glitter shines even at the bottom of a pencil case. Show me yours!')],
@@ -58,7 +58,7 @@ export const CONCOURS: ConcoursStage[] = [
   stage(4, 'leaderEncre', {
     id: 'gcNocturne', name: L('Grande Maîtresse Nocturne', 'Grand Master Nocturne'),
     party: [
-      { species: '006', level: 45 }, { species: '010', level: 45 }, { species: '008', level: 45, item: 'baie-menthe' },
+      { species: '055', level: 45 }, { species: '010', level: 45 }, { species: '008', level: 45, item: 'baie-menthe' },
       { species: '007', level: 45, item: 'echarpe-tetue' }, { species: '011', level: 46, item: 'baie-doree' },
     ],
     before: [L('L’encre de minuit efface les hésitations. Tu es là pour la dernière page ? Il faudra passer par moi.', 'Midnight ink washes away doubts. Here for the last page? You’ll have to get past me.')],
@@ -102,7 +102,8 @@ export const TOWER_TEAM = 3;
 export const TOWER_LEVEL = 50;
 
 /** Bestioles strong enough for the tower (first forms that evolve are left out). */
-export const TOWER_POOL = ['001', '020', '024', '002', '021', '025', '003', '022', '023', '027', '028', '029', '030', '031', '032', '033', '034', '035', '036', '038', '040', '041', '042', '043', '045', '046', '047', '048', '049', '050', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019'];
+export const TOWER_POOL = ['001', '020', '024', '002', '021', '025', '003', '022', '023', '027', '028', '029', '030', '031', '032', '033', '034', '035', '036', '038', '040', '041', '042', '043', '045', '046', '047', '048', '049', '050', '004', '005', '006', '007', '008', '010', '013', '014', '016', '017', '018', '019',
+  '053', '055', '057', '059', '060', '061', '064', '066', '068', '070'];
 const LEGENDS = ['011'];
 const TOWER_ITEMS = [
   'baie-doree', 'baie-prisme', 'baie-menthe', 'gouter', 'plume-vive', 'loupe', 'clochette', 'ruban-tenace',

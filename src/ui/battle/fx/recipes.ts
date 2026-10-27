@@ -176,6 +176,14 @@ export const MOVE_FX: Record<string, Recipe> = {
   balayette: { user: 'dash', hit: 'knock', layers: [sweep({ color: C.combat[1] }), at(200, dust())] },
   'gros-poing': { user: 'rear', shake: 0.7, layers: [fist({ color: SKIN, size: 0.85, dur: 560 }), at(280, impactStar({ size: 0.8 }))] },
   'rafale-de-poings': { user: 'lunge', layers: [fist({ color: SKIN, size: 0.45, dur: 340 }), at(170, impactStar({ size: 0.4 }))] },
+
+  // ------------------------------------------------ iteration 11
+  'chant-polaire': { layers: [notes({ colors: [C.glace[1], C.glace[2]], n: 7, size: 0.27 }), at(480, sparkle({ kind: 'snow', color: C.glace[1], n: 7, size: 0.26 }))] },
+  'epee-crayon': { user: 'dash', layers: [sparkle({ who: 'user', color: '#ffffff', n: 3 }), at(150, slash({ color: '#f2c43a', n: 1, width: 2.4, len: 1.25 })), at(320, impactStar({ size: 0.5, color: C.acier[0] }))] },
+  'gueule-piege': { user: 'lunge', hit: 'squash', layers: [bite({ gum: C.plante[2], tooth: '#fffbe0', n: 5 }), at(380, drain({ color: C.plante[1] }))] },
+  'os-boomerang': { user: 'rear', layers: [projectile({ kind: 'bone', color: '#f6f1e4', size: 0.36, fly: 340, spin: 3, burst: 'star' })] },
+  'griffe-de-nuit': { user: 'dash', layers: [darken({ alpha: 0.32, dur: 700 }), at(120, slash({ color: C.tenebres[1], n: 3, width: 1.4 }))] },
+  'tempete-psy': { layers: [darken({ color: '#3a1a3a', alpha: 0.25, dur: 1000 }), rings({ colors: [C.psy[1], C.psy[0], C.fee[1]], n: 6 }), at(420, sparkle({ kind: 'star', color: C.psy[1], n: 6, size: 0.24 }))] },
 };
 
 /** The animation of a move, if it has one. */

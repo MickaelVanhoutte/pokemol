@@ -221,6 +221,25 @@ export const TALENTS: TalentDef[] = [
   T('bebe-poche', L('Bébé Poche', 'Pouch Baby'),
     L('Son petit frappe aussi : chaque attaque touche une deuxième fois, à un quart de la puissance.', 'Its little one joins in: each attack hits a second time, at a quarter of the power.'),
     { kind: 'parentalBond' }),
+  // iteration 11 families
+  T('pressentiment', L('Pressentiment', 'Foresight'),
+    L('Il sent venir la première attaque après son entrée : elle ne lui fait que la moitié des dégâts.', 'It senses the first attack after it comes in: that one does only half the damage.'),
+    { kind: 'phaseFirst' }),
+  T('griffes-malines', L('Griffes Malines', 'Sly Claws'),
+    L('Ses capacités tranchantes (griffes, ciseaux, feuilles, ailes) sont 50 % plus fortes.', 'Its cutting moves (claws, scissors, leaves, wings) are 50% stronger.'),
+    { kind: 'flagBoost', flag: 'cut', mult: 1.5 }),
+  T('gaz-piquant', L('Gaz Piquant', 'Stinging Gas'),
+    L('Qui le frappe de près respire son gaz : 3 fois sur 10, il est empoisonné.', 'Whoever hits it up close breathes in its gas: 3 times in 10, they are poisoned.'),
+    { kind: 'contactStatus', status: 'poison', chance: 30 }),
+  T('coquille-de-fer', L('Coquille de Fer', 'Iron Shell'),
+    L('Les capacités Feu et Combat ne lui font que la moitié des dégâts.', 'Fire and Fighting moves do only half the damage to it.'),
+    { kind: 'halve', types: ['feu', 'combat'] }),
+  T('colere-noire', L('Colère Noire', 'Black Fury'),
+    L('Chaque fois qu’il met un adversaire K.O., son Attaque monte.', 'Each time it knocks a foe out, its Attack goes up.'),
+    { kind: 'statOnKO', stat: 'atk' }),
+  T('nage-eclair', L('Nage Éclair', 'Dart Swim'),
+    L('Quand il a tous ses PV, ses capacités Eau passent en premier.', 'At full HP, its Water moves go first.'),
+    { kind: 'galeWings', type: 'eau' }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

@@ -330,6 +330,24 @@ export const MOVES: MoveDef[] = [
   M({ id: 'tache-d-encre', name: L('Tache d’encre', 'Ink Blot'), type: 'tenebres', cat: 'spec', power: 70, acc: 100, pp: 15,
     effects: [{ kind: 'stage', target: 'foe', stat: 'acc', stages: -1, chance: 30 }],
     desc: L('Éclabousse l’ennemi d’encre noire. Peut baisser sa Précision.', 'Splashes the foe with black ink. May lower its accuracy.') }),
+  // iteration 11: signature moves and gap fillers
+  M({ id: 'chant-polaire', name: L('Chant polaire', 'Polar Song'), type: 'glace', cat: 'spec', power: 90, acc: 95, pp: 10,
+    effects: [{ kind: 'status', status: 'sleep', chance: 10 }],
+    desc: L('Une chanson si froide qu’elle gèle l’air. Peut endormir.', 'A song so cold it freezes the air. May put the foe to sleep.') }),
+  M({ id: 'epee-crayon', name: L('Épée-crayon', 'Pencil Sword'), type: 'acier', cat: 'phys', power: 90, acc: 100, pp: 10, cut: true,
+    effects: [{ kind: 'highCrit' }],
+    desc: L('Un grand coup de crayon bien taillé. Coup critique fréquent.', 'A big slash with a sharpened pencil. Often a critical hit.') }),
+  M({ id: 'gueule-piege', name: L('Gueule-piège', 'Snap Trap'), type: 'plante', cat: 'phys', power: 85, acc: 100, pp: 10,
+    effects: [{ kind: 'drain', pct: 30 }],
+    desc: L('Sa bouche se referme sur l’ennemi et lui vole des forces.', 'Its mouth snaps shut on the foe and steals some strength.') }),
+  M({ id: 'os-boomerang', name: L('Os-boomerang', 'Bone Boomerang'), type: 'sol', cat: 'phys', power: 75, acc: 95, pp: 10,
+    desc: L('Il lance son os, qui tourne et revient dans sa main.', 'It throws its bone, which spins and comes back to its hand.') }),
+  M({ id: 'griffe-de-nuit', name: L('Griffe de nuit', 'Night Claw'), type: 'tenebres', cat: 'phys', power: 80, acc: 100, pp: 15, cut: true,
+    effects: [{ kind: 'highCrit' }],
+    desc: L('Des griffes qui sortent de l’ombre. Coup critique fréquent.', 'Claws that come out of the dark. Often a critical hit.') }),
+  M({ id: 'tempete-psy', name: L('Tempête psy', 'Psy Storm'), type: 'psy', cat: 'spec', power: 90, acc: 100, pp: 10,
+    effects: [{ kind: 'confuse', chance: 10 }],
+    desc: L('Un tourbillon de pensées qui donne le tournis. Peut rendre confus.', 'A whirl of thoughts that makes heads spin. May confuse.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

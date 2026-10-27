@@ -40,8 +40,8 @@ export const PHARE_MAPS: Record<string, MapDef> = {
         { id: '005', w: 20, min: 32, max: 34 },
       ],
     },
-    surf: { rate: 0.1, table: [{ id: '003', w: 70, min: 32, max: 36 }, { id: '013', w: 30, min: 32, max: 35 }, { id: '032', w: 20, min: 32, max: 35 }, { id: '042', w: 8, min: 34, max: 36 }] },
-    fishing: { old: [{ id: '003', w: 100, min: 10, max: 14 }], good: [{ id: '003', w: 100, min: 22, max: 26 }], super: [{ id: '003', w: 100, min: 34, max: 38 }, { id: '034', w: 12, min: 34, max: 37 }, { id: '044', w: 4, min: 36, max: 37 }] },
+    surf: { rate: 0.1, table: [{ id: '003', w: 70, min: 32, max: 36 }, { id: '013', w: 30, min: 32, max: 35 }, { id: '032', w: 20, min: 32, max: 35 }, { id: '042', w: 8, min: 34, max: 36 }, { id: '060', w: 5, min: 34, max: 36 }, { id: '059', w: 8, min: 33, max: 36 }] },
+    fishing: { old: [{ id: '003', w: 100, min: 10, max: 14 }], good: [{ id: '003', w: 100, min: 22, max: 26 }], super: [{ id: '003', w: 100, min: 34, max: 38 }, { id: '034', w: 12, min: 34, max: 37 }, { id: '044', w: 4, min: 36, max: 37 }, { id: '070', w: 30, min: 34, max: 37 }, { id: '058', w: 20, min: 32, max: 35 }] },
   },
 
   phare1: {

@@ -9,7 +9,7 @@ import { mix, PAPER, SPARK } from './core';
 export type DoodleKind =
   | 'flame' | 'drop' | 'bubble' | 'rock' | 'leaf' | 'seed' | 'shard' | 'note' | 'star' | 'heart'
   | 'spark' | 'puff' | 'fist' | 'feather' | 'zzz' | 'blob' | 'ink' | 'moon' | 'sun' | 'orb'
-  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'ball' | 'superball' | 'doll' | 'scrap';
+  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'ball' | 'superball' | 'doll' | 'scrap' | 'bone';
 
 const C = 64;
 const circle = (cx: number, cy: number, rx: number, ry: number, r: Rand, n = 22, wob = 0.06): Pt[] =>
@@ -259,6 +259,11 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
     for (const x of [-7, 7]) paint(p, circle(C + x, 25, 2.5, 3, r, 8), GRAPHITE, { line: GRAPHITE, lw: 1 });
     line(p, [[C - 8, 34], [C, 39], [C + 8, 34]], GRAPHITE, 2.5);
     line(p, [[C - 16, 60], [C + 16, 60]], color, 3);
+  },
+  bone(ctx, color, r) {
+    const p = new Pencil(ctx, r);
+    paint(p, [[34, 56], [94, 56], [94, 72], [34, 72]], color, { line: GRAPHITE });
+    for (const [x, y] of [[28, 50], [28, 78], [100, 50], [100, 78]]) paint(p, circle(x, y, 14, 14, r, 10), color, { line: GRAPHITE });
   },
   scrap(ctx, color, r) {
     const p = new Pencil(ctx, r);
