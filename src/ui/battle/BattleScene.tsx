@@ -13,6 +13,8 @@ import type { Look } from '../../overworld/sprites';
 import { fromLook, type Appearance } from '../../data/appearance';
 import { personUrl } from '../personArt';
 import { dollUrl } from './fx/doll';
+import { idleOf } from '../../data/rigs';
+import { prefs } from '../../state/prefs';
 
 export type Fx = Partial<Record<Side, string>>;
 
@@ -62,6 +64,20 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
   return <div class={`pk-hp__xp ${shown ? 'is-on' : ''}`}><XpBar pct={pct} level={level} /></div>;
 }
 
+/**
+ * A Bestiole on its platform: the box takes the move motions, mirroring and states (`cls`); inside, a
+ * layer breathes or flies on the spot while it waits (`idleOf`). The paper doll keeps still.
+ */
+function Sprite({ side, species, src, cls }: { side: Side; species: string | null; src: string; cls: string }) {
+  return (
+    <div class={`pk-sprite ${cls}`}>
+      <div class={`pk-idle pk-idle--${species ? idleOf(species) : 'still'} pk-idle--side${side}`}>
+        <img class="pk-art" src={src} alt="" />
+      </div>
+    </div>
+  );
+}
+
 /** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
 export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored, sceneRef }: {
   view: BattleState; fx: Fx; captured: boolean; backdrop: Backdrop; intro: boolean;
@@ -79,7 +95,7 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
   // behind a paper doll, the doll stands in its place
   const doll = (side: 0 | 1) => view.sides[side].vol.sub > 0;
   return (
-    <div ref={sceneRef} class={`pk-scene ${intro ? 'is-intro' : ''}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
+    <div ref={sceneRef} class={`pk-scene ${intro ? 'is-intro' : ''} ${prefs.value.moveFx ? '' : 'no-idle'}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
       <canvas class="pk-fx-back" aria-hidden="true" />
       {view.weather && <div class={`pk-weather pk-weather--${view.weather.kind}`} aria-hidden="true" />}
       {/* the foe stands under its HP box, you stand over yours */}
@@ -89,10 +105,11 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
         {foeTrainer ? (
           <img class="pk-trainer" src={personUrl(fromLook(foeTrainer))} alt="" />
         ) : (
-          <img
-            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
+          <Sprite
+            side={1}
+            species={doll(1) ? null : foe.species}
             src={doll(1) ? dollUrl() : monArtUrl(foe)}
-            alt=""
+            cls={`${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
           />
         )}
       </div>
@@ -103,10 +120,11 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
         {playerBack ? (
           <img class="pk-trainer pk-trainer--me" src={personUrl(playerBack, 'back')} alt="" />
         ) : (
-          <img
-            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
+          <Sprite
+            side={0}
+            species={doll(0) ? null : mine.species}
             src={doll(0) ? dollUrl() : monArtUrl(mine)}
-            alt=""
+            cls={`${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
           />
         )}
       </div>

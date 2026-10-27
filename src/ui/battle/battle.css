@@ -64,12 +64,21 @@
 .pk-plat--foe { flex: none; margin-top: auto; height: min(36vw, 26dvh, 200px); }
 .pk-plat--me { flex: 1 1 0; min-height: 0; }
 .pk-sprite {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  line-height: 0;
   filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
   transform-origin: 50% 100%;
 }
+/* the drawing fills its platform (a size container), the box around it shrinks to it */
+.pk-art { display: block; max-width: 100cqw; max-height: 100cqh; object-fit: contain; }
+/* waiting: a slow breath from the feet, or flying on the spot; the two sides never in step */
+.pk-idle { transform-origin: 50% 100%; animation: idleBreathe 3.4s ease-in-out infinite; }
+.pk-idle--side0 { animation-duration: 3.1s; animation-delay: -1.3s; }
+.pk-idle--hover { animation-name: idleHover; animation-duration: 2.2s; }
+.pk-idle--hover.pk-idle--side0 { animation-duration: 2s; }
+@keyframes idleBreathe { 50% { scale: 1.015 1.035; } }
+@keyframes idleHover { 50% { translate: 0 -5%; } }
+.pk-idle--still, .no-idle .pk-idle { animation: none; }
+@media (prefers-reduced-motion: reduce) { .pk-idle { animation: none; } }
 .pk-sprite { --flip: 1; transition: filter 1.4s ease; }
 /* Team Gomme drained their colours */
 .pk-sprite.is-grey { filter: grayscale(1) contrast(0.85) brightness(1.08) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
@@ -95,9 +104,11 @@
 .pk-fx-back { z-index: 1; }
 .pk-fx { z-index: 3; }
 /* a paper doll stands in for a Bestiole behind a Pantin de papier */
-.pk-sprite.is-doll { max-height: 72%; margin-bottom: 8%; }
+.pk-sprite.is-doll { margin-bottom: 8%; }
+.pk-sprite.is-doll .pk-art { max-height: 72cqh; }
 /* yours stands lower in its (clipped) column: lift it so the whole doll shows */
-.pk-plat--me .pk-sprite.is-doll { max-height: 64%; margin-bottom: 30%; }
+.pk-plat--me .pk-sprite.is-doll { margin-bottom: 30%; }
+.pk-plat--me .pk-sprite.is-doll .pk-art { max-height: 64cqh; }
 .pk-sprite.is-captured { animation: intoBall 0.35s ease forwards; }
 @keyframes intoBall { to { transform: scaleX(var(--flip)) scale(0.05); opacity: 0; } }
 
