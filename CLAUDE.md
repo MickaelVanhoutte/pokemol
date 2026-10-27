@@ -192,8 +192,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
   bound to the save. Item, menu and badge icons are pixel art from `src/ui/icons.ts`.
 
 **Audio.**
-- `src/audio/music.ts` is a small Web Audio sequencer (pulse, triangle, sine and sawtooth voices,
-  noise drums) playing original tracks; the title menu's music box (`JukeboxScreen`) plays each one. `mapMusic.ts` picks the track for each map; battles pick theirs in `fight()`.
+- `src/audio/music.ts` is a small Web Audio sequencer playing original tracks as a music box: the
+  melody on a music box, the bass on a felt piano, the harmony on chimes (by voice order), brushes,
+  shaker, wood block and bell for drums, all through a small room reverb (no more 8-bit waves); the title menu's music box (`JukeboxScreen`) plays each one. `mapMusic.ts` picks the track for each map; battles pick theirs in `fight()`.
 - `sfx.ts` plays sound effects, and `fxSound(kind)` the sounds of the move animations: each effect
   layer lists its `sounds` (fire whoosh, splash, thunder, slash, stat arpeggios…). Everything respects the prefs.
 

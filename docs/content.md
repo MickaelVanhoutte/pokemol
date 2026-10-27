@@ -133,10 +133,11 @@ rematches, the rival's last duel, the Grands Maîtres), `final` (the Great Erase
 A tune in `src/audio/music.ts` is a `Track`: `bpm`, `bar` (8 eighths for 4/4, 6 for a waltz or 6/8),
 an optional `swing`, up to three `voices` (melody first) and `drums`. Notes are `C#5:2` (length in
 eighths, `.5` for a sixteenth, `.` for a rest), bars separated by `|`; the test checks that every bar
-of every voice has the right length. Each voice picks a `wave` (`square`, `pulse25`, `pulse12`,
-`triangle`, `sine`, `sawtooth`), a `vol`, a `gate` (short and bouncy below 0.6), `vibrato` (cents),
-`detune` (cents: a wobbly second oscillator, used for Team Gomme) and `echo` (eighths). Drums are
-`k` kick, `s` snare, `h` hat, `o` open hat, `r` rim, `t` tom, `c` crash. Helpers (`arp`, `oct`,
+of every voice has the right length. The voice order picks the instrument: the melody on a music
+box, the bass on a felt piano, the harmony or arpeggio on chimes (struck notes ring and fade, low ones
+longer, each a few cents off as if played by hand). A voice can add `detune` (cents: an out-of-tune
+double, the uneasy music box of Team Gomme) and `echo` (eighths). Drums are soft: `k` kick, `s` brush,
+`h` shaker, `o` long shaker, `r` wood block, `t` tom, `c` a little bell. Helpers (`arp`, `oct`,
 `drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts. Give every tune its own
 key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`).
 

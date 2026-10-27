@@ -527,6 +527,12 @@ Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Brais
 cost the team a level before Ambre (her Hard rows fell to 10–49%): Allumou is an extra Bestiole for Paco
 instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, was 43/2/2). The finals and the two standalones joined `TOWER_POOL`.
 
+**A music box instead of 8-bit (Oct 2026).** The owner found the GBA square waves out of place next to the
+pencil and pastel look. The tunes stayed note for note; only the instruments changed. They listened to
+four sounds on a test page (8-bit, music box, acoustic workshop with recorder and ukulele, felt piano) and
+picked the music box: music box melody, felt piano bass, chime arpeggios, brushes and a bell, a small room
+reverb. Team Gomme's tunes keep their unease with an out-of-tune double on the music box.
+
 **Evolutions redrawn (Oct 2026).** The owner found some evolved forms too close to their earlier form (a
 recolour, a bigger copy). Redrawn with a new silhouette: Clochegueule slimmer, Gloutoflor with vines and a
 flytrap jaw, Ossagarde tall with a raised club, Furisinge punching in iron cuffs, Hippoplume with quills and a

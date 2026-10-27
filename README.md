@@ -52,7 +52,8 @@ English: [docs/histoire.md](docs/histoire.md).
 - A living world: day and night on the device's clock (or after sleeping at an Inn or at home), with
   Bestioles that only come out at night; a trade in each town; townspeople asking small favours;
   route trainers who want a rematch the next day.
-- A music box in the title menu (MUSIQUES) to listen to every original tune.
+- Original tunes played as a music box, a felt piano and chimes, with soft brushes and a little bell;
+  the music box in the title menu (MUSIQUES) plays every one.
 - A late game with detours and back-and-forth, a cycling track that loops back south, and a cave
   where something breathes in the dark.
 - Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then

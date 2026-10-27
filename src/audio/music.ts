@@ -1,7 +1,8 @@
 /**
- * Tiny chiptune music player (Web Audio), scheduled a little ahead of time and looped. Each tune
- * has up to three voices (melody, bass, a harmony or arpeggio) with their own timbre, and noise
- * drums. All tunes are original.
+ * Tiny music-box player (Web Audio), scheduled a little ahead of time and looped. Each tune has up
+ * to three voices, each played by its own soft instrument: the melody on a music box, the bass on a
+ * felt piano, the harmony or arpeggio on chimes. Brushes, a shaker, a wood block and a little bell
+ * keep the beat, and a small room reverb ties it all together. All tunes are original.
  *
  * Patterns are space-separated notes with a length in eighth notes: "C5:2 E5 G5:4 .:2 A5:.5"
  * (no length = 1 eighth, ".5" = a sixteenth, "." = rest, "|" = bar line). Every bar of every voice
@@ -17,18 +18,10 @@ export type TrackId =
 /** Short tunes played once over the music, which comes back after them. */
 export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal';
 
-/** Square waves of different widths sound thinner (12%) or rounder (50%). */
-type Wave = 'square' | 'pulse25' | 'pulse12' | 'triangle' | 'sine' | 'sawtooth';
-
+/** The first voice is the melody, the second the bass, the third the harmony. */
 interface Voice {
   notes: string;
-  wave?: Wave;
-  vol?: number;
-  /** Part of each note that sounds (0.4 = short and bouncy, 0.95 = smooth). */
-  gate?: number;
-  /** Vibrato depth in cents on notes longer than a quarter. */
-  vibrato?: number;
-  /** A second oscillator this many cents off: a wobbly, uneasy chorus. */
+  /** A second, out-of-tune music box this many cents off: a wobbly, uneasy chorus (Team Gomme). */
   detune?: number;
   /** A soft repeat of each note this many eighths later (caves, dreams). */
   echo?: number;
@@ -43,8 +36,8 @@ interface Track {
   /** The melody first. */
   voices: Voice[];
   /**
-   * k kick, s snare, h hat, o open hat, r rim, t low tom, c crash, . nothing; one character per
-   * `drumStep` eighths (spaces and bar lines ignored).
+   * k soft kick, s brush, h shaker, o long shaker, r wood block, t low tom, c bell, . nothing; one
+   * character per `drumStep` eighths (spaces and bar lines ignored).
    */
   drums?: string;
   drumStep?: number;
@@ -94,7 +87,6 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 112,
     voices: [
       {
-        wave: 'pulse25', vibrato: 12,
         notes: bars(
           'E5 G5 C6:2 B5 G5 A5:2', 'F5 A5 D6:2 C6 A5 B5:2', 'G5 C6 E6:2 D6 C6 B5 A5', 'G5:4 .:2 G4 A4',
           'C5 E5 G5:2 F5 E5 D5:2', 'E5 G5 C6:2 B5 A5 G5:2', 'A5 F5 D5 F5 E5 C5 D5 B4', 'C5:6 .:2',
@@ -103,7 +95,6 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'triangle',
         notes: bars(
           'C3:2 G3:2 C3:2 G3:2', 'F3:2 C4:2 G3:2 D4:2', 'E3:2 B3:2 A3:2 E3:2', 'G3:2 D4:2 G3:2 D4:2',
           'C3:2 G3:2 F3:2 C4:2', 'C3:2 G3:2 E3:2 B3:2', 'F3:2 C4:2 G3:2 D4:2', 'C3:4 G3:4',
@@ -112,7 +103,6 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'triangle', vol: 0.22, gate: 0.7,
         notes: bars(
           arp('C4 E4 G4 C5', 16), `${arp('F4 A4 C5 A4', 8)} ${arp('G4 B4 D5 B4', 8)}`, `${arp('E4 G4 B4 G4', 8)} ${arp('A4 C5 E5 C5', 8)}`, arp('G4 B4 D5 B4', 16),
           arp('C4 E4 G4 C5', 16), `${arp('C4 E4 G4 E4', 8)} ${arp('E4 G4 B4 G4', 8)}`, `${arp('F4 A4 C5 A4', 8)} ${arp('G4 B4 D5 B4', 8)}`, arp('C4 E4 G4 C5', 16),
@@ -129,10 +119,9 @@ const TRACKS: Record<TrackId, Track> = {
   bourg: {
     bpm: 92, swing: 0.2,
     voices: [
-      { wave: 'pulse12', vibrato: 10, gate: 0.8, vol: 0.2,
-        notes: bars('B4:3 D5 G5:2 F#5 E5', 'E5:3 G5 B5:2 A5 G5', 'E5:2 C5:2 D5 E5 G5:2', 'F#5:4 A5:2 .:2', 'B5:3 A5 G5:2 D5:2', 'E5 F#5 G5 B5 A5:2 G5:2', 'C5 E5 A5 G5 F#5 D5 E5 F#5', 'G5:6 .:2') },
-      { wave: 'triangle', gate: 0.8, notes: bars(strum('G2'), strum('E2'), strum('C3'), strum('D3'), strum('G2'), strum('E2'), 'A2:2 E3:2 D3:2 A3:2', 'G2:4 D3:4') },
-      { wave: 'triangle', vol: 0.18, gate: 0.7, notes: bars(arp('G4 B4 D5 B4', 8, 1), arp('E4 G4 B4 G4', 8, 1), arp('C4 E4 G4 E4', 8, 1), arp('D4 F#4 A4 F#4', 8, 1), arp('G4 B4 D5 B4', 8, 1), arp('E4 G4 B4 G4', 8, 1), `${arp('A4 C5 E5 C5', 4, 1)} ${arp('D4 F#4 A4 F#4', 4, 1)}`, arp('G4 B4 D5 G5', 8, 1)) },
+      { notes: bars('B4:3 D5 G5:2 F#5 E5', 'E5:3 G5 B5:2 A5 G5', 'E5:2 C5:2 D5 E5 G5:2', 'F#5:4 A5:2 .:2', 'B5:3 A5 G5:2 D5:2', 'E5 F#5 G5 B5 A5:2 G5:2', 'C5 E5 A5 G5 F#5 D5 E5 F#5', 'G5:6 .:2') },
+      { notes: bars(strum('G2'), strum('E2'), strum('C3'), strum('D3'), strum('G2'), strum('E2'), 'A2:2 E3:2 D3:2 A3:2', 'G2:4 D3:4') },
+      { notes: bars(arp('G4 B4 D5 B4', 8, 1), arp('E4 G4 B4 G4', 8, 1), arp('C4 E4 G4 E4', 8, 1), arp('D4 F#4 A4 F#4', 8, 1), arp('G4 B4 D5 B4', 8, 1), arp('E4 G4 B4 G4', 8, 1), `${arp('A4 C5 E5 C5', 4, 1)} ${arp('D4 F#4 A4 F#4', 4, 1)}`, arp('G4 B4 D5 G5', 8, 1)) },
     ],
     drums: 'k.h.r.h.k.h.r.hh',
   },
@@ -141,10 +130,9 @@ const TRACKS: Record<TrackId, Track> = {
   pastel: {
     bpm: 116,
     voices: [
-      { wave: 'pulse25', gate: 0.5,
-        notes: bars('A4 D5 F#5 A5 . F#5 A5:2', 'B5 . A5 F#5 D5:2 F#5:2', 'G5 . B5 G5 D5 G5 B5:2', 'A5:2 C#6:2 E5:4', 'F#5 A5 D6 . C#6 D6 A5:2', 'C#6 A5 F#5 . A5:2 C#6:2', 'B5 A5 G5 B5 A5 G5 E5 C#5', 'D5:4 .:2 A4:2') },
-      { wave: 'triangle', gate: 0.5, notes: bars(oct('D3'), oct('B2'), oct('G2'), oct('A2'), oct('D3'), oct('F#2'), `${oct('G2', 4)} ${oct('A2', 4)}`, oct('D3')) },
-      { wave: 'pulse12', gate: 0.35, vol: 0.07, notes: bars(stab('F#4', 'A4'), stab('D4', 'F#4'), stab('B4', 'D5'), stab('C#5', 'E4'), stab('F#4', 'A4'), stab('A4', 'C#5'), stab('B4', 'C#5'), stab('F#4', 'D4')) },
+      { notes: bars('A4 D5 F#5 A5 . F#5 A5:2', 'B5 . A5 F#5 D5:2 F#5:2', 'G5 . B5 G5 D5 G5 B5:2', 'A5:2 C#6:2 E5:4', 'F#5 A5 D6 . C#6 D6 A5:2', 'C#6 A5 F#5 . A5:2 C#6:2', 'B5 A5 G5 B5 A5 G5 E5 C#5', 'D5:4 .:2 A4:2') },
+      { notes: bars(oct('D3'), oct('B2'), oct('G2'), oct('A2'), oct('D3'), oct('F#2'), `${oct('G2', 4)} ${oct('A2', 4)}`, oct('D3')) },
+      { notes: bars(stab('F#4', 'A4'), stab('D4', 'F#4'), stab('B4', 'D5'), stab('C#5', 'E4'), stab('F#4', 'A4'), stab('A4', 'C#5'), stab('B4', 'C#5'), stab('F#4', 'D4')) },
     ],
     drums: 'k.h.s.hkk.h.s.h.',
   },
@@ -153,11 +141,9 @@ const TRACKS: Record<TrackId, Track> = {
   plume: {
     bpm: 100, bar: 6,
     voices: [
-      { wave: 'triangle', vibrato: 14, gate: 0.9, vol: 0.45,
-        notes: bars('E5:2 A5 C#6:3', 'D6:2 C#6 A5:3', 'B5:2 G#5 E5:3', 'A5:6', 'C#6:2 B5 A5:2 F#5', 'D5:2 F#5 A5:3', 'G#5:2 B5 E6:2 D6', 'C#6:3 A5:3') },
-      { wave: 'triangle', vol: 0.4, gate: 0.9, notes: bars('A2:3 E3:3', 'D3:3 A3:3', 'E3:3 B3:3', 'A2:3 E3:3', 'F#2:3 C#3:3', 'D3:3 A3:3', 'E3:3 B2:3', 'A2:6') },
-      { wave: 'pulse12', vol: 0.05, gate: 0.6,
-        notes: bars('.:3 E6:.5 F#6:.5 E6:.5 C#6:.5 .', '.:6', '.:3 B6:.5 A6:.5 G#6:.5 E6:.5 .', '.:6', '.:3 C#6:.5 D6:.5 C#6:.5 A5:.5 .', '.:6', '.:3 E6:.5 F#6:.5 G#6:.5 E6:.5 .', '.:6') },
+      { notes: bars('E5:2 A5 C#6:3', 'D6:2 C#6 A5:3', 'B5:2 G#5 E5:3', 'A5:6', 'C#6:2 B5 A5:2 F#5', 'D5:2 F#5 A5:3', 'G#5:2 B5 E6:2 D6', 'C#6:3 A5:3') },
+      { notes: bars('A2:3 E3:3', 'D3:3 A3:3', 'E3:3 B3:3', 'A2:3 E3:3', 'F#2:3 C#3:3', 'D3:3 A3:3', 'E3:3 B2:3', 'A2:6') },
+      { notes: bars('.:3 E6:.5 F#6:.5 E6:.5 C#6:.5 .', '.:6', '.:3 B6:.5 A6:.5 G#6:.5 E6:.5 .', '.:6', '.:3 C#6:.5 D6:.5 C#6:.5 A5:.5 .', '.:6', '.:3 E6:.5 F#6:.5 G#6:.5 E6:.5 .', '.:6') },
     ],
     drums: 'k..h..',
   },
@@ -166,11 +152,9 @@ const TRACKS: Record<TrackId, Track> = {
   port: {
     bpm: 120, bar: 6,
     voices: [
-      { wave: 'square', gate: 0.6, vol: 0.17,
-        notes: bars('A4 C5 E5 A5:2 G5', 'B5:2 A5 G5:2 D5', 'C5 E5 A5 C6:2 B5', 'G#5:3 E5:3', 'A5 B5 C6 E6:2 D6', 'C6:2 B5 G5:2 E5', 'D5 G5 B5 G#5 B5 E6', 'A5:3 A4:3') },
-      { wave: 'triangle', gate: 0.6,
-        notes: bars('A2 E3 A3 E3 A2 E3', 'G2 D3 G3 D3 G2 D3', 'A2 E3 A3 E3 A2 E3', 'E2 B2 E3 B2 E2 G#2', 'A2 E3 A3 E3 A2 E3', 'C3 G3 C4 G3 C3 G3', 'G2 D3 G3 E2 B2 E3', 'A2 E3 A3 A2:3') },
-      { wave: 'pulse25', vol: 0.06, gate: 0.9, notes: bars('E4:6', 'D4:6', 'E4:6', 'E4:6', 'C5:6', 'E4:6', 'D4:3 E4:3', 'E4:6') },
+      { notes: bars('A4 C5 E5 A5:2 G5', 'B5:2 A5 G5:2 D5', 'C5 E5 A5 C6:2 B5', 'G#5:3 E5:3', 'A5 B5 C6 E6:2 D6', 'C6:2 B5 G5:2 E5', 'D5 G5 B5 G#5 B5 E6', 'A5:3 A4:3') },
+      { notes: bars('A2 E3 A3 E3 A2 E3', 'G2 D3 G3 D3 G2 D3', 'A2 E3 A3 E3 A2 E3', 'E2 B2 E3 B2 E2 G#2', 'A2 E3 A3 E3 A2 E3', 'C3 G3 C4 G3 C3 G3', 'G2 D3 G3 E2 B2 E3', 'A2 E3 A3 A2:3') },
+      { notes: bars('E4:6', 'D4:6', 'E4:6', 'E4:6', 'C5:6', 'E4:6', 'D4:3 E4:3', 'E4:6') },
     ],
     drums: 'k.hs.h',
   },
@@ -179,11 +163,9 @@ const TRACKS: Record<TrackId, Track> = {
   feutre: {
     bpm: 118,
     voices: [
-      { wave: 'pulse25', gate: 0.7, vol: 0.36,
-        notes: bars('.:2 B4 D5 . E5 .:2', '.:2 C#5 E5 . G5 F#5 E5', '.:2 B4 D5 . E5 G5 A5', 'B5:2 A5 G5 E5:2 .:2', 'E5 G5 B5 . B5 A5 G5 E5', 'D5 F#5 A5 . A5 G5 F#5 D5', 'C5 E5 A5 G5 F#5 A5 D6 C6', 'B5:4 .:4') },
-      { wave: 'sawtooth', gate: 0.6, vol: 0.2,
-        notes: bars('E2 . E3 E2 . E2 D3 B2', 'A2 . A3 A2 . A2 G3 E3', 'E2 . E3 E2 . E2 D3 B2', 'A2 . A3 A2 . A2 G3 E3', 'C3 . C4 C3 . C3 B3 G3', 'B2 . B3 B2 . B2 A3 F#3', 'A2 . A3 A2 D3 . D4 C4', 'E2 . E3 E2 B2 D3 E3 .') },
-      { wave: 'pulse12', gate: 0.35, vol: 0.09, notes: bars('.:2 G4 .:3 G4 .', '.:2 C#5 .:3 C#5 .', '.:2 G4 .:3 G4 .', '.:2 C#5 .:3 C#5 .', '.:2 E4 .:3 E4 .', '.:2 D5 .:3 D5 .', '.:2 C5 .:3 F#4 .', '.:2 B4 .:3 B4 .') },
+      { notes: bars('.:2 B4 D5 . E5 .:2', '.:2 C#5 E5 . G5 F#5 E5', '.:2 B4 D5 . E5 G5 A5', 'B5:2 A5 G5 E5:2 .:2', 'E5 G5 B5 . B5 A5 G5 E5', 'D5 F#5 A5 . A5 G5 F#5 D5', 'C5 E5 A5 G5 F#5 A5 D6 C6', 'B5:4 .:4') },
+      { notes: bars('E2 . E3 E2 . E2 D3 B2', 'A2 . A3 A2 . A2 G3 E3', 'E2 . E3 E2 . E2 D3 B2', 'A2 . A3 A2 . A2 G3 E3', 'C3 . C4 C3 . C3 B3 G3', 'B2 . B3 B2 . B2 A3 F#3', 'A2 . A3 A2 D3 . D4 C4', 'E2 . E3 E2 B2 D3 E3 .') },
+      { notes: bars('.:2 G4 .:3 G4 .', '.:2 C#5 .:3 C#5 .', '.:2 G4 .:3 G4 .', '.:2 C#5 .:3 C#5 .', '.:2 E4 .:3 E4 .', '.:2 D5 .:3 D5 .', '.:2 C5 .:3 F#4 .', '.:2 B4 .:3 B4 .') },
     ],
     drums: 'k.h.s.h.k.hks.ho', drumStep: 0.5,
   },
@@ -192,10 +174,8 @@ const TRACKS: Record<TrackId, Track> = {
   braise: {
     bpm: 104,
     voices: [
-      { wave: 'pulse25', gate: 0.7, vibrato: 10,
-        notes: bars('A5 B5 C6 B5 A5:2 E5:2', 'G5 A5 B5 A5 G5:2 D5:2', 'F5 G5 A5 G5 F5 E5 F5 A5', 'G#5:4 E5:2 .:2', 'E6:2 D6 C6 B5 C6 A5:2', 'D6:2 C6 B5 A5 B5 G5:2', 'C6 B5 A5 G5 F5 G5 A5 F5', 'E5:2 F5 E5 G#5:4') },
-      { wave: 'triangle', gate: 0.7,
-        notes: bars('A2:2 E3 A3 A2:2 E3:2', 'G2:2 D3 G3 G2:2 D3:2', 'F2:2 C3 F3 F2:2 C3:2', 'E2:2 B2 E3 E2:2 G#2:2', 'A2:2 E3 A3 A2:2 E3:2', 'G2:2 D3 G3 G2:2 D3:2', 'F2:2 C3 F3 F2:2 C3:2', 'E2:2 B2 E3 E2:4') },
+      { notes: bars('A5 B5 C6 B5 A5:2 E5:2', 'G5 A5 B5 A5 G5:2 D5:2', 'F5 G5 A5 G5 F5 E5 F5 A5', 'G#5:4 E5:2 .:2', 'E6:2 D6 C6 B5 C6 A5:2', 'D6:2 C6 B5 A5 B5 G5:2', 'C6 B5 A5 G5 F5 G5 A5 F5', 'E5:2 F5 E5 G#5:4') },
+      { notes: bars('A2:2 E3 A3 A2:2 E3:2', 'G2:2 D3 G3 G2:2 D3:2', 'F2:2 C3 F3 F2:2 C3:2', 'E2:2 B2 E3 E2:2 G#2:2', 'A2:2 E3 A3 A2:2 E3:2', 'G2:2 D3 G3 G2:2 D3:2', 'F2:2 C3 F3 F2:2 C3:2', 'E2:2 B2 E3 E2:4') },
     ],
     drums: 'k.r.rrr.k.r.rrrr',
   },
@@ -204,10 +184,10 @@ const TRACKS: Record<TrackId, Track> = {
   paillette: {
     bpm: 96,
     voices: [
-      { wave: 'sine', vibrato: 12, echo: 2, gate: 0.9, vol: 0.34,
+      { echo: 2,
         notes: bars('C6:3 A5 F5:2 G5:2', 'B5:3 G5 D5:2 B4:2', 'C6:2 E6:2 A5:4', 'B5:4 D6:4', 'F6:3 E6 C6:2 A5:2', 'D6:3 B5 G5:2 D6:2', 'E6 D6 B5 G5 A5 C6 E6:2', 'F6:6 .:2') },
-      { wave: 'sine', vol: 0.3, gate: 0.95, notes: bars('F2:8', 'G2:8', 'A2:8', 'G2:8', 'F2:8', 'G2:8', 'E2:4 A2:4', 'F2:8') },
-      { wave: 'pulse12', vol: 0.045, gate: 0.6, notes: bars(arp('F5 A5 C6 E6', 16), arp('G5 B5 D6 G6', 16), arp('A5 C6 E6 A6', 16), arp('G5 B5 D6 G6', 16), arp('F5 A5 C6 E6', 16), arp('G5 B5 D6 G6', 16), `${arp('E5 G5 B5 E6', 8)} ${arp('A5 C6 E6 A6', 8)}`, arp('F5 A5 C6 F6', 16)) },
+      { notes: bars('F2:8', 'G2:8', 'A2:8', 'G2:8', 'F2:8', 'G2:8', 'E2:4 A2:4', 'F2:8') },
+      { notes: bars(arp('F5 A5 C6 E6', 16), arp('G5 B5 D6 G6', 16), arp('A5 C6 E6 A6', 16), arp('G5 B5 D6 G6', 16), arp('F5 A5 C6 E6', 16), arp('G5 B5 D6 G6', 16), `${arp('E5 G5 B5 E6', 8)} ${arp('A5 C6 E6 A6', 8)}`, arp('F5 A5 C6 F6', 16)) },
     ],
   },
 
@@ -215,9 +195,8 @@ const TRACKS: Record<TrackId, Track> = {
   gouache: {
     bpm: 84, swing: 0.15,
     voices: [
-      { wave: 'pulse12', vibrato: 10, gate: 0.9, vol: 0.2,
-        notes: bars('A5:3 C6 F5:4', 'D5 F5 A5 D6 C6:2 A5:2', 'A#5:3 A5 G5:2 F5:2', 'E5:3 F5 G5:4', 'C6:3 A5 F5:2 C6:2', 'E6:2 C6 A5 E5:2 A5:2', 'D6 C6 A#5 A5 G5 A5 A#5 G5', 'F5:6 .:2') },
-      { wave: 'triangle', gate: 0.8, vol: 0.4, notes: bars(arp('F3 C4 A4 C4', 8, 1), arp('D3 A3 F4 A3', 8, 1), arp('A#2 F3 D4 F3', 8, 1), arp('C3 G3 E4 G3', 8, 1), arp('F3 C4 A4 C4', 8, 1), arp('A2 E3 C4 E3', 8, 1), `${arp('A#2 F3 D4 F3', 4, 1)} ${arp('C3 G3 E4 G3', 4, 1)}`, arp('F3 C4 A4 F4', 8, 1)) },
+      { notes: bars('A5:3 C6 F5:4', 'D5 F5 A5 D6 C6:2 A5:2', 'A#5:3 A5 G5:2 F5:2', 'E5:3 F5 G5:4', 'C6:3 A5 F5:2 C6:2', 'E6:2 C6 A5 E5:2 A5:2', 'D6 C6 A#5 A5 G5 A5 A#5 G5', 'F5:6 .:2') },
+      { notes: bars(arp('F3 C4 A4 C4', 8, 1), arp('D3 A3 F4 A3', 8, 1), arp('A#2 F3 D4 F3', 8, 1), arp('C3 G3 E4 G3', 8, 1), arp('F3 C4 A4 C4', 8, 1), arp('A2 E3 C4 E3', 8, 1), `${arp('A#2 F3 D4 F3', 4, 1)} ${arp('C3 G3 E4 G3', 4, 1)}`, arp('F3 C4 A4 F4', 8, 1)) },
     ],
     drums: 'k...h...',
   },
@@ -226,11 +205,9 @@ const TRACKS: Record<TrackId, Track> = {
   encre: {
     bpm: 96, swing: 0.33,
     voices: [
-      { wave: 'pulse25', gate: 0.6, vibrato: 8,
-        notes: bars('.:2 A4 C5 D5:2 F5 E5', 'D5:3 B4 G4:2 .:2', '.:2 E5 G5 B5:2 A5 G5', 'C#5:4 E5:2 .:2', '.:2 F5 A5 C6:2 A5 F5', 'D5:3 F5 G#5:2 .:2', 'G5 E5 A#4 G5 C#5 E5 G5 A5', 'D5:6 .:2') },
-      { wave: 'triangle', gate: 0.9,
-        notes: bars('D3:2 F3:2 A3:2 C4:2', 'G2:2 B2:2 D3:2 F3:2', 'C3:2 E3:2 G3:2 B3:2', 'A2:2 C#3:2 E3:2 G3:2', 'D3:2 E3:2 F3:2 A3:2', 'A#2:2 D3:2 F3:2 G#3:2', 'E3:2 A#2:2 A2:2 C#3:2', 'D3:2 A2:2 D3:4') },
-      { wave: 'pulse12', vol: 0.045, gate: 0.95, notes: bars('F4:8', 'F4:8', 'E4:8', 'E4:8', 'F4:8', 'F4:8', 'D4:4 C#4:4', 'F4:8') },
+      { notes: bars('.:2 A4 C5 D5:2 F5 E5', 'D5:3 B4 G4:2 .:2', '.:2 E5 G5 B5:2 A5 G5', 'C#5:4 E5:2 .:2', '.:2 F5 A5 C6:2 A5 F5', 'D5:3 F5 G#5:2 .:2', 'G5 E5 A#4 G5 C#5 E5 G5 A5', 'D5:6 .:2') },
+      { notes: bars('D3:2 F3:2 A3:2 C4:2', 'G2:2 B2:2 D3:2 F3:2', 'C3:2 E3:2 G3:2 B3:2', 'A2:2 C#3:2 E3:2 G3:2', 'D3:2 E3:2 F3:2 A3:2', 'A#2:2 D3:2 F3:2 G#3:2', 'E3:2 A#2:2 A2:2 C#3:2', 'D3:2 A2:2 D3:4') },
+      { notes: bars('F4:8', 'F4:8', 'E4:8', 'E4:8', 'F4:8', 'F4:8', 'D4:4 C#4:4', 'F4:8') },
     ],
     drums: 'k.h.r.hhk.h.r.hh',
   },
@@ -239,10 +216,9 @@ const TRACKS: Record<TrackId, Track> = {
   galerie: {
     bpm: 104,
     voices: [
-      { wave: 'square', gate: 0.85, vol: 0.18,
-        notes: bars('C5:2 E5 G5 C6:3 G5', 'A5:2 F5 A5 C6:4', 'B5:2 D6:2 G5:4', 'E6:3 D6 C6:4', 'C6:2 E6 C6 A5:3 E5', 'F5:2 A5 C6 A5:4', 'G5 B5 D6 F6 D6:2 B5:2', 'C6:6 .:2') },
-      { wave: 'triangle', gate: 0.7, notes: bars('C3:2 G2:2 C3:2 G2:2', 'F2:2 C3:2 F2:2 C3:2', 'G2:2 D3:2 G2:2 D3:2', 'C3:2 G2:2 C3:2 G2:2', 'A2:2 E3:2 A2:2 E3:2', 'F2:2 C3:2 F2:2 C3:2', 'G2:2 D3:2 G2:2 B2:2', 'C3:4 G2:2 C3:2') },
-      { wave: 'sawtooth', vol: 0.05, gate: 0.95, notes: bars('E4:8', 'F4:8', 'D4:8', 'E4:8', 'E4:8', 'F4:8', 'F4:4 D4:4', 'E4:8') },
+      { notes: bars('C5:2 E5 G5 C6:3 G5', 'A5:2 F5 A5 C6:4', 'B5:2 D6:2 G5:4', 'E6:3 D6 C6:4', 'C6:2 E6 C6 A5:3 E5', 'F5:2 A5 C6 A5:4', 'G5 B5 D6 F6 D6:2 B5:2', 'C6:6 .:2') },
+      { notes: bars('C3:2 G2:2 C3:2 G2:2', 'F2:2 C3:2 F2:2 C3:2', 'G2:2 D3:2 G2:2 D3:2', 'C3:2 G2:2 C3:2 G2:2', 'A2:2 E3:2 A2:2 E3:2', 'F2:2 C3:2 F2:2 C3:2', 'G2:2 D3:2 G2:2 B2:2', 'C3:4 G2:2 C3:2') },
+      { notes: bars('E4:8', 'F4:8', 'D4:8', 'E4:8', 'E4:8', 'F4:8', 'F4:4 D4:4', 'E4:8') },
     ],
     drums: `${rep('k.s.k.s.', 7)} k.ssk.ss`,
   },
@@ -252,21 +228,18 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 100, swing: 0.3,
     voices: [
       {
-        wave: 'pulse12', gate: 0.6, vol: 0.26,
         notes: bars(
           'C5 F5 A5:2 G5 F5 . A4', 'D5 F5 A5:2 G5 F5 D5:2', 'D5 G5 A#5:2 A5 G5 D5:2', 'E5 G5 C6:2 A#5 G5 E5 C5',
           'F5 A5 C6 A5 F5:2 C5:2', 'D6 C6 A#5 A5 A#5:2 F5:2', 'E5 G5 A#5 G5 E5 C5 D5 E5', 'F5:4 .:2 E5 C5',
         ),
       },
       {
-        wave: 'triangle', gate: 0.5,
         notes: bars(
           'F2 . C3 . F3 . C3 .', 'D2 . A2 . D3 . A2 .', 'G2 . D3 . G3 . D3 .', 'C3 . G2 . A#2 . G2 .',
           'F2 . C3 . F3 . C3 .', 'A#2 . F3 . A#3 . F3 .', 'C3 . E3 . G3 . A#3 .', 'F2 . C3 . F2:2 .:2',
         ),
       },
       {
-        wave: 'pulse25', gate: 0.35, vol: 0.1,
         notes: bars(
           '. A4 . C5 . A4 . C5', '. F4 . A4 . F4 . A4', '. A#4 . D5 . A#4 . D5', '. A#4 . E5 . A#4 . E5',
           '. A4 . C5 . A4 . C5', '. D5 . F5 . D5 . F5', '. A#4 . E5 . A#4 . E5', '. A4 . C5 . A4:3',
@@ -281,7 +254,6 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 138,
     voices: [
       {
-        wave: 'pulse25', gate: 0.8,
         notes: bars(
           'D5 G5 B5:2 A5 G5 D5:2', 'C5 F5 A5:2 G5 F5 C5:2', 'E5 G5 C6:3 B5 A5 G5', 'F#5:2 A5:2 D6:3 .',
           'B5 A5 G5 D5 G5:2 B5:2', 'C6 A5 F5 C5 F5:2 A5:2', 'G5 E5 C5 E5 F#5 A5 D6 C6', 'B5:4 G5:2 .:2',
@@ -290,7 +262,6 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'triangle', gate: 0.7,
         notes: bars(
           drive('G2', 'D3'), drive('F2', 'C3'), drive('C3', 'G3'), drive('D3', 'A3'),
           drive('G2', 'D3'), drive('F2', 'C3'), 'C3 C3 G3 C3 D3 D3 A3 D3', drive('G2', 'D3'),
@@ -299,7 +270,6 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'pulse12', vol: 0.07, vibrato: 10,
         notes: bars(
           'B4:8', 'A4:8', 'G4:8', 'A4:8', 'B4:8', 'A4:8', 'G4:4 F#4:4', 'G4:8',
           'G4:8', 'E4:8', 'D4:8', 'F#4:8', 'B4:8', 'G4:8', 'A4:4 F#4:4', 'B4:8',
@@ -314,11 +284,11 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 80,
     voices: [
       {
-        wave: 'triangle', vibrato: 14, echo: 3, gate: 0.9, vol: 0.38,
+        echo: 3,
         notes: bars('A4:3 D5 F5:2 E5:2', 'E5:4 G4:2 .:2', 'B4:3 D5 G5:2 F5 E5', 'D5:6 .:2', 'F5:3 A5 C6:2 A5:2', 'A5:3 G5 F5:2 C5:2', 'B4:2 D5:2 C5:2 E5:2', 'D5:6 .:2'),
       },
-      { wave: 'sine', vol: 0.3, notes: bars('D2:8', 'C2:8', 'G2:8', 'D2:8', 'D2:8', 'F2:8', 'G2:4 A2:4', 'D2:8') },
-      { wave: 'pulse12', vol: 0.06, gate: 0.3, echo: 2, notes: bars('.:5 A5 .:2', '.:6 G5 .', '.:3 D6 .:4', '.:8', '.:5 C6 .:2', '.:6 A5 .', '.:2 E6 .:5', '.:8') },
+      { notes: bars('D2:8', 'C2:8', 'G2:8', 'D2:8', 'D2:8', 'F2:8', 'G2:4 A2:4', 'D2:8') },
+      { echo: 2, notes: bars('.:5 A5 .:2', '.:6 G5 .', '.:3 D6 .:4', '.:8', '.:5 C6 .:2', '.:6 A5 .', '.:2 E6 .:5', '.:8') },
     ],
     drums: 't.......t...r...',
   },
@@ -329,20 +299,19 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 118,
     voices: [
       {
-        wave: 'sawtooth', detune: 22, gate: 0.5, vol: 0.15,
+        detune: 22,
         notes: bars(
           '.:2 E5 F5 .:2 E5 D#5', 'E5 .:3 G5 F#5 F5 E5', '.:2 F5 F#5 .:2 F5 E5', 'A#5:2 . A5 .:2 E5:2',
           '.:2 G5 G#5 .:2 G5 F#5', 'C6:2 B5 A#5 A5:2 .:2', 'F5 E5 F5 E5 F5:2 B5:2', 'E5:3 .:3 B4 C5',
         ),
       },
       {
-        wave: 'triangle', gate: 0.45, vol: 0.6,
         notes: bars(
           'E2 . E3 . A#2 . B2 .', 'E2 . E3 . A#2 . B2 .', 'F2 . F3 . B2 . C3 .', 'E2 . E3 . A#2 . B2 .',
           'G2 . G3 . C#3 . D3 .', 'F#2 . F#3 . C3 . C#3 .', 'F2 . F3 . B2 . C3 .', 'E2 . A#2 . E2 .:3',
         ),
       },
-      { wave: 'pulse12', vol: 0.06, vibrato: 25, notes: bars('A#4:8', 'G#4:8', 'F#4:8', 'E4:8', 'D5:8', 'C5:8', 'A#4:8', 'E4:4 .:4') },
+      { notes: bars('A#4:8', 'G#4:8', 'F#4:8', 'E4:8', 'D5:8', 'C5:8', 'A#4:8', 'E4:4 .:4') },
     ],
     drums: 'k..r..h.k.r...h.',
   },
@@ -351,9 +320,9 @@ const TRACKS: Record<TrackId, Track> = {
   edge: {
     bpm: 66,
     voices: [
-      { wave: 'sine', vibrato: 20, echo: 4, gate: 0.95, vol: 0.32, notes: bars('G5:4 F#5:2 E5:2', 'D5:6 A4:2', 'B4:4 C5:2 E5:2', 'F#5:8', 'G5:3 A5 B5:2 G5:2', 'F#5:4 D5:4', 'E5:3 D5 C5:2 E5:2', 'D5:8') },
-      { wave: 'triangle', gate: 0.95, vol: 0.35, notes: bars('C3:8', 'C3:8', 'E3:8', 'D3:8', 'C3:8', 'B2:8', 'A2:8', 'D3:8') },
-      { wave: 'pulse12', vol: 0.05, vibrato: 18, gate: 0.95, notes: bars('E4:8', 'F#4:8', 'G4:8', 'A4:8', 'E4:8', 'D4:8', 'C4:8', 'F#4:8') },
+      { echo: 4, notes: bars('G5:4 F#5:2 E5:2', 'D5:6 A4:2', 'B4:4 C5:2 E5:2', 'F#5:8', 'G5:3 A5 B5:2 G5:2', 'F#5:4 D5:4', 'E5:3 D5 C5:2 E5:2', 'D5:8') },
+      { notes: bars('C3:8', 'C3:8', 'E3:8', 'D3:8', 'C3:8', 'B2:8', 'A2:8', 'D3:8') },
+      { notes: bars('E4:8', 'F#4:8', 'G4:8', 'A4:8', 'E4:8', 'D4:8', 'C4:8', 'F#4:8') },
     ],
   },
 
@@ -362,21 +331,18 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 120, bar: 6,
     voices: [
       {
-        wave: 'pulse12', gate: 0.75, vibrato: 8, vol: 0.24,
         notes: bars(
           'F5:2 A#5:2 D6:2', 'C6:3 A#5 F5:2', 'G5:2 A#5:2 D#6:2', 'D6:4 .:2', 'D6:2 C6 A#5 G5:2', 'D#5:2 G5:2 C6:2', 'A5:2 G5 F5 D#5 C5', 'F5:4 .:2',
           'F5:2 A#5:2 D6:2', 'F6:3 D6 A#5:2', 'G5:2 A#5:2 D#6:2', 'F#5:3 D#5 A#4:2', 'D5:2 F5:2 A#5:2', 'A#5:3 A5 G5:2', 'D#5:2 G5 A5 C6:2', 'A#5:4 .:2',
         ),
       },
       {
-        wave: 'triangle', gate: 0.6, vol: 0.6,
         notes: bars(
           'A#2:2 .:4', 'F2:2 .:4', 'D#2:2 .:4', 'A#2:2 .:4', 'G2:2 .:4', 'C3:2 .:4', 'F2:2 .:4', 'C3:2 .:4',
           'A#2:2 .:4', 'F2:2 .:4', 'D#2:2 .:4', 'D#2:2 .:4', 'A#2:2 .:4', 'G2:2 .:4', 'C3:2 F2:2 .:2', 'A#2:2 F2:2 A#2:2',
         ),
       },
       {
-        wave: 'pulse25', gate: 0.4, vol: 0.06,
         notes: bars(
           '.:2 D4:2 F4:2', '.:2 D4:2 F4:2', '.:2 G4:2 A#4:2', '.:2 D4:2 F4:2', '.:2 A#3:2 D4:2', '.:2 D#4:2 G4:2', '.:2 A3:2 C4:2', '.:2 A3:2 D#4:2',
           '.:2 D4:2 F4:2', '.:2 D4:2 F4:2', '.:2 G4:2 A#4:2', '.:2 F#4:2 A#4:2', '.:2 D4:2 F4:2', '.:2 A#3:2 D4:2', '.:2 D#4 . A3 .', '.:2 D4:2 F4:2',
@@ -390,9 +356,8 @@ const TRACKS: Record<TrackId, Track> = {
   atelier: {
     bpm: 128,
     voices: [
-      { wave: 'pulse25', gate: 0.55,
-        notes: bars('E5 A5 C6 A5 E5 A5 C6 E6', 'F5 A5 C6 A5 F5 A5 C6 F6', 'E5 G5 C6 G5 E5 G5 C6 E6', 'D5 G5 B5 G5 D6:2 B5:2', 'A5:2 C6:2 E6:2 A5:2', 'F5:2 A5:2 C6:2 F5:2', 'G#5 B5 E6 B5 G#5 E5 G#5 B5', 'E6:4 .:2 E5:2') },
-      { wave: 'triangle', gate: 0.6, notes: bars(oct('A2'), oct('F2'), oct('C3'), oct('G2'), oct('A2'), oct('F2'), oct('E2'), oct('E2')) },
+      { notes: bars('E5 A5 C6 A5 E5 A5 C6 E6', 'F5 A5 C6 A5 F5 A5 C6 F6', 'E5 G5 C6 G5 E5 G5 C6 E6', 'D5 G5 B5 G5 D6:2 B5:2', 'A5:2 C6:2 E6:2 A5:2', 'F5:2 A5:2 C6:2 F5:2', 'G#5 B5 E6 B5 G#5 E5 G#5 B5', 'E6:4 .:2 E5:2') },
+      { notes: bars(oct('A2'), oct('F2'), oct('C3'), oct('G2'), oct('A2'), oct('F2'), oct('E2'), oct('E2')) },
     ],
     drums: 'k.h.s.hkk.h.s.h.',
   },
@@ -401,10 +366,9 @@ const TRACKS: Record<TrackId, Track> = {
   rival: {
     bpm: 152,
     voices: [
-      { wave: 'pulse25', gate: 0.8,
-        notes: bars('B4 E5 G#5 B5:2 G#5 E5:2', 'C#6:2 B5 G#5 E5:2 C#5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'D#6:3 C#6 B5:4', 'E6 D#6 E6 B5 G#5:2 E5:2', 'D#5 F#5 B5 D#6 C#6:2 B5:2', 'A5 G#5 F#5 E5 F#5 G#5 A5 B5', 'E6:4 B5:2 E5:2') },
-      { wave: 'triangle', gate: 0.6, notes: bars(gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('E2'), gallop('G#2'), `${oct('A2', 4)} ${oct('B2', 4)}`, 'E2 E2:.5 E2:.5 E3 E2 E2:4') },
-      { wave: 'pulse12', gate: 0.35, vol: 0.07, notes: bars(stab('G#4', 'B4'), stab('E4', 'G#4'), stab('C#5', 'E5'), stab('D#5', 'F#4'), stab('G#4', 'B4'), stab('D#5', 'B4'), stab('C#5', 'D#5'), stab('G#4', 'E4')) },
+      { notes: bars('B4 E5 G#5 B5:2 G#5 E5:2', 'C#6:2 B5 G#5 E5:2 C#5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'D#6:3 C#6 B5:4', 'E6 D#6 E6 B5 G#5:2 E5:2', 'D#5 F#5 B5 D#6 C#6:2 B5:2', 'A5 G#5 F#5 E5 F#5 G#5 A5 B5', 'E6:4 B5:2 E5:2') },
+      { notes: bars(gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('E2'), gallop('G#2'), `${oct('A2', 4)} ${oct('B2', 4)}`, 'E2 E2:.5 E2:.5 E3 E2 E2:4') },
+      { notes: bars(stab('G#4', 'B4'), stab('E4', 'G#4'), stab('C#5', 'E5'), stab('D#5', 'F#4'), stab('G#4', 'B4'), stab('D#5', 'B4'), stab('C#5', 'D#5'), stab('G#4', 'E4')) },
     ],
     drums: 'k.hsk.hsk.hsk.ss',
   },
@@ -414,14 +378,13 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 158,
     voices: [
       {
-        wave: 'square', gate: 0.75, vol: 0.18,
         notes: bars(
           'B4:.5 C#5:.5 D5:.5 F#5:.5 B5:2 A5 F#5 D5:2', 'G5:2 F#5 E5 D5 E5 G5:2', 'A5:.5 G5:.5 F#5:.5 E5:.5 C#5:2 E5 A5 C#6:2', 'A#5:3 C#6 A#5:2 F#5:2',
           'D6:.5 C#6:.5 B5 F#5 D5 B4:2 D5 F#5', 'G5 B5 D6 B5 G5:2 E5:2', 'E5 G5 B5 G5 F#5 A#5 C#6 E6', 'D6:2 B5:2 F#5:.5 E5:.5 D5:.5 C#5:.5 B4:2',
         ),
       },
-      { wave: 'triangle', gate: 0.6, notes: bars(oct('B2'), oct('G2'), oct('A2'), oct('F#2'), oct('B2'), oct('G2'), `${oct('E2', 4)} ${oct('F#2', 4)}`, oct('B2')) },
-      { wave: 'pulse25', gate: 0.35, vol: 0.07, notes: bars(stab('D5'), stab('B4'), stab('C#5'), stab('A#4'), stab('D5'), stab('B4'), stab('G4', 'A#4'), stab('D5', 'F#4')) },
+      { notes: bars(oct('B2'), oct('G2'), oct('A2'), oct('F#2'), oct('B2'), oct('G2'), `${oct('E2', 4)} ${oct('F#2', 4)}`, oct('B2')) },
+      { notes: bars(stab('D5'), stab('B4'), stab('C#5'), stab('A#4'), stab('D5'), stab('B4'), stab('G4', 'A#4'), stab('D5', 'F#4')) },
     ],
     drums: 'kkhsk.hskkhsk.ss',
   },
@@ -431,21 +394,18 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 164,
     voices: [
       {
-        wave: 'pulse25', gate: 0.8,
         notes: bars(
           'D5 F5 A5 D6 C6 A5 F5 A5', 'G5 A5 A#5 A5 G5 F5 E5 C5', 'D5 F5 A5 D6 E6 D6 C6 A5', 'A#5 A5 G5 E5 F5:4',
           'A#5 A5 G5 F5 E5 F5 G5 A5', 'C6 A#5 A5 G5 F5 E5 D5 E5', 'F5 G5 A5 C6 D6 C6 A5 F5', 'E5 C#5 E5 A5 D5:4',
         ),
       },
       {
-        wave: 'triangle', gate: 0.7,
         notes: bars(
           oct('D3'), `${oct('G2', 4)} ${oct('C3', 4)}`, `${oct('D3', 4)} ${oct('A2', 4)}`, 'A#2 A#3 C3 C4 F3 F4 F3 F4',
           `${oct('A#2', 4)} ${oct('C3', 4)}`, `${oct('F3', 4)} ${oct('G3', 4)}`, `${oct('D3', 4)} ${oct('A#2', 4)}`, `${oct('A2', 4)} ${oct('D3', 4)}`,
         ),
       },
       {
-        wave: 'pulse12', gate: 0.4, vol: 0.08,
         notes: bars(stab('F4'), stab('A#4', 'E4'), stab('F4', 'E4'), stab('D4', 'F4'), stab('D4', 'E4'), stab('A4', 'B4'), stab('F4', 'D4'), stab('C#4', 'D4')),
       },
     ],
@@ -457,17 +417,16 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 156,
     voices: [
       {
-        wave: 'sawtooth', detune: 14, gate: 0.7, vol: 0.11,
+        detune: 14,
         notes: bars(
           'A5 C6 A5 D#5 E5 .:3', 'A5:.5 A#5:.5 A5 G5 E5 D#5:2 C5:2', 'C6 D#6 C6 F#5 G5 .:3', 'C6:.5 C#6:.5 C6 A#5 G5 F#5:2 D#5:2',
           'D#5:2 F#5:2 A5:2 C6:2', 'D#6:3 C6 A5:2 F#5:2', 'F#5 G5 F#5 F5 E5 D#5 D5 C#5', 'E5:4 G#5:2 A#5:2',
         ),
       },
       {
-        wave: 'triangle', gate: 0.6,
         notes: bars(oct('A2'), 'A2 A3 A2 A3 D#3 D#2 E3 E2', oct('C3'), 'C3 C4 C3 C4 F#3 F#2 G3 G2', oct('D#3'), 'D#3 D#2 D#3 D#2 C3 C2 A2 A3', 'F#2 F#3 F#2 F#3 F2 F3 E2 E3', 'E2 E3 E2 E3 E2 E3 G#2 A#2'),
       },
-      { wave: 'pulse25', gate: 0.3, vol: 0.07, notes: bars('.:2 D#5 .:3 D#5 .', '.:2 D#5 .:3 D#5 .', '.:2 F#5 .:3 F#5 .', '.:2 F#5 .:3 F#5 .', '.:2 A5 .:3 A5 .', '.:2 A5 .:3 A5 .', '.:2 C6 .:3 C6 .', '.:2 D6 .:3 D6 .') },
+      { notes: bars('.:2 D#5 .:3 D#5 .', '.:2 D#5 .:3 D#5 .', '.:2 F#5 .:3 F#5 .', '.:2 F#5 .:3 F#5 .', '.:2 A5 .:3 A5 .', '.:2 A5 .:3 A5 .', '.:2 C6 .:3 C6 .', '.:2 D6 .:3 D6 .') },
     ],
     drums: 'k.s.kks.k.s.kkss',
   },
@@ -477,7 +436,6 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 172,
     voices: [
       {
-        wave: 'pulse25', gate: 0.85, vibrato: 8,
         notes: bars(
           'E5:2 B5:2 G#5 B5 E6:2', 'D6:3 C#6 B5:2 A5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'G#5:4 B5:4',
           'C#6:2 B5 G#5 E5:2 G#5:2', 'A5:2 C#6:2 E6:2 C#6:2', 'D#6:3 C#6 B5:2 F#5:2', 'B5:.5 C#6:.5 D#6:.5 E6:.5 F#6:2 D#6:2 B5:2',
@@ -486,14 +444,12 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'triangle', gate: 0.6,
         notes: bars(
           gallop('E2'), gallop('D2'), gallop('A2'), gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('B2'),
           gallop('E2'), gallop('G#2'), gallop('A2'), gallop('E2'), gallop('F#2'), gallop('A2'), gallop('B2'), 'E2 E2:.5 E2:.5 E3 E2 E2:4',
         ),
       },
       {
-        wave: 'sawtooth', vol: 0.05, gate: 0.95,
         notes: bars(
           'B4:8', 'A4:8', 'E5:8', 'B4:8', 'G#4:8', 'E5:8', 'F#4:4 A4:4', 'D#5:8',
           'B4:8', 'D#5:8', 'E5:8', 'B4:8', 'C#5:8', 'E5:8', 'F#5:4 A5:4', 'G#4:4 B4:4',
@@ -508,7 +464,6 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 150,
     voices: [
       {
-        wave: 'square', gate: 0.8, vol: 0.18,
         notes: bars(
           'C5 D#5 G5 C6 B5 G5 D#5 G5', 'G#5 G5 F5 D#5 D5 D#5 F5 D5', 'C5 D#5 G5 C6 D6 C6 B5 G5', 'G#5 G5 F5 D5 G5:4',
           'D#6 D6 C6 G#5 G5 G#5 G5 F5', 'D#5 F5 G5 G#5 G5 F5 D#5 D5', 'C5 D5 D#5 F5 G5 G#5 B5 D6', 'C6:4 G5:4',
@@ -517,7 +472,6 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'triangle', gate: 0.65,
         notes: bars(
           oct('C3'), `${oct('F2', 4)} ${oct('G2', 4)}`, `${oct('C3', 4)} ${oct('G#2', 4)}`, `${oct('F2', 4)} ${oct('G2', 4)}`,
           `${oct('G#2', 4)} ${oct('D#3', 4)}`, `${oct('F2', 4)} ${oct('G2', 4)}`, `${oct('G#2', 4)} ${oct('G2', 4)}`, `${oct('C3', 4)} ${oct('G2', 4)}`,
@@ -525,7 +479,7 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'sawtooth', vol: 0.05, detune: 8, gate: 0.95,
+        detune: 8,
         notes: bars(
           'G4:8', 'C5:4 B4:4', 'G4:4 G#4:4', 'C5:4 B4:4', 'C5:4 A#4:4', 'C5:4 B4:4', 'D#5:4 D5:4', 'D#5:4 D5:4',
           'D#5:8', 'F5:8', 'G5:8', 'G5:8', 'D#5:8', 'F5:8', 'G5:4 D#5:4', 'F5:4 D5:4',
@@ -540,7 +494,6 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 168,
     voices: [
       {
-        wave: 'pulse25', gate: 0.85, vibrato: 8,
         notes: bars(
           'D5:.5 D5:.5 D5 A5:2 F#5 A5 D6:2', 'B5:3 A5 G5:2 D5:2', 'E5:.5 E5:.5 E5 C#6:2 A5 C#6 E6:2', 'F#6:4 D6:4',
           'D6:2 C#6 B5 F#5:2 B5:2', 'G5 B5 D6 G6:2 D6 B5 G5', 'E6:2 D6 B5 C#6:2 A5 E5', 'D6:6 .:2',
@@ -549,14 +502,12 @@ const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        wave: 'triangle', gate: 0.6,
         notes: bars(
           gallop('D2'), gallop('G2'), gallop('A2'), gallop('D2'), gallop('B2'), gallop('G2'), `${oct('E2', 4)} ${oct('A2', 4)}`, gallop('D2'),
           gallop('G2'), gallop('A2'), gallop('F#2'), gallop('B2'), gallop('G2'), gallop('A2'), `${oct('G2', 4)} ${oct('A2', 4)}`, 'D2 D2:.5 D2:.5 D3 D2 D2:4',
         ),
       },
       {
-        wave: 'pulse12', vol: 0.07, gate: 0.9,
         notes: bars(
           'F#4:4 A4:4', 'D5:4 B4:4', 'C#5:4 E5:4', 'A4:4 F#4:4', 'F#4:4 D5:4', 'B4:4 D5:4', 'G4:4 A4:4', 'F#4:8',
           'D5:4 B4:4', 'E5:4 C#5:4', 'C#5:4 A4:4', 'F#4:4 B4:4', 'B4:4 G4:4', 'A4:4 C#5:4', 'B4:4 C#5:4', 'A4:4 F#4:4',
@@ -571,21 +522,19 @@ const TRACKS: Record<TrackId, Track> = {
     bpm: 100, bar: 6,
     voices: [
       {
-        wave: 'pulse12', vibrato: 10, echo: 3, gate: 0.85, vol: 0.16,
+        echo: 3,
         notes: bars(
           'E5:2 G5 C6:3', 'B5:2 A5 E5:3', 'F5:2 A5 C6:2 A5', 'G5:3 D5:3', 'E5:2 G5 C6:2 D6', 'E6:3 B5:3', 'A5:2 F5 D5:2 B4', 'C5:6',
           'C6:2 A5 F5:2 A5', 'G5:2 E5 C5:3', 'D5:2 F5 A5:2 D6', 'B5:3 G5:3', 'C6:2 B5 A5:2 E5', 'F5:2 A5 C6:3', 'B5:2 F5 D5:2 G5', 'E5:2 D5 C5:3',
         ),
       },
       {
-        wave: 'triangle', gate: 0.95,
         notes: bars(
           'C3:3 G3:3', 'A2:3 E3:3', 'F2:3 C3:3', 'G2:3 D3:3', 'C3:3 G3:3', 'E2:3 B2:3', 'F2:3 G2:3', 'C3:6',
           'F2:3 C3:3', 'C3:3 G3:3', 'D3:3 A3:3', 'G2:3 D3:3', 'A2:3 E3:3', 'F2:3 C3:3', 'G2:3 F3:3', 'C3:6',
         ),
       },
       {
-        wave: 'triangle', vol: 0.2, gate: 0.8,
         notes: bars(
           arp('C4 E4 G4', 6, 1), arp('A3 C4 E4', 6, 1), arp('F3 A3 C4', 6, 1), arp('G3 B3 D4', 6, 1), arp('C4 E4 G4', 6, 1), arp('E3 G3 B3', 6, 1), `${arp('F3 A3 C4', 3, 1)} ${arp('G3 B3 D4', 3, 1)}`, arp('C4 E4 G4', 6, 1),
           arp('F3 A3 C4', 6, 1), arp('C4 E4 G4', 6, 1), arp('D4 F4 A4', 6, 1), arp('G3 B3 D4', 6, 1), arp('A3 C4 E4', 6, 1), arp('F3 A3 C4', 6, 1), arp('G3 B3 F4', 6, 1), arp('C4 E4 G4', 6, 1),
@@ -601,9 +550,9 @@ const JINGLES: Record<JingleId, Track> = {
   badge: {
     bpm: 120,
     voices: [
-      { wave: 'square', gate: 0.85, vol: 0.18, notes: bars('C5 E5 G5 C6:2 G5 C6:2', 'E6:6 .:2') },
-      { wave: 'triangle', notes: bars('C3:2 G3:2 C3:2 G3:2', 'C3:6 .:2') },
-      { wave: 'sawtooth', vol: 0.05, notes: bars('E4:4 G4:4', 'G4:6 .:2') },
+      { notes: bars('C5 E5 G5 C6:2 G5 C6:2', 'E6:6 .:2') },
+      { notes: bars('C3:2 G3:2 C3:2 G3:2', 'C3:6 .:2') },
+      { notes: bars('E4:4 G4:4', 'G4:6 .:2') },
     ],
     drums: 'k.s.k.ssc.......',
   },
@@ -611,16 +560,16 @@ const JINGLES: Record<JingleId, Track> = {
   item: {
     bpm: 160,
     voices: [
-      { wave: 'pulse25', gate: 0.8, notes: 'G5 B5 D6 G6:4 .' },
-      { wave: 'triangle', notes: 'G3:3 D4:4 .' },
+      { notes: 'G5 B5 D6 G6:4 .' },
+      { notes: 'G3:3 D4:4 .' },
     ],
   },
   // a Bestiole caught
   caught: {
     bpm: 140,
     voices: [
-      { wave: 'pulse25', gate: 0.8, notes: bars('C5 E5 G5 E5 C6:2 G5:2', 'E6:4 .:4') },
-      { wave: 'triangle', notes: bars('C3:2 E3:2 G3:2 E3:2', 'C3:4 .:4') },
+      { notes: bars('C5 E5 G5 E5 C6:2 G5:2', 'E6:4 .:4') },
+      { notes: bars('C3:2 E3:2 G3:2 E3:2', 'C3:4 .:4') },
     ],
     drums: 'k.h.k.h.c.......',
   },
@@ -628,8 +577,8 @@ const JINGLES: Record<JingleId, Track> = {
   victory: {
     bpm: 150,
     voices: [
-      { wave: 'pulse25', gate: 0.8, notes: bars('G5 A5 B5 D6 C6 B5 A5 G5', 'C6:2 E6:2 G6:4') },
-      { wave: 'triangle', notes: bars('G2:2 D3:2 G2:2 D3:2', 'C3:2 G3:2 C4:4') },
+      { notes: bars('G5 A5 B5 D6 C6 B5 A5 G5', 'C6:2 E6:2 G6:4') },
+      { notes: bars('G2:2 D3:2 G2:2 D3:2', 'C3:2 G3:2 C4:4') },
     ],
     drums: 'k.hsk.hsk.s.c...',
   },
@@ -637,16 +586,16 @@ const JINGLES: Record<JingleId, Track> = {
   evolved: {
     bpm: 132,
     voices: [
-      { wave: 'pulse12', vibrato: 10, vol: 0.2, notes: bars('E5 G#5 B5 E6 D#6 B5 G#5 B5', 'E6:6 .:2') },
-      { wave: 'triangle', notes: bars('E3:4 B3:4', 'E3:6 .:2') },
+      { notes: bars('E5 G#5 B5 E6 D#6 B5 G#5 B5', 'E6:6 .:2') },
+      { notes: bars('E3:4 B3:4', 'E3:6 .:2') },
     ],
   },
   // the Inn: everyone feels better
   heal: {
     bpm: 110,
     voices: [
-      { wave: 'pulse12', vol: 0.2, notes: bars('G5:2 C6 E6 G6:2 E6:2', 'C6:4 .:4') },
-      { wave: 'triangle', notes: bars('C4:4 E4:4', 'G3:4 .:4') },
+      { notes: bars('G5:2 C6 E6 G6:2 E6:2', 'C6:4 .:4') },
+      { notes: bars('C4:4 E4:4', 'G3:4 .:4') },
     ],
   },
 };
@@ -698,20 +647,45 @@ export function trackNotes(id: TrackId | JingleId): string[] {
 }
 
 let ctx: AudioContext | null = null;
+/** The music's volume (fades move it), through a gentle compressor. */
 let master: GainNode | null = null;
+/** The room every note plays in: straight through a little warmth (`dry`), and into its reverb (`wet`). */
+let room: { dry: BiquadFilterNode; wet: GainNode } | null = null;
+/**
+ * Where the notes of the tune playing go, on their way to the room. Each tune gets a new lane, so
+ * stopping cuts the notes already scheduled while the room rings out.
+ */
+let lane: { dry: GainNode; wet: GainNode } | null = null;
 let current: TrackId | null = null;
 let timer: ReturnType<typeof setInterval> | null = null;
 let noise: AudioBuffer | null = null;
-const pulses = new Map<number, PeriodicWave>();
+
+const LEVEL = 0.042;
 
 function audio(): AudioContext | null {
   try {
     ctx ??= new AudioContext();
     if (ctx.state === 'suspended') void ctx.resume();
     if (!master) {
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -20;
+      comp.ratio.value = 3;
+      comp.attack.value = 0.01;
+      comp.release.value = 0.2;
+      comp.connect(ctx.destination);
       master = ctx.createGain();
-      master.gain.value = 0.11;
-      master.connect(ctx.destination);
+      master.gain.value = LEVEL;
+      master.connect(comp);
+      const dry = ctx.createBiquadFilter();
+      dry.type = 'lowpass';
+      dry.frequency.value = 6500;
+      dry.connect(master);
+      const wet = ctx.createGain();
+      wet.gain.value = 0.32;
+      const reverb = ctx.createConvolver();
+      reverb.buffer = roomEcho(ctx);
+      wet.connect(reverb).connect(master);
+      room = { dry, wet };
     }
     return ctx;
   } catch {
@@ -719,101 +693,181 @@ function audio(): AudioContext | null {
   }
 }
 
-/** A pulse wave of the given duty cycle (0.125, 0.25…), built from its harmonics once. */
-function pulse(c: AudioContext, duty: number): PeriodicWave {
-  let w = pulses.get(duty);
-  if (!w) {
-    const n = 48;
-    const real = new Float32Array(n), imag = new Float32Array(n);
-    for (let k = 1; k < n; k++) real[k] = (2 / (k * Math.PI)) * Math.sin(k * Math.PI * duty);
-    w = c.createPeriodicWave(real, imag);
-    pulses.set(duty, w);
+/** A small room's echo: two seconds of noise dying away, made once. */
+function roomEcho(c: AudioContext): AudioBuffer {
+  const len = Math.floor(c.sampleRate * 2.4);
+  const b = c.createBuffer(2, len, c.sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = b.getChannelData(ch);
+    let prev = 0;
+    for (let i = 0; i < len; i++) {
+      // smoothed a little, so the echo sounds soft rather than hissy
+      prev = prev * 0.55 + (Math.random() * 2 - 1) * Math.exp((-3.2 * i) / c.sampleRate) * 0.45;
+      d[i] = prev;
+    }
   }
-  return w;
+  return b;
 }
 
-const VOL: Record<Wave, number> = { square: 0.2, pulse25: 0.2, pulse12: 0.17, triangle: 0.5, sine: 0.45, sawtooth: 0.12 };
+/** A new lane for a tune or a jingle, at full volume or rising from silence over `fadeIn` seconds. */
+function openLane(c: AudioContext, fadeIn = 0) {
+  closeLane();
+  const dry = c.createGain(), wet = c.createGain();
+  dry.connect(room!.dry);
+  wet.connect(room!.wet);
+  lane = { dry, wet };
+  const g = master!.gain;
+  g.cancelScheduledValues(c.currentTime);
+  g.setValueAtTime(fadeIn > 0 ? 0.0001 : LEVEL, c.currentTime);
+  if (fadeIn > 0) g.linearRampToValueAtTime(LEVEL, c.currentTime + fadeIn);
+}
 
-function osc(c: AudioContext, wave: Wave, f: number): OscillatorNode {
+function closeLane() {
+  lane?.dry.disconnect();
+  lane?.wet.disconnect();
+  lane = null;
+}
+
+/** Sends a note into the room, and into its reverb unless `wet` is false. */
+function out(node: AudioNode, wet = true) {
+  if (!lane) return;
+  node.connect(lane.dry);
+  if (wet) node.connect(lane.wet);
+}
+
+function osc(c: AudioContext, type: OscillatorType, f: number, cents = 0): OscillatorNode {
   const o = c.createOscillator();
-  if (wave === 'pulse25' || wave === 'pulse12') o.setPeriodicWave(pulse(c, wave === 'pulse25' ? 0.25 : 0.125));
-  else o.type = wave;
+  o.type = type;
   o.frequency.value = f;
+  o.detune.value = cents;
   return o;
 }
 
-function tone(c: AudioContext, v: Voice, f: number, t: number, dur: number, vol: number) {
-  const wave = v.wave ?? 'square';
-  const len = Math.max(0.03, dur * (v.gate ?? 0.9));
-  const g = c.createGain();
-  g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(vol, t + 0.01);
-  g.gain.setValueAtTime(vol * 0.8, t + len * 0.6);
-  g.gain.linearRampToValueAtTime(0, t + len);
-  g.connect(master!);
-  const oscs = [osc(c, wave, f)];
-  if (v.detune) {
-    const o2 = osc(c, wave, f);
-    o2.detune.value = v.detune;
-    oscs.push(o2);
-  }
-  // vibrato fades in on long notes
-  let lfo: OscillatorNode | null = null;
-  if (v.vibrato && len > 0.35) {
-    lfo = c.createOscillator();
-    lfo.frequency.value = 5.5;
-    const depth = c.createGain();
-    depth.gain.setValueAtTime(0, t);
-    depth.gain.linearRampToValueAtTime(v.vibrato, t + 0.25);
-    lfo.connect(depth);
-    for (const o of oscs) depth.connect(o.detune);
-    lfo.start(t);
-    lfo.stop(t + len);
-  }
-  for (const o of oscs) {
+/** Played by hand, never quite in tune: a few cents either way. */
+const wobble = (cents: number) => (Math.random() - 0.5) * cents;
+
+/** [frequency ratio, level, how long it rings compared with the fundamental] */
+type Overtone = [number, number, number];
+const MUSIC_BOX: Overtone[] = [[1, 1, 1], [2, 0.22, 0.6], [4.2, 0.07, 0.3]];
+const CHIME: Overtone[] = [[1, 1, 1], [2.76, 0.28, 0.5], [5.4, 0.08, 0.25]];
+
+/**
+ * A struck note that rings and fades away, the music box's and the chimes' (`ring`: seconds for a
+ * C5, low notes ring longer). `detune` adds an out-of-tune double of the fundamental.
+ */
+function struck(c: AudioContext, f: number, t: number, dur: number, amp: number, tones: Overtone[], ring: number, detune = 0) {
+  const decay = Math.min(ring * (523 / f) ** 0.35, dur * 2.5 + 0.35);
+  const parts: [number, number, number, number][] = tones.map(([m, a, k]) => [m, a, k, wobble(9)]);
+  if (detune) parts.push([1, 0.7, 1, detune]);
+  for (const [m, a, k, cents] of parts) {
+    const o = osc(c, 'sine', f * m, cents), g = c.createGain(), end = t + decay * k;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(amp * a, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, end);
     o.connect(g);
+    out(g);
     o.start(t);
-    o.stop(t + len + 0.01);
+    o.stop(end + 0.02);
   }
 }
 
-function drum(c: AudioContext, kind: string, t: number) {
-  if (kind === 'k' || kind === 't') {
-    const o = c.createOscillator();
-    const g = c.createGain();
-    const [from, to, len] = kind === 'k' ? [140, 40, 0.14] : [180, 90, 0.22];
-    o.frequency.setValueAtTime(from, t);
-    o.frequency.exponentialRampToValueAtTime(to, t + len * 0.85);
-    g.gain.setValueAtTime(kind === 'k' ? 0.9 : 0.6, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + len);
-    o.connect(g).connect(master!);
+const chime = (c: AudioContext, f: number, t: number, dur: number, amp: number, detune = 0) =>
+  struck(c, f, t, dur, amp, CHIME, 1.2, detune);
+
+/** A felt piano: a soft hammer, its tone darkening as the note fades, a short release. */
+function piano(c: AudioContext, f: number, t: number, dur: number, amp: number) {
+  const fl = c.createBiquadFilter();
+  fl.type = 'lowpass';
+  fl.Q.value = 0.6;
+  fl.frequency.setValueAtTime(Math.min(1500, f * 8), t);
+  fl.frequency.setTargetAtTime(Math.max(300, f * 1.5), t + 0.02, 0.35);
+  const g = c.createGain(), end = t + Math.max(dur, 0.12);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(amp, t + 0.008);
+  g.gain.setTargetAtTime(amp * 0.25, t + 0.01, 0.6);
+  g.gain.setTargetAtTime(0.0001, end, 0.09);
+  fl.connect(g);
+  out(g);
+  for (const [type, m, a, cents] of [['triangle', 1, 1, 0], ['sine', 1, 0.6, 5], ['sine', 2, 0.18, -3]] as const) {
+    const o = osc(c, type, f * m, cents + wobble(6)), og = c.createGain();
+    og.gain.value = a;
+    o.connect(og).connect(fl);
     o.start(t);
-    o.stop(t + len + 0.01);
-    return;
+    o.stop(end + 0.6);
   }
+}
+
+/** Plays one note of a voice: the melody on a music box, the bass on a felt piano, the harmony on chimes. */
+function play(c: AudioContext, role: number, v: Voice, f: number, t: number, dur: number, soft = 1) {
+  if (role === 0) struck(c, f, t, dur, soft, MUSIC_BOX, 1.7, v.detune);
+  else if (role === 1) piano(c, f, t, dur, 0.85 * soft);
+  else chime(c, f, t, dur, 0.42 * soft, v.detune);
+}
+
+/** A soft burst of filtered noise: brushes and shakers. */
+function hiss(c: AudioContext, type: BiquadFilterType, hz: number, q: number, vol: number, attack: number, len: number, t: number) {
   if (!noise) {
-    noise = c.createBuffer(1, c.sampleRate * 0.9, c.sampleRate);
+    noise = c.createBuffer(1, c.sampleRate * 1.5, c.sampleRate);
     const d = noise.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   }
   const s = c.createBufferSource();
   s.buffer = noise;
   const f = c.createBiquadFilter();
-  // [filter, frequency, volume, length]
-  const [type, hz, vol, len]: [BiquadFilterType, number, number, number] =
-    kind === 'h' ? ['highpass', 7000, 0.25, 0.04]
-      : kind === 'o' ? ['highpass', 6000, 0.22, 0.18]
-        : kind === 'r' ? ['bandpass', 3200, 0.35, 0.03]
-          : kind === 'c' ? ['highpass', 4000, 0.3, 0.8]
-            : ['bandpass', 1800, 0.45, 0.1];
   f.type = type;
   f.frequency.value = hz;
+  f.Q.value = q;
   const g = c.createGain();
-  g.gain.setValueAtTime(vol, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + len);
-  s.connect(f).connect(g).connect(master!);
-  s.start(t);
-  s.stop(t + len);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(vol, t + attack);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+  s.connect(f).connect(g);
+  out(g);
+  // from a different place in the noise each time, so no two hits sound the same
+  s.start(t, Math.random() * 0.5);
+  s.stop(t + len + 0.02);
+}
+
+/** Brushes, a shaker, a wood block and a little bell keep the beat, softly. */
+function drum(c: AudioContext, kind: string, t: number) {
+  const lvl = 0.45;
+  if (kind === 'k' || kind === 't') {
+    // a soft kick (dry), or a low tom ringing in the room: [from, to, glide, length, volume]
+    const [from, to, glide, len, vol] = kind === 'k' ? [110, 48, 0.14, 0.18, 0.55] : [160, 100, 0.25, 0.3, 0.45];
+    const o = osc(c, 'sine', from), g = c.createGain();
+    o.frequency.setValueAtTime(from, t);
+    o.frequency.exponentialRampToValueAtTime(to, t + glide);
+    g.gain.setValueAtTime(vol * lvl, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + len);
+    o.connect(g);
+    out(g, kind === 't');
+    o.start(t);
+    o.stop(t + len + 0.02);
+    return;
+  }
+  if (kind === 'r') {
+    for (const [m, a] of [[1, 1], [1.5, 0.4]]) {
+      const o = osc(c, 'sine', 950 * m), g = c.createGain();
+      g.gain.setValueAtTime(0.22 * lvl * a, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+      o.connect(g);
+      out(g);
+      o.start(t);
+      o.stop(t + 0.08);
+    }
+    return;
+  }
+  if (kind === 'c') {
+    chime(c, 2093, t, 0.6, 0.25 * lvl);
+    chime(c, 1568, t, 0.6, 0.18 * lvl);
+    return;
+  }
+  // [filter, frequency, resonance, volume, attack, length]
+  const [type, hz, q, vol, attack, len]: [BiquadFilterType, number, number, number, number, number] =
+    kind === 'h' ? ['highpass', 7500, 0.7, 0.055, 0.006, 0.05]
+      : kind === 'o' ? ['highpass', 6500, 0.7, 0.06, 0.01, 0.14]
+        : ['bandpass', 2300, 0.8, 0.17, 0.012, 0.17];
+  hiss(c, type, hz, q, vol * lvl, attack, len, t);
 }
 
 /** Length of one loop of a tune, in seconds. */
@@ -840,10 +894,7 @@ export function playMusic(id: TrackId, force = false, fadeIn = 0) {
   stopMusic();
   const c = audio();
   if (!c) return;
-  if (fadeIn > 0 && master) {
-    master.gain.setValueAtTime(0.0001, c.currentTime);
-    master.gain.linearRampToValueAtTime(0.11, c.currentTime + fadeIn);
-  }
+  openLane(c, fadeIn);
   current = id;
   const tr = TRACKS[id];
   const eighth = 60 / tr.bpm / 2;
@@ -852,10 +903,7 @@ export function playMusic(id: TrackId, force = false, fadeIn = 0) {
   startedAt = start;
   // time of a position counted in eighths: off-beat eighths come a little late with a shuffle
   const at = (pos: number) => start + pos * eighth + (swing && Math.abs((pos % 2) - 1) < 1e-6 ? swing : 0);
-  const voices = tr.voices.map((v) => ({
-    v, notes: parse(v.notes), i: 0, pos: 0,
-    vol: v.vol ?? VOL[v.wave ?? 'square'],
-  }));
+  const voices = tr.voices.map((v, role) => ({ v, role, notes: parse(v.notes), i: 0, pos: 0 }));
   const drums = drumHits(tr);
   const step = tr.drumStep ?? 1;
   let drumI = 0;
@@ -867,8 +915,8 @@ export function playMusic(id: TrackId, force = false, fadeIn = 0) {
         const [f, len] = s.notes[s.i];
         const t0 = at(s.pos), t1 = at(s.pos + len);
         if (f) {
-          tone(c, s.v, f, t0, t1 - t0, s.vol);
-          if (s.v.echo) tone(c, { ...s.v, vibrato: 0 }, f, t0 + s.v.echo * eighth, t1 - t0, s.vol * 0.3);
+          play(c, s.role, s.v, f, t0, t1 - t0);
+          if (s.v.echo) play(c, s.role, s.v, f, t0 + s.v.echo * eighth, t1 - t0, 0.3);
         }
         s.pos += len;
         s.i = (s.i + 1) % s.notes.length;
@@ -891,21 +939,19 @@ export function stopMusic() {
   if (timer) clearInterval(timer);
   timer = null;
   current = null;
-  if (master && ctx) {
-    // cut the notes already scheduled
-    master.disconnect();
-    master = null;
-  }
+  // cut the notes already scheduled
+  closeLane();
 }
 
 /** Lowers the music to silence over `seconds`, then stops it (unless another tune started meanwhile). */
 export function fadeOutMusic(seconds: number) {
   if (!master || !ctx || !timer) return stopMusic();
-  const was = current, m = master;
-  m.gain.setValueAtTime(m.gain.value, ctx.currentTime);
-  m.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + seconds);
+  const was = current, l = lane, g = master.gain;
+  g.cancelScheduledValues(ctx.currentTime);
+  g.setValueAtTime(g.value, ctx.currentTime);
+  g.linearRampToValueAtTime(0.0001, ctx.currentTime + seconds);
   setTimeout(() => {
-    if (current === was && master === m) stopMusic();
+    if (current === was && lane === l) stopMusic();
   }, seconds * 1000);
 }
 
@@ -925,17 +971,17 @@ export function playJingle(id: JingleId, opts: { fallback?: () => void; resume?:
   stopMusic();
   const c = audio();
   if (!c) return;
+  openLane(c);
   const tr = JINGLES[id];
   const eighth = 60 / tr.bpm / 2;
   const start = c.currentTime + 0.05;
-  for (const v of tr.voices) {
+  tr.voices.forEach((v, role) => {
     let pos = 0;
-    const vol = v.vol ?? VOL[v.wave ?? 'square'];
     for (const [f, len] of parse(v.notes)) {
-      if (f) tone(c, v, f, start + pos * eighth, len * eighth, vol);
+      if (f) play(c, role, v, f, start + pos * eighth, len * eighth);
       pos += len;
     }
-  }
+  });
   const hits = drumHits(tr);
   for (let i = 0; i < hits.length; i++) if (hits[i] !== '.') drum(c, hits[i], start + i * (tr.drumStep ?? 1) * eighth);
   resumeAfter = back;
