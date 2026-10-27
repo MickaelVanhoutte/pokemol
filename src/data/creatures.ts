@@ -1142,8 +1142,8 @@ export const CREATURES: SpeciesDef[] = [
     learnset: [[1, 'bousculade'], [1, 'grondement'], [5, 'micro-magique'], [9, 'souffle-dragon'], [13, 'pirouette'], [19, 'griffe-dragon'],
       [23, 'calin-lunaire'], [27, 'coup-de-boule'], [29, 'grand-defile']],
     dex: L(
-      'Un petit dragon plié dans du papier de soie rose. Sa petite corne de licorne fait pousser des fleurs en papier partout où il passe.',
-      'A little dragon folded from pink tissue paper. Its little unicorn horn makes paper flowers grow wherever it goes.',
+      'Un petit dragon plié dans du papier nacré. Sa petite corne dorée fait pousser des fleurs en papier partout où il passe.',
+      'A little dragon folded from pearly paper. Its little golden horn makes paper flowers grow wherever it goes.',
     ),
   },
   {

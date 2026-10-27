@@ -43,6 +43,16 @@ export function charm(c: Crayon, x: number, y: number, s: number, col: string, r
   c.dot(x + 4 * s, y - 100 * s, 4 * s, 4 * s, '#ffffff');
 }
 
+/**
+ * The fairy paper dragon's colours, shared by its three stages (Plissou, Plisserpent, Festivouivre): pearl and gold
+ * (the owner picked them; pastels were too close to Libellune's stained glass). The body and head, the mane and legs,
+ * three accents (whiskers, flowers, folds), the muzzle, cheeks, far legs and the horn.
+ */
+export const DRAGON = {
+  BODY: '#e6daf6', MANE: '#e8b93a', ACCENT: '#f08aa6', ACCENT2: '#ffffff', ACCENT3: '#f2c43a', CREAM: '#fff8e6',
+  STAR: '#f7dc35', DEEP: '#d58aa8', LEG_FAR: '#c4b2e6', HORN: '#f2c43a', STRIPE: '#ffffff',
+};
+
 /** A unicorn's spiral horn from `base` to `tip`, striped like a candy stick. */
 export function horn(c: Crayon, base: P, tip: P, w: number, col: string, stripe: string) {
   c.shape(c.band([base, tip], w, 6), col, { angle: 60, over: 0 }, { w: 3.5 });
@@ -65,40 +75,40 @@ export function flower(c: Crayon, x: number, y: number, r: number, petal: string
 }
 
 /**
- * A baby fairy dragon folded out of pastel tissue paper, turned to the left: a big round pink head with a cream
- * muzzle, a little striped unicorn horn, a paper flower by its ear, a soft scalloped mane, big starry eyes, a short
- * accordion body of pink and lilac folds and a star charm at the end of its tail, like a magic wand.
+ * A baby fairy dragon folded out of pearly paper, turned to the left: a big round pearl-white head with a cream
+ * muzzle, a little striped gold unicorn horn, a paper flower by its ear, a soft gold mane, big starry eyes, a short
+ * accordion body of pearl and gold folds and a star charm at the end of its tail, like a magic wand.
  */
 export default {
   id: '084', slug: 'plissou', seed: 8401, size: [1000, 880], tilt: -3,
   draw(c) {
     const { shape, stroke, dot, band, potato } = c;
-    const PINK = '#f28dc0', LILAC = '#b99be8', CREAM = '#fff0d2', SKY = '#8fcdf2', STAR = '#f7dc35', DEEP = '#d0619d';
+    const { BODY, MANE, ACCENT, CREAM, STAR, DEEP, HORN, STRIPE } = DRAGON;
     // the short accordion body, tail first, and the star charm at the tip of its tail
-    accordion(c, [[880, 380], [810, 470], [690, 520], [470, 480]], 7, 110, 170, [PINK, LILAC]);
-    charm(c, 890, 380, 1, STAR, SKY);
+    accordion(c, [[880, 380], [810, 470], [690, 520], [470, 480]], 7, 110, 170, [BODY, MANE]);
+    charm(c, 890, 380, 1, STAR, ACCENT);
     // little paws under it
-    shape(band([[620, 560], [630, 640]], 44, 40), LILAC, { angle: 90, over: 0 });
+    shape(band([[620, 560], [630, 640]], 44, 40), MANE, { angle: 90, over: 0 });
     shape(potato(640, 650, 34, 20, 7, 0.06), CREAM, { over: 0 });
-    shape(band([[460, 560], [450, 650]], 48, 44), LILAC, { angle: 90, over: 0 });
+    shape(band([[460, 560], [450, 650]], 48, 44), MANE, { angle: 90, over: 0 });
     shape(potato(440, 660, 38, 22, 7, 0.06), CREAM, { over: 0 });
     // a soft scalloped mane round the back of its head, and the far horn, behind
     const mane: P[] = [];
     for (let k = 0; k <= 10; k++) { const a = -1.9 + k * 0.33, r = k % 2 ? 205 : 230; mane.push([360 + Math.cos(a) * r, 400 + Math.sin(a) * r]); }
-    shape([...mane, [360, 400]], LILAC, { angle: 60, over: 0 });
+    shape([...mane, [360, 400]], MANE, { angle: 60, over: 0 });
     // the big round head, a cream muzzle, rosy cheeks
-    shape(potato(340, 400, 200, 175, 12, 0.04), PINK, { angle: 75, over: 0.5 });
+    shape(potato(340, 400, 200, 175, 12, 0.04), BODY, { angle: 75, over: 0.5 });
     shape([[150, 430], [200, 390], [320, 420], [360, 500], [300, 560], [190, 560], [140, 500]], CREAM, { angle: 80, over: 0.2 }, { w: 4 });
     c.tint(potato(395, 470, 34, 22, 8, 0.1), DEEP, { gap: 3 });
     dot(175, 440, 8, 6);
     dot(225, 432, 8, 6);
     stroke([[180, 515], [230, 532], [280, 518]], { w: 4.5 });
     // short ribbon whiskers
-    shape(band([[160, 465], [100, 445], [60, 480], [50, 530]], 22, 12), SKY, { over: 0 }, { w: 3 });
-    shape(band([[170, 525], [110, 555], [95, 600], [110, 640]], 22, 12), SKY, { over: 0 }, { w: 3 });
+    shape(band([[160, 465], [100, 445], [60, 480], [50, 530]], 22, 12), ACCENT, { over: 0 }, { w: 3 });
+    shape(band([[170, 525], [110, 555], [95, 600], [110, 640]], 22, 12), ACCENT, { over: 0 }, { w: 3 });
     // a little unicorn horn on its brow, a paper flower by its ear
-    horn(c, [300, 250], [270, 130], 46, '#fff6e6', PINK);
-    flower(c, 430, 255, 46, SKY, STAR);
+    horn(c, [300, 250], [270, 130], 46, HORN, STRIPE);
+    flower(c, 430, 255, 46, ACCENT, STAR);
     // big starry eyes with lashes, looking left
     c.paper(potato(250, 330, 34, 38, 8, 0.05));
     c.paper(potato(360, 320, 38, 42, 8, 0.05));
