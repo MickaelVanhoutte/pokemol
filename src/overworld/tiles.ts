@@ -625,6 +625,25 @@ Object.assign(TILES, {
       p.rect(10, 2, 1, 11, '#c8b48a');
     },
   },
+  // a framed drawing on a wall (or on a stand), in the museum of first sketches
+  cadre: {
+    solid: true,
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      const on = under(p, n, x, y, [...WALLS, ...FLOORS]);
+      if (!WALLS.includes(on)) { p.rect(3, 12, 2, 4, '#7a5230'); p.rect(11, 12, 2, 4, '#7a5230'); }
+      p.rect(1, 1, 14, 12, '#c8963a');
+      p.rect(1, 12, 14, 1, '#8a6224');
+      p.rect(2, 2, 12, 10, '#fffaf0');
+      // a little coloured doodle, a different one in each frame
+      const cols = ['#9be23a', '#f59a3c', '#4a86e0', '#f7dc35', '#f6a7c8', '#7a3dc2', '#ec4a3a', '#8cc8ee'];
+      const c = cols[(x * 3 + y * 5) % cols.length];
+      p.rect(4 + (x % 3), 5, 6, 4, c);
+      p.rect(9 - (x % 3), 3 + (y % 2), 3, 3, c);
+      p.rect(5 + (x % 3), 9, 1, 2, '#3a3346');
+      p.rect(8 + (x % 3), 9, 1, 2, '#3a3346');
+      p.px(10 - (x % 3), 4 + (y % 2), '#3a3346');
+    },
+  },
 });
 
 export function tile(id: string): TileDef {

@@ -30,7 +30,8 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 1. **Bourg-Gribouille** : ta maison et le labo du Prof. Tu choisis ta première Bestiole (Minousse,
    Braisou ou Clapotin), et ton rival te lance tout de suite ton premier combat.
 2. **Chemin des Crayons → Ville-Pastel** : l’Atelier de Mireille. Une fillette, Capucine, a dessiné
-   une Bestiole toute ébouriffée…
+   une Bestiole toute ébouriffée… Et dans le **Musée des premiers croquis**, on peut voir les tout
+   premiers dessins des Bestioles, encadrés.
 3. **Route des Craies et Bois Brumeux** : la Team Gomme est en train d’effacer la forêt !
 4. **Village-Plume** : l’Atelier de Gaspard. Le pont a disparu pendant la nuit : il faut passer par la
    Grotte Gribouillis.
@@ -102,7 +103,8 @@ where every drawing is alive: the **Critters** (Bestioles).
 
 1. **Bourg-Gribouille**: your home and the Prof’s lab. You pick your first Critter (Sproutkit,
    Embersal or Splashell), and your rival battles you straight away.
-2. **Crayon Road → Pastel City**: Mireille’s Atelier. A girl, Capucine, has drawn a very scruffy
+2. **Crayon Road → Pastel City**: Mireille’s Atelier, and the **Museum of First Sketches**, where the very
+   first drawings of the Critters hang in frames. A girl, Capucine, has drawn a very scruffy
    Critter…
 3. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest!
 4. **Featherby**: Gaspard’s Atelier. The bridge vanished overnight: go through Scribble Cave instead.

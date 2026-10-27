@@ -21,7 +21,7 @@ import { ECHOS_MAPS } from './echos';
  * B bush  # fence  S sign  M mailbox  R rock  _ ledge  s sand | f floor  W wall  w window  C counter
  * c carpet  X exit mat  b bookshelf  t table  p plant  P pc  h bed  v tv  m machine  H key rack  U stairs
  * K cave wall  k cave floor  r cave rock  E cave exit  Q tower wall  o tower floor  D stairs down
- * n blank paper  Y sketched tree  | notebook margin
+ * n blank paper  Y sketched tree  | notebook margin  q framed drawing
  */
 export const MAPS: Record<string, MapDef> = {
   ...HOME_MAPS,

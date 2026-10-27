@@ -4,7 +4,8 @@ import { item } from '../data/items';
 import { createMon } from '../engine/pk/creature';
 import { newSeed } from '../engine/rng';
 import { addItem, save, see, takeItem, update } from '../state/game';
-import { ask, flag, getGame, say, sayAll, scripts, setFlag } from '../overworld/controller';
+import { ask, flag, getGame, say, sayAll, scripts, setFlag, showPicture } from '../overworld/controller';
+import { ORIGINALS, originalUrl } from '../data/originals';
 import { playJingle } from '../audio/music';
 import { sfx } from '../audio/sfx';
 
@@ -198,3 +199,24 @@ scripts.papiPlume = async () => {
   }
   await say(L('Ma sœur vit loin au nord, à la Cité-Encre. Elle me manque…', 'My sister lives far up north, in Ink City. I miss her…'), who);
 };
+
+// ------------------------------------------------------------------ the museum of first sketches
+
+/** The curator of the museum in Ville-Pastel. */
+scripts.musee = async () => {
+  const who = L('Conservatrice', 'Curator');
+  await sayAll([
+    L('Bienvenue au Musée des premiers croquis !', 'Welcome to the Museum of First Sketches!'),
+    L('Ici, on garde les tout premiers croquis des Bestioles, tels qu’ils ont été dessinés la toute première fois.', 'Here we keep the very first sketches of the Critters, just as they were drawn the very first time.'),
+    L('Regarde-les de près : les Bestioles ont bien changé depuis… mais on les reconnaît toujours !', 'Take a close look: the Critters have changed a lot since… but you can always recognise them!'),
+  ], who);
+};
+
+// each frame shows one of her drawings
+for (const id of ORIGINALS) {
+  scripts[`musee:${id}`] = async () => {
+    const c = creature(id);
+    await showPicture(originalUrl(c), tr(L('Premier croquis de {n}', 'First sketch of {n}'), { n: tr(c.name) }));
+  };
+}
+

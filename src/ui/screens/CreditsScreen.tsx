@@ -17,7 +17,7 @@ export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
       <Window class="credits__body">
         <p>{tr(L('Les Bestioles sont nées des dessins de', 'The Critters were born from the drawings of'))}</p>
         <p class="credits__artist">{tr(L('la petite artiste', 'the little artist'))}</p>
-        <p>{tr(L('Ses dessins originaux, photographiés par Papa pour qu’ils ne se perdent jamais :', 'Her original drawings, photographed by Daddy so they never get lost:'))}</p>
+        <p>{tr(L('Ses dessins originaux, photographiés par Papa pour qu’ils ne se perdent jamais (ils sont aussi au musée de Ville-Pastel) :', 'Her original drawings, photographed by Daddy so they never get lost (they also hang in the Pastel City museum):'))}</p>
         <div class="credits__parade">
           {originals().map((c) => <img class="mon-art" src={originalUrl(c)} alt={tr(c.name)} title={tr(c.name)} />)}
         </div>

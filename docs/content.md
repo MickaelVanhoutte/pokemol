@@ -123,6 +123,14 @@ of every voice has the right length. Each voice picks a `wave` (`square`, `pulse
 `drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts. Give every tune its own
 key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`).
 
+### The museum
+
+Ville-Pastel's **Musée des premiers croquis** (`musee` in `src/data/maps/pastel.ts`) hangs her original
+drawings (`src/data/originals.ts`) in frames: the `q` tile (`cadre`, on a wall or on a stand). Each frame is
+an `interact` spot whose script `musee:<id>` (`src/story/world.ts`) calls `showPicture(url, caption)`
+(`src/overworld/controller.ts`, the `PictureView` overlay). A new original needs a frame there:
+`src/data/originals.test.ts` checks it.
+
 ### Puzzles
 
 Puzzles are map data; `src/data/puzzles.test.ts` solves each one on the real maps with small

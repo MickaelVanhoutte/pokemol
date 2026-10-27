@@ -35,7 +35,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { kind: 'center', x: 3, y: 3, w: 5, h: 4, door: 2, to: { map: 'centre', x: 5, y: 6, facing: 'up' } },
       { kind: 'shop', x: 10, y: 3, w: 4, h: 4, door: 1, to: { map: 'boutique', x: 4, y: 6, facing: 'up' } },
       { kind: 'gym', x: 16, y: 3, w: 5, h: 4, door: 2, roof: '#9ed36a', to: { map: 'atelierPastel', x: 5, y: 10, facing: 'up' } },
-      { kind: 'house', x: 3, y: 11, w: 4, h: 4, door: 1, roof: '#50a060', lockedText: L('Ça sent bon le gâteau… mais la porte est fermée.', 'It smells like cake… but the door is locked.') },
+      { kind: 'house', x: 3, y: 11, w: 4, h: 4, door: 1, roof: '#c8963a', to: { map: 'musee', x: 6, y: 8, facing: 'up' } },
       { kind: 'cave', x: 17, y: 11, w: 5, h: 4, door: 2, to: { map: 'grotte1', x: 11, y: 14, facing: 'up' } },
     ],
     warps: [
@@ -46,7 +46,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     ],
     triggers: [{ x: 2, y: 9, w: 1, h: 2, script: 'pastelWestGate', unless: 'badge:pastel' }],
     items: [{ x: 22, y: 1, item: 'page-3', hidden: true }],
-    signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Auberge · Boutique', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Inn · Shop') }],
+    signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Auberge · Boutique · Musée', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Inn · Shop · Museum') }],
     npcs: [
       { id: 'tradeVille', x: 4, y: 17, look: LOOKS.kid, facing: 'up', script: 'trade_ville' },
       { id: 'westGuard', x: 2, y: 8, look: LOOKS.hiker, facing: 'down', script: 'pastelWestGuard' },
@@ -138,6 +138,38 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         { id: '015', w: 6, min: 7, max: 8 },
       ],
     },
+  },
+
+  // the first sketches of the Bestioles, framed: her original drawings (src/data/originals.ts)
+  musee: {
+    id: 'musee',
+    name: L('Musée des premiers croquis', 'Museum of First Sketches'),
+    indoor: true,
+    border: 'void',
+    backdrop: 'lab',
+    rows: [
+      'WqqqqqqqqqqqW',
+      'pfffffffffffp',
+      'fffffffffffff',
+      'fffffffffffff',
+      'fqqqqqfqqqqqf',
+      'fffffffffffff',
+      'fffffcccfffff',
+      'pffffcccffffp',
+      'fffffcccfffff',
+      'WWWWWWXWWWWWW',
+    ],
+    warps: [{ x: 6, y: 9, to: { map: 'ville', x: 4, y: 15, facing: 'down' } }],
+    // eleven frames along the back wall, ten on the stand in the middle, in Bestiodex order
+    interact: [
+      ...Array.from({ length: 11 }, (_, i) => ({ x: 1 + i, y: 0, script: `musee:${String(i + 1).padStart(3, '0')}` })),
+      ...[1, 2, 3, 4, 5, 7, 8, 9, 10, 11].map((x, i) => ({ x, y: 4, script: `musee:${String(i + 12).padStart(3, '0')}` })),
+    ],
+    npcs: [
+      { id: 'conservatrice', x: 9, y: 7, look: { hair: '#d8d0c8', shirt: '#7a3dc2', pants: '#3a3346', longHair: true }, facing: 'left', script: 'musee' },
+      { id: 'museeKid', x: 3, y: 2, look: LOOKS.kid, facing: 'up', wander: true,
+        text: [L('Celui-là, on dirait mon petit frère qui dessine ! Mais en mieux… enfin, pareil.', 'That one looks like something my little brother would draw! But better… well, the same.')] },
+    ],
   },
 
   pension: {

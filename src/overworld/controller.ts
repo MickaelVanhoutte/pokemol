@@ -838,6 +838,13 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   return res;
 }
 
+/** A picture shown big over the world with its caption (the museum's frames). */
+export const pictureOverlay = signal<{ src: string; caption: string; resolve: () => void } | null>(null);
+
+export function showPicture(src: string, caption: string): Promise<void> {
+  return new Promise((resolve) => (pictureOverlay.value = { src, caption, resolve }));
+}
+
 /** Evolution scene shown over the world (or null). */
 /** An egg hatching, drawn over the world. */
 export const hatchOverlay = signal<{ mon: Mon; resolve: () => void } | null>(null);
@@ -1056,5 +1063,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, hatchOverlay, nameOverlay, offerNickname, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, hatchOverlay, nameOverlay, pictureOverlay, offerNickname, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }
