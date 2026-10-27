@@ -20,9 +20,15 @@ export default {
       stroke([[x - 105 * s, y + 55 * s], [x - 72 * s, y + 70 * s], [x - 40 * s, y + 55 * s]], 5);
     };
     // the middle one is the tallest
-    mole(330, 520, 0.85);
-    mole(860, 540, 0.8);
-    mole(600, 430, 1.05);
+    k.part('taupe1', { pivot: [330, 700], motion: 'peek', to: [0, 75], period: 3.6, phase: 0.0, behind: true, clip: true }, () => {
+      mole(330, 520, 0.85);
+    });
+    k.part('taupe2', { pivot: [860, 700], motion: 'peek', to: [0, 75], period: 3.6, phase: 0.33, behind: true, clip: true }, () => {
+      mole(860, 540, 0.8);
+    });
+    k.part('taupe3', { pivot: [600, 700], motion: 'peek', to: [0, 75], period: 3.6, phase: 0.66, behind: true, clip: true }, () => {
+      mole(600, 430, 1.05);
+    });
     // one big molehill in front
     shape(shake([[60, 940], [170, 760], [330, 680], [600, 650], [880, 680], [1040, 770], [1140, 940]], 14), EARTH, { gap: 15, miss: 0.04, angle: -20 });
     for (const [x, y, r] of [[250, 840, 28], [480, 870, 30], [720, 860, 26], [930, 840, 24], [600, 910, 20], [380, 920, 22]]) shape(potato(x, y, r, r * 0.75, 6, 0.15), BROWN, { gap: 8, w: 8, miss: 0 }, 4.5);

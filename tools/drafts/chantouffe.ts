@@ -32,9 +32,11 @@ export default {
     dot(553, 466, 8);
     raw(`<path d='${k.smooth([[340, 585], [405, 585], [397, 640], [348, 640]], true)}' fill='#5a2430' stroke='#2e2a35' stroke-width='6'/>`);
     // music notes
-    for (const [x, y] of [[150, 300], [960, 330], [130, 760], [960, 780]]) {
-      dot(x, y, 22, 17, -20);
-      stroke([[x + 18, y - 5], [x + 18, y - 75], [x + 55, y - 60]], 6);
-    }
+    k.part('notes', { pivot: [550, 550], motion: 'flicker', period: 2.2 }, () => {
+      for (const [x, y] of [[150, 300], [960, 330], [130, 760], [960, 780]]) {
+        dot(x, y, 22, 17, -20);
+        stroke([[x + 18, y - 5], [x + 18, y - 75], [x + 55, y - 60]], 6);
+      }
+    });
   },
 } satisfies Draft;

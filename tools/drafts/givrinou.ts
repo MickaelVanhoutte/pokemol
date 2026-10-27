@@ -9,7 +9,9 @@ export default {
     // the ice floe under it
     shape(shake([[110, 860], [930, 850], [890, 950], [150, 955]], 8), FLOE, { gap: 14, angle: -10 });
     // tail flippers behind
-    shape(shake([[780, 700], [960, 610], [990, 690], [900, 750], [990, 820], [945, 860], [780, 800]], 8), BLUE, { gap: 12 });
+    k.part('queue', { pivot: [790, 750], motion: 'swing', amp: 8, period: 1.6, behind: true }, () => {
+      shape(shake([[780, 700], [960, 610], [990, 690], [900, 750], [990, 820], [945, 860], [780, 800]], 8), BLUE, { gap: 12 });
+    });
     // long body lying down
     shape(shake([[250, 560], [420, 470], [650, 520], [830, 640], [810, 800], [600, 850], [330, 840], [210, 720]], 12), ICE, { gap: 16, miss: 0.08, angle: -30 });
     // front flipper
@@ -23,11 +25,13 @@ export default {
     stroke([[250, 590], [300, 610], [350, 585]], 5.5);
     for (const [a, b] of [[[200, 575], [110, 560]], [[205, 590], [115, 610]]]) stroke([a as [number, number], b as [number, number]], 3.5);
     // snowflakes
-    for (const [x, y, s] of [[120, 300, 1], [600, 240, 0.8], [880, 380, 1], [520, 380, 0.6]] as [number, number, number][]) {
-      for (let i = 0; i < 3; i++) {
-        const a = (i * Math.PI) / 3, d: P = [Math.cos(a) * 34 * s, Math.sin(a) * 34 * s];
-        stroke([[x - d[0], y - d[1]], [x + d[0], y + d[1]]], 4.5);
+    k.part('flocons', { pivot: [550, 320], motion: 'flicker', period: 2.6 }, () => {
+      for (const [x, y, s] of [[120, 300, 1], [600, 240, 0.8], [880, 380, 1], [520, 380, 0.6]] as [number, number, number][]) {
+        for (let i = 0; i < 3; i++) {
+          const a = (i * Math.PI) / 3, d: P = [Math.cos(a) * 34 * s, Math.sin(a) * 34 * s];
+          stroke([[x - d[0], y - d[1]], [x + d[0], y + d[1]]], 4.5);
+        }
       }
-    }
+    });
   },
 } satisfies Draft;

@@ -25,6 +25,8 @@ export default {
     dot(440, 525, 30, 36);
     dot(452, 508, 8);
     // sparks
-    for (const [x, y] of [[180, 260], [860, 260], [200, 760], [840, 780]]) shape(shake([[x, y], [x + 30, y - 40], [x + 22, y - 12], [x + 50, y - 30], [x + 18, y + 20], [x + 26, y - 6]], 3), YEL, { gap: 6, w: 7, miss: 0 }, 4);
+    k.part('etincelles', { pivot: [520, 520], motion: 'flicker', period: 1.6 }, () => {
+      for (const [x, y] of [[180, 260], [860, 260], [200, 760], [840, 780]]) shape(shake([[x, y], [x + 30, y - 40], [x + 22, y - 12], [x + 50, y - 30], [x + 18, y + 20], [x + 26, y - 6]], 3), YEL, { gap: 6, w: 7, miss: 0 }, 4);
+    });
   },
 } satisfies Draft;

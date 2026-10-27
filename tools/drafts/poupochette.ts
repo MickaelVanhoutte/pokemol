@@ -7,7 +7,9 @@ export default {
     const { j, potato, shake, shape, stroke, dot } = k;
     const BROWN = '#b07a46', CREAM = '#f1dcae', INNER = '#e8a9a0';
     // long thick tail behind, on the right
-    shape(shake([[660, 830], [840, 900], [1010, 960], [1080, 1010], [1000, 1040], [820, 990], [640, 930]], 10), BROWN, { gap: 13 });
+    k.part('queue', { pivot: [650, 880], motion: 'swing', amp: 4, period: 2.4, behind: true }, () => {
+      shape(shake([[660, 830], [840, 900], [1010, 960], [1080, 1010], [1000, 1040], [820, 990], [640, 930]], 10), BROWN, { gap: 13 });
+    });
     // the far foot and far ear, behind
     shape(potato(400, 1038, 115, 42, 8, 0.08), BROWN, { gap: 12, miss: 0 });
     shape(shake([[430, 260], [380, 100], [440, 120], [480, 250]], 6), BROWN, { gap: 12 });
@@ -16,11 +18,13 @@ export default {
     shape(shake([[400, 430], [620, 430], [730, 620], [750, 850], [680, 1010], [410, 1010], [320, 850], [330, 620]], 12), BROWN, { gap: 15, miss: 0.05 });
     shape(potato(500, 820, 160, 170, 9, 0.05), CREAM, { gap: 13, miss: 0.06 });
     // the baby in the pouch, looking left too
-    shape(shake([[430, 650], [415, 590], [455, 640]], 4), BROWN, { gap: 9, w: 9, miss: 0 }, 5);
-    shape(shake([[545, 650], [570, 590], [535, 640]], 4), BROWN, { gap: 9, w: 9, miss: 0 }, 5);
-    shape(potato(490, 710, 80, 68, 8, 0.05), BROWN, { gap: 11, miss: 0.03 });
-    dot(450, 705, 8, 11); dot(505, 705, 10, 12);
-    stroke([[440, 745], [462, 755], [485, 745]], 4.5);
+    k.part('bebe', { pivot: [490, 770], motion: 'peek', to: [0, 35], shrink: 0.6, fade: true, inside: true, period: 4 }, () => {
+      shape(shake([[430, 650], [415, 590], [455, 640]], 4), BROWN, { gap: 9, w: 9, miss: 0 }, 5);
+      shape(shake([[545, 650], [570, 590], [535, 640]], 4), BROWN, { gap: 9, w: 9, miss: 0 }, 5);
+      shape(potato(490, 710, 80, 68, 8, 0.05), BROWN, { gap: 11, miss: 0.03 });
+      dot(450, 705, 8, 11); dot(505, 705, 10, 12);
+      stroke([[440, 745], [462, 755], [485, 745]], 4.5);
+    });
     stroke([[350, 770], [500, 790], [650, 770]], 6);
     // the near foot
     shape(potato(640, 1042, 135, 48, 8, 0.08), BROWN, { gap: 12, miss: 0 });

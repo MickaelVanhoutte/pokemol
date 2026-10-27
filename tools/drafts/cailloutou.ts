@@ -7,8 +7,10 @@ export default {
     const { j, potato, shake, shape, stroke, dot } = k;
     const GREY = '#9a948c', DARK = '#6e6a64';
     // the far arm, behind the boulder on the left
-    shape(shake([[360, 560], [230, 520], [180, 450], [230, 420], [270, 470], [370, 500]], 6), GREY, { gap: 12, miss: 0 });
-    shape(potato(190, 415, 66, 60, 7, 0.08), GREY, { gap: 11, miss: 0 });
+    k.part('bras-loin', { pivot: [365, 530], motion: 'swing', amp: -8, period: 1.2, behind: true, phase: 0.5 }, () => {
+      shape(shake([[360, 560], [230, 520], [180, 450], [230, 420], [270, 470], [370, 500]], 6), GREY, { gap: 12, miss: 0 });
+      shape(potato(190, 415, 66, 60, 7, 0.08), GREY, { gap: 11, miss: 0 });
+    });
     // pebbles and dust under it
     for (const [x, y, r] of [[330, 880, 40], [520, 910, 30], [700, 885, 45]]) shape(potato(x, y, r, r * 0.7, 6, 0.15), DARK, { gap: 9, w: 9, miss: 0 }, 5);
     for (const x of [260, 450, 620, 780]) stroke([[x, 950], [x + 40 + j(10), 940]], 4);
@@ -17,9 +19,11 @@ export default {
     for (const [x, y, r] of [[560, 700, 30], [700, 690, 26], [650, 470, 20], [720, 590, 18]]) shape(potato(x, y, r, r * 0.8, 6, 0.15), DARK, { gap: 8, w: 9, miss: 0 }, 4.5);
     stroke([[690, 480], [660, 520], [700, 545]], 4.5);
     // the near arm, in front on the right
-    shape(shake([[690, 600], [820, 560], [880, 480], [830, 450], [790, 500], [680, 540]], 6), GREY, { gap: 12, miss: 0 });
-    shape(potato(870, 440, 78, 70, 7, 0.08), GREY, { gap: 11, miss: 0 });
-    stroke([[845, 425], [900, 420]], 4);
+    k.part('bras', { pivot: [685, 570], motion: 'swing', amp: 8, period: 1.2, phase: 0 }, () => {
+      shape(shake([[690, 600], [820, 560], [880, 480], [830, 450], [790, 500], [680, 540]], 6), GREY, { gap: 12, miss: 0 });
+      shape(potato(870, 440, 78, 70, 7, 0.08), GREY, { gap: 11, miss: 0 });
+      stroke([[845, 425], [900, 420]], 4);
+    });
     // the grumpy face, turned left
     stroke([[330, 510], [395, 545]], 10);
     stroke([[440, 545], [530, 500]], 11);

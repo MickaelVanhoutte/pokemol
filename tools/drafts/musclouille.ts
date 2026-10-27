@@ -9,8 +9,10 @@ export default {
     // the far leg and far arm, behind the body on the left
     shape(shake([[340, 790], [480, 790], [485, 950], [335, 955]], 8), GREY, { gap: 13, miss: 0.05 });
     shape(potato(400, 972, 95, 40, 7, 0.1), GREY, { gap: 12, miss: 0 });
-    shape(shake([[380, 500], [230, 520], [170, 430], [190, 330], [250, 330], [260, 420], [390, 440]], 8), GREY, { gap: 12, miss: 0 });
-    shape(potato(220, 300, 64, 58, 7, 0.08), GREY, { gap: 11, miss: 0 });
+    k.part('bras-loin', { pivot: [385, 470], motion: 'swing', amp: 6, period: 1.4, behind: true, phase: 0 }, () => {
+      shape(shake([[380, 500], [230, 520], [170, 430], [190, 330], [250, 330], [260, 420], [390, 440]], 8), GREY, { gap: 12, miss: 0 });
+      shape(potato(220, 300, 64, 58, 7, 0.08), GREY, { gap: 11, miss: 0 });
+    });
     // broad body, belt with a gold buckle, muscles, all turned left
     shape(shake([[310, 460], [700, 460], [790, 600], [730, 800], [600, 860], [450, 860], [330, 800], [260, 600]], 10), GREY, { gap: 14, miss: 0.06 });
     shape(shake([[310, 760], [745, 760], [740, 815], [315, 815]], 5), DARK, { gap: 9, w: 12, miss: 0 }, 5.5);
@@ -21,9 +23,11 @@ export default {
     // the near leg and near arm, in front on the right
     shape(shake([[560, 790], [710, 790], [715, 950], [555, 955]], 8), GREY, { gap: 13, miss: 0.05 });
     shape(potato(640, 975, 102, 44, 7, 0.1), GREY, { gap: 12, miss: 0 });
-    shape(shake([[700, 500], [860, 520], [930, 430], [910, 320], [845, 320], [835, 420], [690, 440]], 8), GREY, { gap: 12, miss: 0 });
-    shape(potato(880, 290, 75, 66, 7, 0.08), GREY, { gap: 11, miss: 0 });
-    stroke([[900, 470], [860, 420]], 4.5);
+    k.part('bras', { pivot: [695, 470], motion: 'swing', amp: -6, period: 1.4, phase: 0 }, () => {
+      shape(shake([[700, 500], [860, 520], [930, 430], [910, 320], [845, 320], [835, 420], [690, 440]], 8), GREY, { gap: 12, miss: 0 });
+      shape(potato(880, 290, 75, 66, 7, 0.08), GREY, { gap: 11, miss: 0 });
+      stroke([[900, 470], [860, 420]], 4.5);
+    });
     // head turned left, headband, determined grin
     shape(potato(470, 350, 135, 120, 8, 0.05), GREY, { gap: 14, miss: 0.04 });
     shape(shake([[340, 290], [600, 280], [604, 326], [337, 334]], 5), RED, { gap: 9, w: 11, miss: 0 }, 5.5);

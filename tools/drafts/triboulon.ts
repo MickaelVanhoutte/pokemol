@@ -24,6 +24,8 @@ export default {
     ball(330, 720, 0.95, [-1]);
     ball(820, 720, 0.95, [1]);
     ball(575, 420, 1.05, [-1, 1]);
-    for (const [x, y] of [[150, 300], [960, 280], [575, 980], [180, 1000], [980, 990]]) shape(shake([[x, y], [x + 30, y - 40], [x + 22, y - 12], [x + 50, y - 30], [x + 18, y + 20], [x + 26, y - 6]], 3), YEL, { gap: 6, w: 7, miss: 0 }, 4);
+    k.part('etincelles', { pivot: [575, 600], motion: 'flicker', period: 1.6 }, () => {
+      for (const [x, y] of [[150, 300], [960, 280], [575, 980], [180, 1000], [980, 990]]) shape(shake([[x, y], [x + 30, y - 40], [x + 22, y - 12], [x + 50, y - 30], [x + 18, y + 20], [x + 26, y - 6]], 3), YEL, { gap: 6, w: 7, miss: 0 }, 4);
+    });
   },
 } satisfies Draft;

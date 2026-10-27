@@ -62,8 +62,12 @@ export default {
     shape(potato(560, 415, 90, 72, 8, 0.08), YEL, { gap: 11, w: 13, miss: 0 });
     for (let i = 0; i < 6; i++) dot(560 + j(100), 415 + j(70), 6);
     // vines: one hangs down to the ground, one whips forward
-    vine([[470, 480], [400, 580], [360, 700], [330, 820], [300, 900]], 17, 'bulb');
-    vine([[660, 480], [780, 400], [920, 360], [1060, 380], [1150, 320]], 19, 'leaf');
+    k.part('liane-bas', { pivot: [470, 480], motion: 'swing', amp: 4, period: 2.2 }, () => {
+      vine([[470, 480], [400, 580], [360, 700], [330, 820], [300, 900]], 17, 'bulb');
+    });
+    k.part('liane', { pivot: [660, 480], motion: 'swing', amp: 7, period: 1.6 }, () => {
+      vine([[660, 480], [780, 400], [920, 360], [1060, 380], [1150, 320]], 19, 'leaf');
+    });
     // head at the front: cat ears, angry red eyes, fangs
     shape(shake([[840, 470], [860, 345], [925, 450]], 6), WHITE, { gap: 14, miss: 0.1 });
     shape(shake([[970, 445], [1040, 340], [1055, 470]], 6), WHITE, { gap: 14, miss: 0.1 });

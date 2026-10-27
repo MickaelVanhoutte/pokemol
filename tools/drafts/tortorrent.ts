@@ -8,22 +8,24 @@ export default {
     const BLUE = '#2f4fc2', PALE = '#8fc0f0', BROWN = '#8e5628', YEL = '#e0bb48', GREY = '#9a98a8';
 
     // water gushing from the two spouts in thick arcs, splashing at the end
-    for (const [x, y, dir] of [[695, 250, -1], [888, 300, 1]] as [number, number, number][]) {
-      const mid = (t: number): P => [x + dir * 280 * t, y - 260 * Math.sin(Math.PI * t * 0.8) + 120 * t * t];
-      const left: P[] = [], right: P[] = [];
-      for (let i = 0; i <= 8; i++) {
-        const t = i / 8, [mx, my] = mid(t), [nx, ny] = mid(Math.min(1, t + 0.05)), w = 28 + 30 * t;
-        const dx = nx - mx, dy = ny - my, l = Math.hypot(dx, dy) || 1;
-        left.push([mx - (dy / l) * w, my + (dx / l) * w]); right.push([mx + (dy / l) * w, my - (dx / l) * w]);
+    k.part('jets', { pivot: [790, 270], motion: 'swing', amp: 3, period: 0.8, behind: true }, () => {
+      for (const [x, y, dir] of [[695, 250, -1], [888, 300, 1]] as [number, number, number][]) {
+        const mid = (t: number): P => [x + dir * 280 * t, y - 260 * Math.sin(Math.PI * t * 0.8) + 120 * t * t];
+        const left: P[] = [], right: P[] = [];
+        for (let i = 0; i <= 8; i++) {
+          const t = i / 8, [mx, my] = mid(t), [nx, ny] = mid(Math.min(1, t + 0.05)), w = 28 + 30 * t;
+          const dx = nx - mx, dy = ny - my, l = Math.hypot(dx, dy) || 1;
+          left.push([mx - (dy / l) * w, my + (dx / l) * w]); right.push([mx + (dy / l) * w, my - (dx / l) * w]);
+        }
+        const jet = [...left, ...bumps([left[8], right[8]], 2, dir * 30), ...right.reverse()] as P[];
+        colourOnly(jet, '#6fa8ea', { angle: dir * 70, gap: 13, w: 14, miss: 0.05 });
+        stroke(left.slice(0, 8), 5); stroke(right.slice(1), 5);
+        for (const [ox, oy] of [[30, 30], [70, -10], [10, 70]] as P[]) {
+          const [ex, ey] = mid(1);
+          shape([[ex + dir * ox, ey + oy - 24], [ex + dir * ox + 12, ey + oy], [ex + dir * ox + 8, ey + oy + 12], [ex + dir * ox - 8, ey + oy + 12], [ex + dir * ox - 12, ey + oy]], '#6fa8ea', { gap: 8, w: 7, miss: 0 }, 5);
+        }
       }
-      const jet = [...left, ...bumps([left[8], right[8]], 2, dir * 30), ...right.reverse()] as P[];
-      colourOnly(jet, '#6fa8ea', { angle: dir * 70, gap: 13, w: 14, miss: 0.05 });
-      stroke(left.slice(0, 8), 5); stroke(right.slice(1), 5);
-      for (const [ox, oy] of [[30, 30], [70, -10], [10, 70]] as P[]) {
-        const [ex, ey] = mid(1);
-        shape([[ex + dir * ox, ey + oy - 24], [ex + dir * ox + 12, ey + oy], [ex + dir * ox + 8, ey + oy + 12], [ex + dir * ox - 8, ey + oy + 12], [ex + dir * ox - 12, ey + oy]], '#6fa8ea', { gap: 8, w: 7, miss: 0 }, 5);
-      }
-    }
+    });
     // the spouts: two grey tubes sticking out of the shell
     shape(shake([[650, 400], [660, 250], [735, 245], [740, 400]], 8), GREY, { gap: 14, w: 11 });
     shape(shake([[830, 430], [850, 300], [925, 305], [915, 445]], 8), GREY, { gap: 14, w: 11 });
@@ -58,10 +60,12 @@ export default {
     stroke([[470, 590], [480, 990]], 4.5);
 
     // arms: huge, one fist forward with claws out, one flexed up
-    shape(shake([[300, 600], [190, 640], [110, 700], [80, 780], [150, 800], [220, 740], [320, 700]], 10), BLUE, { gap: 14 });
-    shape(potato(95, 800, 70, 60, 7, 0.14), BLUE, { gap: 14 });
-    for (const [a, b] of [[[60, 770], [10, 735]], [[50, 805], [-5, 815]], [[70, 845], [30, 890]]] as [P, P][]) stroke([a, [b[0] + j(12), b[1] + j(12)]], 7);
-    for (const i of [0, 1, 2]) stroke([[170 + i * 20, 860 + i * 18], [260 + i * 15, 880 + i * 18]], 5);
+    k.part('poing', { pivot: [300, 640], motion: 'peek', to: [10, 0], period: 1.6 }, () => {
+      shape(shake([[300, 600], [190, 640], [110, 700], [80, 780], [150, 800], [220, 740], [320, 700]], 10), BLUE, { gap: 14 });
+      shape(potato(95, 800, 70, 60, 7, 0.14), BLUE, { gap: 14 });
+      for (const [a, b] of [[[60, 770], [10, 735]], [[50, 805], [-5, 815]], [[70, 845], [30, 890]]] as [P, P][]) stroke([a, [b[0] + j(12), b[1] + j(12)]], 7);
+      for (const i of [0, 1, 2]) stroke([[170 + i * 20, 860 + i * 18], [260 + i * 15, 880 + i * 18]], 5);
+    });
     shape(shake([[660, 560], [760, 470], [800, 380], [860, 400], [830, 500], [720, 620]], 10), BLUE, { gap: 14 });
     for (const [a, b] of [[[810, 385], [800, 330]], [[835, 385], [855, 335]], [[855, 405], [905, 380]]] as [P, P][]) stroke([a, [b[0] + j(12), b[1] + j(12)]], 6.5);
 

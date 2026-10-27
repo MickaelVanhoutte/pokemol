@@ -554,8 +554,12 @@ breathes (or hovers) while it waits, and the first fifteen have moving parts dra
 Clapotin (the whole turtle into its shell: hiding only the head looked like it lost it), Zigzou (tail,
 lightning), Papivole and Noctaile (folding wings), Piafou, Libellune, Canarmure (wing, pencil-sword),
 Ocrinou (trunk), Taupinou (its hole), Dragobraise, Piaflèche, Piafurie, Dragopataud, Ciseaumante,
-Ptérocaille (wings). The others follow by batches. After a win or a capture, your Bestiole dances (a hop
-while turning round, twice) during the tune.
+Ptérocaille (wings). Then every other Bestiole, by batches shown on an animated preview page: tails, arms,
+vines, fins, sparks, notes, Zzz, snow, tongues, jaws. The owner's own requests: Lunelle's belly moon twinkles,
+Ronflon brings its apple to its mouth (`reach`), Ombrouille sticks out its tongue, Ciseaumante snips,
+Minoufleur's near vine moved behind its body (it looked like it came out of its mouth). After a win or a
+capture, your Bestiole dances (a hop while turning round, twice) during the tune. The rigs add about
+5.5 MB to the offline download.
 
 **Stronger first Atelier Masters, and smaller things (Oct 2026).** The owner rolled over the first two
 Ateliers, nearly one hit each: Mireille's ace (L7) and Gaspard's (L10) were below their own apprentices

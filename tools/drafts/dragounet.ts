@@ -16,8 +16,10 @@ export default {
       stroke([[x - 18, y + 8], [x + 18, y - 8]], 4.5);
     }
     // fins on the head, the head, a pearl and a nub
-    shape(shake([[420, 220], [330, 170], [335, 245], [410, 270]], 6), WHITE, { gap: 10, miss: 0 });
-    shape(shake([[600, 200], [750, 110], [745, 230], [615, 265]], 6), WHITE, { gap: 10, miss: 0 });
+    k.part('nageoires', { pivot: [500, 250], motion: 'swing', amp: 5, period: 1.8, behind: true }, () => {
+      shape(shake([[420, 220], [330, 170], [335, 245], [410, 270]], 6), WHITE, { gap: 10, miss: 0 });
+      shape(shake([[600, 200], [750, 110], [745, 230], [615, 265]], 6), WHITE, { gap: 10, miss: 0 });
+    });
     // the head turned left, a little snout
     shape(shake([[370, 260], [410, 190], [510, 160], [610, 200], [630, 280], [570, 340], [450, 350], [380, 320], [345, 290]], 5), BLUE, { gap: 13, miss: 0.03 });
     shape(potato(495, 175, 20, 18, 6, 0.08), PEARL, { gap: 7, w: 8, miss: 0 }, 4.5);
@@ -29,6 +31,8 @@ export default {
     stroke([[380, 305], [425, 318], [470, 300]], 5.5);
     dot(362, 278, 4); dot(382, 280, 4);
     // bubbles
-    for (const [x, y, r] of [[200, 520, 26], [250, 440, 16], [860, 300, 22], [900, 230, 13]]) stroke(potato(x, y, r, r, 7, 0.05).concat([potato(x, y, r, r, 7, 0.05)[0]]), 4);
+    k.part('bulles', { pivot: [550, 380], motion: 'flicker', period: 2.4 }, () => {
+      for (const [x, y, r] of [[200, 520, 26], [250, 440, 16], [860, 300, 22], [900, 230, 13]]) stroke(potato(x, y, r, r, 7, 0.05).concat([potato(x, y, r, r, 7, 0.05)[0]]), 4);
+    });
   },
 } satisfies Draft;
