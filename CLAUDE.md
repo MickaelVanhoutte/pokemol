@@ -21,6 +21,10 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - **Original names only.** No Pokémon names, branding or assets anywhere: the site is public.
   The game's own words are Bestiole, Crayon-ball, Atelier (gym), Maître d'Atelier (leader),
   Bestiodex, Team Gomme.
+- **Every Bestiole is drawn three-quarters, turned to the left** (`faces: 'left'`), never straight
+  from the front: it looks silly in battle, and battles mirror the drawings so both Bestioles face each
+  other (`src/data/bestioles.test.ts` checks that `faces` is set). Far limbs start hidden behind the
+  body, every part stays attached, nothing hangs limp.
 - **French first, English second.** Every player-visible text is written `L('français', 'English')`
   and shown with `tr()`. Use typographic `’` and `« »`. Gendered French uses `{g:féminin|masculin}`
   (the player picks girl or boy). `{name}` and `{rival}` are global placeholders.

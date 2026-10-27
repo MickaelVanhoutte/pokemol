@@ -6,19 +6,20 @@ export default {
   draw(k) {
     const { j, potato, shake, shape, stroke, dot } = k;
     const BROWN = '#8a5a34', EARTH = '#6b4a2b', PINK = '#f07f9a', PAW = '#f0b6a0';
+    // each mole turned three-quarters to the left: its face and nose on the left side
     const mole = (x: number, y: number, s: number) => {
-      shape(potato(x, y, 110 * s, 220 * s, 9, 0.05), BROWN, { gap: 14, miss: 0.06 });
-      stroke([[x - 70 * s, y - 85 * s], [x - 32 * s, y - 75 * s]], 7);
-      stroke([[x + 32 * s, y - 75 * s], [x + 70 * s, y - 85 * s]], 7);
-      shape(potato(x, y - 25 * s, 52 * s, 40 * s, 7, 0.06), PINK, { gap: 8, w: 10, miss: 0 }, 6);
-      dot(x - 14 * s, y - 30 * s, 6); dot(x + 14 * s, y - 30 * s, 6);
+      shape(shake([[x - 100 * s, y + 220 * s], [x - 120 * s, y - 20 * s], [x - 95 * s, y - 170 * s], [x - 20 * s, y - 225 * s], [x + 70 * s, y - 190 * s], [x + 115 * s, y - 40 * s], [x + 110 * s, y + 220 * s]], 6), BROWN, { gap: 14, miss: 0.06 });
+      stroke([[x - 105 * s, y - 85 * s], [x - 80 * s, y - 77 * s]], 6);
+      stroke([[x - 20 * s, y - 75 * s], [x + 25 * s, y - 85 * s]], 7);
+      shape(potato(x - 75 * s, y - 25 * s, 50 * s, 38 * s, 7, 0.06), PINK, { gap: 8, w: 10, miss: 0 }, 6);
+      dot(x - 88 * s, y - 30 * s, 5); dot(x - 62 * s, y - 30 * s, 6);
       for (const d of [-1, 1]) {
-        stroke([[x + d * 55 * s, y - 15 * s], [x + d * 140 * s, y - 35 * s]], 3.5);
-        stroke([[x + d * 55 * s, y + 5 * s], [x + d * 140 * s, y + 20 * s]], 3.5);
+        stroke([[x - 75 * s + d * 50 * s, y - 15 * s], [x - 75 * s + d * 130 * s, y - 35 * s]], 3.5);
+        stroke([[x - 75 * s + d * 50 * s, y + 5 * s], [x - 75 * s + d * 130 * s, y + 20 * s]], 3.5);
       }
-      stroke([[x - 35 * s, y + 55 * s], [x, y + 72 * s], [x + 35 * s, y + 55 * s]], 5);
+      stroke([[x - 105 * s, y + 55 * s], [x - 72 * s, y + 70 * s], [x - 40 * s, y + 55 * s]], 5);
     };
-    // the middle one is the tallest; the right one looks the other way
+    // the middle one is the tallest
     mole(330, 520, 0.85);
     mole(860, 540, 0.8);
     mole(600, 430, 1.05);

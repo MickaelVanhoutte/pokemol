@@ -15,17 +15,17 @@ export default {
     // the neck rising up, with a yellow belly
     shape(band([[560, 720], [600, 600], [560, 470], [470, 380]], 62, 50), PURPLE, { gap: 14, miss: 0.04 });
     for (const [x, y] of [[560, 690], [575, 620], [565, 550], [530, 480]]) stroke([[x - 40, y], [x + 30, y + 10]], 5);
-    // head, slit eyes, tongue
-    shape(potato(420, 320, 140, 105, 8, 0.05), PURPLE, { gap: 14, miss: 0.03 });
-    for (const x of [380, 480]) {
-      shape(potato(x, 300, 30, 24, 6, 0.08), YEL, { gap: 7, w: 8, miss: 0 }, 4.5);
-      stroke([[x, 282], [x + 2, 318]], 6);
-    }
+    // head turned left (a long snout), slit eyes, the far one smaller, tongue
+    shape(shake([[290, 330], [330, 260], [430, 220], [540, 250], [560, 330], [490, 400], [370, 410], [290, 380]], 5), PURPLE, { gap: 14, miss: 0.03 });
+    shape(potato(352, 300, 20, 20, 6, 0.08), YEL, { gap: 7, w: 8, miss: 0 }, 4.5);
+    stroke([[352, 286], [353, 314]], 5);
+    shape(potato(440, 296, 30, 24, 6, 0.08), YEL, { gap: 7, w: 8, miss: 0 }, 4.5);
+    stroke([[440, 278], [442, 314]], 6);
     stroke([[300, 365], [420, 380]], 5);
     stroke([[300, 365], [220, 372], [180, 345]], 5);
     shape(shake([[300, 368], [215, 372], [175, 345], [205, 382], [175, 410], [220, 385], [300, 378]], 3), RED, { gap: 6, w: 7, miss: 0 }, 4);
     // venom drops
     for (const [x, y] of [[180, 470], [700, 330], [760, 470]]) shape([[x, y - 30], [x + 14, y], [x + 9, y + 14], [x - 9, y + 14], [x - 14, y]], GREEN, { gap: 7, w: 8, miss: 0 }, 4.5);
-    dot(355, 350, 4); dot(375, 352, 4);
+    dot(305, 345, 4); dot(322, 347, 4);
   },
 } satisfies Draft;

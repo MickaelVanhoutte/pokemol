@@ -67,6 +67,11 @@ describe('Bestiole design rules (docs/bestioles.md)', () => {
     }
   });
 
+  it('draws every Bestiole in three-quarter view, looking to one side', () => {
+    // a Bestiole drawn straight from the front looks silly in battle; turned to one side, battles mirror it
+    for (const c of CREATURES) expect(c.faces, `${c.id} ${c.slug}: draw it three-quarters to the left and set faces: 'left'`).toBeDefined();
+  });
+
   it('makes evolutions rarer to catch and worth more XP than their earlier form', () => {
     for (const c of CREATURES.filter((x) => x.evolvesFrom)) {
       const from = creature(c.evolvesFrom!);

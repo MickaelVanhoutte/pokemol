@@ -102,7 +102,15 @@ Moves can carry `punch: true` or `cut: true` (`MoveDef` in `src/data/schema.ts`)
 - A level-0 learnset entry is learned on evolving (see docs/content.md).
 - Stencils (`stencils: [...]`) add coverage the player can choose.
 
-## 6. Place it
+## 6. Draw it
+
+Bestioles are drawn in code in the little artist's style (`tools/redraws`, see the `new-bestiole` skill).
+Always in three-quarter view turned to the left, with `faces: 'left'`: a drawing straight from the front
+looks silly in battle, and battles mirror the drawings so both Bestioles face each other. The rules test
+checks that `faces` is set. Turned to the left, the near limbs are on the right and bigger, the far ones on
+the left start hidden behind the body; the face, snout and mouth sit toward the left edge.
+
+## 7. Place it
 
 - Wild: an `encounters` table on a map at the story point where its level makes sense, with a weight
   that matches `rarity`. Night-only or day-only tables give the clock a use.
@@ -111,7 +119,7 @@ Moves can carry `punch: true` or `cut: true` (`MoveDef` in `src/data/schema.ts`)
 - Strong finals and standalones go in `TOWER_POOL` (`src/data/postgame.ts`).
 - Brouillons (not drawn yet) get `draft: true` (docs/content.md, "Brouillons").
 
-## 7. Check it
+## 8. Check it
 
 ```bash
 npm test                                   # includes the rules test

@@ -229,7 +229,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '027', slug: 'zigzeclair', draft: true, name: L('Zigzéclair', 'Zigzapper'), kind: L('Bestiole Orage', 'Storm Critter'),
+    id: '027', slug: 'zigzeclair', faces: 'left', draft: true, name: L('Zigzéclair', 'Zigzapper'), kind: L('Bestiole Orage', 'Storm Critter'),
     type: 'electrique', base: { hp: 60, atk: 88, def: 55, spa: 90, spd: 80, spe: 107 },
     catchRate: 75, baseExp: 122, evYield: { spe: 3 }, rarity: 'uncommon', evolvesFrom: '004',
     stencils: ['pochoir-02', 'pochoir-04', 'pochoir-11', 'pochoir-12', 'pochoir-17', 'pochoir-19'],
@@ -257,7 +257,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '047', slug: 'chantouffe', draft: true, name: L('Chantouffe', 'Croonfluff'), kind: L('Bestiole Duvet', 'Fluff Critter'),
+    id: '047', slug: 'chantouffe', faces: 'left', draft: true, name: L('Chantouffe', 'Croonfluff'), kind: L('Bestiole Duvet', 'Fluff Critter'),
     type: 'fee', type2: 'normal', base: { hp: 140, atk: 75, def: 55, spa: 90, spd: 65, spe: 50 },
     catchRate: 50, baseExp: 109, evYield: { hp: 3 }, rarity: 'uncommon', evolvesFrom: '005',
     stencils: ['pochoir-02', 'pochoir-04', 'pochoir-06', 'pochoir-09', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
@@ -285,7 +285,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '028', slug: 'luneclat', draft: true, name: L('Lunéclat', 'Moonglow'), kind: L('Bestiole Clair-de-lune', 'Moonlight Critter'),
+    id: '028', slug: 'luneclat', faces: 'left', draft: true, name: L('Lunéclat', 'Moonglow'), kind: L('Bestiole Clair-de-lune', 'Moonlight Critter'),
     type: 'fee', base: { hp: 95, atk: 72, def: 75, spa: 92, spd: 90, spe: 61 },
     catchRate: 25, baseExp: 129, evYield: { hp: 3 }, rarity: 'uncommon', evolvesFrom: '006',
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-06', 'pochoir-09', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
@@ -424,7 +424,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '029', slug: 'boxouille', draft: true, name: L('Boxouille', 'Punchling'), kind: L('Bestiole Boxeuse', 'Boxer Critter'),
+    id: '029', slug: 'boxouille', faces: 'left', draft: true, name: L('Boxouille', 'Punchling'), kind: L('Bestiole Boxeuse', 'Boxer Critter'),
     type: 'combat', base: { hp: 70, atk: 80, def: 50, spa: 35, spd: 35, spe: 35 },
     catchRate: 180, baseExp: 88, evYield: { atk: 2 }, rarity: 'uncommon', evolutions: [{ to: '037', level: 28 }],
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -438,7 +438,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '037', slug: 'musclouille', draft: true, name: L('Musclouille', 'Flexling'), kind: L('Bestiole Costaude', 'Strongman Critter'),
+    id: '037', slug: 'musclouille', faces: 'left', draft: true, name: L('Musclouille', 'Flexling'), kind: L('Bestiole Costaude', 'Strongman Critter'),
     type: 'combat', base: { hp: 80, atk: 100, def: 70, spa: 50, spd: 60, spe: 45 },
     catchRate: 90, baseExp: 146, evYield: { atk: 2 }, rarity: 'uncommon', evolvesFrom: '029', evolutions: [{ to: '038', level: 40 }],
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -452,7 +452,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '038', slug: 'quadripoing', draft: true, name: L('Quadripoing', 'Quadfist'), kind: L('Bestiole Quatre-Bras', 'Four-Arm Critter'),
+    id: '038', slug: 'quadripoing', faces: 'left', draft: true, name: L('Quadripoing', 'Quadfist'), kind: L('Bestiole Quatre-Bras', 'Four-Arm Critter'),
     type: 'combat', base: { hp: 90, atk: 130, def: 80, spa: 65, spd: 85, spe: 65 },
     catchRate: 45, baseExp: 193, evYield: { atk: 3 }, rarity: 'uncommon', evolvesFrom: '037',
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -466,7 +466,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '030', slug: 'cailloutou', draft: true, name: L('Cailloutou', 'Pebblet'), kind: L('Bestiole Caillou', 'Pebble Critter'),
+    id: '030', slug: 'cailloutou', faces: 'left', draft: true, name: L('Cailloutou', 'Pebblet'), kind: L('Bestiole Caillou', 'Pebble Critter'),
     type: 'roche', type2: 'sol', base: { hp: 40, atk: 80, def: 100, spa: 30, spd: 30, spe: 20 },
     catchRate: 255, baseExp: 86, evYield: { def: 2 }, rarity: 'common', evolutions: [{ to: '039', level: 25 }],
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -480,7 +480,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '039', slug: 'rocailloux', draft: true, name: L('Rocailloux', 'Boulderbud'), kind: L('Bestiole Rocher', 'Boulder Critter'),
+    id: '039', slug: 'rocailloux', faces: 'left', draft: true, name: L('Rocailloux', 'Boulderbud'), kind: L('Bestiole Rocher', 'Boulder Critter'),
     type: 'roche', type2: 'sol', base: { hp: 55, atk: 95, def: 115, spa: 45, spd: 45, spe: 40 },
     catchRate: 120, baseExp: 134, evYield: { def: 2 }, rarity: 'common', evolvesFrom: '030', evolutions: [{ to: '040', level: 38 }],
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -494,7 +494,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '040', slug: 'montagnoc', draft: true, name: L('Montagnoc', 'Mountroll'), kind: L('Bestiole Montagne', 'Mountain Critter'),
+    id: '040', slug: 'montagnoc', faces: 'left', draft: true, name: L('Montagnoc', 'Mountroll'), kind: L('Bestiole Montagne', 'Mountain Critter'),
     type: 'roche', type2: 'sol', base: { hp: 85, atk: 120, def: 135, spa: 55, spd: 65, spe: 45 },
     catchRate: 45, baseExp: 177, evYield: { def: 3 }, rarity: 'uncommon', evolvesFrom: '039',
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -508,7 +508,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '031', slug: 'taupinou', draft: true, name: L('Taupinou', 'Molelet'), kind: L('Bestiole Taupe', 'Mole Critter'),
+    id: '031', slug: 'taupinou', faces: 'left', draft: true, name: L('Taupinou', 'Molelet'), kind: L('Bestiole Taupe', 'Mole Critter'),
     type: 'sol', base: { hp: 30, atk: 60, def: 30, spa: 40, spd: 50, spe: 75 },
     catchRate: 255, baseExp: 81, evYield: { spe: 2 }, rarity: 'common', evolutions: [{ to: '041', level: 26 }],
     stencils: ['pochoir-02', 'pochoir-11', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -521,7 +521,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '041', slug: 'taupitrio', draft: true, name: L('Taupitrio', 'Moletrio'), kind: L('Bestiole Trio', 'Trio Critter'),
+    id: '041', slug: 'taupitrio', faces: 'left', draft: true, name: L('Taupitrio', 'Moletrio'), kind: L('Bestiole Trio', 'Trio Critter'),
     type: 'sol', base: { hp: 50, atk: 100, def: 55, spa: 55, spd: 75, spe: 140 },
     catchRate: 50, baseExp: 153, evYield: { spe: 2 }, rarity: 'uncommon', evolvesFrom: '031',
     stencils: ['pochoir-02', 'pochoir-11', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
@@ -561,7 +561,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '033', slug: 'sifflasse', draft: true, name: L('Sifflasse', 'Hissling'), kind: L('Bestiole Serpent', 'Snake Critter'),
+    id: '033', slug: 'sifflasse', faces: 'left', draft: true, name: L('Sifflasse', 'Hissling'), kind: L('Bestiole Serpent', 'Snake Critter'),
     type: 'poison', base: { hp: 35, atk: 60, def: 44, spa: 40, spd: 54, spe: 67 },
     catchRate: 255, baseExp: 62, evYield: { atk: 2 }, rarity: 'uncommon', evolutions: [{ to: '043', level: 30 }],
     stencils: ['pochoir-02', 'pochoir-11', 'pochoir-12', 'pochoir-15', 'pochoir-18', 'pochoir-19'],
@@ -575,7 +575,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '043', slug: 'cobrasse', draft: true, name: L('Cobrasse', 'Hoodhiss'), kind: L('Bestiole Cobra', 'Cobra Critter'),
+    id: '043', slug: 'cobrasse', faces: 'left', draft: true, name: L('Cobrasse', 'Hoodhiss'), kind: L('Bestiole Cobra', 'Cobra Critter'),
     type: 'poison', base: { hp: 65, atk: 95, def: 75, spa: 65, spd: 80, spe: 90 },
     catchRate: 90, baseExp: 147, evYield: { atk: 2 }, rarity: 'uncommon', evolvesFrom: '033',
     stencils: ['pochoir-02', 'pochoir-11', 'pochoir-12', 'pochoir-15', 'pochoir-18', 'pochoir-19'],
@@ -589,7 +589,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '034', slug: 'dragounet', draft: true, name: L('Dragounet', 'Dragonlet'), kind: L('Bestiole Dragonnet', 'Little Dragon Critter'),
+    id: '034', slug: 'dragounet', faces: 'left', draft: true, name: L('Dragounet', 'Dragonlet'), kind: L('Bestiole Dragonnet', 'Little Dragon Critter'),
     type: 'dragon', base: { hp: 41, atk: 64, def: 45, spa: 50, spd: 50, spe: 50 },
     catchRate: 45, baseExp: 67, evYield: { atk: 2 }, rarity: 'rare', evolutions: [{ to: '044', level: 30 }],
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-14', 'pochoir-16', 'pochoir-19', 'pochoir-20'],
@@ -603,7 +603,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '044', slug: 'dragondine', draft: true, name: L('Dragondine', 'Dragonflow'), kind: L('Bestiole Ondine', 'Water-Sprite Critter'),
+    id: '044', slug: 'dragondine', faces: 'left', draft: true, name: L('Dragondine', 'Dragonflow'), kind: L('Bestiole Ondine', 'Water-Sprite Critter'),
     type: 'dragon', base: { hp: 61, atk: 84, def: 65, spa: 70, spd: 70, spe: 70 },
     catchRate: 45, baseExp: 144, evYield: { atk: 2 }, rarity: 'rare', evolvesFrom: '034', evolutions: [{ to: '045', level: 55 }],
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-14', 'pochoir-16', 'pochoir-19', 'pochoir-20'],
@@ -617,7 +617,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '045', slug: 'dragopataud', draft: true, name: L('Dragopataud', 'Dragonbumble'), kind: L('Bestiole Câlin', 'Cuddle Critter'),
+    id: '045', slug: 'dragopataud', faces: 'left', draft: true, name: L('Dragopataud', 'Dragonbumble'), kind: L('Bestiole Câlin', 'Cuddle Critter'),
     type: 'dragon', type2: 'vol', base: { hp: 88, atk: 115, def: 88, spa: 95, spd: 84, spe: 70 },
     catchRate: 45, baseExp: 218, evYield: { atk: 3 }, rarity: 'rare', evolvesFrom: '044',
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-14', 'pochoir-16', 'pochoir-19', 'pochoir-20'],
@@ -631,7 +631,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '035', slug: 'boulonnet', draft: true, name: L('Boulonnet', 'Boltbit'), kind: L('Bestiole Aimant', 'Magnet Critter'),
+    id: '035', slug: 'boulonnet', faces: 'left', draft: true, name: L('Boulonnet', 'Boltbit'), kind: L('Bestiole Aimant', 'Magnet Critter'),
     type: 'electrique', type2: 'acier', base: { hp: 25, atk: 35, def: 70, spa: 95, spd: 55, spe: 45 },
     catchRate: 190, baseExp: 89, evYield: { spa: 2 }, rarity: 'uncommon', evolutions: [{ to: '046', level: 30 }],
     stencils: ['pochoir-02', 'pochoir-04', 'pochoir-17', 'pochoir-19'],
@@ -644,7 +644,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '046', slug: 'triboulon', draft: true, name: L('Triboulon', 'Tribolt'), kind: L('Bestiole Trio d’aimants', 'Magnet Trio Critter'),
+    id: '046', slug: 'triboulon', faces: 'left', draft: true, name: L('Triboulon', 'Tribolt'), kind: L('Bestiole Trio d’aimants', 'Magnet Trio Critter'),
     type: 'electrique', type2: 'acier', base: { hp: 55, atk: 65, def: 100, spa: 120, spd: 75, spe: 75 },
     catchRate: 60, baseExp: 161, evYield: { spa: 3 }, rarity: 'uncommon', evolvesFrom: '035',
     stencils: ['pochoir-02', 'pochoir-04', 'pochoir-17', 'pochoir-19'],
@@ -672,7 +672,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '049', slug: 'poupochette', draft: true, name: L('Poupochette', 'Pouchmum'), kind: L('Bestiole Maman', 'Mum Critter'),
+    id: '049', slug: 'poupochette', faces: 'left', draft: true, name: L('Poupochette', 'Pouchmum'), kind: L('Bestiole Maman', 'Mum Critter'),
     type: 'normal', base: { hp: 105, atk: 95, def: 80, spa: 40, spd: 80, spe: 90 },
     catchRate: 45, baseExp: 175, evYield: { hp: 2 }, rarity: 'rare',
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-12', 'pochoir-15', 'pochoir-19'],
