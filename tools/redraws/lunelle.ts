@@ -37,5 +37,12 @@ export default {
     dot(452, 440, 11, 14, '#ffffff');
     stroke([[300, 560], [360, 590], [430, 570]], { w: 5 });
     shape(potato(560, 530, 36, 22, 7, 0.1), DEEP, { over: 0 }, { w: 0.1 });
+    // only in battle: its belly moon twinkles (drawn last, the card stays the same)
+    c.part('lune', { pivot: [440, 720], motion: 'flicker', period: 2.2, extra: true }, () => {
+      shape(moon, '#fff4b0', { angle: 80, over: 0, press: 0.8 }, { w: 3.5 });
+      for (const [x, y, r] of [[530, 650, 24], [345, 690, 18], [500, 805, 16], [390, 620, 14]] as const) {
+        shape([[x, y - r], [x + r / 4, y - r / 4], [x + r, y], [x + r / 4, y + r / 4], [x, y + r], [x - r / 4, y + r / 4], [x - r, y], [x - r / 4, y - r / 4]], MOON, { over: 0 }, { w: 3 }, false);
+      }
+    });
   },
 } satisfies Redraw;

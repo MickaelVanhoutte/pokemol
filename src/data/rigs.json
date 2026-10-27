@@ -126,6 +126,17 @@
         "height": 18.2,
         "ox": 87.3,
         "oy": 79
+      },
+      {
+        "name": "lune",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 27.7,
+        "top": 61.3,
+        "width": 29.1,
+        "height": 24.1,
+        "ox": 51.1,
+        "oy": 53.9
       }
     ]
   },
@@ -158,6 +169,18 @@
   "008": {
     "slug": "ronflon",
     "parts": [
+      {
+        "name": "pomme",
+        "motion": "reach",
+        "amp": -58,
+        "period": 4.4,
+        "left": 0,
+        "top": 48.1,
+        "width": 42.1,
+        "height": 22.7,
+        "ox": 19.1,
+        "oy": 13.6
+      },
       {
         "name": "zzz",
         "motion": "flicker",
@@ -246,6 +269,23 @@
         "height": 23.9,
         "ox": 92.2,
         "oy": 65
+      },
+      {
+        "name": "langue",
+        "motion": "peek",
+        "to": [
+          0,
+          -55
+        ],
+        "shrink": 0.3,
+        "fade": true,
+        "period": 3.4,
+        "left": 36,
+        "top": 56.3,
+        "width": 14.8,
+        "height": 23.1,
+        "ox": 46.6,
+        "oy": 13.4
       }
     ]
   },
@@ -422,9 +462,9 @@
         "period": 2.2,
         "behind": true,
         "left": 59.3,
-        "top": 11.2,
+        "top": 11.6,
         "width": 31.4,
-        "height": 40.1,
+        "height": 39.9,
         "ox": 9,
         "oy": 90.4
       },
@@ -433,10 +473,11 @@
         "motion": "swing",
         "amp": 6,
         "period": 1.9,
+        "behind": true,
         "left": 0,
-        "top": 36.3,
+        "top": 36.6,
         "width": 32.4,
-        "height": 33.7,
+        "height": 33.6,
         "ox": 91.2,
         "oy": 74.5
       }
@@ -732,6 +773,32 @@
         "height": 36.9,
         "ox": 25.8,
         "oy": 72.1
+      },
+      {
+        "name": "lame-haut",
+        "motion": "flap",
+        "amp": 14,
+        "period": 0.6,
+        "phase": 0,
+        "left": 0.7,
+        "top": 22.8,
+        "width": 38.8,
+        "height": 20.6,
+        "ox": 87.9,
+        "oy": 77.3
+      },
+      {
+        "name": "lame-bas",
+        "motion": "flap",
+        "amp": 14,
+        "period": 0.6,
+        "phase": 0.5,
+        "left": 2.3,
+        "top": 55.1,
+        "width": 38.4,
+        "height": 8.1,
+        "ox": 90.9,
+        "oy": 20.1
       }
     ]
   },

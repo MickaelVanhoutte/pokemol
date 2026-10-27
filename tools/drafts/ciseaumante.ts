@@ -20,17 +20,20 @@ export default {
     shape(shake([[560, 600], [700, 560], [840, 650], [900, 800], [820, 860], [680, 790]], 10), GREEN, { gap: 13, miss: 0.04 });
     shape(potato(560, 560, 85, 160, 8, 0.05), GREEN, { gap: 13, miss: 0.04, angle: -70 });
     // scissor arms: blades out front, red handles at the elbow
-    const scissors = (x: number, y: number, dx: number, dy: number) => {
+    // in battle the lower blade of each pair opens and shuts round its screw: snip, snip
+    const scissors = (x: number, y: number, dx: number, dy: number, blade: string, phase: number) => {
       shape(potato(x, y, 46, 34, 7, 0.06), HANDLE, { gap: 8, w: 9, miss: 0 }, 5);
       shape(potato(x + 30, y + 40, 46, 34, 7, 0.06), HANDLE, { gap: 8, w: 9, miss: 0 }, 5);
       shape(shake([[x + 20, y + 10], [x + dx, y + dy - 25], [x + dx + 20, y + dy], [x + 40, y + 40]], 4), BLADE, { gap: 8, w: 9, miss: 0 }, 5);
-      shape(shake([[x + 40, y + 30], [x + dx + 20, y + dy + 10], [x + dx + 10, y + dy + 40], [x + 30, y + 50]], 4), BLADE, { gap: 8, w: 9, miss: 0 }, 5);
-      dot(x + 32, y + 26, 7);
+      k.part(blade, { pivot: [x + 32, y + 26], motion: 'flap', amp: 14, period: 0.6, phase }, () => {
+        shape(shake([[x + 40, y + 30], [x + dx + 20, y + dy + 10], [x + dx + 10, y + dy + 40], [x + 30, y + 50]], 4), BLADE, { gap: 8, w: 9, miss: 0 }, 5);
+        dot(x + 32, y + 26, 7);
+      });
     };
     stroke([[520, 520], [470, 470], [430, 470]], 10);
-    scissors(380, 440, -250, -150);
+    scissors(380, 440, -250, -150, 'lame-haut', 0);
     stroke([[540, 600], [480, 640], [440, 650]], 10);
-    scissors(390, 620, -270, 20);
+    scissors(390, 620, -270, 20, 'lame-bas', 0.5);
     // triangle head, big eyes, antennae
     stroke([[500, 260], [470, 140], [420, 100]], 5);
     stroke([[560, 260], [620, 140], [680, 110]], 5);

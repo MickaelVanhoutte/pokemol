@@ -31,5 +31,10 @@ export default {
       shape(band([[300, 500], [190, 470], [90, 450]], 54, 46), PURPLE, { angle: 20 });
       shape([[100, 415], [15, 360], [70, 440], [5, 465], [75, 478], [30, 540], [115, 490]], PURPLE, { angle: 20, press: 1.1 }, {}, false);
     });
+    // only in battle: a big tongue poking out of its grin, now and then (drawn last, the card stays the same)
+    c.part('langue', { pivot: [420, 590], motion: 'peek', to: [0, -55], shrink: 0.3, fade: true, period: 3.4, extra: true }, () => {
+      shape([[372, 588], [470, 588], [478, 680], [448, 742], [404, 738], [370, 680]], '#f07f9a', { angle: 90, over: 0, press: 1.1 });
+      stroke([[422, 600], [424, 700]], { w: 4, col: '#c4506b' });
+    });
   },
 } satisfies Redraw;

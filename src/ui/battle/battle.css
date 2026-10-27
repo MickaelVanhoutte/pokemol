@@ -91,6 +91,8 @@
 @keyframes partSwing { 25% { rotate: var(--amp); } 75% { rotate: calc(-1 * var(--amp)); } }
 .pk-part--nod { animation-name: partNod; }
 @keyframes partNod { 0%, 70%, 100% { rotate: 0deg; } 80% { rotate: var(--amp); } 90% { rotate: 0deg; } }
+.pk-part--reach { animation-name: partReach; }
+@keyframes partReach { 0%, 30%, 100% { rotate: 0deg; } 48%, 68% { rotate: var(--amp); } 85% { rotate: 0deg; } }
 .pk-part--peek { animation-name: partPeek; }
 @keyframes partPeek { 0%, 40%, 100% { translate: 0 0; scale: 1; opacity: 1; } 52%, 82% { translate: var(--to-x) var(--to-y); scale: var(--shrink); opacity: var(--fade); } }
 /* in front at rest, behind the rest once it is small (a turtle inside its shell) */

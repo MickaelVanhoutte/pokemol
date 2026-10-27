@@ -16,9 +16,12 @@ export default {
     shape(potato(300, 860, 100, 80, 10, 0.06), BLUE, { angle: 60 });
     shape(potato(285, 870, 54, 42, 8, 0.08), CREAM, { over: 0 }, { w: 4 });
     // the near arm holding an apple on the tummy
-    shape(band([[230, 520], [260, 610], [390, 640]], 80, 70), BLUE, { angle: 60 });
-    shape(potato(430, 630, 50, 46, 9, 0.05), APPLE, { angle: 80, press: 1.1, over: 0 });
-    stroke([[430, 585], [440, 555]], { w: 4.5 });
+    // in battle it brings the apple up to its mouth now and then, still fast asleep
+    c.part('pomme', { pivot: [235, 520], motion: 'reach', amp: -58, period: 4.4 }, () => {
+      shape(band([[230, 520], [260, 610], [390, 640]], 80, 70), BLUE, { angle: 60 });
+      shape(potato(430, 630, 50, 46, 9, 0.05), APPLE, { angle: 80, press: 1.1, over: 0 });
+      stroke([[430, 585], [440, 555]], { w: 4.5 });
+    });
     // the head turned left, little pointed ears, fast asleep
     shape([[300, 250], [320, 150], [390, 230]], BLUE, { angle: 70 }, {}, false);
     shape([[540, 225], [620, 130], [640, 245]], BLUE, { angle: 110 }, {}, false);
