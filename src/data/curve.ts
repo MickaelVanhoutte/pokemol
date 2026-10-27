@@ -40,7 +40,7 @@ export const CURVE_PATH: CurveStep[] = [
   { map: 'entrepot1' },
   { map: 'entrepot2' },
   { map: 'atelierFluo' },
-  { map: 'montFusain1', from: 'feutre', to: 'montFusain2', join: 1 },
+  { map: 'montFusain1', from: 'feutre', to: 'montFusain2' },
   { map: 'montFusain2', from: 'montFusain1', to: 'braise' },
   { map: 'atelierBraise' },
   { map: 'route6', from: 'braise', to: 'paillette' },
@@ -62,6 +62,8 @@ export const CURVE_PATH: CurveStep[] = [
 
 /** Trainers you can walk around or that are extras (the strong cave guard, the tower's shadow). */
 const OPTIONAL = new Set(['gardien', 'ombre']);
+/** Team Gomme's officers: like the Atelier Masters, a boss may stand a little above the team. */
+const ADMINS = new Set(['rature', 'blanche', 'buvard', 'rature2', 'blanche2']);
 
 const solid = (def: MapDef, x: number, y: number, blocked: Set<string>) => {
   const row = def.rows[y];
@@ -129,6 +131,8 @@ export interface CurveRow {
   /** Its strongest Bestiole at this difficulty. */
   ace: number;
   leader: boolean;
+  /** An Atelier Master or a Team Gomme admin. */
+  boss: boolean;
   /** The team's levels when you meet it: the starter first. */
   starter: number;
   mates: number[];
@@ -174,7 +178,7 @@ export function curve(difficulty: Difficulty = 'normal'): Curve {
     for (const id of [...pathTrainers(step.map), ...(step.fights ?? [])]) {
       const t = TRAINERS[id];
       rows.push({
-        map: step.map, trainer: id, leader: !!t.badge,
+        map: step.map, trainer: id, leader: !!t.badge, boss: !!t.badge || ADMINS.has(id),
         ace: Math.max(...t.party.map((p) => trainerLevel(p.level, difficulty))),
         starter: levelOf(team[0].xp), mates: team.slice(1).map((m) => levelOf(m.xp)),
       });

@@ -3,20 +3,20 @@ import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
 const FUSAIN_ENCOUNTERS = {
-  rate: 0.09,
+  rate: 0.11,
   anyTile: true,
   table: [
-    { id: '009', w: 26, min: 20, max: 23 },
-    { id: '008', w: 18, min: 21, max: 24 },
-    { id: '004', w: 18, min: 20, max: 23 },
-    { id: '013', w: 16, min: 20, max: 23 },
-    { id: '010', w: 8, min: 22, max: 24 },
-    { id: '007', w: 14, min: 20, max: 23 },
-    { id: '002', w: 4, min: 20, max: 22 },
-    { id: '029', w: 14, min: 20, max: 23 },
-    { id: '030', w: 16, min: 20, max: 23 },
-    { id: '067', w: 12, min: 20, max: 23 },
-    { id: '065', w: 6, min: 20, max: 22 },
+    { id: '009', w: 26, min: 18, max: 21 },
+    { id: '008', w: 18, min: 19, max: 22 },
+    { id: '004', w: 18, min: 18, max: 21 },
+    { id: '013', w: 16, min: 18, max: 21 },
+    { id: '010', w: 8, min: 20, max: 22 },
+    { id: '007', w: 14, min: 18, max: 21 },
+    { id: '002', w: 4, min: 18, max: 20 },
+    { id: '029', w: 14, min: 18, max: 21 },
+    { id: '030', w: 16, min: 18, max: 21 },
+    { id: '067', w: 12, min: 18, max: 21 },
+    { id: '065', w: 6, min: 18, max: 20 },
   ],
 };
 
@@ -62,6 +62,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     ],
     npcs: [
       { id: 'mfOlga', x: 7, y: 5, look: LOOKS.hiker, facing: 'right', trainer: 'mfOlga', sight: 4 },
+      { id: 'mfArmand', x: 17, y: 6, look: { hair: '#6a6a7a', shirt: '#8a6a3a', pants: '#4a4a5a', hat: '#c8a060' }, facing: 'right', trainer: 'mfArmand', sight: 2 },
       { id: 'mfRemi', x: 13, y: 9, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'up', trainer: 'mfRemi', sight: 3 },
       { id: 'mineur', x: 13, y: 10, look: LOOKS.hiker, facing: 'down', script: 'mineur' },
     ],

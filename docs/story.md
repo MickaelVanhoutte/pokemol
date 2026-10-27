@@ -220,9 +220,9 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Atelier Pastel | L5–6 | Mireille L7/L9 (Chrysalou, Papivole) |
 | Route 2, Bois Brumeux | L7–10 (4 + 6 trainers) | — |
 | Atelier Plume | L11 | Gaspard L10/L8 |
-| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15) | Marine L16–19 |
-| Route 4, Ville-Feutre | L17–21 | Rature L18–20, Zélie L22–24 |
-| Mont Fusain, Braise | L22–24 | Ambre L23–24 |
+| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 has 4 trainers | Marine L15/16/18 |
+| Route 4, Ville-Feutre | L15–19 (Route 4 has 5 trainers) | Rature L18/17/19, Zélie L19/19/21 |
+| Mont Fusain, Braise | L18–20 (wild L18–22) | Ambre L21/18/21 |
 | Paillette, Tour | L27–31 | Célestine L31–34, Blanche L30–31 (×4) |
 | Gouache, Encre, Factory | L31–38 | Basile L35–38 (Bouquétigre ace), Nocturne L35–38 |
 | Finale | — | Rival L40–43 (6), Great Eraser L39–41 (5) |
@@ -235,15 +235,27 @@ several levels behind, and the routes forced no wild battles at all. The balance
 assumed generous hand-written levels. Now the sim fights at the curve's levels.
 
 Changes:
-- Catch-up XP (Gen 5 level factor on the Gen 3 base) and XP on capture.
+- XP follows the Gen 5 formula: `baseExp × level / 5`, then scaled by the level gap (catch-up XP).
+  Catching a Bestiole gives XP too.
+- The curve assumes a team of five that shares the XP evenly.
 - Act 1's routes doubled in size. Bands of tall grass across them force about 3 wild battles per crossing (Route 2 and the
   woods have a slightly higher encounter rate). New trainers: Margot and Arthur on Route 1, Anouk and Colette on
   Route 2, Timothée and Maëlle in the woods. Paul, the second grunt, Pierrot's Zigzou and Gaspard's
   Ronflon went down a level.
 
-On Normal the curve now brings the team to Mireille at L7/6 and to Gaspard at L12/12/11. Gaspard's
-sims went from about 30% to 66–75%. `curve.test.ts` checks Act 1. Acts 2 and 3 follow, together with
-their routes.
+On Normal the curve now brings the team to Mireille at L8/7 and to Gaspard at L13/13/11 (Gaspard's sims
+went from about 30% to 66–75%).
+
+Act 2 got the same treatment:
+- Route 3 (26×34) and Route 4 (24×40) have forced bands of tall grass, and two more trainers each:
+  Loïc and Romane, Nino and Clara.
+- Mont Fusain got Géologue Armand and a slightly higher encounter rate. Its puzzles were left alone.
+- Act 2's trainers were brought down to the curve: Marine 15/16/18, Zélie 19/19/21, Ambre 21/18/21.
+  The wild Bestioles of Route 4 and Mont Fusain went down too.
+
+On Normal the sims now give Marine and Zélie 93–100% and Ambre 41–91% (Minousse against Fire).
+`curve.test.ts` checks Acts 1 and 2: route trainers no higher than the team's lead, Atelier Masters
+and admins at most two levels above it. Act 3 follows with its routes.
 
 **The owner's request (Oct 2026):** the first battles must let players learn the mechanics.
 - The first trainers have one or two low-level Bestioles; the starter alone should win Act 1 route
@@ -271,7 +283,7 @@ passes `'normal'` explicitly.
 2–4 levels below the expected starter level, and each leader's ace matches it. Mont Fusain and Ambre
 barely moved, so Act 3 (from Route 6, L27) is unchanged.
 - Each starter is also a rare wild find (weight 3–4): Minousse in the Bois Brumeux (L8–10), Clapotin
-  on Route 3 (L14–16), Braisou on Mont Fusain (L20–22). Every team can find a type counter (Minousse
+  on Route 3 (L14–16), Braisou on Mont Fusain (L18–20). Every team can find a type counter (Minousse
   against Ambre needs one), and the Bestiodex can be completed without Tombola luck.
 - Still tough on Normal: Camper Tom (three starters) for Braisou, and Ambre for a Minousse team
   without a Water or Fire Bestiole.

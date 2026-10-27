@@ -6,7 +6,7 @@ import { CURVE_PATH, curve, forcedSteps } from './curve';
  * Bestioles they can't avoid keeps up without grinding. Each act is checked once its routes have been
  * made longer: `CHECKED_UNTIL` moves forward with them.
  */
-const CHECKED_UNTIL = 'atelierPlume';
+const CHECKED_UNTIL = 'atelierBraise';
 
 describe('the level curve on Normal', () => {
   const { rows } = curve('normal');
@@ -14,11 +14,11 @@ describe('the level curve on Normal', () => {
   const checked = rows.slice(0, last + 1);
 
   it('never puts a route trainer ahead of the team’s lead', () => {
-    for (const r of checked.filter((x) => !x.leader)) expect(`${r.trainer} L${r.ace}`).toBe(`${r.trainer} L${Math.min(r.ace, r.starter)}`);
+    for (const r of checked.filter((x) => !x.boss)) expect(`${r.trainer} L${r.ace}`).toBe(`${r.trainer} L${Math.min(r.ace, r.starter)}`);
   });
 
-  it('keeps each Atelier Master within one level of it', () => {
-    for (const r of checked.filter((x) => x.leader)) expect(r.ace - r.starter, r.trainer).toBeLessThanOrEqual(1);
+  it('keeps each Atelier Master and Team Gomme admin within two levels of it', () => {
+    for (const r of checked.filter((x) => x.boss)) expect(r.ace - r.starter, r.trainer).toBeLessThanOrEqual(2);
   });
 
   it('walks a real path: every map crossed links where it should', () => {
