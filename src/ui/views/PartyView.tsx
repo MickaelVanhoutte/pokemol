@@ -40,7 +40,7 @@ function Slot({ m, i, lead, active, cursor, disabled, swapping, tag, onClick }: 
  * FRLG party screen. `field`: summary, held item (give / take) and order; `battle`: send out or
  * summary; `forced`: like battle with no cancel (after a faint); `target`: pick who gets an item.
  */
-export function PartyView({ party, mode, active = -1, canPick = () => true, message, tag, refuse, onPick, onSwap, onGive, onTake, onClose }: {
+export function PartyView({ party, mode, active = -1, canPick = () => true, message, tag, refuse, onPick, onSwap, onSwapMoves, onGive, onTake, onClose }: {
   party: Mon[];
   mode: PartyMode;
   /** Creature currently fighting (battle modes). */
@@ -53,6 +53,8 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
   refuse?: (i: number) => string;
   onPick?: (i: number) => void;
   onSwap?: (i: number, j: number) => void;
+  /** Puts two moves of a Bestiole in each other's place (from its summary). */
+  onSwapMoves?: (i: number, a: number, b: number) => void;
   /** Field ITEM menu: GIVE opens the bag, TAKE puts the held item back in it. */
   onGive?: (i: number) => void;
   onTake?: (i: number) => void;
@@ -173,7 +175,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
           </div>
         </div>
       )}
-      {summary !== null && <SummaryView mon={party[summary]} onClose={() => setSummary(null)} />}
+      {summary !== null && <SummaryView mon={party[summary]} onClose={() => setSummary(null)} onSwapMoves={onSwapMoves && ((a, b) => onSwapMoves(summary, a, b))} />}
     </div>
   );
 }

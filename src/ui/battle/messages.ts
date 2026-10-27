@@ -28,8 +28,11 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
   switch (e.t) {
     case 'sendOut':
       if (e.side === 1) {
-        if (st.kind === 'wild') return [f(L('Un {n} sauvage apparaît !', 'A wild {n} appeared!'), { n: monLabel(st.sides[1].party[e.idx]) })];
-        return [f(L('{t} envoie {n} !', '{t} sent out {n}!'), { t: tr(st.sides[1].name), n: monLabel(st.sides[1].party[e.idx]) })];
+        const sent = st.sides[1].party[e.idx];
+        const lines = st.kind === 'wild' ? [f(L('Un {n} sauvage apparaît !', 'A wild {n} appeared!'), { n: monLabel(sent) })]
+          : [f(L('{t} envoie {n} !', '{t} sent out {n}!'), { t: tr(st.sides[1].name), n: monLabel(sent) })];
+        if (sent.shiny) lines.push(f(L('Oh ! Une Bestiole pailletée !', 'Oh! A sparkly Critter!')));
+        return lines;
       }
       return [f(L('Vas-y, {n} !', 'Go, {n}!'), { n: mine(e.idx) })];
     case 'withdraw':

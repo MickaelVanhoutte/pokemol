@@ -120,10 +120,11 @@
 .summary__moves .mlist__item { font-size: 1.1rem; }
 .summary__detail { font-size: 1rem; }
 .summary__detail p { margin: 0; }
-.summary__stats { color: var(--ink-soft); }
 .summary__foot { display: flex; justify-content: flex-end; gap: 6px; }
 .mvline { display: inline-flex; gap: 6px; align-items: center; }
 .mvline.is-new { color: #2a6ad6; }
+.mvline.is-moving { color: var(--cursor); }
+.summary__move-btn { margin-top: 6px; font-size: 1rem; }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
 .kv dt { color: var(--ink-soft); }
 .kv dd { margin: 0; text-align: right; }

@@ -117,8 +117,8 @@ export function BattleScreen(props: BattleProps) {
       const sent = snap.sides[e.side].party[e.idx];
       if (sent) {
         setTimeout(() => sfx.cry(sent.species), 250 * speed.current);
-        // a sparkly Bestiole twinkles as it comes out
-        if (sent.shiny) setTimeout(() => { sfx.sparkle(); pulse(e.side, 'shiny', 1000); }, 650 * speed.current);
+        // a sparkly Bestiole twinkles as it comes out (the stars and their sound are its animation)
+        if (sent.shiny) setTimeout(() => { if (!prefs.value.moveFx) sfx.sparkle(); pulse(e.side, 'shiny', 1700); }, 650 * speed.current);
       }
     }
     if (e.t === 'faint' && e.side === 1 && props.trainer?.grey) {
@@ -179,7 +179,8 @@ export function BattleScreen(props: BattleProps) {
       case 'end': if (e.result === 'win' || e.result === 'capture') { stopMusic(); playJingle(e.result === 'capture' ? 'caught' : 'victory', { fallback: sfx.victory, resume: false }); } break;
     }
     // an animation, and enough time to read the message
-    const wait = sleep((e.t === 'move' && anim ? 600 : eventDuration(e)) * speed.current);
+    const shinyOut = e.t === 'sendOut' && !!snap.sides[e.side].party[e.idx]?.shiny;
+    const wait = sleep((e.t === 'move' && anim ? 600 : eventDuration(e) + (shinyOut ? 900 : 0)) * speed.current);
     await (anim ? Promise.all([anim, wait]) : wait);
     if (e.t === 'ball') {
       setMsg(lines.join('\n'));

@@ -1,6 +1,7 @@
 import { L, t, tr } from '../../i18n';
 import type { Mon } from '../../engine/pk/creature';
-import { MoveButton, TextBox, YesNo } from '../paper';
+import { useEffect, useState } from 'preact/hooks';
+import { MoveButton, MoveInfo, TextBox, Window, YesNo } from '../paper';
 import { useMenuNav } from '../paper/nav';
 import type { PanelMode } from './panelMode';
 
@@ -55,7 +56,20 @@ function FightGrid(p: PanelProps) {
     if (s === undefined || (s >= 0 && !p.usable.includes(s))) return;
     p.onMove(s);
   };
-  const [cur, setCur] = useMenuNav(slots.length, { cols: 2, onSelect: pick, onCancel: p.onBack });
+  // a long press shows what a move does, until the next tap or key
+  const [info, setInfo] = useState<number | null>(null);
+  const [cur, setCur] = useMenuNav(slots.length, { cols: 2, active: info === null, onSelect: pick, onCancel: p.onBack });
+  useEffect(() => {
+    if (info === null) return;
+    const close = (e: KeyboardEvent) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      setInfo(null);
+    };
+    window.addEventListener('keydown', close, true);
+    return () => window.removeEventListener('keydown', close, true);
+  }, [info]);
+  const shown = info === null ? undefined : slots[info];
   return (
     <div class="bpanel__grid">
       {[0, 1, 2, 3].map((k) => {
@@ -69,9 +83,15 @@ function FightGrid(p: PanelProps) {
             disabled={s >= 0 && !p.usable.includes(s)}
             class={k === cur ? 'is-on' : ''}
             onClick={() => { setCur(k); pick(k); }}
+            onHold={() => { setCur(k); setInfo(k); }}
           />
         );
       })}
+      {shown !== undefined && (
+        <div class="bpanel__info" onClick={() => setInfo(null)}>
+          <Window seyes><MoveInfo id={shown < 0 ? 'lutte' : p.active.moves[shown].id} pp={shown < 0 ? undefined : p.active.moves[shown].pp} /></Window>
+        </div>
+      )}
     </div>
   );
 }
@@ -97,7 +117,7 @@ export function BattlePanel(p: PanelProps) {
       {(m === 'command' || m === 'fight' || m === 'learnAsk') && (
         <div class="bpanel__split">
           <div class="window seyes bpanel__prompt">
-            <p>{p.text}</p>
+            <p>{p.text}{m === 'fight' && <small class="bpanel__hint">{tr(L('Appui long : détails', 'Hold for details'))}</small>}</p>
             {m === 'fight' && <button class="pbtn pbtn--b bpanel__back" onClick={p.onBack}>{t('battle.btn.back')}</button>}
           </div>
           {m === 'command' && <CommandGrid {...p} />}

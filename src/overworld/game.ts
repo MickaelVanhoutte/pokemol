@@ -8,6 +8,7 @@ import { pencilize } from './pencil';
 import { SpriteSheet, type Look } from './sprites';
 import { tile } from './tiles';
 import { creature } from '../data/creatures';
+import { shinyRecolour } from '../art/shiny';
 
 export const TILE = 16;
 const MARGIN = 9;
@@ -62,6 +63,8 @@ export interface Follower {
   img: HTMLImageElement;
   /** Which way the drawing looks, to turn it towards where it walks. */
   faces?: 'left' | 'right';
+  /** A sparkly Bestiole twinkles as it follows. */
+  shiny?: boolean;
 }
 
 export interface LoadedMap {
@@ -129,14 +132,32 @@ export class Input {
 
 const sheetCache = new Map<string, SpriteSheet>();
 const minis = new Map<string, HTMLImageElement>();
-/** A Bestiole's overworld miniature (public/minis, made by `npm run minis`). */
-export function miniFor(species: string): HTMLImageElement {
-  let img = minis.get(species);
+/** A Bestiole's overworld miniature (public/minis, made by `npm run minis`), in its sparkly colours if `shiny`. */
+export function miniFor(species: string, shiny = false): HTMLImageElement {
+  const key = shiny ? `${species}*` : species;
+  let img = minis.get(key);
   if (!img) {
     const sp = creature(species);
-    img = new Image();
-    img.src = `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
-    minis.set(species, img);
+    const out = (img = new Image());
+    minis.set(key, out);
+    if (!shiny) out.src = `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
+    else {
+      // recoloured from the plain miniature, like the card (src/art/shiny.ts)
+      const base = miniFor(species);
+      const paint = () => {
+        const c = document.createElement('canvas');
+        c.width = base.naturalWidth;
+        c.height = base.naturalHeight;
+        const g = c.getContext('2d')!;
+        g.drawImage(base, 0, 0);
+        const data = g.getImageData(0, 0, c.width, c.height);
+        shinyRecolour(data.data, sp.id);
+        g.putImageData(data, 0, 0);
+        out.src = c.toDataURL('image/png');
+      };
+      if (base.complete && base.naturalWidth) paint();
+      else base.addEventListener('load', paint, { once: true });
+    }
   }
   return img;
 }
@@ -582,6 +603,24 @@ export class Game {
       ctx.drawImage(f.img, 0, 0, dw, dh);
       ctx.restore();
     } else ctx.drawImage(f.img, x, y, dw, dh);
+    if (f.shiny) this.drawTwinkle(ctx, x, y, dw, dh);
+  }
+
+  /** Little gold stars blinking on a sparkly follower, two at a time, somewhere new each time. */
+  private drawTwinkle(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+    const now = performance.now(), cycle = Math.floor(now / 1100), u = (now % 1100) / 1100;
+    const rand = (n: number) => { const r = Math.sin(n * 12.9898) * 43758.5453; return r - Math.floor(r); };
+    for (let k = 0; k < 2; k++) {
+      const v = u - k * 0.35;
+      if (v < 0 || v > 0.5) continue;
+      const arm = v < 0.12 || v > 0.38 ? 1 : 2;
+      const sx = Math.round(x + 1 + rand(cycle * 2 + k) * (w - 2)), sy = Math.round(y + rand(cycle * 2 + k + 0.5) * h * 0.75);
+      ctx.fillStyle = '#ffd84a';
+      ctx.fillRect(sx - arm, sy, arm * 2 + 1, 1);
+      ctx.fillRect(sx, sy - arm, 1, arm * 2 + 1);
+      ctx.fillStyle = '#fffbe6';
+      ctx.fillRect(sx, sy, 1, 1);
+    }
   }
 
   render() {

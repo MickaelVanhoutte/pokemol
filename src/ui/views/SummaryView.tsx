@@ -6,7 +6,7 @@ import { evolutionHints } from '../evolutionText';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
-import { HpBar, MenuList, PixelIcon, StatusTag, TypeBadge, TypeBadges, Window, XpBar, YesNo, lv } from '../paper';
+import { HpBar, MenuList, MoveInfo, PixelIcon, StatusTag, TypeBadge, TypeBadges, Window, XpBar, YesNo, lv } from '../paper';
 import { item } from '../../data/items';
 import { ivGrade } from '../../engine/pk/judge';
 import { nature } from '../../data/natures';
@@ -64,9 +64,12 @@ const natureLabel = (mon: Mon) => {
 
 /**
  * FRLG summary: INFOS / STATS / CAPACITÉS. With `learn`, opens on the moves page with the new
- * move as a 5th row: picking a row forgets it (`null` = give up the new move).
+ * move as a 5th row: picking a row forgets it (`null` = give up the new move). With `onSwapMoves`,
+ * the moves can be put in another order (DÉPLACER, then the row to swap with).
  */
-export function SummaryView(props: { mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void } }) {
+export function SummaryView(props: {
+  mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void }; onSwapMoves?: (a: number, b: number) => void;
+}) {
   return props.mon.egg ? <EggSummary mon={props.mon} onClose={props.onClose} /> : <SummaryMain {...props} />;
 }
 
@@ -91,11 +94,22 @@ function EggSummary({ mon, onClose }: { mon: Mon; onClose: () => void }) {
   );
 }
 
-function SummaryMain({ mon, onClose, learn }: {
-  mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void };
+function SummaryMain({ mon, onClose, learn, onSwapMoves }: {
+  mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void }; onSwapMoves?: (a: number, b: number) => void;
 }) {
   const [page, setPage] = useState<Page>(learn ? 2 : 0);
   const [sel, setSel] = useState<number | null>(null);
+  // the move being moved: the next row picked takes its place
+  const [moving, setMoving] = useState<number | null>(null);
+  const pickMove = (i: number) => {
+    if (learn) return setConfirm(i);
+    if (moving !== null) {
+      if (i !== moving) onSwapMoves?.(moving, i);
+      setMoving(null);
+    }
+    setSel(i);
+  };
+  const back = () => (learn ? setConfirm(4) : moving !== null ? setMoving(null) : onClose());
   const [confirm, setConfirm] = useState<number | null>(null);
   const sp = creature(mon.species);
   const color = TYPES[sp.type].color;
@@ -103,7 +117,7 @@ function SummaryMain({ mon, onClose, learn }: {
   useMenuNav(0, {
     active: confirm === null,
     onSelect: () => undefined,
-    onCancel: () => (learn ? setConfirm(4) : onClose()),
+    onCancel: back,
   });
   // swipe between pages
   let x0 = 0;
@@ -185,30 +199,30 @@ function SummaryMain({ mon, onClose, learn }: {
         {page === 2 && (
           <>
             {learn && <p class="summary__hint">{tr(L('Quelle capacité oublier ?', 'Which move should be forgotten?'))}</p>}
+            {moving !== null && <p class="summary__hint">{tr(L('Où mettre {m} ?', 'Where should {m} go?'), { m: tr(move(moves[moving]).name) })}</p>}
             <Window class="summary__box summary__moves">
               <MenuList
                 active={confirm === null}
                 onCursor={(i) => setSel(i)}
-                onCancel={() => (learn ? setConfirm(4) : onClose())}
+                onCancel={back}
                 items={moves.map((id, i) => {
                   const mv = move(id);
                   const pp = i < mon.moves.length ? mon.moves[i].pp : mv.pp;
                   return {
-                    label: <span class={`mvline ${learn && i === 4 ? 'is-new' : ''}`}><TypeBadge type={mv.type} /> {tr(mv.name)}</span>,
+                    label: <span class={`mvline ${learn && i === 4 ? 'is-new' : ''} ${i === moving ? 'is-moving' : ''}`}><TypeBadge type={mv.type} /> {tr(mv.name)}</span>,
                     side: `PP ${pp}/${mv.pp}`,
-                    onSelect: () => (learn ? setConfirm(i) : setSel(i)),
+                    onSelect: () => pickMove(i),
                   };
                 })}
               />
             </Window>
             <Window class="summary__box summary__detail">
-              {detail ? (
+              {detail && sel !== null ? (
                 <>
-                  <p class="summary__stats">
-                    {detail.cat === 'status' ? tr(L('Statut', 'Status')) : `${tr(L('Puissance', 'Power'))} ${detail.power}`}
-                    {' · '}{tr(L('Précision', 'Accuracy'))} {detail.acc ?? '—'}
-                  </p>
-                  <p>{tr(detail.desc)}</p>
+                  <MoveInfo id={moves[sel]} pp={sel < mon.moves.length ? mon.moves[sel].pp : undefined} />
+                  {onSwapMoves && !learn && moving === null && mon.moves.length > 1 && (
+                    <button class="pbtn summary__move-btn" onClick={() => setMoving(sel)}>{tr(L('Déplacer', 'Move'))}</button>
+                  )}
                 </>
               ) : <p>{tr(L('Touche une capacité pour la décrire.', 'Tap a move to read about it.'))}</p>}
             </Window>
@@ -217,7 +231,7 @@ function SummaryMain({ mon, onClose, learn }: {
       </div>
 
       <div class="frame__foot summary__foot">
-        <button class="pbtn pbtn--b" onClick={() => (learn ? setConfirm(4) : onClose())}>{tr(L('Retour', 'Back'))}</button>
+        <button class="pbtn pbtn--b" onClick={back}>{tr(L('Retour', 'Back'))}</button>
       </div>
 
       {learn && confirm !== null && (

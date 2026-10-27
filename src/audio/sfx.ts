@@ -141,6 +141,8 @@ const FX = {
   snore: () => play([{ f: 180, to: 120, dur: 0.35, type: 'triangle', vol: 0.05 }]),
   buzz: () => play([{ f: 110, dur: 0.5, type: 'sawtooth', vol: 0.03 }, { f: 116, dur: 0.5, type: 'square', vol: 0.02 }]),
   ice: () => { noise(0, 0.3, 6000, 0.08); play([{ f: 1800, to: 2400, dur: 0.2, type: 'triangle', vol: 0.03 }]); },
+  /** A sparkly Bestiole: a run of glittering notes up, ringing out. */
+  shiny: () => play([1319, 1760, 2093, 2637, 3136, 2637, 3520].map((f, i) => ({ f, at: i * 0.055, dur: i === 6 ? 0.35 : 0.1, type: 'triangle' as const, vol: 0.06 }))),
   twinkle: () => play([1568, 2093, 1760].map((f, i) => ({ f, at: i * 0.06, dur: 0.07, type: 'triangle' as const, vol: 0.03 }))),
   shine: () => play([784, 1047, 1319, 1568].map((f, i) => ({ f, at: i * 0.06, dur: 0.12, type: 'triangle' as const, vol: 0.04 }))),
   statUp: () => play([392, 494, 587, 784].map((f, i) => ({ f, at: i * 0.06, dur: 0.07, vol: 0.04 }))),

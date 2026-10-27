@@ -141,7 +141,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - `src/ui/battle/BattleScreen.tsx` dispatches actions:
   - it plays the events as text (`messages.ts`) and animations (`BattleScene.tsx`);
   - it keeps the bag, party and learn-move overlays inside itself, because the router would unmount
-    the battle.
+    the battle;
+  - a long press (or right click) on a move button (`MoveButton`'s `onHold`) shows `MoveInfo` over the
+    scene: type, kind, power, accuracy, PP and description.
 - `BattlePanel` has a fixed height. Its mode comes from the pure `panelMode()`. Long text is
   paginated by `TextBox` rather than growing the panel.
 - Backdrops are drawn in coloured pencil on a canvas (`backdrops.ts`, with the `Pencil` of
@@ -189,7 +191,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
 Both go through `src/art/cutout.ts` (paper flattening, ink mask) like a photo and make the overworld
 miniature `public/minis/<id>-<slug>.png` (`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour
 palette, a dark outline). The miniature is the follower (`Game.follower`, refreshed from the party by
-`refreshFollower`); a test requires one per creature. Her own drawings stay as the originals:
+`refreshFollower`); a test requires one per creature. Sparkly (shiny) Bestioles are recoloured at run time
+by `src/art/shiny.ts`, the same hue turn for the card (`monArtUrl`) and the follower (`miniFor(id, true)`). Her own drawings stay as the originals:
 `tools/cards-manifest.json` (crop box, erase polygons, `scale`, `options`) → `tools/cut-drawings.ts` →
 `public/originals/`, listed in `src/data/originals.ts` and shown in the credits. Sheets land in
 `tools/out/` (gitignored scratch, also excluded from `tsc`).

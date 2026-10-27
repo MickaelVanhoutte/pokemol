@@ -234,6 +234,33 @@ export const popOut = (o: { who?: Who; dur?: number } = {}): Builder => (env) =>
   };
 };
 
+/** A sparkly Bestiole coming out: two rings of gold stars bursting from it, then glitter twinkling all over. */
+export const shinyBurst = (o: { who?: Who; dur?: number } = {}): Builder => (env) => {
+  const dur = o.dur ?? 1400;
+  const R = fixed(env, 97);
+  const glitter = Array.from({ length: 10 }, () => [R() - 0.5, R() - 0.5, 0.45 + R() * 0.4]);
+  return {
+    start: 0, sounds: [['shiny', 0], ['shiny', 560]], dur,
+    draw(b, t) {
+      const A = who(env, o.who ?? 'user'), s = A.size;
+      ([[0, 8, 0], [0.4, 7, 0.45]] as const).forEach(([from, n, turn], w) => {
+        const u = seg(t, from, from + 0.55);
+        if (u <= 0 || u >= 1) return;
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2 + turn + u * 0.9;
+          const r = s * (0.12 + easeOut(u) * 0.6);
+          b.doodle('star', i % 2 ? '#ffd84a' : SPARK, A.x + Math.cos(a) * r, A.y + Math.sin(a) * r * 0.85, s * 0.22 * bell(u), { seed: w * 20 + i });
+        }
+      });
+      glitter.forEach(([dx, dy, at0], i) => {
+        const u = seg(t, at0, at0 + 0.35);
+        if (u <= 0 || u >= 1) return;
+        b.doodle('spark', '#ffd84a', A.x + dx * s * 0.9, A.y + dy * s * 0.9, s * 0.15 * bell(u), { seed: 60 + i });
+      });
+    },
+  };
+};
+
 /** A pencil whirl closing in on a drawing called back. */
 export const whirl = (o: { who?: Who; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 520;

@@ -36,6 +36,7 @@ export function PartyScreen() {
       mode="field"
       message={note}
       onSwap={(i, j) => update((x) => { [x.party[i], x.party[j]] = [x.party[j], x.party[i]]; })}
+      onSwapMoves={(i, a, b) => update((x) => { const m = x.party[i].moves; [m[a], m[b]] = [m[b], m[a]]; })}
       onGive={(i) => { setNote(undefined); setGiveTo(i); }}
       onTake={(i) => update((x) => void takeHeld(x, x.party[i]))}
       onClose={backToWorld}

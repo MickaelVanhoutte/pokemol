@@ -22,7 +22,7 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
     <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
       <div class="pk-hp__top">
         {/* just the name: "wild" / "foe" stay in the battle messages */}
-        <b>{monLabel(m)}</b>
+        <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦">✦</i>}</b>
         {m.status && <StatusTag s={m.status} />}
         <span>{lv(m.level)}</span>
       </div>

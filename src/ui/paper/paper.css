@@ -185,4 +185,12 @@ img.picon { image-rendering: pixelated; image-rendering: crisp-edges; }
 .pk-move small { display: flex; gap: 8px; font-size: 0.85rem; color: var(--ink-soft); white-space: nowrap; }
 .pk-move__type { color: var(--type); filter: brightness(0.8); }
 .pk-move:disabled { opacity: 0.45; cursor: default; }
+/* a long press shows the move's details: no text selection or phone menu */
+.pk-move { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.move-info p { margin: 0 0 4px; }
+.move-info p:last-child { margin: 0; }
+.move-info__head { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-size: 1.25rem; }
+.move-info__head b { font-weight: 400; }
+.move-info__cat { font-size: 0.9rem; color: var(--ink-soft); }
+.move-info__stats { display: flex; flex-wrap: wrap; gap: 0 14px; color: var(--ink-soft); }
 .pk-move:not(:disabled):active { transform: translateY(2px); }

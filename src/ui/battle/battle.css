@@ -103,8 +103,8 @@
 
 .fx-in { animation: popIn 0.5s cubic-bezier(.3, 1.6, .5, 1); }
 /* sparkly Bestiole: a golden twinkle as it comes out */
-.fx-shiny { animation: shinyTwinkle 1s ease; }
-@keyframes shinyTwinkle { 30%, 70% { filter: drop-shadow(0 0 6px #ffd84a) drop-shadow(0 0 2px #fff) brightness(1.15); } }
+.fx-shiny { animation: shinyTwinkle 1.7s ease; }
+@keyframes shinyTwinkle { 20%, 45%, 75% { filter: drop-shadow(0 0 10px #ffd84a) drop-shadow(0 0 3px #fff) brightness(1.2); } 32%, 60% { filter: drop-shadow(0 0 3px #ffd84a); } }
 @keyframes popIn { from { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
 .fx-out { animation: popOut 0.5s ease forwards; }
 @keyframes popOut { to { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
@@ -132,6 +132,7 @@
 /* name and level on one line, the bar under it: two short rows */
 .pk-hp__top { display: flex; align-items: baseline; gap: 6px; font-size: clamp(0.9rem, 3.6vw, 1.1rem); line-height: 1.15; }
 .pk-hp__top b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
+.pk-hp__top .shiny-mark { margin-left: 3px; }
 .pk-hp__bar { display: flex; align-items: center; gap: 4px; }
 .pk-hp__bar .hpbar { flex: 1; }
 .pk-hp__bar .hp-label { font-size: 0.65rem; }
@@ -176,6 +177,15 @@
 }
 .bpanel__prompt p { margin: 0; flex: 1; min-width: 0; }
 .bpanel__back { flex: none; font-size: 1rem; min-height: 0; padding: 0 6px; }
+.bpanel__hint { display: block; font-size: 0.8em; color: var(--ink-soft); }
+/* a long press on a move: what it does, over the scene; any tap or key closes it */
+.bpanel__info {
+  position: fixed; inset: 0; z-index: 40;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: max(10vh, 12px) 16px 0;
+  background: rgba(43, 37, 54, 0.3);
+}
+.bpanel__info > .window { width: min(100%, 440px); font-size: 1.1rem; }
 /* rows never grow past the fixed panel: at worst a button clips its own text */
 .bpanel__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 2px; }
 .bpanel__grid .pk-move { overflow: hidden; }

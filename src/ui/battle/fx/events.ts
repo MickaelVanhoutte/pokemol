@@ -8,7 +8,7 @@ import type { Major, StageKey } from '../../../data/schema';
 import { activeMon, type BattleEvent, type BattleState, type Side } from '../../../engine/pk/battle';
 import { at, PAL, SPARK, type Builder, type Recipe } from './core';
 import { drain, impactStar, sparkle, sparks, speedLines, wrap } from './effects';
-import { aura, batter, crayonBall, crumbs, doll, orbit, popOut, pulse, rise, shield, sweat, vines, weatherIn, whirl } from './statusFx';
+import { aura, batter, crayonBall, crumbs, doll, orbit, popOut, pulse, rise, shield, shinyBurst, sweat, vines, weatherIn, whirl } from './statusFx';
 
 /** Crayon of each stat for the rising (or falling) chevrons. */
 const STAT: Record<StageKey, string> = {
@@ -39,7 +39,7 @@ export function eventFx(e: BattleEvent, snap: BattleState, moveShown: { side: Si
   const on = (side: Side, layers: Builder[]) => ({ side, recipe: { hit: 'none' as const, layers } });
   const typeColor = (side: Side) => PAL[creature(activeMon(snap.sides[side]).species).type][1];
   switch (e.t) {
-    case 'sendOut': return on(e.side, [popOut()]);
+    case 'sendOut': return on(e.side, snap.sides[e.side].party[e.idx]?.shiny ? [popOut(), at(280, shinyBurst())] : [popOut()]);
     case 'withdraw': return on(e.side, [whirl()]);
     case 'status': return on(e.side, statusLayers(e.status, e.bad));
     case 'residual': return on(e.side, statusLayers(e.status));

@@ -382,11 +382,12 @@ export function refreshFollower() {
     g.follower = null;
     return;
   }
-  const img = miniFor(lead.species);
+  const img = miniFor(lead.species, lead.shiny);
   if (g.follower?.img === img) return;
   const p = g.player;
   const had = g.follower;
-  g.follower = had ? { ...had, img, faces: creature(lead.species).faces } : { x: p.x, y: p.y, fromX: p.x, fromY: p.y, t: 0, ms: 200, moving: false, dir: p.dir, img, faces: creature(lead.species).faces };
+  const look = { img, faces: creature(lead.species).faces, shiny: !!lead.shiny };
+  g.follower = had ? { ...had, ...look } : { x: p.x, y: p.y, fromX: p.x, fromY: p.y, t: 0, ms: 200, moving: false, dir: p.dir, ...look };
   if (!had) g.placeFollower();
 }
 

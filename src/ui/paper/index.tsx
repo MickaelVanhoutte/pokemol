@@ -258,13 +258,65 @@ export function Frame({ title, onBack, backLabel, right, children, foot, class: 
   );
 }
 
-export function MoveButton({ id, pp, disabled, onClick, class: cls = '' }: { id: string; pp?: number; disabled?: boolean; onClick: () => void; class?: string }) {
+/** A move button. `onHold`: a long press (or a right click) asks what the move does, without picking it. */
+export function MoveButton({ id, pp, disabled, onClick, onHold, class: cls = '' }: {
+  id: string; pp?: number; disabled?: boolean; onClick: () => void; onHold?: () => void; class?: string;
+}) {
   const mv = move(id);
+  const hold = useRef<{ timer?: number; fired: boolean }>({ fired: false });
+  const stop = () => clearTimeout(hold.current.timer);
+  const fire = () => {
+    stop();
+    if (hold.current.fired) return;
+    hold.current.fired = true;
+    onHold?.();
+  };
   return (
-    <button class={`pk-move ${cls}`} style={{ '--type': TYPES[mv.type].color, '--th': `var(--hatch-t-${mv.type})` }} disabled={disabled} onClick={onClick}>
+    <button
+      class={`pk-move ${cls}`}
+      style={{ '--type': TYPES[mv.type].color, '--th': `var(--hatch-t-${mv.type})` }}
+      disabled={disabled}
+      onPointerDown={() => {
+        if (!onHold) return;
+        stop();
+        hold.current.fired = false;
+        hold.current.timer = window.setTimeout(fire, 450);
+      }}
+      onPointerUp={stop}
+      onPointerLeave={stop}
+      onPointerCancel={stop}
+      onContextMenu={(e) => {
+        if (!onHold) return;
+        e.preventDefault();
+        fire();
+      }}
+      onClick={() => {
+        // the press that showed the details doesn't pick the move too
+        if (hold.current.fired) hold.current.fired = false;
+        else onClick();
+      }}
+    >
       <b>{tr(mv.name)}</b>
       <small><span class="pk-move__type">{tr(TYPES[mv.type].name)}</span>{pp !== undefined ? <span>PP {pp}/{mv.pp}</span> : null}</small>
     </button>
+  );
+}
+
+const CATEGORY = { phys: L('Physique', 'Physical'), spec: L('Spéciale', 'Special'), status: L('Statut', 'Status') };
+
+/** What a move does: its type and kind, power, accuracy, PP, and its description. */
+export function MoveInfo({ id, pp }: { id: string; pp?: number }) {
+  const mv = move(id);
+  return (
+    <div class="move-info">
+      <p class="move-info__head"><b>{tr(mv.name)}</b> <TypeBadge type={mv.type} /> <span class="move-info__cat">{tr(CATEGORY[mv.cat])}</span></p>
+      <p class="move-info__stats">
+        {mv.cat !== 'status' && <span>{tr(L('Puissance', 'Power'))} {mv.power}</span>}
+        <span>{tr(L('Précision', 'Accuracy'))} {mv.acc ?? '—'}</span>
+        <span>PP {pp ?? mv.pp}/{mv.pp}</span>
+      </p>
+      <p class="move-info__desc">{tr(mv.desc)}</p>
+    </div>
   );
 }
 
