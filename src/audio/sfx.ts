@@ -100,6 +100,12 @@ function cry(species: string) {
 
 export const sfx = {
   cry,
+  /** A pencil scratching paper: a few tiny grains of bright noise (`k` softer as sleep comes). */
+  pencil: (k = 1) => {
+    for (let i = 0; i < 3; i++) noise(i * 0.035 + Math.random() * 0.01, 0.035 + Math.random() * 0.03, 3000 + Math.random() * 1800, 0.03 * k, 2200);
+  },
+  /** An eraser rubbing on paper. */
+  rub: () => noise(0, 0.2, 700 + Math.random() * 200, 0.045, 1300),
   blip: () => play([{ f: 880, dur: 0.05, vol: 0.035 }]),
   confirm: () => play([{ f: 660, dur: 0.06 }, { f: 990, at: 0.06, dur: 0.08 }]),
   hit: () => play([{ f: 220, to: 70, dur: 0.18, type: 'sawtooth', vol: 0.07 }]),

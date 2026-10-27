@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 import { DEFAULT_LOOKS, fromLook, type Appearance } from '../../data/appearance';
 import { personUrl } from '../personArt';
 import { LookView } from '../views/LookView';
+import { SleepIntroView } from '../views/SleepIntroView';
 import { enterWorld, runScript } from '../../overworld/controller';
 import { newGame } from '../../state/game';
 import { go } from '../../state/router';
@@ -13,7 +14,8 @@ import { MenuList, TextBox, Window } from '../paper';
 import '../screens.css';
 
 type Step =
-  | { kind: 'night'; text: LText }
+  /** Falling asleep at the desk, before the dream (SleepIntroView). */
+  | { kind: 'sleep' }
   | { kind: 'say'; text: LText; show?: 'prof' | 'mon' | 'player' | 'rival' }
   | { kind: 'gender' }
   | { kind: 'avatar' }
@@ -22,9 +24,7 @@ type Step =
   | { kind: 'end' };
 
 const STEPS: Step[] = [
-  { kind: 'night', text: L('… encore un dessin… juste un dernier…', '… one more drawing… just one more…') },
-  { kind: 'night', text: L('… ses ailes… je n’arrive pas à faire ses ailes…', '… its wings… I can’t get its wings right…') },
-  { kind: 'night', text: L('… zzz …', '… zzz …') },
+  { kind: 'sleep' },
   { kind: 'say', show: 'prof', text: L('Bonjour ! Bienvenue dans le monde des Bestioles !', 'Hello there! Welcome to the world of Critters!') },
   { kind: 'say', show: 'prof', text: L('Je m’appelle Fusain. Tout le monde m’appelle le Prof des Bestioles.', 'My name is Charcoal. People call me the Critter Prof.') },
   { kind: 'say', show: 'mon', text: L('Ce monde est peuplé de créatures étonnantes : les Bestioles.', 'This world is home to amazing creatures: Critters.') },
@@ -65,11 +65,10 @@ export function NewGameScreen() {
 
   const show = step.kind === 'say' ? step.show : step.kind === 'name' ? 'player' : step.kind === 'rival' ? 'rival' : step.kind === 'gender' ? 'prof' : undefined;
 
-  if (step.kind === 'night') {
+  if (step.kind === 'sleep') {
     return (
-      <div class="prologue prologue--night" onClick={next}>
-        <p key={i} class="prologue__night">{tr(step.text)}</p>
-        <TextBox class="prologue__hidden" text="" keys onAdvance={next} instant />
+      <div class="prologue prologue--night">
+        <SleepIntroView onDone={next} />
       </div>
     );
   }

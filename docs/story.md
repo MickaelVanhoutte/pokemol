@@ -99,7 +99,7 @@ they are used.
 
 | # | Maps (ids) | What happens | Flags set |
 |---|---|---|---|
-| 0 | `NewGameScreen` | Night lines, the Prof's speech, girl/boy, the look picker (« Dessine-toi ! »), name and rival name | — |
+| 0 | `NewGameScreen` | Falling asleep (`SleepIntroView`, about 19 s, a tap skips a beat): a desk lamp, the sketchbook page, the pencil trying a wing, rubbing it out, trying again, seen through heavy eyelids, blurrier and blurrier, with the night lines; pencil and eraser sounds (`sfx.pencil`, `sfx.rub`) while the title music fades out; eyes shut, coloured fireflies of the dream while the title theme fades in (`playMusic('title', false, 6)`) and plays on under the Prof's speech; a white light opens the dream. Then the Prof's speech, girl/boy, the look picker (« Dessine-toi ! »), name and rival name | — |
 | 1 | `maison`, `maisonRival`, `bourg` (Bourg-Gribouille), `labo` | Wake up; starter at the lab (camera clue); tutorial battle against the rival (friendly, coached) | `intro`, `rivalStarter`, `rival1` |
 | 2 | `route1` (Chemin des Crayons) | A grunt chases Coconfus and erases a patch of grass (`r1Erased`); choice 1; first trainers; wild L3–4 | `a1.r1seen`, `choix:tache` |
 | 3 | `ville` (Ville-Pastel), `atelierPastel` | 🏅 **Mireille**, Insect; Lison's drawing (choice 2) | `badge:pastel`, `choix:musee` |

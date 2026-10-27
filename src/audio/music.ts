@@ -832,14 +832,18 @@ export function musicPosition(): number {
 
 /**
  * Starts a looping tune (no-op if it is already playing or music is off). `force`: the music box
- * plays even when the music option is off.
+ * plays even when the music option is off. `fadeIn`: seconds to rise from silence (the prologue).
  */
-export function playMusic(id: TrackId, force = false) {
+export function playMusic(id: TrackId, force = false, fadeIn = 0) {
   if (!force && (!prefs.value.music || !prefs.value.sound)) return stopMusic();
   if (current === id && timer) return;
   stopMusic();
   const c = audio();
   if (!c) return;
+  if (fadeIn > 0 && master) {
+    master.gain.setValueAtTime(0.0001, c.currentTime);
+    master.gain.linearRampToValueAtTime(0.11, c.currentTime + fadeIn);
+  }
   current = id;
   const tr = TRACKS[id];
   const eighth = 60 / tr.bpm / 2;
@@ -892,6 +896,17 @@ export function stopMusic() {
     master.disconnect();
     master = null;
   }
+}
+
+/** Lowers the music to silence over `seconds`, then stops it (unless another tune started meanwhile). */
+export function fadeOutMusic(seconds: number) {
+  if (!master || !ctx || !timer) return stopMusic();
+  const was = current, m = master;
+  m.gain.setValueAtTime(m.gain.value, ctx.currentTime);
+  m.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + seconds);
+  setTimeout(() => {
+    if (current === was && master === m) stopMusic();
+  }, seconds * 1000);
 }
 
 let jingleTimer: ReturnType<typeof setTimeout> | null = null;
