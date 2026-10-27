@@ -24,6 +24,8 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 - **La Team Gomme**, des gens en uniforme gris, avec une casquette en forme de gomme rose et bleue
   et un masque noir. Ils effacent les paysages et rendent les Bestioles toutes grises. Leurs chefs sont l’Admin Rature et l’Admin Blanche, et tout en
   haut, le mystérieux **Grand Effaceur**.
+- **Coconfus**, un petit cocon tout embrouillé, avec un trou au milieu, comme un dessin pas fini. La
+  Team Gomme le poursuit dès le Chemin des Crayons : pourquoi lui en veut-elle autant ?
 - **Les 8 Maîtres d’Atelier**, un par ville : Mireille (Insecte), Gaspard (Normal), Marine (Eau),
   Zélie (Électrique), Ambre (Feu), Célestine (Fée), Basile (Plante) et Nocturne (Spectre).
 
@@ -31,10 +33,11 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 
 1. **Bourg-Gribouille** : ta maison et le labo du Prof. Tu choisis ta première Bestiole (Minousse,
    Braisou ou Clapotin), et ton rival te lance tout de suite ton premier combat.
-2. **Chemin des Crayons → Ville-Pastel** : l’Atelier de Mireille. Une fillette, Capucine, a dessiné
+2. **Chemin des Crayons → Ville-Pastel** : un Sbire Gomme poursuit un petit cocon… L’Atelier de Mireille. Une fillette, Capucine, a dessiné
    une Bestiole toute ébouriffée… Et dans le **Musée des premiers croquis**, on peut voir les tout
    premiers dessins des Bestioles, encadrés.
-3. **Route des Craies et Bois Brumeux** : la Team Gomme est en train d’effacer la forêt !
+3. **Route des Craies et Bois Brumeux** : la Team Gomme est en train d’effacer la forêt ! Et le petit
+   cocon de la route a besoin de toi.
 4. **Village-Plume** : l’Atelier de Gaspard. Le pont a disparu pendant la nuit : il faut passer par la
    Grotte Gribouillis.
 5. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola.
@@ -49,6 +52,9 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 
 ## À côté de l’aventure
 
+- **Tes choix comptent.** En chemin, on te demande parfois ton avis : un dessin raté, on le
+  recommence ou on le garde tel qu’il est ? Il n’y a pas de mauvaise réponse… mais l’histoire a deux
+  fins, et ce sont tes réponses qui choisissent.
 - Attrape les Bestioles et remplis ton **Bestiodex**.
 - Chaque Bestiole a **un pouvoir bien à elle** (un talent ou une attaque que personne d’autre n’a) :
   même la plus petite a sa place dans ton équipe, jusqu’au niveau 100.
@@ -65,7 +71,7 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
   gants.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
   crédits. Quelques-unes sont des **brouillons**, griffonnés vite fait. On en croise dans les grottes,
-  sur la montagne, au bord de l’eau… Il y en a **70** à découvrir : certaines ne sortent que la nuit,
+  sur la montagne, au bord de l’eau… Il y en a **73** à découvrir : certaines ne sortent que la nuit,
   d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche.
 - Des **énigmes** dans les grottes et les tours, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
@@ -105,6 +111,8 @@ where every drawing is alive: the **Critters** (Bestioles).
 - **Team Gomme**, people in grey uniforms, with caps shaped like pink and blue erasers and black
   masks. They rub out the scenery and turn Critters grey. Their bosses are Admin Smudge (Rature) and Admin Whiteout (Blanche), and above
   them, the mysterious **Great Eraser**.
+- **Muddlecoon** (Coconfus), a muddled little cocoon with a hole in the middle, like an unfinished
+  drawing. Team Gomme chases it from Crayon Road on: why are they so set on it?
 - **The 8 Atelier Masters**, one per town: Mireille (Bug), Gaspard (Normal), Marine (Water), Zelie
   (Electric), Amber (Fire), Celestine (Fairy), Basil (Grass) and Nocturne (Ghost).
 
@@ -112,10 +120,11 @@ where every drawing is alive: the **Critters** (Bestioles).
 
 1. **Bourg-Gribouille**: your home and the Prof’s lab. You pick your first Critter (Sproutkit,
    Embersal or Splashell), and your rival battles you straight away.
-2. **Crayon Road → Pastel City**: Mireille’s Atelier, and the **Museum of First Sketches**, where the very
+2. **Crayon Road → Pastel City**: an Eraser Grunt is chasing a little cocoon… Mireille’s Atelier, and the **Museum of First Sketches**, where the very
    first drawings of the Critters hang in frames. A girl, Capucine, has drawn a very scruffy
    Critter…
-3. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest!
+3. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest! And the little cocoon from the
+   road needs you.
 4. **Featherby**: Gaspard’s Atelier. The bridge vanished overnight: go through Scribble Cave instead.
 5. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola.
 6. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
@@ -129,6 +138,9 @@ where every drawing is alive: the **Critters** (Bestioles).
 
 ## Besides the adventure
 
+- **Your choices matter.** Along the way, people sometimes ask what you think: a failed drawing, do
+  you start it again or keep it as it is? There is no wrong answer… but the story has two endings, and
+  your answers choose.
 - Catch Critters and fill your **Critterdex**.
 - Every Critter has **a power of its own** (a talent or a move nobody else has): even the smallest
   one has its place in your team, all the way to level 100.
@@ -144,7 +156,7 @@ where every drawing is alive: the **Critters** (Bestioles).
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few
   are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…
-  There are **70** to discover: some only come out at night, others hide in the tower, deep in the water
+  There are **73** to discover: some only come out at night, others hide in the tower, deep in the water
   or at the end of a fishing line.
 - **Puzzles** in caves and towers, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.

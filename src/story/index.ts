@@ -9,3 +9,4 @@ import './postgame';
 import './puzzles';
 import './world';
 import './legends';
+import './coconfus';

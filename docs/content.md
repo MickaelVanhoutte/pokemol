@@ -35,6 +35,9 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
 | `gc:<1-4>` | Grand Concours scripts | Grand Maître beaten in the current attempt (cleared at the door) |
+| `choix:<id>` (1 or 2), `choix:<id>:a` / `:b` | `choose()` in `src/story/choices.ts` | A story choice: 1 touches the drawing up (Libellune ending), 2 keeps it as it is (Noctaile ending). Maps use `:a` / `:b` to show its consequence ([story.md](story.md#the-two-endings)) |
+| `gift:coconfus` | `coconfusJoins()` (Misty Woods, or the next town for older saves) | Coconfus joined the team |
+| `prof:coconfus` | the Prof's wrapper in `src/story/coconfus.ts` | The Prof said he never photographed Coconfus |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
 Maps react without code:
@@ -170,7 +173,8 @@ Add `scripts.myId = async () => { … }` in the act file (`src/story/act1.ts`…
 for shared ones), then reference `myId` from a map. Tools (import from `../overworld/controller`):
 
 - Dialogue: `say(text, speaker?, vars?)`, `sayAll(lines, speaker?)`, `ask(text, choices, speaker?)`
-  (resolves to the choice index), `showToast(msg)`.
+  (resolves to the choice index), `showToast(msg)`. A choice that counts towards the ending goes
+  through `choose(id, question, a, b)` (`src/story/choices.ts`, ids in `CHOICES`).
 - Flags: `flag`, `setFlag`.
 - Save: `update((d) => …)` from `src/state/game.ts`, `giveMon(species, level)`, `giveItem(id, n)`.
 - Movement and screens: `warpTo(dest, { keepFade? })`, `openScreen(screen)` (resolves when the player
@@ -180,7 +184,7 @@ for shared ones), then reference `myId` from a map. Tools (import from `../overw
   `afterScript`), or `fight(kind, name, party, opts)` for scripted ones (`friendly`, `tutorial`,
   `backdrop`, `look`, `grey`). Both return or set the result, and a loss blacks out unless `friendly`.
 - Cut-scenes, through `const g = getGame()`:
-  - `g.npc(id)`, `g.spawn(id, look, x, y, dir)`, `g.remove(id)`;
+  - `g.npc(id)`, `g.spawn(id, look, x, y, dir, mon?)` (`mon` draws a Bestiole's miniature), `g.remove(id)`;
   - `await g.walk(actor, ['up', 'up', 'left'])`;
   - `g.face(actor, dir)`, `g.faceToward(a, b)`;
   - `await g.fadeTo(1, ms, 'white' | 'black')`, `await g.wipeTo(…)`;

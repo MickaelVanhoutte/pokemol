@@ -664,7 +664,7 @@ async function trainerApproach(n: Actor) {
   await trainerBattle(n.npc!.trainer!, n);
 }
 
-export async function trainerBattle(id: string, actor?: Actor) {
+export async function trainerBattle(id: string, actor?: Actor, look?: Look) {
   const tdef = TRAINERS[id];
   if (!partyAlive(s())) {
     await say(L('Tes Bestioles sont épuisées… Va vite les reposer à l’Auberge !', 'Your Critters are worn out… Go rest them at the Inn!'), tdef.name);
@@ -672,7 +672,7 @@ export async function trainerBattle(id: string, actor?: Actor) {
   }
   if (actor) getGame().faceToward(actor, getGame().player);
   await sayAll(tdef.before, tdef.name);
-  const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef, look: actor?.npc?.look, grey: tdef.grey });
+  const out = await fight('trainer', tdef.name, trainerParty(tdef, newSeed()), { trainer: tdef, look: actor?.npc?.look ?? look, grey: tdef.grey });
   if (out.result === 'win') {
     // everything the win unlocks is saved at once, before any dialog: closing the app during the
     // cut-scene that follows can't block the story (the map itself changes when the scene ends)

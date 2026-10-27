@@ -17,7 +17,8 @@ export const MACHINE_PRICE = 1000;
 /** Picks a random creature (rarity-weighted) close to the player's strongest level. */
 export function machineRoll(seed: number, topLevel: number): Mon {
   const st = { rng: seed };
-  const sp = pickWeighted(st, CREATURES, (c) => RARITIES[c.rarity].weight);
+  // the dream legendaries and their cocoon belong to the story, never to the machine
+  const sp = pickWeighted(st, CREATURES.filter((c) => c.rarity !== 'legendary'), (c) => RARITIES[c.rarity].weight);
   const level = Math.max(3, Math.min(40, topLevel - 2));
   return createMon(sp.id, level, st);
 }

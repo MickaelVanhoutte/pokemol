@@ -9,6 +9,7 @@ vi.mock('../audio/sfx', () => ({ sfx: new Proxy({}, { get: () => () => undefined
 const { MAPS } = await import('../data/maps');
 const { TRAINERS } = await import('../data/trainers');
 const { scripts } = await import('../overworld/controller');
+const { CHOICES } = await import('./choices');
 await import('./index');
 
 const dir = new URL('.', import.meta.url).pathname;
@@ -25,6 +26,8 @@ function flagIsSet(name: string): boolean {
   if (name.startsWith('visit:')) return MAPS[name.slice(6)]?.onEnter === 'visitTown';
   if (name.startsWith('rematch:')) return !!TRAINERS[name.slice(8)]?.badge && source.includes('setFlag(`rematch:${id}`)');
   if (name.startsWith('gc:')) return source.includes('setFlag(`gc:${n}`)');
+  // the story's choices (src/story/choices.ts): choix:<id>, choix:<id>:a and choix:<id>:b
+  if (name.startsWith('choix:')) return (CHOICES as readonly string[]).includes(name.split(':')[1]) && source.includes('setFlag(`choix:${id}`');
   // puzzles: set by the generic code from the map data
   if (name.startsWith('fresque:')) return Object.values(MAPS).some((m) => m.fresques?.some((f) => `fresque:${f.id}` === name)) && source.includes('setFlag(`fresque:${f.id}`)');
   if (name.startsWith('puzzle:')) return Object.values(MAPS).some((m) => m.puzzles?.some((pz) => pz.flag === name)) && source.includes('solvedPuzzles(');

@@ -131,6 +131,8 @@ export interface EvolutionRule {
   item?: string;
   /** At least this much friendship (0–255) when levelling up. */
   friendship?: number;
+  /** Only at the end of the story, for the ending it names (1: touched up, 2: kept as it is). */
+  story?: 1 | 2;
 }
 
 export interface ItemDef {

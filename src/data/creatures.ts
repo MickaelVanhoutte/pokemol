@@ -960,31 +960,46 @@ export const CREATURES: SpeciesDef[] = [
       'Its fins prick like sharpened quills. When it is cross, it spits a cloud of ink and vanishes.',
     ),
   },
-  // ---------------------------------------------------------------- the two legendaries: the good dream and the bad one
+  // ---------------------------------------------------------------- the unfinished cocoon and the two dreams it can become
+  // the unfinished drawing: it becomes one dream or the other at the end of the story (src/story/finale.ts)
   {
-    id: '071', slug: 'libellune', faces: 'left', name: L('Libellune', 'Glassfly'), kind: L('Bestiole Bon Rêve', 'Sweet Dream Critter'),
+    id: '073', slug: 'coconfus', faces: 'left', name: L('Coconfus', 'Muddlecoon'), kind: L('Bestiole Pas Finie', 'Unfinished Critter'),
+    type: 'insecte', type2: 'tenebres', base: { hp: 80, atk: 40, def: 110, spa: 70, spd: 110, spe: 20 },
+    catchRate: 45, baseExp: 140, evYield: { def: 1, spd: 1 }, rarity: 'legendary',
+    stencils: ['pochoir-09', 'pochoir-12', 'pochoir-19'],
+    talents: ['pas-fini'], hiddenTalent: 'pas-fini',
+    evolutions: [{ to: '071', story: 1 }, { to: '072', story: 2 }],
+    learnset: [[1, 'cocon-serre'], [1, 'fil-de-soie'], [1, 'micro-magique'], [8, 'choc-mental'], [13, 'coup-en-douce'], [18, 'cauchemar'],
+      [24, 'tache-d-encre'], [30, 'reve-eveille'], [36, 'rayon-d-ailes']],
+    dex: L(
+      'Un cocon tout embrouillé, avec un petit trou au milieu. On dirait qu’il attend que quelqu’un finisse de le dessiner.',
+      'A muddled cocoon with a little hole in the middle. It seems to be waiting for someone to finish drawing it.',
+    ),
+  },
+  {
+    id: '071', slug: 'libellune', faces: 'left', name: L('Libellune', 'Glassfly'), kind: L('Bestiole Rêve Retouché', 'Redrawn Dream Critter'), evolvesFrom: '073',
     type: 'insecte', type2: 'fee', base: { hp: 90, atk: 70, def: 90, spa: 125, spd: 125, spe: 100 },
     catchRate: 25, baseExp: 270, evYield: { spa: 1, spd: 2 }, rarity: 'legendary',
     stencils: ['pochoir-01', 'pochoir-06', 'pochoir-07', 'pochoir-09', 'pochoir-12', 'pochoir-19'],
     talents: ['veilleuse'], hiddenTalent: 'ailes-prisme',
-    learnset: [[1, 'dard'], [1, 'poudre-dodo'], [8, 'micro-magique'], [15, 'rayon-d-ailes'], [22, 'calin-lunaire'],
+    learnset: [[0, 'reve-vitrail'], [1, 'dard'], [1, 'poudre-dodo'], [8, 'micro-magique'], [15, 'rayon-d-ailes'], [22, 'calin-lunaire'],
       [29, 'bourdonnement'], [34, 'eclat-de-lune'], [38, 'reve-vitrail'], [44, 'poudre-arc-en-ciel'], [50, 'rayon-de-soleil']],
     dex: L(
-      'On dit qu’elle se pose au bord des lits pour souffler les bons rêves. Ses ailes de vitrail brillent toutes seules dans le noir.',
-      'They say it lands at the edge of beds to breathe in sweet dreams. Its stained-glass wings shine all by themselves in the dark.',
+      'On dit qu’elle naît d’un dessin qu’on a gommé pour le refaire encore mieux. Ses ailes de vitrail brillent toutes seules dans le noir.',
+      'They say it is born from a drawing rubbed out to be done again, even better. Its stained-glass wings shine all by themselves in the dark.',
     ),
   },
   {
-    id: '072', slug: 'noctaile', faces: 'left', name: L('Noctaile', 'Nightmoth'), kind: L('Bestiole Mauvais Rêve', 'Bad Dream Critter'),
+    id: '072', slug: 'noctaile', faces: 'left', name: L('Noctaile', 'Nightmoth'), kind: L('Bestiole Rêve Gardé', 'Kept Dream Critter'), evolvesFrom: '073',
     type: 'tenebres', type2: 'psy', base: { hp: 85, atk: 90, def: 80, spa: 135, spd: 90, spe: 120 },
     catchRate: 25, baseExp: 270, evYield: { spa: 2, spe: 1 }, rarity: 'legendary',
     stencils: ['pochoir-08', 'pochoir-09', 'pochoir-11', 'pochoir-12', 'pochoir-19', 'pochoir-20'],
     talents: ['mauvais-reves'], hiddenTalent: 'brume-epaisse',
-    learnset: [[1, 'bouh'], [1, 'regard-hypnotique'], [8, 'choc-mental'], [15, 'coup-en-douce'], [22, 'cauchemar'],
+    learnset: [[0, 'ombre-songe'], [1, 'bouh'], [1, 'regard-hypnotique'], [8, 'choc-mental'], [15, 'coup-en-douce'], [22, 'cauchemar'],
       [29, 'reve-eveille'], [35, 'tache-d-encre'], [40, 'ombre-songe'], [48, 'tempete-psy'], [55, 'ombre-farceuse']],
     dex: L(
-      'Ses ailes portent des spirales qui donnent le tournis. Quand il passe au-dessus d’une maison, tout le monde y fait le même cauchemar.',
-      'Its wings bear spirals that make heads spin. When it flies over a house, everyone inside has the same nightmare.',
+      'On dit qu’il naît d’un dessin qu’on a gardé avec toutes ses taches. Ses spirales donnent le tournis, et il veille sur les rêves de ceux qui doutent.',
+      'They say it is born from a drawing kept with all its smudges. Its spirals make heads spin, and it watches over the dreams of those who doubt.',
     ),
   },
 ];

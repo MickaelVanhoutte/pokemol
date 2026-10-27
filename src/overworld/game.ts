@@ -847,10 +847,10 @@ export class Game {
     return this.npcs.find((n) => n.id === id);
   }
 
-  /** Adds an actor for a cutscene (e.g. the professor walking in). */
-  spawn(id: string, look: Look, x: number, y: number, dir: Dir): Actor {
+  /** Adds an actor for a cutscene (e.g. the professor walking in); `mon` draws a Bestiole's miniature instead. */
+  spawn(id: string, look: Look, x: number, y: number, dir: Dir, mon?: string): Actor {
     const a: Actor = {
-      id, x, y, dir, sheet: sheetFor(look), moving: false, t: 0, fromX: x, fromY: y, ms: WALK_MS * 1.2, step: 0,
+      id, x, y, dir, sheet: sheetFor(look), moving: false, t: 0, fromX: x, fromY: y, ms: WALK_MS * 1.2, step: 0, mini: mon ? miniFor(mon) : undefined,
       homeX: x, homeY: y, wanderIn: 0,
     };
     this.npcs.push(a);

@@ -27,7 +27,7 @@ export interface CurveStep {
 
 /** The story's path on the way to each badge (optional places and trainers left out). */
 export const CURVE_PATH: CurveStep[] = [
-  { map: 'route1', from: 'bourg', to: 'ville', join: 1 },
+  { map: 'route1', from: 'bourg', to: 'ville', join: 1, fights: ['r1gomme'] },
   { map: 'atelierPastel' },
   { map: 'route2', from: 'ville', to: 'bois' },
   { map: 'bois', from: 'route2', to: 'plume', join: 1 },

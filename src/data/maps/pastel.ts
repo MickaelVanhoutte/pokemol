@@ -44,7 +44,11 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { x: 0, y: 9, to: { map: 'route2', x: 38, y: 6, facing: 'left' } },
       { x: 0, y: 10, to: { map: 'route2', x: 38, y: 7, facing: 'left' } },
     ],
-    triggers: [{ x: 2, y: 9, w: 1, h: 2, script: 'pastelWestGate', unless: 'badge:pastel' }],
+    triggers: [
+      { x: 2, y: 9, w: 1, h: 2, script: 'pastelWestGate', unless: 'badge:pastel' },
+      // coming out of the Atelier with the badge: Lison and her drawing (the second choice)
+      { x: 16, y: 7, w: 5, h: 2, script: 'pastelDrawing', if: 'badge:pastel', unless: 'choix:musee' },
+    ],
     items: [{ x: 22, y: 1, item: 'page-3', hidden: true }],
     signs: [{ x: 2, y: 12, text: L('VILLE-PASTEL\nLa ville aux mille couleurs.\nAtelier de Mireille · Auberge · Boutique · Musée', 'PASTEL CITY\nThe city of a thousand colours.\nMireille’s Atelier · Inn · Shop · Museum') }],
     npcs: [
@@ -53,6 +57,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'caveGuard', x: 19, y: 15, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'down', hideIf: 'badge:plume',
         text: [L('La Grotte Gribouillis est fermée : on entend des bruits de gomme là-dedans…', 'Scribble Cave is closed: you can hear erasers scrubbing in there…'), L('Reviens quand tu auras le badge de Village-Plume, je te laisserai passer.', 'Come back with the Featherby badge and I’ll let you through.')] },
       { id: 'capucine', x: 7, y: 16, look: LOOKS.girl, facing: 'left', script: 'touffouGift' },
+      { id: 'lison', x: 15, y: 8, look: { hair: '#c0582a', shirt: '#f6a7c8', pants: '#5a4a8a', longHair: true }, facing: 'right', script: 'pastelDrawing', showIf: 'badge:pastel', hideIf: 'choix:musee' },
       { id: 'granny', x: 8, y: 9, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!')] },
       { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire!')] },
       { id: 'jardinier', x: 14, y: 16, look: { hair: '#5a3a20', shirt: '#4f9a3c', pants: '#7a5230', hat: '#f2c14e' }, facing: 'down', script: 'jardinier' },
@@ -176,6 +181,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'conservatrice', x: 9, y: 7, look: { hair: '#d8d0c8', shirt: '#7a3dc2', pants: '#3a3346', longHair: true }, facing: 'left', script: 'musee' },
       { id: 'museeKid', x: 3, y: 2, look: LOOKS.kid, facing: 'up', wander: true,
         text: [L('Celui-là, on dirait mon petit frère qui dessine ! Mais en mieux… enfin, pareil.', 'That one looks like something my little brother would draw! But better… well, the same.')] },
+      { id: 'lisonMusee', x: 7, y: 2, look: { hair: '#c0582a', shirt: '#f6a7c8', pants: '#5a4a8a', longHair: true }, facing: 'up', script: 'lisonMusee', showIf: 'choix:musee' },
     ],
   },
 
@@ -247,6 +253,9 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'paul', x: 16, y: 12, look: LOOKS.hiker, facing: 'left', trainer: 'paul', sight: 3 },
       { id: 'gomme1', x: 10, y: 9, look: LOOKS.gomme, facing: 'down', trainer: 'gomme1', sight: 3 },
       { id: 'gomme2', x: 18, y: 1, look: LOOKS.gommeF, facing: 'down', trainer: 'gomme2', sight: 4, hideIf: 'a1.bois' },
+      // the little cocoon of Route 1, the grunt's prisoner: it joins you once the grunt is beaten
+      { id: 'coconBois', x: 17, y: 1, look: LOOKS.kid, mon: '073', facing: 'down', showIf: 'a1.r1seen', hideIf: 'gift:coconfus',
+        text: [L('Le petit cocon de la route ! Il est coincé derrière le Sbire Gomme. Il tremble…', 'The little cocoon from the road! It’s stuck behind the Eraser Grunt. It’s trembling…')] },
       { id: 'lucioleKid', x: 5, y: 13, look: LOOKS.kid, facing: 'left', wander: false,
         text: [L('Derrière les ronces, au sud, des lucioles dansent la nuit. Ma grande sœur dit qu’elles montrent le chemin d’une clairière… mais il ne faut jamais les perdre de vue !', 'Past the brambles to the south, fireflies dance at night. My big sister says they show the way to a clearing… but you must never lose sight of them!')] },
     ],

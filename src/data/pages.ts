@@ -15,7 +15,7 @@ export const PAGES: LText[] = [
   L('« Parfois, une petite voix dans ma tête dit que mes dessins sont moches. Je n’aime pas cette voix. »', '“Sometimes a little voice in my head says my drawings are ugly. I don’t like that voice.”'),
   L('« Mon cahier est presque plein. Il ne reste plus que la toute dernière page… »', '“My sketchbook is almost full. There’s only the very last page left…”'),
   L('« Papa m’a montré l’album sur son téléphone : TOUS mes dessins sont dedans, même les tout petits ! »', '“Daddy showed me the album on his phone: ALL my drawings are in it, even the tiny ones!”'),
-  L('« Je crois que je me suis {g:endormie|endormi} sur mon cahier, avec les crayons dans la main… »', '“I think I fell asleep on my sketchbook, with the pencils still in my hand…”'),
+  L('« Je crois que je me suis {g:endormie|endormi} sur mon papillon pas fini, avec les crayons dans la main… »', '“I think I fell asleep on my unfinished butterfly, with the pencils still in my hand…”'),
   L('« Demain, je dessinerai une nouvelle Bestiole. Promis ! »', '“Tomorrow I’ll draw a new Critter. Promise!”'),
 ];
 

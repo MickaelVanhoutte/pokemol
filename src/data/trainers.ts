@@ -72,6 +72,15 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [L('La maîtresse dit qu’il faut s’entraîner tous les jours. Tu t’entraînes avec moi ?', 'My teacher says you have to practise every day. Will you practise with me?')],
     after: [L('Bon… je retourne faire mes devoirs.', 'Well… back to my homework.')],
   }),
+  // the first grunt, chasing Coconfus down Route 1 (src/story/act1.ts, route1Gomme)
+  T({
+    id: 'r1gomme', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '012', level: 3 }], money: 120, grey: true,
+    before: [
+      L('Ce truc ? C’est un dessin raté. Pas fini, tout embrouillé, ça dépasse de partout… Ça se gomme !', 'This thing? It’s a failed drawing. Unfinished, all muddled, going over the lines everywhere… It gets rubbed out!'),
+      L('Tu veux le protéger ? Alors montre-moi ta Bestiole !', 'You want to protect it? Then show me your Critter!'),
+    ],
+    after: [L('Hein ?! Ma Bestiole a retrouvé ses couleurs ?', 'Huh?! My Critter got its colours back?')],
+  }),
   T({
     id: 'iris', name: L('Fillette Iris', 'Lass Iris'), party: [{ species: '013', level: 4 }], money: 180,
     before: [L('J’ai dessiné ma Bestiole moi-même ! Regarde comme elle est jolie !', 'I drew my Critter myself! Look how pretty it is!')],

@@ -180,7 +180,8 @@ export const HOME_MAPS: Record<string, MapDef> = {
       { x: 7, y: 41, to: { map: 'bourg', x: 9, y: 1, facing: 'down' } },
       { x: 8, y: 41, to: { map: 'bourg', x: 10, y: 1, facing: 'down' } },
     ],
-    triggers: [{ x: 7, y: 39, w: 2, h: 1, script: 'route1Gomme', if: 'rival1', unless: 'a1.r1seen' }],
+    // a grunt chasing Coconfus down the road (src/story/act1.ts): across the whole route, high enough to see it all
+    triggers: [{ x: 2, y: 31, w: 18, h: 1, script: 'route1Gomme', if: 'rival1', unless: 'a1.r1seen' }],
     items: [{ x: 14, y: 9, item: 'potion' }, { x: 1, y: 1, item: 'crayon-ball', count: 2 }, { x: 1, y: 17, item: 'page-2', hidden: true }, { x: 14, y: 5, item: 'baie-bleue' }, { x: 14, y: 10, item: 'crayon-gris' }],
     signs: [
       { x: 2, y: 5, text: L('↑ VILLE-PASTEL', '↑ PASTEL CITY') },

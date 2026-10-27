@@ -242,7 +242,10 @@ export const TALENTS: TalentDef[] = [
   T('nage-eclair', L('Nage Éclair', 'Dart Swim'),
     L('Quand il a tous ses PV, ses capacités Eau passent en premier.', 'At full HP, its Water moves go first.'),
     { kind: 'galeWings', type: 'eau' }),
-  // the two legendaries
+  // the two legendaries and the unfinished cocoon they come from
+  T('pas-fini', L('Pas Fini', 'Not Done Yet'),
+    L('Tant qu’il a tous ses PV, il ne prend que la moitié des dégâts : on ne gomme pas un dessin pas fini !', 'At full HP, it takes only half the damage: you don’t rub out a drawing that isn’t finished!'),
+    { kind: 'fullHpGuard' }),
   T('veilleuse', L('Veilleuse', 'Night-light'),
     L('La nuit, elle brille : son Atq. Spé. et sa Déf. Spé. sont 30 % plus fortes.', 'At night it glows: its Sp. Atk and Sp. Def are 30% stronger.'),
     { kind: 'nightBoost' }),

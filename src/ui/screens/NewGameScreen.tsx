@@ -23,6 +23,7 @@ type Step =
 
 const STEPS: Step[] = [
   { kind: 'night', text: L('… encore un dessin… juste un dernier…', '… one more drawing… just one more…') },
+  { kind: 'night', text: L('… ses ailes… je n’arrive pas à faire ses ailes…', '… its wings… I can’t get its wings right…') },
   { kind: 'night', text: L('… zzz …', '… zzz …') },
   { kind: 'say', show: 'prof', text: L('Bonjour ! Bienvenue dans le monde des Bestioles !', 'Hello there! Welcome to the world of Critters!') },
   { kind: 'say', show: 'prof', text: L('Je m’appelle Fusain. Tout le monde m’appelle le Prof des Bestioles.', 'My name is Charcoal. People call me the Critter Prof.') },

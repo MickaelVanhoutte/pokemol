@@ -122,7 +122,9 @@ re-renders everything.
   - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask`.
 
 **Story** (`src/story`): async functions registered as `scripts.<id>`. `world.ts` holds the town trades
-(`TRADES`) and the side quests (`quest:*` flags). Maps reference script ids from:
+(`TRADES`) and the side quests (`quest:*` flags). `choices.ts` holds the story's choices (`choose`,
+`endingOf`: the two endings) and Coconfus's helpers; `coconfus.ts` wraps other scripts, so it is
+imported last. Maps reference script ids from:
 - NPCs (`script`), triggers, `interact` spots;
 - building doors (`script`), `onEnter`;
 - a trainer's `afterScript`.

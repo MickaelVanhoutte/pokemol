@@ -17,6 +17,8 @@ const isFinal = (c: SpeciesDef) => !c.evolutions?.length;
 
 /** Base-stat total bands by stage (docs/bestioles.md). */
 export function band(c: SpeciesDef): [number, number] {
+  // Coconfus, the cocoon both dream legendaries come from
+  if (c.rarity === 'legendary' && !isFinal(c)) return [400, 440];
   if (c.rarity === 'legendary') return [560, 600];
   if (!c.evolvesFrom && isFinal(c)) return [450, 520];
   if (!c.evolvesFrom) return [190, 340];

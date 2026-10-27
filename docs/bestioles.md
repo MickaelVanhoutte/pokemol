@@ -25,6 +25,7 @@ The base-stat total (the sum of the six) must sit in its band, by stage (`band()
 | Final form | 460–545 | 470–530 (starter finals 515, Dragopataud 540) |
 | Never evolves | 450–520 | 470–510, by rarity |
 | `rarity: 'legendary'` | 560–600 | 600 (Libellune, Noctaile) |
+| Legendary first form | 400–440 | 430 (Coconfus, the cocoon both come from) |
 
 A line's stage comes from `evolvesFrom` and `evolutions`. Finals are close, not equal: the spread and the
 power make the difference, not 80 points of stats.
@@ -86,6 +87,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Osselot → Ossagarde | Os-Boomerang (Ground physical 75) | signature move | Slow |
 | Fâchinge → Furisinge | Colère Noire: +1 Attack after it knocks a foe out | `statOnKO` | — |
 | Hippomine → Hippoplume | Nage Éclair: Water moves go first at full HP | `galeWings` | Fragile |
+| Coconfus (legendary cocoon) | Pas Fini: at full HP it takes half the damage | `fullHpGuard` | — |
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
 

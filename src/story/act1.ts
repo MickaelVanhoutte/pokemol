@@ -9,9 +9,13 @@ import type { Dir } from '../save/schema';
 import { addItem, healParty, save, update } from '../state/game';
 import { sfx } from '../audio/sfx';
 import {
-  dayPhase, mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast, wait,
+  dayPhase, mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast,
+  trainerBattle, wait,
 } from '../overworld/controller';
+import { LEGEND } from '../overworld/mapTypes';
+import { TILES } from '../overworld/tiles';
 import { sleepUntil } from './common';
+import { choose, COCONFUS, coconfusJoins, RETOUCHE } from './choices';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
 // ------------------------------------------------------------------ home
@@ -254,11 +258,81 @@ scripts.touffouGift = async () => {
   await say(L('Prends-en bien soin ! On dit qu’un jour, il pourra changer de forme…', 'Take good care of it! They say that one day it could change its shape…'), who);
 };
 
+/**
+ * Leaving Bourg-Gribouille: a grunt is chasing a muddled little cocoon down the road. You stand up for it
+ * (the first Team Gomme battle) and answer the first of the story's choices (src/story/choices.ts).
+ */
 scripts.route1Gomme = async () => {
-  setFlag('a1.r1seen');
+  const g = getGame();
+  const px = g.player.x, py = g.player.y;
   await bubble('player', '!', 700);
-  await say(L('Une silhouette grise file vers le nord en ricanant, une énorme gomme sous le bras…', 'A grey figure dashes north, snickering, a huge eraser under its arm…'));
-  await say(L('Plus loin, un morceau des hautes herbes a disparu, comme effacé !', 'Further up, a patch of tall grass has vanished, as if rubbed out!'));
+  await say(L('Quelque chose dévale les hautes herbes en tremblant… Un petit cocon tout embrouillé !', 'Something comes tumbling down through the tall grass, trembling… A muddled little cocoon!'));
+  // they come down the free tiles above you (a tree stops a walk)
+  const free = (x: number, y: number) => !TILES[LEGEND[g.map.def.rows[y]?.[x]]]?.solid;
+  let room = 0;
+  while (room < 5 && free(px, py - room - 1)) room++;
+  const cocon = g.spawn('coconR1', LOOKS.kid, px, py - room, 'down', COCONFUS);
+  await g.walk(cocon, Array(Math.max(0, room - 1)).fill('down'), 150);
+  // it hides behind you, on whichever side is free
+  await g.walk(cocon, [free(px + 1, py - 1) && free(px + 1, py) ? 'right' : 'left', 'down'], 150);
+  cocon.dir = 'up';
+  const grunt = g.spawn('gommeR1', LOOKS.gomme, px, py - room, 'down');
+  await g.walk(grunt, Array(Math.max(0, room - 1)).fill('down'), 140);
+  await say(L('Reviens ici, toi ! Un dessin raté comme toi, ça se gomme !', 'Come back here, you! A failed drawing like you gets rubbed out!'), GRUNT);
+  await trainerBattle('r1gomme', grunt, LOOKS.gomme);
+  if (!flag('tr:r1gomme')) return;
+  await say(L('Pfff ! Le Grand Effaceur a des gommes géantes, lui. Ce dessin raté, on finira bien par l’avoir !', 'Pfff! The Great Eraser has giant erasers. We’ll get that failed drawing in the end!'), GRUNT);
+  await g.walk(grunt, Array(Math.max(0, room - 1)).fill('up'), 120);
+  g.remove('gommeR1');
+  setFlag('a1.r1seen');
+  await say(L('Le Sbire file vers le nord, une énorme gomme sous le bras. Plus loin, un morceau des hautes herbes a disparu, comme effacé !', 'The grunt dashes north, a huge eraser under his arm. Further up, a patch of tall grass has vanished, as if rubbed out!'));
+  g.faceToward(cocon, g.player);
+  g.faceToward(g.player, cocon);
+  await say(L('Le petit cocon te regarde avec de grands yeux. Une trace de gomme lui barre la joue.', 'The little cocoon looks at you with big eyes. An eraser mark runs across its cheek.'));
+  const way = await choose('tache', L('Que fais-tu ?', 'What do you do?'),
+    L('J’essuie doucement la trace.', 'I gently wipe the mark off.'),
+    L('Elle te va bien, garde-la !', 'It suits you, keep it!'), undefined, false);
+  await say(way === RETOUCHE
+    ? L('Tu essuies la trace. Le petit cocon ferme les yeux… et une lueur rose traverse son cocon.', 'You wipe the mark off. The little cocoon closes its eyes… and a pink glow runs through its cocoon.')
+    : L('Tu lui souris. Le petit cocon touche sa trace… et une spirale sombre se dessine autour, comme un motif.', 'You smile at it. The little cocoon touches its mark… and a dark spiral draws itself around it, like a pattern.'));
+  await say(L('Il te fait un petit signe… puis il file vers le nord et disparaît dans les hautes herbes.', 'It gives you a little wave… then dashes north and disappears into the tall grass.'));
+  g.remove('coconR1');
+};
+
+/** Coming out of the Atelier with the Pastel Badge: an apprentice doesn't like her first drawing (choice 2). */
+scripts.pastelDrawing = async () => {
+  const g = getGame();
+  const who = L('Apprentie Lison', 'Apprentice Lison');
+  const lison = g.npc('lison');
+  await bubble('lison', '!', 600);
+  if (lison) {
+    for (let i = 0; i < 4 && Math.abs(lison.x - g.player.x) + Math.abs(lison.y - g.player.y) > 1; i++) {
+      await g.walk(lison, [lison.y < g.player.y ? 'down' : lison.y > g.player.y ? 'up' : lison.x < g.player.x ? 'right' : 'left'], 160);
+    }
+    g.faceToward(lison, g.player);
+    g.faceToward(g.player, lison);
+  }
+  await sayAll([
+    L('Attends ! Toi qui as battu Mireille… Regarde mon dessin. C’est pour le Musée des premiers croquis.', 'Wait! You beat Mireille… Look at my drawing. It’s for the Museum of First Sketches.'),
+    L('Il est raté. Sa patte est trop longue, et j’ai dépassé partout… Je ne sais pas quoi faire.', 'It’s a failure. Its leg is too long, and I went over the lines everywhere… I don’t know what to do.'),
+  ], who);
+  const way = await choose('musee', L('Qu’est-ce que tu lui conseilles ?', 'What do you tell her?'),
+    L('Recommence-le, tu feras encore mieux !', 'Start it again, you’ll do even better!'),
+    L('Garde-le, c’est ton premier : il est unique !', 'Keep it, it’s your first: it’s one of a kind!'), undefined);
+  await say(way === RETOUCHE
+    ? L('Tu as raison ! Je vais le refaire, et cette fois je prendrai mon temps. Viens le voir au musée !', 'You’re right! I’ll do it again, and this time I’ll take my time. Come and see it at the museum!')
+    : L('Tu as raison ! Je vais l’accrocher au musée tel qu’il est. Mon tout premier ! Viens le voir !', 'You’re right! I’ll hang it in the museum just as it is. My very first! Come and see it!'), who);
+  if (lison) {
+    await g.walk(lison, ['left', 'left'], 140);
+    g.remove('lison');
+  }
+};
+
+scripts.lisonMusee = async () => {
+  const who = L('Apprentie Lison', 'Apprentice Lison');
+  await say(flag('choix:musee:a')
+    ? L('Je l’ai refait trois fois ! Le voilà, accroché au musée. Il est beaucoup mieux, non ?', 'I did it three more times! There it is, hanging in the museum. It’s much better, isn’t it?')
+    : L('Le voilà, accroché au musée, avec sa patte trop longue. Les gens disent qu’il a du caractère !', 'There it is, hanging in the museum, too-long leg and all. People say it has character!'), who);
 };
 
 const WEST_GATE = L('Hop hop ! La route de l’ouest est dangereuse en ce moment. Reviens avec le Badge Pastel de Mireille.', 'Whoa there! The west road is dangerous these days. Come back with Mireille’s Pastel Badge.');
@@ -284,6 +358,12 @@ scripts.boisRestore = async () => {
     await g.walk(grunt, ['up'], 140);
     g.remove('gomme2');
   }
+  // the little cocoon from Route 1 was the grunt's prisoner: it picks you
+  const cocon = g.npc('coconBois');
+  if (cocon && !flag('gift:coconfus')) {
+    await say(L('Le petit cocon de la route ! Le Sbire le gardait prisonnier… Il se blottit contre toi en tremblant.', 'The little cocoon from the road! The grunt was keeping it prisoner… It snuggles up to you, trembling.'));
+    await coconfusJoins(10, cocon);
+  }
   const px = g.player.x, py = g.player.y;
   playMusic('rival');
   const rival = g.spawn('rivalBois', LOOKS.rival, px, Math.min(g.map.h - 2, py + 3), 'up');
@@ -293,6 +373,7 @@ scripts.boisRestore = async () => {
     L('{name} ! Toi aussi tu les as vus ? Ces Gommeux effacent tout sur leur passage !', '{name}! You saw them too? Those Erasers rub out everything in their way!'),
     L('Mais regarde… quand on bat leurs Bestioles grises, les couleurs reviennent !', 'But look… when you beat their grey Critters, the colours come back!'),
   ], RIVAL);
+  if (flag('gift:coconfus')) await say(L('Et c’est quoi, ce truc tout embrouillé avec un trou ? … Bizarre. Mais il a l’air de bien t’aimer.', 'And what’s that muddled thing with a hole in it? … Weird. But it really seems to like you.'), RIVAL);
   await flash('white', 220);
   showToast(tr(L('Le bois retrouve ses couleurs !', 'The woods get their colours back!')));
   await sayAll([

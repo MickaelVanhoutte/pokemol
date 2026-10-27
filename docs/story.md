@@ -29,6 +29,37 @@ where every drawing is alive.
   Papa took photos of the new drawings "comme ça, ils ne se perdront jamais". Credits follow, then
   "the next night" the player goes back to the dream for the post-game.
 
+## The two endings
+
+Iteration 16 (Oct 2026), the owner's design. **Team Gomme are the little artist's doubts**, and the Great
+Eraser is the doubting self. **Coconfus** (EN *Muddlecoon*, id 073, Bug/Dark, `src/story/coconfus.ts`) is the
+butterfly the child could not finish drawing before falling asleep (pages 3, 5, 6 and 11 hint at it): a
+muddled cocoon with a hole rubbed through it, half a stained-glass wing and the start of a spiral. Its two
+evolutions are the legendaries, by a story-only rule (`evolutions: [{ to, story: 1 | 2 }]`, never by level):
+- **ending 1, touch it up**: the player listens to the doubts to do better. Awake, the child rubs Coconfus out
+  and redraws it, better: **Libellune** (Bug/Fairy);
+- **ending 2, keep it**: the player listens to the doubts but accepts imperfection as part of drawing. The
+  smudges become the drawing: **Noctaile** (Dark/Psychic).
+
+Neither answer is wrong. Each choice is `choose(id, …)` in `src/story/choices.ts`: flag `choix:<id>` = 1 or
+2, plus `choix:<id>:a` / `:b` for the maps. `endingOf()` takes the majority of the seven story choices and the
+final answer to the Great Eraser, which counts double; a tie (an older save that missed some) goes to the final
+answer. When Coconfus is in the party it reacts to each answer (a pink glow, or a dark spiral).
+
+| # | Id | Where | Touch it up (1) | Keep it (2) |
+|---|---|---|---|---|
+| 1 | `tache` | Route 1, after the first grunt | wipe the eraser mark off Coconfus | « elle te va bien » |
+| 2 | `musee` | Ville-Pastel, Apprentice Lison at the Atelier door after the badge | « recommence-le » | « garde-le, il est unique » |
+
+Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was.
+
+**Coconfus in Act 1.** Leaving Bourg-Gribouille, the first grunt (`r1gomme`, a scripted battle, L3) chases it
+down Route 1 (`route1Gomme`, a trigger across the route); it flees north after choice 1. The second grunt of the
+Misty Woods holds it prisoner (`coconBois` NPC); beating him, it joins the team at L10 (`coconfusJoins`, flag
+`gift:coconfus`), and the rival finds it weird. The Prof, shown it, has never photographed it: « il n’est pas
+fini » (`prof:coconfus`). Saves that crossed the woods before iteration 16 meet it in the next town they visit,
+a little under their lead's level. The legendaries and Coconfus never come out of the Tombola's machine.
+
 Speaker names live in `src/story/cast.ts`; Papa, the Great Eraser and the leaders are defined where
 they are used.
 
@@ -38,9 +69,9 @@ they are used.
 |---|---|---|---|
 | 0 | `NewGameScreen` | Night lines, the Prof's speech, girl/boy, the look picker (« Dessine-toi ! »), name and rival name | — |
 | 1 | `maison`, `maisonRival`, `bourg` (Bourg-Gribouille), `labo` | Wake up; starter at the lab (camera clue); tutorial battle against the rival (friendly, coached) | `intro`, `rivalStarter`, `rival1` |
-| 2 | `route1` (Chemin des Crayons) | A grunt erases a patch of grass (`r1Erased`); first trainers; wild L2–4 | `a1.r1seen` |
-| 3 | `ville` (Ville-Pastel), `atelierPastel` | 🏅 **Mireille**, Insect | `badge:pastel` |
-| 4 | `route2` (Route des Craies), `bois` (Bois Brumeux) | West gate opens with the badge. Two grunts erase the woods; beating the second runs `boisRestore` | `a1.bois` |
+| 2 | `route1` (Chemin des Crayons) | A grunt chases Coconfus and erases a patch of grass (`r1Erased`); choice 1; first trainers; wild L3–4 | `a1.r1seen`, `choix:tache` |
+| 3 | `ville` (Ville-Pastel), `atelierPastel` | 🏅 **Mireille**, Insect; Lison's drawing (choice 2) | `badge:pastel`, `choix:musee` |
+| 4 | `route2` (Route des Craies), `bois` (Bois Brumeux) | West gate opens with the badge. Two grunts erase the woods; beating the second runs `boisRestore`, and Coconfus joins | `a1.bois`, `gift:coconfus` |
 | 5 | `plume` (Village-Plume), `atelierPlume` | 🏅 **Gaspard**, Normal. The bridge east is erased, so the player goes through the cave | `badge:plume` |
 | 6 | `grotte1`, `grotte2` (Grotte Gribouillis) | Cave trainers and the optional strong `gardien`; exits to the port | — |
 | 7 | `route3`, `port` (Port-Aquarelle), `atelierAquarelle`, `tombola` | 🏅 **Marine**, Water (`marineAfter` restores the bridge). Fair with the **Tombola** side quest (golden ticket hidden on Route 4) | `badge:aquarelle`, `a2.bridge`, `a2.tombola` |

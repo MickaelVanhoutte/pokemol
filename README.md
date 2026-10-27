@@ -11,7 +11,8 @@ photographs every Bestiole "so none ever gets lost", and Team Gomme rubs out the
 out Bestioles for their mysterious boss, the Great Eraser. More, still without spoilers, in French and
 English: [docs/histoire.md](docs/histoire.md).
 
-- 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, an ending.
+- 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, and choices along the
+  way that lead to one of two endings.
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
 - Attacks animated in coloured pencil, FireRed style: fireballs, lightning, water jets, waves,
