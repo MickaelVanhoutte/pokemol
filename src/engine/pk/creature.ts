@@ -149,10 +149,20 @@ export function healMon(m: Mon) {
   for (const s of m.moves) s.pp = move(s.id).pp;
 }
 
-/** XP a defeated creature gives to each participant (Gen 3 formula). */
-export function xpYield(defeated: Mon, trainer: boolean, participants: number): number {
+/**
+ * How the level gap changes the XP (Gen 5): ×1 at equal levels, more for a Bestiole behind the one it
+ * beat (×1.6 for a L5 beating a L10), less for one ahead (×0.67 for a L15 beating a L10). New
+ * teammates catch up, and training far above the foes slows down by itself.
+ */
+export function levelFactor(defeatedLevel: number, earnerLevel: number): number {
+  return ((2 * defeatedLevel + 10) / (defeatedLevel + earnerLevel + 10)) ** 2.5;
+}
+
+/** XP a defeated creature gives to each participant: Gen 3 base, scaled by the earner's level (`levelFactor`). */
+export function xpYield(defeated: Mon, trainer: boolean, participants: number, earnerLevel = defeated.level): number {
   const base = Math.floor((creature(defeated.species).baseExp * defeated.level) / 7);
-  return Math.max(1, Math.floor((trainer ? Math.floor(base * 1.5) : base) / Math.max(1, participants)));
+  const full = Math.floor((trainer ? Math.floor(base * 1.5) : base) * levelFactor(defeated.level, earnerLevel));
+  return Math.max(1, Math.floor(full / Math.max(1, participants)));
 }
 
 /** Adds the effort points of a beaten creature (capped); keeps the same missing HP. Mutates the creature. */

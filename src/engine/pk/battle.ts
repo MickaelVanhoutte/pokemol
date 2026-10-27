@@ -839,7 +839,10 @@ function throwBall(st: BattleState, ballId: string, out: Out) {
   }
   const caught = shakes === 4;
   out.push({ t: 'ball', item: ballId, shakes: Math.min(3, shakes), caught });
-  if (caught) finish(st, 'capture', out);
+  if (!caught) return;
+  // a catch counts like a win: XP and effort points for the Bestioles that fought it (Gen 6)
+  awardXp(st, target, out);
+  finish(st, 'capture', out);
 }
 
 function tryRun(st: BattleState, out: Out): boolean {
@@ -943,16 +946,33 @@ function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: nu
   const party = st.sides[0].party.map((m, i) => ({ m, i })).filter(({ m }) => alive(m));
   const fighters = party.filter(({ m }) => st.participants.includes(m.uid));
   const holders = party.filter(({ m }) => m.item && ITEM_BY_ID[m.item]?.hold === 'shareXp');
-  const full = xpYield(foeMon, st.kind === 'trainer', 1);
+  // each Bestiole's share depends on its own level (catch-up XP)
+  const full = (m: Mon) => xpYield(foeMon, st.kind === 'trainer', 1, m.level);
   const part = (pool: number, n: number) => Math.max(1, Math.floor(pool / n));
   const gain = new Map<number, number>();
-  if (!holders.length) for (const { i } of fighters) gain.set(i, part(full, fighters.length));
+  if (!holders.length) for (const { m, i } of fighters) gain.set(i, part(full(m), fighters.length));
   else {
-    for (const { i } of fighters) gain.set(i, part(Math.floor(full / 2), fighters.length));
-    for (const { i } of holders) gain.set(i, (gain.get(i) ?? 0) + part(Math.floor(full / 2), holders.length));
+    for (const { m, i } of fighters) gain.set(i, part(Math.floor(full(m) / 2), fighters.length));
+    for (const { m, i } of holders) gain.set(i, (gain.get(i) ?? 0) + part(Math.floor(full(m) / 2), holders.length));
   }
   // a Bestiole received in a trade learns faster (Gen 3: ×1.5)
   return party.filter(({ i }) => gain.has(i)).map(({ m, i }) => ({ m, i, amount: m.ot ? Math.floor(gain.get(i)! * 1.5) : gain.get(i)! }));
+}
+
+/** Effort points, XP, level-ups and moves to learn for beating (or catching) `foeMon`. */
+function awardXp(st: BattleState, foeMon: Mon, out: Out) {
+  for (const { m, i, amount } of xpShares(st, foeMon)) {
+    gainEvs(m, foeMon.species);
+    out.push({ t: 'xp', idx: i, amount });
+    for (const up of addXp(m, amount)) {
+      out.push({ t: 'levelUp', idx: i, level: up.level });
+      for (const mv of up.learned) out.push({ t: 'learned', idx: i, move: mv });
+      for (const mv of up.pending) {
+        st.learnQueue.push({ uid: m.uid, move: mv });
+        out.push({ t: 'learnPrompt', idx: i, move: mv });
+      }
+    }
+  }
 }
 
 /** Feu de Joie: the Bestiole that knocked a foe out gets a stage up. */
@@ -973,18 +993,7 @@ function checkFaints(st: BattleState, out: Out) {
   if (!alive(foeMon)) {
     out.push({ t: 'faint', side: 1, idx: foe.active });
     koBoost(st, 0, out);
-    for (const { m, i, amount } of xpShares(st, foeMon)) {
-      gainEvs(m, foeMon.species);
-      out.push({ t: 'xp', idx: i, amount });
-      for (const up of addXp(m, amount)) {
-        out.push({ t: 'levelUp', idx: i, level: up.level });
-        for (const mv of up.learned) out.push({ t: 'learned', idx: i, move: mv });
-        for (const mv of up.pending) {
-          st.learnQueue.push({ uid: m.uid, move: mv });
-          out.push({ t: 'learnPrompt', idx: i, move: mv });
-        }
-      }
-    }
+    awardXp(st, foeMon, out);
     const next = foe.party.findIndex((m) => alive(m));
     if (next < 0) {
       finish(st, 'win', out);

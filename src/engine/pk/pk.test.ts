@@ -8,7 +8,7 @@ import { TYPES, effectiveness } from '../../data/types';
 import { L } from '../../i18n';
 import { aiChoose } from './ai';
 import { act, activeMon, catchChance, computeDamage, createBattle, effectiveStat, IllegalAction, itemUsable, usableSlots, type Action, type BattleState } from './battle';
-import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, maxHp, movesAt, statsOf, xpAt, type Mon } from './creature';
+import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, levelFactor, maxHp, movesAt, statsOf, xpAt, type Mon } from './creature';
 
 const IV0 = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
 const mon = (species: string, level: number, seed = 1, patch: Partial<Mon> = {}) => ({ ...createMon(species, level, { rng: seed }, IV0), ...patch });
@@ -260,6 +260,9 @@ describe('battle', () => {
     expect(left).toMatchObject({ side: 0, amount: Math.floor(maxHp(me) / 16) });
   });
 
+  /** XP a level `earner` Bestiole gets for beating a wild Lunelle (013) at L3. */
+  const lunelleXp = (earner: number) => Math.floor(Math.floor((creature('013').baseExp * 3) / 7) * levelFactor(3, earner));
+
   it('the Tracing Paper shares XP with a creature that did not fight (Gen 3 halves)', () => {
     const fighter = mon('002', 20);
     const benched = mon('001', 5, 1, { item: 'papier-calque' });
@@ -267,20 +270,42 @@ describe('battle', () => {
     const st = battle([fighter, benched], [foe], 'wild');
     const r = act(st, { type: 'move', slot: slotOf(fighter, 'flammeche') }, { type: 'move', slot: 0 });
     const xp = r.events.filter((e) => e.t === 'xp');
-    const full = Math.floor((creature('013').baseExp * 3) / 7);
-    expect(xp).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(full / 2) }, { t: 'xp', idx: 1, amount: Math.floor(full / 2) }]);
+    expect(xp).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(lunelleXp(20) / 2) }, { t: 'xp', idx: 1, amount: Math.floor(lunelleXp(5) / 2) }]);
     expect(r.state.sides[0].party[1].evs.spe).toBe(1);
     // without it, the fighter gets everything
     const solo = act(battle([fighter, mon('001', 5)], [foe], 'wild'), { type: 'move', slot: slotOf(fighter, 'flammeche') }, { type: 'move', slot: 0 });
-    expect(solo.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: full }]);
+    expect(solo.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: lunelleXp(20) }]);
   });
 
   it('a Bestiole received in a trade gets ×1.5 XP (Gen 3)', () => {
     const traded = mon('002', 20);
     traded.ot = 'Hugo';
     const r = act(battle([traded], [mon('013', 3)], 'wild'), { type: 'move', slot: slotOf(traded, 'flammeche') }, { type: 'move', slot: 0 });
-    const full = Math.floor((creature('013').baseExp * 3) / 7);
-    expect(r.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(full * 1.5) }]);
+    expect(r.events.filter((e) => e.t === 'xp')).toEqual([{ t: 'xp', idx: 0, amount: Math.floor(lunelleXp(20) * 1.5) }]);
+  });
+
+  it('catch-up XP: the Gen 3 amount at equal levels, more when behind, less when ahead', () => {
+    expect(levelFactor(12, 12)).toBe(1);
+    expect(levelFactor(10, 5)).toBeCloseTo(1.58, 1);
+    expect(levelFactor(10, 15)).toBeCloseTo(0.67, 1);
+    const beat = (lv: number) => act(battle([mon('002', lv)], [mon('013', 10, 1, { hp: 1 })], 'wild'), { type: 'move', slot: 0 }, { type: 'move', slot: 0 }).events.find((e) => e.t === 'xp');
+    expect(beat(10)).toMatchObject({ amount: Math.floor((creature('013').baseExp * 10) / 7) });
+  });
+
+  it('catching a Bestiole gives XP and effort points, as beating it would', () => {
+    const me = mon('002', 8);
+    me.xp = xpAt(9) - 1;
+    const wild = mon('062', 4, 1, { status: 'sleep', hp: 1 });
+    const r = act(battle([me], [wild], 'wild'), { type: 'ball', item: 'crayon-ball' }, { type: 'move', slot: 0 });
+    expect(r.state.result).toBe('capture');
+    const xp = r.events.find((e) => e.t === 'xp');
+    expect(xp).toMatchObject({ idx: 0, amount: Math.floor(Math.floor((creature('062').baseExp * 4) / 7) * levelFactor(4, 8)) });
+    expect(r.events.some((e) => e.t === 'levelUp')).toBe(true);
+    expect(r.state.sides[0].party[0].evs.atk).toBe(1);
+    // the XP comes after the ball, the end of the battle after the XP
+    const order = r.events.map((e) => e.t);
+    expect(order.indexOf('ball')).toBeLessThan(order.indexOf('xp'));
+    expect(order.indexOf('xp')).toBeLessThan(order.indexOf('end'));
   });
 
   it('berries can be eaten from the bag in battle', () => {
