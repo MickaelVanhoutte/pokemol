@@ -11,7 +11,13 @@
  * - lopsided shapes, stick legs, zig-zag fur, oval eyes filled with colour.
  *
  * Parts are drawn whole, one after the other, so what is in front hides what is behind.
+ *
+ * A part that moves in battle (a wing, a trunk) is drawn inside `c.part(name, { pivot, motion… }, () => …)`:
+ * the card keeps it, and `npm run redraws` also cuts it out on its own for the battle rig, over (or with
+ * `behind`, under) the rest. An `extra` part is only in the rig (sparks, closed eyelids): draw it last, so
+ * the card's random strokes stay the same.
  */
+import type { PartMove } from '../../src/data/rigs.ts';
 
 export type P = [number, number];
 export const GRAPHITE = '#3f3b46';
@@ -19,6 +25,17 @@ export const FELT = '#27232d';
 const PAPER = '#f7f3ea';
 
 export type Crayon = ReturnType<typeof crayon>;
+
+/** A moving part, as drawn: its name and pivot (drawing coordinates), how it moves, where it sits. */
+export interface PartDef extends PartMove {
+  name: string;
+  pivot: P;
+  behind?: boolean;
+  extra?: boolean;
+}
+
+/** What `svg()` draws: the card, the rig's body without its moving parts, or one part alone. */
+export type View = 'card' | 'base' | { part: string };
 
 export interface Colour {
   /** Main stroke direction in degrees (90 = up and down). */
@@ -153,6 +170,14 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
   }
 
   let defs = '', seq = '', ids = 0;
+  // the drawing in pieces, each with the moving part it belongs to (if any)
+  const chunks: { part?: string; svg: string }[] = [];
+  const parts: PartDef[] = [];
+  let inPart: string | undefined;
+  const cut = () => {
+    if (seq) chunks.push({ part: inPart, svg: seq });
+    seq = '';
+  };
 
   /** Coloured-pencil colouring of a shape (no outline). */
   function colour(shape: P[], col: string, o: Colour = {}, round = true): string {
@@ -241,15 +266,33 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
     raw(svg: string) {
       seq += svg;
     },
-    /** The whole drawing on its sheet, tilted a little around (cx, cy). */
-    svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2): string {
+    /**
+     * A part that moves in battle (see the top of this file). A part drawn in several goes (bits behind and
+     * in front of something else) is called again with the same name; its first description counts.
+     */
+    part(name: string, def: Omit<PartDef, 'name'>, draw: () => void) {
+      cut();
+      inPart = name;
+      draw();
+      cut();
+      inPart = undefined;
+      if (!parts.some((p) => p.name === name)) parts.push({ name, ...def });
+    },
+    /** The moving parts drawn so far. */
+    parts: () => parts,
+    /** The whole drawing on its sheet, tilted a little around (cx, cy); or a `view` of it for the battle rig. */
+    svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, view: View = 'card'): string {
+      cut();
+      const extra = new Set(parts.filter((p) => p.extra).map((p) => p.name));
+      const body = chunks.filter((k) => (view === 'card' ? !k.part || !extra.has(k.part) : view === 'base' ? !k.part : k.part === view.part))
+        .map((k) => k.svg).join('');
       return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' viewBox='0 0 ${W} ${H}'><defs>${defs}`
         // paper tooth: white specks where the pencil skipped over the grain
         + `<filter id='grain' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' seed='${seed0 % 97}' result='n'/>`
         + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -5 3.85' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
         + `<filter id='lead' x='-2%' y='-2%' width='104%' height='104%'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='${(seed0 + 5) % 97}' result='n'/>`
         + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.5' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
-        + `</defs><rect width='${W}' height='${H}' fill='${PAPER}'/><g transform='rotate(${r1(tilt)} ${cx} ${cy})'>${seq}</g></svg>`;
+        + `</defs><rect width='${W}' height='${H}' fill='${PAPER}'/><g transform='rotate(${r1(tilt)} ${cx} ${cy})'>${body}</g></svg>`;
     },
   };
 }

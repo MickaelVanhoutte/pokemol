@@ -31,9 +31,12 @@ export default {
     shape(potato(330, 400, 175, 160, 12, 0.04), OCHRE, { angle: 70, over: 0.45 });
     shape(spikes([[250, 270], [320, 225], [400, 240]], 3, 26), DEEP, { over: 0 }, {}, false);
     shape(potato(430, 430, 60, 80, 9, 0.06), DEEP, { angle: 90, over: 0 });
-    shape(band([[210, 470], [170, 560], [160, 640], [200, 680], [235, 655]], 64, 34), OCHRE, { angle: 20 });
-    stroke([[175, 560], [205, 568]], { w: 3 });
-    stroke([[168, 600], [198, 606]], { w: 3 });
+    // the trunk: in battle it goes up and down, from under the head (the tusks stay in front)
+    c.part('trompe', { pivot: [215, 475], motion: 'swing', amp: 12, period: 2.2, behind: true }, () => {
+      shape(band([[210, 470], [170, 560], [160, 640], [200, 680], [235, 655]], 64, 34), OCHRE, { angle: 20 });
+      stroke([[175, 560], [205, 568]], { w: 3 });
+      stroke([[168, 600], [198, 606]], { w: 3 });
+    });
     // two tiny tusks curling out
     shape(band([[250, 520], [215, 570], [228, 610]], 24, 12), TUSK, { over: 0 });
     shape(band([[300, 530], [290, 585], [310, 615]], 24, 12), TUSK, { over: 0 });

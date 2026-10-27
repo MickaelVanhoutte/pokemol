@@ -29,15 +29,20 @@ export default {
       }
     };
     // the far wings, smaller, behind on the left
-    wing([470, 430], [180, 140], 70, 0, false);
-    wing([470, 470], [150, 420], 60, 2, false);
+    const buzz = { motion: 'flap', amp: 9, period: 0.22, behind: true } as const;
+    c.part('ailes-loin', { pivot: [470, 450], ...buzz }, () => {
+      wing([470, 430], [180, 140], 70, 0, false);
+      wing([470, 470], [150, 420], 60, 2, false);
+    });
     // the slender ringed body, curling down and back
     const tail: P[] = [[520, 470], [640, 560], [760, 650], [860, 760], [900, 860], [860, 930]];
     shape(band(tail, 70, 30), BODY, { angle: 30, over: 0.4 });
     for (let i = 1; i < tail.length - 1; i++) stroke([[tail[i][0] - 30, tail[i][1] + 22], [tail[i][0] + 26, tail[i][1] - 26]], { w: 4, col: DEEP });
     // the near wings, big, spread up and to the right
-    wing([560, 420], [900, 90], 95, 1, true);
-    wing([570, 470], [1010, 380], 80, 3, true);
+    c.part('ailes', { pivot: [565, 445], ...buzz, phase: 0.5 }, () => {
+      wing([560, 420], [900, 90], 95, 1, true);
+      wing([570, 470], [1010, 380], 80, 3, true);
+    });
     // the thorax and the head, looking left
     shape(potato(520, 450, 80, 75, 10, 0.05), BODY, { angle: 70, over: 0.4 });
     shape(potato(390, 420, 105, 95, 12, 0.04), BODY, { angle: 80, over: 0.4 });

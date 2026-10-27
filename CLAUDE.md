@@ -178,6 +178,13 @@ conventions are in [docs/content.md](docs/content.md#flags).
     Bestiole while `vol.sub > 0`), talents, held items, send-out and the Crayon-ball (always drawn);
   - a new move needs a recipe (`recipes.test.ts` fails without one). The option ANIMATIONS
     (`prefs.moveFx`) turns them off, except the Crayon-ball.
+- A battle drawing (`Sprite` in `BattleScene.tsx`) is a `.pk-sprite` box, which takes the move motions,
+  the mirroring and every state (grey, faint, doll, capture, the victory dance `fx-victory`), around a
+  `.pk-idle` layer that breathes or hovers while it waits (`idleOf`, `src/data/rigs.ts`). A Bestiole drawn
+  with moving parts has a battle rig (`RIG_OF`: `public/rigs/<id>-<slug>/`, `src/data/rigs.json`), its body
+  and each part a separate picture moved by CSS (`flap`, `fold`, `swing`, `nod`, `peek`, `flicker`,
+  `blink`); shiny and pale ones recolour each piece (`rigLayerUrl`). The drawing sizes itself with
+  container units of its platform, so the box shrinks to it and the effects still find it.
 
 **UI kit** (`src/ui/paper`):
 - the font is Patrick Hand (handwriting); menu entries use pencil doodles (`src/ui/sketchIcons.ts`),
@@ -212,6 +219,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - the *brouillons* by `tools/drafts` (`npm run drafts`, rougher kid kit, `draft: true`, see
   [docs/content.md](docs/content.md#brouillons-drafts)).
 
+A part that moves in battle is drawn inside `c.part(name, { pivot, motion… }, () => …)` (both kits);
+`npm run redraws` / `npm run drafts` then also write its battle rig (`tools/redraws/rig.ts`, checked on
+`tools/out/rigs-sheet.png`) without changing the card ([docs/content.md](docs/content.md#moving-parts-in-battle)).
 Both go through `src/art/cutout.ts` (paper flattening, ink mask) like a photo and make the overworld
 miniature `public/minis/<id>-<slug>.png` (`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour
 palette, a dark outline). The miniature is the follower (`Game.follower`, refreshed from the party by

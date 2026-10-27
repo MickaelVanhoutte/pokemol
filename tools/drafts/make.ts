@@ -10,7 +10,8 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import { cutout } from '../../src/art/cutout.ts';
 import { makeMini } from '../minis.ts';
-import { kid, type Draft } from './kid.ts';
+import { kid, type Draft, type Kid } from './kid.ts';
+import { makeRig, saveRig, turned } from '../redraws/rig.ts';
 import clapoflot from './clapoflot.ts';
 import tortorrent from './tortorrent.ts';
 import bouquetigre from './bouquetigre.ts';
@@ -49,10 +50,15 @@ export const DRAFTS: Draft[] = [
 
 const root = new URL('../..', import.meta.url).pathname;
 
-/** The drawing as it would come out of the scanner: an RGBA picture on paper. */
-export async function drawDraft(d: Draft): Promise<Buffer> {
+/** The drawing done with the kit (its card, its moving parts). */
+export function drawKid(d: Draft): Kid {
   const k = kid(d.seed, { layered: d.layered });
   d.draw(k);
+  return k;
+}
+
+/** The drawing as it would come out of the scanner: an RGBA picture on paper. */
+export async function drawDraft(d: Draft, k = drawKid(d)): Promise<Buffer> {
   const [w, h] = d.size;
   return sharp(Buffer.from(k.svg(w, h, d.tilt, d.pivot[0], d.pivot[1], d.offset?.[0] ?? 0, d.offset?.[1] ?? 0))).png().toBuffer();
 }
@@ -60,9 +66,11 @@ export async function drawDraft(d: Draft): Promise<Buffer> {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const only = process.argv.slice(2);
   await mkdir(join(root, 'public/cards'), { recursive: true });
+  const rigSheets: { input: Buffer; left: number; top: number }[] = [];
   for (const d of DRAFTS) {
     if (only.length && !only.includes(d.id) && !only.includes(d.slug)) continue;
-    const { data, info } = await sharp(await drawDraft(d)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const k = drawKid(d);
+    const { data, info } = await sharp(await drawDraft(d, k)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     // small bits (water drops, sparks) are part of the drawing
     const res = cutout({ data, width: info.width, height: info.height }, { minComponent: 0.002 });
     const card = join(root, 'public/cards', `${d.id}-${d.slug}.webp`);
@@ -71,6 +79,20 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       .webp({ quality: 86, alphaQuality: 90, effort: 6 })
       .toFile(card);
     await makeMini(card, join(root, 'public/minis', `${d.id}-${d.slug}.png`));
-    console.log(`✓ ${d.id} ${d.slug}`);
+    // its battle rig, when it has moving parts
+    const [W, H] = d.size;
+    const [dx, dy] = d.offset ?? [0, 0];
+    const made = await makeRig({
+      id: d.id, slug: d.slug, parts: k.parts(),
+      render: (view) => k.svg(W, H, d.tilt, d.pivot[0], d.pivot[1], dx, dy, view), place: turned(k.tiltOf(d.tilt), d.pivot[0], d.pivot[1], dx, dy),
+    }, root);
+    await saveRig(root, d.id, made?.rig ?? null);
+    if (made) rigSheets.push({ input: made.sheet, left: (rigSheets.length % 4) * 430, top: Math.floor(rigSheets.length / 4) * 430 });
+    console.log(`✓ ${d.id} ${d.slug}${k.parts().length ? ` (${k.parts().map((p) => p.name).join(', ')})` : ''}`);
+  }
+  if (rigSheets.length) {
+    await sharp({ create: { width: 4 * 430, height: Math.ceil(rigSheets.length / 4) * 430, channels: 4, background: '#ffffff' } })
+      .composite(rigSheets).png().toFile(join(root, 'tools/out/rigs-drafts-sheet.png'));
+    console.log('rigs → tools/out/rigs-drafts-sheet.png');
   }
 }

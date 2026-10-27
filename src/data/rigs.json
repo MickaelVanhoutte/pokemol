@@ -1,0 +1,428 @@
+{
+  "003": {
+    "slug": "clapotin",
+    "parts": [
+      {
+        "name": "corps",
+        "motion": "peek",
+        "to": [
+          0,
+          0
+        ],
+        "shrink": 0.12,
+        "fade": true,
+        "inside": true,
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 100,
+        "ox": 75.1,
+        "oy": 58.5
+      }
+    ]
+  },
+  "004": {
+    "slug": "zigzou",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.6,
+        "behind": true,
+        "left": 60.1,
+        "top": 33.9,
+        "width": 39.9,
+        "height": 44.5,
+        "ox": 11.5,
+        "oy": 87.5
+      },
+      {
+        "name": "eclairs",
+        "motion": "flicker",
+        "left": 0,
+        "top": 20.2,
+        "width": 97.3,
+        "height": 31.5,
+        "ox": 45.4,
+        "oy": 94.2
+      }
+    ]
+  },
+  "007": {
+    "slug": "papivole",
+    "parts": [
+      {
+        "name": "ailes-loin",
+        "motion": "fold",
+        "behind": true,
+        "left": 0,
+        "top": 15.9,
+        "width": 35.5,
+        "height": 64.9,
+        "ox": 91.7,
+        "oy": 50.8
+      },
+      {
+        "name": "ailes",
+        "motion": "fold",
+        "left": 48.1,
+        "top": 1.4,
+        "width": 51.9,
+        "height": 85.6,
+        "ox": 9.2,
+        "oy": 53.9
+      }
+    ]
+  },
+  "013": {
+    "slug": "piafou",
+    "parts": [
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": 22,
+        "period": 0.4,
+        "left": 31.2,
+        "top": 39.2,
+        "width": 24.3,
+        "height": 31.2,
+        "ox": 73.2,
+        "oy": 12.2
+      }
+    ]
+  },
+  "025": {
+    "slug": "dragobraise",
+    "parts": [
+      {
+        "name": "aile-g",
+        "motion": "flap",
+        "amp": 14,
+        "period": 0.7,
+        "behind": true,
+        "phase": 0,
+        "left": 20.2,
+        "top": 6.9,
+        "width": 31.1,
+        "height": 39.2,
+        "ox": 93.9,
+        "oy": 79.7
+      },
+      {
+        "name": "aile-d",
+        "motion": "flap",
+        "amp": -14,
+        "period": 0.7,
+        "behind": true,
+        "phase": 0,
+        "left": 56.3,
+        "top": 1.2,
+        "width": 33.5,
+        "height": 46.8,
+        "ox": 6.7,
+        "oy": 77.5
+      }
+    ]
+  },
+  "026": {
+    "slug": "piafleche",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": 14,
+        "period": 0.55,
+        "behind": true,
+        "phase": 0,
+        "left": 26.5,
+        "top": 0,
+        "width": 24.7,
+        "height": 53.8,
+        "ox": 91.9,
+        "oy": 90.7
+      },
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": 16,
+        "period": 0.55,
+        "phase": 0,
+        "left": 35.9,
+        "top": 9.8,
+        "width": 28.2,
+        "height": 48.8,
+        "ox": 57.6,
+        "oy": 89.1
+      }
+    ]
+  },
+  "031": {
+    "slug": "taupinou",
+    "parts": [
+      {
+        "name": "taupe",
+        "motion": "peek",
+        "period": 3.6,
+        "phase": 0,
+        "clip": true,
+        "to": [
+          0,
+          78
+        ],
+        "behind": true,
+        "left": 16.6,
+        "top": 0,
+        "width": 49.8,
+        "height": 69,
+        "ox": 65.5,
+        "oy": 90.5
+      },
+      {
+        "name": "pattes",
+        "motion": "peek",
+        "period": 3.6,
+        "phase": 0,
+        "clip": true,
+        "to": [
+          0,
+          60
+        ],
+        "fade": true,
+        "left": 23.6,
+        "top": 53.5,
+        "width": 39.7,
+        "height": 15.1,
+        "ox": 50.6,
+        "oy": 59.6
+      }
+    ]
+  },
+  "036": {
+    "slug": "piafurie",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": 12,
+        "period": 0.8,
+        "behind": true,
+        "phase": 0,
+        "left": 21.4,
+        "top": 0,
+        "width": 31.4,
+        "height": 51.6,
+        "ox": 85.3,
+        "oy": 94.4
+      },
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": -12,
+        "period": 0.8,
+        "phase": 0,
+        "left": 49.6,
+        "top": 2.4,
+        "width": 40.2,
+        "height": 61.4,
+        "ox": 16.1,
+        "oy": 90.2
+      }
+    ]
+  },
+  "045": {
+    "slug": "dragopataud",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": 16,
+        "period": 0.5,
+        "behind": true,
+        "phase": 0,
+        "left": 0,
+        "top": 24,
+        "width": 24.2,
+        "height": 20.4,
+        "ox": 89.1,
+        "oy": 75.7
+      },
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": -16,
+        "period": 0.5,
+        "phase": 0,
+        "left": 49.9,
+        "top": 19.3,
+        "width": 36.8,
+        "height": 28.4,
+        "ox": 30.7,
+        "oy": 77
+      }
+    ]
+  },
+  "048": {
+    "slug": "ciseaumante",
+    "parts": [
+      {
+        "name": "ailes",
+        "motion": "flap",
+        "amp": 8,
+        "period": 0.18,
+        "behind": true,
+        "left": 43.9,
+        "top": 16.1,
+        "width": 56.1,
+        "height": 36.9,
+        "ox": 25.8,
+        "oy": 72.1
+      }
+    ]
+  },
+  "050": {
+    "slug": "pterocaille",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": -12,
+        "period": 0.95,
+        "behind": true,
+        "phase": 0,
+        "left": 49.3,
+        "top": 0,
+        "width": 36.1,
+        "height": 62.2,
+        "ox": 6.5,
+        "oy": 90.4
+      },
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": 12,
+        "period": 0.95,
+        "phase": 0,
+        "left": 3.6,
+        "top": 26.9,
+        "width": 46.7,
+        "height": 49.3,
+        "ox": 94.7,
+        "oy": 80.8
+      }
+    ]
+  },
+  "061": {
+    "slug": "canarmure",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": 18,
+        "period": 0.45,
+        "behind": true,
+        "left": 4,
+        "top": 49.2,
+        "width": 32.6,
+        "height": 16.9,
+        "ox": 83.9,
+        "oy": 36.5
+      },
+      {
+        "name": "epee",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2.8,
+        "left": 56.7,
+        "top": 0,
+        "width": 43.3,
+        "height": 62.3,
+        "ox": 12.1,
+        "oy": 93.7
+      }
+    ]
+  },
+  "071": {
+    "slug": "libellune",
+    "parts": [
+      {
+        "name": "ailes-loin",
+        "motion": "flap",
+        "amp": 9,
+        "period": 0.22,
+        "behind": true,
+        "left": 7.3,
+        "top": 5.9,
+        "width": 36.6,
+        "height": 44.8,
+        "ox": 95.5,
+        "oy": 82.2
+      },
+      {
+        "name": "ailes",
+        "motion": "flap",
+        "amp": 9,
+        "period": 0.22,
+        "behind": true,
+        "phase": 0.5,
+        "left": 49.8,
+        "top": 0,
+        "width": 50.2,
+        "height": 51.4,
+        "ox": 4.3,
+        "oy": 82
+      }
+    ]
+  },
+  "072": {
+    "slug": "noctaile",
+    "parts": [
+      {
+        "name": "ailes-loin",
+        "motion": "fold",
+        "amp": 45,
+        "period": 0.9,
+        "behind": true,
+        "phase": 0,
+        "left": 0,
+        "top": 7.6,
+        "width": 40.3,
+        "height": 71.1,
+        "ox": 93.3,
+        "oy": 51.9
+      },
+      {
+        "name": "ailes",
+        "motion": "fold",
+        "amp": 45,
+        "period": 0.9,
+        "behind": true,
+        "phase": 0,
+        "left": 48.3,
+        "top": 1.9,
+        "width": 49.3,
+        "height": 87.7,
+        "ox": 6.7,
+        "oy": 51.3
+      }
+    ]
+  },
+  "076": {
+    "slug": "ocrinou",
+    "parts": [
+      {
+        "name": "trompe",
+        "motion": "swing",
+        "amp": 12,
+        "period": 2.2,
+        "behind": true,
+        "left": 0,
+        "top": 38.2,
+        "width": 16.7,
+        "height": 44.1,
+        "ox": 64.8,
+        "oy": 11.5
+      }
+    ]
+  }
+}

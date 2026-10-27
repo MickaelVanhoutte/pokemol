@@ -548,6 +548,15 @@ the summary shows effort points. Magic Lollipops (+1 level) lie off the beaten t
 Mont Fusain to Route Blanche (most of them hidden), and shops sell them for 10 000 ₽ after the ending. The
 level curve assumes a player who picks none up.
 
+**Bestioles alive in battle (Oct 2026).** The owner asked for little animations: wings beating, Ocrinou's
+trunk, Taupinou in and out of its hole, Clapotin hiding in its shell, Zigzou's sparks. Every Bestiole now
+breathes (or hovers) while it waits, and the first fifteen have moving parts drawn apart (battle rigs):
+Clapotin (the whole turtle into its shell: hiding only the head looked like it lost it), Zigzou (tail,
+lightning), Papivole and Noctaile (folding wings), Piafou, Libellune, Canarmure (wing, pencil-sword),
+Ocrinou (trunk), Taupinou (its hole), Dragobraise, Piaflèche, Piafurie, Dragopataud, Ciseaumante,
+Ptérocaille (wings). The others follow by batches. After a win or a capture, your Bestiole dances (a hop
+while turning round, twice) during the tune.
+
 **Stronger first Atelier Masters, and smaller things (Oct 2026).** The owner rolled over the first two
 Ateliers, nearly one hit each: Mireille's ace (L7) and Gaspard's (L10) were below their own apprentices
 and the no-grind team, Basile's (L28) too. Now Mireille has Chenillou L7, Chrysalou L8, Papivole L8;

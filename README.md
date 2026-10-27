@@ -19,6 +19,8 @@ English: [docs/histoire.md](docs/histoire.md).
 - Attacks animated in coloured pencil, FireRed style: fireballs, lightning, water jets, waves,
   claws, bites, punches… drawn in code, with lines that wobble like a flipbook and a little synth
   sound for each effect (they can be turned off in the options).
+- Bestioles alive in battle: they breathe or hover while they wait, beat their wings, wag a tail, hide
+  in a shell or a hole, crackle with sparks, and dance when they win.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
 - Field tools: scissors, foam mallet and strong gloves for bushes, rocks and boulders, a paper

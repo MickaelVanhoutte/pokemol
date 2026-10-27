@@ -319,6 +319,27 @@ Scripts run one at a time and lock player input. To change an existing script af
   - The shop sells the list in `STOCK` (`ShopScreen.tsx`), each item after a number of badges.
   - Item icons are pixel art in `src/ui/icons.ts` (`ROWS`, or a painter in `PAINTED`).
 
+### Moving parts in battle
+
+In battle every Bestiole breathes (or hovers, when it flies; `idleOf` in `src/data/rigs.ts`), and its own
+parts can move: wrap the code that draws a part in `c.part(name, def, () => { … })` (`k.part` in a layered
+brouillon). `npm run redraws` (or `drafts`) cuts the body and each part out on their own into
+`public/rigs/<id>-<slug>/` and records them in `src/data/rigs.json`; `tools/out/rigs-sheet.png` shows them put
+back together, each part framed with its pivot as a red dot. The card doesn't change.
+
+- `pivot`: the drawing point it turns around (a wing's root, the base of a trunk).
+- `motion`: `flap` (beats, `amp` degrees; a negative `amp` for a wing on the other side), `fold` (folds
+  towards the pivot, butterfly wings, `amp` %), `swing` (trunk, tail), `nod`, `peek` (goes to `to`, in % of
+  its own size, with `shrink` and `fade`), `flicker` (sparks), `blink` (closed eyelids). `period` in seconds,
+  `phase` (0–1) so parts move together.
+- `behind`: under the body (a far wing, a part drawn first). `inside`: in front at rest, behind the rest
+  once small (Clapotin's body into its shell). `clip`: cut off at the drawing's edge (Taupinou going down
+  its hole).
+- `extra`: only in battle, not on the card (Zigzou's lightning): draw it last, so the card's random strokes
+  stay the same. A part drawn in two goes (some before something else, some after) is called twice with the
+  same name.
+- `src/data/rigs.test.ts` checks each rig's pictures, boxes, pivots and motions.
+
 ### Brouillons (drafts)
 
 The *brouillons* are Bestioles drawn in code more roughly than the redraws: a module in

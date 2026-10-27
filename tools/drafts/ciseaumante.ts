@@ -7,8 +7,10 @@ export default {
     const { j, potato, shake, shape, stroke, dot } = k;
     const GREEN = '#5fbf4a', LIGHT = '#bfe8b0', BLADE = '#a9b2c4', HANDLE = '#e24848';
     // see-through wings behind
-    shape(shake([[620, 470], [880, 300], [990, 340], [880, 470], [700, 560]], 8), LIGHT, { gap: 15, miss: 0.35 });
-    shape(shake([[620, 520], [900, 480], [980, 560], [850, 610], [680, 610]], 8), LIGHT, { gap: 15, miss: 0.35 });
+    k.part('ailes', { pivot: [630, 520], motion: 'flap', amp: 8, period: 0.18, behind: true }, () => {
+      shape(shake([[620, 470], [880, 300], [990, 340], [880, 470], [700, 560]], 8), LIGHT, { gap: 15, miss: 0.35 });
+      shape(shake([[620, 520], [900, 480], [980, 560], [850, 610], [680, 610]], 8), LIGHT, { gap: 15, miss: 0.35 });
+    });
     // thin legs
     for (const [a, b, c] of [[[600, 800], [690, 900], [660, 1050]], [[540, 820], [500, 920], [540, 1060]], [[650, 760], [800, 840], [830, 990]]] as [P, P, P][]) {
       stroke([a, b, c], 8);

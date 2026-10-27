@@ -32,8 +32,12 @@ export default {
     };
 
     // wings behind everything: one each side of the back
-    wing([570, 500], [430, 250], [250, 170], [[262, 380], [390, 470], [540, 560]], 42);
-    wing([690, 500], [840, 230], [1070, 160], [[1045, 370], [905, 480], [715, 585]], -42);
+    k.part('aile-g', { pivot: [570, 500], motion: 'flap', amp: 14, period: 0.7, behind: true, phase: 0 }, () => {
+      wing([570, 500], [430, 250], [250, 170], [[262, 380], [390, 470], [540, 560]], 42);
+    });
+    k.part('aile-d', { pivot: [690, 500], motion: 'flap', amp: -14, period: 0.7, behind: true, phase: 0 }, () => {
+      wing([690, 500], [840, 230], [1070, 160], [[1045, 370], [905, 480], [715, 585]], -42);
+    });
     // tail curling right, a big flame at its tip
     {
       const path: P[] = [[700, 880], [830, 960], [980, 965], [1090, 895], [1140, 790]];

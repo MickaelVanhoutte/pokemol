@@ -23,14 +23,19 @@ export default {
       stroke([[x, y], [x + 30, y - 40], [x + 5, y - 70], [x + 40, y - 110]], { w: 5, col: '#8a6cd0' });
     }
     // the far wings, smaller, behind on the left
-    wing([[470, 400], [330, 210], [180, 160], [110, 260], [170, 380], [330, 450]], [230, 270], 38, false);
-    wing([[470, 470], [300, 520], [200, 640], [260, 720], [380, 650], [470, 540]], [300, 600], 30, false);
+    const beat = { motion: 'fold', amp: 45, period: 0.9, behind: true, phase: 0 } as const;
+    c.part('ailes-loin', { pivot: [470, 450], ...beat }, () => {
+      wing([[470, 400], [330, 210], [180, 160], [110, 260], [170, 380], [330, 450]], [230, 270], 38, false);
+      wing([[470, 470], [300, 520], [200, 640], [260, 720], [380, 650], [470, 540]], [300, 600], 30, false);
+    });
     // the plump furry body and its tail
     shape(potato(560, 560, 110, 190, 12, 0.06), BODY, { angle: 80, over: 0.5 });
     for (const y of [560, 630, 700]) stroke([[470, y], [650, y + 10]], { w: 4, col: DEEP });
     // the near wings, big, spread up and to the right, scalloped
-    wing(([[590, 400], [700, 180]] as P[]).concat(spikes([[700, 180], [880, 110], [1020, 200], [1050, 380]], 3, 22), [[900, 470], [640, 470]]), [880, 280], 62, true);
-    wing(([[620, 500], [860, 520]] as P[]).concat(spikes([[860, 520], [1000, 620], [960, 780]], 2, 20), [[800, 800], [640, 640]]), [840, 640], 46, true);
+    c.part('ailes', { pivot: [610, 470], ...beat }, () => {
+      wing(([[590, 400], [700, 180]] as P[]).concat(spikes([[700, 180], [880, 110], [1020, 200], [1050, 380]], 3, 22), [[900, 470], [640, 470]]), [880, 280], 62, true);
+      wing(([[620, 500], [860, 520]] as P[]).concat(spikes([[860, 520], [1000, 620], [960, 780]], 2, 20), [[800, 800], [640, 640]]), [840, 640], 46, true);
+    });
     // the grey fluffy collar
     shape(spikes([[400, 470], [480, 540], [600, 540], [660, 470]], 3, 30).concat([[560, 420], [450, 420]]), FUR, { angle: 80, over: 0 }, {}, false);
     // feathery antennae: two curved fronds of grey fur

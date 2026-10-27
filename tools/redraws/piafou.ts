@@ -16,9 +16,11 @@ export default {
     // a slim body leaning forward: brown back, yellow chest
     shape([[330, 420], [420, 340], [560, 360], [600, 470], [580, 620], [500, 720], [380, 730], [310, 640]], BROWN, { angle: 60, over: 0.6, press: 1.1 });
     shape([[480, 380], [590, 400], [615, 520], [575, 660], [500, 715], [450, 600]], YELLOW, { angle: 80, over: 0.4 });
-    // the folded wing
-    shape([[330, 470], [430, 450], [470, 560], [420, 680], [340, 650]], BROWN, { angle: 30, press: 1.25, over: 0.3 });
-    for (const [x, y] of [[350, 540], [360, 600]]) stroke([[x, y], [x + 70, y - 15]], { w: 3.5 });
+    // the folded wing (it flutters in battle)
+    c.part('aile', { pivot: [430, 460], motion: 'flap', amp: 22, period: 0.4 }, () => {
+      shape([[330, 470], [430, 450], [470, 560], [420, 680], [340, 650]], BROWN, { angle: 30, press: 1.25, over: 0.3 });
+      for (const [x, y] of [[350, 540], [360, 600]]) stroke([[x, y], [x + 70, y - 15]], { w: 3.5 });
+    });
     // the head, a tuft, the beak open to sing
     shape([[440, 240], [520, 190], [620, 210], [670, 290], [640, 380], [540, 410], [450, 370], [425, 300]], YELLOW, { angle: 80, over: 0.45 });
     shape([[470, 210], [450, 120], [500, 160], [510, 95], [545, 170], [530, 205]], BROWN, { angle: 80, press: 1.1, over: 0 }, {}, false);

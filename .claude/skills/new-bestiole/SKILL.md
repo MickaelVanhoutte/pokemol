@@ -28,6 +28,8 @@ Every Bestiole is drawn in code in the little artist's style; she no longer has 
   bigger, more complex and more impressive: a new silhouette, new features (vines, horns, quills, cuffs…), a
   fiercer pose. Put the whole line side by side on the sheet before showing it.
 - The 26 *brouillons* of `tools/drafts` (`draft: true`) are the rough kit; don't add new ones there.
+- Give it its own little gesture in battle: draw the part that moves (wings, a tail, a trunk, sparks…) inside
+  `c.part()` (see docs/content.md, « Moving parts in battle ») and check `tools/out/rigs-sheet.png`.
 
 ## 2. The model
 

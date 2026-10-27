@@ -5,7 +5,9 @@
  *
  * Two ways to draw: by default every colour goes down first and every line on top (lines cross
  * each other, like a quick sketch); `layered` draws part by part, so front parts hide back ones.
+ * A layered drawing can have moving parts for its battle rig, like the crayon kit's (`k.part()`).
  */
+import type { PartDef, View } from '../redraws/crayon.ts';
 
 export type P = [number, number];
 export const PENCIL = '#2e2a35';
@@ -49,6 +51,27 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
   });
 
   let defs = '', ids = 0, colours = '', lines = '', seq = '';
+  // the drawing in pieces, each with the moving part it belongs to (layered drawings only, see crayon.ts)
+  const chunks: { part?: string; svg: string }[] = [];
+  const parts: PartDef[] = [];
+  let inPart: string | undefined;
+  const cut = () => {
+    if (seq) chunks.push({ part: inPart, svg: seq });
+    seq = '';
+  };
+  /** A part that moves in battle (as in the crayon kit). */
+  function part(name: string, def: Omit<PartDef, 'name'>, draw: () => void) {
+    if (!opts.layered) throw new Error(`moving part ${name}: the drawing must be layered`);
+    cut();
+    inPart = name;
+    draw();
+    cut();
+    inPart = undefined;
+    if (!parts.some((p) => p.name === name)) parts.push({ name, ...def });
+  }
+  // the sheet's little extra tilt, drawn once: the card and the rig's pieces line up
+  let jitter: number | undefined;
+  const tiltOf = (tilt: number) => r1(tilt + (jitter ??= j(4)));
   // layered: each part is drawn whole, in order, so what is in front hides what is behind
   const put = (kind: 'c' | 'l', svg: string) => {
     if (opts.layered) seq += svg;
@@ -156,16 +179,20 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
   };
 
   /** The whole drawing, on paper, tilted a little around (cx, cy) and moved by (dx, dy). */
-  function svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, dx = 0, dy = 0): string {
+  function svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, dx = 0, dy = 0, view: View = 'card'): string {
+    cut();
+    const extra = new Set(parts.filter((p) => p.extra).map((p) => p.name));
+    const body = chunks.filter((k) => (view === 'card' ? !k.part || !extra.has(k.part) : view === 'base' ? !k.part : k.part === view.part))
+      .map((k) => k.svg).join('');
     return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' viewBox='0 0 ${W} ${H}'><defs>${defs}`
       + `<filter id='grain' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3' result='n'/>`
       + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.6' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
       + `<filter id='lead' x='-2%' y='-2%' width='104%' height='104%'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='9' result='n'/>`
       + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2 1.75' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
-      + `</defs><rect width='${W}' height='${H}' fill='#f7f3ea'/><g transform='translate(${dx} ${dy}) rotate(${r1(tilt + j(4))} ${cx} ${cy})'>${colours}${lines}${seq}</g></svg>`;
+      + `</defs><rect width='${W}' height='${H}' fill='#f7f3ea'/><g transform='translate(${dx} ${dy}) rotate(${tiltOf(tilt)} ${cx} ${cy})'>${colours}${lines}${body}</g></svg>`;
   }
   const outline = (pts: P[], closed: boolean, w: number) => put('l', line(pts, closed, w));
-  return { rnd, j, potato, shake, densify, band, shape, colourOnly, stroke, outline, dot, raw, bumps, spikes, sharpLine, svg, smooth };
+  return { rnd, j, potato, shake, densify, band, shape, colourOnly, stroke, outline, dot, raw, bumps, spikes, sharpLine, svg, smooth, part, parts: () => parts, tiltOf };
 }
 
 /** One brouillon: where its card goes, how it is drawn and framed. */

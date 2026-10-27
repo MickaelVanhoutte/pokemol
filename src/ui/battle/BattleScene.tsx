@@ -1,8 +1,8 @@
 import { L, tr } from '../../i18n';
 import { creature, mirrored, monLabel } from '../../data/creatures';
-import { monArtUrl } from '../monArt';
+import { monArtUrl, rigLayerUrl } from '../monArt';
 import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
-import { maxHp, xpAt, MAX_LEVEL } from '../../engine/pk/creature';
+import { maxHp, xpAt, MAX_LEVEL, type Mon } from '../../engine/pk/creature';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Ref } from 'preact';
 import { HpBar, StatusTag, XpBar, lv } from '../paper';
@@ -13,7 +13,7 @@ import type { Look } from '../../overworld/sprites';
 import { fromLook, type Appearance } from '../../data/appearance';
 import { personUrl } from '../personArt';
 import { dollUrl } from './fx/doll';
-import { idleOf } from '../../data/rigs';
+import { MOTION_DEFAULTS, RIG_OF, idleOf, rigFile, type RigPart } from '../../data/rigs';
 import { prefs } from '../../state/prefs';
 
 export type Fx = Partial<Record<Side, string>>;
@@ -66,13 +66,41 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
 
 /**
  * A Bestiole on its platform: the box takes the move motions, mirroring and states (`cls`); inside, a
- * layer breathes or flies on the spot while it waits (`idleOf`). The paper doll keeps still.
+ * layer breathes or flies on the spot while it waits (`idleOf`), and a Bestiole with a battle rig moves
+ * its parts (`src/data/rigs.ts`). The paper doll (`mon` null) keeps still.
  */
-function Sprite({ side, species, src, cls }: { side: Side; species: string | null; src: string; cls: string }) {
+function Sprite({ side, mon, src, cls }: { side: Side; mon: Mon | null; src: string; cls: string }) {
+  const rig = mon ? RIG_OF[mon.species] : undefined;
+  const part = (p: RigPart) => {
+    const [amp, period] = MOTION_DEFAULTS[p.motion];
+    const s = p.period ?? period;
+    return (
+      <img
+        class={`pk-part pk-part--${p.motion} ${p.behind ? 'is-behind' : ''} ${p.inside ? 'is-inside' : ''}`}
+        src={rigLayerUrl(mon!, rigFile(mon!.species, rig!, p.name), false)}
+        alt=""
+        style={{
+          left: `${p.left}%`, top: `${p.top}%`, width: `${p.width}%`, height: `${p.height}%`,
+          transformOrigin: `${p.ox}% ${p.oy}%`, animationDuration: `${s}s`,
+          // each part and each side starts somewhere else in its movement
+          animationDelay: `${-((p.phase ?? ((p.name.length * 7) % 10) / 10) + side * 0.37) * s}s`,
+          '--amp': p.motion === 'fold' ? `${1 - (p.amp ?? amp) / 100}` : `${p.amp ?? amp}deg`,
+          '--to-x': `${p.to?.[0] ?? 0}%`, '--to-y': `${p.to?.[1] ?? 0}%`,
+          '--shrink': `${p.shrink ?? 1}`, '--fade': p.fade ? '0' : '1',
+        }}
+      />
+    );
+  };
   return (
     <div class={`pk-sprite ${cls}`}>
-      <div class={`pk-idle pk-idle--${species ? idleOf(species) : 'still'} pk-idle--side${side}`}>
-        <img class="pk-art" src={src} alt="" />
+      <div class={`pk-idle pk-idle--${mon ? idleOf(mon.species) : 'still'} pk-idle--side${side} ${rig?.parts.some((p) => p.clip) ? 'is-clipped' : ''}`}>
+        {rig && mon ? (
+          <>
+            {rig.parts.filter((p) => p.behind).map(part)}
+            <img class="pk-art pk-rig" src={rigLayerUrl(mon, rigFile(mon.species, rig, 'base'), true)} alt="" />
+            {rig.parts.filter((p) => !p.behind).map(part)}
+          </>
+        ) : <img class="pk-art" src={src} alt="" />}
       </div>
     </div>
   );
@@ -107,7 +135,7 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
         ) : (
           <Sprite
             side={1}
-            species={doll(1) ? null : foe.species}
+            mon={doll(1) ? null : foe}
             src={doll(1) ? dollUrl() : monArtUrl(foe)}
             cls={`${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
           />
@@ -122,7 +150,7 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
         ) : (
           <Sprite
             side={0}
-            species={doll(0) ? null : mine.species}
+            mon={doll(0) ? null : mine}
             src={doll(0) ? dollUrl() : monArtUrl(mine)}
             cls={`${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
           />

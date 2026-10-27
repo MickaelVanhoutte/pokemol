@@ -6,9 +6,11 @@ export default {
   draw(c) {
     const { shape, stroke, dot, band, potato } = c;
     const YELLOW = '#f7dc35', BLACK = '#35303a', RED = '#ee4b3c', BROWN = '#a8672e';
-    // the zig-zag tail behind, brown at the bottom
-    shape([[640, 700], [720, 660], [690, 600], [820, 540], [780, 480], [950, 380], [870, 520], [910, 550], [780, 640], [810, 680], [680, 760]], YELLOW, { angle: 30, press: 1.05 }, {}, false);
-    shape([[635, 700], [685, 676], [710, 730], [680, 758]], BROWN, { over: 0 }, { w: 3.5 }, false);
+    // the zig-zag tail behind, brown at the bottom (it wags in battle)
+    c.part('queue', { pivot: [660, 720], motion: 'swing', amp: 9, period: 1.6, behind: true }, () => {
+      shape([[640, 700], [720, 660], [690, 600], [820, 540], [780, 480], [950, 380], [870, 520], [910, 550], [780, 640], [810, 680], [680, 760]], YELLOW, { angle: 30, press: 1.05 }, {}, false);
+      shape([[635, 700], [685, 676], [710, 730], [680, 758]], BROWN, { over: 0 }, { w: 3.5 }, false);
+    });
     // far ear and far arm, behind
     shape([[300, 310], [200, 110], [370, 250]], YELLOW, { angle: 70 }, {}, false);
     shape([[214, 140], [200, 110], [250, 160], [234, 178]], BLACK, { over: 0 }, { w: 3.5 }, false);
@@ -30,5 +32,13 @@ export default {
     dot(450, 355, 18, 24);
     dot(260, 405, 8, 6);
     stroke([[275, 455], [320, 478], [345, 452], [370, 478], [415, 450]]);
+    // only in battle: little lightning bolts crackling round it (drawn last, the card stays the same)
+    c.part('eclairs', { pivot: [500, 500], motion: 'flicker', extra: true }, () => {
+      const bolt = (x: number, y: number, s: number, flip: number) =>
+        shape([[x, y], [x + 34 * s * flip, y + 50 * s], [x + 12 * s * flip, y + 54 * s], [x + 40 * s * flip, y + 110 * s], [x - 6 * s * flip, y + 46 * s], [x + 16 * s * flip, y + 42 * s]], '#ffe34a', { over: 0, press: 1.2 }, { w: 3.5 }, false);
+      bolt(610, 400, 1, 1);
+      bolt(190, 230, 0.9, -1);
+      bolt(900, 250, 0.8, 1);
+    });
   },
 } satisfies Redraw;

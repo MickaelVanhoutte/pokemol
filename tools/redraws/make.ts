@@ -3,7 +3,9 @@
  * Draws the Bestioles redrawn in the little artist's style and makes their card (public/cards) and
  * overworld miniature (public/minis), through the same cutout as her photos. Also writes
  * tools/out/redraws-sheet.png: her original, the redraw, the redraw at battle size and its miniature.
- * `--preview` writes the cards and miniatures to tools/out/redraws/ instead of public/.
+ * A Bestiole drawn with moving parts also gets its battle rig (tools/redraws/rig.ts), checked on
+ * tools/out/rigs-sheet.png. `--preview` writes the cards and miniatures to tools/out/redraws/ instead of
+ * public/, and no rigs.
  */
 import { existsSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
@@ -11,7 +13,8 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import { cutout } from '../../src/art/cutout.ts';
 import { makeMini } from '../minis.ts';
-import { crayon, type Redraw } from './crayon.ts';
+import { makeRig, saveRig, turned } from './rig.ts';
+import { crayon, type Crayon, type Redraw } from './crayon.ts';
 import minousse from './minousse.ts';
 import braisou from './braisou.ts';
 import clapotin from './clapotin.ts';
@@ -80,10 +83,15 @@ export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouil
 
 const root = new URL('../..', import.meta.url).pathname;
 
-/** The drawing as it would come out of the scanner: an RGBA picture on paper. */
-export async function drawRedraw(d: Redraw): Promise<Buffer> {
+/** The drawing done with the kit (its card, its moving parts). */
+export function drawCrayon(d: Redraw): Crayon {
   const c = crayon(d.seed, { felt: d.felt });
   d.draw(c);
+  return c;
+}
+
+/** The drawing as it would come out of the scanner: an RGBA picture on paper. */
+export async function drawRedraw(d: Redraw, c = drawCrayon(d)): Promise<Buffer> {
   const [w, h] = d.size;
   return sharp(Buffer.from(c.svg(w, h, d.tilt ?? 0))).png().toBuffer();
 }
@@ -100,11 +108,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   await mkdir(cards, { recursive: true });
   await mkdir(minis, { recursive: true });
   const rows: { input: Buffer; left: number; top: number }[] = [];
+  const rigSheets: { input: Buffer; left: number; top: number }[] = [];
   const S = 300, ROW = S + 32;
   let n = 0;
   for (const d of REDRAWS) {
     if (only.length && !only.includes(d.id) && !only.includes(d.slug)) continue;
-    const { data, info } = await sharp(await drawRedraw(d)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const c = drawCrayon(d);
+    const { data, info } = await sharp(await drawRedraw(d, c)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     const res = cutout({ data, width: info.width, height: info.height }, { minComponent: 0.002 });
     const card = join(cards, `${d.id}-${d.slug}.webp`);
     await sharp(Buffer.from(res.data.buffer), { raw: { width: res.width, height: res.height, channels: 4 } })
@@ -113,7 +123,16 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       .toFile(card);
     const mini = join(minis, `${d.id}-${d.slug}.png`);
     await makeMini(card, mini);
-    console.log(`✓ ${d.id} ${d.slug}`);
+    if (!preview) {
+      const [W, H] = d.size;
+      const made = await makeRig({
+        id: d.id, slug: d.slug, parts: c.parts(),
+        render: (view) => c.svg(W, H, d.tilt ?? 0, W / 2, H / 2, view), place: turned(d.tilt ?? 0, W / 2, H / 2),
+      }, root);
+      await saveRig(root, d.id, made?.rig ?? null);
+      if (made) rigSheets.push({ input: made.sheet, left: (rigSheets.length % 4) * 430, top: Math.floor(rigSheets.length / 4) * 430 });
+    }
+    console.log(`✓ ${d.id} ${d.slug}${c.parts().length ? ` (${c.parts().map((p) => p.name).join(', ')})` : ''}`);
     // comparison row: her original, the redraw, the redraw small (battle), the miniature
     const top = n++ * ROW;
     const fit = (file: string, size: number, kernel: 'lanczos3' | 'nearest' = 'lanczos3') =>
@@ -129,5 +148,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     await sharp({ create: { width: 2 * S + 290, height: n * ROW, channels: 4, background: '#ffffff' } })
       .composite(rows).png().toFile(join(root, 'tools/out/redraws-sheet.png'));
     console.log('sheet → tools/out/redraws-sheet.png');
+  }
+  if (rigSheets.length) {
+    await sharp({ create: { width: 4 * 430, height: Math.ceil(rigSheets.length / 4) * 430, channels: 4, background: '#ffffff' } })
+      .composite(rigSheets).png().toFile(join(root, 'tools/out/rigs-sheet.png'));
+    console.log('rigs → tools/out/rigs-sheet.png');
   }
 }

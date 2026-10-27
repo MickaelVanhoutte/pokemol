@@ -31,7 +31,8 @@ function star(g: CanvasRenderingContext2D, x: number, y: number, r: number) {
   g.fill();
 }
 
-function makeShiny(id: string): Promise<string> {
+/** The species' card (or `src`, a piece of its battle rig) recoloured; `glitter` sprinkles the stars. */
+function makeShiny(id: string, src = artUrl(creature(id)), glitter = true): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
@@ -51,14 +52,14 @@ function makeShiny(id: string): Promise<string> {
       const next = () => ((rnd = Math.imul(rnd ^ (rnd >>> 15), 2246822507) ^ Math.imul(rnd ^ (rnd >>> 13), 3266489909)) >>> 0) / 4294967296;
       const count = Math.max(6, Math.min(22, Math.round(coloured.length / 2500)));
       const r = Math.max(4, Math.round(Math.max(w, h) / 45));
-      for (let n = 0; n < count && coloured.length; n++) {
+      for (let n = 0; n < count && coloured.length && glitter; n++) {
         const p = coloured[Math.floor(next() * coloured.length)];
         star(g, p % w, Math.floor(p / w), r * (0.6 + next() * 0.7));
       }
       resolve(c.toDataURL('image/png'));
     };
     img.onerror = () => reject(new Error(`art ${id}`));
-    img.src = artUrl(creature(id));
+    img.src = src;
   });
 }
 
@@ -162,4 +163,27 @@ export function monArtUrl(m: { species: string; shiny?: boolean; egg?: unknown }
       .catch(() => pending.delete(sp.id));
   }
   return artUrl(sp);
+}
+
+/**
+ * A piece of a creature's battle rig (`src/data/rigs.ts`), recoloured like its card when it is sparkly
+ * (the same hue turn, glitter only on its body) or rubbed pale.
+ */
+export function rigLayerUrl(m: { species: string; shiny?: boolean }, src: string, body: boolean): string {
+  const how = isPale(m.species) ? 'pale' : m.shiny ? 'shiny' : null;
+  if (!how) return src;
+  void ready.value;
+  const key = `${how}:${src}`;
+  const hit = cache.get(key);
+  if (hit) return hit;
+  if (!pending.has(key) && typeof document !== 'undefined') {
+    pending.add(key);
+    (how === 'pale' ? makePale(src) : makeShiny(m.species, src, body))
+      .then((url) => {
+        cache.set(key, url);
+        ready.value++;
+      })
+      .catch(() => pending.delete(key));
+  }
+  return src;
 }

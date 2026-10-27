@@ -193,6 +193,8 @@ export function BattleScreen(props: BattleProps) {
           stopMusic();
           const tune = e.result === 'capture' ? 'caught' : 'victory';
           playJingle(tune, { fallback: sfx.victory, resume: false });
+          // a little victory dance: your Bestiole hops and turns round, twice, while the tune plays
+          if (prefs.value.moveFx) pulse(0, 'victory', 3100);
           // leaving the battle waits for the end of the tune
           if (prefs.value.music && prefs.value.sound) jingleEnds.current = performance.now() + (trackSeconds(tune) + 0.3) * 1000;
         }

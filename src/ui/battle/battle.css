@@ -77,8 +77,33 @@
 .pk-idle--hover.pk-idle--side0 { animation-duration: 2s; }
 @keyframes idleBreathe { 50% { scale: 1.015 1.035; } }
 @keyframes idleHover { 50% { translate: 0 -5%; } }
-.pk-idle--still, .no-idle .pk-idle { animation: none; }
-@media (prefers-reduced-motion: reduce) { .pk-idle { animation: none; } }
+/* a battle rig: the body, its moving parts under or over it (src/data/rigs.ts) */
+.pk-idle { position: relative; isolation: isolate; }
+.pk-rig { position: relative; z-index: 1; }
+.pk-idle.is-clipped { overflow: hidden; }
+.pk-part { position: absolute; z-index: 2; max-width: none; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+.pk-part.is-behind { z-index: 0; }
+.pk-part--flap { animation-name: partFlap; animation-direction: alternate; }
+@keyframes partFlap { to { rotate: calc(-1 * var(--amp)); } }
+.pk-part--fold { animation-name: partFold; animation-direction: alternate; }
+@keyframes partFold { to { scale: var(--amp) 1; } }
+.pk-part--swing { animation-name: partSwing; }
+@keyframes partSwing { 25% { rotate: var(--amp); } 75% { rotate: calc(-1 * var(--amp)); } }
+.pk-part--nod { animation-name: partNod; }
+@keyframes partNod { 0%, 70%, 100% { rotate: 0deg; } 80% { rotate: var(--amp); } 90% { rotate: 0deg; } }
+.pk-part--peek { animation-name: partPeek; }
+@keyframes partPeek { 0%, 40%, 100% { translate: 0 0; scale: 1; opacity: 1; } 52%, 82% { translate: var(--to-x) var(--to-y); scale: var(--shrink); opacity: var(--fade); } }
+/* in front at rest, behind the rest once it is small (a turtle inside its shell) */
+.pk-part--peek.is-inside { animation-name: partPeek, partInside; }
+@keyframes partInside { 0%, 49%, 87%, 100% { z-index: 2; } 50%, 86% { z-index: 0; } }
+.pk-part--flicker { animation-name: partFlicker; animation-timing-function: steps(1, end); }
+@keyframes partFlicker { 0%, 100% { opacity: 0; } 6% { opacity: 1; } 12% { opacity: 0; } 16% { opacity: 1; } 28% { opacity: 0; } 60% { opacity: 1; } 66% { opacity: 0; } }
+.pk-part--blink { animation-name: partBlink; animation-timing-function: steps(1, end); }
+@keyframes partBlink { 0%, 100% { opacity: 0; } 93% { opacity: 1; } 97% { opacity: 0; } }
+.pk-idle--still, .no-idle .pk-idle, .no-idle .pk-part { animation: none; }
+/* standing still: closed eyelids stay away */
+.no-idle .pk-part--blink { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .pk-idle, .pk-part { animation: none; } .pk-part--blink { opacity: 0; } }
 .pk-sprite { --flip: 1; transition: filter 1.4s ease; }
 /* Team Gomme drained their colours */
 .pk-sprite.is-grey { filter: grayscale(1) contrast(0.85) brightness(1.08) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
@@ -120,6 +145,18 @@
 @keyframes recolorHop { 55% { translate: 0 0; } 65% { translate: 0 -8px; } 75% { translate: 0 0; } 85% { translate: 0 -4px; } }
 @keyframes shinyTwinkle { 20%, 45%, 75% { filter: drop-shadow(0 0 10px #ffd84a) drop-shadow(0 0 3px #fff) brightness(1.2); } 32%, 60% { filter: drop-shadow(0 0 3px #ffd84a); } }
 @keyframes popIn { from { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
+/* the victory dance: a hop while turning round (squeezed flat, then seen from the other side, then back) */
+.fx-victory { animation: victoryDance 1.5s ease-in-out 2; }
+/* it dances out in the open: nothing hides in a shell or a hole meanwhile */
+.fx-victory .pk-part--peek { animation: none; }
+@keyframes victoryDance {
+  0%, 100% { transform: scaleX(var(--flip)); }
+  15% { transform: translateY(-10%) scaleX(var(--flip)); }
+  30% { transform: translateY(-16%) scaleX(calc(var(--flip) * 0.04)); }
+  45% { transform: translateY(-12%) scaleX(calc(var(--flip) * -1)); }
+  60% { transform: translateY(-16%) scaleX(calc(var(--flip) * 0.04)); }
+  78% { transform: translateY(-8%) scaleX(var(--flip)); }
+}
 .fx-out { animation: popOut 0.5s ease forwards; }
 @keyframes popOut { to { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
 /* .fx-hit only keeps a knocked-out drawing shown until it faints; the blink is played by fx/stage.ts */
