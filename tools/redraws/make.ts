@@ -11,9 +11,9 @@ import { existsSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { cutout } from '../../src/art/cutout.ts';
+import { cutRender } from '../../src/art/cutout.ts';
 import { makeMini } from '../minis.ts';
-import { makeRig, saveRig, turned } from './rig.ts';
+import { makeRig, saveRig, SHEET, turned } from './rig.ts';
 import { crayon, type Crayon, type Redraw } from './crayon.ts';
 import minousse from './minousse.ts';
 import braisou from './braisou.ts';
@@ -90,7 +90,7 @@ export function drawCrayon(d: Redraw): Crayon {
   return c;
 }
 
-/** The drawing as it would come out of the scanner: an RGBA picture on paper. */
+/** The drawing as an RGBA picture on a see-through sheet. */
 export async function drawRedraw(d: Redraw, c = drawCrayon(d)): Promise<Buffer> {
   const [w, h] = d.size;
   return sharp(Buffer.from(c.svg(w, h, d.tilt ?? 0))).png().toBuffer();
@@ -115,7 +115,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     if (only.length && !only.includes(d.id) && !only.includes(d.slug)) continue;
     const c = drawCrayon(d);
     const { data, info } = await sharp(await drawRedraw(d, c)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    const res = cutout({ data, width: info.width, height: info.height }, { minComponent: 0.002 });
+    const res = cutRender({ data, width: info.width, height: info.height }, SHEET);
     const card = join(cards, `${d.id}-${d.slug}.webp`);
     await sharp(Buffer.from(res.data.buffer), { raw: { width: res.width, height: res.height, channels: 4 } })
       .resize({ width: 768, height: 768, fit: 'inside' })

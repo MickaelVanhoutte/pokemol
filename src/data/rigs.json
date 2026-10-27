@@ -7,24 +7,24 @@
         "motion": "swing",
         "amp": 14,
         "period": 1.8,
-        "left": 87.3,
-        "top": 52.1,
-        "width": 12.7,
-        "height": 12.6,
-        "ox": 10.7,
-        "oy": 90.6
+        "left": 87.4,
+        "top": 52.3,
+        "width": 12.6,
+        "height": 12.5,
+        "ox": 10.9,
+        "oy": 90.5
       },
       {
         "name": "vrilles",
         "motion": "swing",
         "amp": 9,
         "period": 2.6,
-        "left": 58.9,
+        "left": 59.1,
         "top": 2.9,
-        "width": 25.6,
-        "height": 24.1,
-        "ox": 23,
-        "oy": 81.5
+        "width": 25.4,
+        "height": 23.9,
+        "ox": 22.7,
+        "oy": 81.9
       }
     ]
   },
@@ -37,12 +37,12 @@
         "amp": 6,
         "period": 2,
         "behind": true,
-        "left": 46.8,
-        "top": 23.7,
-        "width": 53.2,
+        "left": 46.9,
+        "top": 23.6,
+        "width": 53.1,
         "height": 60.8,
-        "ox": 9.4,
-        "oy": 84.9
+        "ox": 9.1,
+        "oy": 85.1
       }
     ]
   },
@@ -63,8 +63,8 @@
         "top": 0,
         "width": 100,
         "height": 100,
-        "ox": 75.1,
-        "oy": 58.5
+        "ox": 75.2,
+        "oy": 58.6
       }
     ]
   },
@@ -77,22 +77,22 @@
         "amp": 9,
         "period": 1.6,
         "behind": true,
-        "left": 60.1,
-        "top": 33.9,
-        "width": 39.9,
-        "height": 44.5,
-        "ox": 11.5,
-        "oy": 87.5
+        "left": 59.8,
+        "top": 33.8,
+        "width": 40.2,
+        "height": 44.4,
+        "ox": 12,
+        "oy": 87.7
       },
       {
         "name": "eclairs",
         "motion": "flicker",
         "left": 0,
         "top": 20.2,
-        "width": 97.3,
-        "height": 31.5,
+        "width": 97.2,
+        "height": 31.3,
         "ox": 45.4,
-        "oy": 94.2
+        "oy": 94.5
       }
     ]
   },
@@ -106,9 +106,9 @@
         "left": 0,
         "top": 4.7,
         "width": 27.7,
-        "height": 23.7,
+        "height": 23.5,
         "ox": 64.4,
-        "oy": 74.5
+        "oy": 74.7
       }
     ]
   },
@@ -121,21 +121,21 @@
         "amp": 14,
         "period": 1.6,
         "left": 0,
-        "top": 44.5,
-        "width": 20.7,
-        "height": 18.2,
-        "ox": 87.3,
-        "oy": 79
+        "top": 44.6,
+        "width": 20.5,
+        "height": 18,
+        "ox": 87.7,
+        "oy": 79.3
       },
       {
         "name": "lune",
         "motion": "flicker",
         "period": 2.2,
-        "left": 27.7,
-        "top": 61.3,
+        "left": 27.8,
+        "top": 61.4,
         "width": 29.1,
-        "height": 24.1,
-        "ox": 51.1,
+        "height": 24,
+        "ox": 50.9,
         "oy": 53.9
       }
     ]
@@ -148,20 +148,20 @@
         "motion": "fold",
         "behind": true,
         "left": 0,
-        "top": 15.9,
-        "width": 35.5,
-        "height": 64.9,
-        "ox": 91.7,
-        "oy": 50.8
+        "top": 16,
+        "width": 35.4,
+        "height": 64.8,
+        "ox": 91.6,
+        "oy": 50.9
       },
       {
         "name": "ailes",
         "motion": "fold",
-        "left": 48.1,
+        "left": 48.2,
         "top": 1.4,
-        "width": 51.9,
-        "height": 85.6,
-        "ox": 9.2,
+        "width": 51.8,
+        "height": 85.7,
+        "ox": 9,
         "oy": 53.9
       }
     ]
@@ -175,21 +175,21 @@
         "amp": -58,
         "period": 4.4,
         "left": 0,
-        "top": 48.1,
+        "top": 48.2,
         "width": 42.1,
-        "height": 22.7,
-        "ox": 19.1,
-        "oy": 13.6
+        "height": 22.5,
+        "ox": 18.8,
+        "oy": 13.2
       },
       {
         "name": "zzz",
         "motion": "flicker",
         "period": 3,
-        "left": 62.5,
+        "left": 62.7,
         "top": 0,
-        "width": 31.7,
-        "height": 22.8,
-        "ox": 31.5,
+        "width": 31.5,
+        "height": 22.7,
+        "ox": 31.4,
         "oy": 51.8
       }
     ]
@@ -207,7 +207,7 @@
         "top": 0,
         "width": 100,
         "height": 100,
-        "ox": 50.9,
+        "ox": 51,
         "oy": 50.4
       }
     ]
@@ -221,11 +221,11 @@
         "amp": 12,
         "period": 2,
         "behind": true,
-        "left": 83.4,
-        "top": 71.2,
-        "width": 16.6,
-        "height": 24.1,
-        "ox": 42.3,
+        "left": 81.3,
+        "top": 67.9,
+        "width": 16,
+        "height": 23,
+        "ox": 43.9,
         "oy": 91.5
       },
       {
@@ -233,10 +233,10 @@
         "motion": "swing",
         "amp": 10,
         "period": 1.7,
-        "left": 0,
-        "top": 67.9,
-        "width": 22.7,
-        "height": 32.1,
+        "left": 2.6,
+        "top": 64.7,
+        "width": 21.3,
+        "height": 30.6,
         "ox": 49.5,
         "oy": 94.8
       }
@@ -251,12 +251,12 @@
         "amp": 8,
         "period": 1.9,
         "behind": true,
-        "left": 68.8,
-        "top": 4.7,
-        "width": 31.2,
-        "height": 41.9,
-        "ox": 10.4,
-        "oy": 90.9
+        "left": 69,
+        "top": 4.2,
+        "width": 31,
+        "height": 42.2,
+        "ox": 10.2,
+        "oy": 91.3
       },
       {
         "name": "bras",
@@ -264,11 +264,11 @@
         "amp": 8,
         "period": 1.5,
         "left": 0,
-        "top": 34.2,
-        "width": 32.8,
-        "height": 23.9,
-        "ox": 92.2,
-        "oy": 65
+        "top": 34.3,
+        "width": 32.7,
+        "height": 23.8,
+        "ox": 92.5,
+        "oy": 64.8
       },
       {
         "name": "langue",
@@ -280,12 +280,12 @@
         "shrink": 0.3,
         "fade": true,
         "period": 3.4,
-        "left": 36,
-        "top": 56.3,
-        "width": 14.8,
-        "height": 23.1,
-        "ox": 46.6,
-        "oy": 13.4
+        "left": 36.1,
+        "top": 56.4,
+        "width": 14.6,
+        "height": 22.9,
+        "ox": 46.5,
+        "oy": 13.1
       }
     ]
   },
@@ -298,12 +298,12 @@
         "amp": 10,
         "period": 1.8,
         "behind": true,
-        "left": 12.1,
+        "left": 12.2,
         "top": 0,
-        "width": 14.2,
-        "height": 24.8,
+        "width": 14,
+        "height": 24.5,
         "ox": 48,
-        "oy": 94.5
+        "oy": 95.1
       }
     ]
   },
@@ -315,11 +315,11 @@
         "motion": "flap",
         "amp": 22,
         "period": 0.4,
-        "left": 31.2,
-        "top": 39.2,
-        "width": 24.3,
-        "height": 31.2,
-        "ox": 73.2,
+        "left": 31.3,
+        "top": 39.3,
+        "width": 23.9,
+        "height": 31.1,
+        "ox": 73.4,
         "oy": 12.2
       }
     ]
@@ -332,12 +332,12 @@
         "motion": "flicker",
         "period": 2.6,
         "behind": true,
-        "left": 77.2,
+        "left": 77.4,
         "top": 0,
-        "width": 22.8,
-        "height": 12.9,
-        "ox": 10.1,
-        "oy": 81.3
+        "width": 22.6,
+        "height": 12.8,
+        "ox": 9.6,
+        "oy": 82
       },
       {
         "name": "queue",
@@ -346,11 +346,11 @@
         "period": 1.5,
         "behind": true,
         "left": 0,
-        "top": 44.7,
-        "width": 19.1,
-        "height": 19.1,
-        "ox": 90.2,
-        "oy": 45.8
+        "top": 44.8,
+        "width": 19,
+        "height": 18.9,
+        "ox": 90.8,
+        "oy": 45.7
       }
     ]
   },
@@ -362,8 +362,8 @@
         "motion": "blink",
         "left": 0,
         "top": 26.6,
-        "width": 36.2,
-        "height": 12.7,
+        "width": 35.8,
+        "height": 12.5,
         "ox": 49.5,
         "oy": 51.8
       }
@@ -378,12 +378,12 @@
         "amp": 9,
         "period": 1.3,
         "behind": true,
-        "left": 60.6,
-        "top": 28.6,
-        "width": 39.4,
-        "height": 43.8,
-        "ox": 6.7,
-        "oy": 88.7
+        "left": 60.7,
+        "top": 28.7,
+        "width": 39.3,
+        "height": 43.7,
+        "ox": 6.4,
+        "oy": 88.9
       }
     ]
   },
@@ -397,11 +397,11 @@
         "period": 1.6,
         "behind": true,
         "left": 0,
-        "top": 61.8,
-        "width": 44.4,
-        "height": 26.2,
-        "ox": 90.7,
-        "oy": 48.2
+        "top": 61.6,
+        "width": 44.3,
+        "height": 26.4,
+        "ox": 90.9,
+        "oy": 48.7
       }
     ]
   },
@@ -414,12 +414,12 @@
         "amp": 6,
         "period": 1.8,
         "behind": true,
-        "left": 59.4,
-        "top": 35.9,
-        "width": 40.6,
-        "height": 43,
-        "ox": 10.8,
-        "oy": 86.8
+        "left": 59.6,
+        "top": 36,
+        "width": 40.4,
+        "height": 42.9,
+        "ox": 10.5,
+        "oy": 87
       }
     ]
   },
@@ -432,23 +432,23 @@
         "amp": 7,
         "period": 1.2,
         "behind": true,
-        "left": 73.4,
+        "left": 73.6,
         "top": 26.5,
-        "width": 26.6,
-        "height": 30.5,
-        "ox": 11.7,
-        "oy": 83.1
+        "width": 26.4,
+        "height": 30.4,
+        "ox": 11.5,
+        "oy": 83
       },
       {
         "name": "etincelles",
         "motion": "flicker",
         "period": 1.6,
         "left": 0,
-        "top": 12.2,
-        "width": 93.8,
-        "height": 15.3,
-        "ox": 50.2,
-        "oy": 50.4
+        "top": 12.1,
+        "width": 93.9,
+        "height": 15.2,
+        "ox": 50.1,
+        "oy": 50.7
       }
     ]
   },
@@ -461,12 +461,12 @@
         "amp": 7,
         "period": 2.2,
         "behind": true,
-        "left": 59.3,
+        "left": 59.4,
         "top": 11.6,
-        "width": 31.4,
-        "height": 39.9,
-        "ox": 9,
-        "oy": 90.4
+        "width": 31.3,
+        "height": 39.8,
+        "ox": 8.8,
+        "oy": 90.7
       },
       {
         "name": "liane",
@@ -475,11 +475,11 @@
         "period": 1.9,
         "behind": true,
         "left": 0,
-        "top": 36.6,
-        "width": 32.4,
-        "height": 33.6,
-        "ox": 91.2,
-        "oy": 74.5
+        "top": 36.7,
+        "width": 32.2,
+        "height": 33.4,
+        "ox": 91.5,
+        "oy": 74.7
       }
     ]
   },
@@ -492,12 +492,12 @@
         "amp": 5,
         "period": 2.2,
         "behind": true,
-        "left": 44.3,
-        "top": 20,
-        "width": 55.7,
-        "height": 61.8,
-        "ox": 8.6,
-        "oy": 80.5
+        "left": 44.5,
+        "top": 19.7,
+        "width": 55.5,
+        "height": 60.3,
+        "ox": 8.4,
+        "oy": 80.6
       }
     ]
   },
@@ -514,7 +514,7 @@
         "top": 25.1,
         "width": 43.5,
         "height": 50.8,
-        "ox": 10.4,
+        "ox": 10.2,
         "oy": 77.7
       },
       {
@@ -526,11 +526,11 @@
         ],
         "period": 1.4,
         "left": 0,
-        "top": 41.7,
+        "top": 41.8,
         "width": 28.5,
-        "height": 19.4,
+        "height": 19.3,
         "ox": 87.4,
-        "oy": 45.6
+        "oy": 45.4
       }
     ]
   },
@@ -543,12 +543,12 @@
         "amp": 3,
         "period": 0.8,
         "behind": true,
-        "left": 23,
+        "left": 22.8,
         "top": 0,
-        "width": 77,
+        "width": 77.2,
         "height": 26.8,
         "ox": 50.6,
-        "oy": 79.8
+        "oy": 79.6
       },
       {
         "name": "poing",
@@ -559,11 +559,11 @@
         ],
         "period": 1.6,
         "left": 0,
-        "top": 47.6,
-        "width": 27.9,
-        "height": 26.3,
-        "ox": 87.5,
-        "oy": 17
+        "top": 48.1,
+        "width": 28,
+        "height": 26.1,
+        "ox": 86.8,
+        "oy": 16
       }
     ]
   },
@@ -576,11 +576,11 @@
         "amp": 4,
         "period": 2.2,
         "left": 12.1,
-        "top": 45,
-        "width": 22.6,
-        "height": 50.1,
-        "ox": 89.6,
-        "oy": 6.8
+        "top": 45.1,
+        "width": 22.5,
+        "height": 50,
+        "ox": 89.9,
+        "oy": 6.6
       },
       {
         "name": "liane",
@@ -588,7 +588,7 @@
         "amp": 7,
         "period": 1.6,
         "left": 44.9,
-        "top": 26.4,
+        "top": 26.5,
         "width": 55.1,
         "height": 25.8,
         "ox": 6.6,
@@ -606,12 +606,12 @@
         "period": 0.7,
         "behind": true,
         "phase": 0,
-        "left": 20.2,
-        "top": 6.9,
+        "left": 20.3,
+        "top": 7,
         "width": 31.1,
-        "height": 39.2,
-        "ox": 93.9,
-        "oy": 79.7
+        "height": 39.1,
+        "ox": 93.8,
+        "oy": 79.8
       },
       {
         "name": "aile-d",
@@ -620,12 +620,12 @@
         "period": 0.7,
         "behind": true,
         "phase": 0,
-        "left": 56.3,
-        "top": 1.2,
-        "width": 33.5,
-        "height": 46.8,
-        "ox": 6.7,
-        "oy": 77.5
+        "left": 56.4,
+        "top": 1.3,
+        "width": 33.3,
+        "height": 46.6,
+        "ox": 6.5,
+        "oy": 77.6
       }
     ]
   },
@@ -641,10 +641,10 @@
         "phase": 0,
         "left": 26.5,
         "top": 0,
-        "width": 24.7,
-        "height": 53.8,
-        "ox": 91.9,
-        "oy": 90.7
+        "width": 24.6,
+        "height": 53.7,
+        "ox": 92.2,
+        "oy": 90.9
       },
       {
         "name": "aile",
@@ -655,8 +655,8 @@
         "left": 35.9,
         "top": 9.8,
         "width": 28.2,
-        "height": 48.8,
-        "ox": 57.6,
+        "height": 48.9,
+        "ox": 57.8,
         "oy": 89.1
       }
     ]
@@ -671,9 +671,9 @@
         "period": 1.4,
         "behind": true,
         "left": 53.8,
-        "top": 3.6,
+        "top": 3.5,
         "width": 46.2,
-        "height": 76.7,
+        "height": 76.8,
         "ox": 5.6,
         "oy": 96.2
       },
@@ -682,10 +682,10 @@
         "motion": "flicker",
         "period": 1.8,
         "left": 7.5,
-        "top": 26.8,
+        "top": 26.7,
         "width": 74.6,
-        "height": 19.7,
-        "ox": 44.7,
+        "height": 19.8,
+        "ox": 44.6,
         "oy": 53.7
       }
     ]
@@ -700,12 +700,12 @@
         "period": 0.5,
         "behind": true,
         "phase": 0,
-        "left": 12.9,
-        "top": 41.8,
+        "left": 13,
+        "top": 42,
         "width": 21.2,
-        "height": 18.4,
-        "ox": 85.5,
-        "oy": 72.3
+        "height": 18.5,
+        "ox": 85,
+        "oy": 71.4
       },
       {
         "name": "aile",
@@ -714,21 +714,21 @@
         "period": 0.5,
         "behind": true,
         "phase": 0,
-        "left": 64.3,
-        "top": 38.9,
-        "width": 31.9,
-        "height": 30.7,
-        "ox": 9.3,
-        "oy": 58.6
+        "left": 63.5,
+        "top": 39.1,
+        "width": 32.7,
+        "height": 30.5,
+        "ox": 11.6,
+        "oy": 58.7
       },
       {
         "name": "etoiles",
         "motion": "flicker",
         "period": 2.4,
         "left": 0,
-        "top": 13.8,
+        "top": 14,
         "width": 100,
-        "height": 70.7,
+        "height": 70.6,
         "ox": 54.1,
         "oy": 55.2
       }
@@ -743,11 +743,11 @@
         "amp": 10,
         "period": 0.8,
         "behind": true,
-        "left": 73.1,
+        "left": 73.3,
         "top": 2.5,
-        "width": 26.9,
-        "height": 24.6,
-        "ox": 12.6,
+        "width": 26.7,
+        "height": 24.4,
+        "ox": 12.2,
         "oy": 42.4
       },
       {
@@ -762,9 +762,9 @@
         "left": 0,
         "top": 25.3,
         "width": 58.9,
-        "height": 31.2,
+        "height": 31,
         "ox": 84.8,
-        "oy": 59.3
+        "oy": 59.4
       }
     ]
   },
@@ -780,10 +780,10 @@
         "phase": 0.5,
         "left": 0,
         "top": 0,
-        "width": 32.5,
-        "height": 38.2,
+        "width": 32.6,
+        "height": 36.9,
         "ox": 90.4,
-        "oy": 82.4
+        "oy": 82.7
       },
       {
         "name": "bras",
@@ -792,11 +792,11 @@
         "period": 1.2,
         "phase": 0,
         "left": 63.7,
-        "top": 6.9,
+        "top": 6.4,
         "width": 36.3,
-        "height": 40,
+        "height": 39.3,
         "ox": 9.9,
-        "oy": 82.2
+        "oy": 82
       }
     ]
   },
@@ -814,11 +814,11 @@
           78
         ],
         "behind": true,
-        "left": 16.6,
+        "left": 16.8,
         "top": 0,
-        "width": 49.8,
+        "width": 49.7,
         "height": 69,
-        "ox": 65.5,
+        "ox": 65.4,
         "oy": 90.5
       },
       {
@@ -832,12 +832,12 @@
           60
         ],
         "fade": true,
-        "left": 23.6,
+        "left": 23.8,
         "top": 53.5,
-        "width": 39.7,
-        "height": 15.1,
-        "ox": 50.6,
-        "oy": 59.6
+        "width": 39.6,
+        "height": 14.9,
+        "ox": 50.7,
+        "oy": 60.1
       }
     ]
   },
@@ -853,9 +853,9 @@
         "left": 66.7,
         "top": 45,
         "width": 26.2,
-        "height": 35.9,
+        "height": 35.8,
         "ox": 18.6,
-        "oy": 60.7
+        "oy": 60.9
       },
       {
         "name": "flocons",
@@ -863,10 +863,10 @@
         "period": 2.6,
         "left": 0.9,
         "top": 0,
-        "width": 80.8,
-        "height": 25.4,
+        "width": 80.7,
+        "height": 25.3,
         "ox": 56,
-        "oy": 57.5
+        "oy": 57.8
       }
     ]
   },
@@ -879,12 +879,12 @@
         "amp": 6,
         "period": 0.35,
         "behind": true,
-        "left": 51.1,
+        "left": 51.2,
         "top": 54.9,
-        "width": 48.9,
+        "width": 48.8,
         "height": 38.4,
-        "ox": 11.8,
-        "oy": 81.1
+        "ox": 11.6,
+        "oy": 81.4
       },
       {
         "name": "langue",
@@ -897,7 +897,7 @@
         "fade": true,
         "period": 1.8,
         "left": 0,
-        "top": 16,
+        "top": 15.9,
         "width": 21.1,
         "height": 11.2,
         "ox": 88.1,
@@ -914,12 +914,12 @@
         "amp": 5,
         "period": 1.8,
         "behind": true,
-        "left": 17.5,
+        "left": 17.1,
         "top": 0,
-        "width": 52.4,
-        "height": 19.5,
-        "ox": 41,
-        "oy": 83.8
+        "width": 53.5,
+        "height": 19.4,
+        "ox": 40.9,
+        "oy": 84.2
       },
       {
         "name": "bulles",
@@ -927,10 +927,10 @@
         "period": 2.4,
         "left": 0,
         "top": 12,
-        "width": 87.3,
-        "height": 38,
+        "width": 87.2,
+        "height": 37.9,
         "ox": 51.3,
-        "oy": 48.9
+        "oy": 48.8
       }
     ]
   },
@@ -943,10 +943,10 @@
         "period": 1.6,
         "left": 0,
         "top": 0,
-        "width": 94,
-        "height": 96.1,
+        "width": 93.6,
+        "height": 96,
         "ox": 48.2,
-        "oy": 53.6
+        "oy": 53.8
       }
     ]
   },
@@ -960,11 +960,11 @@
         "period": 0.8,
         "behind": true,
         "phase": 0,
-        "left": 21.4,
+        "left": 21.6,
         "top": 0,
-        "width": 31.4,
+        "width": 31.2,
         "height": 51.6,
-        "ox": 85.3,
+        "ox": 85.6,
         "oy": 94.4
       },
       {
@@ -974,11 +974,11 @@
         "period": 0.8,
         "phase": 0,
         "left": 49.6,
-        "top": 2.4,
-        "width": 40.2,
+        "top": 2.3,
+        "width": 40.3,
         "height": 61.4,
-        "ox": 16.1,
-        "oy": 90.2
+        "ox": 16.3,
+        "oy": 90.4
       }
     ]
   },
@@ -993,11 +993,11 @@
         "behind": true,
         "phase": 0,
         "left": 0,
-        "top": 1.7,
-        "width": 32.3,
-        "height": 37.6,
+        "top": 1.6,
+        "width": 32.2,
+        "height": 37.5,
         "ox": 87.2,
-        "oy": 79.3
+        "oy": 79.5
       },
       {
         "name": "bras",
@@ -1005,12 +1005,12 @@
         "amp": -6,
         "period": 1.4,
         "phase": 0,
-        "left": 61.7,
+        "left": 61.6,
         "top": 2.2,
-        "width": 38.3,
-        "height": 41.6,
-        "ox": 10.8,
-        "oy": 73.5
+        "width": 38.4,
+        "height": 41.4,
+        "ox": 11,
+        "oy": 73.6
       }
     ]
   },
@@ -1026,12 +1026,12 @@
         ],
         "period": 1.3,
         "phase": 0,
-        "left": 64.3,
-        "top": 50.4,
-        "width": 35.7,
-        "height": 20.5,
-        "ox": 8.3,
-        "oy": 26
+        "left": 64.4,
+        "top": 50.5,
+        "width": 35.6,
+        "height": 20.3,
+        "ox": 8.1,
+        "oy": 25.7
       },
       {
         "name": "bras-haut",
@@ -1040,8 +1040,8 @@
         "period": 1.2,
         "left": 64.1,
         "top": 0,
-        "width": 29.3,
-        "height": 37.3,
+        "width": 29.2,
+        "height": 37.2,
         "ox": 9,
         "oy": 88.3
       }
@@ -1057,11 +1057,11 @@
         "period": 1.3,
         "phase": 0.5,
         "left": 66.7,
-        "top": 68,
+        "top": 67.5,
         "width": 24.8,
-        "height": 32,
+        "height": 31.7,
         "ox": 13,
-        "oy": 16.1
+        "oy": 15.8
       },
       {
         "name": "bras-haut",
@@ -1070,11 +1070,11 @@
         "period": 1.3,
         "phase": 0,
         "left": 70.3,
-        "top": 7.1,
+        "top": 7,
         "width": 29.7,
-        "height": 35.3,
+        "height": 34.9,
         "ox": 11.4,
-        "oy": 86.8
+        "oy": 87.1
       }
     ]
   },
@@ -1094,10 +1094,10 @@
         "period": 4.4,
         "left": 6.4,
         "top": 0,
-        "width": 35.7,
-        "height": 32.4,
+        "width": 35.4,
+        "height": 32.3,
         "ox": 81.6,
-        "oy": 73.6
+        "oy": 73.9
       }
     ]
   },
@@ -1115,12 +1115,12 @@
         "phase": 0,
         "behind": true,
         "clip": true,
-        "left": 12.1,
-        "top": 18.3,
-        "width": 26.5,
+        "left": 12.2,
+        "top": 18.2,
+        "width": 26.4,
         "height": 59.3,
-        "ox": 61.6,
-        "oy": 79.6
+        "ox": 61.5,
+        "oy": 79.8
       },
       {
         "name": "taupe2",
@@ -1133,12 +1133,12 @@
         "phase": 0.33,
         "behind": true,
         "clip": true,
-        "left": 56.9,
-        "top": 19,
-        "width": 25.4,
+        "left": 57,
+        "top": 18.9,
+        "width": 25.3,
         "height": 50.7,
-        "ox": 61.3,
-        "oy": 84.4
+        "ox": 61.2,
+        "oy": 84.6
       },
       {
         "name": "taupe3",
@@ -1151,9 +1151,9 @@
         "phase": 0.66,
         "behind": true,
         "clip": true,
-        "left": 30.4,
+        "left": 30.5,
         "top": 0,
-        "width": 32.6,
+        "width": 32.4,
         "height": 65.5,
         "ox": 62.8,
         "oy": 97.2
@@ -1169,11 +1169,11 @@
         "amp": 6,
         "period": 2,
         "behind": true,
-        "left": 76.1,
+        "left": 76.2,
         "top": 29.7,
-        "width": 23.5,
+        "width": 23.4,
         "height": 32.4,
-        "ox": 14.7,
+        "ox": 14.4,
         "oy": 87.9
       },
       {
@@ -1181,9 +1181,9 @@
         "motion": "flicker",
         "period": 2.6,
         "left": 0,
-        "top": 10.1,
+        "top": 10.2,
         "width": 97,
-        "height": 25.8,
+        "height": 25.6,
         "ox": 50.1,
         "oy": 47.2
       }
@@ -1199,11 +1199,11 @@
         "period": 1.8,
         "behind": true,
         "left": 49.6,
-        "top": 74.5,
+        "top": 74.6,
         "width": 50.4,
-        "height": 21.1,
-        "ox": 11.1,
-        "oy": 74.1
+        "height": 21,
+        "ox": 11.2,
+        "oy": 73.9
       },
       {
         "name": "langue",
@@ -1216,10 +1216,10 @@
         "fade": true,
         "period": 1.8,
         "left": 14.1,
-        "top": 13.8,
-        "width": 17.7,
+        "top": 13.9,
+        "width": 17.6,
         "height": 9.5,
-        "ox": 84.3,
+        "ox": 84.9,
         "oy": 24.3
       }
     ]
@@ -1233,11 +1233,11 @@
         "amp": 6,
         "period": 2.4,
         "behind": true,
-        "left": 42.3,
+        "left": 42.4,
         "top": 0,
         "width": 30.9,
         "height": 28.1,
-        "ox": 13,
+        "ox": 12.7,
         "oy": 90.4
       },
       {
@@ -1246,9 +1246,9 @@
         "period": 2.2,
         "left": 0,
         "top": 18.3,
-        "width": 93.7,
-        "height": 80.7,
-        "ox": 50.5,
+        "width": 93.6,
+        "height": 80.8,
+        "ox": 50.6,
         "oy": 49.1
       }
     ]
@@ -1264,7 +1264,7 @@
         "behind": true,
         "phase": 0,
         "left": 0,
-        "top": 24,
+        "top": 24.1,
         "width": 24.2,
         "height": 20.4,
         "ox": 89.1,
@@ -1276,12 +1276,12 @@
         "amp": -16,
         "period": 0.5,
         "phase": 0,
-        "left": 49.9,
-        "top": 19.3,
-        "width": 36.8,
-        "height": 28.4,
-        "ox": 30.7,
-        "oy": 77
+        "left": 50.1,
+        "top": 19.4,
+        "width": 36.7,
+        "height": 28.3,
+        "ox": 30.5,
+        "oy": 76.9
       }
     ]
   },
@@ -1296,8 +1296,8 @@
         "top": 5.2,
         "width": 82.9,
         "height": 94.8,
-        "ox": 48,
-        "oy": 46
+        "ox": 48.1,
+        "oy": 45.9
       }
     ]
   },
@@ -1309,9 +1309,9 @@
         "motion": "flicker",
         "period": 2.2,
         "left": 0,
-        "top": 17.3,
+        "top": 17.4,
         "width": 100,
-        "height": 62.2,
+        "height": 62,
         "ox": 48.2,
         "oy": 56.1
       }
@@ -1326,12 +1326,12 @@
         "amp": 8,
         "period": 0.18,
         "behind": true,
-        "left": 43.9,
-        "top": 16.1,
-        "width": 56.1,
-        "height": 36.9,
-        "ox": 25.8,
-        "oy": 72.1
+        "left": 44,
+        "top": 16.2,
+        "width": 56,
+        "height": 36.7,
+        "ox": 25.7,
+        "oy": 72.2
       },
       {
         "name": "lame-haut",
@@ -1340,11 +1340,11 @@
         "period": 0.6,
         "phase": 0,
         "left": 0.7,
-        "top": 22.8,
-        "width": 38.8,
-        "height": 20.6,
-        "ox": 87.9,
-        "oy": 77.3
+        "top": 22,
+        "width": 38.9,
+        "height": 21.5,
+        "ox": 87.7,
+        "oy": 78.2
       },
       {
         "name": "lame-bas",
@@ -1352,12 +1352,12 @@
         "amp": 14,
         "period": 0.6,
         "phase": 0.5,
-        "left": 2.3,
-        "top": 55.1,
-        "width": 38.4,
-        "height": 8.1,
-        "ox": 90.9,
-        "oy": 20.1
+        "left": 1.5,
+        "top": 55.2,
+        "width": 41.7,
+        "height": 8,
+        "ox": 85.5,
+        "oy": 19.1
       }
     ]
   },
@@ -1370,12 +1370,12 @@
         "amp": 4,
         "period": 2.4,
         "behind": true,
-        "left": 40.8,
-        "top": 72.8,
-        "width": 59.2,
-        "height": 24.3,
+        "left": 40.9,
+        "top": 72.9,
+        "width": 59.1,
+        "height": 24.2,
         "ox": 7.3,
-        "oy": 24.6
+        "oy": 24.4
       },
       {
         "name": "bebe",
@@ -1389,9 +1389,9 @@
         "inside": true,
         "period": 4,
         "left": 17.8,
-        "top": 47.3,
+        "top": 47.4,
         "width": 21.2,
-        "height": 21.9,
+        "height": 21.8,
         "ox": 46,
         "oy": 92.9
       }
@@ -1407,12 +1407,12 @@
         "period": 0.95,
         "behind": true,
         "phase": 0,
-        "left": 49.3,
+        "left": 48.9,
         "top": 0,
-        "width": 36.1,
-        "height": 62.2,
-        "ox": 6.5,
-        "oy": 90.4
+        "width": 36.5,
+        "height": 63.9,
+        "ox": 8.1,
+        "oy": 88.5
       },
       {
         "name": "aile",
@@ -1420,12 +1420,12 @@
         "amp": 12,
         "period": 0.95,
         "phase": 0,
-        "left": 3.6,
-        "top": 26.9,
-        "width": 46.7,
-        "height": 49.3,
-        "ox": 94.7,
-        "oy": 80.8
+        "left": 4,
+        "top": 27.3,
+        "width": 47.8,
+        "height": 48.9,
+        "ox": 92.2,
+        "oy": 81
       }
     ]
   },
@@ -1438,12 +1438,12 @@
         "amp": 6,
         "period": 2.6,
         "behind": true,
-        "left": 54.9,
-        "top": 60,
-        "width": 45.1,
-        "height": 32.6,
-        "ox": 11.1,
-        "oy": 74
+        "left": 58,
+        "top": 60.2,
+        "width": 42,
+        "height": 32.5,
+        "ox": 10.9,
+        "oy": 74.2
       }
     ]
   },
@@ -1455,12 +1455,12 @@
         "motion": "swing",
         "amp": 7,
         "period": 2,
-        "left": 61.1,
-        "top": 7.4,
-        "width": 37.5,
-        "height": 47.8,
-        "ox": 9.9,
-        "oy": 91.5
+        "left": 61.2,
+        "top": 7.2,
+        "width": 37.3,
+        "height": 47.9,
+        "ox": 9.6,
+        "oy": 91.7
       }
     ]
   },
@@ -1477,9 +1477,9 @@
         "left": 0,
         "top": 17.6,
         "width": 38.7,
-        "height": 38.7,
-        "ox": 92.3,
-        "oy": 87.7
+        "height": 38.6,
+        "ox": 92.6,
+        "oy": 87.9
       },
       {
         "name": "cuillere",
@@ -1487,12 +1487,12 @@
         "amp": 6,
         "period": 2.4,
         "phase": 0,
-        "left": 61.6,
-        "top": 5.7,
-        "width": 38.4,
-        "height": 48.5,
-        "ox": 8.8,
-        "oy": 92
+        "left": 61.8,
+        "top": 5.8,
+        "width": 38.2,
+        "height": 48.4,
+        "ox": 8.5,
+        "oy": 92.2
       }
     ]
   },
@@ -1505,11 +1505,11 @@
         "amp": 8,
         "period": 1.7,
         "behind": true,
-        "left": 61.2,
-        "top": 48,
-        "width": 38.8,
-        "height": 33.4,
-        "ox": 12,
+        "left": 61.3,
+        "top": 48.1,
+        "width": 38.7,
+        "height": 33.3,
+        "ox": 12.1,
         "oy": 85.1
       }
     ]
@@ -1523,12 +1523,12 @@
         "amp": 10,
         "period": 1.8,
         "behind": true,
-        "left": 77.5,
-        "top": 18,
-        "width": 22.5,
-        "height": 37.2,
-        "ox": 11,
-        "oy": 88.1
+        "left": 77.6,
+        "top": 18.2,
+        "width": 22.4,
+        "height": 37,
+        "ox": 11.1,
+        "oy": 88.4
       }
     ]
   },
@@ -1541,9 +1541,9 @@
         "period": 2.6,
         "behind": true,
         "left": 0,
-        "top": 7.7,
+        "top": 7.2,
         "width": 100,
-        "height": 92.3,
+        "height": 92.8,
         "ox": 48.3,
         "oy": 43.4
       }
@@ -1558,11 +1558,11 @@
         "period": 2.6,
         "behind": true,
         "left": 0,
-        "top": 1.9,
+        "top": 1.7,
         "width": 100,
-        "height": 98.1,
+        "height": 98.3,
         "ox": 49.9,
-        "oy": 47.2
+        "oy": 47.3
       }
     ]
   },
@@ -1576,9 +1576,9 @@
         "period": 3,
         "left": 0,
         "top": 0,
-        "width": 96.9,
-        "height": 59.4,
-        "ox": 96.5,
+        "width": 96.8,
+        "height": 59.5,
+        "ox": 96.6,
         "oy": 78.3
       }
     ]
@@ -1610,11 +1610,11 @@
         "amp": 10,
         "period": 1.6,
         "left": 38.6,
-        "top": 79,
-        "width": 19.8,
-        "height": 21,
-        "ox": 55.9,
-        "oy": 15.3
+        "top": 79.2,
+        "width": 19.7,
+        "height": 20.8,
+        "ox": 56.2,
+        "oy": 14.9
       },
       {
         "name": "cou",
@@ -1623,10 +1623,10 @@
         "period": 3.2,
         "left": 0,
         "top": 0,
-        "width": 38.2,
-        "height": 64.8,
-        "ox": 75.3,
-        "oy": 92.1
+        "width": 38,
+        "height": 65,
+        "ox": 75.5,
+        "oy": 91.7
       }
     ]
   },
@@ -1639,23 +1639,23 @@
         "amp": 18,
         "period": 0.45,
         "behind": true,
-        "left": 4,
-        "top": 49.2,
-        "width": 32.6,
-        "height": 16.9,
-        "ox": 83.9,
-        "oy": 36.5
+        "left": 3.9,
+        "top": 49.3,
+        "width": 32.5,
+        "height": 16.8,
+        "ox": 84.3,
+        "oy": 36.1
       },
       {
         "name": "epee",
         "motion": "swing",
         "amp": 6,
         "period": 2.8,
-        "left": 56.7,
+        "left": 56.9,
         "top": 0,
-        "width": 43.3,
+        "width": 43.1,
         "height": 62.3,
-        "ox": 12.1,
+        "ox": 11.8,
         "oy": 93.7
       }
     ]
@@ -1669,11 +1669,11 @@
         "amp": 10,
         "period": 1.8,
         "left": 53.6,
-        "top": 48.7,
+        "top": 48.8,
         "width": 46.4,
-        "height": 15.5,
-        "ox": 4.4,
-        "oy": 79.3
+        "height": 15.4,
+        "ox": 4.5,
+        "oy": 79.2
       },
       {
         "name": "tete",
@@ -1682,10 +1682,10 @@
         "period": 2.6,
         "left": 0,
         "top": 0,
-        "width": 77.2,
-        "height": 40.6,
-        "ox": 59,
-        "oy": 90.8
+        "width": 77.1,
+        "height": 40.5,
+        "ox": 59.1,
+        "oy": 91
       }
     ]
   },
@@ -1698,10 +1698,10 @@
         "amp": 3,
         "period": 3,
         "left": 24.1,
-        "top": 16.5,
+        "top": 16.4,
         "width": 75.9,
-        "height": 83.5,
-        "ox": 41,
+        "height": 83.6,
+        "ox": 40.9,
         "oy": 5.3
       }
     ]
@@ -1719,20 +1719,20 @@
         "top": 0,
         "width": 94.2,
         "height": 90.4,
-        "ox": 47.8,
-        "oy": 59.3
+        "ox": 47.7,
+        "oy": 59.4
       },
       {
         "name": "feuille",
         "motion": "swing",
         "amp": 6,
         "period": 2,
-        "left": 66.5,
-        "top": 54.6,
-        "width": 33.5,
-        "height": 21.3,
+        "left": 66.6,
+        "top": 54.8,
+        "width": 33.4,
+        "height": 21.2,
         "ox": 4,
-        "oy": 62.4
+        "oy": 62.6
       }
     ]
   },
@@ -1744,12 +1744,12 @@
         "motion": "swing",
         "amp": 8,
         "period": 2.2,
-        "left": 60.2,
-        "top": 50.3,
-        "width": 35.3,
-        "height": 35.2,
-        "ox": 14.1,
-        "oy": 21
+        "left": 60.4,
+        "top": 50.2,
+        "width": 35.6,
+        "height": 35.6,
+        "ox": 13.6,
+        "oy": 21.4
       }
     ]
   },
@@ -1761,12 +1761,12 @@
         "motion": "swing",
         "amp": 5,
         "period": 2,
-        "left": 53.3,
+        "left": 53.4,
         "top": 0,
-        "width": 46.7,
-        "height": 57.2,
-        "ox": 21.9,
-        "oy": 87.4
+        "width": 46.6,
+        "height": 57.1,
+        "ox": 21.8,
+        "oy": 87.5
       },
       {
         "name": "feux",
@@ -1775,8 +1775,8 @@
         "left": 0,
         "top": 32.5,
         "width": 94.4,
-        "height": 42.1,
-        "ox": 47.4,
+        "height": 42,
+        "ox": 47.3,
         "oy": 49.1
       }
     ]
@@ -1790,23 +1790,23 @@
         "amp": 10,
         "period": 1.6,
         "behind": true,
-        "left": 69.3,
-        "top": 36.5,
-        "width": 26.6,
-        "height": 33.7,
-        "ox": 12.2,
-        "oy": 88.1
+        "left": 69.4,
+        "top": 36.7,
+        "width": 26.4,
+        "height": 33.6,
+        "ox": 11.8,
+        "oy": 88
       },
       {
         "name": "poing",
         "motion": "swing",
         "amp": 8,
         "period": 1.2,
-        "left": 70.9,
-        "top": 22.9,
-        "width": 29.1,
-        "height": 31.1,
-        "ox": 11.9,
+        "left": 71,
+        "top": 23,
+        "width": 29,
+        "height": 31,
+        "ox": 11.5,
         "oy": 84.4
       }
     ]
@@ -1819,21 +1819,21 @@
         "motion": "swing",
         "amp": 6,
         "period": 1.4,
-        "left": 69.6,
+        "left": 69.7,
         "top": 1.4,
-        "width": 30.4,
-        "height": 46.3,
-        "ox": 15.8,
-        "oy": 90.5
+        "width": 30.3,
+        "height": 46.2,
+        "ox": 15.6,
+        "oy": 90.7
       },
       {
         "name": "vapeur",
         "motion": "flicker",
         "period": 1.9,
-        "left": 16.2,
+        "left": 16.3,
         "top": 0,
-        "width": 50.8,
-        "height": 13.6,
+        "width": 50.7,
+        "height": 13.4,
         "ox": 52,
         "oy": 50
       }
@@ -1849,10 +1849,10 @@
         "period": 0.7,
         "behind": true,
         "left": 64.6,
-        "top": 25,
+        "top": 25.1,
         "width": 35.4,
-        "height": 36.6,
-        "ox": 10.9,
+        "height": 36.4,
+        "ox": 11,
         "oy": 52.7
       }
     ]
@@ -1866,21 +1866,21 @@
         "amp": 4,
         "period": 2.4,
         "behind": true,
-        "left": 56.8,
-        "top": 21,
-        "width": 43.2,
-        "height": 57.5,
-        "ox": 18.4,
-        "oy": 55.8
+        "left": 56.9,
+        "top": 21.1,
+        "width": 43.1,
+        "height": 57.4,
+        "ox": 18.2,
+        "oy": 55.9
       },
       {
         "name": "encre",
         "motion": "flicker",
         "period": 2.2,
-        "left": 3.7,
+        "left": 3.5,
         "top": 9.4,
-        "width": 95.1,
-        "height": 66.5,
+        "width": 95.4,
+        "height": 66.6,
         "ox": 52.4,
         "oy": 57.5
       }
@@ -1897,10 +1897,10 @@
         "behind": true,
         "left": 7.3,
         "top": 5.9,
-        "width": 36.6,
-        "height": 44.8,
-        "ox": 95.5,
-        "oy": 82.2
+        "width": 36.4,
+        "height": 44.6,
+        "ox": 95.7,
+        "oy": 82.4
       },
       {
         "name": "ailes",
@@ -1909,11 +1909,11 @@
         "period": 0.22,
         "behind": true,
         "phase": 0.5,
-        "left": 49.8,
+        "left": 49.9,
         "top": 0,
-        "width": 50.2,
+        "width": 50.1,
         "height": 51.4,
-        "ox": 4.3,
+        "ox": 4.2,
         "oy": 82
       }
     ]
@@ -1930,9 +1930,9 @@
         "phase": 0,
         "left": 0,
         "top": 7.6,
-        "width": 40.3,
-        "height": 71.1,
-        "ox": 93.3,
+        "width": 40.2,
+        "height": 70.9,
+        "ox": 93.5,
         "oy": 51.9
       },
       {
@@ -1945,7 +1945,7 @@
         "left": 48.3,
         "top": 1.9,
         "width": 49.3,
-        "height": 87.7,
+        "height": 87.5,
         "ox": 6.7,
         "oy": 51.3
       }
@@ -1961,12 +1961,12 @@
         "period": 0.9,
         "behind": true,
         "phase": 0,
-        "left": 50.1,
+        "left": 49.8,
         "top": 7,
-        "width": 38.7,
+        "width": 38.8,
         "height": 30.1,
-        "ox": 10,
-        "oy": 92.2
+        "ox": 10.4,
+        "oy": 92.5
       },
       {
         "name": "moignon",
@@ -1974,12 +1974,12 @@
         "amp": 8,
         "period": 0.9,
         "phase": 0,
-        "left": 54.4,
-        "top": 39.8,
-        "width": 45.6,
-        "height": 29.4,
-        "ox": 10.8,
-        "oy": 51.5
+        "left": 54.5,
+        "top": 40,
+        "width": 45.5,
+        "height": 29.3,
+        "ox": 10.5,
+        "oy": 51.3
       }
     ]
   },
@@ -1993,10 +1993,10 @@
         "period": 2.2,
         "left": 0,
         "top": 0,
-        "width": 49.2,
-        "height": 64.6,
-        "ox": 90.3,
-        "oy": 76.8
+        "width": 49.1,
+        "height": 64.5,
+        "ox": 90.5,
+        "oy": 77.1
       }
     ]
   },
@@ -2009,11 +2009,11 @@
         "amp": 10,
         "period": 2.4,
         "left": 0.6,
-        "top": 18.3,
+        "top": 18.4,
         "width": 49.7,
-        "height": 47.8,
+        "height": 47.6,
         "ox": 90.8,
-        "oy": 81.8
+        "oy": 82
       }
     ]
   },
@@ -2027,11 +2027,11 @@
         "period": 2.2,
         "behind": true,
         "left": 0,
-        "top": 38.2,
-        "width": 16.7,
-        "height": 44.1,
-        "ox": 64.8,
-        "oy": 11.5
+        "top": 38.4,
+        "width": 16.6,
+        "height": 44,
+        "ox": 64.5,
+        "oy": 11.2
       }
     ]
   },
@@ -2045,21 +2045,21 @@
         "behind": true,
         "left": 50.8,
         "top": 0,
-        "width": 27,
-        "height": 27.5,
+        "width": 27.2,
+        "height": 27.8,
         "ox": 48.9,
-        "oy": 50.9
+        "oy": 50.7
       },
       {
         "name": "trompe",
         "motion": "swing",
         "amp": 4,
         "period": 2.4,
-        "left": 3.5,
-        "top": 2.5,
-        "width": 58.2,
-        "height": 49.7,
-        "ox": 21.9,
+        "left": 3.6,
+        "top": 2.7,
+        "width": 58,
+        "height": 49.6,
+        "ox": 21.8,
         "oy": 90.7
       }
     ]
@@ -2076,9 +2076,9 @@
         "left": 72.6,
         "top": 0,
         "width": 27.4,
-        "height": 45.4,
+        "height": 45.3,
         "ox": 3.8,
-        "oy": 97.9
+        "oy": 98.1
       }
     ]
   },
@@ -2094,9 +2094,9 @@
         "left": 71.2,
         "top": 2,
         "width": 28.8,
-        "height": 49.9,
+        "height": 49.8,
         "ox": 7.8,
-        "oy": 95.5
+        "oy": 95.6
       },
       {
         "name": "cle",
@@ -2105,10 +2105,10 @@
         "period": 1.4,
         "left": 24,
         "top": 42.2,
-        "width": 8.7,
+        "width": 8.6,
         "height": 31.2,
-        "ox": 11.4,
-        "oy": 3.1
+        "ox": 10.6,
+        "oy": 2.8
       }
     ]
   },
@@ -2120,12 +2120,12 @@
         "motion": "swing",
         "amp": 10,
         "period": 0.9,
-        "left": 50.6,
-        "top": 38.1,
-        "width": 49.4,
-        "height": 21,
-        "ox": 12.5,
-        "oy": 75.2
+        "left": 50.8,
+        "top": 38.2,
+        "width": 49.2,
+        "height": 20.8,
+        "ox": 12.1,
+        "oy": 75.4
       },
       {
         "name": "flamme",
@@ -2133,12 +2133,12 @@
         "amp": 8,
         "period": 0.6,
         "behind": true,
-        "left": 25.1,
+        "left": 25.2,
         "top": 0,
-        "width": 38.8,
-        "height": 15.9,
-        "ox": 50.7,
-        "oy": 96.8
+        "width": 38.5,
+        "height": 15.8,
+        "ox": 50.8,
+        "oy": 97.4
       }
     ]
   },
@@ -2155,7 +2155,7 @@
         "top": 0,
         "width": 71.6,
         "height": 26.8,
-        "ox": 33.9,
+        "ox": 33.8,
         "oy": 84
       },
       {
@@ -2167,11 +2167,11 @@
         ],
         "period": 1.5,
         "left": 0,
-        "top": 44.7,
-        "width": 69.8,
-        "height": 22.4,
-        "ox": 94,
-        "oy": 14.9
+        "top": 44.8,
+        "width": 69.6,
+        "height": 22.3,
+        "ox": 94.2,
+        "oy": 14.6
       }
     ]
   },
@@ -2184,12 +2184,12 @@
         "amp": 8,
         "period": 2,
         "behind": true,
-        "left": 69.1,
-        "top": 38.5,
-        "width": 30.9,
+        "left": 69.2,
+        "top": 38.4,
+        "width": 30.8,
         "height": 29.3,
-        "ox": 3.6,
-        "oy": 87.7
+        "ox": 3.2,
+        "oy": 88.1
       },
       {
         "name": "rayons",
@@ -2197,10 +2197,10 @@
         "period": 2.2,
         "left": 0,
         "top": 35.8,
-        "width": 91.2,
+        "width": 91.1,
         "height": 52.9,
         "ox": 51.3,
-        "oy": 50.8
+        "oy": 51
       }
     ]
   },
@@ -2211,10 +2211,10 @@
         "name": "etoiles",
         "motion": "flicker",
         "period": 2.4,
-        "left": 6.1,
-        "top": 27.9,
+        "left": 6,
+        "top": 28,
         "width": 82.1,
-        "height": 63.8,
+        "height": 63.7,
         "ox": 48.4,
         "oy": 48.3
       }
@@ -2229,12 +2229,12 @@
         "amp": 5,
         "period": 1.8,
         "behind": true,
-        "left": 43.2,
-        "top": 17,
-        "width": 51.6,
-        "height": 65.4,
-        "ox": 4.5,
-        "oy": 70.2
+        "left": 43.1,
+        "top": 16.9,
+        "width": 51.8,
+        "height": 65,
+        "ox": 4.9,
+        "oy": 70.4
       }
     ]
   },
@@ -2250,7 +2250,7 @@
         "left": 29.7,
         "top": 9.4,
         "width": 70.3,
-        "height": 86.1,
+        "height": 85.5,
         "ox": 9.1,
         "oy": 40.8
       }
@@ -2269,7 +2269,7 @@
         "top": 0,
         "width": 76.8,
         "height": 93.8,
-        "ox": 13,
+        "ox": 12.9,
         "oy": 48.8
       }
     ]
@@ -2281,10 +2281,10 @@
         "name": "neige",
         "motion": "flicker",
         "period": 1.8,
-        "left": 41,
-        "top": 3.6,
+        "left": 40.9,
+        "top": 3.5,
         "width": 38,
-        "height": 35.9,
+        "height": 36,
         "ox": 48.6,
         "oy": 55.3
       }
@@ -2299,12 +2299,12 @@
         "amp": 6,
         "period": 2.6,
         "behind": true,
-        "left": 60.3,
+        "left": 59.9,
         "top": 6.6,
-        "width": 39.7,
-        "height": 56.3,
-        "ox": 10.7,
-        "oy": 64.4
+        "width": 40.1,
+        "height": 56.4,
+        "ox": 10.6,
+        "oy": 64.5
       }
     ]
   }

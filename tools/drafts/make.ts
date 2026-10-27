@@ -8,10 +8,10 @@
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { cutout } from '../../src/art/cutout.ts';
+import { cutRender } from '../../src/art/cutout.ts';
 import { makeMini } from '../minis.ts';
 import { kid, type Draft, type Kid } from './kid.ts';
-import { makeRig, saveRig, turned } from '../redraws/rig.ts';
+import { makeRig, saveRig, SHEET, turned } from '../redraws/rig.ts';
 import clapoflot from './clapoflot.ts';
 import tortorrent from './tortorrent.ts';
 import bouquetigre from './bouquetigre.ts';
@@ -57,7 +57,7 @@ export function drawKid(d: Draft): Kid {
   return k;
 }
 
-/** The drawing as it would come out of the scanner: an RGBA picture on paper. */
+/** The drawing as an RGBA picture on a see-through sheet. */
 export async function drawDraft(d: Draft, k = drawKid(d)): Promise<Buffer> {
   const [w, h] = d.size;
   return sharp(Buffer.from(k.svg(w, h, d.tilt, d.pivot[0], d.pivot[1], d.offset?.[0] ?? 0, d.offset?.[1] ?? 0))).png().toBuffer();
@@ -71,8 +71,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     if (only.length && !only.includes(d.id) && !only.includes(d.slug)) continue;
     const k = drawKid(d);
     const { data, info } = await sharp(await drawDraft(d, k)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    // small bits (water drops, sparks) are part of the drawing
-    const res = cutout({ data, width: info.width, height: info.height }, { minComponent: 0.002 });
+    const res = cutRender({ data, width: info.width, height: info.height }, SHEET);
     const card = join(root, 'public/cards', `${d.id}-${d.slug}.webp`);
     await sharp(Buffer.from(res.data.buffer), { raw: { width: res.width, height: res.height, channels: 4 } })
       .resize({ width: 768, height: 768, fit: 'inside' })

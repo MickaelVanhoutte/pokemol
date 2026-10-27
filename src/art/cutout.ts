@@ -320,3 +320,44 @@ export function cutout(img: Rgba, opts: Partial<CutoutOptions> = {}): CutoutResu
   }
   return { data: out, width: ow, height: oh, offset: [x0, y0] };
 }
+
+/**
+ * Trims a drawing rendered on a see-through sheet (the Bestioles drawn in code): its own alpha is the cut-out,
+ * so what its lines enclose stays see-through and light greys stay grey. The colours get the levels of
+ * `cutout`, with `paper` (the kit's paper colour, 0–255) taken to white.
+ */
+export function cutRender(img: Rgba, paper: [number, number, number], saturate = defaultCutoutOptions.saturate): CutoutResult {
+  const { width: w, height: h, data } = img;
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (data[(y * w + x) * 4 + 3] > 5) {
+        if (x < x0) x0 = x; if (x > x1) x1 = x;
+        if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    }
+  }
+  if (x1 < 0) { x0 = 0; y0 = 0; x1 = w - 1; y1 = h - 1; }
+  const m = 6;
+  x0 = Math.max(0, x0 - m); y0 = Math.max(0, y0 - m);
+  x1 = Math.min(w - 1, x1 + m); y1 = Math.min(h - 1, y1 + m);
+  const ow = x1 - x0 + 1, oh = y1 - y0 + 1;
+  const out = new Uint8ClampedArray(ow * oh * 4);
+  const lv = (v: number) => Math.min(1, Math.max(0, (v - 0.03) / 0.9));
+  for (let y = 0; y < oh; y++) {
+    for (let x = 0; x < ow; x++) {
+      const si = ((y + y0) * w + (x + x0)) * 4;
+      const di = (y * ow + x) * 4;
+      let r = lv(data[si] / paper[0]), g = lv(data[si + 1] / paper[1]), b = lv(data[si + 2] / paper[2]);
+      const l = 0.299 * r + 0.587 * g + 0.114 * b;
+      r = l + (r - l) * saturate;
+      g = l + (g - l) * saturate;
+      b = l + (b - l) * saturate;
+      out[di] = r * 255;
+      out[di + 1] = g * 255;
+      out[di + 2] = b * 255;
+      out[di + 3] = data[si + 3];
+    }
+  }
+  return { data: out, width: ow, height: oh, offset: [x0, y0] };
+}

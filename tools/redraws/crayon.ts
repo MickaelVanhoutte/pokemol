@@ -22,7 +22,7 @@ import type { PartMove } from '../../src/data/rigs.ts';
 export type P = [number, number];
 export const GRAPHITE = '#3f3b46';
 export const FELT = '#27232d';
-const PAPER = '#f7f3ea';
+export const PAPER = '#f7f3ea';
 
 export type Crayon = ReturnType<typeof crayon>;
 
@@ -280,7 +280,7 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
     },
     /** The moving parts drawn so far. */
     parts: () => parts,
-    /** The whole drawing on its sheet, tilted a little around (cx, cy); or a `view` of it for the battle rig. */
+    /** The whole drawing on a see-through sheet, tilted a little around (cx, cy); or a `view` of it for the battle rig. */
     svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, view: View = 'card'): string {
       cut();
       const extra = new Set(parts.filter((p) => p.extra).map((p) => p.name));
@@ -292,7 +292,7 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
         + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -5 3.85' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
         + `<filter id='lead' x='-2%' y='-2%' width='104%' height='104%'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='${(seed0 + 5) % 97}' result='n'/>`
         + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.5' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
-        + `</defs><rect width='${W}' height='${H}' fill='${PAPER}'/><g transform='rotate(${r1(tilt)} ${cx} ${cy})'>${body}</g></svg>`;
+        + `</defs><g transform='rotate(${r1(tilt)} ${cx} ${cy})'>${body}</g></svg>`;
     },
   };
 }

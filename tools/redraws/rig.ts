@@ -1,6 +1,6 @@
 /**
  * The battle rig of a Bestiole drawn with moving parts (`c.part()`): its body without them and each part on
- * its own, cut out like the card (`src/art/cutout.ts`) and placed on one sheet. Written to
+ * its own, trimmed like the card (`cutRender` in `src/art/cutout.ts`) and placed on one sheet. Written to
  * public/rigs/<id>-<slug>/ (base.webp, <part>.webp), with each part's box and pivot in src/data/rigs.json
  * (read by src/data/rigs.ts), and drawn on tools/out/rigs-sheet.png to check the cut-outs.
  */
@@ -8,9 +8,12 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp, { type Sharp } from 'sharp';
-import { cutout, type CutoutResult } from '../../src/art/cutout.ts';
+import { cutRender, type CutoutResult } from '../../src/art/cutout.ts';
 import type { Rig, RigPart } from '../../src/data/rigs.ts';
-import type { P, PartDef, View } from './crayon.ts';
+import { PAPER, type P, type PartDef, type View } from './crayon.ts';
+
+/** The kits' paper, taken to white on the cards and rigs. */
+export const SHEET = [1, 3, 5].map((i) => parseInt(PAPER.slice(i, i + 2), 16)) as [number, number, number];
 
 /** Largest side of a rig's pictures: a battle drawing is at most ~250 px, twice that on a phone. */
 const SIZE = 512;
@@ -36,13 +39,12 @@ export const turned = (tilt: number, cx: number, cy: number, dx = 0, dy = 0) => 
 export async function makeRig(d: Rigged, root: string): Promise<{ rig: Rig; sheet: Buffer } | null> {
   const { parts } = d;
   if (!parts.length) return null;
-  const cut = async (view: View, minComponent: number): Promise<CutoutResult> => {
+  const cut = async (view: View): Promise<CutoutResult> => {
     const { data, info } = await sharp(Buffer.from(d.render(view))).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    return cutout({ data, width: info.width, height: info.height }, { minComponent });
+    return cutRender({ data, width: info.width, height: info.height }, SHEET);
   };
-  // the body like the card; a small part keeps its small strokes
-  const base = await cut('base', 0.002);
-  const layers = await Promise.all(parts.map((p) => cut({ part: p.name }, 0.0002)));
+  const base = await cut('base');
+  const layers = await Promise.all(parts.map((p) => cut({ part: p.name })));
   const all = [base, ...layers];
   const x0 = Math.min(...all.map((r) => r.offset[0])), y0 = Math.min(...all.map((r) => r.offset[1]));
   const x1 = Math.max(...all.map((r) => r.offset[0] + r.width)), y1 = Math.max(...all.map((r) => r.offset[1] + r.height));

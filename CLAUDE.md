@@ -222,7 +222,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
 A part that moves in battle is drawn inside `c.part(name, { pivot, motion… }, () => …)` (both kits);
 `npm run redraws` / `npm run drafts` then also write its battle rig (`tools/redraws/rig.ts`, checked on
 `tools/out/rigs-sheet.png`) without changing the card ([docs/content.md](docs/content.md#moving-parts-in-battle)).
-Both go through `src/art/cutout.ts` (paper flattening, ink mask) like a photo and make the overworld
+Both are drawn on a see-through sheet and trimmed by `cutRender` (`src/art/cutout.ts`: their own alpha, so
+what their lines enclose stays see-through; a white part is drawn as paper), and make the overworld
 miniature `public/minis/<id>-<slug>.png` (`tools/minis.ts`, `src/art/mini.ts`: shrunk, a fitted 6-colour
 palette, a dark outline). The miniature is the follower (`Game.follower`, refreshed from the party by
 `refreshFollower`); a test requires one per creature. Sparkly (shiny) Bestioles are recoloured at run time

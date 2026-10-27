@@ -136,7 +136,7 @@ The site is served at `https://<user>.github.io/pokemol/` (the `base` in `vite.c
 
 ```
 tools/            drawing cutout pipeline (sharp) and icon generator
-src/art/          cutout algorithm (paper flattening, ink mask, flood fill)
+src/art/          cutout of her drawings (paper flattening, ink mask, flood fill), trim of the code drawings
 src/data/         creatures, moves, items, badges, sketchbook pages, types chart, trainers, maps/ (one file per area)
 src/engine/pk/    pure game logic: creatures/stats/XP, Gen 3–style battle engine, catching, AI (tested)
 src/overworld/    canvas engine: hand-painted tiles, sprites, buildings, movement, dialogs, pick-ups

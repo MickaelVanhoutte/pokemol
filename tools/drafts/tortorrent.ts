@@ -5,7 +5,7 @@ export default {
   id: '023', slug: 'tortorrent', seed: 21, size: [1350, 1420], tilt: -6, pivot: [560, 720], offset: [110, 90],
   draw(k) {
     const { j, potato, shake, shape, colourOnly, stroke, dot, raw, bumps, spikes, sharpLine, smooth } = k;
-    const BLUE = '#2f4fc2', PALE = '#8fc0f0', BROWN = '#8e5628', YEL = '#e0bb48', GREY = '#9a98a8';
+    const BLUE = '#2f4fc2', PALE = '#8fc0f0', BROWN = '#8e5628', YEL = '#e0bb48', GREY = '#77758a';
 
     // water gushing from the two spouts in thick arcs, splashing at the end
     k.part('jets', { pivot: [790, 270], motion: 'swing', amp: 3, period: 0.8, behind: true }, () => {
@@ -27,8 +27,8 @@ export default {
       }
     });
     // the spouts: two grey tubes sticking out of the shell
-    shape(shake([[650, 400], [660, 250], [735, 245], [740, 400]], 8), GREY, { gap: 14, w: 11 });
-    shape(shake([[830, 430], [850, 300], [925, 305], [915, 445]], 8), GREY, { gap: 14, w: 11 });
+    shape(shake([[650, 400], [660, 250], [735, 245], [740, 400]], 8), GREY, { gap: 8, w: 12, miss: 0.05 });
+    shape(shake([[830, 430], [850, 300], [925, 305], [915, 445]], 8), GREY, { gap: 8, w: 12, miss: 0.05 });
     stroke([[655, 262], [732, 258]], 5); stroke([[848, 312], [922, 318]], 5);
 
     // short thick tail

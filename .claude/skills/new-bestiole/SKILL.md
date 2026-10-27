@@ -24,6 +24,8 @@ Every Bestiole is drawn in code in the little artist's style; she no longer has 
   `tools/out/redraws-sheet.png` (her drawing, the redraw, battle size, miniature). Show the owner the sheet
   before going on. Draw it in three-quarter view turned to the left, never straight from the front (it looks
   silly in battle), and set `faces: 'left'`: battles mirror it so both Bestioles face each other.
+  The sheet is see-through: what the lines enclose stays see-through unless it is coloured, so a part meant
+  to be white is drawn with `c.paper()`.
 - An evolution is never a recolour of its earlier form. First forms are cute and simple; evolved forms are
   bigger, more complex and more impressive: a new silhouette, new features (vines, horns, quills, cuffs…), a
   fiercer pose. Put the whole line side by side on the sheet before showing it.

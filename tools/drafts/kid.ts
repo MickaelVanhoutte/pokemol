@@ -52,8 +52,8 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
 
   let defs = '', ids = 0;
   // the drawing in pieces, each with the moving part it belongs to (see crayon.ts): layered, one list in
-  // drawing order; otherwise every colour first, then every line
-  const chunks: { part?: string; svg: string }[] = [], colours: typeof chunks = [], lines: typeof chunks = [];
+  // drawing order; otherwise the shapes' paper first, then every colour, then every line
+  const chunks: { part?: string; svg: string }[] = [], papers: typeof chunks = [], colours: typeof chunks = [], lines: typeof chunks = [];
   const parts: PartDef[] = [];
   let inPart: string | undefined, seq = '';
   const cut = () => {
@@ -77,6 +77,8 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
     if (opts.layered) seq += svg;
     else (kind === 'c' ? colours : lines).push({ part: inPart, svg });
   };
+  // the path the last line took: a shape's paper goes right up to its outline
+  let drawn: P[] = [];
   function line(pts: P[], closed = false, w = 7): string {
     let p = shake(pts, 10);
     if (closed) {
@@ -85,6 +87,7 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
       const a = p[0], b = p[1];
       p.push(rnd() < 0.5 ? [a[0] + j(18), a[1] + j(18)] : [a[0] - (b[0] - a[0]) * 0.4 + j(8), a[1] - (b[1] - a[1]) * 0.4 + j(8)]);
     }
+    drawn = p;
     let s = `<path d='${smooth(p, false)}' fill='none' stroke='${PENCIL}' stroke-width='${r1(w * (0.85 + rnd() * 0.35))}' stroke-linecap='round' stroke-linejoin='round'/>`;
     if (rnd() < 0.55) s += `<path d='${smooth(shake(p.slice(0, Math.max(2, Math.ceil(p.length * (0.4 + rnd() * 0.6)))), 9), false)}' fill='none' stroke='${PENCIL}' stroke-width='${r1(w * 0.6)}' stroke-opacity='.8' stroke-linecap='round'/>`;
     return `<g filter='url(#lead)'>${s}</g>`;
@@ -113,14 +116,23 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
     return `<g clip-path='url(#${id})' filter='url(#grain)'>${s}</g>`;
   }
   /** A coloured part: its colouring, then its outline (sometimes gone round twice). */
+  // the paper under it, so the colouring's gaps aren't see-through (the sheet itself is); drawn first of all
+  // by default, under the shape in layered mode
   const shape = (pts: P[], col: string, o: Fill = {}, w = 6.8) => {
+    const at = seq.length;
     if (opts.layered) put('c', `<path d='${smooth(pts, true)}' fill='#f7f3ea'/><path d='${smooth(pts, true)}' fill='${col}' opacity='${o.wash ?? 0.45}' filter='url(#grain)'/>`);
     put('c', scribble(pts, col, { gap: 19, w: 13, miss: 0.3, ...o }));
     put('l', line(pts, true, w));
+    const paper = `<path d='${smooth(drawn, true)}' fill='#f7f3ea'/>`;
+    if (opts.layered) seq = seq.slice(0, at) + paper + seq.slice(at);
+    else papers.push({ part: inPart, svg: paper });
     if (rnd() < 0.6) put('l', line(pts, true, w * 0.7));
   };
   /** Just colour, no outline (fire, water). */
-  const colourOnly = (pts: P[], col: string, o: Fill = {}) => { put('c', scribble(pts, col, { gap: 15, w: 13, miss: 0.1, ...o })); };
+  const colourOnly = (pts: P[], col: string, o: Fill = {}) => {
+    if (!opts.layered) papers.push({ part: inPart, svg: `<path d='${smooth(pts, true)}' fill='#f7f3ea'/>` });
+    put('c', scribble(pts, col, { gap: 15, w: 13, miss: 0.1, ...o }));
+  };
   const stroke = (pts: P[], w = 6.5) => { put('l', line(pts, false, w * 1.15)); };
   /** Solid pencil blobs (eyes, nostrils). */
   const dot = (x: number, y: number, rx: number, ry = rx, rot = 0) => {
@@ -177,19 +189,19 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
     put('l', `<g filter='url(#lead)'><path d='${d}' fill='none' stroke='${PENCIL}' stroke-width='${w}' stroke-linejoin='round' stroke-linecap='round'/></g>`);
   };
 
-  /** The whole drawing, on paper, tilted a little around (cx, cy) and moved by (dx, dy). */
+  /** The whole drawing on a see-through sheet, tilted a little around (cx, cy) and moved by (dx, dy). */
   function svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, dx = 0, dy = 0, view: View = 'card'): string {
     cut();
     const extra = new Set(parts.filter((p) => p.extra).map((p) => p.name));
     const shown = (list: typeof chunks) => list.filter((k) => (view === 'card' ? !k.part || !extra.has(k.part) : view === 'base' ? !k.part : k.part === view.part))
       .map((k) => k.svg).join('');
-    const body = shown(colours) + shown(lines) + shown(chunks);
+    const body = shown(papers) + shown(colours) + shown(lines) + shown(chunks);
     return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' viewBox='0 0 ${W} ${H}'><defs>${defs}`
       + `<filter id='grain' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3' result='n'/>`
       + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.6' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
       + `<filter id='lead' x='-2%' y='-2%' width='104%' height='104%'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='9' result='n'/>`
       + `<feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2 1.75' result='m'/><feComposite in='SourceGraphic' in2='m' operator='in'/></filter>`
-      + `</defs><rect width='${W}' height='${H}' fill='#f7f3ea'/><g transform='translate(${dx} ${dy}) rotate(${tiltOf(tilt)} ${cx} ${cy})'>${body}</g></svg>`;
+      + `</defs><g transform='translate(${dx} ${dy}) rotate(${tiltOf(tilt)} ${cx} ${cy})'>${body}</g></svg>`;
   }
   const outline = (pts: P[], closed: boolean, w: number) => put('l', line(pts, closed, w));
   return { rnd, j, potato, shake, densify, band, shape, colourOnly, stroke, outline, dot, raw, bumps, spikes, sharpLine, svg, smooth, part, parts: () => parts, tiltOf };
