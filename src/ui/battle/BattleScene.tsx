@@ -4,6 +4,7 @@ import { monArtUrl } from '../monArt';
 import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
 import { maxHp, xpAt, MAX_LEVEL } from '../../engine/pk/creature';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import type { Ref } from 'preact';
 import { HpBar, PixelIcon, StatusTag, XpBar, lv } from '../paper';
 import { sketchIconUrl } from '../sketchIcons';
 import { backdropUrl, platformUrl } from './backdrops';
@@ -60,17 +61,22 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
 }
 
 /** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
-export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored }: {
+export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored, sceneRef }: {
   view: BattleState; fx: Fx; ball: BallFx | null; captured: boolean; backdrop: Backdrop; intro: boolean;
   foeTrainer?: Look; playerBack?: Look; grey: boolean; recolored: string[];
+  /** The scene element, where the move animations draw. */
+  sceneRef?: Ref<HTMLDivElement>;
 }) {
   const mine = activeMon(view.sides[0]);
   const foe = activeMon(view.sides[1]);
   const mySp = creature(mine.species);
   const foeSp = creature(foe.species);
   const isGrey = grey && !recolored.includes(foe.uid);
+  // up in the air or under the ground during a two-turn move
+  const away = (side: 0 | 1) => (view.sides[side].vol.invuln ? 'is-away' : '');
   return (
-    <div class={`pk-scene ${intro ? 'is-intro' : ''}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
+    <div ref={sceneRef} class={`pk-scene ${intro ? 'is-intro' : ''}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
+      <canvas class="pk-fx-back" aria-hidden="true" />
       {view.weather && <div class={`pk-weather pk-weather--${view.weather.kind}`} aria-hidden="true" />}
       {/* the foe stands under its HP box, you stand over yours */}
       <div class="pk-side pk-side--foe">
@@ -80,7 +86,7 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
           <img class="pk-trainer" src={lookImage(foeTrainer, 'down')} alt="" />
         ) : (
           <img
-            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''}`}
+            class={`pk-sprite ${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)}`}
             src={monArtUrl(foe)}
             alt=""
           />
@@ -99,13 +105,14 @@ export function BattleScene({ view, fx, ball, captured, backdrop, intro, foeTrai
           <img class="pk-trainer pk-trainer--me" src={lookImage(playerBack, 'up')} alt="" />
         ) : (
           <img
-            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''}`}
+            class={`pk-sprite ${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)}`}
             src={monArtUrl(mine)}
             alt=""
           />
         )}
       </div>
       </div>
+      <canvas class="pk-fx" aria-hidden="true" />
     </div>
   );
 }

@@ -89,7 +89,11 @@
 @keyframes hpIn { from { opacity: 0; transform: translateY(-6px); } }
 /* drawings looking the wrong way are mirrored so both Bestioles face each other */
 .pk-sprite.is-mirrored { --flip: -1; transform: scaleX(-1); }
-.pk-sprite.is-gone { opacity: 0; }
+.pk-sprite.is-gone, .pk-sprite.is-away { opacity: 0; }
+/* move animations: one canvas under the drawings (washes, cracks), one over them */
+.pk-fx, .pk-fx-back { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pk-fx-back { z-index: 1; }
+.pk-fx { z-index: 3; }
 .pk-sprite.is-captured { animation: intoBall 0.35s ease forwards; }
 @keyframes intoBall { to { transform: scaleX(var(--flip)) scale(0.05); opacity: 0; } }
 
@@ -100,8 +104,7 @@
 @keyframes popIn { from { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
 .fx-out { animation: popOut 0.5s ease forwards; }
 @keyframes popOut { to { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
-.fx-hit { animation: hitBlink 0.6s steps(2) 3; }
-@keyframes hitBlink { 50% { opacity: 0.1; } }
+/* .fx-hit only keeps a knocked-out drawing shown until it faints; the blink is played by fx/stage.ts */
 .fx-faint { animation: faint 0.8s ease forwards; }
 @keyframes faint { to { transform: translateY(60%) scaleX(var(--flip)); opacity: 0; } }
 .fx-lunge-me { animation: lungeMe 0.4s ease; }

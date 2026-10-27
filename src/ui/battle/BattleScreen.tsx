@@ -20,6 +20,10 @@ import { SummaryView } from '../views/SummaryView';
 import { describe, eventDuration } from './messages';
 import { BattleScene, type BallFx, type Fx } from './BattleScene';
 import { BattlePanel } from './BattlePanel';
+import { FxStage } from './fx/stage';
+import { fxFor, MOVE_FX } from './fx/recipes';
+import { moveOutcome } from './fx/outcome';
+import type { Recipe } from './fx/core';
 import { panelMode } from './panelMode';
 import './battle.css';
 
@@ -82,13 +86,28 @@ export function BattleScreen(props: BattleProps) {
   const [cast, setCast] = useState<{ foe: boolean; me: boolean }>({ foe: !!props.trainer, me: !!props.playerLook });
   const [intro, setIntro] = useState(true);
   const [recolored, setRecolored] = useState<string[]>([]);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<FxStage | null>(null);
+  stageRef.current ??= new FxStage(() => sceneRef.current);
+  const stage = stageRef.current;
+  // the move whose animation is playing: later hits of a multi-hit move play it again
+  const hitting = useRef<{ user: 0 | 1; recipe: Recipe; hits: number } | null>(null);
 
   const pulse = (side: 0 | 1, kind: string, ms = 500) => {
     setFx((f) => ({ ...f, [side]: kind }));
     setTimeout(() => setFx((f) => (f[side] === kind ? { ...f, [side]: undefined } : f)), ms);
   };
+  // taking damage: the drawing blinks (and stays shown until it faints, if that was the last hit)
+  const hurt = (side: 0 | 1) => {
+    pulse(side, 'hit', 1300);
+    stage.blink(side);
+    sfx.hit();
+  };
 
-  const animate = async (e: BattleEvent, snap: BattleState) => {
+  const animate = async (e: BattleEvent, snap: BattleState, events: BattleEvent[], i: number) => {
+    // back from the air or from under the ground (or knocked out of it)
+    for (const side of [0, 1] as const) if (!snap.sides[side].vol.invuln && !(e.t === 'move' && e.side === side)) stage.reset(side);
+    let anim: Promise<void> | null = null;
     if (e.t === 'sendOut') {
       // the trainer (or the player) steps aside and throws the ball
       if (e.side === 1) setCast((c) => ({ ...c, foe: false }));
@@ -114,15 +133,27 @@ export function BattleScreen(props: BattleProps) {
     switch (e.t) {
       case 'sendOut': pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
       case 'withdraw': pulse(e.side, 'out', 600); break;
-      case 'move': pulse(e.side, e.side === 0 ? 'lunge-me' : 'lunge-foe', 450); break;
-      case 'damage': if (e.amount) { pulse(e.side, 'hit', 600); sfx.hit(); } break;
-      case 'confusedHit': case 'recoil': case 'weatherHurt': case 'trapHurt': case 'seedDrain': pulse(e.side, 'hit', 600); sfx.hit(); break;
+      case 'move': {
+        hitting.current = null;
+        const recipe = prefs.value.moveFx ? fxFor(e.move) : undefined;
+        const out = recipe ? moveOutcome(events, i) : null;
+        const opts = { side: e.side, speed: speed.current, crit: out?.crit, eff: out?.eff };
+        if (recipe && out?.charge && recipe.charge) anim = stage.play(recipe, { ...opts, charge: true });
+        else if (recipe && out?.lands) {
+          anim = stage.play(recipe, opts);
+          hitting.current = { user: e.side, recipe, hits: 0 };
+        } else if (recipe?.charge) anim = stage.play({ user: recipe.user, hit: 'none', layers: [] }, opts);
+        else pulse(e.side, e.side === 0 ? 'lunge-me' : 'lunge-foe', 450);
+        break;
+      }
+      case 'damage': if (e.amount) hurt(e.side); break;
+      case 'confusedHit': case 'recoil': case 'weatherHurt': case 'trapHurt': case 'seedDrain': hurt(e.side); break;
       case 'subHit': sfx.hit(); break;
       case 'protect': case 'sub': sfx.confirm(); break;
       case 'frozen': pulse(e.side, 'status', 700); break;
       case 'faint': pulse(e.side, 'faint', 2000); sfx.ko(); break;
       case 'heal': case 'useItem': case 'berry': case 'regen': case 'itemHeal': sfx.heal(); break;
-      case 'itemHurt': pulse(e.side, 'hit', 600); sfx.hit(); break;
+      case 'itemHurt': hurt(e.side); break;
       case 'levelUp': sfx.levelUp(); break;
       case 'status': pulse(e.side, 'status', 700); break;
       case 'ball':
@@ -132,7 +163,8 @@ export function BattleScreen(props: BattleProps) {
         break;
       case 'end': if (e.result === 'win' || e.result === 'capture') { stopMusic(); playJingle(e.result === 'capture' ? 'caught' : 'victory', { fallback: sfx.victory, resume: false }); } break;
     }
-    await sleep(eventDuration(e) * speed.current);
+    // an animated move: its animation, and enough time to read the message
+    await (anim ? Promise.all([anim, sleep(600 * speed.current)]) : sleep(eventDuration(e) * speed.current));
     if (e.t === 'ball') {
       setMsg(lines.join('\n'));
       if (!e.caught) {
@@ -146,8 +178,14 @@ export function BattleScreen(props: BattleProps) {
 
   const play = async (step: Step) => {
     for (let i = 0; i < step.events.length; i++) {
+      const e = step.events[i];
+      // each further hit of an animated move plays it again before the HP drops
+      const h = hitting.current;
+      if ((e.t === 'damage' || e.t === 'subHit') && h && e.side !== h.user && ++h.hits > 1) {
+        await stage.play(h.recipe, { side: h.user, speed: speed.current, crit: e.crit, eff: e.eff, quick: true });
+      }
       setView(step.snaps[i]);
-      await animate(step.events[i], step.snaps[i]);
+      await animate(e, step.snaps[i], step.events, i);
     }
     setView(step.state);
   };
@@ -183,6 +221,12 @@ export function BattleScreen(props: BattleProps) {
 
   if (import.meta.env.DEV) {
     (window as unknown as Record<string, unknown>).__battle = { dispatch, state: () => stRef.current, speed };
+    (window as unknown as Record<string, unknown>).__fx = {
+      ids: () => Object.keys(MOVE_FX),
+      play: (id: string, side: 0 | 1 = 0) => { const r = fxFor(id); return r ? stage.play(r, { side, speed: speed.current }) : null; },
+      freeze: (id: string, frac: number, side: 0 | 1 = 0, charge = false) => { const r = fxFor(id); if (r) stage.freeze(r, { side, speed: 1, seed: 7, charge }, frac); return !!r; },
+      clear: () => stage.clear(),
+    };
   }
 
   useEffect(() => {
@@ -201,6 +245,7 @@ export function BattleScreen(props: BattleProps) {
       await play(step);
       setBusy(false);
     })();
+    return () => stage.stop();
   }, []);
 
   // a charged two-turn move goes off by itself on the next turn
@@ -240,7 +285,7 @@ export function BattleScreen(props: BattleProps) {
         view={view} fx={fx} ball={ball} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
         foeTrainer={props.trainer && (cast.foe || beaten) ? props.trainer.look : undefined}
         playerBack={cast.me ? props.playerLook : undefined}
-        grey={!!props.trainer?.grey} recolored={recolored}
+        grey={!!props.trainer?.grey} recolored={recolored} sceneRef={sceneRef}
       />
       <BattlePanel
         mode={mode}

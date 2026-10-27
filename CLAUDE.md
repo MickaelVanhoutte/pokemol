@@ -137,7 +137,17 @@ conventions are in [docs/content.md](docs/content.md#flags).
     the battle.
 - `BattlePanel` has a fixed height. Its mode comes from the pure `panelMode()`. Long text is
   paginated by `TextBox` rather than growing the panel.
-- Backdrops are drawn in coloured pencil on a canvas (`backdrops.ts`).
+- Backdrops are drawn in coloured pencil on a canvas (`backdrops.ts`, with the `Pencil` of
+  `src/ui/paper/pencilCanvas.ts`).
+- Move animations live in `src/ui/battle/fx/`:
+  - `recipes.ts` gives each move a `Recipe`: motions of the two drawings (Web Animations on the
+    `translate` / `rotate` / `scale` properties, which keep mirrored drawings mirrored) and timed layers
+    from `effects.ts`, drawn by the flipbook `Brush` (`brush.ts`, 12 wobbles a second) with the doodles
+    of `doodles.ts`;
+  - `stage.ts` plays them on two canvases, `.pk-fx` over the drawings and `.pk-fx-back` under them;
+  - `outcome.ts` reads the events after a `move`: only a move that lands animates, as on the GBA;
+  - a new damaging move needs a recipe (`recipes.test.ts` fails without one). The option
+    ANIMATIONS (`prefs.moveFx`) turns them off.
 
 **UI kit** (`src/ui/paper`):
 - the font is Patrick Hand (handwriting); menu entries use pencil doodles (`src/ui/sketchIcons.ts`),

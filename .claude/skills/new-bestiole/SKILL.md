@@ -45,7 +45,7 @@ Find the family's weak point (a ×4 weakness, weak types, no strong move, low st
   changes damage, message in `messages.ts`, `POWER_KINDS` in the rules test, a test in the "family powers"
   block of `src/engine/pk/talents.test.ts`);
 - or a signature move in `src/data/moves.ts` (damaging, power 70+ or priority, learned only by this family
-  by about level 30).
+  by about level 30), with its animation in `src/ui/battle/fx/recipes.ts` (docs/content.md, "Moves").
 
 An evolution joins its family's power: same talents (same number of them), or the same signature move.
 

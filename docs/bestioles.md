@@ -47,7 +47,7 @@ Each family gets one "super power" that makes up for its weak point. It is eithe
 - **a power talent**: the species' only regular talent (`talents: ['<power>']`). The hidden talent stays as
   the 25% alternative, so one Bestiole in four of that family plays without the power; or
 - **a signature move**: a damaging move with power 70+ (or that goes first) that no other family learns by
-  level-up, learned by about level 30.
+  level-up, learned by about level 30, with an animation of its own in `src/ui/battle/fx/recipes.ts`.
 
 Pick what fixes the family's problem: a double weakness wants a defensive talent, weak types want a
 strong move or a damage bonus, low stats want a talent that changes how it fights.

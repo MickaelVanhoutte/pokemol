@@ -31,6 +31,12 @@ const ROWS: Row<unknown>[] = [
     set: (v) => setPref('battleAnim', v as number),
   },
   {
+    label: L('ANIMATIONS', 'ANIMATIONS'),
+    values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
+    get: () => prefs.value.moveFx,
+    set: (v) => setPref('moveFx', v as boolean),
+  },
+  {
     label: L('SONS', 'SOUND'),
     values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
     get: () => prefs.value.sound,

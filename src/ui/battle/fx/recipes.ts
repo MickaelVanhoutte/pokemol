@@ -1,0 +1,147 @@
+/**
+ * The animation of every move, keyed by move id. A new move needs one here
+ * (`src/ui/battle/fx/recipes.test.ts` fails without it).
+ */
+import type { Recipe } from './core';
+import { at, INK, NEON, PAL as C, RAINBOW } from './core';
+import {
+  beam, bite, blaze, bolt, boo, breath, burrow, buzz, cracks, darken, drain, dust, eyes, fist, flash,
+  gather, gust, hands, impactStar, jab, jet, notes, pop, projectile, rainOn, rings, rockfall, shade,
+  slash, snip, sparkle, sparks, speedLines, spikes, splat, sweep, swirl, tongue, twirl, wave, whip, wrap,
+} from './effects';
+
+const CLAW = '#fdfdfd';
+const SKIN = '#f2c69a';
+const BEAK = '#f2b33d';
+
+export const MOVE_FX: Record<string, Recipe> = {
+  // ------------------------------------------------ Normal
+  bousculade: { user: 'dash', layers: [speedLines(), at(170, impactStar())] },
+  griffe: { user: 'lunge', layers: [slash({ color: CLAW })] },
+  'pas-de-loup': { user: 'dash', layers: [speedLines({ n: 11, dur: 360 }), at(130, impactStar({ size: 0.42 }))] },
+  'coup-de-boule': { user: 'rear', hit: 'knock', layers: [at(330, impactStar({ size: 0.62 }))] },
+  'plat-du-ventre': { user: 'dash', hit: 'squash', shake: 0.6, layers: [speedLines(), at(190, impactStar({ size: 0.75 })), at(190, dust({ n: 7 }))] },
+  ronflement: { user: 'shake', layers: [notes({ colors: [C.normal[2], C.vol[2]], kind: 'zzz', n: 5, size: 0.24 }), at(460, impactStar({ size: 0.35 }))] },
+  'grosse-voix': { user: 'rear', shake: 0.4, layers: [notes({ colors: [C.normal[2], C.psy[1], C.combat[1]], n: 7, size: 0.27 }), at(470, impactStar({ size: 0.42 }))] },
+  picore: { user: 'lunge', layers: [jab({ color: BEAK, n: 2 })] },
+  lutte: { user: 'dash', layers: [speedLines(), at(170, impactStar({ color: C.normal[0] }))] },
+
+  // ------------------------------------------------ Flying
+  rafale: { layers: [gust({ n: 3 })] },
+  'bec-vrille': { user: 'dash', layers: [jab({ color: BEAK, n: 1, size: 0.58, drill: true }), at(160, impactStar({ size: 0.55 }))] },
+  'grand-vol': {
+    user: 'drop', shake: 0.5,
+    layers: [speedLines({ who: 'target', down: true, n: 9, dur: 360 }), at(300, impactStar({ size: 0.72 }))],
+    charge: { user: 'rise', layers: [dust({ who: 'user', n: 5 }), sparkle({ who: 'user', kind: 'feather', color: C.vol[0], n: 5, size: 0.28 })] },
+  },
+  'coup-d-ailes': { layers: [gust({ n: 3, bits: 'feather', bitColor: C.vol[0] })] },
+
+  // ------------------------------------------------ Grass
+  'coup-de-liane': { layers: [whip({ color: C.plante[1], kind: 'vine' })] },
+  'griffe-pousse': { user: 'lunge', layers: [slash({ color: C.plante[1] }), at(400, drain({ color: C.plante[1] }))] },
+  'feuille-coupante': { layers: [projectile({ kind: 'leaf', color: [C.plante[1], C.plante[0]], n: 5, gap: 60, spin: 2, size: 0.32, spread: 0.45 })] },
+  'rafale-de-graines': { layers: [projectile({ kind: 'seed', color: '#b07a3c', n: 9, gap: 50, size: 0.2, spread: 0.6, fly: 320, burst: 'clod' })] },
+  'rayon-de-soleil': {
+    layers: [pop({ kind: 'sun', color: C.electrique[1], who: 'user', size: 0.6, dur: 520, dy: -0.6 }), at(160, beam({ colors: [C.electrique[1]], width: 0.26, dur: 820, glow: 'sun' })), at(160, flash({ color: C.electrique[0], alpha: 0.35 }))],
+    charge: { layers: [gather({ color: C.electrique[0] })] },
+  },
+
+  // ------------------------------------------------ Fire
+  flammeche: { layers: [projectile({ kind: 'flame', color: C.feu[1], n: 3, gap: 110, size: 0.36, burst: 'flame' })] },
+  'tourbillon-braises': { layers: [projectile({ kind: 'flame', color: C.feu[1], n: 3, gap: 70, size: 0.26, burst: false }), at(300, swirl({ kind: 'flame', color: C.feu[1], n: 11 }))] },
+  'queue-ardente': { user: 'spin', layers: [whip({ color: C.feu[1], kind: 'fire' })] },
+  'grand-brasier': { shake: 0.4, layers: [projectile({ kind: 'flame', color: C.feu[1], size: 0.62, fly: 420, burst: false }), at(400, blaze({ n: 18 }))] },
+
+  // ------------------------------------------------ Water
+  bulles: { layers: [projectile({ kind: 'bubble', color: C.eau[1], n: 6, gap: 70, size: 0.27, spread: 0.6, lift: 0.1, burst: 'drop' })] },
+  'jet-d-eau': { layers: [jet()] },
+  'carapace-roulante': { user: 'roll', layers: [speedLines({ dur: 520 }), at(270, impactStar({ size: 0.58 }))] },
+  'grosse-vague': { shake: 0.4, layers: [wave()] },
+  'pluie-d-aquarelle': { layers: [rainOn({ colors: RAINBOW, n: 26, size: 0.2 })] },
+
+  // ------------------------------------------------ Ground
+  secousse: { user: 'hop', shake: 1, layers: [cracks({ dur: 800 }), dust()] },
+  galerie: {
+    user: 'popUp', shake: 0.4,
+    layers: [burrow({ n: 8 }), cracks({ dur: 700 }), at(200, impactStar({ size: 0.6 }))],
+    charge: { user: 'sink', layers: [dust({ who: 'user' }), burrow({ who: 'user', n: 6 })] },
+  },
+  tremblement: { user: 'hop', shake: 1.6, layers: [cracks({ n: 7, dur: 1000 }), dust({ n: 9, dur: 900 }), at(220, dust({ who: 'user', n: 4 }))] },
+  surgissement: { user: 'popUp', shake: 0.6, layers: [burrow({ n: 10 }), cracks({ dur: 600 }), at(120, impactStar({ size: 0.66 }))] },
+
+  // ------------------------------------------------ Rock
+  'jet-de-cailloux': { layers: [projectile({ kind: 'rock', color: C.roche[1], n: 3, gap: 100, size: 0.32, spin: 1 })] },
+  eboulis: { shake: 0.8, layers: [rockfall({ n: 6 })] },
+  'pique-fossile': { user: 'dash', layers: [speedLines({ n: 9 }), projectile({ kind: 'rock', color: C.roche[1], n: 2, size: 0.26, fly: 260, gap: 60, burst: false }), at(260, impactStar({ size: 0.62 }))] },
+  'lame-de-pierre': { shake: 0.6, layers: [spikes({ n: 6 })] },
+
+  // ------------------------------------------------ Ice
+  'souffle-glace': { layers: [breath({ kind: 'snow', colors: [C.glace[1], '#ffffff'], n: 18, size: 0.28 })] },
+  'rayon-givre': { layers: [beam({ colors: [C.glace[1]], width: 0.17, glow: 'snow' }), at(300, sparkle({ kind: 'shard', color: C.glace[1], n: 6, size: 0.26 }))] },
+  'crocs-givre': { user: 'lunge', layers: [bite({ gum: C.glace[2], tooth: C.glace[0] }), at(250, sparkle({ kind: 'shard', color: C.glace[1], n: 5 }))] },
+
+  // ------------------------------------------------ Poison
+  'dard-venin': { user: 'lunge', layers: [jab({ color: C.poison[1], n: 1, size: 0.48 }), at(150, sparkle({ kind: 'bubble', color: C.poison[1], n: 5, size: 0.22 }))] },
+  'pate-gluante': { layers: [projectile({ kind: 'blob', color: C.poison[1], n: 3, gap: 100, size: 0.32, burst: false }), at(380, splat({ color: C.poison[1], size: 0.6 }))] },
+  'crochet-venin': { user: 'lunge', layers: [bite({ gum: C.poison[2] }), at(260, sparkle({ kind: 'bubble', color: C.poison[1], n: 5, size: 0.18 }))] },
+  'boue-toxique': { shake: 0.3, layers: [darken({ color: C.poison[2], alpha: 0.25 }), projectile({ kind: 'blob', color: '#8a5f9a', n: 4, gap: 80, size: 0.3, burst: false }), at(400, splat({ color: C.poison[1], size: 0.9 }))] },
+
+  // ------------------------------------------------ Dragon
+  'griffe-dragon': { user: 'lunge', layers: [slash({ color: C.dragon[1], width: 1.4 })] },
+  'souffle-dragon': { layers: [breath({ kind: 'puff', colors: [C.dragon[1], C.dragon[0]], n: 18, size: 0.36 })] },
+  'colere-dragon': { user: 'rear', shake: 0.6, layers: [darken({ color: C.dragon[2], alpha: 0.32, dur: 1100 }), at(120, breath({ kind: 'flame', colors: [C.dragon[1], C.dragon[0], C.feu[1]], n: 24, size: 0.42, dur: 900 }))] },
+
+  // ------------------------------------------------ Steel
+  'aile-d-acier': { user: 'dash', layers: [sparkle({ who: 'user', color: '#ffffff', n: 4 }), at(120, slash({ color: C.acier[1], n: 1, width: 2, len: 1.1 }))] },
+  'griffe-metal': { user: 'lunge', layers: [slash({ color: C.acier[1], width: 1.2 }), at(200, sparkle({ color: '#ffffff', n: 4, size: 0.15 }))] },
+  'tete-de-fer': { user: 'rear', hit: 'knock', shake: 0.4, layers: [sparkle({ who: 'user', color: '#ffffff', n: 5 }), at(330, impactStar({ size: 0.66, color: C.acier[0] }))] },
+  'canon-aimant': { layers: [pop({ kind: 'magnet', color: '#e0453a', who: 'user', size: 0.45, dy: -0.55, dur: 520 }), at(240, projectile({ kind: 'orb', color: C.acier[1], size: 0.36, fly: 320, burst: false })), at(560, sparks({ color: '#7ad0ff' }))] },
+
+  // ------------------------------------------------ Bug
+  'fil-enroule': { layers: [whip({ color: '#f4efe4', kind: 'plain', width: 0.4 }), at(330, wrap())] },
+  dard: { user: 'lunge', layers: [jab({ color: C.insecte[2], n: 2, size: 0.42 })] },
+  'rayon-d-ailes': { layers: [sparkle({ who: 'user', color: C.insecte[0], n: 5 }), at(100, beam({ colors: [C.insecte[0], C.insecte[1], C.fee[0]], width: 0.2 }))] },
+  'coup-de-ciseaux': { user: 'lunge', layers: [snip()] },
+  bourdonnement: { user: 'shake', shake: 0.3, layers: [notes({ colors: [C.insecte[1]], n: 4, size: 0.18 }), at(200, buzz())] },
+
+  // ------------------------------------------------ Electric
+  'petite-etincelle': { layers: [projectile({ kind: 'spark', color: C.electrique[1], n: 2, gap: 90, size: 0.3, burst: false }), at(330, sparks())] },
+  'zap-zap': { layers: [bolt({ n: 2, dur: 620, from: 'user' })] },
+  'queue-eclair': { user: 'spin', layers: [whip({ color: C.electrique[1], kind: 'bolt' }), at(260, sparks({ dur: 420 }))] },
+  'grand-zigzag': { shake: 0.5, layers: [bolt({ n: 2, dur: 760, width: 1.4 }), at(150, sparks({ n: 5, dur: 520 }))] },
+  'eclair-fluo': { layers: [bolt({ color: NEON[0], dur: 600 }), at(200, bolt({ color: NEON[1], dur: 420 })), at(250, sparkle({ color: NEON[2], n: 5 }))] },
+
+  // ------------------------------------------------ Fairy
+  'micro-magique': { layers: [sparkle({ who: 'user', kind: 'star', color: C.fee[0], n: 4 }), at(80, notes({ colors: [C.fee[1], C.psy[1]], n: 5 }))] },
+  pirouette: { user: 'spin', layers: [twirl({ colors: [C.fee[1], C.fee[0], '#ffffff'] }), at(200, impactStar({ size: 0.36, color: C.fee[0] }))] },
+  'eclat-de-lune': { layers: [darken({ color: '#2a3366', alpha: 0.3, dur: 1100 }), pop({ kind: 'moon', color: '#f7e6a0', who: 'user', dy: -0.7, size: 0.5, dur: 700 }), at(340, beam({ colors: [C.fee[0], '#f7e6a0'], width: 0.2, glow: 'star' }))] },
+  'grand-concert': { shake: 0.3, layers: [notes({ colors: RAINBOW, n: 10, size: 0.26, dur: 1100 }), at(520, sparkle({ kind: 'star', color: C.fee[1], n: 8, size: 0.28 }))] },
+
+  // ------------------------------------------------ Psychic
+  'choc-mental': { layers: [rings({ colors: [C.psy[1], C.psy[0]], n: 4 })] },
+  'corne-arc-en-ciel': { user: 'rear', layers: [at(160, beam({ colors: RAINBOW, width: 0.24 })), at(460, sparkle({ kind: 'star', color: '#ffffff', n: 6 }))] },
+  'reve-eveille': { layers: [rings({ colors: [C.psy[0], C.fee[0], C.vol[0]], n: 5, bubbles: true }), at(450, sparkle({ kind: 'star', color: C.psy[1], n: 5 }))] },
+
+  // ------------------------------------------------ Ghost
+  bouh: { hit: 'knock', layers: [darken({ alpha: 0.3, dur: 760 }), boo()] },
+  'langue-fantome': { hit: 'squash', layers: [tongue()] },
+  cauchemar: { layers: [darken({ alpha: 0.45, dur: 1000 }), eyes(), at(220, sparkle({ kind: 'zzz', color: C.spectre[2], n: 3, size: 0.26, dur: 700 }))] },
+  'mains-de-brume': { layers: [darken({ alpha: 0.3 }), hands()] },
+  'ombre-farceuse': { layers: [darken({ alpha: 0.35 }), shade()] },
+
+  // ------------------------------------------------ Dark
+  mordillage: { user: 'lunge', layers: [bite()] },
+  'coup-en-douce': { user: 'dash', layers: [darken({ alpha: 0.2, dur: 500 }), speedLines({ n: 9 }), at(140, slash({ color: C.tenebres[1], n: 1, width: 1.4 }))] },
+  'tache-d-encre': { layers: [projectile({ kind: 'ink', color: INK, n: 3, gap: 90, size: 0.32, burst: false }), at(380, splat({ color: INK, size: 0.75 }))] },
+
+  // ------------------------------------------------ Fighting
+  'poing-crayon': { user: 'lunge', layers: [fist({ color: SKIN }), at(220, impactStar({ size: 0.5 }))] },
+  balayette: { user: 'dash', hit: 'knock', layers: [sweep({ color: C.combat[1] }), at(200, dust())] },
+  'gros-poing': { user: 'rear', shake: 0.7, layers: [fist({ color: SKIN, size: 0.85, dur: 560 }), at(280, impactStar({ size: 0.8 }))] },
+  'rafale-de-poings': { user: 'lunge', layers: [fist({ color: SKIN, size: 0.45, dur: 340 }), at(170, impactStar({ size: 0.4 }))] },
+};
+
+/** The animation of a move, if it has one. */
+export function fxFor(id: string): Recipe | undefined {
+  return MOVE_FX[id];
+}

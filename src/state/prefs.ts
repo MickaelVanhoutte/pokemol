@@ -9,6 +9,8 @@ export interface Prefs {
   difficulty: Difficulty;
   /** Battle animation duration multiplier (1 = normal). */
   battleAnim: number;
+  /** Move animations in battle (the GBA's "battle scene" option). */
+  moveFx: boolean;
   sound: boolean;
   music: boolean;
   /** Write the save after every change. Off: only SAUVER in the menu writes it (GBA style). */
@@ -18,7 +20,7 @@ export interface Prefs {
 }
 
 const KEY = 'atelier-bestioles.prefs';
-const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, sound: true, music: true, autosave: false, follower: true };
+const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, moveFx: true, sound: true, music: true, autosave: false, follower: true };
 
 function read(): Prefs {
   try {

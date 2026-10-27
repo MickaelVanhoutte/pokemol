@@ -13,6 +13,9 @@ English: [docs/histoire.md](docs/histoire.md).
 - 8 Ateliers (gyms) and badges, Team Gomme hideouts, a rival you name yourself, an ending.
 - Classic battles: party of 6, four moves with PP, moves learnt by level-up, types, statuses,
   stat stages, XP, evolution scene. FireRed-style screens drawn on school paper.
+- Attacks animated in coloured pencil, FireRed style: fireballs, lightning, water jets, waves,
+  claws, bites, punches… drawn in code, with lines that wobble like a flipbook (they can be turned
+  off in the options).
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
 - Field tools: scissors, foam mallet and strong gloves for bushes, rocks and boulders, a paper
