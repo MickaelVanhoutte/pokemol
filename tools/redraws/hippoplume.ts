@@ -18,10 +18,12 @@ export default {
       stroke([a, [a[0] + dx * 0.85, a[1] + dy * 0.85]], { w: 2.5 });
     };
     // the quill fins fanned out along its back
-    quill([560, 380], [800, 250], 46);
-    quill([600, 500], [870, 430], 50);
-    quill([600, 630], [860, 640], 46);
-    quill([560, 740], [780, 810], 38);
+    c.part('plumes', { pivot: [590, 560], motion: 'swing', amp: 4, period: 2.4, behind: true }, () => {
+      quill([560, 380], [800, 250], 46);
+      quill([600, 500], [870, 430], 50);
+      quill([600, 630], [860, 640], 46);
+      quill([560, 740], [780, 810], 38);
+    });
     // the body and the tight curl of its tail, the cream ribbed belly
     shape(band([[500, 330], [590, 470], [590, 640], [520, 790], [470, 900], [520, 985], [625, 965], [635, 890], [570, 880]], 170, 40), BLUE, { angle: 80, over: 0.6, press: 1.05 });
     c.tint(band([[445, 360], [500, 480], [495, 640], [445, 770]], 64, 28), CREAM, { gap: 3.4 });
@@ -45,6 +47,8 @@ export default {
     dot(436, 232, 4, 4, '#ffffff');
     stroke([[405, 196], [495, 214]], { w: 6.5 });
     // ink splashes
-    for (const [x, y, r] of [[120, 460, 14], [170, 520, 9], [860, 140, 11], [130, 760, 12]] as const) shape(potato(x, y, r, r, 7, 0.15), INK, { over: 0, press: 1.2 }, { w: 2.5 });
+    c.part('encre', { pivot: [500, 500], motion: 'flicker', period: 2.2 }, () => {
+      for (const [x, y, r] of [[120, 460, 14], [170, 520, 9], [860, 140, 11], [130, 760, 12]] as const) shape(potato(x, y, r, r, 7, 0.15), INK, { over: 0, press: 1.2 }, { w: 2.5 });
+    });
   },
 } satisfies Redraw;

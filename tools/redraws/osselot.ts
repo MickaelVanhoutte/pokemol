@@ -17,9 +17,11 @@ export default {
     shape(potato(470, 700, 80, 100, 10, 0.05), CREAM, { over: 0 });
     // the near leg and the near arm holding a bone
     shape(band([[570, 790], [580, 870], [590, 905]], 66, 62), BROWN, { angle: 90 });
-    shape(band([[620, 620], [690, 680], [700, 740]], 48, 42), BROWN, { angle: 100 });
-    shape(band([[640, 800], [760, 620]], 24, 22), BONE, { angle: 60, over: 0 });
-    for (const [x, y] of [[630, 815], [655, 790], [770, 610], [745, 595]] as const) shape(potato(x, y, 22, 20, 8, 0.05), BONE, { over: 0 }, { w: 3.5 });
+    c.part('os', { pivot: [620, 620], motion: 'swing', amp: 8, period: 2.2 }, () => {
+      shape(band([[620, 620], [690, 680], [700, 740]], 48, 42), BROWN, { angle: 100 });
+      shape(band([[640, 800], [760, 620]], 24, 22), BONE, { angle: 60, over: 0 });
+      for (const [x, y] of [[630, 815], [655, 790], [770, 610], [745, 595]] as const) shape(potato(x, y, 22, 20, 8, 0.05), BONE, { over: 0 }, { w: 3.5 });
+    });
     // the head under its skull helmet, turned left
     shape(potato(430, 420, 150, 130, 12, 0.05), BROWN, { angle: 80, over: 0.4 });
     shape([[270, 400], [300, 280], [420, 220], [560, 250], [610, 360], [570, 420], [480, 380], [380, 380], [320, 420]], BONE, { angle: 70, over: 0.3 }, {}, false);

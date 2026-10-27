@@ -15,9 +15,11 @@ export default {
       return [path[i][0] + (path[i + 1][0] - path[i][0]) * k, path[i][1] + (path[i + 1][1] - path[i][1]) * k];
     };
     // vines coiled behind: one above the hood, one out to the right, one low on the left; the far leaf
-    shape(band([[700, 340], [770, 210], [870, 130], [975, 140], [1015, 230], [970, 295], [905, 270], [915, 215]], 46, 20), GREEN, { angle: 60 });
-    shape(band([[790, 660], [940, 680], [1040, 780], [1030, 900], [950, 930], [910, 875], [950, 840]], 42, 18), GREEN, { angle: 120 });
-    shape(band([[380, 860], [250, 900], [150, 860], [130, 770], [190, 730], [235, 775], [205, 810]], 40, 16), GREEN, { angle: 30 });
+    c.part('lianes', { pivot: [560, 620], motion: 'swing', amp: 4, period: 2.6, behind: true }, () => {
+      shape(band([[700, 340], [770, 210], [870, 130], [975, 140], [1015, 230], [970, 295], [905, 270], [915, 215]], 46, 20), GREEN, { angle: 60 });
+      shape(band([[790, 660], [940, 680], [1040, 780], [1030, 900], [950, 930], [910, 875], [950, 840]], 42, 18), GREEN, { angle: 120 });
+      shape(band([[380, 860], [250, 900], [150, 860], [130, 770], [190, 730], [235, 775], [205, 810]], 40, 16), GREEN, { angle: 30 });
+    });
     shape([[340, 660], [220, 590], [80, 565], [140, 635], [70, 675], [200, 715], [120, 755], [330, 735]], GREEN, { angle: 20, press: 1.1 }, {}, false);
     stroke([[330, 690], [110, 620]], { w: 3 });
     // the huge pitcher, round, its point at the bottom, brown spots
@@ -43,7 +45,9 @@ export default {
     stroke([[318, 484], [380, 503]], { w: 6.5 });
     stroke([[432, 492], [515, 473]], { w: 7 });
     // the near leaf, big and serrated
-    shape([[760, 700], [900, 630], [1070, 625], [1010, 690], [1085, 735], [990, 760], [1040, 805], [890, 810], [770, 790]], GREEN, { angle: 160, press: 1.1 }, {}, false);
-    stroke([[780, 750], [1040, 700]], { w: 3 });
+    c.part('feuille', { pivot: [765, 750], motion: 'swing', amp: 6, period: 2 }, () => {
+      shape([[760, 700], [900, 630], [1070, 625], [1010, 690], [1085, 735], [990, 760], [1040, 805], [890, 810], [770, 790]], GREEN, { angle: 160, press: 1.1 }, {}, false);
+      stroke([[780, 750], [1040, 700]], { w: 3 });
+    });
   },
 } satisfies Redraw;

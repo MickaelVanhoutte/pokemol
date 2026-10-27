@@ -627,6 +627,64 @@
       }
     ]
   },
+  "042": {
+    "slug": "banquisette",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2,
+        "behind": true,
+        "left": 76.1,
+        "top": 29.7,
+        "width": 23.5,
+        "height": 32.4,
+        "ox": 14.7,
+        "oy": 87.9
+      },
+      {
+        "name": "flocons",
+        "motion": "flicker",
+        "period": 2.6,
+        "left": 0,
+        "top": 10.1,
+        "width": 97,
+        "height": 25.8,
+        "ox": 50.1,
+        "oy": 47.2
+      }
+    ]
+  },
+  "044": {
+    "slug": "dragondine",
+    "parts": [
+      {
+        "name": "nageoire",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2.4,
+        "behind": true,
+        "left": 42.3,
+        "top": 0,
+        "width": 30.9,
+        "height": 28.1,
+        "ox": 13,
+        "oy": 90.4
+      },
+      {
+        "name": "etincelles",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 0,
+        "top": 18.3,
+        "width": 93.7,
+        "height": 80.7,
+        "ox": 50.5,
+        "oy": 49.1
+      }
+    ]
+  },
   "045": {
     "slug": "dragopataud",
     "parts": [
@@ -940,6 +998,232 @@
       }
     ]
   },
+  "062": {
+    "slug": "clochiflor",
+    "parts": [
+      {
+        "name": "feuille",
+        "motion": "swing",
+        "amp": 10,
+        "period": 1.8,
+        "left": 53.6,
+        "top": 48.7,
+        "width": 46.4,
+        "height": 15.5,
+        "ox": 4.4,
+        "oy": 79.3
+      },
+      {
+        "name": "tete",
+        "motion": "nod",
+        "amp": 7,
+        "period": 2.6,
+        "left": 0,
+        "top": 0,
+        "width": 77.2,
+        "height": 40.6,
+        "ox": 59,
+        "oy": 90.8
+      }
+    ]
+  },
+  "063": {
+    "slug": "clochegueule",
+    "parts": [
+      {
+        "name": "cloche",
+        "motion": "swing",
+        "amp": 3,
+        "period": 3,
+        "left": 24.1,
+        "top": 16.5,
+        "width": 75.9,
+        "height": 83.5,
+        "ox": 41,
+        "oy": 5.3
+      }
+    ]
+  },
+  "064": {
+    "slug": "gloutoflor",
+    "parts": [
+      {
+        "name": "lianes",
+        "motion": "swing",
+        "amp": 4,
+        "period": 2.6,
+        "behind": true,
+        "left": 3.6,
+        "top": 0,
+        "width": 94.2,
+        "height": 90.4,
+        "ox": 47.8,
+        "oy": 59.3
+      },
+      {
+        "name": "feuille",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2,
+        "left": 66.5,
+        "top": 54.6,
+        "width": 33.5,
+        "height": 21.3,
+        "ox": 4,
+        "oy": 62.4
+      }
+    ]
+  },
+  "065": {
+    "slug": "osselot",
+    "parts": [
+      {
+        "name": "os",
+        "motion": "swing",
+        "amp": 8,
+        "period": 2.2,
+        "left": 60.2,
+        "top": 50.3,
+        "width": 35.3,
+        "height": 35.2,
+        "ox": 14.1,
+        "oy": 21
+      }
+    ]
+  },
+  "066": {
+    "slug": "ossagarde",
+    "parts": [
+      {
+        "name": "massue",
+        "motion": "swing",
+        "amp": 5,
+        "period": 2,
+        "left": 53.3,
+        "top": 0,
+        "width": 46.7,
+        "height": 57.2,
+        "ox": 21.9,
+        "oy": 87.4
+      },
+      {
+        "name": "feux",
+        "motion": "flicker",
+        "period": 2.4,
+        "left": 0,
+        "top": 32.5,
+        "width": 94.4,
+        "height": 42.1,
+        "ox": 47.4,
+        "oy": 49.1
+      }
+    ]
+  },
+  "067": {
+    "slug": "fachinge",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 10,
+        "period": 1.6,
+        "behind": true,
+        "left": 69.3,
+        "top": 36.5,
+        "width": 26.6,
+        "height": 33.7,
+        "ox": 12.2,
+        "oy": 88.1
+      },
+      {
+        "name": "poing",
+        "motion": "swing",
+        "amp": 8,
+        "period": 1.2,
+        "left": 70.9,
+        "top": 22.9,
+        "width": 29.1,
+        "height": 31.1,
+        "ox": 11.9,
+        "oy": 84.4
+      }
+    ]
+  },
+  "068": {
+    "slug": "furisinge",
+    "parts": [
+      {
+        "name": "poing",
+        "motion": "swing",
+        "amp": 6,
+        "period": 1.4,
+        "left": 69.6,
+        "top": 1.4,
+        "width": 30.4,
+        "height": 46.3,
+        "ox": 15.8,
+        "oy": 90.5
+      },
+      {
+        "name": "vapeur",
+        "motion": "flicker",
+        "period": 1.9,
+        "left": 16.2,
+        "top": 0,
+        "width": 50.8,
+        "height": 13.6,
+        "ox": 52,
+        "oy": 50
+      }
+    ]
+  },
+  "069": {
+    "slug": "hippomine",
+    "parts": [
+      {
+        "name": "nageoire",
+        "motion": "swing",
+        "amp": 7,
+        "period": 0.7,
+        "behind": true,
+        "left": 64.6,
+        "top": 25,
+        "width": 35.4,
+        "height": 36.6,
+        "ox": 10.9,
+        "oy": 52.7
+      }
+    ]
+  },
+  "070": {
+    "slug": "hippoplume",
+    "parts": [
+      {
+        "name": "plumes",
+        "motion": "swing",
+        "amp": 4,
+        "period": 2.4,
+        "behind": true,
+        "left": 56.8,
+        "top": 21,
+        "width": 43.2,
+        "height": 57.5,
+        "ox": 18.4,
+        "oy": 55.8
+      },
+      {
+        "name": "encre",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 3.7,
+        "top": 9.4,
+        "width": 95.1,
+        "height": 66.5,
+        "ox": 52.4,
+        "oy": 57.5
+      }
+    ]
+  },
   "071": {
     "slug": "libellune",
     "parts": [
@@ -1002,6 +1286,55 @@
         "height": 87.7,
         "ox": 6.7,
         "oy": 51.3
+      }
+    ]
+  },
+  "073": {
+    "slug": "coconfus",
+    "parts": [
+      {
+        "name": "moignon-loin",
+        "motion": "swing",
+        "amp": 9,
+        "period": 0.9,
+        "behind": true,
+        "phase": 0,
+        "left": 50.1,
+        "top": 7,
+        "width": 38.7,
+        "height": 30.1,
+        "ox": 10,
+        "oy": 92.2
+      },
+      {
+        "name": "moignon",
+        "motion": "swing",
+        "amp": 8,
+        "period": 0.9,
+        "phase": 0,
+        "left": 54.4,
+        "top": 39.8,
+        "width": 45.6,
+        "height": 29.4,
+        "ox": 10.8,
+        "oy": 51.5
+      }
+    ]
+  },
+  "074": {
+    "slug": "agrafou",
+    "parts": [
+      {
+        "name": "machoire",
+        "motion": "nod",
+        "amp": 12,
+        "period": 2.2,
+        "left": 0,
+        "top": 0,
+        "width": 49.2,
+        "height": 64.6,
+        "ox": 90.3,
+        "oy": 76.8
       }
     ]
   },

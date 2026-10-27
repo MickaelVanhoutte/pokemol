@@ -21,7 +21,9 @@ export default {
     shape([[1080, 845], [1120, 740], [1150, 790], [1180, 690], [1200, 840]], ICE, { angle: 80, over: 0 }, {}, false);
     stroke([[640, 900], [700, 925], [760, 905]], { w: 3.5 });
     // the tail flukes raised behind, the far flipper
-    shape([[960, 600], [1050, 440], [1130, 360], [1110, 470], [1215, 450], [1140, 560], [1030, 640]], BLUE, { angle: 50 });
+    c.part('queue', { pivot: [985, 615], motion: 'swing', amp: 6, period: 2, behind: true }, () => {
+      shape([[960, 600], [1050, 440], [1130, 360], [1110, 470], [1215, 450], [1140, 560], [1030, 640]], BLUE, { angle: 50 });
+    });
     shape([[350, 700], [300, 780], [230, 850], [330, 850], [400, 760]], ICE, { angle: 60 });
     // the long body rearing up, the frosty shade under it
     shape([[290, 470], [420, 400], [560, 460], [720, 560], [870, 570], [990, 530], [1030, 600], [940, 710], [760, 800], [540, 830], [380, 810], [290, 710], [260, 580]], WHITE, { angle: -20, over: 0.45, press: 1.1 });
@@ -49,6 +51,8 @@ export default {
     stroke([[165, 392], [85, 385]], { w: 3 });
     stroke([[167, 404], [92, 420]], { w: 3 });
     // sparkles of frost
-    for (const [x, y, s] of [[110, 180, 1], [560, 160, 0.8], [880, 360, 1], [1180, 250, 0.7], [700, 270, 0.6]] as const) flake(x, y, s);
+    c.part('flocons', { pivot: [640, 250], motion: 'flicker', period: 2.6 }, () => {
+      for (const [x, y, s] of [[110, 180, 1], [560, 160, 0.8], [880, 360, 1], [1180, 250, 0.7], [700, 270, 0.6]] as const) flake(x, y, s);
+    });
   },
 } satisfies Redraw;

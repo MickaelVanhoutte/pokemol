@@ -39,7 +39,9 @@ export default {
     orb(1062, 700, 20);
     orb(500, 470, 36);
     // the near fin, big and feathery, the little horn, the head turned left
-    shape([[560, 255], [640, 160], [730, 80], [820, 50], [790, 120], [860, 120], [790, 185], [850, 210], [760, 250], [800, 280], [690, 290], [600, 300]], FIN, { angle: 30, over: 0 }, {}, false);
+    c.part('nageoire', { pivot: [590, 285], motion: 'swing', amp: 6, period: 2.4, behind: true }, () => {
+      shape([[560, 255], [640, 160], [730, 80], [820, 50], [790, 120], [860, 120], [790, 185], [850, 210], [760, 250], [800, 280], [690, 290], [600, 300]], FIN, { angle: 30, over: 0 }, {}, false);
+    });
     shape([[365, 222], [372, 150], [410, 212]], HORN, { over: 0 }, { w: 4 }, false);
     shape([[250, 300], [320, 225], [440, 190], [570, 210], [620, 290], [585, 365], [470, 400], [350, 390], [255, 372], [215, 340]], BLUE, { angle: 80, over: 0.4 });
     // a calm, proud face
@@ -54,6 +56,8 @@ export default {
     dot(232, 325, 5, 4);
     stroke([[242, 352], [290, 364], [335, 352]], { w: 5 });
     // sparkles round it
-    for (const [x, y, s] of [[150, 520, 1], [230, 840, 0.8], [960, 330, 0.9], [1050, 250, 0.6], [760, 600, 0.55], [420, 960, 0.7]] as const) sparkle(x, y, s);
+    c.part('etincelles', { pivot: [600, 600], motion: 'flicker', period: 2.2 }, () => {
+      for (const [x, y, s] of [[150, 520, 1], [230, 840, 0.8], [960, 330, 0.9], [1050, 250, 0.6], [760, 600, 0.55], [420, 960, 0.7]] as const) sparkle(x, y, s);
+    });
   },
 } satisfies Redraw;

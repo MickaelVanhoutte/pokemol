@@ -14,9 +14,11 @@ export default {
     // a ghostly shadow under it
     c.tint(potato(520, 1050, 330, 45, 10, 0.1), WISP, { gap: 4, wash: 0.2 });
     // violet fire round the top of the club, the club itself, behind the head
-    for (const [x, y, s] of [[920, 110, 1.3], [1000, 130, 1], [890, 190, 0.9]] as const) shape(wisp(x, y, s), WISP, { over: 0, press: 0.9 }, { w: 3 });
-    shape(band([[820, 430], [950, 110]], 46, 40), BONE, { angle: 60, over: 0 });
-    for (const [x, y, r] of [[925, 100, 44], [975, 115, 40], [815, 450, 32], [845, 455, 30]] as const) shape(potato(x, y, r, r * 0.9, 8, 0.05), BONE, { over: 0 }, { w: 3.5 });
+    c.part('massue', { pivot: [700, 560], motion: 'swing', amp: 5, period: 2 }, () => {
+      for (const [x, y, s] of [[920, 110, 1.3], [1000, 130, 1], [890, 190, 0.9]] as const) shape(wisp(x, y, s), WISP, { over: 0, press: 0.9 }, { w: 3 });
+      shape(band([[820, 430], [950, 110]], 46, 40), BONE, { angle: 60, over: 0 });
+      for (const [x, y, r] of [[925, 100, 44], [975, 115, 40], [815, 450, 32], [845, 455, 30]] as const) shape(potato(x, y, r, r * 0.9, 8, 0.05), BONE, { over: 0 }, { w: 3.5 });
+    });
     // the tail, the far leg and the far arm reaching out with its claws, behind
     shape(band([[640, 850], [790, 900], [900, 860], [960, 780]], 74, 30), BROWN, { angle: 30 });
     shape(band([[470, 830], [410, 950], [385, 1030]], 92, 80), BROWN, { angle: 90 });
@@ -30,8 +32,10 @@ export default {
     // the near leg, wide apart; the near arm raising the club
     shape(band([[610, 850], [655, 960], [665, 1035]], 98, 88), BROWN, { angle: 90 });
     shape(potato(695, 1050, 82, 32, 8, 0.06), BROWN, { over: 0 });
-    shape(band([[640, 600], [770, 480], [830, 370]], 66, 56), BROWN, { angle: 120 });
-    shape(potato(835, 365, 42, 40, 8, 0.08), BROWN, { over: 0 });
+    c.part('massue', { pivot: [700, 560], motion: 'swing', amp: 5, period: 2 }, () => {
+      shape(band([[640, 600], [770, 480], [830, 370]], 66, 56), BROWN, { angle: 120 });
+      shape(potato(835, 365, 42, 40, 8, 0.08), BROWN, { over: 0 });
+    });
     // the head under its skull helmet, two horns swept back, a crack
     shape(potato(430, 430, 150, 125, 12, 0.05), BROWN, { angle: 80, over: 0.4 });
     shape(band([[470, 250], [530, 180], [610, 140], [690, 145]], 64, 8), HORN, { angle: 20, over: 0 });
@@ -50,6 +54,8 @@ export default {
     stroke([[275, 500], [330, 486], [395, 498]], { w: 5 });
     c.paper([[318, 489], [328, 514], [340, 490]], { w: 3.5 }, false);
     // wisps drifting round it
-    for (const [x, y, s] of [[180, 450, 0.8], [960, 600, 0.9], [130, 800, 0.7]] as const) shape(wisp(x, y, s), WISP, { over: 0, press: 0.8 }, { w: 3 });
+    c.part('feux', { pivot: [520, 600], motion: 'flicker', period: 2.4 }, () => {
+      for (const [x, y, s] of [[180, 450, 0.8], [960, 600, 0.9], [130, 800, 0.7]] as const) shape(wisp(x, y, s), WISP, { over: 0, press: 0.8 }, { w: 3 });
+    });
   },
 } satisfies Redraw;

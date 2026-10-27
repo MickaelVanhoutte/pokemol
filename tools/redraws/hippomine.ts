@@ -7,7 +7,9 @@ export default {
     const { shape, stroke, dot, band, potato, spikes } = c;
     const BLUE = '#5aa0e6', CREAM = '#f3e6c6', FIN = '#bfe2fa';
     // the fin on its back
-    shape(([[540, 410], [570, 400]] as [number, number][]).concat(spikes([[570, 400], [640, 510], [630, 640]], 3, -55)).concat([[560, 640]]), FIN, { angle: 60, over: 0 }, {}, false);
+    c.part('nageoire', { pivot: [550, 520], motion: 'swing', amp: 7, period: 0.7, behind: true }, () => {
+      shape(([[540, 410], [570, 400]] as [number, number][]).concat(spikes([[570, 400], [640, 510], [630, 640]], 3, -55)).concat([[560, 640]]), FIN, { angle: 60, over: 0 }, {}, false);
+    });
     // the body and the curled tail
     shape(band([[480, 400], [530, 520], [520, 650], [460, 760], [420, 840], [460, 900], [540, 880], [540, 830], [495, 830]], 120, 30), BLUE, { angle: 80, over: 0.5 });
     c.tint(band([[440, 420], [480, 530], [470, 650], [430, 740]], 50, 26), CREAM, { gap: 3.4 });

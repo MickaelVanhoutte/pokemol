@@ -35,15 +35,19 @@ export default {
     // the near foot stamping, the near arm raised, its cuff and fist
     shape(potato(700, 985, 105, 44, 8, 0.06), BROWN, { over: 0 });
     cuff(690, 935, 66, 22, 3);
-    shape(band([[760, 500], [860, 380], [905, 245]], 90, 78), FUR, { angle: 120 });
-    cuff(890, 300, 58, 24, -18);
-    shape(potato(915, 185, 80, 74, 9, 0.06), BROWN, { angle: 80, over: 0.3 });
+    c.part('poing', { pivot: [760, 500], motion: 'swing', amp: 6, period: 1.4 }, () => {
+      shape(band([[760, 500], [860, 380], [905, 245]], 90, 78), FUR, { angle: 120 });
+      cuff(890, 300, 58, 24, -18);
+      shape(potato(915, 185, 80, 74, 9, 0.06), BROWN, { angle: 80, over: 0.3 });
+    });
     // pointy ears, steam puffing off its head
     shape([[320, 380], [215, 235], [365, 300]], BROWN, { over: 0 }, {}, false);
     shape([[640, 285], [745, 170], [710, 330]], BROWN, { over: 0 }, {}, false);
-    puff(250, 175, 1);
-    puff(320, 120, 0.7);
-    puff(640, 130, 0.8);
+    c.part('vapeur', { pivot: [450, 150], motion: 'flicker', period: 1.9 }, () => {
+      puff(250, 175, 1);
+      puff(320, 120, 0.7);
+      puff(640, 130, 0.8);
+    });
     // the furious face shifted left: a heavy spiky brow, red eyes, a pig nose, gritted teeth, an angry vein
     shape(spikes([[255, 430], [380, 400], [510, 405]], 3, -24), BROWN, { over: 0, press: 1.15 }, {}, false);
     c.paper(potato(315, 470, 24, 22, 8, 0.05));

@@ -13,12 +13,14 @@ export default {
     const BODY = '#6c5f92', DEEP = '#3a3160', SILK = '#c9c0dc', PINK = '#ee5fb0', PAPER = '#f7f3ea';
     const PANES = ['#bfe2fa', '#f6a7c8', '#f7e37a'];
     // the far wing stub, crumpled, peeking over its back: a few stained-glass panes
-    const far: P[] = spikes([[600, 330], [690, 210], [790, 150]], 2, 18).concat([[840, 210], [800, 300], [700, 370], [610, 390]]);
-    shape(far, PANES[0], { angle: 40, over: 0.2, press: 0.95 }, { w: 4 }, false);
-    c.tint(potato(730, 240, 34, 28, 8, 0.1), PANES[1], { gap: 3.4 });
-    c.tint(potato(780, 270, 22, 20, 8, 0.1), PANES[2], { gap: 3.4 });
-    stroke([[630, 370], [720, 260], [800, 180]], { w: 3.5 });
-    stroke([[690, 330], [740, 300], [770, 330]], { w: 3 });
+    c.part('moignon-loin', { pivot: [610, 380], motion: 'swing', amp: 9, period: 0.9, behind: true, phase: 0 }, () => {
+      const far: P[] = spikes([[600, 330], [690, 210], [790, 150]], 2, 18).concat([[840, 210], [800, 300], [700, 370], [610, 390]]);
+      shape(far, PANES[0], { angle: 40, over: 0.2, press: 0.95 }, { w: 4 }, false);
+      c.tint(potato(730, 240, 34, 28, 8, 0.1), PANES[1], { gap: 3.4 });
+      c.tint(potato(780, 270, 22, 20, 8, 0.1), PANES[2], { gap: 3.4 });
+      stroke([[630, 370], [720, 260], [800, 180]], { w: 3.5 });
+      stroke([[690, 330], [740, 300], [770, 330]], { w: 3 });
+    });
     // feathery antennae, short and a bit bent
     for (const [x0, y0, x1, y1, bend] of [[430, 190, 330, 70, -40], [490, 175, 540, 60, 40]] as const) {
       const pts: P[] = [], back: P[] = [];
@@ -55,16 +57,18 @@ export default {
     c.paper(potato(470, 790, 36, 30, 9, 0.06), { w: 4.5 });
     stroke([[440, 778], [462, 768], [492, 772]], { w: 3, col: DEEP });
     // the near wing stub, crumpled, with the start of a pink spiral
-    const near: P[] = [[615, 520], [700, 468], [790, 462], [855, 505], [872, 575], [835, 625], [858, 680], [780, 705], [700, 676], [632, 622]];
-    shape(near, '#3a3160', { angle: 60, over: 0.5, press: 1.1 }, { w: 5 });
-    // crumpled: folds that don't line up
-    stroke([[790, 470], [812, 520], [800, 560]], { w: 3, col: '#241e40' });
-    stroke([[838, 625], [800, 650], [760, 640]], { w: 3, col: '#241e40' });
-    shape(potato(775, 580, 42, 38, 10, 0.05), PINK, { angle: 90, over: 0, press: 1.1 }, { w: 3.5 });
-    const sp: P[] = [];
-    for (let k = 0; k < 16; k++) { const a = k * 0.6, rad = (k / 16) * 32; sp.push([775 + Math.cos(a) * rad, 580 + Math.sin(a) * rad]); }
-    stroke(sp, { w: 3.5, col: '#241e40' });
-    stroke([[700, 500], [740, 560], [720, 640]], { w: 3, col: '#241e40' });
+    c.part('moignon', { pivot: [625, 570], motion: 'swing', amp: 8, period: 0.9, phase: 0 }, () => {
+      const near: P[] = [[615, 520], [700, 468], [790, 462], [855, 505], [872, 575], [835, 625], [858, 680], [780, 705], [700, 676], [632, 622]];
+      shape(near, '#3a3160', { angle: 60, over: 0.5, press: 1.1 }, { w: 5 });
+      // crumpled: folds that don't line up
+      stroke([[790, 470], [812, 520], [800, 560]], { w: 3, col: '#241e40' });
+      stroke([[838, 625], [800, 650], [760, 640]], { w: 3, col: '#241e40' });
+      shape(potato(775, 580, 42, 38, 10, 0.05), PINK, { angle: 90, over: 0, press: 1.1 }, { w: 3.5 });
+      const sp: P[] = [];
+      for (let k = 0; k < 16; k++) { const a = k * 0.6, rad = (k / 16) * 32; sp.push([775 + Math.cos(a) * rad, 580 + Math.sin(a) * rad]); }
+      stroke(sp, { w: 3.5, col: '#241e40' });
+      stroke([[700, 500], [740, 560], [720, 640]], { w: 3, col: '#241e40' });
+    });
     // the face peeking out under its hood of silk, looking left
     shape(potato(395, 360, 115, 88, 12, 0.05), SILK, { angle: 80, over: 0.2, press: 0.9 }, { w: 4 });
     stroke([[285, 300], [360, 270], [450, 268], [520, 300]], { w: 5, col: DEEP });
