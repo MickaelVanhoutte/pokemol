@@ -341,6 +341,12 @@ friendship from L20.
 and admins at most five levels above it. A boss's strength is mostly its team, so `npm run balance`
 tunes them.
 
+**Wild levels under the trainers (Oct 2026).** The owner noticed wild Bestioles stronger than the trainers of
+the same route. Every map's wild levels are now capped at the ace of its weakest trainer (the ranges keep two
+levels of spread), and a test keeps it so. The Piste Cyclable's cyclists came up four levels to their area
+instead. With a little less wild XP the team runs about a level lower in places, so a dozen route trainers and
+Marine, Célestine, Basile, Admin Blanche (second fight) and the Great Eraser came down a level or two.
+
 **A longer game (iteration 16, Oct 2026).** The owner wants the story to end around L45–50, like the
 GBA games. Act 1 is unchanged. From Route 3 on, every trainer with fewer than three Bestioles got one more,
 picked from the wild Bestioles around (in its grown form at that level, `grownForm`), and the leaders and
@@ -352,7 +358,7 @@ echo cave L38 Ombrouille, Bois Perdu, Grotte des Ratures, the island, the Super 
 
 The curve now brings the team to Marine at L17, Ambre L23, Célestine L25, Basile L29, Nocturne L32 and the end
 of the Factory at L34 (it was L29). Act 4, beyond the margin (23 trainers with four Bestioles, about 6 forced wild
-battles), takes it to L41, Route Blanche to L42 and the Great Eraser to L43 (`curve.test.ts` checks it now runs
+battles), takes it to L41, Route Blanche to L42 and the Great Eraser to L42–43 (`curve.test.ts` checks it now runs
 down to the finale and ends at 42 or more). The finale bosses keep a high ace (L45) with lower teammates: on
 Normal the rival sits at 44–79% and the Great Eraser at 42–57%. A player who fights a little more than the
 forced minimum, or rematches route trainers, arrives around L45.

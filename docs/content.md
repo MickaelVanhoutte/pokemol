@@ -65,7 +65,9 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   about 20–25 grass steps can't be avoided: about 3 wild battles per crossing (the owner's choice).
   Each route also has 4–6 trainers whose sight crosses the path. `npm run curve` shows the forced
   battles per route. Keep items, berries and hidden pages at the same coordinates when redrawing a
-  route: the save keys them by `x,y`.
+  route: the save keys them by `x,y`. A wild Bestiole is never stronger than the trainers of its map:
+  the highest wild level stays at or under the ace of the weakest trainer there (the owner's rule,
+  checked by the "wild levels" test in `src/data/maps.test.ts`).
 - `buildings`: drawn over the rows. They take `kind`, a position and size, a `door` column, and a
   `to` target. A `script` instead of `to` gates the door. `kind` is one of `'house' | 'lab' | 'center'
   | 'shop' | 'cave' | 'tower' | 'gym'…`; `roof` sets the colour.

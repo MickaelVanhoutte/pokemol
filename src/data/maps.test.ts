@@ -105,6 +105,18 @@ describe('maps', () => {
   }
 });
 
+describe('wild levels', () => {
+  // the owner's rule (Oct 2026): a wild Bestiole is never stronger than the trainers of its area
+  it('keeps the wild Bestioles at or under the ace of every trainer on the same map', () => {
+    for (const m of Object.values(MAPS)) {
+      const table = m.encounters?.table ?? [];
+      const aces = (m.npcs ?? []).filter((n) => n.trainer && TRAINERS[n.trainer]).map((n) => Math.max(...TRAINERS[n.trainer!].party.map((p) => p.level)));
+      if (!table.length || !aces.length) continue;
+      expect(Math.max(...table.map((e) => e.max)), m.id).toBeLessThanOrEqual(Math.min(...aces));
+    }
+  });
+});
+
 describe('habitats', () => {
   it('finds wild places, sailing and fishing spots, gifts and the Tombola', () => {
     expect(habitatsOf('012').some((h) => h.map === 'route1' && h.how === 'grass')).toBe(true);
