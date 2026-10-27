@@ -8,8 +8,9 @@ surprises (ni la fin). Pour tout savoir, avec les secrets, voir [story.md](story
 ## Le début
 
 Un soir, une petite artiste (ou un petit artiste) dessine dans son cahier… « encore un dessin, juste
-un dernier… » et s’endort sur la page. Elle ouvre les yeux à **Papeterre**, un pays dessiné sur une
-immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bestioles**.
+un dernier… ». Il y a un dessin qu’elle n’arrive pas à finir, et elle finit par s’endormir sur la page.
+Elle ouvre les yeux à **Papeterre**, un pays dessiné sur une immense feuille de papier, où tous les
+dessins sont vivants : ce sont les **Bestioles**.
 
 ## Les personnages
 
@@ -20,12 +21,14 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 - **Le Prof. Fusain** photographie toutes les Bestioles « pour qu’aucune ne se perde jamais ».
   Clic-clac !
 - **Ton voisin**, ton rival : c’est toi qui choisis son nom (Feutre, Crayon, Pinceau…). Un peu
-  vantard, il veut devenir le meilleur dresseur de Papeterre.
+  vantard, il veut devenir le meilleur dresseur de Papeterre… mais il lui arrive aussi de douter.
+- **Coconfus**, un petit cocon tout embrouillé, avec un trou au milieu, comme un dessin pas fini.
+  La Team Gomme le poursuit dès le premier jour, et il finit par faire route avec toi. Pourquoi
+  lui en veulent-ils autant ?
 - **La Team Gomme**, des gens en uniforme gris, avec une casquette en forme de gomme rose et bleue
-  et un masque noir. Ils effacent les paysages et rendent les Bestioles toutes grises. Leurs chefs sont l’Admin Rature et l’Admin Blanche, et tout en
-  haut, le mystérieux **Grand Effaceur**.
-- **Coconfus**, un petit cocon tout embrouillé, avec un trou au milieu, comme un dessin pas fini. La
-  Team Gomme le poursuit dès le Chemin des Crayons : pourquoi lui en veut-elle autant ?
+  et un masque noir. Ils effacent les paysages et rendent les Bestioles toutes grises. Leurs chefs
+  sont l’Admin Rature, l’Admin Blanche et le Capitaine Buvard, et tout en haut, le mystérieux
+  **Grand Effaceur**, qui n’a pas de visage.
 - **Les 8 Maîtres d’Atelier**, un par ville : Mireille (Insecte), Gaspard (Normal), Marine (Eau),
   Zélie (Électrique), Ambre (Feu), Célestine (Fée), Basile (Plante) et Nocturne (Spectre).
 
@@ -33,41 +36,52 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
 
 1. **Bourg-Gribouille** : ta maison et le labo du Prof. Tu choisis ta première Bestiole (Minousse,
    Braisou ou Clapotin), et ton rival te lance tout de suite ton premier combat.
-2. **Chemin des Crayons → Ville-Pastel** : un Sbire Gomme poursuit un petit cocon… L’Atelier de Mireille. Une fillette, Capucine, a dessiné
-   une Bestiole toute ébouriffée… Et dans le **Musée des premiers croquis**, on peut voir les tout
-   premiers dessins des Bestioles, encadrés.
-3. **Route des Craies et Bois Brumeux** : la Team Gomme est en train d’effacer la forêt ! Et le petit
-   cocon de la route a besoin de toi.
-4. **Village-Plume** : l’Atelier de Gaspard. Le pont a disparu pendant la nuit : il faut passer par la
-   Grotte Gribouillis.
-5. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola.
-6. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme cache
-   quelque chose.
-7. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan.
-8. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
-   occupe la Tour Brumeuse…
-9. **Jardin-Gouache** : l’Atelier de Basile, où même l’herbe est peinte à la main.
-10. **Cité-Encre**, la ville où la nuit ne sèche jamais. Un mystère t’attend à l’Atelier de Nocturne.
-11. **À l’ouest, au-delà de la Marge rouge du cahier** : un hameau de brouillons que personne n’a
-    finis, une forêt dessinée au crayon, et la Forteresse de la Team Gomme.
-12. **Plus au nord**, le monde n’est même plus colorié… Jusqu’où va la page ?
+2. **Chemin des Crayons** : un Sbire Gomme poursuit un petit cocon tout tremblant. Ton premier
+   combat contre la Team Gomme !
+3. **Ville-Pastel** : l’Atelier de Mireille. Capucine a dessiné une Bestiole toute ébouriffée, et
+   une apprentie n’aime pas son premier dessin… Dans le **Musée des premiers croquis**, on peut voir
+   les tout premiers dessins des Bestioles, encadrés.
+4. **Route des Craies et Bois Brumeux** : la Team Gomme est en train d’effacer la forêt ! Et le
+   petit cocon de la route a besoin de toi.
+5. **Village-Plume** : l’Atelier de Gaspard. Le pont a disparu pendant la nuit : il faut passer par
+   la Grotte Gribouillis.
+6. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola.
+7. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
+   cache quelque chose.
+8. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan.
+9. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
+   occupe la Tour Brumeuse… Tout en haut, quelqu’un que tu connais bien a besoin d’être rassuré.
+10. **Jardin-Gouache** : l’Atelier de Basile, où même l’herbe est peinte à la main.
+11. **Cité-Encre**, la ville où la nuit ne sèche jamais. L’Atelier de Nocturne est fermé : il faut
+    d’abord prendre le bateau jusqu’au **Phare de l’Encrier**. Puis l’**Usine à Gommes**, où le Grand
+    Effaceur se montre enfin.
+12. **À l’ouest, au-delà de la Marge rouge du cahier** : la page n’est plus que dessinée au crayon.
+    Le **Hameau-Brouillon**, où vivent des dessins que personne n’a finis, la **Forêt des
+    Esquisses**, et tout au fond la **Forteresse Gomme** et sa machine géante.
+13. **Plus au nord**, le monde n’est même plus colorié… Jusqu’où va la page ?
+
+## Tes choix comptent
+
+En chemin, on te demande parfois ton avis. Un dessin raté : on le recommence, ou on le garde tel
+qu’il est ? Un pont dont les couleurs ont coulé, une ville qui retrouve ses couleurs, un ami qui se
+trouve nul, une fresque tachée d’encre, un village que personne n’a jamais fini… Il n’y a pas de
+mauvaise réponse, et le petit cocon réagit à chacune.
+
+L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle tu verras.
 
 ## À côté de l’aventure
 
-- **Tes choix comptent.** En chemin, on te demande parfois ton avis : un dessin raté, on le
-  recommence ou on le garde tel qu’il est ? Il n’y a pas de mauvaise réponse… mais l’histoire a deux
-  fins, et ce sont tes réponses qui choisissent.
 - Attrape les Bestioles et remplis ton **Bestiodex**.
 - Chaque Bestiole a **un pouvoir bien à elle** (un talent ou une attaque que personne d’autre n’a) :
   même la plus petite a sa place dans ton équipe, jusqu’au niveau 100.
-- Retrouve les **12 pages déchirées** d’un cahier, cachées un peu partout.
+- Retrouve les **12 pages déchirées** d’un cahier, cachées un peu partout. Lis-les bien.
 - Les plus courageux iront plus loin : derrière les ronces du Bois Brumeux, des lucioles montrent le
-  chemin d’une clairière… et, sur la Route de l’Encre, une grotte toute raturée cache un secret tout au
-  fond. On raconte que ce qu’on y trouve a quelque chose à voir avec les rêves.
+  chemin d’une clairière… et, sur la Route de l’Encre, une grotte toute raturée cache un secret tout
+  au fond. On raconte que ce qu’on y voit a quelque chose à voir avec les rêves.
 - Certaines Bestioles grandissent avec toi : entraîne-les bien, elles te réservent des surprises.
 - Les routes sont longues, pleines d’herbes hautes et de dresseurs : ton équipe s’entraîne en chemin,
-  jusqu’aux alentours du niveau 45 à la fin de l’histoire.
-  Attraper une Bestiole rapporte de l’expérience, et les Bestioles en retard rattrapent vite les autres.
+  jusqu’aux alentours du niveau 45 à la fin de l’histoire. Attraper une Bestiole rapporte de
+  l’expérience, et les Bestioles en retard rattrapent vite les autres.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
@@ -76,13 +90,12 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
   crédits. Quelques-unes sont des **brouillons**, griffonnés vite fait. On en croise dans les grottes,
   sur la montagne, au bord de l’eau… Il y en a **73** à découvrir : certaines ne sortent que la nuit,
   d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche.
-- Des **énigmes** dans les grottes et les tours, et des **fresques** à reconstituer.
+- Des **énigmes** dans les grottes, les tours et les repaires, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
 - Dans chaque ville, une **Auberge** : l’aubergiste remet tes Bestioles en forme, et ses lits te
   laissent dormir jusqu’à la nuit ou jusqu’au matin.
 - Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une nuit à l’Auberge ou
-  dans ton lit).
-  Certaines Bestioles ne sortent que la nuit…
+  dans ton lit). Certaines Bestioles ne sortent que la nuit…
 - Les habitants te proposent des **échanges** de Bestioles, et certains ont besoin d’un coup de main :
   une Bestiole perdue, une lettre à porter, une curiosité à satisfaire…
 - Les dresseurs des routes veulent leur **revanche** dès le lendemain.
@@ -99,9 +112,10 @@ surprises (or the ending). The full version, secrets included, is in [story.md](
 
 ## How it starts
 
-One evening, a little artist draws in a sketchbook… “one more drawing, just one more…” and falls
-asleep on the page. They open their eyes in **Papeterra**, a land drawn on a giant sheet of paper,
-where every drawing is alive: the **Critters** (Bestioles).
+One evening, a little artist draws in a sketchbook… “one more drawing, just one more…”. There is one
+drawing they just can’t finish, and in the end they fall asleep on the page. They open their eyes in
+**Papeterra**, a land drawn on a giant sheet of paper, where every drawing is alive: the **Critters**
+(Bestioles).
 
 ## The characters
 
@@ -110,12 +124,14 @@ where every drawing is alive: the **Critters** (Bestioles).
 - **Mom** gives you the Map of Papeterra, then sneakers to run faster.
 - **Prof. Charcoal** (Fusain) takes a picture of every Critter “so none ever gets lost”. Click-clack!
 - **Your neighbour**, your rival: you pick his name (Marker, Crayon, Brush…). A bit of a show-off, he
-  wants to be the best trainer in Papeterra.
-- **Team Gomme**, people in grey uniforms, with caps shaped like pink and blue erasers and black
-  masks. They rub out the scenery and turn Critters grey. Their bosses are Admin Smudge (Rature) and Admin Whiteout (Blanche), and above
-  them, the mysterious **Great Eraser**.
+  wants to be the best trainer in Papeterra… but sometimes he has doubts too.
 - **Muddlecoon** (Coconfus), a muddled little cocoon with a hole in the middle, like an unfinished
-  drawing. Team Gomme chases it from Crayon Road on: why are they so set on it?
+  drawing. Team Gomme chases it from the very first day, and it ends up travelling with you. Why are
+  they so set on it?
+- **Team Gomme**, people in grey uniforms, with caps shaped like pink and blue erasers and black
+  masks. They rub out the scenery and turn Critters grey. Their bosses are Admin Smudge (Rature),
+  Admin Whiteout (Blanche) and Captain Blotter (Buvard), and above them, the mysterious
+  **Great Eraser**, who has no face.
 - **The 8 Atelier Masters**, one per town: Mireille (Bug), Gaspard (Normal), Marine (Water), Zelie
   (Electric), Amber (Fire), Celestine (Fairy), Basil (Grass) and Nocturne (Ghost).
 
@@ -123,40 +139,50 @@ where every drawing is alive: the **Critters** (Bestioles).
 
 1. **Bourg-Gribouille**: your home and the Prof’s lab. You pick your first Critter (Sproutkit,
    Embersal or Splashell), and your rival battles you straight away.
-2. **Crayon Road → Pastel City**: an Eraser Grunt is chasing a little cocoon… Mireille’s Atelier, and the **Museum of First Sketches**, where the very
-   first drawings of the Critters hang in frames. A girl, Capucine, has drawn a very scruffy
-   Critter…
-3. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest! And the little cocoon from the
+2. **Crayon Road**: an Eraser Grunt is chasing a trembling little cocoon. Your first battle against
+   Team Gomme!
+3. **Pastel City**: Mireille’s Atelier. Capucine has drawn a very scruffy Critter, and an apprentice
+   doesn’t like her first drawing… In the **Museum of First Sketches**, the very first drawings of the
+   Critters hang in frames.
+4. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest! And the little cocoon from the
    road needs you.
-4. **Featherby**: Gaspard’s Atelier. The bridge vanished overnight: go through Scribble Cave instead.
-5. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola.
-6. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
+5. **Featherby**: Gaspard’s Atelier. The bridge vanished overnight: go through Scribble Cave instead.
+6. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola.
+7. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
    is hiding something.
-7. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano.
-8. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty
-   Tower…
-9. **Gouache Garden**: Basil’s Atelier, where even the grass is hand-painted.
-10. **Ink City**, where the night never dries. A mystery awaits at Nocturne’s Atelier.
-11. **West, beyond the red Margin of the sketchbook**: a hamlet of drafts nobody finished, a forest drawn
-    in pencil, and Team Gomme’s Fortress.
-12. **Further north**, the world isn’t even coloured in anymore… How far does the page go?
+8. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano.
+9. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
+   At the top, someone you know well needs cheering up.
+10. **Gouache Garden**: Basil’s Atelier, where even the grass is hand-painted.
+11. **Ink City**, where the night never dries. Nocturne’s Atelier is closed: first take the boat to the
+    **Inkwell Lighthouse**. Then the **Eraser Factory**, where the Great Eraser shows himself at last.
+12. **West, beyond the red Margin of the sketchbook**: the page is only drawn in pencil there. **Draft
+    Hamlet**, home to drawings nobody finished, the **Sketch Forest**, and deep inside, the **Eraser
+    Fortress** and its giant machine.
+13. **Further north**, the world isn’t even coloured in anymore… How far does the page go?
+
+## Your choices matter
+
+Along the way, people sometimes ask what you think. A failed drawing: do you start it again, or keep
+it as it is? A bridge whose colours ran, a city getting its colours back, a friend who thinks he’s
+rubbish, a fresco with an ink blot, a village nobody ever finished… There is no wrong answer, and the
+little cocoon reacts to each one.
+
+The story has **two endings**, and your answers choose which one you will see.
 
 ## Besides the adventure
 
-- **Your choices matter.** Along the way, people sometimes ask what you think: a failed drawing, do
-  you start it again or keep it as it is? There is no wrong answer… but the story has two endings, and
-  your answers choose.
 - Catch Critters and fill your **Critterdex**.
 - Every Critter has **a power of its own** (a talent or a move nobody else has): even the smallest
   one has its place in your team, all the way to level 100.
-- Find the **12 torn pages** of a sketchbook, hidden all over the place.
+- Find the **12 torn pages** of a sketchbook, hidden all over the place. Read them carefully.
 - The bravest will go further: past the brambles of the Misty Woods, fireflies show the way to a
   clearing… and on the Ink Path, a cave full of scribbles hides a secret at the very bottom. They say
-  what you find there has something to do with dreams.
+  what you see there has something to do with dreams.
 - Some Critters grow up with you: train them well, they have surprises in store.
-- The roads are long, full of tall grass and trainers: your team trains on the way, up to around level 45
-  by the end of the story. Catching a Critter
-  gives experience, and Critters that fall behind catch up fast.
+- The roads are long, full of tall grass and trainers: your team trains on the way, up to around level
+  45 by the end of the story. Catching a Critter gives experience, and Critters that fall behind catch
+  up fast.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
@@ -164,12 +190,12 @@ where every drawing is alive: the **Critters** (Bestioles).
   are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…
   There are **73** to discover: some only come out at night, others hide in the tower, deep in the water
   or at the end of a fishing line.
-- **Puzzles** in caves and towers, and **fresques** to piece back together.
+- **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.
 - Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let
   you sleep until night or until morning.
-- Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed). Some Critters
-  only come out at night…
+- Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed).
+  Some Critters only come out at night…
 - Townspeople offer Critter **trades**, and some need a hand: a lost Critter, a letter to carry, a
   curiosity to satisfy…
 - Route trainers want a **rematch** the very next day.
