@@ -22,7 +22,8 @@ Every Bestiole is drawn in code in the little artist's style; she no longer has 
   Ask the owner what inspired it and keep its signature features (a bulb on the back, a flame on the tail…):
   her drawings don't always show them. Then `npm run redraws -- <id>` and check
   `tools/out/redraws-sheet.png` (her drawing, the redraw, battle size, miniature). Show the owner the sheet
-  before going on. Set `faces` from the new pose.
+  before going on. Draw it in three-quarter view turned to the left, never straight from the front (it looks
+  silly in battle), and set `faces: 'left'`: battles mirror it so both Bestioles face each other.
 - The 29 *brouillons* of `tools/drafts` (`draft: true`) are the rough kit; don't add new ones there.
 
 ## 2. The model

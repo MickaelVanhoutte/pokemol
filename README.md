@@ -102,7 +102,8 @@ original (steps 1–4); otherwise start at step 5.
    It writes `public/originals/012-mon-nom.webp`; add the id to `ORIGINALS` in `src/data/originals.ts`.
 5. Draw it in her style: a module `tools/redraws/<slug>.ts` listed in `REDRAWS` (`tools/redraws/make.ts`),
    drawn with the `crayon` kit (`shape`, `paper`, `stroke`, `dot`, `band`, `spikes`…). Keep what makes
-   the creature: its colours, its shape, its signature features (and what inspired it).
+   the creature: its colours, its shape, its signature features (and what inspired it). Draw it in
+   three-quarter view turned to the left (`faces: 'left'`), so battles can mirror it to face its foe.
    `npm run redraws -- 012` writes its card, the little overworld sprite that follows you
    (`public/minis/`), and `tools/out/redraws-sheet.png` next to her drawing.
 6. Add the creature to `src/data/creatures.ts` (same `id`/`slug`): name in French and English, type,
