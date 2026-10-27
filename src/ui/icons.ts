@@ -115,6 +115,58 @@ function pencil(p: Painter, color: string) {
   ], { ...PAL, L: color });
 }
 
+/** Effort items' colour per stat, light and dark (biscuit icing, eraser sleeve). */
+const STAT_TINT: Record<string, [string, string]> = {
+  hp: [PAL.R, PAL.r], atk: [PAL.O, '#b8642a'], def: [PAL.Y, PAL.y], spa: [PAL.P, '#6a48a0'], spd: [PAL.E, PAL.e], spe: [PAL.T, '#2a807c'],
+};
+
+/** A round biscuit with coloured icing and chocolate chips (adds effort points). */
+function biscuit(p: Painter, icing: string) {
+  p.at(0, 1).sprite([
+    '.....KKKKKK.....',
+    '...KKnnnnnnKK...',
+    '..KnnCCCCCCnnK..',
+    '.KnCCWWCCCCCCnK.',
+    '.KnCWCCCCNCCCnK.',
+    '.KnCCCCCCCCCCnK.',
+    '.KnCCCNCCCCCCnK.',
+    '.KnCCCCCCCNCCnK.',
+    '.KnnCCCCCCCCnnK.',
+    '..KnnnnnnnnnnK..',
+    '...KKnnnnnnKK...',
+    '.....KKKKKK.....',
+  ], { ...PAL, C: icing });
+}
+
+/** A block eraser in a coloured paper sleeve (rubs out effort points). */
+function eraser(p: Painter, sleeve: string, shade: string) {
+  p.at(0, 4).sprite([
+    '..KKKKKKKKKKKK..',
+    '.KWWWWKCCCCCCCK.',
+    '.KWWWWKCWWWWCCK.',
+    '.KWWWWKCCCCCCCK.',
+    '.KggggKcccccccK.',
+    '..KKKKKKKKKKKK..',
+  ], { ...PAL, C: sleeve, c: shade });
+}
+
+/** A swirly lollipop on its stick (Magic Lollipop: one level). */
+function lollipop(p: Painter) {
+  const SWIRL = [PAL.M, PAL.Y, PAL.T];
+  for (let y = 0; y < 12; y++) {
+    for (let x = 1; x < 15; x++) {
+      const d = Math.hypot(x - 7.5, y - 6);
+      if (d > 5.9) continue;
+      const band = Math.floor((Math.atan2(y - 6, x - 7.5) / (2 * Math.PI)) * 3 + d * 0.55 + 3) % 3;
+      p.px(x, y, d > 4.9 ? PAL.K : SWIRL[band]);
+    }
+  }
+  p.px(5, 3, PAL.W);
+  p.px(4, 4, PAL.W);
+  p.rect(7, 12, 2, 4, PAL.K);
+  p.rect(7, 12, 1, 3, PAL.W);
+}
+
 /** Painter for an id: the table below, a stencil tinted by its move type, or a coloured pencil. */
 function painterFor(id: string): ((p: Painter) => void) | undefined {
   if (PAINTED[id]) return PAINTED[id];
@@ -122,6 +174,11 @@ function painterFor(id: string): ((p: Painter) => void) | undefined {
   const mv = def?.kind === 'stencil' ? MOVE_BY_ID[def.move ?? ''] : undefined;
   if (mv) return (p) => stencilCard(p, TYPES[mv.type].color);
   if (def?.kind === 'evo' && def.type) return (p) => magicPencil(p, TYPES[def.type!].color);
+  if (def?.kind === 'effort' && def.stat) {
+    const [light, dark] = STAT_TINT[def.stat];
+    return def.amount > 0 ? (p) => biscuit(p, light) : (p) => eraser(p, light, dark);
+  }
+  if (def?.kind === 'level') return lollipop;
   return def?.hold === 'typeBoost' && def.type ? (p) => pencil(p, TYPES[def.type!].color) : undefined;
 }
 

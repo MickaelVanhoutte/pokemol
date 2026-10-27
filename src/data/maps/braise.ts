@@ -68,6 +68,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'mineur', x: 13, y: 10, look: LOOKS.hiker, facing: 'down', script: 'mineur' },
     ],
     items: [
+      { x: 5, y: 1, item: 'sucette-magique' },
       { x: 1, y: 10, item: 'super-potion' }, { x: 4, y: 10, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }, { x: 2, y: 8, item: 'pochoir-13' },
       { x: 1, y: 1, item: 'bille-ardente' }, { x: 5, y: 2, item: 'baie-doree', count: 2 },
     ],
@@ -121,6 +122,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
 
   braise: {
     id: 'braise',
+    items: [{ x: 1, y: 2, item: 'sucette-magique', hidden: true }],
     name: L('Village-Braise', 'Embervale'),
     border: 'tree',
     backdrop: 'volcano',

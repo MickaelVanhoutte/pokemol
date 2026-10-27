@@ -76,7 +76,9 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
     (a trainer's look is also drawn in coloured pencil for the battle intro, through `fromLook`);
   - `text: LText[]` for simple talkers, `script` for story NPCs;
   - `trainer` plus `sight` (tiles) for trainers who spot the player;
-  - `wander`, `showIf` / `hideIf`, and `fromMap` in shared interiors.
+  - `wander`, `showIf` / `hideIf`, and `fromMap` in shared interiors: the Inn's helpers each stand in
+    one town's Inn only (only the innkeeper and the pilot are everywhere), and a helper's `service`
+    (« Natures ») is listed for that town on the Town Map. `src/data/inns.test.ts` checks it.
   - `mon: '<creature id>'` draws the NPC as that Bestiole's little overworld sprite (`public/minis/`),
     for Bestioles living on the map (Lulu).
 - `signs`, `triggers` (an area that runs a script when stepped on), `interact` (A on a tile runs a
@@ -288,7 +290,12 @@ Scripts run one at a time and lock player input. To change an existing script af
   which multiplies both, and the `TypeBadges` component. Each type has a held coloured pencil (a test
   checks it). Some types can't get a status: Fire can't be burned, Ice can't be frozen, Poison and
   Metal can't be poisoned, Electric can't be paralysed.
-- **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil'`.
+- **Items** (`src/data/items.ts`): `kind: 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil' | 'field' | 'evo' | 'effort' | 'level'`.
+  - `effort`: biscuits (+10) and erasers (−10) of one `stat`'s effort points (`addEvs`), from the bag;
+    sold from 3 badges.
+  - `level`: the Magic Lollipop, one level (`growLevel`) played in the world (`useLollipop`: moves,
+    evolution, « Encore une ? »). Before the ending it is only found on the map, after the 3rd badge
+    (`src/data/inns.test.ts`); shops sell it once the story is over (`'ending'` in `STOCK`).
   Key items (pages, golden ticket) go in the OBJETS RARES pocket and are never sold.
   - `berry`: a Bestiole holding it eats it in battle as soon as it helps (`amount` HP at half HP or
     less, or a status in `cures`); berries can also be eaten from the bag. They have their own pocket.

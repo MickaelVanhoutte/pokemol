@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import { L, tr } from '../../i18n';
+import { L, locale, tr } from '../../i18n';
 import { BADGES } from '../../data/badges';
 import { MAPS } from '../../data/maps';
 import { WORLD, placeOf, playerSpot, townOfTrainer } from '../../data/worldmap';
@@ -16,6 +16,8 @@ const centre = (id: string) => {
   return { x: r.x + r.w / 2, y: r.y + r.h / 2 };
 };
 const BADGE_OF_TOWN = Object.fromEntries(BADGES.map((b) => [townOfTrainer(leaderOf(b.id).id), b]));
+/** What the Inn's helpers of a town do (« Surnoms », « Natures »…). */
+const innServices = (town: string) => (MAPS.centre.npcs ?? []).filter((n) => n.service && n.fromMap?.includes(town)).map((n) => tr(n.service!));
 /** Position on the drawn part of the map, in %. */
 const px = (v: number) => `${((v - VIEW.x) / VIEW.w) * 100}%`;
 const py = (v: number) => `${((v - VIEW.y) / VIEW.h) * 100}%`;
@@ -80,6 +82,7 @@ export function TownMapView({ save, avatar, onClose }: { save: SaveData; avatar:
     cursor === target ? tr(L('★ Ton objectif', '★ Your goal')) : '',
     WORLD[cursor].kind === 'town' && cursor !== 'bordPage' && !visited(cursor) ? tr(L('Pas encore visité', 'Not visited yet')) : '',
     badge ? `${tr(badge.name)} ${save.badges.includes(badge.id) ? '✓' : '—'}` : '',
+    visited(cursor) && innServices(cursor).length ? `${tr(L('Auberge', 'Inn'))}${locale.value === 'fr' ? '\u00a0: ' : ': '}${innServices(cursor).join(', ')}` : '',
   ].filter(Boolean);
 
   return (

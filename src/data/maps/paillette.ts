@@ -64,7 +64,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'r6d', x: 13, y: 33, look: { hair: '#d64545', shirt: '#f2c14e', pants: '#3a7ad6', hat: '#d64545' }, facing: 'left', trainer: 'r6d', sight: 4 },
       { id: 'r6b', x: 4, y: 12, look: LOOKS.kid, facing: 'right', trainer: 'r6b', sight: 4 },
     ],
-    items: [{ x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }, { x: 15, y: 2, item: 'crayon-rose' }, { x: 2, y: 19, item: 'pochoir-17' }, { x: 2, y: 20, item: 'pochoir-18' }],
+    items: [{ x: 22, y: 20, item: 'sucette-magique', hidden: true }, { x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }, { x: 15, y: 2, item: 'crayon-rose' }, { x: 2, y: 19, item: 'pochoir-17' }, { x: 2, y: 20, item: 'pochoir-18' }],
     berries: [{ x: 4, y: 8, item: 'baie-doree' }],
     encounters: {
       rate: 0.14,
@@ -124,7 +124,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { x: 10, y: 0, to: { map: 'route7', x: 9, y: 38, facing: 'up' } },
     ],
     signs: [{ x: 2, y: 12, text: L('BOURG-PAILLETTE\nTout ce qui brille vient d’ici.\nAtelier de Célestine', 'GLIMMERTON\nEverything that sparkles comes from here.\nCelestine’s Atelier') }],
-    items: [{ x: 18, y: 14, item: 'page-8', hidden: true }],
+    items: [{ x: 1, y: 1, item: 'sucette-magique', hidden: true }, { x: 18, y: 14, item: 'page-8', hidden: true }],
     npcs: [
       { id: 'tradePaillette', x: 3, y: 13, look: LOOKS.ghostgirl, facing: 'right', script: 'trade_paillette' },
       { id: 'block1', x: 9, y: 1, look: LOOKS.gomme, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },

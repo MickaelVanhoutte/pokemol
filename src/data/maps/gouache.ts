@@ -64,7 +64,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'r7d', x: 13, y: 33, look: { hair: '#c0582a', shirt: '#a87a3a', pants: '#5a4a3a', hat: '#5a8a3a', longHair: true }, facing: 'left', trainer: 'r7d', sight: 4 },
       { id: 'r7b', x: 4, y: 15, look: LOOKS.hiker, facing: 'right', trainer: 'r7b', sight: 4 },
     ],
-    items: [{ x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }, { x: 13, y: 5, item: 'crayon-mauve' }, { x: 1, y: 1, item: 'pochoir-20' }, { x: 2, y: 1, item: 'crayon-indigo' }],
+    items: [{ x: 22, y: 19, item: 'sucette-magique', hidden: true }, { x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }, { x: 13, y: 5, item: 'crayon-mauve' }, { x: 1, y: 1, item: 'pochoir-20' }, { x: 2, y: 1, item: 'crayon-indigo' }],
     berries: [{ x: 13, y: 13, item: 'baie-menthe' }, { x: 2, y: 2, item: 'baie-doree' }],
     encounters: {
       rate: 0.15,
@@ -124,7 +124,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { x: 19, y: 3, to: { map: 'piste', x: 1, y: 3, facing: 'right' } },
     ],
     signs: [{ x: 2, y: 12, text: L('JARDIN-GOUACHE\nIci, même l’herbe est peinte à la main.\nAtelier de Basile', 'GOUACHE GARDEN\nHere, even the grass is hand-painted.\nBasil’s Atelier') }],
-    items: [{ x: 1, y: 13, item: 'page-10', hidden: true }],
+    items: [{ x: 18, y: 6, item: 'sucette-magique' }, { x: 1, y: 13, item: 'page-10', hidden: true }],
     berries: [{ x: 2, y: 8, item: 'baie-doree' }],
     npcs: [
       { id: 'rosalie', x: 16, y: 13, look: LOOKS.granny, facing: 'left', script: 'rosalie' },

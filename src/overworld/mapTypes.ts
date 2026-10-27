@@ -38,6 +38,8 @@ export interface NpcDef {
   hideIf?: string;
   /** In a shared interior: only there when entered from one of these maps. */
   fromMap?: string[];
+  /** What this character does for the player, shown on the Town Map for the town (Inn helpers). */
+  service?: LText;
   /** A Bestiole standing there, drawn as its miniature instead of a person (`look` is then unused). */
   mon?: string;
 }

@@ -26,9 +26,13 @@ English: [docs/histoire.md](docs/histoire.md).
 - The Pencil Day Care on Route 2: leave two Bestioles to gain XP while you walk; two of one
   family sometimes leave an egg, which hatches as you carry it (inheriting IVs, the hidden talent,
   and the nature of a parent holding the Everstone).
-- Friendship (hearts in the summary), evolutions by level, magic pencil or friendship, a Move
-  Rememberer and a Move Forgetter in every Inn.
-- Collecting: nicknames (and a Calligrapher in every Inn), sparkly Bestioles (1 in 100,
+- Friendship (hearts in the summary), evolutions by level, magic pencil or friendship.
+- Every Inn has its own helpers, listed on the Town Map once you've been there: a Calligrapher
+  (nicknames), a Move Rememberer, Coach Effort (effort points), a Mood Teller (natures), a Star
+  Polisher (born qualities) and a Talent Gardener (talents, hidden ones included). Effort points show
+  in the summary; biscuits add some, erasers rub them out, and Magic Lollipops (+1 level) hide off
+  the beaten track.
+- Collecting: nicknames, sparkly Bestioles (1 in 100,
   recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray
   and Ariadne Thread.
 - 18 types with dual-type Bestioles, weather (rain, sun, sandstorm, hail), freeze, bad poison,

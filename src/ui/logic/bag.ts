@@ -1,6 +1,6 @@
 import { ITEMS, item } from '../../data/items';
 import type { ItemDef } from '../../data/schema';
-import { evolutionFor, maxHp, type Mon } from '../../engine/pk/creature';
+import { EV_STAT_MAX, EV_TOTAL_MAX, MAX_LEVEL, STAT_KEYS, addEvs, evolutionFor, maxHp, type Mon } from '../../engine/pk/creature';
 import { creature } from '../../data/creatures';
 
 export type Pocket = 'items' | 'balls' | 'berries' | 'stencils' | 'key';
@@ -40,6 +40,12 @@ export function canUseOn(itemId: string, m: Mon): boolean {
   if (def.kind === 'status') return m.hp > 0 && !!m.status;
   if (def.kind === 'revive') return m.hp <= 0;
   if (def.kind === 'berry') return m.hp > 0 && ((def.amount > 0 && m.hp < maxHp(m)) || (!!m.status && !!def.cures?.includes(m.status)));
+  // a biscuit needs room under the caps, an eraser something to rub out
+  if (def.kind === 'effort' && def.stat) {
+    const total = STAT_KEYS.reduce((n, k) => n + m.evs[k], 0);
+    return def.amount > 0 ? m.evs[def.stat] < EV_STAT_MAX && total < EV_TOTAL_MAX : m.evs[def.stat] > 0;
+  }
+  if (def.kind === 'level') return m.level < MAX_LEVEL;
   return false;
 }
 
@@ -56,6 +62,7 @@ export function useOn(itemId: string, m: Mon): boolean {
     m.hp = Math.max(1, Math.floor((maxHp(m) * def.amount) / 100));
     m.status = null;
   }
+  if (def.kind === 'effort' && def.stat) addEvs(m, def.stat, def.amount);
   if (def.kind === 'berry') {
     m.hp = Math.min(maxHp(m), m.hp + def.amount);
     if (m.status && def.cures?.includes(m.status)) {

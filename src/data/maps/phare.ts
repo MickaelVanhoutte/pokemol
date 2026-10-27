@@ -30,7 +30,7 @@ export const PHARE_MAPS: Record<string, MapDef> = {
     ],
     buildings: [{ kind: 'tower', x: 6, y: 1, w: 4, h: 5, door: 1, roof: '#e04848', to: { map: 'phare1', x: 4, y: 8, facing: 'up' } }],
     npcs: [{ id: 'passeurIle', x: 7, y: 11, look: LOOKS.passeur, facing: 'up', script: 'passeur' }],
-    items: [{ x: 12, y: 6, item: 'pierre-immuable', hidden: true }],
+    items: [{ x: 10, y: 1, item: 'sucette-magique' }, { x: 12, y: 6, item: 'pierre-immuable', hidden: true }],
     encounters: {
       rate: 0.12,
       table: [

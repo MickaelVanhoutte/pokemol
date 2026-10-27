@@ -1,7 +1,7 @@
 import { L } from '../i18n';
 import { move } from './moves';
 import { TYPES } from './types';
-import type { ItemDef } from './schema';
+import type { ItemDef, StatKey } from './schema';
 
 /** Stencils, in order (pochoir-01…): the first eight are the Atelier Masters' rewards. */
 export const STENCIL_MOVES = [
@@ -19,6 +19,32 @@ function stencil(moveId: string, i: number): ItemDef {
     id: stencilId(i + 1), name: L(`Pochoir ${n} ${mv.name.fr}`, `Stencil ${n} ${mv.name.en}`), price: 0, kind: 'stencil', amount: 0, move: moveId,
     desc: L(`${mv.desc.fr} Un pochoir ne s’use jamais.`, `${mv.desc.en} A stencil never wears out.`),
   };
+}
+
+/** Effort items, one biscuit and one eraser per stat: [stat, id part, French name part, French "in", English]. */
+const EFFORT_STATS: [StatKey, string, string, string, string][] = [
+  ['hp', 'pv', 'de PV', 'en PV', 'HP'],
+  ['atk', 'attaque', 'd’Attaque', 'en Attaque', 'Attack'],
+  ['def', 'defense', 'de Défense', 'en Défense', 'Defense'],
+  ['spa', 'atq-spe', 'd’Atq. Spé.', 'en Atq. Spé.', 'Sp. Atk'],
+  ['spd', 'def-spe', 'de Déf. Spé.', 'en Déf. Spé.', 'Sp. Def'],
+  ['spe', 'vitesse', 'de Vitesse', 'en Vitesse', 'Speed'],
+];
+/** Effort points a biscuit adds, or an eraser rubs out. */
+export const EFFORT_STEP = 10;
+
+/** Biscuits add effort points to a stat (it grows a little stronger), erasers rub them out. */
+function effortItems(): ItemDef[] {
+  return EFFORT_STATS.flatMap(([stat, id, of, inFr, en]): ItemDef[] => [
+    {
+      id: `biscuit-${id}`, name: L(`Biscuit ${of}`, `${en} Biscuit`), price: 1000, kind: 'effort', amount: EFFORT_STEP, stat,
+      desc: L(`Un biscuit croquant : +${EFFORT_STEP} efforts ${inFr}.`, `A crunchy biscuit: +${EFFORT_STEP} effort in ${en}.`),
+    },
+    {
+      id: `gomme-${id}`, name: L(`Gomme ${of}`, `${en} Eraser`), price: 300, kind: 'effort', amount: -EFFORT_STEP, stat,
+      desc: L(`Une gomme toute douce : −${EFFORT_STEP} efforts ${inFr}.`, `A soft eraser: −${EFFORT_STEP} effort in ${en}.`),
+    },
+  ]);
 }
 
 export const ITEMS: ItemDef[] = [
@@ -87,6 +113,11 @@ export const ITEMS: ItemDef[] = [
   {
     id: 'vernis', name: L('Vernis Protecteur', 'Protective Varnish'), price: 700, kind: 'battle', amount: 0, boost: 'guard',
     desc: L('Un coup de vernis : pendant 5 tours, l’ennemi ne peut pas faire baisser les stats de ton équipe.', 'A coat of varnish: for 5 turns, the foe can’t lower your team’s stats.'),
+  },
+  ...effortItems(),
+  {
+    id: 'sucette-magique', name: L('Sucette Magique', 'Magic Lollipop'), price: 10000, kind: 'level', amount: 1,
+    desc: L('Une sucette aux mille couleurs : +1 niveau.', 'A lollipop of a thousand colours: +1 level.'),
   },
   // ---------------------------------------------------------------- berries (a Bestiole can hold one)
   {

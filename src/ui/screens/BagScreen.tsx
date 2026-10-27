@@ -2,11 +2,12 @@ import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
-import { backToWorld, fieldItemProblem, playerLook, toggleBike, useFieldItem } from '../../overworld/controller';
+import { backToWorld, fieldItemProblem, playerLook, toggleBike, useFieldItem, useLollipop } from '../../overworld/controller';
 import { save, see, takeItem, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { canUseOn, evolveWith, stencilStatus, useOn } from '../logic/bag';
 import { move } from '../../data/moves';
+import { STAT_NAMES } from '../../data/types';
 import { evolutionMoves, evolve, learnMove } from '../../engine/pk/creature';
 import { EvolutionView } from '../views/EvolutionView';
 import { SummaryView } from '../views/SummaryView';
@@ -166,18 +167,29 @@ export function BagScreen() {
     );
   }
   if (using) {
+    const def = item(using);
     return (
       <PartyView
         party={d.party}
         mode="target"
+        // effort items show the points each Bestiole already has in that stat
+        tag={def.kind === 'effort' && def.stat ? (i) => (d.party[i].egg ? '' : `${tr(L('Efforts', 'Effort'))} ${d.party[i].evs[def.stat!]}/255`) : undefined}
         canPick={(i) => canUseOn(using, d.party[i])}
-        message={tr(L('Utiliser {i} sur quelle Bestiole ?', 'Use {i} on which Critter?'), { i: tr(item(using).name) })}
+        message={tr(L('Utiliser {i} sur quelle Bestiole ?', 'Use {i} on which Critter?'), { i: tr(def.name) })}
         onPick={(i) => {
+          if (def.kind === 'level') {
+            setUsing(null);
+            void useLollipop(i);
+            return;
+          }
           update((x) => {
             if (takeItem(x, using)) useOn(using, x.party[i]);
           });
           sfx.heal();
-          setNote(tr(L('Tu utilises {i} sur {n}.', 'You used {i} on {n}.'), { i: tr(item(using).name), n: monLabel(d.party[i]) }));
+          const m = save.value!.party[i];
+          setNote(def.kind === 'effort' && def.stat
+            ? tr(L('Les efforts en {s} de {n} passent à {v}.', '{n}’s {s} effort is now {v}.'), { s: tr(STAT_NAMES[def.stat]), n: monLabel(m), v: m.evs[def.stat] })
+            : tr(L('Tu utilises {i} sur {n}.', 'You used {i} on {n}.'), { i: tr(def.name), n: monLabel(m) }));
           setUsing(null);
         }}
         onClose={() => setUsing(null)}

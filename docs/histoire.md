@@ -93,7 +93,12 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Des **énigmes** dans les grottes, les tours et les repaires, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
 - Dans chaque ville, une **Auberge** : l’aubergiste remet tes Bestioles en forme, et ses lits te
-  laissent dormir jusqu’à la nuit ou jusqu’au matin.
+  laissent dormir jusqu’à la nuit ou jusqu’au matin. Chaque Auberge a aussi son habitué : un
+  Calligraphe pour les surnoms, un Coach pour les efforts, une Diseuse d’Humeurs pour les natures,
+  une Polisseuse d’Étoiles pour les qualités de naissance, un Jardinier pour les talents… La carte
+  rappelle qui se trouve où, dans les villes déjà visitées.
+- Des **Biscuits** et des **Gommes** pour régler les efforts de tes Bestioles, et quelques **Sucettes
+  Magiques** (un niveau de plus !) cachées loin des chemins.
 - Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une nuit à l’Auberge ou
   dans ton lit). Certaines Bestioles ne sortent que la nuit…
 - Les habitants te proposent des **échanges** de Bestioles, et certains ont besoin d’un coup de main :
@@ -195,7 +200,11 @@ The story has **two endings**, and your answers choose which one you will see.
 - **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.
 - Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let
-  you sleep until night or until morning.
+  you sleep until night or until morning. Each Inn also has its regular: a Calligrapher for
+  nicknames, a Coach for effort, a Mood Teller for natures, a Star Polisher for born qualities, a
+  Gardener for talents… The map reminds you who is where, in the towns you've visited.
+- **Biscuits** and **Erasers** to tune your Critters' effort, and a few **Magic Lollipops** (one more
+  level!) hidden off the beaten track.
 - Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed).
   Some Critters only come out at night…
 - Townspeople offer Critter **trades**, and some need a hand: a lost Critter, a letter to carry, a

@@ -527,6 +527,27 @@ Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Brais
 cost the team a level before Ambre (her Hard rows fell to 10–49%): Allumou is an extra Bestiole for Paco
 instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, was 43/2/2). The finals and the two standalones joined `TOWER_POOL`.
 
+**Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
+too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be
+forgotten). Now only the innkeeper and the Pencil Balloon pilot are in every Inn; each town's Inn has its
+own helper (`fromMap`), listed on the Town Map for the towns visited:
+
+| Inn | Helper |
+|---|---|
+| Ville-Pastel | Prof's aide (Tracing Paper) and the sailor who explains the PC and the beds |
+| Village-Plume | Calligrapher (nicknames) |
+| Port-Aquarelle | Move Rememberer |
+| Ville-Feutre | Coach Effort: shows a Bestiole's effort points, rubs them all out for free |
+| Village-Braise | Mood Teller: nature, 2 000 ₽ (the stat to raise, then the one to lower) |
+| Bourg-Paillette | Star Polisher: one born quality to S (IV 31), 3 000 ₽ |
+| Jardin-Gouache | Talent Gardener: 3 000 ₽, 8 000 ₽ for the hidden talent |
+| Cité-Encre, Hameau-Brouillon, Place des Chefs-d'Œuvre | a resident with a word about the town |
+
+Shops sell effort Biscuits (+10, 1 000 ₽) and Erasers (−10, 300 ₽) from 3 badges, and the STATS page of
+the summary shows effort points. Magic Lollipops (+1 level) lie off the beaten track on 13 maps from
+Mont Fusain to Route Blanche (most of them hidden), and shops sell them for 10 000 ₽ after the ending. The
+level curve assumes a player who picks none up.
+
 **A music box instead of 8-bit (Oct 2026).** The owner found the GBA square waves out of place next to the
 pencil and pastel look. The tunes stayed note for note; only the instruments changed. They listened to
 four sounds on a test page (8-bit, music box, acoustic workshop with recorder and ukulele, felt piano) and

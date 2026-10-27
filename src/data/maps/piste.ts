@@ -75,6 +75,7 @@ export const PISTE_MAPS: Record<string, MapDef> = {
       { id: 'pc4', x: 9, y: 30, look: LOOKS.cyclist, facing: 'right', trainer: 'pc4', sight: 2 },
     ],
     items: [
+      { x: 6, y: 25, item: 'sucette-magique' },
       { x: 1, y: 9, item: 'super-crayon-ball', count: 2 }, { x: 1, y: 25, item: 'rappel' }, { x: 4, y: 30, item: 'baie-doree' },
       { x: 11, y: 1, item: 'super-potion', count: 2 }, { x: 3, y: 13, item: 'baie-prisme', hidden: true },
     ],

@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const DREAM_MAPS: Record<string, MapDef> = {
   routeBlanche: {
     id: 'routeBlanche',
+    items: [{ x: 1, y: 8, item: 'sucette-magique', hidden: true }],
     name: L('Route Blanche', 'Blank Road'),
     border: 'sketchtree',
     backdrop: 'sketch',

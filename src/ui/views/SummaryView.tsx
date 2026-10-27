@@ -5,7 +5,7 @@ import { monArtUrl } from '../monArt';
 import { evolutionHints } from '../evolutionText';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
-import { MAX_LEVEL, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
+import { EV_STAT_MAX, EV_TOTAL_MAX, MAX_LEVEL, STAT_KEYS, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
 import { HpBar, MenuList, MoveInfo, PixelIcon, StatusTag, TypeBadge, TypeBadges, Window, XpBar, YesNo, lv } from '../paper';
 import { item } from '../../data/items';
 import { ivGrade } from '../../engine/pk/judge';
@@ -54,6 +54,30 @@ function NatureMark({ mon, k }: { mon: Mon; k: StatKey }) {
   if (k === n.up) return <i class="nat nat--up" aria-label="+10%">▲</i>;
   if (k === n.down) return <i class="nat nat--down" aria-label="−10%">▼</i>;
   return null;
+}
+
+/** Short stat names for the effort bars. */
+const SHORT: Record<StatKey, ReturnType<typeof L>> = {
+  hp: L('PV', 'HP'), atk: L('Att.', 'Atk'), def: L('Déf.', 'Def'), spa: L('A.Spé', 'SpA'), spd: L('D.Spé', 'SpD'), spe: L('Vit.', 'Spe'),
+};
+
+/** Effort points per stat as little crayon bars (from beaten Bestioles and biscuits). */
+function Efforts({ mon }: { mon: Mon }) {
+  const total = STAT_KEYS.reduce((n, k) => n + mon.evs[k], 0);
+  return (
+    <div class="efforts">
+      <div class="efforts__head"><span>{tr(L('Efforts', 'Effort'))}</span><span>{total}/{EV_TOTAL_MAX}</span></div>
+      <div class="efforts__grid">
+        {STAT_KEYS.map((k) => (
+          <div class="efforts__cell" title={tr(STAT_NAMES[k])}>
+            <span>{tr(SHORT[k])}</span>
+            <i class="efforts__bar"><i style={{ width: `${(mon.evs[k] / EV_STAT_MAX) * 100}%` }} /></i>
+            <b>{mon.evs[k]}</b>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /** « Nature rêveuse » / "Dreamy nature". */
@@ -191,8 +215,9 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves }: {
               <dt>{tr(L('Niveau suivant', 'Next Lv.'))}</dt><dd>{toNext || '—'}</dd>
             </dl>
             <div class="summary__xp"><span>EXP</span><XpBar pct={xpPct} /></div>
+            <Efforts mon={mon} />
             <p class="summary__legend">
-              {natureLabel(mon)}{nature(mon.nature).up ? ' ▲▼' : ''} · {tr(L('E → S : qualités de naissance', 'E → S: born qualities'))}
+              {natureLabel(mon)}{nature(mon.nature).up ? ' ▲▼' : ''} · {tr(L('E → S : qualités de naissance', 'E → S: born qualities'))} · {tr(L('efforts : combats et biscuits', 'effort: battles and biscuits'))}
             </p>
           </Window>
         )}

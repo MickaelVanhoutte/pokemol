@@ -181,12 +181,30 @@ export function gainEvs(m: Mon, defeatedSpecies: string) {
   if (m.hp > 0) m.hp += maxHp(m) - before;
 }
 
+/**
+ * Adds (or, below 0, rubs out) effort points in one stat, within the caps; keeps the same missing HP.
+ * Returns how many points actually changed. Mutates the creature.
+ */
+export function addEvs(m: Mon, k: StatKey, delta: number): number {
+  const before = maxHp(m);
+  const total = STAT_KEYS.reduce((n, s) => n + m.evs[s], 0);
+  const change = delta > 0 ? Math.min(delta, EV_STAT_MAX - m.evs[k], EV_TOTAL_MAX - total) : Math.max(delta, -m.evs[k]);
+  m.evs[k] += change;
+  if (m.hp > 0) m.hp = Math.max(1, m.hp + maxHp(m) - before);
+  return change;
+}
+
 export interface LevelUp {
   level: number;
   /** Moves learnt automatically (a free slot was available). */
   learned: string[];
   /** Moves waiting for a "forget a move?" choice. */
   pending: string[];
+}
+
+/** Exactly one level more (a Magic Lollipop): the XP up to the next level. Mutates the creature. */
+export function growLevel(m: Mon): LevelUp[] {
+  return m.level >= MAX_LEVEL ? [] : addXp(m, xpAt(m.level + 1) - m.xp);
 }
 
 /** Adds XP, levelling up as needed; keeps the same missing HP. Mutates the creature. */

@@ -1,7 +1,7 @@
 import { L, type LText } from '../i18n';
 import type { StatKey } from './schema';
 
-type BattleStat = Exclude<StatKey, 'hp'>;
+export type BattleStat = Exclude<StatKey, 'hp'>;
 
 /** A personality ("nature"): +10% to one stat and −10% to another, or nothing for the five calm ones. */
 export interface NatureDef {

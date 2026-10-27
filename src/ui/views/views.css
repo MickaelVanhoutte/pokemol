@@ -114,6 +114,16 @@
 .nat--up { color: #c0392b; }
 .nat--down { color: #3a6ad6; }
 .summary__legend { margin: 6px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
+/* effort points (EVs): six little crayon bars */
+.efforts { margin-top: 6px; font-size: 0.95rem; }
+.efforts__head { display: flex; justify-content: space-between; color: var(--ink-soft); }
+.efforts__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 16px; }
+@media (min-width: 520px) { .efforts__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.efforts__cell { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.efforts__cell span { flex: none; width: 2.7em; color: var(--ink-soft); }
+.efforts__cell b { flex: none; min-width: 2em; padding-left: 2px; font-weight: 400; text-align: right; }
+.efforts__bar { flex: 1; min-width: 12px; height: 12px; overflow: hidden; border: 3px solid transparent; border-image: var(--frame-thin-paper) 16 / 3px stretch; background: #efe5d2 padding-box; }
+.efforts__bar i { display: block; height: 100%; background: var(--hatch-peach) 0 0 / 36px 36px, #f9cfa3; }
 .summary__hidden { color: #b07a10; font-size: 0.8em; }
 .summary__talent { margin: 6px 0 0; font-size: 1rem; line-height: 1.25; }
 .summary__hint { margin: 0; color: var(--cursor); font-size: 1.1rem; }

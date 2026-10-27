@@ -1,12 +1,16 @@
-import { L, tr } from '../i18n';
+import { L, locale, tr, type LText } from '../i18n';
 import { healParty, save, update } from '../state/game';
 import { shiftTo } from '../state/clock';
 import { playJingle } from '../audio/music';
 import { sfx } from '../audio/sfx';
 import { ask, dayPhase, flag, getGame, giveItem, offerNickname, openScreen, say, sayAll, scripts, setFlag, teachMove, updateTime, wait } from '../overworld/controller';
 import { move } from '../data/moves';
-import { rememberableMoves } from '../engine/pk/creature';
-import { monLabel } from '../data/creatures';
+import { STAT_KEYS, addEvs, maxHp, rememberableMoves } from '../engine/pk/creature';
+import { ivGrade } from '../engine/pk/judge';
+import { NATURES, nature, type BattleStat } from '../data/natures';
+import { STAT_NAMES } from '../data/types';
+import { talent, type TalentSlot } from '../data/talents';
+import { creature, monLabel } from '../data/creatures';
 import { INNKEEPER } from './cast';
 
 /** You wake up here after a blackout, and the Ariadne Thread leads back here. */
@@ -134,28 +138,138 @@ scripts.souvenirs = async () => {
   await teachMove(c, moves[k]);
 };
 
-/** Inn: Madame Trou-de-Mémoire makes a Bestiole forget a move. */
-scripts.oubli = async () => {
-  const who = L('Mme Trou-de-Mémoire', 'Mrs Forgetful');
+/** Asks which Bestiole of the party (eggs left out); its party index, or -1. */
+async function pickMon(question: LText, who: LText, vars?: Record<string, string | number>): Promise<number> {
   const party = save.value?.party ?? [];
-  if (!party.length) {
-    await say(L('Hein ? Qu’est-ce que je disais ? Ah oui : je fais oublier des capacités aux Bestioles.', 'Huh? What was I saying? Ah yes: I make Critters forget moves.'), who);
+  const ids = party.flatMap((m, i) => (m.egg ? [] : [i]));
+  if (!ids.length) {
+    await say(L('Reviens me voir avec une Bestiole !', 'Come back with a Critter!'), who);
+    return -1;
+  }
+  const c = await ask(question, [...ids.map((i) => monLabel(party[i])), L('Aucune', 'None')], who, vars);
+  return c < ids.length ? ids[c] : -1;
+}
+
+/** Asks to pay `price` for a service; false when the player says no or can't afford it. */
+async function pay(question: LText, price: number, who: LText, vars: Record<string, string | number>): Promise<boolean> {
+  if ((await ask(question, [L('Oui', 'Yes'), L('Non', 'No')], who, { ...vars, p: price })) !== 0) return false;
+  if (save.value!.money < price) {
+    await say(L('Oh… Il te manque des sous. Reviens quand tu auras {p} ₽ !', 'Oh… You’re short of money. Come back when you have ₽{p}!'), who, { p: price });
+    return false;
+  }
+  update((x) => void (x.money -= price));
+  sfx.coin();
+  return true;
+}
+
+const BATTLE_STATS: BattleStat[] = ['atk', 'def', 'spa', 'spd', 'spe'];
+/** The best born quality (IV): grade S. */
+const MAX_IV = 31;
+/** « fonceuse » / "Headstrong": a nature's name inside a sentence. */
+const natureWord = (id: string) => (locale.value === 'fr' ? tr(nature(id).name).toLowerCase() : tr(nature(id).name));
+
+/** Inn of Ville-Feutre: Coach Effort explains effort points, shows them, and rubs them all out for free. */
+scripts.coachEffort = async () => {
+  const who = L('Coach Effort', 'Coach Effort');
+  await sayAll([
+    L('Chaque Bestiole battue laisse des points d’effort à celles qui ont combattu. Quatre points d’effort, et la stat grandit d’un point au niveau 100 !', 'Every Critter beaten leaves effort points to the ones that fought. Four effort points, and the stat grows by one point at level 100!'),
+    L('255 au plus par stat, 510 en tout. Tu les vois dans le résumé, page STATS. Les Biscuits en ajoutent, les Gommes en effacent : la Boutique en vend dès 3 badges.', 'At most 255 per stat, 510 in all. You can see them in the summary, STATS page. Biscuits add some, Erasers rub them out: shops sell them from 3 badges on.'),
+  ], who);
+  const i = await pickMon(L('Je te montre les efforts de quelle Bestiole ?', 'Whose effort shall I show you?'), who);
+  if (i < 0) return;
+  const m = save.value!.party[i];
+  const total = STAT_KEYS.reduce((n, k) => n + m.evs[k], 0);
+  await say(`${STAT_KEYS.map((k) => `${tr(STAT_NAMES[k])} ${m.evs[k]}`).join(' · ')} — ${total}/510`, who);
+  if (!total) {
+    await say(L('{n} n’a encore aucun effort. Au boulot !', '{n} has no effort yet. Get to work!'), who, { n: monLabel(m) });
     return;
   }
-  const c = await ask(L('Je fais oublier des capacités. Quelle Bestiole ?', 'I make Critters forget moves. Which one?'), [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
-  if (c >= party.length) return;
-  const m = party[c];
-  if (m.moves.length <= 1) {
-    await say(L('{n} doit garder au moins une capacité !', '{n} must keep at least one move!'), who, { n: monLabel(m) });
+  if ((await ask(L('Je les efface tous, pour repartir de zéro ? C’est gratuit.', 'Shall I rub them all out, to start again from scratch? It’s free.'), [L('Oui', 'Yes'), L('Non', 'No')], who)) !== 0) return;
+  update((x) => {
+    for (const k of STAT_KEYS) addEvs(x.party[i], k, -x.party[i].evs[k]);
+  });
+  await say(L('Et hop, tout propre ! {n} peut reprendre l’entraînement.', 'There, all clean! {n} can start training again.'), who, { n: monLabel(m) });
+};
+
+/** Inn of Village-Braise: the Mood Teller changes a Bestiole's nature (the stat it raises and the one it lowers). */
+scripts.humeurs = async () => {
+  const who = L('Diseuse d’Humeurs', 'Mood Teller');
+  const PRICE = 2000;
+  const i = await pickMon(L('Je lis l’humeur des Bestioles… et je peux la changer, pour {p} ₽. Laquelle ?', 'I read Critters’ moods… and I can change them, for ₽{p}. Which one?'), who, { p: PRICE });
+  if (i < 0) return;
+  const m = save.value!.party[i];
+  await say(L('{n} a la nature {h}.', '{n} has a {h} nature.'), who, { n: monLabel(m), h: natureWord(m.nature) });
+  const up = await ask(L('Quelle qualité doit grandir ?', 'Which quality should grow?'),
+    [...BATTLE_STATS.map((k) => STAT_NAMES[k]), L('Aucune : équilibrée', 'None: balanced'), L('Annuler', 'Cancel')], who);
+  if (up > BATTLE_STATS.length) return;
+  let id: string;
+  if (up === BATTLE_STATS.length) {
+    // a balanced nature raises and lowers nothing: keep the one it has if it is balanced already
+    id = nature(m.nature).up ? NATURES.find((n) => !n.up)!.id : m.nature;
+  } else {
+    const downs = BATTLE_STATS.filter((k) => k !== BATTLE_STATS[up]);
+    const dn = await ask(L('Et laquelle doit rapetisser ?', 'And which should shrink?'), [...downs.map((k) => STAT_NAMES[k]), L('Annuler', 'Cancel')], who);
+    if (dn >= downs.length) return;
+    id = NATURES.find((n) => n.up === BATTLE_STATS[up] && n.down === downs[dn])!.id;
+  }
+  if (id === m.nature) {
+    await say(L('Mais… c’est déjà son humeur !', 'But… that’s its mood already!'), who);
     return;
   }
-  const k = await ask(L('Quelle capacité doit-il oublier ?', 'Which move should it forget?'), [...m.moves.map((s) => move(s.id).name), L('Annuler', 'Cancel')], who);
-  if (k >= m.moves.length) return;
-  const sure = await ask(L('{n} va oublier {m}. C’est sûr ?', '{n} will forget {m}. Are you sure?'), [L('Oui', 'Yes'), L('Non', 'No')], who, { n: monLabel(m), m: tr(move(m.moves[k].id).name) });
-  if (sure !== 0) return;
-  const gone = tr(move(m.moves[k].id).name);
-  update((x) => void x.party[c].moves.splice(k, 1));
-  await say(L('Pouf ! {n} a oublié {m}. Hihi, moi aussi je l’ai déjà oublié !', 'Poof! {n} forgot {m}. Hee hee, I’ve forgotten it already too!'), who, { n: monLabel(m), m: gone });
+  if (!(await pay(L('{n} aura la nature {h}, pour {p} ₽. D’accord ?', '{n} will have a {h} nature, for ₽{p}. All right?'), PRICE, who, { n: monLabel(m), h: natureWord(id) }))) return;
+  update((x) => void (x.party[i].nature = id));
+  await say(L('Abracadabra… {n} a maintenant la nature {h} !', 'Abracadabra… {n} now has a {h} nature!'), who, { n: monLabel(m), h: natureWord(id) });
+};
+
+/** Inn of Bourg-Paillette: the Star Polisher raises one born quality (IV) to the top, S. */
+scripts.polisseuse = async () => {
+  const who = L('Polisseuse d’Étoiles', 'Star Polisher');
+  const PRICE = 3000;
+  const i = await pickMon(L('Je fais briller les qualités de naissance jusqu’à la lettre S, pour {p} ₽ la qualité. Pour quelle Bestiole ?', 'I polish born qualities up to the letter S, for ₽{p} a quality. For which Critter?'), who, { p: PRICE });
+  if (i < 0) return;
+  const m = save.value!.party[i];
+  const k = await ask(L('Quelle qualité faire briller ?', 'Which quality shall I polish?'),
+    [...STAT_KEYS.map((s) => `${tr(STAT_NAMES[s])} : ${ivGrade(m.ivs[s])}`), L('Annuler', 'Cancel')], who);
+  if (k >= STAT_KEYS.length) return;
+  const stat = STAT_KEYS[k];
+  if (m.ivs[stat] >= MAX_IV) {
+    await say(L('Celle-là brille déjà de mille feux !', 'That one already shines like a star!'), who);
+    return;
+  }
+  if (!(await pay(L('Polir {s} de {n} jusqu’à S, pour {p} ₽ ?', 'Polish {n}’s {s} up to S, for ₽{p}?'), PRICE, who, { n: monLabel(m), s: tr(STAT_NAMES[stat]) }))) return;
+  update((x) => {
+    const mon = x.party[i], before = maxHp(mon);
+    mon.ivs[stat] = MAX_IV;
+    if (mon.hp > 0) mon.hp += maxHp(mon) - before;
+  });
+  await say(L('Frotti, frotta… Et voilà : {s} brille comme une étoile !', 'Rub-a-dub… There: {s} shines like a star!'), who, { s: tr(STAT_NAMES[stat]) });
+};
+
+/** Inn of Jardin-Gouache: the Talent Gardener changes a Bestiole's talent, the hidden one included. */
+scripts.talents = async () => {
+  const who = L('Jardinier des Talents', 'Talent Gardener');
+  const PRICE = 3000, HIDDEN = 8000;
+  const i = await pickMon(L('Je fais pousser les talents des Bestioles : {p} ₽, ou {h} ₽ pour un talent caché. Laquelle ?', 'I grow Critters’ talents: ₽{p}, or ₽{h} for a hidden talent. Which one?'), who, { p: PRICE, h: HIDDEN });
+  if (i < 0) return;
+  const m = save.value!.party[i];
+  const sp = creature(m.species);
+  const slots: [TalentSlot, string][] = [...sp.talents.map((t, s): [TalentSlot, string] => [s as TalentSlot, t]), [2, sp.hiddenTalent]];
+  // a species with one regular talent reads slot 1 as slot 0 (`talentOf`)
+  const mine: TalentSlot = m.talent === 2 ? 2 : sp.talents[m.talent] ? m.talent : 0;
+  const c = await ask(L('Quel talent pour {n} ?', 'Which talent for {n}?'), [
+    ...slots.map(([s, t]) => `${tr(talent(t).name)}${s === 2 ? ' ✦' : ''}${s === mine ? tr(L(' (le sien)', ' (current)')) : ''}`),
+    L('Annuler', 'Cancel'),
+  ], who, { n: monLabel(m) });
+  if (c >= slots.length) return;
+  const [slot, id] = slots[c];
+  if (slot === mine) {
+    await say(L('C’est déjà son talent !', 'That’s its talent already!'), who);
+    return;
+  }
+  await say(`${tr(talent(id).name)}${locale.value === 'fr' ? '\u00a0: ' : ': '}${tr(talent(id).desc)}`, who);
+  if (!(await pay(L('{n} aura le talent {t}, pour {p} ₽. D’accord ?', '{n} will get the {t} talent, for ₽{p}. All right?'), slot === 2 ? HIDDEN : PRICE, who, { n: monLabel(m), t: tr(talent(id).name) }))) return;
+  update((x) => void (x.party[i].talent = slot));
+  await say(L('Un peu d’eau, un peu de soleil… {n} a maintenant le talent {t} !', 'A little water, a little sun… {n} now has the {t} talent!'), who, { n: monLabel(m), t: tr(talent(id).name) });
 };
 
 scripts.clerk = async () => {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createMon, maxHp } from '../../engine/pk/creature';
+import { MAX_LEVEL, createMon, growLevel, maxHp, xpAt } from '../../engine/pk/creature';
+import { creature } from '../../data/creatures';
 import { canUseOn, pocketItems, stencilStatus, useOn } from './bag';
 import { canDeposit } from './pc';
 import { moveCursor } from '../paper/nav';
@@ -46,6 +47,46 @@ describe('bag', () => {
     sick.status = 'poison';
     expect(useOn('retouche', sick)).toBe(true);
     expect(sick.status).toBe(null);
+  });
+});
+
+describe('effort items and the Magic Lollipop', () => {
+  it('biscuits add 10 effort points within the caps, keeping the missing HP', () => {
+    const m = mon(5);
+    const lost = maxHp(m) - m.hp;
+    expect(useOn('biscuit-pv', m)).toBe(true);
+    expect(m.evs.hp).toBe(10);
+    expect(maxHp(m) - m.hp).toBe(lost);
+    m.evs.atk = 250;
+    expect(useOn('biscuit-attaque', m)).toBe(true);
+    expect(m.evs.atk).toBe(255);
+    expect(canUseOn('biscuit-attaque', m)).toBe(false);
+    // 510 in all
+    Object.assign(m.evs, { hp: 255, atk: 255, def: 0 });
+    expect(canUseOn('biscuit-defense', m)).toBe(false);
+  });
+  it('erasers rub out 10 effort points, never below 0', () => {
+    const m = mon();
+    expect(canUseOn('gomme-vitesse', m)).toBe(false);
+    m.evs.spe = 4;
+    expect(useOn('gomme-vitesse', m)).toBe(true);
+    expect(m.evs.spe).toBe(0);
+  });
+  it('a Magic Lollipop gives exactly one level and its moves, not past 100 nor to an egg', () => {
+    const m = mon(5);
+    const lost = maxHp(m) - m.hp;
+    const ups = growLevel(m);
+    expect(m.level).toBe(11);
+    expect(m.xp).toBe(xpAt(11));
+    expect(maxHp(m) - m.hp).toBe(lost);
+    const due = creature(m.species).learnset.filter(([l]) => l === 11).map(([, id]) => id);
+    expect(ups.flatMap((u) => [...u.learned, ...u.pending])).toEqual(due);
+    expect(canUseOn('sucette-magique', m)).toBe(true);
+    const top = createMon('001', MAX_LEVEL, { rng: 1 });
+    expect(canUseOn('sucette-magique', top)).toBe(false);
+    expect(growLevel(top)).toEqual([]);
+    const egg = { ...mon(), egg: { steps: 100 } };
+    expect(canUseOn('sucette-magique', egg)).toBe(false);
   });
 });
 

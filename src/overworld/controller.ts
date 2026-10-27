@@ -8,7 +8,7 @@ import { badgeDef } from '../data/badges';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, learnMove, MAX_LEVEL, maxHp, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, allMons, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
@@ -1008,6 +1008,37 @@ export async function useFieldItem(id: string) {
       const d = s();
       if (save.value) save.value.player.returnTo = d.respawn.returnTo;
       await warpTo({ map: d.respawn.map, x: d.respawn.x, y: d.respawn.y, facing: 'down' });
+    }
+  });
+}
+
+/**
+ * A Magic Lollipop from the bag: party creature `i` grows a level, learns that level's moves (asking which
+ * to forget when it knows four) and evolves if it's time; then another one, if the player wants.
+ */
+export async function useLollipop(i: number) {
+  const LOLLIPOP = 'sucette-magique';
+  backToWorld();
+  await locked(async () => {
+    await wait(200);
+    for (;;) {
+      const m = s().party[i];
+      if (!m || m.egg || m.level >= MAX_LEVEL || !(s().bag[LOLLIPOP] > 0)) return;
+      let ups: LevelUp[] = [];
+      update((x) => {
+        takeItem(x, LOLLIPOP);
+        ups = growLevel(x.party[i]);
+      });
+      sfx.levelUp();
+      const vars = { n: monLabel(s().party[i]) };
+      await say(L('Crounch ! {n} monte au niveau {l} !', 'Crunch! {n} grew to level {l}!'), undefined, { ...vars, l: s().party[i].level });
+      for (const id of ups.flatMap((u) => u.learned)) await say(L('{n} apprend {m} !', '{n} learned {m}!'), undefined, { ...vars, m: tr(move(id).name) });
+      for (const id of ups.flatMap((u) => u.pending)) await teachMove(i, id);
+      await checkEvolutions();
+      const left = s().bag[LOLLIPOP] ?? 0;
+      if (!left || s().party[i].level >= MAX_LEVEL) return;
+      const again = await ask(L('Encore une Sucette Magique ? (Il t’en reste {k}.)', 'Another Magic Lollipop? ({k} left.)'), [L('Oui', 'Yes'), L('Non', 'No')], undefined, { k: left });
+      if (again !== 0) return;
     }
   });
 }

@@ -53,7 +53,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
       { id: 'r9e', x: 11, y: 12, look: LOOKS.gommeF, facing: 'up', trainer: 'r9e', sight: 4 },
       { id: 'r9f', x: 3, y: 11, look: DRAFT_F, facing: 'up', trainer: 'r9f', sight: 2 },
     ],
-    items: [{ x: 42, y: 1, item: 'super-potion', count: 2 }, { x: 24, y: 15, item: 'rappel', hidden: true }, { x: 1, y: 16, item: 'retouche' }, { x: 19, y: 15, item: 'super-crayon-ball', count: 3 }],
+    items: [{ x: 22, y: 1, item: 'sucette-magique', hidden: true }, { x: 42, y: 1, item: 'super-potion', count: 2 }, { x: 24, y: 15, item: 'rappel', hidden: true }, { x: 1, y: 16, item: 'retouche' }, { x: 19, y: 15, item: 'super-crayon-ball', count: 3 }],
     encounters: {
       rate: 0.16,
       table: [
@@ -197,7 +197,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
       { id: 'es5', x: 4, y: 24, look: { hair: '#3a2a1a', shirt: '#f4f4f8', pants: '#5a8ad6', hat: '#f2c14e' }, facing: 'up', trainer: 'es5', sight: 3 },
       { id: 'es6', x: 8, y: 10, look: LOOKS.gommeF, facing: 'left', trainer: 'es6', sight: 4 },
     ],
-    items: [{ x: 26, y: 11, item: 'super-crayon-ball', count: 3 }, { x: 22, y: 19, item: 'baie-doree' }, { x: 37, y: 26, item: 'retouche' }, { x: 1, y: 9, item: 'rappel', hidden: true }, { x: 10, y: 5, item: 'super-potion', count: 2 }],
+    items: [{ x: 27, y: 20, item: 'sucette-magique', hidden: true }, { x: 26, y: 11, item: 'super-crayon-ball', count: 3 }, { x: 22, y: 19, item: 'baie-doree' }, { x: 37, y: 26, item: 'retouche' }, { x: 1, y: 9, item: 'rappel', hidden: true }, { x: 10, y: 5, item: 'super-potion', count: 2 }],
     encounters: {
       rate: 0.15,
       table: [

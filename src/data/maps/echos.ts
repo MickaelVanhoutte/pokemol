@@ -43,7 +43,7 @@ export const ECHOS_MAPS: Record<string, MapDef> = {
       { id: 'echoHiker', x: 2, y: 7, look: LOOKS.hiker, facing: 'right',
         text: [L('Écoute… Au fond de la grotte, quelque chose respire. Des yeux rouges brillent derrière les trous.', 'Listen… At the back of the cave, something is breathing. Red eyes glow beyond the pits.')] },
     ],
-    items: [{ x: 9, y: 1, item: 'super-potion', count: 2 }, { x: 12, y: 7, item: 'retouche', count: 2 }],
+    items: [{ x: 1, y: 7, item: 'sucette-magique' }, { x: 9, y: 1, item: 'super-potion', count: 2 }, { x: 12, y: 7, item: 'retouche', count: 2 }],
     encounters: {
       rate: 0.08,
       anyTile: true,

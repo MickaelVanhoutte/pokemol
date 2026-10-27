@@ -6,8 +6,8 @@ import { addItem, save, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { ShopView } from '../views/ShopView';
 
-/** What every shop sells, and how many badges each item needs. */
-const STOCK: Record<string, number> = {
+/** What every shop sells, and how many badges each item needs (`ending`: only once the story is over). */
+export const STOCK: Record<string, number | 'ending'> = {
   'crayon-ball': 0, potion: 0, retouche: 0, spray: 0,
   'fil-ariane': 1, 'super-spray': 2,
   'super-crayon-ball': 1, 'super-potion': 1, rappel: 1,
@@ -18,12 +18,20 @@ const STOCK: Record<string, number> = {
   'plume-vive': 4, 'loupe': 4, 'couronne-carton': 4, 'clochette': 4,
   'ruban-tenace': 5, 'casque-pointes': 5,
   'bandeau-tetu': 6, 'lunettes-tetues': 6, 'echarpe-tetue': 6, 'bille-ardente': 6, 'tablier-peintre': 6,
+  // effort biscuits and erasers
+  ...Object.fromEntries(ITEMS.filter((it) => it.kind === 'effort').map((it) => [it.id, 3])),
+  // before the ending, Magic Lollipops are only found on the map
+  'sucette-magique': 'ending',
 };
+
+/** Whether a shop sells this item now. */
+export const onSale = (id: string, d: { badges: string[]; flags: Record<string, unknown> }) =>
+  id in STOCK && (STOCK[id] === 'ending' ? !!d.flags.ending : d.badges.length >= (STOCK[id] as number));
 
 export function ShopScreen({ tower }: { tower?: boolean }) {
   const d = save.value!;
   if (tower) return <TowerShop />;
-  const stock = ITEMS.filter((it) => it.id in STOCK && d.badges.length >= STOCK[it.id]);
+  const stock = ITEMS.filter((it) => onSale(it.id, d));
   return (
     <ShopView
       money={d.money}

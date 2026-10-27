@@ -120,7 +120,7 @@ export type HoldEffect =
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;
  * `battle`: boosts the creature fighting (syrups, sharpener, varnish), only in battle.
  */
-export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil' | 'field' | 'evo';
+export type ItemKind = 'heal' | 'status' | 'revive' | 'ball' | 'key' | 'berry' | 'hold' | 'battle' | 'stencil' | 'field' | 'evo' | 'effort' | 'level';
 
 /** One way to evolve. A rule with an `item` only works with that item; others work on levelling up. */
 export interface EvolutionRule {
@@ -155,4 +155,6 @@ export interface ItemDef {
   move?: string;
   /** Field items (used from the bag on the map): Shoo Spray (`amount` steps) or Ariadne Thread. */
   field?: 'repel' | 'escape';
+  /** Effort items: the stat whose effort points they add (`amount` > 0, biscuits) or rub out (< 0, erasers). */
+  stat?: StatKey;
 }
