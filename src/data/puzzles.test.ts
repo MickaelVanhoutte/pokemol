@@ -203,6 +203,41 @@ describe('puzzles: solvable and not too hard', () => {
     expect(n!).toBeLessThanOrEqual(10);
   });
 
+  it('Eraser Fortress 1F: the crayon switches lead to the stairs and back', () => {
+    const def = MAPS.forteresse1;
+    const others = busy(def);
+    type S = { x: number; y: number; flip: boolean };
+    const at = (x: number, y: number) => (s: S) => s.x === x && s.y === y;
+    const next = (st: S): S[] => {
+      const rows = flipBarriers(def.rows, st.flip);
+      return DIRS.flatMap(([, dx, dy]): S[] => {
+        const nx = st.x + dx, ny = st.y + dy, t = tileOf(rows, nx, ny);
+        if (t === 'leverred' || t === 'leverblue') return [{ ...st, flip: !st.flip }];
+        return !solid(rows, nx, ny) && !others.has(`${nx},${ny}`) ? [{ x: nx, y: ny, flip: st.flip }] : [];
+      });
+    };
+    const key = (s: S) => `${s.x},${s.y},${s.flip}`;
+    expect(bfs<S>({ x: 7, y: 10, flip: false }, key, next, at(12, 1))).not.toBeNull();
+    expect(bfs<S>({ x: 11, y: 1, flip: false }, key, next, at(7, 10))).not.toBeNull();
+    expect(bfs<S>({ x: 7, y: 10, flip: false }, key, (s) => next(s).filter((n) => n.flip === s.flip), at(12, 1))).toBeNull();
+  });
+
+  it('Eraser Fortress 2F: the glossy hall leads to the stairs up in a few slides', () => {
+    const def = MAPS.forteresse2;
+    const rows = fresh(def);
+    const others = busy(def);
+    const holes = new Set((def.holes ?? []).map((h) => `${h.x},${h.y}`));
+    const free = (x: number, y: number) => (!solid(rows, x, y) || holes.has(`${x},${y}`)) && !others.has(`${x},${y}`);
+    const moves = bfs<[number, number]>([1, 2], (p) => `${p}`, ([x, y]) => DIRS.flatMap(([d, dx, dy]) => {
+      if (!free(x + dx, y + dy)) return [];
+      const [ex, ey] = slideFrom(rows, x + dx, y + dy, d, (a, b) => free(a, b) && !holes.has(`${a},${b}`));
+      return holes.has(`${ex},${ey}`) || holes.has(`${x + dx},${y + dy}`) ? [] : [[ex, ey] as [number, number]];
+    }), ([x, y]) => x === 10 && y === 1);
+    expect(moves).not.toBeNull();
+    expect(moves!).toBeLessThanOrEqual(10);
+    for (const h of def.holes ?? []) expect(h.fall && h.to && !solid(fresh(MAPS[h.to.map]), h.to.x, h.to.y)).toBe(true);
+  });
+
   it('Eraser Factory 2F: two blocks on the plates open the shutter, even after one fell down the hole', () => {
     const def = MAPS.usine2;
     const all = blocksOf(def);

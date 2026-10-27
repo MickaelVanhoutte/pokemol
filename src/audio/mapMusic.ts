@@ -9,6 +9,8 @@ const BY_MAP: Record<string, TrackId> = {
   centre: 'center', boutique: 'center', tombola: 'center',
   phare1: 'gomme', phare2: 'gomme', phare3: 'gomme',
   concours: 'atelier',
+  // Act 4: the half-drawn places beyond the margin, then Team Gomme's fortress
+  brouillon: 'edge', esquisses: 'edge', forteresse1: 'gomme', forteresse2: 'gomme', forteresse3: 'gomme',
 };
 
 /** Every town has its own theme, which also plays in its houses. */

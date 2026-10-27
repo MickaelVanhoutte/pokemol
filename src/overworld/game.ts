@@ -203,7 +203,12 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
         tile(id).paint(p, frame, (dx, dy) => get(x + dx, y + dy), x, y);
       }
     }
-    for (const b of def.buildings ?? []) ctx.drawImage(paintBuilding(b), (b.x + MARGIN) * TILE, (b.y + MARGIN) * TILE);
+    for (const b of def.buildings ?? []) {
+      // a building not coloured in yet: only its pencil lines on the paper
+      if (b.sketch) ctx.filter = 'grayscale(1) contrast(0.55) brightness(1.45)';
+      ctx.drawImage(paintBuilding(b), (b.x + MARGIN) * TILE, (b.y + MARGIN) * TILE);
+      ctx.filter = 'none';
+    }
     pencilize(c);
     layers.push(c);
   }

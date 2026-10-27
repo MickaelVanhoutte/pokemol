@@ -12,9 +12,9 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     rows: [
       'YYYYYYYYYnnYYYYYYYYY',
       'YnnnnnnnnnnnnnnnnnnY',
-      'YnnYnnnnnnnnnnnnYnnY',
-      'YnnnnnnnnnnnnnnnnnnY',
-      'YnnnnnnnnnnnnnnnnnnY',
+      'YggYggggggggggggYggY',
+      'YggggggggggggggggggY',
+      'YggggggggggggggggggY',
       'YnYnnnnnnnnnnnnnnYnY',
       'YnnnnnnnnnnnnnnnnnnY',
       'TnnnnYnnn::nnnYnnnnT',
@@ -34,7 +34,24 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       { x: 10, y: 0, to: { map: 'bordPage', x: 8, y: 12, facing: 'up' } },
     ],
     triggers: [{ x: 9, y: 9, w: 2, h: 1, script: 'rivalFinal', if: 'a3.usine', unless: 'tr:rivalFinal' }],
-    npcs: [{ id: 'rivalEnd', x: 9, y: 6, look: LOOKS.rival, facing: 'down', script: 'rivalFinal', showIf: 'a3.usine', hideIf: 'tr:rivalFinal' }],
+    npcs: [
+      { id: 'rivalEnd', x: 9, y: 6, look: LOOKS.rival, facing: 'down', script: 'rivalFinal', showIf: 'a3.usine', hideIf: 'tr:rivalFinal' },
+      { id: 'rbGaston', x: 6, y: 12, look: { hair: '#8a8494', shirt: '#c9d8f0', pants: '#c9d8f0', hat: '#f4f0e6' }, facing: 'right', trainer: 'rbGaston', sight: 3 },
+      { id: 'rbMila', x: 13, y: 13, look: { hair: '#c0582a', shirt: '#f6c8d8', pants: '#f6c8d8', longHair: true }, facing: 'left', trainer: 'rbMila', sight: 3 },
+    ],
+    // the last stretch before the Edge of the Page: only sketched grass
+    encounters: {
+      rate: 0.15,
+      table: [
+        { id: '011', w: 4, min: 41, max: 42, time: 'night' },
+        { id: '049', w: 20, min: 40, max: 42 },
+        { id: '053', w: 12, min: 40, max: 42 },
+        { id: '064', w: 16, min: 40, max: 42 },
+        { id: '066', w: 16, min: 40, max: 42 },
+        { id: '036', w: 16, min: 40, max: 42, time: 'day' },
+        { id: '057', w: 16, min: 40, max: 42 },
+      ],
+    },
   },
 
   bordPage: {

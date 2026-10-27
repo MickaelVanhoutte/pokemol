@@ -11,6 +11,8 @@ export interface BuildingDef {
   /** Door column relative to the building's left edge (door sits on the bottom row). */
   door: number;
   roof?: string;
+  /** Only sketched in pencil, not coloured in. */
+  sketch?: boolean;
 }
 
 const OUT = '#2a2238';

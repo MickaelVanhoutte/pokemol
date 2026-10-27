@@ -48,6 +48,8 @@ export const MAIN: Objective[] = [
   step('phare', 'phareIle', L('Rejoins Nocturne au phare (passeur du Port).', 'Join Nocturne at the lighthouse (ferry at Port).'), ['a3.phare'], (s) => on(s, 'a3.phare') || on(s, 'badge:encre')),
   step('encre', 'encre', L('Bats Nocturne à l’Atelier de la Cité-Encre.', 'Beat Nocturne at the Ink City Atelier.'), ['badge:encre']),
   step('usine', 'usine1', L('Entre dans l’Usine à Gommes de la Cité-Encre.', 'Storm the Eraser Factory in Ink City.'), ['a3.usine']),
+  step('marge', 'route9', L('Passe la Marge, à l’ouest de la Cité-Encre.', 'Cross the Margin, west of Ink City.'), ['a4.marge']),
+  step('forteresse', 'forteresse1', L('Arrête la Gomme Géante de la Forteresse Gomme.', 'Stop the Giant Eraser in the Eraser Fortress.'), ['a4.machine']),
   step('rival', 'routeBlanche', L('{rival} t’attend sur la Route Blanche.', '{rival} is waiting on the Blank Road.'), ['tr:rivalFinal']),
   step('effaceur', 'bordPage', L('Arrête le Grand Effaceur au Bord de la Page.', 'Stop the Great Eraser at the Edge of the Page.'), ['tr:effaceur'], (s) => on(s, 'ending')),
 ];

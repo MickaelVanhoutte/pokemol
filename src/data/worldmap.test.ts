@@ -63,6 +63,6 @@ describe('world map', () => {
   });
 
   it('lands the balloon in front of each Inn', () => {
-    expect(TOWNS.map((t) => t.map)).toEqual(['bourg', 'ville', 'plume', 'port', 'feutre', 'braise', 'paillette', 'gouache', 'encre', 'galerie']);
+    expect(TOWNS.map((t) => t.map)).toEqual(['bourg', 'ville', 'plume', 'port', 'feutre', 'braise', 'paillette', 'gouache', 'encre', 'brouillon', 'galerie']);
   });
 });

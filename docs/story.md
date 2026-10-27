@@ -54,6 +54,7 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 | 4 | `feutre` | Ville-Feutre's warehouse, Zélie freed (`feutreRestore`) | colour it all back | keep a few grey lines (`x` tiles in the streets, the locals say why) |
 | 5 | `rival` | Misty Tower top, the rival after Blanche (`towerFreed` → `rivalDoubts`): « je suis nul » | « entraîne-toi ! » | « t’es génial comme t’es » |
 | 6 | `encre` | Atelier Encre, Nocturne after the badge (`encreChoice`): the ink blot on her fresco | rub it out, paint it again (`V` stars) | turn it into a moon (`N`) |
+| 7 | `hameau` | Hameau-Brouillon, the Elder of Sketches (`hameauChoice`): « tu veux bien nous finir ? » | colour the hamlet in (patch `hameauColour`, buildings coloured) | « vous êtes beaux comme ça, pas finis » (it stays sketched) |
 
 Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was.
 
@@ -97,6 +98,7 @@ they are used.
 | 13 | `route8`, `encre` (Cité-Encre) | The Atelier is locked: Nocturne’s note (`atelierEncreDoor`) sends you back south | `a3.note` |
 | 13b | `port` → ferry (`passeur`) → `phareIle`, `phare1`–`phare3` (Phare de l’Encrier) | Grunts, a block-and-plate room (2F), **Captain Buvard** at the lantern; Nocturne gets her Midnight Ink back (`phareEnd`) | `a3.phare` |
 | 13c | `encre`, `atelierEncre`, `usine1`–`usine3` | 🏅 **Nocturne**, Ghost. Then the Eraser Factory: Rature and Blanche again; the Great Eraser escapes | `badge:encre`, `a3.usine` |
+| 13d | `encre` (west exit) → `route9` (Route de la Marge), `brouillon` (Hameau-Brouillon), `esquisses` (Forêt des Esquisses), `forteresse1`–`3` (Forteresse Gomme) | Act 4 (`src/story/act4.ts`, maps in `src/data/maps/marge.ts`): a white wall closes the north of Cité-Encre (`murBlanc` patch, `encreNorth`). West past the red margin (`margeCross`, doodles of wings in the margin), the hamlet of unfinished drafts (choice 7, `hameauChoice`: coloured in, or left sketched: `sketchUnless` buildings and a patch), the sketched forest (sketch grass `g`), the fortress (1F crayon barriers, 2F glossy paper, 3F the rival heals you, then Buvard, Rature and Blanche, who say they are the little voices of doubt). Pulling the Giant Eraser's lever (`grandeGomme`) brings the wall down and blows you back to Cité-Encre | `a4.marge`, `choix:hameau`, `a4.rival`, `a4.machine` |
 | 14 | `routeBlanche`, `bordPage` (Le Bord de la Page) | Half-drawn world: final rival battle, then the Great Eraser with the choice | `tr:rivalFinal`, `tr:effaceur` |
 | 15 | `chambre` | The real bedroom, Papa, the drawings on the desk, credits | `ending` |
 
@@ -270,7 +272,8 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Mont Fusain, Braise | L20–23 (wild L19–23) | Ambre L23/20/24 |
 | Route 6, Paillette, Tour | L23–27 | Célestine L26/27/28/29 (Lamacorne added), Blanche L23/24/23/24 |
 | Routes 7–8, Gouache, Lighthouse, Encre, Factory | L27–33 (three Bestioles per trainer) | Basile L27–30 (four), Buvard L29–31, Nocturne L30–33 (five, an Ombrouille ace), Rature L31–32 and Blanche L33–34 (five each) |
-| Finale | — | Rival L28–31 (6), Great Eraser L27–31 (5) |
+| Act 4: Route de la Marge, Forêt des Esquisses, Forteresse Gomme | L35–40, four Bestioles each (wild L34–39) | Buvard L40–42, Rature L39–40, Blanche L41–43 (five each, one after the other; the rival heals you first) |
+| Finale | Route Blanche: Gaston and Mila L40–41 (four each), sketch grass | Rival L40–41 and his starter L45 (6), Great Eraser L40–41 and Ombrouille L45 (5) |
 
 Run `npm run balance` for the current numbers instead of trusting this table.
 
@@ -328,7 +331,11 @@ equal level are a fight). Wild levels rose by 1 (Act 2) to 4 (Act 3), the option
 echo cave L38 Ombrouille, Bois Perdu, Grotte des Ratures, the island, the Super Rod).
 
 The curve now brings the team to Marine at L17, Ambre L23, Célestine L25, Basile L29, Nocturne L32 and the end
-of the Factory at L34 (it was L29). Act 4, beyond the margin, takes it to about L45 before the finale.
+of the Factory at L34 (it was L29). Act 4, beyond the margin (23 trainers with four Bestioles, about 6 forced wild
+battles), takes it to L41, Route Blanche to L42 and the Great Eraser to L43 (`curve.test.ts` checks it now runs
+down to the finale and ends at 42 or more). The finale bosses keep a high ace (L45) with lower teammates: on
+Normal the rival sits at 44–79% and the Great Eraser at 42–57%. A player who fights a little more than the
+forced minimum, or rematches route trainers, arrives around L45.
 Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Hard 0–100% depending on the starter.
 
 **The owner's request (Oct 2026):** the first battles must let players learn the mechanics.

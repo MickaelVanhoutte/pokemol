@@ -437,6 +437,38 @@ export const TILES: Record<string, TileDef> = {
       if (hash(x, y, 4) < 0.5) { p.rect(4 + Math.floor(hash(x, y, 5) * 6), 6, 2, 1, '#e8a0b0'); p.px(10, 10, '#e8a0b0'); }
     },
   },
+  // Team Gomme's Giant Eraser (a block of these tiles): pink rubber on top, the blue sleeve below, gears around
+  bigeraser: {
+    solid: true,
+    paint: (p, _f, n, x, y) => {
+      TILES.towerfloor.paint(p, 0, n, x, y);
+      const top = n(0, -1) !== 'bigeraser', left = n(-1, 0) !== 'bigeraser', right = n(1, 0) !== 'bigeraser';
+      p.rect(left ? 2 : 0, top ? 3 : 0, 16 - (left ? 2 : 0) - (right ? 2 : 0), 16 - (top ? 3 : 0), top ? '#f29ab8' : '#5b8ad6');
+      if (top) { p.rect(left ? 2 : 0, 3, 16 - (left ? 2 : 0) - (right ? 2 : 0), 2, '#f8c4d6'); p.rect(left ? 2 : 0, 14, 16 - (left ? 2 : 0) - (right ? 2 : 0), 2, '#c96a8a'); }
+      else for (let i = 3; i < 16; i += 5) p.rect(i, 2, 1, 12, '#3f68b0');
+      if (left) p.rect(1, top ? 3 : 0, 1, top ? 13 : 16, '#2a2238');
+      if (right) p.rect(14, top ? 3 : 0, 1, top ? 13 : 16, '#2a2238');
+      if (top) p.rect(left ? 1 : 0, 2, 16 - (left ? 1 : 0) - (right ? 1 : 0), 1, '#2a2238');
+      if (n(0, 1) !== 'bigeraser') p.rect(left ? 1 : 0, 15, 16 - (left ? 1 : 0) - (right ? 1 : 0), 1, '#2a2238');
+      if (top && (left || right)) { p.disc(left ? 2 : 13, 3, 2, '#8a8494'); p.px(left ? 2 : 13, 3, '#2a2238'); }
+    },
+  },
+  // tall grass beyond the margin: only pencil blades on the paper (wild Bestioles hide there too)
+  sketchgrass: {
+    encounter: true,
+    over: true,
+    animated: true,
+    paint: (p, f, _n, x, y) => {
+      p.fill('#fbf6ea');
+      p.noise(0.04, '#e9e0cc', x * 5 + y * 11);
+      const g = '#8a8494';
+      for (const [ox, oy] of [[1, 1], [9, 1], [5, 8], [12, 9]] as const) {
+        for (const [bx, h] of [[0, 5], [2, 6], [4, 4]] as const) {
+          for (let i = 0; i < h; i++) p.px(ox + bx + (i < 2 && f ? 1 : 0), oy + i, i === 0 ? '#b8b0c4' : g);
+        }
+      }
+    },
+  },
   // the edge of the page: the world is only sketched there, not coloured in yet
   paper: {
     paint: (p, _f, _n, x, y) => {

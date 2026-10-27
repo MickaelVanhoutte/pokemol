@@ -6,7 +6,7 @@ import { CURVE_PATH, curve, forcedSteps } from './curve';
  * Bestioles they can't avoid keeps up without grinding. Each act is checked once its routes have been
  * made longer: `CHECKED_UNTIL` moves forward with them.
  */
-const CHECKED_UNTIL = 'usine3';
+const CHECKED_UNTIL = 'bordPage';
 
 describe('the level curve on Normal', () => {
   const { rows } = curve('normal');
@@ -27,5 +27,11 @@ describe('the level curve on Normal', () => {
     for (const s of CURVE_PATH.filter((x) => x.from && x.to)) {
       expect(forcedSteps(s.map, s.from!, s.to!), `${s.from} → ${s.map} → ${s.to}`).toBeGreaterThanOrEqual(0);
     }
+  });
+
+  // the owner asked for a longer story (iteration 16): the team reaches the finale in the forties
+  it('brings the team to the Great Eraser around level 43', () => {
+    const last = rows.find((r) => r.trainer === 'effaceur')!;
+    expect(last.starter).toBeGreaterThanOrEqual(42);
   });
 });

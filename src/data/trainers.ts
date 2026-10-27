@@ -1,6 +1,7 @@
 import { L, type LText } from '../i18n';
 import { createMon, MAX_LEVEL, type Mon } from '../engine/pk/creature';
 import { prefs, type Difficulty } from '../state/prefs';
+import { grownForm } from './creatures';
 import { NEUTRAL_NATURE } from './natures';
 
 export interface TrainerMon {
@@ -649,13 +650,153 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Même mon blanc… a des couleurs, maintenant.', 'Even my white… has colours in it now.')],
   }),
   // ---------------------------------------------------------------- the end of the page
+  // ---------------------------------------------------------------- Act 4: the Margin Road (src/data/maps/marge.ts)
+  T({
+    id: 'r9a', name: L('Peintre Victor', 'Painter Victor'), party: [{ species: '053', level: 34 }, { species: '036', level: 34 }, { species: '061', level: 34 }, { species: '043', level: 35 }], money: 1100,
+    before: [L('Je repeins les lignes du cahier. La rouge, là-bas, personne n’ose la franchir !', 'I repaint the lines of the sketchbook. The red one over there, nobody dares to cross it!')],
+    after: [L('Toi, tu vas la franchir, hein ?', 'You’re going to cross it, aren’t you?')],
+  }),
+  T({
+    id: 'r9b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '061', level: 35 }, { species: '057', level: 35 }, { species: '043', level: 36 }, { species: '008', level: 36 }], money: 1100, grey: true,
+    before: [L('Au-delà de la marge, rien n’est colorié. Et c’est très bien comme ça !', 'Beyond the margin, nothing is coloured in. And that’s just fine!')],
+    after: [L('Ma Bestiole a rougi… de honte, ou de couleur ?', 'My Critter went red… with shame, or with colour?')],
+  }),
+  T({
+    id: 'r9c', name: L('Collégienne Suzon', 'Schoolgirl Suzon'), party: [{ species: '057', level: 34 }, { species: '053', level: 34 }, { species: '028', level: 35 }, { species: '047', level: 35 }], money: 1100,
+    before: [L('Dans la marge, j’écris mes notes. Toi, tu vas avoir une mauvaise note !', 'I write my notes in the margin. You’re going to get a bad mark!')],
+    after: [L('Zéro pointé… pour moi.', 'A big zero… for me.')],
+  }),
+  T({
+    id: 'r9d', name: L('Gribouilleur Titouan', 'Doodler Titouan'), party: [{ species: '043', level: 35 }, { species: '049', level: 35 }, { species: '010', level: 35 }, { species: '064', level: 36 }], money: 1150,
+    before: [L('Ici, on dessine sans gomme. Si on rate, on continue !', 'Here, we draw without an eraser. If we get it wrong, we keep going!')],
+    after: [L('J’ai raté… mais je continue !', 'I got it wrong… but I keep going!')],
+  }),
+  T({
+    id: 'r9e', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '064', level: 33 }, { species: '055', level: 33 }, { species: '057', level: 34 }, { species: '046', level: 34 }], money: 1150, grey: true,
+    before: [L('Les brouillons, ça se jette. Hop, à la poubelle !', 'Drafts get thrown away. Straight in the bin!')],
+    after: [L('Mes Bestioles reviennent en couleurs… même ici ?', 'My Critters are getting their colours back… even here?')],
+  }),
+  T({
+    id: 'r9f', name: L('Croqueuse Aya', 'Sketcher Aya'), party: [{ species: '064', level: 34 }, { species: '048', level: 34 }, { species: '052', level: 35 }, { species: '028', level: 35 }], money: 1150,
+    before: [L('Un trait, deux traits… et hop, une Bestiole ! Pas besoin qu’elle soit parfaite.', 'One line, two lines… and there, a Critter! It doesn’t need to be perfect.')],
+    after: [L('Elle était parfaite, finalement.', 'It was perfect after all.')],
+  }),
+  // ---------------------------------------------------------------- Act 4: the Sketch Forest
+  T({
+    id: 'es1', name: L('Bûcheronne Gaëlle', 'Lumberjill Gaelle'), party: [{ species: '048', level: 36 }, { species: '068', level: 36 }, { species: '040', level: 36 }, { species: '064', level: 37 }], money: 1200,
+    before: [L('Ces arbres ne sont que des traits. Je n’arrive même pas à les couper !', 'These trees are only lines. I can’t even chop them down!')],
+    after: [L('Je vais plutôt les colorier.', 'I’ll colour them in instead.')],
+  }),
+  T({
+    id: 'es2', name: L('Médium Sélène', 'Medium Selene'), party: [{ species: '064', level: 37 }, { species: '010', level: 37 }, { species: '066', level: 38 }, { species: '053', level: 38 }], money: 1200,
+    before: [L('Les esquisses chuchotent. Elles disent que tu doutes, toi aussi…', 'The sketches whisper. They say you have doubts too…')],
+    after: [L('Elles disent aussi que tu avances quand même.', 'They also say you keep going anyway.')],
+  }),
+  T({
+    id: 'es3', name: L('Randonneur Hector', 'Hiker Hector'), party: [{ species: '053', level: 37 }, { species: '041', level: 37 }, { species: '040', level: 38 }, { species: '038', level: 38 }], money: 1200,
+    before: [L('Je me suis perdu. Tout se ressemble quand rien n’est colorié !', 'I’m lost. Everything looks the same when nothing is coloured in!')],
+    after: [L('Bon, je te suis, alors ?', 'All right, shall I follow you then?')],
+  }),
+  T({
+    id: 'es4', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '064', level: 36 }, { species: '057', level: 36 }, { species: '043', level: 36 }, { species: '010', level: 37 }], money: 1250, grey: true,
+    before: [L('La Forteresse est tout près. Tu n’iras pas plus loin !', 'The Fortress is very close. You won’t get any further!')],
+    after: [L('Bon… tu iras plus loin.', 'Fine… you’ll get further.')],
+  }),
+  T({
+    id: 'es5', name: L('Peintre Ulysse', 'Painter Ulysses'), party: [{ species: '010', level: 36 }, { species: '017', level: 36 }, { species: '018', level: 36 }, { species: '019', level: 37 }], money: 1250,
+    before: [L('Je suis venu colorier la forêt. Mais par où commencer ?', 'I came to colour the forest in. But where do I start?')],
+    after: [L('Par le début, sans doute.', 'At the beginning, I suppose.')],
+  }),
+  T({
+    id: 'es6', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '066', level: 37 }, { species: '046', level: 37 }, { species: '055', level: 38 }, { species: '057', level: 38 }], money: 1250, grey: true,
+    before: [L('Le patron a construit une Gomme Géante. Bientôt, le monde entier sera blanc !', 'The boss built a Giant Eraser. Soon the whole world will be white!')],
+    after: [L('Bon, peut-être pas le monde entier…', 'Well, maybe not the whole world…')],
+  }),
+  // ---------------------------------------------------------------- Act 4: the Eraser Fortress
+  T({
+    id: 'f1g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '064', level: 38 }, { species: '043', level: 38 }, { species: '057', level: 38 }, { species: '010', level: 39 }], money: 1300, grey: true,
+    before: [L('Ça dépasse ! Ça dépasse de partout ! Moi, je gomme tout ce qui dépasse.', 'It goes over the lines! Over the lines everywhere! I rub out everything that goes over.')],
+    after: [L('Ça dépasse… mais c’est joli.', 'It goes over… but it’s pretty.')],
+  }),
+  T({
+    id: 'f1g2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '064', level: 38 }, { species: '046', level: 38 }, { species: '055', level: 39 }, { species: '059', level: 39 }], money: 1300, grey: true,
+    before: [L('Les autres dessinent mieux que toi. Tout le monde le sait !', 'Everyone else draws better than you. Everybody knows it!')],
+    after: [L('Bon. Peut-être pas TOUT le monde.', 'Well. Maybe not EVERYBODY.')],
+  }),
+  T({
+    id: 'f1g3', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '047', level: 38 }, { species: '057', level: 39 }, { species: '066', level: 39 }, { species: '008', level: 39 }], money: 1300, grey: true,
+    before: [L('Recommence ! Recommence encore ! C’est jamais assez bien !', 'Start again! Start again! It’s never good enough!')],
+    after: [L('C’était… assez bien.', 'That was… good enough.')],
+  }),
+  T({
+    id: 'f2a', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '053', level: 39 }, { species: '043', level: 39 }, { species: '046', level: 39 }, { species: '055', level: 40 }], money: 1350, grey: true,
+    before: [L('C’est moche. C’est tout moche. … Je dis ça à tout le monde, tu sais.', 'It’s ugly. It’s all ugly. … I say that to everyone, you know.')],
+    after: [L('C’est pas si moche, en fait.', 'It’s not that ugly, actually.')],
+  }),
+  T({
+    id: 'f2b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '064', level: 39 }, { species: '059', level: 39 }, { species: '057', level: 40 }, { species: '010', level: 40 }], money: 1350, grey: true,
+    before: [L('Une page blanche ne se trompe jamais. Toi, si !', 'A blank page is never wrong. You are!')],
+    after: [L('Tu t’es trompé… et tu as gagné quand même ?', 'You got it wrong… and you still won?')],
+  }),
+  T({
+    id: 'f2c', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '053', level: 39 }, { species: '066', level: 39 }, { species: '043', level: 40 }, { species: '046', level: 40 }], money: 1350, grey: true,
+    before: [L('Tu ne seras jamais {g:une vraie artiste|un vrai artiste} !', 'You’ll never be a real artist!')],
+    after: [L('… Si, peut-être, en fait.', '… Maybe you will, actually.')],
+  }),
+  // the three admins, one last time: they are the little voices of doubt
+  T({
+    id: 'buvard2', name: L('Capitaine Buvard', 'Captain Blotter'), money: 5000, grey: true,
+    party: [{ species: '042', level: 40 }, { species: '059', level: 40 }, { species: '070', level: 41 }, { species: '060', level: 41 }, { species: '008', level: 42, item: 'baie-doree' }],
+    before: [
+      L('Ho ho… Te revoilà. Tu sais ce que je suis, au fond ?', 'Ho ho… You again. Do you know what I really am?'),
+      L('La petite voix qui dit : « les autres font mieux ». Je bois tout ton courage, comme l’encre.', 'The little voice that says: “the others do it better”. I soak up all your courage, like ink.'),
+    ],
+    after: [L('Les autres font autrement. Pas mieux. Je crois que je viens de comprendre…', 'The others do it differently. Not better. I think I just understood…')],
+  }),
+  T({
+    id: 'rature3', name: L('Admin Rature', 'Admin Smudge'), money: 5000, grey: true,
+    party: [{ species: '036', level: 39 }, { species: '057', level: 39 }, { species: '055', level: 39 }, { species: '010', level: 40 }, { species: '011', level: 40, item: 'baie-doree' }],
+    before: [
+      L('Moi, je suis la voix qui dit : « ça dépasse, c’est raté, barre tout ». On n’est pas méchants, tu sais.', 'I’m the voice that says: “it goes over, it’s wrong, cross it all out”. We’re not mean, you know.'),
+      L('On est juste… les petites voix dans la tête de quelqu’un qui dessine.', 'We’re just… the little voices in the head of someone who draws.'),
+    ],
+    after: [L('Une rature, ça peut aussi devenir un dessin. Je ne savais pas.', 'A crossing-out can become a drawing too. I didn’t know that.')],
+  }),
+  T({
+    id: 'blanche3', name: L('Admin Blanche', 'Admin Whiteout'), money: 5000, grey: true,
+    party: [{ species: '043', level: 41 }, { species: '046', level: 42 }, { species: '059', level: 42 }, { species: '066', level: 42 }, { species: '049', level: 43, item: 'baie-doree' }],
+    before: [
+      L('Et moi, je suis celle qui dit : « recommence tout, depuis le début, sur une page blanche ».', 'And I’m the one who says: “start it all again, from the beginning, on a blank page”.'),
+      L('Derrière moi, la Gomme Géante. Et au Bord de la Page, le patron t’attend : il veut finir de gommer ton cocon.', 'Behind me, the Giant Eraser. And at the Edge of the Page, the boss is waiting: he wants to finish rubbing out your cocoon.'),
+    ],
+    after: [L('Une page blanche, c’est joli… surtout quand quelqu’un dessine dessus.', 'A blank page is pretty… especially when someone draws on it.')],
+  }),
+  // ---------------------------------------------------------------- Route Blanche, before the Edge of the Page
+  T({
+    id: 'rbGaston', name: L('Somnambule Gaston', 'Sleepwalker Gaston'), party: [{ species: '049', level: 40 }, { species: '052', level: 40 }, { species: '010', level: 41 }, { species: '008', level: 41 }], money: 1400,
+    before: [L('Zzz… Je rêve que je me bats… Zzz… contre toi…', 'Zzz… I’m dreaming I’m battling… Zzz… you…')],
+    after: [L('Zzz… Je rêve que j’ai perdu. Zzz…', 'Zzz… I’m dreaming I lost. Zzz…')],
+  }),
+  T({
+    id: 'rbMila', name: L('Rêveuse Mila', 'Dreamer Mila'), party: [{ species: '028', level: 40 }, { species: '047', level: 41 }, { species: '014', level: 41 }, { species: '064', level: 41 }], money: 1400,
+    before: [L('Au bout de cette route, la page s’arrête. Après, il n’y a plus que le réveil…', 'At the end of this road, the page stops. After that, there’s only waking up…')],
+    after: [L('Bon réveil, alors !', 'Have a nice waking up, then!')],
+  }),
   T({
     id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true,
-    party: [{ species: '008', level: 28 }, { species: '007', level: 27 }, { species: '004', level: 27 }, { species: '010', level: 28 }, { species: '011', level: 31, item: 'baie-doree' }],
+    party: [{ species: '008', level: 40 }, { species: '007', level: 40 }, { species: '027', level: 40 }, { species: '010', level: 41 }, { species: '011', level: 45, item: 'baie-doree' }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
   }),
 ].map((t) => [t.id, t]));
+
+/** The rival's team on Route Blanche: his starter, grown to its level, is the ace. */
+export function rivalFinalTeam(rivalStarter: string): TrainerDef['party'] {
+  return [
+    { species: '036', level: 40, item: 'plume-vive' }, { species: '008', level: 40 }, { species: '053', level: 41, item: 'lunettes-tetues' },
+    { species: '007', level: 40 }, { species: '027', level: 41 }, { species: grownForm(rivalStarter, 45), level: 45, item: 'baie-doree' },
+  ];
+}
 
 /** The rival picks the starter that yours beats, so the very first battle is winnable. */
 export const RIVAL_COUNTER: Record<string, string> = { '001': '003', '002': '001', '003': '002' };

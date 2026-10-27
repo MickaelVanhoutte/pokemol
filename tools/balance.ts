@@ -15,7 +15,7 @@
 import { act, createBattle, type Action, type BattleState } from '../src/engine/pk/battle.ts';
 import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
-import { DIFFICULTY, TRAINERS, partyOf } from '../src/data/trainers.ts';
+import { DIFFICULTY, RIVAL_COUNTER, TRAINERS, partyOf, rivalFinalTeam } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
 import { CONCOURS } from '../src/data/postgame.ts';
 import { curve } from '../src/data/curve.ts';
@@ -110,20 +110,30 @@ const STEPS: [string, Team][] = [
   ['nocturne', teamAt('nocturne', 6)],
   ['rature2', teamAt('rature2', 6)],
   ['blanche2', teamAt('blanche2', 6)],
-  ['effaceur', teamAt('blanche2', 6)],
+  // Act 4, beyond the margin, then the finale
+  ['r9d', teamAt('r9d', 6)],
+  ['es4', teamAt('es4', 6)],
+  ['f2b', teamAt('f2b', 6)],
+  ['buvard2', teamAt('buvard2', 6)],
+  ['rature3', teamAt('rature3', 6)],
+  ['blanche3', teamAt('blanche3', 6)],
+  ['rivalFinal', teamAt('rivalFinal', 6)],
+  ['effaceur', teamAt('effaceur', 6)],
   // post-game: the Grand Concours, each fight alone with a level 50 team
   ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(50, 6, 0)]),
 ];
 const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer.id === id)!.trainer;
+/** The foe's team against this starter: the final rival picks the starter that beats yours. */
+const foeParty = (id: string, starter: string) => (id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter]) : trainer(id).party);
 
 console.log(`difficulty ${difficulty}, ${n} fights per cell — Minousse / Braisou / Clapotin`);
 for (const [id, t] of STEPS) {
   if (only && !only.includes(id)) continue;
   const cells = ['001', '002', '003'].map((starter) => {
     const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? grownForm(starter, lv) : sp, lv, { rng: seed * 13 + i }));
-    const rate = winRate(mk, (seed) => partyOf(trainer(id).party, seed, difficulty), DIFFICULTY[difficulty].slip, n);
+    const rate = winRate(mk, (seed) => partyOf(foeParty(id, starter), seed, difficulty), DIFFICULTY[difficulty].slip, n);
     return `${Math.round(rate * 100)}%`.padStart(5);
   });
-  const foe = trainer(id).party.map((m) => m.level).join('/');
+  const foe = foeParty(id, '001').map((m) => m.level).join('/');
   console.log(id.padEnd(10), `vs L${foe}`.padEnd(16), `team L${t.map((x) => x[1]).join('+')}`.padEnd(22), cells.join(' '));
 }

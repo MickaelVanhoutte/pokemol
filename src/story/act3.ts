@@ -1,7 +1,7 @@
 import { L, tr } from '../i18n';
 import { playMusic } from '../audio/music';
-import { CREATURES, grownForm } from '../data/creatures';
-import { partyOf } from '../data/trainers';
+import { CREATURES } from '../data/creatures';
+import { partyOf, rivalFinalTeam } from '../data/trainers';
 import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
@@ -246,11 +246,6 @@ scripts.echoShadow = async () => {
   }
 };
 
-scripts.encreNorth = async () => {
-  const g = getGame();
-  await say(L('Au nord, le monde n’est même plus colorié… Une drôle de brume blanche empêche d’avancer.', 'Up north, the world isn’t even coloured in anymore… A strange white mist keeps you from going on.'));
-  await g.walk(g.player, ['down'], 160);
-};
 
 scripts.rature2Stop = async () => {
   const g = getGame();
@@ -306,7 +301,8 @@ scripts.usineEnd = async () => {
   await say(L('Viens donc me trouver au Bord de la Page, là où tout finit. Nous verrons bien ce qu’il restera de tes gribouillis.', 'Come and find me at the Edge of the Page, where everything ends. We’ll see what’s left of your scribbles.'), EFFACEUR);
   await flash('white', 300);
   g.remove(boss.id);
-  await say(L('(La brume blanche au nord de la Cité-Encre s’est levée.)', '(The white mist north of Ink City has lifted.)'));
+  await shake(700);
+  await say(L('Au loin, un grondement… Un grand mur blanc vient de se dresser au nord de la Cité-Encre !', 'In the distance, a rumble… A great white wall has just risen north of Ink City!'));
 };
 
 // ------------------------------------------------------------------ the last rival battle
@@ -323,11 +319,7 @@ scripts.rivalFinal = async () => {
     L('{name}… Je savais que tu viendrais jusqu’ici.', '{name}… I knew you’d make it here.'),
     L('Avant d’affronter le Grand Effaceur, montre-moi tout ce que tu as appris. Sans retenue !', 'Before you face the Great Eraser, show me everything you’ve learned. Hold nothing back!'),
   ], RIVAL);
-  const starter = grownForm(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0'), 43);
-  const party = partyOf([
-    { species: '013', level: 28, item: 'plume-vive' }, { species: '008', level: 28, item: 'gouter' }, { species: '010', level: 29, item: 'lunettes-tetues' },
-    { species: '007', level: 28 }, { species: '004', level: 29 }, { species: starter, level: 31, item: 'baie-doree' },
-  ], newSeed());
+  const party = partyOf(rivalFinalTeam(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0')), newSeed());
   const out = await fight('trainer', RIVAL, party, {
     trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
     look: LOOKS.rival, backdrop: 'sketch', music: 'rival',

@@ -16,13 +16,14 @@ import { PHARE_MAPS } from './phare';
 import { PISTE_MAPS } from './piste';
 import { ECHOS_MAPS } from './echos';
 import { LEGEND_MAPS } from './legendes';
+import { MARGE_MAPS } from './marge';
 
 /*
  * Legend: . grass  , grass2  " tall grass  : path  * flowers  ~ water  = bridge  e erased paper  T tree
  * B bush  # fence  S sign  M mailbox  R rock  _ ledge  s sand | f floor  W wall  w window  C counter
  * c carpet  X exit mat  b bookshelf  t table  p plant  P pc  h bed  v tv  m machine  H key rack  U stairs
  * K cave wall  k cave floor  r cave rock  E cave exit  Q tower wall  o tower floor  D stairs down
- * n blank paper  Y sketched tree  | notebook margin  q framed drawing  y fireflies
+ * n blank paper  Y sketched tree  | notebook margin  q framed drawing  y fireflies  g sketched tall grass
  */
 export const MAPS: Record<string, MapDef> = {
   ...HOME_MAPS,
@@ -42,4 +43,5 @@ export const MAPS: Record<string, MapDef> = {
   ...PISTE_MAPS,
   ...ECHOS_MAPS,
   ...LEGEND_MAPS,
+  ...MARGE_MAPS,
 };

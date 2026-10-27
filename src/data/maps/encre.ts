@@ -106,7 +106,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'T........::........T',
       'T........::........T',
       'T........::........T',
-      'T::::::::::::::::::T',
+      ':::::::::::::::::::T',
       'T........::........T',
       'T........::........T',
       'T........::........T',
@@ -129,8 +129,15 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       { x: 10, y: 15, to: { map: 'route8', x: 9, y: 1, facing: 'down' } },
       { x: 9, y: 0, to: { map: 'routeBlanche', x: 9, y: 14, facing: 'up' } },
       { x: 10, y: 0, to: { map: 'routeBlanche', x: 10, y: 14, facing: 'up' } },
+      // west: the Margin Road (Act 4)
+      { x: 0, y: 5, to: { map: 'route9', x: 42, y: 9, facing: 'left' } },
     ],
-    triggers: [{ x: 9, y: 1, w: 2, h: 1, script: 'encreNorth', unless: 'a3.usine' }],
+    // the white wall north of the city stands until the Giant Eraser is stopped (src/story/act4.ts)
+    patches: [{ id: 'murBlanc', x: 9, y: 0, rows: ['ee'], unless: 'a4.machine' }],
+    triggers: [
+      { x: 9, y: 1, w: 2, h: 1, script: 'encreNorth', unless: 'a4.machine' },
+      { x: 1, y: 5, script: 'encreWest', unless: 'a3.usine' },
+    ],
     signs: [{ x: 2, y: 11, text: L('CITÉ-ENCRE\nLa ville où la nuit ne sèche jamais.\nAtelier de Nocturne · Usine à Gommes', 'INK CITY\nWhere the night never dries.\nNocturne’s Atelier · Eraser Factory') }],
     items: [{ x: 18, y: 14, item: 'page-11', hidden: true }],
     npcs: [

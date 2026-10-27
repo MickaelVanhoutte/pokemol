@@ -111,6 +111,7 @@ function patched(def: MapDef): MapDef {
   if (barriersFlipped) out = { ...out, rows: flipBarriers(out.rows, true) };
   if (def.obstacles?.some((o) => o.showIf || o.hideIf || o.id)) out = { ...out, obstacles: def.obstacles.filter(visibleObstacle) };
   if (def.tintUnless && flag(def.tintUnless)) out = { ...out, tint: undefined };
+  if (def.buildings?.some((b) => b.sketchUnless)) out = { ...out, buildings: def.buildings.map((b) => (b.sketchUnless ? { ...b, sketch: !flag(b.sketchUnless) } : b)) };
   return out;
 }
 

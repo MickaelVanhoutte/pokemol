@@ -12,7 +12,7 @@ import { footprint } from '../overworld/buildings';
 import { LEGEND, type MapDef } from '../overworld/mapTypes';
 import { TILES } from '../overworld/tiles';
 import { MAPS } from './maps';
-import { TRAINERS, trainerLevel } from './trainers';
+import { rivalFinalTeam, TRAINERS, trainerLevel, type TrainerDef } from './trainers';
 
 export interface CurveStep {
   map: string;
@@ -58,12 +58,23 @@ export const CURVE_PATH: CurveStep[] = [
   { map: 'usine1' },
   { map: 'usine2', fights: ['rature2'] },
   { map: 'usine3', fights: ['blanche2'] },
+  // Act 4, beyond the margin
+  { map: 'route9', from: 'encre', to: 'brouillon' },
+  { map: 'esquisses', from: 'brouillon', to: 'forteresse1' },
+  { map: 'forteresse1' },
+  { map: 'forteresse2' },
+  { map: 'forteresse3' },
+  { map: 'routeBlanche', from: 'encre', to: 'bordPage', fights: ['rivalFinal'] },
+  { map: 'bordPage', fights: ['effaceur'] },
 ];
 
 /** Trainers you can walk around or that are extras (the strong cave guard, the tower's shadow). */
 const OPTIONAL = new Set(['gardien', 'ombre']);
-/** Team Gomme's officers: like the Atelier Masters, a boss may stand a little above the team. */
-const ADMINS = new Set(['rature', 'blanche', 'buvard', 'rature2', 'blanche2']);
+/** Team Gomme's officers and the finale: like the Atelier Masters, a boss may stand a little above the team. */
+const ADMINS = new Set(['rature', 'blanche', 'buvard', 'rature2', 'blanche2', 'buvard2', 'rature3', 'blanche3', 'rivalFinal', 'effaceur']);
+
+/** A trainer of the path: the final rival is built by the story, the others are in TRAINERS. */
+const trainerOf = (id: string): Pick<TrainerDef, 'party' | 'badge'> => (id === 'rivalFinal' ? { party: rivalFinalTeam('001'), badge: undefined } : TRAINERS[id]);
 
 const solid = (def: MapDef, x: number, y: number, blocked: Set<string>) => {
   const row = def.rows[y];
@@ -176,7 +187,7 @@ export function curve(difficulty: Difficulty = 'normal'): Curve {
       team.push({ xp: xpAt(avg) });
     }
     for (const id of [...pathTrainers(step.map), ...(step.fights ?? [])]) {
-      const t = TRAINERS[id];
+      const t = trainerOf(id);
       rows.push({
         map: step.map, trainer: id, leader: !!t.badge, boss: !!t.badge || ADMINS.has(id),
         ace: Math.max(...t.party.map((p) => trainerLevel(p.level, difficulty))),

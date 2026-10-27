@@ -143,6 +143,8 @@ export interface MapBuilding extends BuildingDef {
   /** Script run when entering the door instead of warping (dungeon gates). */
   script?: string;
   lockedText?: LText;
+  /** Drawn in pencil only (not coloured in) until this flag is set (Hameau-Brouillon). */
+  sketchUnless?: string;
 }
 
 export interface MapDef {
@@ -206,4 +208,6 @@ export const LEGEND: Record<string, string> = {
   '%': 'shadow',
   // the consequences of the story's choices: a bridge left runny, grey lines kept, Nocturne's fresco
   'u': 'bridgerun', 'x': 'greytrace', 'A': 'inkblot', 'V': 'inkfresco', 'N': 'inkmoon',
+  // tall grass only sketched in pencil, beyond the margin
+  'g': 'sketchgrass', 'a': 'bigeraser',
 };

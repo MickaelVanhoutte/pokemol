@@ -48,7 +48,9 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
    occupe la Tour Brumeuse…
 9. **Jardin-Gouache** : l’Atelier de Basile, où même l’herbe est peinte à la main.
 10. **Cité-Encre**, la ville où la nuit ne sèche jamais. Un mystère t’attend à l’Atelier de Nocturne.
-11. **Plus au nord**, le monde n’est même plus colorié… Jusqu’où va la page ?
+11. **À l’ouest, au-delà de la Marge rouge du cahier** : un hameau de brouillons que personne n’a
+    finis, une forêt dessinée au crayon, et la Forteresse de la Team Gomme.
+12. **Plus au nord**, le monde n’est même plus colorié… Jusqu’où va la page ?
 
 ## À côté de l’aventure
 
@@ -63,7 +65,8 @@ immense feuille de papier, où tous les dessins sont vivants : ce sont les **Bes
   chemin d’une clairière… et, sur la Route de l’Encre, une grotte toute raturée cache un secret tout au
   fond. On raconte que ce qu’on y trouve a quelque chose à voir avec les rêves.
 - Certaines Bestioles grandissent avec toi : entraîne-les bien, elles te réservent des surprises.
-- Les routes sont longues, pleines d’herbes hautes et de dresseurs : ton équipe s’entraîne en chemin.
+- Les routes sont longues, pleines d’herbes hautes et de dresseurs : ton équipe s’entraîne en chemin,
+  jusqu’aux alentours du niveau 45 à la fin de l’histoire.
   Attraper une Bestiole rapporte de l’expérience, et les Bestioles en retard rattrapent vite les autres.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
@@ -134,7 +137,9 @@ where every drawing is alive: the **Critters** (Bestioles).
    Tower…
 9. **Gouache Garden**: Basil’s Atelier, where even the grass is hand-painted.
 10. **Ink City**, where the night never dries. A mystery awaits at Nocturne’s Atelier.
-11. **Further north**, the world isn’t even coloured in anymore… How far does the page go?
+11. **West, beyond the red Margin of the sketchbook**: a hamlet of drafts nobody finished, a forest drawn
+    in pencil, and Team Gomme’s Fortress.
+12. **Further north**, the world isn’t even coloured in anymore… How far does the page go?
 
 ## Besides the adventure
 
@@ -149,7 +154,8 @@ where every drawing is alive: the **Critters** (Bestioles).
   clearing… and on the Ink Path, a cave full of scribbles hides a secret at the very bottom. They say
   what you find there has something to do with dreams.
 - Some Critters grow up with you: train them well, they have surprises in store.
-- The roads are long, full of tall grass and trainers: your team trains on the way. Catching a Critter
+- The roads are long, full of tall grass and trainers: your team trains on the way, up to around level 45
+  by the end of the story. Catching a Critter
   gives experience, and Critters that fall behind catch up fast.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.

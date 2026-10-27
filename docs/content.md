@@ -13,7 +13,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 |---|---|---|
 | `intro`, `rival1`, `visitedCenter`, `ending`, `pagesReward`, `dexDiploma` | story scripts | One-off story steps |
 | `rivalStarter` | lab script | Rival's species, stored as a number (e.g. `3` for `'003'`) |
-| `a1.*`, `a2.*`, `a3.*` | story scripts | Act milestones (`a1.bois`, `a2.feutre`, `a3.usine`… see [story.md](story.md#region-path)) |
+| `a1.*` … `a4.*` | story scripts | Act milestones (`a1.bois`, `a2.feutre`, `a3.usine`, `a4.marge`, `a4.rival`, `a4.machine`… see [story.md](story.md#region-path)) |
 | `tr:<trainerId>` | `trainerBattle()` on a win | Trainer beaten (NPC trainers stop battling; also used as a story gate) |
 | a trainer's `storyFlag` (`a1.bois`…) | `trainerBattle()` on a win, saved together with `tr:` and the badge | What the win unlocks; its `afterScript` only plays the scene |
 | `badge:<badgeId>` | `trainerBattle()` for leaders | Badge owned (also pushed to `save.badges`) |
