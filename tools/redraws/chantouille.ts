@@ -10,6 +10,11 @@ export default {
     shape(potato(610, 900, 66, 32, 8, 0.06), PINK, { angle: 10 });
     shape([[330, 300], [300, 120], [420, 240]], PINK, { angle: 70 }, {}, false);
     shape([[340, 260], [318, 165], [380, 235]], DEEP, { over: 0 }, { w: 3.5 }, false);
+    // the far arm, behind the body: only its paw and the microphone show past the edge, by the mouth
+    shape(band([[360, 640], [250, 620], [175, 590]], 54, 46), PINK, { angle: 30 });
+    shape(band([[165, 590], [150, 500]], 26, 20), GREY, { angle: 90, over: 0 });
+    shape(potato(148, 478, 42, 40, 9, 0.05), GREEN, { angle: 60, press: 1.1 });
+    shape(potato(170, 595, 40, 36, 9, 0.06), PINK, { angle: 30, over: 0 });
     // the round body, turned left
     shape(potato(520, 560, 290, 330, 14, 0.04), PINK, { angle: 80, over: 0.5 });
     shape(potato(390, 905, 74, 34, 8, 0.06), PINK, { angle: 10 });
@@ -27,13 +32,8 @@ export default {
     shape(potato(495, 482, 42, 56, 9, 0.04), '#3e6fd0', { angle: 90, over: 0, press: 1.2 }, { w: 4 });
     dot(316, 470, 9, 13, '#ffffff');
     dot(484, 460, 12, 15, '#ffffff');
-    // the near arm comes round from the side, its paw holding the microphone up to the mouth
-    shape(band([[300, 690], [282, 610]], 28, 22), GREY, { angle: 90, over: 0 });
-    shape(potato(278, 590, 42, 40, 9, 0.05), GREEN, { angle: 60, press: 1.1 });
-    shape(band([[470, 780], [380, 790], [320, 740]], 58, 50), PINK, { angle: 30 });
-    shape(potato(310, 715, 40, 36, 9, 0.06), PINK, { angle: 30, over: 0 });
-    // singing: a small round open mouth, low on the face
-    shape(potato(395, 690, 42, 36, 9, 0.05), '#b52a3c', { angle: 0, over: 0 }, { w: 4.5 });
-    shape(potato(400, 704, 22, 14, 7, 0.05), '#f39ab0', { over: 0 }, { w: 0.1 });
+    // singing: a small round open mouth, near the front edge, toward the microphone
+    shape(potato(330, 640, 38, 34, 9, 0.05), '#b52a3c', { angle: 0, over: 0 }, { w: 4.5 });
+    shape(potato(334, 653, 20, 12, 7, 0.05), '#f39ab0', { over: 0 }, { w: 0.1 });
   },
 } satisfies Redraw;
