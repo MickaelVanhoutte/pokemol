@@ -24,7 +24,8 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - **Every Bestiole is drawn three-quarters, turned to the left** (`faces: 'left'`), never straight
   from the front: it looks silly in battle, and battles mirror the drawings so both Bestioles face each
   other (`src/data/bestioles.test.ts` checks that `faces` is set). Far limbs start hidden behind the
-  body, every part stays attached, nothing hangs limp.
+  body, every part stays attached, nothing hangs limp. An evolution is never a recolour: first forms are
+  cute and simple, evolved forms bigger, more complex and more impressive (new silhouette and features).
 - **French first, English second.** Every player-visible text is written `L('français', 'English')`
   and shown with `tr()`. Use typographic `’` and `« »`. Gendered French uses `{g:féminin|masculin}`
   (the player picks girl or boy). `{name}` and `{rival}` are global placeholders.

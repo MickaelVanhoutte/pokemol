@@ -358,6 +358,12 @@ and the Grand Concours got Glissonde (Marine), Canarmure L44 (Ambre), Psymagus L
 Pantharuse (Nocturne). Those stages, which the sims won 98–100% of the time, now sit at 50–93% on Normal.
 The ten final forms joined `TOWER_POOL`.
 
+**Evolutions redrawn (Oct 2026).** The owner found some evolved forms too close to their earlier form (a
+recolour, a bigger copy). Redrawn with a new silhouette: Clochegueule slimmer, Gloutoflor with vines and a
+flytrap jaw, Ossagarde tall with a raised club, Furisinge punching in iron cuffs, Hippoplume with quills and a
+pen-nib snout. Zigzéclair, Banquisette and Dragondine were brouillons: they moved to the `crayon` kit and lost
+`draft: true` (26 brouillons left).
+
 **Family powers (iteration 8).** Every family got a power, a talent or a signature move
 ([docs/bestioles.md](bestioles.md) lists them). Trainers use talent slot 0, so their Bestioles always have
 it. Retuned with the sims:

@@ -229,7 +229,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '027', slug: 'zigzeclair', faces: 'left', draft: true, name: L('Zigzéclair', 'Zigzapper'), kind: L('Bestiole Orage', 'Storm Critter'),
+    id: '027', slug: 'zigzeclair', faces: 'left', name: L('Zigzéclair', 'Zigzapper'), kind: L('Bestiole Orage', 'Storm Critter'),
     type: 'electrique', base: { hp: 60, atk: 88, def: 55, spa: 90, spd: 80, spe: 107 },
     catchRate: 75, baseExp: 122, evYield: { spe: 3 }, rarity: 'uncommon', evolvesFrom: '004',
     stencils: ['pochoir-02', 'pochoir-04', 'pochoir-11', 'pochoir-12', 'pochoir-17', 'pochoir-19'],
@@ -547,7 +547,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '042', slug: 'banquisette', faces: 'left', draft: true, name: L('Banquisette', 'Glacielle'), kind: L('Bestiole Banquise', 'Ice Floe Critter'),
+    id: '042', slug: 'banquisette', faces: 'left', name: L('Banquisette', 'Glacielle'), kind: L('Bestiole Banquise', 'Ice Floe Critter'),
     type: 'glace', type2: 'eau', base: { hp: 90, atk: 70, def: 80, spa: 80, spd: 95, spe: 70 },
     catchRate: 75, baseExp: 176, evYield: { spd: 2 }, rarity: 'uncommon', evolvesFrom: '032',
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
@@ -603,7 +603,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '044', slug: 'dragondine', faces: 'left', draft: true, name: L('Dragondine', 'Dragonflow'), kind: L('Bestiole Ondine', 'Water-Sprite Critter'),
+    id: '044', slug: 'dragondine', faces: 'left', name: L('Dragondine', 'Dragonflow'), kind: L('Bestiole Ondine', 'Water-Sprite Critter'),
     type: 'dragon', base: { hp: 61, atk: 84, def: 65, spa: 70, spd: 70, spe: 70 },
     catchRate: 45, baseExp: 144, evYield: { atk: 2 }, rarity: 'rare', evolvesFrom: '034', evolutions: [{ to: '045', level: 55 }],
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-14', 'pochoir-16', 'pochoir-19', 'pochoir-20'],

@@ -16,7 +16,6 @@ import tortorrent from './tortorrent.ts';
 import bouquetigre from './bouquetigre.ts';
 import dragobraise from './dragobraise.ts';
 import piafleche from './piafleche.ts';
-import zigzeclair from './zigzeclair.ts';
 import luneclat from './luneclat.ts';
 import boxouille from './boxouille.ts';
 import cailloutou from './cailloutou.ts';
@@ -31,9 +30,7 @@ import quadripoing from './quadripoing.ts';
 import rocailloux from './rocailloux.ts';
 import montagnoc from './montagnoc.ts';
 import taupitrio from './taupitrio.ts';
-import banquisette from './banquisette.ts';
 import cobrasse from './cobrasse.ts';
-import dragondine from './dragondine.ts';
 import dragopataud from './dragopataud.ts';
 import triboulon from './triboulon.ts';
 import chantouffe from './chantouffe.ts';
@@ -43,10 +40,10 @@ import pterocaille from './pterocaille.ts';
 
 export const DRAFTS: Draft[] = [
   clapoflot, tortorrent, bouquetigre, dragobraise,
-  piafleche, zigzeclair, luneclat, boxouille, cailloutou,
+  piafleche, luneclat, boxouille, cailloutou,
   taupinou, givrinou, sifflasse, dragounet, boulonnet,
   piafurie, musclouille, quadripoing, rocailloux, montagnoc,
-  taupitrio, banquisette, cobrasse, dragondine, dragopataud,
+  taupitrio, cobrasse, dragopataud,
   triboulon, chantouffe, ciseaumante, poupochette, pterocaille,
 ];
 
