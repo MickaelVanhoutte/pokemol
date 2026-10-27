@@ -68,6 +68,7 @@ npm run curve -- [easy|normal|hard]          # the team's levels at each trainer
 npm run redraws -- 013                        # draw a Bestiole in her style (card, mini, tools/out/redraws-sheet.png)
 npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png
+npm run music -- title                        # record tunes into src/audio/recordings (Chrome + macOS afconvert)
 ```
 
 There is no linter. TypeScript is strict with `noUnusedLocals`/`noUnusedParameters`.
@@ -192,9 +193,14 @@ conventions are in [docs/content.md](docs/content.md#flags).
   bound to the save. Item, menu and badge icons are pixel art from `src/ui/icons.ts`.
 
 **Audio.**
-- `src/audio/music.ts` is a small Web Audio sequencer playing original tracks as a music box: the
-  melody on a music box, the bass on a felt piano, the harmony on chimes (by voice order), brushes,
-  shaker, wood block and bell for drums, all through a small room reverb (no more 8-bit waves); the title menu's music box (`JukeboxScreen`) plays each one. `mapMusic.ts` picks the track for each map; battles pick theirs in `fight()`.
+- The original tunes are notes in `src/audio/tunes.ts`. `npm run music` plays them on a music box
+  (`tools/music/synth.ts`, in headless Chrome: the melody on a music box, the bass on a felt piano, the
+  harmony on chimes by voice order, brushes, shaker, wood block and bell, a small room reverb) and
+  records each into `src/audio/recordings/<id>.m4a` (committed; Vite hashes the names, so a re-recorded
+  tune is downloaded again). Phones only play the recordings: synthesizing on the phone crackled.
+  `src/audio/music.ts` downloads them all after launch (`preloadMusic`), decodes on demand (jingles and
+  the last 3 tunes kept decoded) and loops each inside its recording (`LOOP_MARGIN`). After changing a
+  tune's notes, run `npm run music -- <id>`. The title menu's music box (`JukeboxScreen`) plays each one. `mapMusic.ts` picks the track for each map; battles pick theirs in `fight()`.
 - `sfx.ts` plays sound effects, and `fxSound(kind)` the sounds of the move animations: each effect
   layer lists its `sounds` (fire whoosh, splash, thunder, slash, stat arpeggios…). Everything respects the prefs.
 

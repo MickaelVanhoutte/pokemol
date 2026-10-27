@@ -6,6 +6,7 @@ import '@fontsource/inter/800.css';
 import './styles/global.css';
 import { App } from './app';
 import './story';
+import { preloadMusic } from './audio/music';
 import { startPwa } from './state/pwa';
 import { save } from './state/game';
 import { screen } from './state/router';
@@ -15,6 +16,8 @@ import { installSketch } from './ui/paper/sketch';
 installSketch();
 render(<App />, document.getElementById('app')!);
 startPwa();
+// the recorded music, in the background once the title screen is up
+setTimeout(() => void preloadMusic(), 1500);
 
 // play time: counts while a game is open and the page is visible (saved with the game)
 setInterval(() => {

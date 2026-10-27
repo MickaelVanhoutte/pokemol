@@ -531,7 +531,10 @@ instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, 
 pencil and pastel look. The tunes stayed note for note; only the instruments changed. They listened to
 four sounds on a test page (8-bit, music box, acoustic workshop with recorder and ukulele, felt piano) and
 picked the music box: music box melody, felt piano bass, chime arpeggios, brushes and a bell, a small room
-reverb. Team Gomme's tunes keep their unease with an out-of-tune double on the music box.
+reverb. Team Gomme's tunes keep their unease with an out-of-tune double on the music box. Played live on
+the phone it crackled (5 to 8 times the work of the 8-bit sound, measured offline), so the tunes are
+now recorded once (`npm run music`) and the game plays the recordings, downloaded in the background at
+launch (4 MB).
 
 **Evolutions redrawn (Oct 2026).** The owner found some evolved forms too close to their earlier form (a
 recolour, a bigger copy). Redrawn with a new silhouette: Clochegueule slimmer, Gloutoflor with vines and a

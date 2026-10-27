@@ -38,7 +38,7 @@ export default defineConfig({
       },
       workbox: {
         // everything is downloaded in the background on the first visit, then the game runs offline
-        globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2,ogg,mp3,wav,json}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2,ogg,mp3,m4a,wav,json}'],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,

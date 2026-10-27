@@ -18,7 +18,7 @@ Vitest in a node environment, with no DOM. What they guard:
 | `src/ui/battle/panelMode.test.ts` | Each battle state maps to one panel mode |
 | `src/ui/paper/paginate.test.ts` | Text box pagination |
 | `src/ui/logic/logic.test.ts` | Bag pockets and item use, PC rules, menu cursor movement |
-| `src/audio/music.test.ts` | Note and rest parsing |
+| `src/audio/music.test.ts` | Note and rest parsing, bar lengths, a recording for every tune |
 
 ## Level curve (`npm run curve`)
 

@@ -1,5 +1,6 @@
+import { existsSync, statSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { jingleIds, parse, trackIds, trackLengths, trackNotes, trackSeconds } from './music';
+import { jingleIds, parse, trackIds, trackLengths, trackNotes, trackSeconds } from './tunes';
 
 describe('music', () => {
   it('parses notes, rests and sixteenths', () => {
@@ -23,6 +24,13 @@ describe('music', () => {
     for (const id of trackIds()) {
       expect(trackSeconds(id), id).toBeGreaterThan(5);
       expect(trackSeconds(id), id).toBeLessThan(60);
+    }
+  });
+  it('has a recording of every tune (npm run music)', () => {
+    for (const id of [...trackIds(), ...jingleIds()]) {
+      const file = new URL(`./recordings/${id}.m4a`, import.meta.url);
+      expect(existsSync(file), id).toBe(true);
+      expect(statSync(file).size, id).toBeLessThan(400 * 1024);
     }
   });
 });

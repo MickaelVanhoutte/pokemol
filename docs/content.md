@@ -130,7 +130,7 @@ sound effect as `fallback` for players with the music off. Battles pick theirs i
 rematches, the rival's last duel, the Grands Maîtres), `final` (the Great Eraser), `champion`
 (Prof. Fusain at the Grand Concours); `opts.music` overrides it.
 
-A tune in `src/audio/music.ts` is a `Track`: `bpm`, `bar` (8 eighths for 4/4, 6 for a waltz or 6/8),
+A tune in `src/audio/tunes.ts` is a `Track`: `bpm`, `bar` (8 eighths for 4/4, 6 for a waltz or 6/8),
 an optional `swing`, up to three `voices` (melody first) and `drums`. Notes are `C#5:2` (length in
 eighths, `.5` for a sixteenth, `.` for a rest), bars separated by `|`; the test checks that every bar
 of every voice has the right length. The voice order picks the instrument: the melody on a music
@@ -139,7 +139,10 @@ longer, each a few cents off as if played by hand). A voice can add `detune` (ce
 double, the uneasy music box of Team Gomme) and `echo` (eighths). Drums are soft: `k` kick, `s` brush,
 `h` shaker, `o` long shaker, `r` wood block, `t` tom, `c` a little bell. Helpers (`arp`, `oct`,
 `drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts. Give every tune its own
-key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`).
+key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`). Then record it:
+`npm run music -- <id>` writes `src/audio/recordings/<id>.m4a` (the game plays only recordings; a test
+checks that every tune has one). It needs Google Chrome and macOS's `afconvert`; the WAVs stay in
+`tools/out/music` to listen to.
 
 ### The museum
 
