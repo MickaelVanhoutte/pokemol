@@ -117,6 +117,9 @@ function patched(def: MapDef): MapDef {
   if (def.obstacles?.some((o) => o.showIf || o.hideIf || o.id)) out = { ...out, obstacles: def.obstacles.filter(visibleObstacle) };
   if (def.tintUnless && flag(def.tintUnless)) out = { ...out, tint: undefined, drained: undefined };
   if (def.buildings?.some((b) => b.sketchUnless)) out = { ...out, buildings: def.buildings.map((b) => (b.sketchUnless ? { ...b, sketch: !flag(b.sketchUnless) } : b)) };
+  // the Inn and the shop of a town only sketched in pencil are sketched too
+  const town = def.generic ? MAPS[save.value?.player.returnTo?.map ?? ''] : undefined;
+  if (town?.sketchUnless && !flag(town.sketchUnless)) out = { ...out, sketch: true };
   return out;
 }
 

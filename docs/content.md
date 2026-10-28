@@ -50,6 +50,9 @@ Maps react without code:
 - trigger `if` / `unless`;
 - `patches[].if` / `unless`;
 - `tintUnless` (with `drained: true`, the map is drawn in greys until the flag is set: Ville-Feutre).
+- `sketchUnless` on a building (only its pencil lines until the flag) and on a town (Hameau-Brouillon): the shared
+  Inn and shop entered from it are drawn in pencil too, their people included, and its Inn's windows stay unlit.
+  A sign there is the pencil sign `i`.
 
 After a script that changed flags, the map is rebuilt (`refreshMap()`).
 

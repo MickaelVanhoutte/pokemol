@@ -74,7 +74,8 @@ const innLantern = (b: BuildingDef): [number, number] => [b.door * 16 + 17, b.h 
 
 /** What stays lit at night (x, y, w, h in pixels from the building's corner): the Inn's windows and lantern. */
 export function lights(b: BuildingDef): [number, number, number, number][] {
-  if (b.kind !== 'center') return [];
+  // an Inn only sketched in pencil has no lamp lit yet
+  if (b.kind !== 'center' || b.sketch) return [];
   const [lx, ly] = innLantern(b);
   return [...innWindows(b).map(([x, y]): [number, number, number, number] => [x, y, 10, 8]), [lx + 1, ly + 1, 3, 4]];
 }

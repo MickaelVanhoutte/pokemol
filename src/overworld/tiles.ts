@@ -491,6 +491,18 @@ export const TILES: Record<string, TileDef> = {
       p.rect(9, 13, 1, 3, g);
     },
   },
+  // a sign only sketched in pencil (Draft Hamlet, until it is coloured in)
+  sketchsign: {
+    solid: true,
+    paint: (p, _f, _n, x, y) => {
+      p.fill('#fbf6ea');
+      p.noise(0.04, '#e9e0cc', x * 5 + y * 11);
+      const g = '#8a8494', light = '#b8b0c4';
+      p.rect(2, 3, 12, 1, g); p.rect(2, 9, 12, 1, g); p.rect(2, 4, 1, 5, g); p.rect(13, 4, 1, 5, g);
+      p.rect(7, 10, 1, 5, g); p.rect(8, 10, 1, 5, light);
+      p.rect(4, 5, 8, 1, light); p.rect(4, 7, 6, 1, light);
+    },
+  },
   margin: {
     solid: true,
     paint: (p, _f, _n, x, y) => {

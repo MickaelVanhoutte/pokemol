@@ -12,6 +12,8 @@ import { shinyRecolour } from '../art/shiny';
 
 export const TILE = 16;
 const MARGIN = 9;
+/** Only pencil lines on the paper: a building (or a room) not coloured in yet. */
+const SKETCH = 'grayscale(1) contrast(0.55) brightness(1.45)';
 const WALK_MS = 210;
 const RUN_MS = 120;
 const BIKE_MS = 85;
@@ -204,9 +206,22 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
     }
     for (const b of def.buildings ?? []) {
       // a building not coloured in yet: only its pencil lines on the paper
-      if (b.sketch) ctx.filter = 'grayscale(1) contrast(0.55) brightness(1.45)';
+      if (b.sketch) ctx.filter = SKETCH;
       ctx.drawImage(paintBuilding(b), (b.x + MARGIN) * TILE, (b.y + MARGIN) * TILE);
       ctx.filter = 'none';
+    }
+    // a shared room of a town not coloured in yet: the whole room too, but the void around it stays black
+    if (def.sketch) {
+      const copy = makeCanvas(c.width, c.height);
+      copy.getContext('2d')!.drawImage(c, 0, 0);
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.filter = SKETCH;
+      ctx.drawImage(copy, 0, 0);
+      ctx.filter = 'none';
+      ctx.fillStyle = '#000';
+      for (let y = -MARGIN; y < h + MARGIN; y++) {
+        for (let x = -MARGIN; x < w + MARGIN; x++) if (get(x, y) === 'void') ctx.fillRect((x + MARGIN) * TILE, (y + MARGIN) * TILE, TILE, TILE);
+      }
     }
     pencilize(c);
   };
@@ -747,9 +762,12 @@ export class Game {
         ctx.fillRect(sx + 3, Math.round((a.fromY + (a.y - a.fromY) * a.t) * TILE - camY) + 13, 10, 3);
       }
       if (a === this.player && this.biking) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
+      // in a room only sketched in pencil, the people living there are sketched too (not the player)
+      if (this.map.def.sketch && a !== this.player) ctx.filter = SKETCH;
       if (a.mini) {
         if (a.mini.complete && a.mini.naturalWidth) ctx.drawImage(a.mini, Math.round(sx + (TILE - a.mini.naturalWidth) / 2), sy + TILE - a.mini.naturalHeight - 1);
       } else a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
+      ctx.filter = 'none';
       // sailing: the paper boat hides the legs
       if (a === this.player && this.surfing) ctx.drawImage(fieldSprite('boat'), sx, sy + 9 + Math.round(Math.sin(performance.now() / 300)));
       // tall grass hides the legs

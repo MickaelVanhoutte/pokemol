@@ -174,6 +174,12 @@ export interface MapDef {
   drained?: boolean;
   /** The tint (and the drained greys) disappear once this story flag is set (colours brought back). */
   tintUnless?: string;
+  /**
+   * A town only sketched in pencil until this story flag is set: the shared rooms entered from it (the Inn, the
+   * shop) are drawn in pencil too, the people in them included (`sketch`, set by the controller).
+   */
+  sketchUnless?: string;
+  sketch?: boolean;
   /** Drifting fog wisps. */
   fog?: boolean;
   /** Story script id run every time the map is entered. */
@@ -221,5 +227,5 @@ export const LEGEND: Record<string, string> = {
   // the consequences of the story's choices: a bridge left runny, grey lines kept, Nocturne's fresco
   'u': 'bridgerun', 'x': 'greytrace', 'A': 'inkblot', 'V': 'inkfresco', 'N': 'inkmoon',
   // tall grass only sketched in pencil, beyond the margin
-  'g': 'sketchgrass', 'a': 'bigeraser',
+  'g': 'sketchgrass', 'a': 'bigeraser', 'i': 'sketchsign',
 };
