@@ -9,7 +9,7 @@ import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
 import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
-import { addItem, addMon, allMons, autosave, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
+import { addItem, addMon, allMons, autosave, blackoutLoss, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
@@ -922,7 +922,7 @@ export async function teachMove(i: number, id: string) {
 
 async function blackout() {
   const d = s();
-  const lost = Math.floor(d.money / 2);
+  const lost = blackoutLoss(d);
   await say(L('Tu n’as plus de Bestiole en forme… Tu perds {n} ₽ et tu cours te reposer.', 'You have no more Critters that can fight… You drop ₽{n} and hurry back to rest.'), undefined, { n: lost });
   update((x) => {
     x.money -= lost;

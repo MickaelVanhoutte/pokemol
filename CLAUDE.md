@@ -87,7 +87,7 @@ and resume when the player returns to the world. `App` is keyed on the locale, s
 re-renders everything.
 
 **State.**
-- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, 8 PC `boxes` of 30, bag, flags, `steps`, `daycare`…).
+- `src/state/game.ts`: the `save` signal (`SaveData` v5 from `src/save/schema.ts`: party, PC `boxes` of 30 (8 at first, `spareBox` adds one when they are nearly full), bag, flags, `steps`, `daycare`…).
   Up to `SLOTS` (3) games live side by side (a parent's and a child's): `slot` is the one being played,
   stored under `atelier-bestioles.save` (game 1, the key of the single save before) or `….save.2` / `.3`;
   the title screen picks one (`peekSlot`, `savedSlots`), and each game keeps its own `difficulty`, applied by

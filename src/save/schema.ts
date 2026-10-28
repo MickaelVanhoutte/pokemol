@@ -33,7 +33,7 @@ export interface SaveData {
   flags: Record<string, number>;
   /** Up to 6 creatures that travel with you; the first one leads battles. */
   party: Mon[];
-  /** PC storage: BOX_COUNT boxes of BOX_SIZE creatures (v5; older saves had one `box`). */
+  /** PC storage: at least BOX_COUNT boxes of BOX_SIZE creatures, one more each time it gets nearly full (`spareBox`; v5, older saves had one `box`). */
   boxes: Mon[][];
   /** Steps left before the Shoo Spray wears off. */
   repel?: number;

@@ -71,6 +71,7 @@ export function repair(s: SaveData): SaveData {
     for (const m of legacy) storeInBox(s, m);
     delete (s as SaveData & { box?: Mon[] }).box;
   }
+  spareBox(s);
   // the look can be chosen since Oct 2026: older saves keep their portrait
   s.player.look ??= { ...(OLD_AVATARS[s.player.avatar] ?? OLD_AVATARS[0]) };
   // each game keeps its difficulty since there can be several: older ones take the device's
@@ -263,6 +264,22 @@ export function storeInBox(s: SaveData, m: Mon) {
   const box = s.boxes.find((b) => b.length < BOX_SIZE);
   if (box) box.push(m);
   else s.boxes.push([m]);
+  spareBox(s);
+}
+
+/** The PC never fills up: with less than a box's worth of room left, a new empty box is added at the end. */
+export function spareBox(s: SaveData) {
+  const room = s.boxes.reduce((n, b) => n + Math.max(0, BOX_SIZE - b.length), 0);
+  if (room < BOX_SIZE) s.boxes.push([]);
+}
+
+/** FireRed's steps of the blackout's price, by number of badges. */
+const LOSS_STEPS = [2, 4, 6, 9, 12, 16, 20, 25, 30];
+
+/** What a blackout costs, as in FireRed: the party's top level × 4 × a step that grows with the badges. */
+export function blackoutLoss(s: SaveData): number {
+  const top = Math.max(1, ...s.party.filter((m) => !m.egg).map((m) => m.level));
+  return Math.min(s.money, top * 4 * LOSS_STEPS[Math.min(s.badges.length, LOSS_STEPS.length - 1)]);
 }
 
 /** Every creature the player owns (party first, then the boxes). */

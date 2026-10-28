@@ -35,7 +35,7 @@ English: [docs/histoire.md](docs/histoire.md).
   in the summary; biscuits add some, erasers rub them out, and Magic Lollipops (+1 level) hide off
   the beaten track.
 - Collecting: nicknames, sparkly Bestioles (1 in 100,
-  recoloured drawing with glitter), cries, "met at" notes in the summary, 8 PC boxes, Shoo Spray
+  recoloured drawing with glitter), cries, "met at" notes in the summary, PC boxes that never run out, Shoo Spray
   and Ariadne Thread.
 - 18 types with dual-type Bestioles, weather (rain, sun, sandstorm, hail), freeze, bad poison,
   shields, two-turn moves, ties, greedy seeds and paper dolls.

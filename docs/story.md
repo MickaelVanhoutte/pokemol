@@ -607,6 +607,9 @@ which a player chooses not to. On Hard: Gaspard 51/18/36% (was 63/27/46), Zélie
 **Small fixes the owner asked for (iteration 20).** Coach Effort rubs out one stat's effort or all of them (it used to be
 all or nothing). A long list of choices (six Bestioles and « Aucune ») went off the top of the screen in landscape: it now
 scrolls, and in landscape it stands beside the text. The Bestiodex no longer stamps the brouillons BROUILLON.
+A blackout cost half the purse; it now costs what FireRed charges (`blackoutLoss`: the party's top level × 4 × 2 to
+30 by badges, so 480 ₽ at L20 with two badges). The PC adds a box at the end whenever less than a box's worth of room
+is left (`spareBox`), so it never fills up.
 
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be

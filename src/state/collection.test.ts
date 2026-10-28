@@ -4,7 +4,7 @@ import { monLabel } from '../data/creatures';
 import { partyOf } from '../data/trainers';
 import { ITEM_BY_ID } from '../data/items';
 import { BOX_COUNT, BOX_SIZE } from '../save/schema';
-import { addMon, allMons, migrate } from './game';
+import { addMon, allMons, blackoutLoss, migrate, spareBox } from './game';
 
 function v4Save(boxCount: number) {
   const st = { rng: 7 };
@@ -33,6 +33,35 @@ describe('PC boxes', () => {
     while (s.party.length < 6) addMon(s, createMon('004', 5, st));
     expect(addMon(s, createMon('005', 5, st))).toBe('box');
     expect(s.boxes[1]).toHaveLength(1);
+  });
+
+  it('adds a box when the PC gets nearly full, and never more than needed', () => {
+    const s = migrate(v4Save(0))!;
+    const st = { rng: 5 };
+    // seven full boxes and an empty one: still a box's worth of room
+    for (let b = 0; b < 7; b++) s.boxes[b] = Array.from({ length: BOX_SIZE }, () => createMon('013', 5, st));
+    spareBox(s);
+    expect(s.boxes).toHaveLength(BOX_COUNT);
+    s.boxes[7].push(createMon('013', 5, st));
+    spareBox(s);
+    expect(s.boxes).toHaveLength(BOX_COUNT + 1);
+    // a capture with a full party lands in the eighth box; the ninth stays free
+    while (s.party.length < 6) addMon(s, createMon('004', 5, st));
+    expect(addMon(s, createMon('005', 5, st))).toBe('box');
+    expect(s.boxes[7]).toHaveLength(2);
+    expect(s.boxes).toHaveLength(BOX_COUNT + 1);
+  });
+
+  it('costs what FireRed charges for a blackout, never more than the purse', () => {
+    const s = migrate(v4Save(0))!;
+    s.money = 10000;
+    s.party = [createMon('001', 20, { rng: 1 }), createMon('002', 12, { rng: 2 })];
+    s.badges = ['pastel', 'plume'];
+    expect(blackoutLoss(s)).toBe(20 * 4 * 6);
+    s.badges = Array.from({ length: 12 }, (_, i) => `b${i}`);
+    expect(blackoutLoss(s)).toBe(20 * 4 * 30);
+    s.money = 300;
+    expect(blackoutLoss(s)).toBe(300);
   });
 
   it('notes where and how a creature was met', () => {
