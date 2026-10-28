@@ -209,6 +209,18 @@
 .pccell.is-ko img { filter: grayscale(1); }
 .pc__empty { grid-column: 1 / -1; margin: 6px 0; color: var(--ink-soft); }
 .pc__note { flex: none; font-size: 1.05rem; }
+/* landscape phones: the party as a 3×2 grid beside the box, all six in view (a column showed one and a half) */
+@media (orientation: landscape) and (max-height: 540px) {
+  .pc__party { width: min(40%, 300px); display: flex; flex-direction: column; overflow: hidden; }
+  .pc__party .pc__label { flex: none; }
+  .pc__col { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .pc__party .pc__label { margin-bottom: 2px; font-size: 0.85rem; }
+  /* the drawing fills its cell, the level written over its corner */
+  .pc__col .pccell { position: relative; min-height: 0; overflow: hidden; padding: 0; border-width: 5px; border-image-width: 5px; }
+  .pc__col .pccell img { flex: 1 1 0; min-height: 0; width: 100%; height: auto; object-fit: contain; }
+  .pc__col .pccell small { position: absolute; right: 1px; bottom: 0; padding: 0 3px; font-size: 0.75rem; line-height: 1.2; background: rgba(255, 250, 240, 0.85); border-radius: 4px; }
+  .pc__note { font-size: 1rem; }
+}
 
 /* ---------- shop */
 .money-win { flex: none; padding: 0 8px; font-size: 1.15rem; white-space: nowrap; }
