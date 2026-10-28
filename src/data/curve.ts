@@ -102,7 +102,11 @@ export function forcedSteps(mapId: string, from: string, to: string): number {
   if (!starts.length) starts = links(def).filter((l) => l.to.map === from).map((l) => ({ x: l.x, y: l.y }));
   const goals = new Set(links(def).filter((l) => l.to.map === to).map((l) => `${l.x},${l.y}`));
   if (!starts.length || !goals.size) return -1;
-  const blocked = new Set((def.buildings ?? []).flatMap((b) => footprint(b).filter((f) => !f.door).map((f) => `${f.x},${f.y}`)));
+  // buildings, and bushes, boulders and rocks: on the story's path the tool that clears them may not be in the bag yet
+  const blocked = new Set([
+    ...(def.buildings ?? []).flatMap((b) => footprint(b).filter((f) => !f.door).map((f) => `${f.x},${f.y}`)),
+    ...(def.obstacles ?? []).map((o) => `${o.x},${o.y}`),
+  ]);
   const cost = (x: number, y: number) => (def.encounters?.anyTile || TILES[LEGEND[def.rows[y][x]]]?.encounter ? 1 : 0);
   const best = new Map<string, number>();
   const dq: [number, number, number][] = starts.map((s) => [s.x, s.y, 0]);

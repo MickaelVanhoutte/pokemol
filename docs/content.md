@@ -152,6 +152,23 @@ key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`). Then 
 checks that every tune has one). It needs Google Chrome and macOS's `afconvert`; the WAVs stay in
 `tools/out/music` to listen to.
 
+### Routes
+
+The owner found the first routes "too simple and linear" (one straight path through full-width bands of tall
+grass), so every route between towns was redrawn the same way (Route 4, `route4` in `maps/feutre.ts`, is the model):
+- belts of trees split it into areas, crossed by a short passage of tall grass; the path winds through them;
+- things off the main way: a side meadow, a hidden nook, a pond or river with an islet or far bank for the paper
+  boat, a ledge (`_`, crossed only going down) to jump back as a shortcut, an `obstacles` bush, rock or boulder
+  opening a shortcut once the tool is in the bag;
+- tall grass you must cross, and patches you can walk round; each route with its own character (water, ledges,
+  hedges, clearings…).
+
+What has to stay: the map's size, warps and buildings (neighbours point into it), its trainers, NPCs, signs and
+triggers (a story trigger must still be crossed by every way through), and **items at their exact coordinates**
+(a picked item is remembered by position: moving it gives it twice). Its forced tall-grass steps between its two
+towns stay close to before: the level curve counts them (`forcedSteps` in `src/data/curve.ts`, where obstacles count
+as solid), and `src/data/curve.test.ts` checks that a player who never grinds keeps up.
+
 ### The museum
 
 Ville-Pastel's **Musée des premiers croquis** (`musee` in `src/data/maps/pastel.ts`) hangs her original

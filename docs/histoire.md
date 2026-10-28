@@ -88,7 +88,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   plus forte et gagne un nouveau talent (parfois même un nouveau type), le temps du combat. Les Maîtres d’Atelier ont le leur…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
-  gants.
+  gants. Chaque route a ses recoins : prairies à l’écart, objets cachés, rebords pour redescendre d’un
+  saut, étangs et rivières dont l’autre rive attend ton bateau, buissons et rochers qui ouvrent des
+  raccourcis quand tu reviens avec le bon outil.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
   crédits. Quelques-unes sont des **brouillons**, griffonnés vite fait. On en croise dans les grottes,
   sur la montagne, au bord de l’eau… Il y en a **107** à découvrir : certaines ne sortent que la nuit,
@@ -198,7 +200,9 @@ The story has **two endings**, and your answers choose which one you will see.
   makes a **fair copy** of a fully grown Critter: gone over in felt-tip, it gets stronger and takes a new
   talent (sometimes even a new type) for the rest of the battle. The Atelier Masters have their own…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
-- **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
+- **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves. Every road has
+  its corners: meadows off the way, hidden items, ledges to jump back down, ponds and rivers whose far bank
+  waits for your boat, bushes and rocks that open shortcuts when you come back with the right tool.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few
   are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…
   There are **107** to discover: some only come out at night, others hide in the tower, deep in the water
