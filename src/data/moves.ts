@@ -365,6 +365,13 @@ export const MOVES: MoveDef[] = [
   M({ id: 'grand-defile', name: L('Grand défilé', 'Grand Parade'), type: 'dragon', cat: 'phys', power: 95, acc: 100, pp: 10,
     effects: [{ kind: 'stage', target: 'self', stat: 'atk', stages: 1, chance: 20 }],
     desc: L('Il fonce en dansant comme un dragon de fête. Peut augmenter son Attaque.', 'It charges, dancing like a parade dragon. May raise its Attack.') }),
+  // iteration 18
+  M({ id: 'lancer-de-gland', name: L('Lancer de gland', 'Acorn Toss'), type: 'plante', cat: 'phys', power: 85, acc: 100, pp: 10,
+    effects: [{ kind: 'flinch', chance: 20 }],
+    desc: L('Il lance un gland de toutes ses forces. Peut apeurer l’ennemi.', 'It throws an acorn with all its might. May make the foe flinch.') }),
+  M({ id: 'giclee-d-encre', name: L('Giclée d’encre', 'Ink Splash'), type: 'spectre', cat: 'spec', power: 90, acc: 100, pp: 10,
+    effects: [{ kind: 'stage', target: 'foe', stat: 'acc', stages: -1, chance: 20 }],
+    desc: L('Une giclée d’encre hantée qui tache tout. Peut baisser la Précision de l’ennemi.', 'A splash of haunted ink that stains everything. May lower the foe’s accuracy.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

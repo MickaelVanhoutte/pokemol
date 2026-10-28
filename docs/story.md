@@ -527,6 +527,37 @@ Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Brais
 cost the team a level before Ambre (her Hard rows fell to 10–49%): Allumou is an extra Bestiole for Paco
 instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, was 43/2/2). The finals and the two standalones joined `TOWER_POOL`.
 
+**Ten Bestioles for the Ateliers' types (iteration 18), 98 in all.** The owner noticed that the Atelier Masters
+and apprentices had only one or two Bestioles of the Atelier's type: the teams dated from before the dex grew.
+Ten more, drawn with the `crayon` kit; the owner turned down a paintbrush plant line (replaced by the squirrels)
+and asked for Érabreuil to throw its acorn rather than eat it (the `throw` motion of the battle rigs).
+- Punaisette → Punaisaure (Bug → Bug/Steel, L20): a shield bug whose back is a drawing-pin head, then a knight
+  beetle with a pin for a horn. Routes 1–2 and the Misty Woods; Punaisaure on Route 7. Apprentice Lou.
+  Power: Bouclier Punaise (Fire and Flying halved).
+- Lumiver → Lampyrette (Bug → Bug/Electric, L18): a glow-worm, then a firefly with a light-bulb belly. Routes 1–2
+  and the Misty Woods at night; Lampyrette on Route 4 at night (rare). Apprentice Malo, Rocker Jimmy. Power:
+  Lanterne (`nightBoost`).
+- Érabou → Érabreuil (Grass, L26): a squirrel with a maple-leaf tail nibbling an acorn, then an autumn squirrel
+  with an acorn-cap helmet who throws its acorns. Routes 3–4; Érabreuil on Route 7 and in the Lost Wood.
+  Gardener Rosa, Landscaper Arno, Basile. Power: Lancer de Gland (Grass physical 85, 20% flinch).
+- Nénurette (Water/Grass, rare): a tree frog on a lily pad, a water lily on its head. Route 3. Swimmer Lila,
+  Landscaper Arno. Power: Averse d’Été (rain as it comes in).
+- Tachou → Tachombre (Ghost, L30): a living ink blot, then a great ink splash with a gold pen nib. Misty Tower
+  and Route 8; Tachombre in the Scribble-Out Cave. Storyteller Ombelin, Nocturne. Power: Giclée d’Encre (Ghost
+  special 90, 20% accuracy drop).
+- Fanétome (Ghost/Grass, rare): a pressed flower back as a little ghost. Route 8 and the Lost Wood at night.
+  Calligrapher Saki, Basile, Nocturne. Power: Herbier (`regen`).
+
+Every Master's team is now all of the Atelier's type (Mireille, Gaspard and Célestine already were): Marine
+Hippomine, Givrinou, Clapoflot; Zélie Boulonnet, Lumignon, Zigzou; Ambre Braisou, Toufeu, Braisaure; Basile
+Érabreuil, Fanétome, Clochegueule, Bouquétigre; Nocturne Tachombre, Grimouille, Ossagarde, Fanétome, Ombrouille.
+Each apprentice has at least two of three. A first Marine with Nénurette (rain) behind Clapoflot fell to 82/9/8% on
+Normal, and a Zélie with Lampyrette to 43/82/13%: Marine has Givrinou, Zélie Lumignon. On Normal: Marine 87/77/81%
+(was 97/95/87), Zélie 90/99/90% (was 100/94/87), Ambre 77/74/100% (was 72/67/98), Basile 61/80/67% (was 11/81/36),
+Nocturne 82/85/84% (was 75/85/78). The new teams give a little more XP, so one teammate is a level up at the
+finale: Effaceur 69/64/65% (was 56/47/49), inside the finale's 50–75% band. On Hard, Marine is 31/3/9% (was 45/17/2).
+The six finals and standalones joined `TOWER_POOL`.
+
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be
 forgotten). Now only the innkeeper and the Pencil Balloon pilot are in every Inn; each town's Inn has its

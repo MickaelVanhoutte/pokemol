@@ -26,6 +26,7 @@ const RATURES_ENCOUNTERS = {
     { id: '066', w: 16, min: 32, max: 34 },
     { id: '055', w: 14, min: 32, max: 34, time: 'night' as const },
     { id: '009', w: 20, min: 31, max: 33 },
+    { id: '097', w: 5, min: 32, max: 34 },
   ],
 };
 
@@ -73,6 +74,8 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
         { id: '055', w: 10, min: 28, max: 30, time: 'night' },
         { id: '047', w: 12, min: 27, max: 29 },
         { id: '026', w: 15, min: 27, max: 30, time: 'day' },
+        { id: '094', w: 5, min: 27, max: 30 },
+        { id: '098', w: 6, min: 28, max: 30, time: 'night' },
       ],
     },
   },

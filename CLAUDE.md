@@ -182,8 +182,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
   the mirroring and every state (grey, faint, doll, capture, the victory dance `fx-victory`), around a
   `.pk-idle` layer that breathes or hovers while it waits (`idleOf`, `src/data/rigs.ts`). A Bestiole drawn
   with moving parts has a battle rig (`RIG_OF`: `public/rigs/<id>-<slug>/`, `src/data/rigs.json`), its body
-  and each part a separate picture moved by CSS (`flap`, `fold`, `swing`, `nod`, `peek`, `flicker`,
-  `blink`); shiny and pale ones recolour each piece (`rigLayerUrl`). The drawing sizes itself with
+  and each part a separate picture moved by CSS (`flap`, `fold`, `swing`, `nod`, `reach`, `peek`, `throw`,
+  `flicker`, `blink`); shiny and pale ones recolour each piece (`rigLayerUrl`). The drawing sizes itself with
   container units of its platform, so the box shrinks to it and the effects still find it.
 
 **UI kit** (`src/ui/paper`):

@@ -268,6 +268,19 @@ export const TALENTS: TalentDef[] = [
   T('atchoum', L('Atchoum', 'Achoo'),
     L('Il arrive dans un nuage de poussière : la Précision de l’adversaire baisse.', 'It arrives in a cloud of dust: the foe’s accuracy drops.'),
     { kind: 'entryStage', target: 'foe', stat: 'acc', stages: -1 }),
+  // iteration 18: the new Ateliers' Bestioles
+  T('bouclier-punaise', L('Bouclier Punaise', 'Pin Shield'),
+    L('Sa carapace ronde le protège : les capacités Feu et Vol ne lui font que la moitié des dégâts.', 'Its round shell shields it: Fire and Flying moves do only half the damage to it.'),
+    { kind: 'halve', types: ['feu', 'vol'] }),
+  T('lanterne', L('Lanterne', 'Lantern'),
+    L('La nuit, sa lanterne s’allume : son Atq. Spé. et sa Déf. Spé. sont 30 % plus fortes.', 'At night its lantern lights up: its Sp. Atk and Sp. Def are 30% higher.'),
+    { kind: 'nightBoost' }),
+  T('averse-d-ete', L('Averse d’Été', 'Summer Shower'),
+    L('Elle chante en arrivant : il se met à pleuvoir.', 'It sings as it arrives: rain starts to fall.'),
+    { kind: 'entryWeather', weather: 'pluie' }),
+  T('herbier', L('Herbier', 'Herbarium'),
+    L('Pressée entre deux pages, elle reprend des forces : elle récupère 1/16 de ses PV à chaque tour, et 1/8 au soleil.', 'Pressed between two pages, it gets its strength back: 1/16 of its HP each turn, and 1/8 in sunshine.'),
+    { kind: 'regen', pct: 1 / 16, sunPct: 1 / 8 }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

@@ -17,7 +17,7 @@ describe('battle rigs', () => {
         // every piece lies on the drawing's sheet, and turns around a point on or next to it
         expect(p.left >= 0 && p.top >= 0 && p.left + p.width <= 100.2 && p.top + p.height <= 100.2, `${p.name} box`).toBe(true);
         expect(p.ox >= -25 && p.ox <= 125 && p.oy >= -25 && p.oy <= 125, `${p.name} pivot ${p.ox},${p.oy}`).toBe(true);
-        if (p.motion === 'peek') expect(p.to, `${p.name} goes somewhere`).toBeDefined();
+        if (p.motion === 'peek' || p.motion === 'throw') expect(p.to, `${p.name} goes somewhere`).toBeDefined();
       }
     });
   }

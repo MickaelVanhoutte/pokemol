@@ -77,9 +77,19 @@ import plisserpent from './plisserpent.ts';
 import festivouivre from './festivouivre.ts';
 import globargot from './globargot.ts';
 import moutoussiere from './moutoussiere.ts';
+import punaisette from './punaisette.ts';
+import punaisaure from './punaisaure.ts';
+import lumiver from './lumiver.ts';
+import lampyrette from './lampyrette.ts';
+import erabou from './erabou.ts';
+import erabreuil from './erabreuil.ts';
+import nenurette from './nenurette.ts';
+import tachou from './tachou.ts';
+import tachombre from './tachombre.ts';
+import fanetome from './fanetome.ts';
 
 /** Sorted by id when drawn. */
-export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouille, lunelle, papivole, ronflon, brumouille, grimouille, ombrouille, chenillou, piafou, lamacorne, chrysalou, touffou, touflot, toufeu, toufoudre, minoufleur, braisaure, dormipsy, cuillipsy, psymagus, chapardou, pantharuse, fumeron, fumerax, coquilou, coquifort, glissonde, canarmure, clochiflor, clochegueule, gloutoflor, osselot, ossagarde, fachinge, furisinge, hippomine, hippoplume, libellune, noctaile, zigzeclair, banquisette, dragondine, coconfus, agrafou, crocagrafe, ocrinou, mammouchaud, faonvole, cerfoudre, allumou, allumbattant, lumignon, projetoile, plissou, plisserpent, festivouivre, globargot, moutoussiere].sort((a, b) => a.id.localeCompare(b.id));
+export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, zigzou, chantouille, lunelle, papivole, ronflon, brumouille, grimouille, ombrouille, chenillou, piafou, lamacorne, chrysalou, touffou, touflot, toufeu, toufoudre, minoufleur, braisaure, dormipsy, cuillipsy, psymagus, chapardou, pantharuse, fumeron, fumerax, coquilou, coquifort, glissonde, canarmure, clochiflor, clochegueule, gloutoflor, osselot, ossagarde, fachinge, furisinge, hippomine, hippoplume, libellune, noctaile, zigzeclair, banquisette, dragondine, coconfus, agrafou, crocagrafe, ocrinou, mammouchaud, faonvole, cerfoudre, allumou, allumbattant, lumignon, projetoile, plissou, plisserpent, festivouivre, globargot, moutoussiere, punaisette, punaisaure, lumiver, lampyrette, erabou, erabreuil, nenurette, tachou, tachombre, fanetome].sort((a, b) => a.id.localeCompare(b.id));
 
 const root = new URL('../..', import.meta.url).pathname;
 

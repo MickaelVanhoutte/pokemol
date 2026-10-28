@@ -20,15 +20,17 @@ export function idleOf(species: string): Idle {
  * - `nod`: a little bow of the head around its pivot;
  * - `reach`: turns to `amp` degrees, stays a moment, comes back (an arm bringing food to the mouth);
  * - `peek`: slides by `to` (% of its own size) and back, hiding behind what is in front (a shell, a hole);
+ * - `throw`: flies off to `to` (% of its own size) in an arc and fades, then is back where it was (a nut thrown
+ *   at the foe; give the arm that throws it a `nod` with the same `period` and `phase`);
  * - `flicker`: flashes on and off (sparks, lightning);
  * - `blink`: shows for a blink now and then (closed eyelids drawn over the eyes).
  */
-export type Motion = 'flap' | 'fold' | 'swing' | 'nod' | 'reach' | 'peek' | 'flicker' | 'blink';
-export const MOTIONS: Motion[] = ['flap', 'fold', 'swing', 'nod', 'reach', 'peek', 'flicker', 'blink'];
+export type Motion = 'flap' | 'fold' | 'swing' | 'nod' | 'reach' | 'peek' | 'throw' | 'flicker' | 'blink';
+export const MOTIONS: Motion[] = ['flap', 'fold', 'swing', 'nod', 'reach', 'peek', 'throw', 'flicker', 'blink'];
 
 /** Defaults when a part doesn't say: [amp, seconds]. */
 export const MOTION_DEFAULTS: Record<Motion, [number, number]> = {
-  flap: [18, 0.5], fold: [55, 0.6], swing: [8, 2.6], nod: [6, 3.2], reach: [-45, 4], peek: [0, 4.2], flicker: [0, 2.4], blink: [0, 4.6],
+  flap: [18, 0.5], fold: [55, 0.6], swing: [8, 2.6], nod: [6, 3.2], reach: [-45, 4], peek: [0, 4.2], throw: [0, 3.6], flicker: [0, 2.4], blink: [0, 4.6],
 };
 
 /** How a part moves: what the drawing code gives `c.part()`, besides its name and pivot. */
@@ -38,7 +40,7 @@ export interface PartMove {
   amp?: number;
   /** Seconds for one movement. */
   period?: number;
-  /** Peek: where the part goes, in % of its own width and height… */
+  /** Peek and throw: where the part goes, in % of its own width and height… */
   to?: [number, number];
   /** …how small it gets there, and whether it fades away (hiding in a shell)… */
   shrink?: number;

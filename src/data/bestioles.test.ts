@@ -29,7 +29,7 @@ export function band(c: SpeciesDef): [number, number] {
 /** Talent kinds that count as a family's power (the iteration-8 powers, plus Peau de Mousse). */
 const POWER_KINDS = new Set(['regen', 'statOnKO', 'fullHpGuard', 'prism', 'galeWings', 'ignoreImmunity', 'nightBoost', 'sleepTank',
   'phaseFirst', 'allStab', 'fluffy', 'flagBoost', 'entryWeather', 'touchStatus', 'parentalBond', 'badDreams']);
-const POWER_TALENTS = new Set(['peau-de-mousse', 'gaz-piquant', 'coquille-de-fer', 'peinture-rupestre', 'chasse-cauchemar', 'atchoum']);
+const POWER_TALENTS = new Set(['peau-de-mousse', 'gaz-piquant', 'coquille-de-fer', 'peinture-rupestre', 'chasse-cauchemar', 'atchoum', 'bouclier-punaise']);
 const hasPowerTalent = (c: SpeciesDef) => c.talents.some((t) => POWER_KINDS.has(talent(t).effect.kind) || POWER_TALENTS.has(t));
 
 /** Moves only one family learns by level-up: its signature moves. */

@@ -192,6 +192,10 @@ export const MOVE_FX: Record<string, Recipe> = {
   'craque-poing': { user: 'lunge', layers: [sparks({ color: C.feu[1], n: 6, dur: 300 }), at(120, fist({ color: '#6b4a3a' })), at(330, impactStar({ size: 0.6, color: C.feu[1] })), at(330, swirl({ kind: 'flame', color: C.feu[1], n: 5, dur: 460, size: 0.3 }))] },
   // the paper dragon dances in a shower of colours, then charges
   'grand-defile': { user: 'dash', shake: 0.5, layers: [...RAINBOW.slice(0, 5).map((c, i) => at(i * 70, rise({ kind: 'spark', color: c, n: 3, size: 0.22, dur: 600 }))), at(420, speedLines({ n: 10, dur: 380 })), at(620, impactStar({ size: 0.75, color: C.dragon[1] }))] },
+  // the autumn squirrel winds up and throws an acorn, spinning
+  'lancer-de-gland': { user: 'rear', layers: [projectile({ kind: 'acorn', color: '#c8893e', size: 0.4, fly: 340, spin: 2, burst: 'star' })] },
+  // the ink ghost splashes the foe with blots of violet-black ink
+  'giclee-d-encre': { layers: [projectile({ kind: 'ink', color: C.spectre[2], n: 4, gap: 70, size: 0.36, burst: false }), at(360, splat({ color: C.spectre[2], size: 0.95 })), at(420, sparkle({ kind: 'ink', color: C.spectre[1], n: 4, size: 0.18 }))] },
 };
 
 /** The animation of a move, if it has one. */

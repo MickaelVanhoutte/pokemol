@@ -330,7 +330,8 @@ back together, each part framed with its pivot as a red dot. The card doesn't ch
 - `pivot`: the drawing point it turns around (a wing's root, the base of a trunk).
 - `motion`: `flap` (beats, `amp` degrees; a negative `amp` for a wing on the other side), `fold` (folds
   towards the pivot, butterfly wings, `amp` %), `swing` (trunk, tail), `nod`, `peek` (goes to `to`, in % of
-  its own size, with `shrink` and `fade`), `flicker` (sparks), `blink` (closed eyelids). `period` in seconds,
+  its own size, with `shrink` and `fade`), `throw` (flies to `to` in an arc, then is back: Érabreuil's acorn;
+  the arm throwing it gets a `nod` with the same `period` and `phase`), `flicker` (sparks), `blink` (closed eyelids). `period` in seconds,
   `phase` (0–1) so parts move together.
 - `behind`: under the body (a far wing, a part drawn first). `inside`: in front at rest, behind the rest
   once small (Clapotin's body into its shell). `clip`: cut off at the drawing's edge (Taupinou going down

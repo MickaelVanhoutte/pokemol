@@ -206,6 +206,8 @@ export const HOME_MAPS: Record<string, MapDef> = {
         { id: '006', w: 30, min: 2, max: 3, time: 'night' },
         { id: '005', w: 10, min: 2, max: 3 },
         { id: '008', w: 4, min: 3, max: 3 },
+        { id: '089', w: 16, min: 2, max: 3, time: 'day' },
+        { id: '091', w: 14, min: 2, max: 3, time: 'night' },
       ],
     },
   },

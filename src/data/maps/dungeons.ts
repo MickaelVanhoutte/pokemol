@@ -15,6 +15,7 @@ const TOWER_ENCOUNTERS = {
     { id: '065', w: 14, min: 24, max: 25 },
     { id: '066', w: 4, min: 23, max: 25 },
     { id: '088', w: 6, min: 23, max: 25 },
+    { id: '096', w: 14, min: 23, max: 25 },
   ],
 };
 

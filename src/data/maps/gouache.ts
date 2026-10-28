@@ -82,6 +82,8 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
         { id: '068', w: 8, min: 25, max: 27 },
         { id: '063', w: 10, min: 25, max: 27 },
         { id: '084', w: 4, min: 25, max: 27 },
+        { id: '090', w: 5, min: 25, max: 27 },
+        { id: '094', w: 3, min: 26, max: 27 },
       ],
     },
   },

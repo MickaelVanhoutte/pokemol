@@ -2307,5 +2307,398 @@
         "oy": 64.5
       }
     ]
+  },
+  "089": {
+    "slug": "punaisette",
+    "parts": [
+      {
+        "name": "antennes",
+        "motion": "swing",
+        "amp": 10,
+        "period": 1.7,
+        "left": 0,
+        "top": 0,
+        "width": 21.6,
+        "height": 34.2,
+        "ox": 73.3,
+        "oy": 93.2
+      },
+      {
+        "name": "paupiere",
+        "motion": "blink",
+        "left": 4.3,
+        "top": 34,
+        "width": 21.4,
+        "height": 20.6,
+        "ox": 48.3,
+        "oy": 52.9
+      }
+    ]
+  },
+  "090": {
+    "slug": "punaisaure",
+    "parts": [
+      {
+        "name": "ailes",
+        "motion": "flap",
+        "amp": 12,
+        "period": 0.45,
+        "behind": true,
+        "left": 53.7,
+        "top": 0,
+        "width": 46.3,
+        "height": 47.3,
+        "ox": 2.3,
+        "oy": 75.6
+      },
+      {
+        "name": "patte",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.5,
+        "left": 6.3,
+        "top": 59.5,
+        "width": 32.7,
+        "height": 15.4,
+        "ox": 89.3,
+        "oy": 18.9
+      }
+    ]
+  },
+  "091": {
+    "slug": "lumiver",
+    "parts": [
+      {
+        "name": "antennes",
+        "motion": "swing",
+        "amp": 12,
+        "period": 1.5,
+        "behind": true,
+        "left": 4.2,
+        "top": 11.6,
+        "width": 17.7,
+        "height": 27.9,
+        "ox": 69,
+        "oy": 89.6
+      },
+      {
+        "name": "lueur",
+        "motion": "flicker",
+        "period": 2.2,
+        "behind": true,
+        "left": 58.8,
+        "top": 41.2,
+        "width": 41.2,
+        "height": 58.8,
+        "ox": 49.8,
+        "oy": 52.1
+      }
+    ]
+  },
+  "092": {
+    "slug": "lampyrette",
+    "parts": [
+      {
+        "name": "ailes-loin",
+        "motion": "flap",
+        "amp": 16,
+        "period": 0.2,
+        "behind": true,
+        "phase": 0.5,
+        "left": 42.9,
+        "top": 7.9,
+        "width": 31.7,
+        "height": 40.3,
+        "ox": 3.5,
+        "oy": 89.4
+      },
+      {
+        "name": "antennes",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.3,
+        "behind": true,
+        "left": 0,
+        "top": 2.9,
+        "width": 28.7,
+        "height": 31.9,
+        "ox": 53.2,
+        "oy": 94
+      },
+      {
+        "name": "ailes",
+        "motion": "flap",
+        "amp": 16,
+        "period": 0.2,
+        "left": 36.1,
+        "top": 0,
+        "width": 51,
+        "height": 52.9,
+        "ox": 2.3,
+        "oy": 80.9
+      },
+      {
+        "name": "etincelles",
+        "motion": "flicker",
+        "period": 1.9,
+        "left": 46.4,
+        "top": 52.5,
+        "width": 53.6,
+        "height": 47.5,
+        "ox": 35.8,
+        "oy": 43.8
+      }
+    ]
+  },
+  "093": {
+    "slug": "erabou",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 2,
+        "behind": true,
+        "left": 40.1,
+        "top": 10.4,
+        "width": 59.9,
+        "height": 78.8,
+        "ox": 26,
+        "oy": 92.8
+      },
+      {
+        "name": "gland",
+        "motion": "reach",
+        "amp": 55,
+        "period": 4.2,
+        "left": 9.2,
+        "top": 51.7,
+        "width": 25.9,
+        "height": 19.3,
+        "ox": 86.3,
+        "oy": 22.5
+      }
+    ]
+  },
+  "094": {
+    "slug": "erabreuil",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 4,
+        "period": 2.6,
+        "behind": true,
+        "left": 40.1,
+        "top": 0,
+        "width": 59.9,
+        "height": 85.1,
+        "ox": 37.1,
+        "oy": 91.8
+      },
+      {
+        "name": "bras",
+        "motion": "nod",
+        "amp": -18,
+        "period": 3.6,
+        "phase": 0,
+        "left": 16.5,
+        "top": 48.6,
+        "width": 25.8,
+        "height": 16.2,
+        "ox": 87.5,
+        "oy": 46.3
+      },
+      {
+        "name": "noisette",
+        "motion": "throw",
+        "to": [
+          -330,
+          -20
+        ],
+        "shrink": 0.85,
+        "period": 3.6,
+        "phase": 0,
+        "left": 8,
+        "top": 39,
+        "width": 15.7,
+        "height": 20,
+        "ox": 49.4,
+        "oy": 52.1
+      },
+      {
+        "name": "feuilles",
+        "motion": "flicker",
+        "period": 2.6,
+        "left": 0,
+        "top": 19.2,
+        "width": 97,
+        "height": 76.7,
+        "ox": 47.9,
+        "oy": 44.2
+      }
+    ]
+  },
+  "095": {
+    "slug": "nenurette",
+    "parts": [
+      {
+        "name": "fleur",
+        "motion": "swing",
+        "amp": 7,
+        "period": 2.4,
+        "behind": true,
+        "left": 31.3,
+        "top": 0,
+        "width": 19,
+        "height": 28.8,
+        "ox": 46.5,
+        "oy": 86.1
+      },
+      {
+        "name": "langue",
+        "motion": "peek",
+        "to": [
+          48,
+          0
+        ],
+        "shrink": 0.2,
+        "fade": true,
+        "period": 3.2,
+        "left": 1.5,
+        "top": 43,
+        "width": 26.6,
+        "height": 11,
+        "ox": 89.5,
+        "oy": 58.6
+      }
+    ]
+  },
+  "096": {
+    "slug": "tachou",
+    "parts": [
+      {
+        "name": "goutte",
+        "motion": "peek",
+        "to": [
+          0,
+          220
+        ],
+        "shrink": 0.7,
+        "fade": true,
+        "period": 2.6,
+        "left": 46.8,
+        "top": 87.2,
+        "width": 9.6,
+        "height": 12.8,
+        "ox": 50,
+        "oy": 43.3
+      },
+      {
+        "name": "paupiere",
+        "motion": "blink",
+        "left": 19.5,
+        "top": 20.1,
+        "width": 33.2,
+        "height": 21.2,
+        "ox": 47.7,
+        "oy": 55
+      }
+    ]
+  },
+  "097": {
+    "slug": "tachombre",
+    "parts": [
+      {
+        "name": "bras-loin",
+        "motion": "swing",
+        "amp": 7,
+        "period": 2.3,
+        "behind": true,
+        "left": 64.7,
+        "top": 15.8,
+        "width": 35.3,
+        "height": 31.4,
+        "ox": 12.3,
+        "oy": 83.8
+      },
+      {
+        "name": "bras",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.7,
+        "left": 0,
+        "top": 38.8,
+        "width": 38.2,
+        "height": 21.5,
+        "ox": 90.4,
+        "oy": 54.8
+      },
+      {
+        "name": "gouttes",
+        "motion": "flicker",
+        "period": 2.4,
+        "left": 44.9,
+        "top": 87.5,
+        "width": 29.8,
+        "height": 12.5,
+        "ox": 52.3,
+        "oy": 10.8
+      }
+    ]
+  },
+  "098": {
+    "slug": "fanetome",
+    "parts": [
+      {
+        "name": "feuille-loin",
+        "motion": "swing",
+        "amp": -6,
+        "period": 2.8,
+        "behind": true,
+        "phase": 0.4,
+        "left": 48.8,
+        "top": 36.6,
+        "width": 31,
+        "height": 22.5,
+        "ox": 12,
+        "oy": 90.9
+      },
+      {
+        "name": "feuille",
+        "motion": "swing",
+        "amp": 9,
+        "period": 2.2,
+        "left": 0.3,
+        "top": 33.9,
+        "width": 25.7,
+        "height": 24.3,
+        "ox": 92.3,
+        "oy": 91.8
+      },
+      {
+        "name": "tete",
+        "motion": "nod",
+        "amp": 8,
+        "period": 3.6,
+        "left": 7.5,
+        "top": 0,
+        "width": 53.8,
+        "height": 55.6,
+        "ox": 53.1,
+        "oy": 89.2
+      },
+      {
+        "name": "petales",
+        "motion": "flicker",
+        "period": 2.8,
+        "left": 0,
+        "top": 11.9,
+        "width": 100,
+        "height": 74.8,
+        "ox": 45.2,
+        "oy": 50.2
+      }
+    ]
   }
 }

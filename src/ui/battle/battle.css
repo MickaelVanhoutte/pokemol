@@ -98,6 +98,16 @@
 /* in front at rest, behind the rest once it is small (a turtle inside its shell) */
 .pk-part--peek.is-inside { animation-name: partPeek, partInside; }
 @keyframes partInside { 0%, 49%, 87%, 100% { z-index: 2; } 50%, 86% { z-index: 0; } }
+/* thrown at the foe in an arc, gone, then back in the paw */
+.pk-part--throw { animation-name: partThrow; }
+@keyframes partThrow {
+  0%, 66% { translate: 0 0; scale: 1; opacity: 1; }
+  72% { translate: calc(var(--to-x) * 0.5) calc(var(--to-y) * 0.5 - 60%); }
+  78% { translate: var(--to-x) var(--to-y); scale: var(--shrink); opacity: 1; }
+  80% { translate: var(--to-x) var(--to-y); scale: var(--shrink); opacity: 0; }
+  81%, 94% { translate: 0 0; scale: 1; opacity: 0; }
+  100% { translate: 0 0; scale: 1; opacity: 1; }
+}
 .pk-part--flicker { animation-name: partFlicker; animation-timing-function: steps(1, end); }
 @keyframes partFlicker { 0%, 100% { opacity: 0; } 6% { opacity: 1; } 12% { opacity: 0; } 16% { opacity: 1; } 28% { opacity: 0; } 60% { opacity: 1; } 66% { opacity: 0; } }
 .pk-part--blink { animation-name: partBlink; animation-timing-function: steps(1, end); }
@@ -150,7 +160,7 @@
 /* the victory dance: a hop while turning round (squeezed flat, then seen from the other side, then back) */
 .fx-victory { animation: victoryDance 1.5s ease-in-out 2; }
 /* it dances out in the open: nothing hides in a shell or a hole meanwhile */
-.fx-victory .pk-part--peek { animation: none; }
+.fx-victory .pk-part--peek, .fx-victory .pk-part--throw { animation: none; }
 @keyframes victoryDance {
   0%, 100% { transform: scaleX(var(--flip)); }
   15% { transform: translateY(-10%) scaleX(var(--flip)); }

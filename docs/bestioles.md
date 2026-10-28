@@ -95,6 +95,12 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Plissou → Plisserpent → Festivouivre | Grand Défilé (Dragon physical 95, 20% chance of +1 Attack) | signature move | Slow |
 | Globargot | Flocons Fous: hail as it comes in | `entryWeather` | Many weaknesses |
 | Moutoussière | Atchoum: the foe's accuracy drops as it comes in | `entryStage` (listed in `POWER_TALENTS`) | Average stats |
+| Punaisette → Punaisaure | Bouclier Punaise: Fire and Flying damage halved | `halve` (listed in `POWER_TALENTS`) | Fire ×4 (Bug/Steel) |
+| Lumiver → Lampyrette | Lanterne: Sp. Atk and Sp. Def ×1.3 at night | `nightBoost` | Fragile |
+| Érabou → Érabreuil | Lancer de Gland (Grass physical 85, 20% flinch) | signature move | No strong Grass physical move |
+| Nénurette | Averse d’Été: rain as it comes in | `entryWeather` | Average |
+| Tachou → Tachombre | Giclée d’Encre (Ghost special 90, 20% accuracy drop) | signature move | Fragile |
+| Fanétome | Herbier: heals 1/16 HP a turn, 1/8 in sunshine | `regen` | Many weaknesses |
 | Coconfus (legendary cocoon) | Pas Fini: at full HP it takes half the damage | `fullHpGuard` | — |
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
