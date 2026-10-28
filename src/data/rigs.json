@@ -1,4 +1,309 @@
 {
+  "100": {
+    "slug": "leviafarce",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 8,
+        "period": 2.2,
+        "behind": true,
+        "left": 78,
+        "top": 45.7,
+        "width": 22,
+        "height": 49.1,
+        "ox": 36.4,
+        "oy": 91
+      },
+      {
+        "name": "collerette",
+        "motion": "swing",
+        "amp": 6,
+        "period": 1.6,
+        "left": 31.7,
+        "top": 0,
+        "width": 38.1,
+        "height": 47.4,
+        "ox": 35.6,
+        "oy": 54.8
+      },
+      {
+        "name": "machoire",
+        "motion": "nod",
+        "amp": -10,
+        "period": 2.8,
+        "left": 4.6,
+        "top": 22.7,
+        "width": 40.9,
+        "height": 19.6,
+        "ox": 91.3,
+        "oy": 46.6
+      },
+      {
+        "name": "ecume",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 0,
+        "top": 52.1,
+        "width": 99.5,
+        "height": 38,
+        "ox": 47,
+        "oy": 68
+      }
+    ]
+  },
+  "101": {
+    "slug": "medusoie",
+    "parts": [
+      {
+        "name": "tentacules-loin",
+        "motion": "swing",
+        "amp": 9,
+        "period": 2.6,
+        "behind": true,
+        "phase": 0.5,
+        "left": 60.4,
+        "top": 36.4,
+        "width": 22.3,
+        "height": 51.7,
+        "ox": -7.1,
+        "oy": 15.4
+      },
+      {
+        "name": "tentacules",
+        "motion": "swing",
+        "amp": 8,
+        "period": 2.2,
+        "left": 24.3,
+        "top": 45.4,
+        "width": 42,
+        "height": 54.6,
+        "ox": 45.2,
+        "oy": 6.4
+      },
+      {
+        "name": "bulles",
+        "motion": "flicker",
+        "period": 2,
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 68.6,
+        "ox": 50.7,
+        "oy": 58
+      }
+    ]
+  },
+  "102": {
+    "slug": "voilamere",
+    "parts": [
+      {
+        "name": "tentacules-loin",
+        "motion": "swing",
+        "amp": 7,
+        "period": 3,
+        "behind": true,
+        "phase": 0.5,
+        "left": 49.1,
+        "top": 48.8,
+        "width": 34.3,
+        "height": 49.6,
+        "ox": 33.1,
+        "oy": 14.5
+      },
+      {
+        "name": "voile",
+        "motion": "swing",
+        "amp": 5,
+        "period": 2.4,
+        "behind": true,
+        "left": 25.4,
+        "top": 0,
+        "width": 56.9,
+        "height": 27,
+        "ox": 48.7,
+        "oy": 82.6
+      },
+      {
+        "name": "tentacules",
+        "motion": "swing",
+        "amp": 6,
+        "period": 2.6,
+        "left": 13.5,
+        "top": 56.2,
+        "width": 61.6,
+        "height": 43.8,
+        "ox": 47,
+        "oy": 11.6
+      },
+      {
+        "name": "gouttes",
+        "motion": "flicker",
+        "period": 1.8,
+        "left": 0,
+        "top": 18.6,
+        "width": 100,
+        "height": 47.6,
+        "ox": 48.4,
+        "oy": 86
+      }
+    ]
+  },
+  "103": {
+    "slug": "chiroplie",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": 22,
+        "period": 0.5,
+        "behind": true,
+        "left": 0,
+        "top": 29.1,
+        "width": 34.9,
+        "height": 47.2,
+        "ox": 91,
+        "oy": 56.5
+      },
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": 22,
+        "period": 0.5,
+        "left": 46.2,
+        "top": 10.5,
+        "width": 53.8,
+        "height": 64.5,
+        "ox": 7.3,
+        "oy": 67
+      }
+    ]
+  },
+  "104": {
+    "slug": "vampapier",
+    "parts": [
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": 12,
+        "period": 0.8,
+        "behind": true,
+        "left": 0,
+        "top": 13.1,
+        "width": 33.3,
+        "height": 40.4,
+        "ox": 93.3,
+        "oy": 75
+      },
+      {
+        "name": "aile",
+        "motion": "flap",
+        "amp": 12,
+        "period": 0.8,
+        "left": 50.4,
+        "top": 6.6,
+        "width": 49.6,
+        "height": 54.4,
+        "ox": 6.1,
+        "oy": 69
+      },
+      {
+        "name": "gouttes",
+        "motion": "flicker",
+        "period": 1.7,
+        "left": 11.6,
+        "top": 43.8,
+        "width": 55.8,
+        "height": 28.6,
+        "ox": 43.1,
+        "oy": 10.7
+      }
+    ]
+  },
+  "105": {
+    "slug": "poncou",
+    "parts": [
+      {
+        "name": "tete",
+        "motion": "nod",
+        "amp": 7,
+        "period": 2.4,
+        "left": 0,
+        "top": 33.6,
+        "width": 40.7,
+        "height": 44.4,
+        "ox": 86.6,
+        "oy": 44.1
+      },
+      {
+        "name": "sable",
+        "motion": "flicker",
+        "period": 2.2,
+        "left": 13.4,
+        "top": 78.4,
+        "width": 86.6,
+        "height": 21.6,
+        "ox": 41.8,
+        "oy": 40.9
+      }
+    ]
+  },
+  "106": {
+    "slug": "rapepic",
+    "parts": [
+      {
+        "name": "piquants",
+        "motion": "swing",
+        "amp": 4,
+        "period": 2,
+        "behind": true,
+        "left": 11.4,
+        "top": 0,
+        "width": 88.6,
+        "height": 70.7,
+        "ox": 52.5,
+        "oy": 79.3
+      },
+      {
+        "name": "sable",
+        "motion": "flicker",
+        "period": 2.4,
+        "left": 10.9,
+        "top": 86.4,
+        "width": 84,
+        "height": 13.6,
+        "ox": 41.3,
+        "oy": 34.5
+      }
+    ]
+  },
+  "107": {
+    "slug": "galibou",
+    "parts": [
+      {
+        "name": "aile-peinte",
+        "motion": "nod",
+        "amp": -12,
+        "period": 0.9,
+        "left": 65.3,
+        "top": 36.1,
+        "width": 32.3,
+        "height": 46.8,
+        "ox": 23.4,
+        "oy": 10.5
+      },
+      {
+        "name": "paupiere",
+        "motion": "blink",
+        "left": 11.6,
+        "top": 15.6,
+        "width": 60.4,
+        "height": 28.8,
+        "ox": 47.7,
+        "oy": 55.2
+      }
+    ]
+  },
   "001": {
     "slug": "minousse",
     "parts": [
@@ -2698,6 +3003,47 @@
         "height": 74.8,
         "ox": 45.2,
         "oy": 50.2
+      }
+    ]
+  },
+  "099": {
+    "slug": "avrilou",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 13,
+        "period": 0.9,
+        "behind": true,
+        "left": 71.5,
+        "top": 25.6,
+        "width": 28.5,
+        "height": 54.3,
+        "ox": 16.7,
+        "oy": 52.3
+      },
+      {
+        "name": "nageoire",
+        "motion": "flap",
+        "amp": 22,
+        "period": 0.6,
+        "left": 35.5,
+        "top": 67.7,
+        "width": 17.1,
+        "height": 25.8,
+        "ox": 24.5,
+        "oy": 19.4
+      },
+      {
+        "name": "gouttes",
+        "motion": "flicker",
+        "period": 1.6,
+        "left": 0,
+        "top": 0,
+        "width": 99.1,
+        "height": 100,
+        "ox": 46.2,
+        "oy": 53.7
       }
     ]
   }

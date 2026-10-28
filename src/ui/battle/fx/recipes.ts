@@ -195,6 +195,9 @@ export const MOVE_FX: Record<string, Recipe> = {
   // the autumn squirrel winds up and throws an acorn, spinning
   'lancer-de-gland': { user: 'rear', layers: [projectile({ kind: 'acorn', color: '#c8893e', size: 0.4, fly: 340, spin: 2, burst: 'star' })] },
   // the ink ghost splashes the foe with blots of violet-black ink
+  gigotage: calm({ user: 'wiggle', layers: [sparkle({ who: 'user', kind: 'bubble', color: C.eau[1], n: 5, size: 0.2 })] }),
+  deferlante: { user: 'lunge', shake: 0.3, layers: [wave(), at(300, impactStar({ size: 0.55 }))] },
+  'croc-buvard': { user: 'lunge', hit: 'squash', layers: [bite({ gum: C.poison[2], tooth: '#f7f3ea', n: 4 }), at(380, drain({ color: C.poison[1] }))] },
   'giclee-d-encre': { layers: [projectile({ kind: 'ink', color: C.spectre[2], n: 4, gap: 70, size: 0.36, burst: false }), at(360, splat({ color: C.spectre[2], size: 0.95 })), at(420, sparkle({ kind: 'ink', color: C.spectre[1], n: 4, size: 0.18 }))] },
 };
 

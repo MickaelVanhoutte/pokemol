@@ -281,6 +281,19 @@ export const TALENTS: TalentDef[] = [
   T('herbier', L('Herbier', 'Herbarium'),
     L('Pressée entre deux pages, elle reprend des forces : elle récupère 1/16 de ses PV à chaque tour, et 1/8 au soleil.', 'Pressed between two pages, it gets its strength back: 1/16 of its HP each turn, and 1/8 in sunshine.'),
     { kind: 'regen', pct: 1 / 16, sunPct: 1 / 8 }),
+  // iteration 19: the sea, the caves and the sandpaper
+  T('poisson-d-avril', L('Poisson d’Avril', 'April Fool'),
+    L('En arrivant, il fait une farce à l’adversaire : surpris, son Attaque baisse.', 'It plays a prank on the foe as it arrives: startled, the foe’s Attack drops.'),
+    { kind: 'entryStage', target: 'foe', stat: 'atk', stages: -1 }),
+  T('soie-urticante', L('Soie Urticante', 'Stinging Silk'),
+    L('Ses rubans piquent : le toucher peut empoisonner l’attaquant (3 chances sur 10).', 'Its ribbons sting: touching it may poison the attacker (3 chances in 10).'),
+    { kind: 'contactStatus', status: 'poison', chance: 30 }),
+  T('poussiere-de-poncage', L('Poussière de Ponçage', 'Sanding Dust'),
+    L('Il arrive en se frottant : une tempête de sable se lève.', 'It arrives rubbing itself down: a sandstorm blows up.'),
+    { kind: 'entryWeather', weather: 'sable' }),
+  T('vernis', L('Vernis', 'Varnish'),
+    L('Une couche de vernis le protège : les capacités Eau et Plante ne lui font que la moitié des dégâts.', 'A coat of varnish shields it: Water and Grass moves do only half the damage to it.'),
+    { kind: 'halve', types: ['eau', 'plante'] }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

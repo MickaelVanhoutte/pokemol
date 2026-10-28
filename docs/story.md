@@ -558,6 +558,36 @@ Nocturne 82/85/84% (was 75/85/78). The new teams give a little more XP, so one t
 finale: Effaceur 69/64/65% (was 56/47/49), inside the finale's 50–75% band. On Hard, Marine is 31/3/9% (was 45/17/2).
 The six finals and standalones joined `TOWER_POOL`.
 
+**The sea, the caves and the sandpaper (iteration 19), 107 in all.** After the Ateliers, the gaps were elsewhere:
+every fishing rod pulled up Clapotin, sailing met Clapotin and Piafou, no cave had a bat, the last routes only
+showed Bestioles met before, and Poison (5), Rock and Ice (6) were the rarest types. Nine more, drawn with the
+`crayon` kit; the owner turned down a pangolin (now a porcupine), a sheet of tracing paper that copied the foe (twice),
+a paper snowflake, an origami penguin, a cotton-wool fox and a hermit crab in an ice-cream cone, so the Ice one waits.
+- Avrilou → Léviafarce (Water → Water/Dark, L20): an April fish of paper with its strip of tape, that can only
+  flop about (Gigotage, a move that does nothing: `{ kind: 'nothing' }`, "But nothing happens!"), then a sea serpent
+  with a jester's collar. Every rod on every coast, Avrilou above all with the Old Rod; Léviafarce rare with the
+  Super Rod off the Inkwell Isle. Captain Buvard's rematch. Power: Poisson d’Avril (`entryStage`, the foe's Attack −1).
+- Médusoie → Voilamère (Water/Poison, L30): a tissue-paper jellyfish with crepe-paper ribbons, then a great one
+  with a ruffled sail. Sailing off every coast; Voilamère off the Inkwell Isle. Swimmer Loïc, a lighthouse grunt.
+  Power: Soie Urticante (`contactStatus`, poison 30%).
+- Chiroplie → Vampapier (Poison/Flying, L22): a bat of folded black paper with googly eyes, then a vampire with a
+  cape. Scribble Cave and Mount Charcoal; Vampapier in the Echo Cave. Team Gomme grunts (Rocket's bats). Power:
+  Croc-buvard (Poison physical 75, drains 50%).
+- Ponçou → Râpépic (Ground, L24): a hedgehog with a sandpaper back, then a porcupine whose quills are strips of
+  sandpaper and nail files, orange gnawing teeth. Route 4 and Mount Charcoal; Râpépic on the cycling track (rare).
+  Caver Rémi, Cyclist Noé, Painter Victor. Power: Poussière de Ponçage (sandstorm as it comes in).
+- Galibou (Rock, rare): an owl painted on a pebble, varnished; it flaps its painted wing but can't fly (it still
+  learns Grand Vol). Route 3 by the water and the Echo Cave. Painter Victor. Power: Vernis (Water and Grass halved).
+
+Who got them: Swimmer Loïc Médusoie, the grunts at the Misty Woods and on Route 4 Chiroplie, the tower grunt
+Vampapier, a lighthouse grunt Voilamère, Caver Rémi Ponçou, Cyclist Noé and Painter Victor Râpépic, Victor Galibou,
+Captain Buvard's rematch Léviafarce (L39, in place of Glissonde; L41 dropped the row to 44/45/43%), Route 9's grunt
+Vampapier. Swaps keep the XP close: a Pêcheur Gus with an Avrilou, a Captain Buvard with Voilamère (Braisou 88% →
+50%) and 26-weight Chiroplie in the Scribble Cave (less XP from the cave, Hard Marine's starter a level down) were
+undone or toned down, and Chiroplie's base XP is the model's 54. On Normal only Buvard's rematch moves: 55/55/53%
+(was 59/58/61); on Hard, Ambre's second row 57/49/89% (was 64/60/91) and the cycling track's Noé 78/87/83%. The four
+finals and Galibou joined `TOWER_POOL`.
+
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be
 forgotten). Now only the innkeeper and the Pencil Balloon pilot are in every Inn; each town's Inn has its

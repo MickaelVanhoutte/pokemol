@@ -36,6 +36,8 @@ export type MoveEffect =
   | { kind: 'boostIfFoeAsleep'; mult: number }
   /** Only works while the user is asleep. */
   | { kind: 'onlyAsleep' }
+  /** Does nothing at all (Avrilou flopping about). */
+  | { kind: 'nothing' }
   /** Badly poisons: the poison hurts more every turn (chance in %). */
   | { kind: 'toxic'; chance: number }
   /** Sets the weather for 5 turns. */

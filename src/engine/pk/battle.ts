@@ -85,6 +85,8 @@ export type BattleEvent =
   | { t: 'move'; side: Side; move: string }
   | { t: 'miss'; side: Side }
   | { t: 'fail'; side: Side }
+  /** A move that does nothing at all (Gigotage). */
+  | { t: 'nothing' }
   | { t: 'noEffect'; side: Side }
   | { t: 'damage'; side: Side; amount: number; crit?: boolean; eff?: number }
   | { t: 'hits'; count: number }
@@ -801,6 +803,10 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
         break;
       case 'heal':
         anything = healSide(st, side, (maxHp(user) * e.pct) / 100, out) > 0;
+        break;
+      case 'nothing':
+        out.push({ t: 'nothing' });
+        anything = true;
         break;
       case 'rest':
         if (user.hp >= maxHp(user)) break;

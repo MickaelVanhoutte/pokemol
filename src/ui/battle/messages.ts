@@ -43,6 +43,8 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       return [f(L('{n} rate son attaque !', '{n}’s attack missed!'), { n: nm(e.side) })];
     case 'fail':
       return [tr(L('Mais cela échoue !', 'But it failed!'))];
+    case 'nothing':
+      return [tr(L('Mais rien ne se passe !', 'But nothing happens!'))];
     case 'noEffect':
       return [f(L('Ça n’affecte pas {n}…', 'It doesn’t affect {n}…'), { n: nm(e.side) })];
     case 'damage': {

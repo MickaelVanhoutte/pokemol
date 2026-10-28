@@ -47,6 +47,17 @@ describe('critical hits (Gen 3)', () => {
   });
 });
 
+describe('Gigotage', () => {
+  it('does nothing at all, and says so', () => {
+    const st = start([mon('099', 10, ['gigotage'])], [mon('008', 10, ['gros-baillement'])]);
+    const step = turn(st);
+    expect(step.events.some((e) => e.t === 'nothing')).toBe(true);
+    expect(step.events.some((e) => e.t === 'fail' && e.side === 0)).toBe(false);
+    expect(step.state.sides[1].vol.stages).toEqual(st.sides[1].vol.stages);
+    expect(step.state.sides[1].party[0].hp).toBe(st.sides[1].party[0].hp);
+  });
+});
+
 describe('weather', () => {
   it('lasts 5 turns and makes Water moves stronger in the rain', () => {
     let st = start([mon('003', 30, ['averse', 'bulles'])], [mon('008', 30, ['gros-baillement'])]);

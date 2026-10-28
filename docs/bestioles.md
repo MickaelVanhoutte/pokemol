@@ -101,6 +101,11 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Nénurette | Averse d’Été: rain as it comes in | `entryWeather` | Average |
 | Tachou → Tachombre | Giclée d’Encre (Ghost special 90, 20% accuracy drop) | signature move | Fragile |
 | Fanétome | Herbier: heals 1/16 HP a turn, 1/8 in sunshine | `regen` | Many weaknesses |
+| Avrilou → Léviafarce | Poisson d’Avril: the foe’s Attack drops as it comes in | `entryStage` (listed in `POWER_TALENTS`) | A useless first form |
+| Médusoie → Voilamère | Soie Urticante: hitting it up close poisons 30% of the time | `contactStatus` (listed in `POWER_TALENTS`) | Frail against physical hits |
+| Chiroplie → Vampapier | Croc-buvard (Poison physical 75, drains 50%) | signature move | Weak, no strong Poison move |
+| Ponçou → Râpépic | Poussière de Ponçage: a sandstorm as it comes in | `entryWeather` | Weak special side |
+| Galibou | Vernis: Water and Grass damage halved | `halve` (listed in `POWER_TALENTS`) | Water and Grass |
 | Coconfus (legendary cocoon) | Pas Fini: at full HP it takes half the damage | `fullHpGuard` | — |
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |

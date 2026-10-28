@@ -372,6 +372,16 @@ export const MOVES: MoveDef[] = [
   M({ id: 'giclee-d-encre', name: L('Giclée d’encre', 'Ink Splash'), type: 'spectre', cat: 'spec', power: 90, acc: 100, pp: 10,
     effects: [{ kind: 'stage', target: 'foe', stat: 'acc', stages: -1, chance: 20 }],
     desc: L('Une giclée d’encre hantée qui tache tout. Peut baisser la Précision de l’ennemi.', 'A splash of haunted ink that stains everything. May lower the foe’s accuracy.') }),
+  // iteration 19: the sea, the caves and the sandpaper
+  M({ id: 'gigotage', name: L('Gigotage', 'Flop About'), type: 'normal', cat: 'status', power: 0, acc: null, pp: 40,
+    effects: [{ kind: 'nothing' }],
+    desc: L('Il gigote dans tous les sens. Il ne se passe rien du tout.', 'It flops about every which way. Nothing at all happens.') }),
+  M({ id: 'deferlante', name: L('Déferlante', 'Breaker'), type: 'eau', cat: 'phys', power: 80, acc: 100, pp: 15,
+    effects: [{ kind: 'flinch', chance: 20 }],
+    desc: L('Il se jette sur l’ennemi comme une grosse vague. Peut l’apeurer.', 'It crashes into the foe like a big wave. May make it flinch.') }),
+  M({ id: 'croc-buvard', name: L('Croc-buvard', 'Blotting Fang'), type: 'poison', cat: 'phys', power: 75, acc: 100, pp: 10,
+    effects: [{ kind: 'drain', pct: 50 }],
+    desc: L('Ses crocs de papier boivent les forces de l’ennemi comme un buvard boit l’encre.', 'Its paper fangs soak up the foe’s strength the way blotting paper soaks up ink.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));
