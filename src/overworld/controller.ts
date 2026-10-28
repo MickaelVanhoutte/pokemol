@@ -85,7 +85,9 @@ export function setFlag(name: string, v = 1) {
 function visibleNpc(n: NpcDef): boolean {
   if (n.showIf && !flag(n.showIf)) return false;
   if (n.hideIf && flag(n.hideIf)) return false;
-  if (n.fromMap && !n.fromMap.includes(save.value?.player.returnTo?.map ?? '')) return false;
+  const back = save.value?.player.returnTo;
+  if (n.fromMap && !n.fromMap.includes(back?.map ?? '')) return false;
+  if (n.fromDoor && !n.fromDoor.some(([m, x, y]) => back?.map === m && back.x === x && back.y === y)) return false;
   return true;
 }
 
@@ -155,6 +157,7 @@ export function enterWorld() {
   const d = s();
   g.setPlayer(lookOf(playerLook()), d.player.x, d.player.y, d.player.facing);
   loadMap(d.player.map);
+  g.unstick();
   refreshFollower();
   g.placeFollower();
   g.lock = 0;
@@ -504,12 +507,16 @@ function canFall(x: number, y: number): boolean {
 
 async function fallTo(to: WarpTarget) {
   const g = getGame();
+  // a pit that brings you back to the door of the same room (the ink blots of Atelier Encre)
+  const sameRoom = to.map === g.map.def.id;
   sfx.hit();
   await g.fadeTo(1, 260);
   await warpTo(to, { keepFade: true });
   await g.fadeTo(0, 200);
   await shake(250);
-  showToast(tr(L('Aïe ! Tu es {g:tombée|tombé} à l’étage du dessous.', 'Ouch! You fell to the floor below.')));
+  showToast(tr(sameRoom
+    ? L('Splatch ! Tu as glissé dans l’encre… et te revoilà à l’entrée.', 'Splosh! You slipped into the ink… and you’re back at the door.')
+    : L('Aïe ! Tu es {g:tombée|tombé} à l’étage du dessous.', 'Ouch! You fell to the floor below.')));
 }
 
 /** A switch: the red and blue crayon barriers swap (until the next visit). */

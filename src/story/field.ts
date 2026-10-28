@@ -71,3 +71,8 @@ giver('velociste', L('Vélociste', 'Bike Maker'), {
   before: [L('Les couleurs sont revenues grâce à toi ! Tiens, mon Vélo-Crayon : ses roues sont des taille-crayons, ça file !', 'The colours are back thanks to you! Here, my Pencil Bike: its wheels are pencil sharpeners, it zooms!')],
   after: L('Monte dessus avec VÉLO dans le menu. Pas à l’intérieur, hein !', 'Get on it with BIKE in the menu. Not indoors, mind!'),
 });
+
+/** Village-Braise's forge: too hot to go in, the smith works outside. */
+scripts.forgeBraise = async () => {
+  await say(L('Une chaleur de four s’échappe de la porte. Le forgeron travaille dehors, à côté.', 'Oven-like heat pours out of the door. The smith works outside, next to it.'));
+};

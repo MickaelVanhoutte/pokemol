@@ -45,3 +45,12 @@ export const MAPS: Record<string, MapDef> = {
   ...LEGEND_MAPS,
   ...MARGE_MAPS,
 };
+
+// a town's residents go into the shared house room their door leads to (`maisonVille`, `maisonPetite`…)
+for (const town of Object.values(MAPS)) {
+  for (const n of town.residents ?? []) {
+    const [, x, y] = n.fromDoor?.[0] ?? [];
+    const door = (town.buildings ?? []).find((b) => b.to && b.x + b.door === x && b.y + b.h === y);
+    if (door) (MAPS[door.to!.map].npcs ??= []).push(n);
+  }
+}

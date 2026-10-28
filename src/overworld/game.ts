@@ -401,6 +401,32 @@ export class Game {
     const all = [...this.npcs, this.player];
     return all.find((a) => a !== except && ((a.x === x && a.y === y) || (a.moving && a.fromX === x && a.fromY === y)));
   }
+  /**
+   * A save made where the map has since changed (a house built on that spot): the player steps to the nearest
+   * free tile instead of loading stuck inside it.
+   */
+  unstick() {
+    const p = this.player, w = this.map.w;
+    const free = (x: number, y: number) => this.inside(x, y) && !this.map.solid[y * w + x] && !this.obstacleAt(x, y);
+    if (free(p.x, p.y) || this.map.doors.has(p.y * w + p.x)) return;
+    const seen = new Set([p.y * w + p.x]);
+    const queue: [number, number][] = [[p.x, p.y]];
+    while (queue.length) {
+      const [x, y] = queue.shift()!;
+      for (const [dx, dy] of Object.values(DIRS)) {
+        const nx = x + dx, ny = y + dy;
+        if (!this.inside(nx, ny) || seen.has(ny * w + nx)) continue;
+        seen.add(ny * w + nx);
+        if (free(nx, ny) && !this.map.warps.has(ny * w + nx)) {
+          p.x = p.fromX = nx;
+          p.y = p.fromY = ny;
+          return;
+        }
+        queue.push([nx, ny]);
+      }
+    }
+  }
+
   blocked(x: number, y: number, who?: Actor): boolean {
     if (!this.inside(x, y)) return true;
     // sailing: the player can go on water (and lands by walking onto the shore)

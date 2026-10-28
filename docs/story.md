@@ -655,6 +655,33 @@ Bestiole (no evolution left: 55 of them, legendaries included) is redrawn in fel
   doubled its Boue Toxique.
 - **Bestiodex**: once a fair copy has been seen in battle (`fair:<id>`), its entry gets an AU PROPRE button.
 
+**Routes, towns and Ateliers come alive (iteration 22).** The owner found the routes "too simple and linear" and the
+towns and Ateliers "all the same, lifeless".
+- **Routes**: each is redrawn around areas and tall-grass passages, with its own character and things off the main way
+  (docs/content.md, "Routes"); items, trainers, triggers and the forced wild battles the level curve counts stay.
+  Routes 3 and 8 got sailing and fishing on their new water.
+- **Towns** grow (only on a side with no exit, so coordinates and saves stay valid) and get a landmark, gardens,
+  2–4 houses you can enter and 7–12 people and Bestioles outside. The houses share three rooms (`maisonVille`,
+  `maisonPetite`, `maisonAtelier`); each town lists who lives behind which door in its `residents` (`fromDoor`).
+  Bourg-Gribouille: the First Line Square, a studio, a pond, a vegetable garden. Ville-Pastel: Chalk Square, the
+  artists' quarter, the Butterfly Garden. Village-Plume: a dovecote, the quill-maker. Port-Aquarelle: the quay, the
+  Painters' Square, Gull Point. Ville-Feutre: neon signs and felt-tip makers, people who speak differently before
+  and after its colours come back. Village-Braise: the forge, the hot spring, the glassblower. Bourg-Paillette: the
+  Wishing Fountain, the Glitter Works. Jardin-Gouache: the garden quarter and allotments. Cité-Encre: fireflies, a
+  canal of blue ink, the Night Library.
+- **Ateliers** are bigger rooms with a puzzle each and four trainers besides the Master (two new ones each, in
+  `src/data/teams/<town>.ts`; puzzle tests in `src/data/ateliers/`): Pastel, eraser blocks onto plates; Plume, draughts
+  of glossy paper; Aquarelle, blocks pushed into the pool's holes as stepping stones; Fluo, felt-tip barriers with
+  three switches; Braise, Amber's flames (two switches); Paillette, a starry glossy floor; Gouache, blocks onto
+  plates in a greenhouse; Encre, glossy ink with blots that drop you back at the door. Atelier Fluo's and Atelier
+  Encre's doors are set by story scripts (`fluoDoor`, `atelierEncreDoor`), so those two rooms grew to the right only.
+- **Balance**: the new trainers' XP puts the player a level or two higher from the third Atelier on, so (Normal,
+  before → after, win rates by starter) Zélie +1 level (90/99/90 → 98/100/98); Célestine L26/27/27/28 and Basile
+  L29/30/29/33, tuned for a player without a fully grown Bestiole (69/70/65 and 65/76/54 then); Nocturne +2
+  (82/85/84 → 80/83/85); the Great Eraser's Papivole and Zigzéclair L39 (76/73/75); the final rival's teammates L41
+  and its Dragobraise L41 (69/56/71); Team Gomme's Buvard +2, Rature's and Blanche's second and third teams +1 (back
+  near their old numbers). Gaspard, Marine and Ambre stay: one level made them far harder.
+
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be
 forgotten). Now only the innkeeper and the Pencil Balloon pilot are in every Inn; each town's Inn has its

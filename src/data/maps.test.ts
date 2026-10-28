@@ -130,3 +130,28 @@ describe('habitats', () => {
     expect(habitatsOf('011').at(-1)?.how).toBe('tombola');
   });
 });
+
+describe('shared houses', () => {
+  it('finds the door of every town resident (or it would be left out of the houses)', () => {
+    for (const town of Object.values(MAPS)) {
+      for (const n of town.residents ?? []) {
+        const [m, x, y] = n.fromDoor?.[0] ?? [];
+        expect(m, `${town.id} ${n.id}`).toBe(town.id);
+        const door = (town.buildings ?? []).find((b) => b.to && b.x + b.door === x && b.y + b.h === y);
+        expect(door?.to && MAPS[door.to.map]?.generic, `${town.id} ${n.id}: no house door at ${x},${(y ?? 0) - 1}`).toBe(true);
+      }
+    }
+  });
+
+  it('lets in their door-bound people only by a real door into that house', () => {
+    for (const m of Object.values(MAPS)) {
+      for (const n of m.npcs ?? []) {
+        for (const [town, x, y] of n.fromDoor ?? []) {
+          // the tile in front of a door of `town` that leads into this house
+          const door = (MAPS[town]?.buildings ?? []).find((b) => b.to?.map === m.id && b.x + b.door === x && b.y + b.h === y);
+          expect(door, `${m.id} ${n.id}: no door of ${town} at ${x},${y - 1}`).toBeDefined();
+        }
+      }
+    }
+  });
+});

@@ -35,24 +35,31 @@ dessins sont vivants : ce sont les **Bestioles**.
 ## Le voyage, dans l’ordre
 
 1. **Bourg-Gribouille** : ta maison et le labo du Prof. Tu choisis ta première Bestiole (Minousse,
-   Braisou ou Clapotin), et ton rival te lance tout de suite ton premier combat.
+   Braisou ou Clapotin), et ton rival te lance tout de suite ton premier combat. Autour : la Place du
+   Premier Trait, la mare, le potager, et l’atelier de la maîtresse de dessin.
 2. **Chemin des Crayons** : un Sbire Gomme poursuit un petit cocon tout tremblant. Ton premier
    combat contre la Team Gomme !
 3. **Ville-Pastel** : l’Atelier de Mireille. Capucine a dessiné une Bestiole toute ébouriffée, et
    une apprentie n’aime pas son premier dessin… Dans le **Musée des premiers croquis**, on peut voir
-   les tout premiers dessins des Bestioles, encadrés.
+   les tout premiers dessins des Bestioles, encadrés. La Place des Craies et sa fontaine, le quartier
+   des artistes et le Jardin des Papillons.
 4. **Route des Craies et Bois Brumeux** : la Team Gomme est en train d’effacer la forêt ! Et le
    petit cocon de la route a besoin de toi.
-5. **Village-Plume** : l’Atelier de Gaspard. Le pont a disparu pendant la nuit : il faut passer par
-   la Grotte Gribouillis.
-6. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola.
+5. **Village-Plume** : l’Atelier de Gaspard, plein de courants d’air. Le pont a disparu pendant la
+   nuit : il faut passer par la Grotte Gribouillis. Un pigeonnier, et l’atelier de la faiseuse de plumes.
+6. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola, le quai des pêcheurs, la
+   Place des Peintres et la Pointe des Mouettes.
 7. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
-   cache quelque chose.
-8. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan.
+   cache quelque chose. Ses enseignes au néon, sa Fontaine Fluo et ses fabricants de feutres.
+8. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan, sa forge, sa source chaude
+   et le souffleur de verre.
 9. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
    occupe la Tour Brumeuse… Tout en haut, quelqu’un que tu connais bien a besoin d’être rassuré.
-10. **Jardin-Gouache** : l’Atelier de Basile, où même l’herbe est peinte à la main.
-11. **Cité-Encre**, la ville où la nuit ne sèche jamais. L’Atelier de Nocturne est fermé : il faut
+   On y fait des vœux à la Fontaine aux Vœux, et la Fabrique de Paillettes prépare le Bal des Étoiles.
+10. **Jardin-Gouache** : l’Atelier de Basile, une serre où même l’herbe est peinte à la main ; le
+    quartier des jardins, ses potagers partagés et son étang aux nénuphars.
+11. **Cité-Encre**, la ville où la nuit ne sèche jamais : lucioles en guise de lampadaires, canal
+    d’encre bleue, Bibliothèque de Nuit. L’Atelier de Nocturne est fermé : il faut
     d’abord prendre le bateau jusqu’au **Phare de l’Encrier**. Puis l’**Usine à Gommes**, où le Grand
     Effaceur se montre enfin.
 12. **À l’ouest, au-delà de la Marge rouge du cahier** : la page n’est plus que dessinée au crayon.
@@ -86,6 +93,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - À Ville-Feutre, on te confie le **Feutre d’Or**, qu’aucune gomme ne peut effacer. Une fois par
   combat, il **met au propre** une Bestiole qui a fini de grandir : repassée au feutre, elle devient
   plus forte et gagne un nouveau talent (parfois même un nouveau type), le temps du combat. Les Maîtres d’Atelier ont le leur…
+- Chaque **Atelier** a son énigme (blocs à pousser, courants d’air, pierres de gué à refaire, flammes
+  qui barrent le chemin, sols glissants…) et ses élèves à battre avant le Maître. Dans les villes, on
+  entre chez les habitants : chacun a son histoire.
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
   gants. Chaque route a ses recoins : prairies à l’écart, objets cachés, rebords pour redescendre d’un
@@ -150,23 +160,30 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
 ## The journey, in order
 
 1. **Bourg-Gribouille**: your home and the Prof’s lab. You pick your first Critter (Sproutkit,
-   Embersal or Splashell), and your rival battles you straight away.
+   Embersal or Splashell), and your rival battles you straight away. Around it: First Line Square, the
+   pond, the vegetable garden and the drawing teacher’s studio.
 2. **Crayon Road**: an Eraser Grunt is chasing a trembling little cocoon. Your first battle against
    Team Gomme!
 3. **Pastel City**: Mireille’s Atelier. Capucine has drawn a very scruffy Critter, and an apprentice
    doesn’t like her first drawing… In the **Museum of First Sketches**, the very first drawings of the
-   Critters hang in frames.
+   Critters hang in frames. Chalk Square and its fountain, the artists’ quarter and the Butterfly Garden.
 4. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest! And the little cocoon from the
    road needs you.
-5. **Featherby**: Gaspard’s Atelier. The bridge vanished overnight: go through Scribble Cave instead.
-6. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola.
+5. **Featherby**: Gaspard’s draughty Atelier. The bridge vanished overnight: go through Scribble Cave
+   instead. A dovecote, and the quill-maker’s studio.
+6. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola, the fishermen’s quay, Painters’
+   Square and Gull Point.
 7. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
-   is hiding something.
-8. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano.
+   is hiding something. Its neon signs, its Fluo Fountain and its felt-tip makers.
+8. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano, its forge, its hot
+   spring and the glassblower.
 9. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
-   At the top, someone you know well needs cheering up.
-10. **Gouache Garden**: Basil’s Atelier, where even the grass is hand-painted.
-11. **Ink City**, where the night never dries. Nocturne’s Atelier is closed: first take the boat to the
+   At the top, someone you know well needs cheering up. Wishes are made at the Wishing Fountain, and
+   the Glitter Works is getting ready for the Star Ball.
+10. **Gouache Garden**: Basil’s Atelier, a greenhouse where even the grass is hand-painted; the garden
+    quarter, its shared allotments and its lily pond.
+11. **Ink City**, where the night never dries: fireflies for street lamps, a canal of blue ink, the
+    Night Library. Nocturne’s Atelier is closed: first take the boat to the
     **Inkwell Lighthouse**. Then the **Eraser Factory**, where the Great Eraser shows himself at last.
 12. **West, beyond the red Margin of the sketchbook**: the page is only drawn in pencil there. **Draft
     Hamlet**, home to drawings nobody finished, the **Sketch Forest**, and deep inside, the **Eraser
@@ -199,6 +216,9 @@ The story has **two endings**, and your answers choose which one you will see.
 - In Felt City you are given the **Golden Felt-tip**, which no eraser can rub out. Once per battle, it
   makes a **fair copy** of a fully grown Critter: gone over in felt-tip, it gets stronger and takes a new
   talent (sometimes even a new type) for the rest of the battle. The Atelier Masters have their own…
+- Every **Atelier** has its puzzle (blocks to push, draughts, stepping stones to rebuild, flames that
+  block the way, slippery floors…) and its pupils to beat before the Master. In towns you can visit
+  people at home: each has a story.
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves. Every road has
   its corners: meadows off the way, hidden items, ledges to jump back down, ponds and rivers whose far bank

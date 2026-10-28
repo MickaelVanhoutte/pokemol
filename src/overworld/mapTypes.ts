@@ -38,6 +38,8 @@ export interface NpcDef {
   hideIf?: string;
   /** In a shared interior: only there when entered from one of these maps. */
   fromMap?: string[];
+  /** In a shared house: only there when entered by this door (its map, and the tile in front of the door). */
+  fromDoor?: [map: string, x: number, y: number][];
   /** What this character does for the player, shown on the Town Map for the town (Inn helpers). */
   service?: LText;
   /** A Bestiole standing there, drawn as its miniature instead of a person (`look` is then unused). */
@@ -180,6 +182,11 @@ export interface MapDef {
   generic?: boolean;
   /** Cave, tower or hideout: the Ariadne Thread works here. */
   dungeon?: boolean;
+  /**
+   * People living in this town's houses: each has a `fromDoor` of this map, and is put into the shared house room
+   * its door leads to (src/data/maps/index.ts).
+   */
+  residents?: NpcDef[];
   /** Obstacles cleared with the scissors, gloves or mallet. */
   obstacles?: ObstacleDef[];
   /** Wild Bestioles met while sailing on water. */

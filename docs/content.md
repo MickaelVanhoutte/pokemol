@@ -101,7 +101,11 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
   sketch`).
 - `indoor`, `tint`, `fog`, `onEnter` (towns use `'visitTown'`).
-- `generic: true` marks a shared interior.
+- `generic: true` marks a shared interior. Town houses share three rooms (`maisonVille`, `maisonPetite`,
+  `maisonAtelier` in `maps/interiors.ts`): the town lists who lives in each house in its `residents`, with
+  `fromDoor: [[town, x, y]]` (the tile in front of the door); they are put in the room that door leads to, and a
+  test checks every door. A save made on a tile where a house now stands steps to the nearest free tile on load
+  (`Game.unstick`).
 - `patches`: `{ id, x, y, rows, if?, unless? }` redraws a block while the flag condition holds. In
   patch rows, `?` keeps the tile underneath.
 
@@ -230,7 +234,9 @@ Scripts run one at a time and lock player input. To change an existing script af
 
 ## Trainers
 
-`src/data/trainers.ts`, one `T({...})` per trainer, then an NPC with `trainer: '<id>'` and `sight`.
+`src/data/trainers.ts`, one `T({...})` per trainer, then an NPC with `trainer: '<id>'` and `sight`. An Atelier's
+own trainers (besides its Master) are in `src/data/teams/<town>.ts`, merged into `TRAINERS`; its puzzle has its
+test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzleSearch.ts`.
 
 - `party`: `[{ species, level }]` at **Normal** difficulty. `partyOf` applies `DIFFICULTY`, and
   trainer IVs are fixed per difficulty.
