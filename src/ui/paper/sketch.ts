@@ -195,6 +195,8 @@ export function installSketch(root: HTMLElement = document.documentElement) {
   set('--hatch-ink', hatch(98, GRAPHITE, { strokes: 22, opacity: 0.4 }));
   set('--pencil-frame', frame(5, PASTELS.paper[0]));
   set('--pencil-frame-2', frame(6, PASTELS.paper[0]));
+  // gone over hard in dark lead: the selected move
+  set('--pencil-frame-on', frame(8, PASTELS.paper[0], { ink: INK, weight: 11 }));
   // each type's own crayon, for move buttons
   for (const [id, t] of Object.entries(TYPES)) set(`--hatch-t-${id}`, hatch(seed++, t.color, { strokes: 24, opacity: 0.8 }));
   set('--rule', rule(3));

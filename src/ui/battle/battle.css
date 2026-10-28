@@ -269,7 +269,13 @@
 .bpanel__info > .window { width: min(100%, 440px); font-size: 1.1rem; }
 /* rows never grow past the fixed panel: at worst a button clips its own text */
 .bpanel__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 2px; }
-.bpanel__grid .pk-move { overflow: hidden; }
+.bpanel__grid .pk-move { overflow: hidden; container-type: inline-size; }
+/* the selected move: its frame gone over hard in dark lead (no cursor: the name and PP keep the whole width) */
+.bpanel__grid .pk-move.is-on { border-image-source: var(--pencil-frame-on); }
+/* a name or a type line too long for its button gets smaller rather than cut (--n, --m: their lengths, MoveButton),
+   and the name's line never gets squeezed under its letters */
+.bpanel__grid .pk-move b { --fs: clamp(1rem, 4.4vw, 1.25rem); font-size: min(var(--fs), 100cqi / (var(--n) * 0.41)); line-height: 1.15; flex: none; }
+.bpanel__grid .pk-move small { --fs: 0.85rem; font-size: min(var(--fs), 100cqi / (var(--m) * 0.47)); line-height: 1.15; }
 .bpanel--learnAsk .bpanel__split { flex-direction: row; align-items: stretch; }
 .bpanel--learnAsk .bpanel__prompt { flex: 1; height: auto; }
 .bpanel__yesno { flex: none; display: flex; align-items: flex-end; }
@@ -294,13 +300,12 @@
   text-align: left;
   cursor: pointer;
 }
-.gba-btn.is-on::before, .pk-move.is-on::before {
+.gba-btn.is-on::before {
   content: '';
   position: absolute; left: 0.25em; top: 50%;
   width: 1.2em; height: 0.7em; margin-top: -0.35em;
   background: var(--pencil-cursor) no-repeat center / contain;
 }
-.pk-move.is-on::before { left: auto; right: 4px; }
 .gba-btn:active { transform: translateY(2px); }
 .gba-btn--attack { --sk-fill: var(--coral); --sk-hatch: var(--hatch-coral); --pencil-frame: var(--frame-coral); }
 .gba-btn--bag { --sk-fill: var(--butter); --sk-hatch: var(--hatch-butter); --pencil-frame: var(--frame-butter); }
@@ -324,8 +329,8 @@
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
   /* two rows of moves fit the low panel, even with large text */
   .bpanel__grid .pk-move { border: 6px solid transparent; border-image: var(--pencil-frame) 24 / 6px stretch; padding: 0 6px 0 12px; }
-  .bpanel__grid .pk-move b { font-size: min(1.25rem, 6dvh); line-height: 1.1; }
-  .bpanel__grid .pk-move small { font-size: min(0.85rem, 4.2dvh); line-height: 1.1; }
+  .bpanel__grid .pk-move b { --fs: min(1.25rem, 6dvh); line-height: 1.1; }
+  .bpanel__grid .pk-move small { --fs: min(0.85rem, 4.2dvh); line-height: 1.1; }
   /* the speaker label goes in the corner so the text keeps its lines */
   .bpanel__text .textbox__speaker { position: absolute; top: 2px; left: auto; right: 8px; margin: 0; z-index: 1; }
 }

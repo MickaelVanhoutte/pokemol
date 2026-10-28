@@ -383,6 +383,10 @@ Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Ha
 | Normal | as written | 12 | Best move |
 | Hard | +10% | 20 | Best move |
 
+On Easy and Normal, a pencil thumb marks the moves that hit the foe's weak spot (super effective against its
+current types, a fair copy's included), once its species was met in an earlier battle: the Bestiodex's `seen`
+list as it was when the battle began (`weakSpotSlots`, `src/ui/battle/weakSpots.ts`). Hard shows nothing.
+
 Every trainer team goes through `partyOf`, including rematches and the final rival. The lab tutorial
 passes `'normal'` explicitly.
 

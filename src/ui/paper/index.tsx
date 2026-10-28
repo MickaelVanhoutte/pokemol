@@ -262,11 +262,16 @@ export function Frame({ title, onBack, backLabel, right, children, foot, class: 
   );
 }
 
-/** A move button. `onHold`: a long press (or a right click) asks what the move does, without picking it. */
-export function MoveButton({ id, pp, disabled, onClick, onHold, class: cls = '' }: {
-  id: string; pp?: number; disabled?: boolean; onClick: () => void; onHold?: () => void; class?: string;
+/**
+ * A move button. `onHold`: a long press (or a right click) asks what the move does, without picking it.
+ * `good`: it hits the foe's weak spot (a thumb before its type, src/ui/battle/weakSpots.ts).
+ */
+export function MoveButton({ id, pp, disabled, good, onClick, onHold, class: cls = '' }: {
+  id: string; pp?: number; disabled?: boolean; good?: boolean; onClick: () => void; onHold?: () => void; class?: string;
 }) {
   const mv = move(id);
+  const name = tr(mv.name), type = tr(TYPES[mv.type].name);
+  const line = pp !== undefined ? `${type} PP ${pp}/${mv.pp}` : type;
   const hold = useRef<{ timer?: number; fired: boolean }>({ fired: false });
   const stop = () => clearTimeout(hold.current.timer);
   const fire = () => {
@@ -278,7 +283,11 @@ export function MoveButton({ id, pp, disabled, onClick, onHold, class: cls = '' 
   return (
     <button
       class={`pk-move ${cls}`}
-      style={{ '--type': TYPES[mv.type].color, '--th': `var(--hatch-t-${mv.type})` }}
+      style={{
+        '--type': TYPES[mv.type].color, '--th': `var(--hatch-t-${mv.type})`,
+        // lengths of the name and of the type line (the thumb counts for three letters), so long ones shrink to fit
+        '--n': Math.max(8, name.length), '--m': Math.max(14, line.length + (good ? 3 : 0)),
+      }}
       disabled={disabled}
       onPointerDown={() => {
         if (!onHold) return;
@@ -300,8 +309,11 @@ export function MoveButton({ id, pp, disabled, onClick, onHold, class: cls = '' 
         else onClick();
       }}
     >
-      <b>{tr(mv.name)}</b>
-      <small><span class="pk-move__type">{tr(TYPES[mv.type].name)}</span>{pp !== undefined ? <span>PP {pp}/{mv.pp}</span> : null}</small>
+      <b>{name}</b>
+      <small>
+        {good && <img class="pk-move__good" src={sketchIconUrl('thumb')!} alt={tr(L('Super efficace', 'Super effective'))} />}
+        <span class="pk-move__type">{type}</span>{pp !== undefined ? <span>PP {pp}/{mv.pp}</span> : null}
+      </small>
     </button>
   );
 }

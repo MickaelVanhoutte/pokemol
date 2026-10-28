@@ -165,7 +165,10 @@ conventions are in [docs/content.md](docs/content.md#flags).
   - it keeps the bag, party and learn-move overlays inside itself, because the router would unmount
     the battle;
   - a long press (or right click) on a move button (`MoveButton`'s `onHold`) shows `MoveInfo` over the
-    scene: type, kind, power, accuracy, PP and description.
+    scene: type, kind, power, accuracy, PP and description;
+  - on Easy and Normal, a pencil thumb marks the moves that hit the foe's weak spot once its species was met before
+    (`weakSpotSlots`, `src/ui/battle/weakSpots.ts`; `fight()` passes the Bestiodex's `seen` from before the battle).
+    The selected move has a darker frame (`--pencil-frame-on`), and long names shrink to fit their button.
 - The fair copy (« mise au propre », `src/data/fairCopies.ts`): with the Feutre d'Or (`feutre-or`, from Zélie), a
   side makes one fully grown Bestiole a fair copy per battle: the AU PROPRE toggle in the move menu, a move action
   with `fair: true`, `canFairCopy`; it transforms before anyone moves. `Mon.fair` (battle only, dropped by the

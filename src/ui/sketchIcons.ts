@@ -138,6 +138,14 @@ const DRAW: Record<string, (seed: number) => string> = {
     d.line([[32, 19], [30, 13], [35, 12]], 2.4);
     return d.svg();
   },
+  // a thumb up (a move that hits the foe's weak spot), its sleeve in mint
+  thumb: (s) => {
+    const d = doodle(s);
+    d.shape([[4, 22], [13, 21], [14, 42], [4, 43]], '#bfe8c4', '#8ccc94');
+    d.shape([[13, 23], [19, 21], [21, 13], [21, 6], [25, 4], [28, 8], [28, 16], [26, 21], [39, 21], [43, 25], [42, 31], [40, 39], [35, 42], [13, 41]], '#fde0c2', '#f1ad73');
+    for (const y of [27, 32, 37]) d.line([[30, y], [41, y]], 1.6);
+    return d.svg();
+  },
 };
 
 const cache = new Map<string, string>();

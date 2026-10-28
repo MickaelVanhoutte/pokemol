@@ -194,3 +194,6 @@ img.picon { image-rendering: pixelated; image-rendering: crisp-edges; }
 .move-info__cat { font-size: 0.9rem; color: var(--ink-soft); }
 .move-info__stats { display: flex; flex-wrap: wrap; gap: 0 14px; color: var(--ink-soft); }
 .pk-move:not(:disabled):active { transform: translateY(2px); }
+/* a move that hits the foe's weak spot: a pencil thumb before its type, clear of the cursor on the right even when
+   a long type name pushes the PP out (src/ui/battle/weakSpots.ts); it doesn't make the line taller */
+.pk-move__good { flex: none; align-self: center; width: 1.7em; height: 1.7em; margin: -0.5em -4px -0.4em -3px; pointer-events: none; }

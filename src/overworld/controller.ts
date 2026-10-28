@@ -810,6 +810,8 @@ export interface FightOptions {
 export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], opts: FightOptions = {}): Promise<{ result: BattleResult; state: BattleState }> {
   const d = s();
   const money = opts.trainer ? opts.trainer.money : 0;
+  // met before this battle: their weak spots get marked on the moves (Easy and Normal)
+  const met = [...d.dex.seen];
   update((x) => enemy.forEach((m) => see(x, m.species)));
   calm(odds);
   const g = getGame();
@@ -830,6 +832,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
         playerLook: playerLook(),
+        fought: met,
         music: opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gommeBattle' : kind === 'trainer' ? 'trainer' : 'wild'),
         trainer: kind === 'trainer' ? {
           title: tr(enemyName),

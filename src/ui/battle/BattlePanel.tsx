@@ -16,6 +16,8 @@ export interface PanelProps {
   struggling: boolean;
   /** Moves that can be picked (a Stubborn item locks one, the Painter’s Apron forbids status moves). */
   usable: number[];
+  /** Moves that hit the foe's weak spot (Easy and Normal, a foe met before: weakSpots.ts). */
+  good: number[];
   pulseAttack: boolean;
   onFight: () => void;
   onBag: () => void;
@@ -86,6 +88,7 @@ function FightGrid(p: PanelProps) {
             id={id}
             pp={s < 0 ? undefined : p.active.moves[s].pp}
             disabled={s >= 0 && !p.usable.includes(s)}
+            good={p.good.includes(s)}
             class={k === cur ? 'is-on' : ''}
             onClick={() => { setCur(k); pick(k); }}
             onHold={() => { setCur(k); setInfo(k); }}

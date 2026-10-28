@@ -23,6 +23,7 @@ English: [docs/histoire.md](docs/histoire.md).
   in a shell or a hole, crackle with sparks, and dance when they win.
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
+  On Easy and Normal, a thumb shows which moves work best against a Bestiole you have already met.
 - Field tools: scissors, foam mallet and strong gloves for bushes, rocks and boulders, a paper
   boat to sail, three fishing rods, a pencil bike; the Bestiodex tells where each Bestiole lives.
 - The Pencil Day Care on Route 2: leave two Bestioles to gain XP while you walk; two of one

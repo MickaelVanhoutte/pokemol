@@ -27,6 +27,7 @@ import { moveOutcome } from './fx/outcome';
 import { ballFx, eventFx } from './fx/events';
 import type { Recipe } from './fx/core';
 import { panelMode } from './panelMode';
+import { weakSpotSlots } from './weakSpots';
 import './battle.css';
 
 export interface BattleProps {
@@ -46,6 +47,8 @@ export interface BattleProps {
   /** Player character, seen from behind at the start. */
   playerLook?: Appearance;
   music?: TrackId;
+  /** Species met in earlier battles: on Easy and Normal their weak spots are marked on the moves. */
+  fought?: string[];
 }
 
 export interface BattleTrainer {
@@ -339,6 +342,7 @@ export function BattleScreen(props: BattleProps) {
         active={active}
         struggling={!usableSlots(active, me.vol).length}
         usable={usableSlots(active, me.vol)}
+        good={weakSpotSlots(active, activeMon(st.sides[1]), props.fought ?? [], prefs.value.difficulty)}
         pulseAttack={coach === 1}
         onFight={() => setMenu('fight')}
         onBag={() => { setBagNote(''); setOverlay({ kind: 'bag' }); }}
