@@ -135,4 +135,33 @@
   .atelier__name { display: grid; grid-template-columns: 34% minmax(0, 1fr); align-items: start; gap: 4px 12px; }
   .atelier__card { grid-row: 1 / 3; }
   .atelier__card .mon-art { max-height: 36dvh; max-width: 100%; }
+  /*
+   * Drawing: the sheet takes the full height. The bar (Partir, the message, Terminer) moves to the right column
+   * under the pencils, which gets narrower: the tabs, the sheet and that column side by side.
+   */
+  .atelier--draw {
+    display: grid; gap: 8px;
+    grid-template-columns: auto minmax(0, 1fr) min(34vw, 15.5rem);
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: "tabs sheet tools" "tabs sheet foot";
+  }
+  .atelier--draw .frame__body, .atelier--draw .atelier__page, .atelier--draw .drawpad { display: contents; }
+  .atelier--draw .atelier__tabs { grid-area: tabs; }
+  .atelier--draw .drawpad__fit { grid-area: sheet; height: auto; aspect-ratio: auto; max-width: none; }
+  .atelier--draw .drawpad__tools { grid-area: tools; min-height: 0; justify-content: flex-start; }
+  .atelier--draw .frame__foot { grid-area: foot; }
+  .atelier--draw .atelier__foot { flex-wrap: wrap; }
+  .atelier--draw .atelier__note { flex: 1 1 100%; order: -1; font-size: 0.85rem; }
+  .atelier--draw .atelier__foot > .pbtn { flex: 1 1 0; white-space: nowrap; font-size: 0.9rem; padding: 0 6px; }
+  /* the hint and the pencils compact */
+  .atelier--draw .drawpad__hint { font-size: 0.75rem; line-height: 1.2; }
+  .atelier--draw .drawpad__tools { gap: 4px; padding-top: 5px; }
+  .atelier--draw .drawpad__crayons { gap: 3px; }
+  .atelier--draw .drawpad__row { gap: 3px; }
+  .atelier--draw .drawpad__row .pbtn { min-height: 1.8em; font-size: 0.8rem; padding: 0 5px; border-width: 5px; border-image-width: 5px; }
+  .atelier--draw .drawpad__size { min-width: 2em; }
+}
+/* very short landscape screens: the hint only shows to warn (an open outline) */
+@media (orientation: landscape) and (max-height: 340px) {
+  .atelier--draw .drawpad__hint:not(.is-oops) { display: none; }
 }

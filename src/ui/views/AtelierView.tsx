@@ -38,7 +38,7 @@ export function AtelierView({ design, onDone, onCancel }: { design: CustomDesign
   const leave = () => (dirty ? setLeaving(true) : onCancel());
   return (
     <Frame
-      class="atelier"
+      class={`atelier ${tab === 'draw' ? 'atelier--draw' : ''}`}
       title={tr(L('Atelier des Brouillons', 'Draft Workshop'))}
       onBack={leave}
       backLabel={tr(L('Partir', 'Leave'))}
