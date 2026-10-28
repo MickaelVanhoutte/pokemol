@@ -86,7 +86,6 @@ function DexEntry({ index, isSeen, isCaught, visited, onMove, onClose }: {
         <div class="dex__facts">
           <b class="dex__name">{tr(sp.name)}</b>
           <span>{tr(sp.kind)}</span>
-          {sp.draft && <span class="dex__draft">{tr(L('BROUILLON', 'DRAFT'))}</span>}
           <TypeBadges species={sp.id} />
           {isCaught(sp.id) && <button class="pbtn dex__cry" onClick={() => sfx.cry(sp.id)}>♪ {tr(L('Cri', 'Cry'))}</button>}
         </div>
@@ -95,7 +94,6 @@ function DexEntry({ index, isSeen, isCaught, visited, onMove, onClose }: {
         {isCaught(sp.id) ? (
           <>
             <p>{tr(sp.dex)}</p>
-            {sp.draft && <p class="dex__evo">{tr(L('Un brouillon, griffonné vite fait.', 'A draft, scribbled quickly.'))}</p>}
             {evolutionHints(sp).length > 0 && (
               <p class="dex__evo">{tr(L('Évolution : {h}.', 'Evolves: {h}.'), { h: evolutionHints(sp).join(' · ') })}</p>
             )}

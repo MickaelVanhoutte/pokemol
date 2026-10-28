@@ -168,7 +168,7 @@ const MAX_IV = 31;
 /** « fonceuse » / "Headstrong": a nature's name inside a sentence. */
 const natureWord = (id: string) => (locale.value === 'fr' ? tr(nature(id).name).toLowerCase() : tr(nature(id).name));
 
-/** Inn of Ville-Feutre: Coach Effort explains effort points, shows them, and rubs them all out for free. */
+/** Inn of Ville-Feutre: Coach Effort explains effort points, shows them, and rubs out one stat's (or all) for free. */
 scripts.coachEffort = async () => {
   const who = L('Coach Effort', 'Coach Effort');
   await sayAll([
@@ -184,11 +184,18 @@ scripts.coachEffort = async () => {
     await say(L('{n} n’a encore aucun effort. Au boulot !', '{n} has no effort yet. Get to work!'), who, { n: monLabel(m) });
     return;
   }
-  if ((await ask(L('Je les efface tous, pour repartir de zéro ? C’est gratuit.', 'Shall I rub them all out, to start again from scratch? It’s free.'), [L('Oui', 'Yes'), L('Non', 'No')], who)) !== 0) return;
+  // one stat at a time, or all of them at once
+  const stats = STAT_KEYS.filter((k) => m.evs[k] > 0);
+  const all = stats.length > 1;
+  const c = await ask(L('J’en efface lesquels ? C’est gratuit.', 'Which ones shall I rub out? It’s free.'),
+    [...stats.map((k) => `${tr(STAT_NAMES[k])} (${m.evs[k]})`), ...(all ? [L('Tous', 'All of them')] : []), L('Aucun', 'None')], who);
+  if (c > stats.length || (c === stats.length && !all)) return;
+  const wipe = c < stats.length ? [stats[c]] : stats;
   update((x) => {
-    for (const k of STAT_KEYS) addEvs(x.party[i], k, -x.party[i].evs[k]);
+    for (const k of wipe) addEvs(x.party[i], k, -x.party[i].evs[k]);
   });
-  await say(L('Et hop, tout propre ! {n} peut reprendre l’entraînement.', 'There, all clean! {n} can start training again.'), who, { n: monLabel(m) });
+  if (c < stats.length) await say(L('Et hop ! {n} n’a plus d’efforts en {s}.', 'There! {n} has no {s} effort any more.'), who, { n: monLabel(m), s: tr(STAT_NAMES[stats[c]]) });
+  else await say(L('Et hop, tout propre ! {n} peut reprendre l’entraînement.', 'There, all clean! {n} can start training again.'), who, { n: monLabel(m) });
 };
 
 /** Inn of Village-Braise: the Mood Teller changes a Bestiole's nature (the stat it raises and the one it lowers). */

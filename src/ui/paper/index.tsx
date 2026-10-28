@@ -97,9 +97,12 @@ export function MenuList({ items, onCancel, active = true, class: cls = '', onCu
     items[i].onSelect();
   };
   const [cur, setCur] = useMenuNav(items.length, { onSelect: pick, onCancel, active });
+  const box = useRef<HTMLDivElement>(null);
   useEffect(() => onCursor?.(cur), [cur]);
+  // in a list too long for its box, the keys bring the cursor into view
+  useEffect(() => void box.current?.children[cur]?.scrollIntoView?.({ block: 'nearest' }), [cur]);
   return (
-    <div class={`mlist ${cls}`} role="menu">
+    <div ref={box} class={`mlist ${cls}`} role="menu">
       {items.map((it, i) => (
         <button
           class={`mlist__item ${i === cur ? 'is-on' : ''}`}

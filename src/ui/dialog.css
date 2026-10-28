@@ -1,11 +1,10 @@
 .dialog-layer {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   padding: 6px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: stretch;
   gap: 4px;
   z-index: 30;
@@ -22,4 +21,15 @@
   min-width: 7em;
   max-width: 92%;
   margin-right: max(0px, calc((100% - 900px) / 2));
+  /* a long list (six Bestioles and « Aucune ») scrolls instead of going off the top of the screen */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  /* the choices stand beside the text, where the whole height is free */
+  .dialog-layer { flex-direction: row; align-items: flex-end; }
+  .dialog { flex: 1 1 0; min-width: 0; margin: 0; }
+  .dialog-choices { order: 2; max-height: 100%; margin-right: 0; }
 }

@@ -604,6 +604,10 @@ went from 38.6 to 24.3. To make up for it, a wild Bestiole gives ×1.5 XP like a
 Tim 77/49/57% (was 92/87/87). Tim's drop is the sim's: its Zigzou reaches L17 and forgets Petite Étincelle for Frisson,
 which a player chooses not to. On Hard: Gaspard 51/18/36% (was 63/27/46), Zélie 89/100/94% (was 46/96/58).
 
+**Small fixes the owner asked for (iteration 20).** Coach Effort rubs out one stat's effort or all of them (it used to be
+all or nothing). A long list of choices (six Bestioles and « Aucune ») went off the top of the screen in landscape: it now
+scrolls, and in landscape it stands beside the text. The Bestiodex no longer stamps the brouillons BROUILLON.
+
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be
 forgotten). Now only the innkeeper and the Pencil Balloon pilot are in every Inn; each town's Inn has its
@@ -614,7 +618,7 @@ own helper (`fromMap`), listed on the Town Map for the towns visited:
 | Ville-Pastel | Prof's aide (Tracing Paper) and the sailor who explains the PC and the beds |
 | Village-Plume | Calligrapher (nicknames) |
 | Port-Aquarelle | Move Rememberer |
-| Ville-Feutre | Coach Effort: shows a Bestiole's effort points, rubs them all out for free |
+| Ville-Feutre | Coach Effort: shows a Bestiole's effort points, rubs out one stat's or all of them for free |
 | Village-Braise | Mood Teller: nature, 2 000 ₽ (the stat to raise, then the one to lower) |
 | Bourg-Paillette | Star Polisher: one born quality to S (IV 31), 3 000 ₽ |
 | Jardin-Gouache | Talent Gardener: 3 000 ₽, 8 000 ₽ for the hidden talent |

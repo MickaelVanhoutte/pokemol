@@ -351,8 +351,8 @@ The *brouillons* are Bestioles drawn in code more roughly than the redraws: a mo
 `tools/drafts/` (`<slug>.ts`, listed in `DRAFTS` in `tools/drafts/make.ts`) that draws with the kid kit
 (`tools/drafts/kid.ts`: potato shapes, pencil lines gone over twice, zig-zag colouring; `layered: true`
 makes front parts hide back ones, which reads better for busy designs). `npm run drafts [-- <id>]` cuts it
-out like a photo and writes its card and miniature. Its creature entry gets `draft: true` (a BROUILLON
-stamp in the Bestiodex). New Bestioles use the `crayon` kit of `tools/redraws` instead; to redo a
+out like a photo and writes its card and miniature. Its creature entry gets `draft: true` (the Bestiodex
+shows no stamp: the owner asked to drop it). New Bestioles use the `crayon` kit of `tools/redraws` instead; to redo a
 brouillon in her style, move it there and drop `draft: true`.
 
 ## UI
