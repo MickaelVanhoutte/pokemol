@@ -184,7 +184,14 @@ export function paintBuilding(b: BuildingDef): HTMLCanvasElement {
       p.rect(2, 10, W - 4, H - 10, '#5a5878');
       for (let y = 12; y < H; y += 6) for (let x = 3 + ((y / 6) % 2) * 3; x < W - 4; x += 7) p.rect(x, y, 6, 1, '#47465f');
       p.rect(2, 10, 1, H - 10, OUT); p.rect(W - 3, 10, 1, H - 10, OUT);
-      for (let i = 0; i < 10; i++) p.rect(W / 2 - i * (W / 20), 10 - i, i * (W / 10), 1, i < 2 ? '#3a2a5a' : '#7b60c3');
+      // a pointed roof: widest at the eaves (row 10), narrowing to its tip, outlined on both slopes
+      for (let i = 0; i < 10; i++) {
+        const hw = Math.max(1, Math.round((W / 2 - 1) * (1 - i / 10)));
+        p.rect(W / 2 - hw, 10 - i, hw * 2, 1, b.roof ?? '#7b60c3');
+        p.rect(W / 2 - hw, 10 - i, 1, 1, '#3a2a5a');
+        p.rect(W / 2 + hw - 1, 10 - i, 1, 1, '#3a2a5a');
+      }
+      p.rect(1, 10, W - 2, 1, '#3a2a5a');
       for (let ty = 1; ty < b.h - 1; ty++) {
         windowAt(p, W / 2 - 4, ty * 16 + 4, 8, 8);
         p.rect(W / 2 - 3, ty * 16 + 5, 6, 6, '#f8e27a');
