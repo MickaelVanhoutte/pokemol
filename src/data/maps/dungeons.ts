@@ -4,7 +4,7 @@ import { LOOKS } from '../../overworld/sprites';
 
 /** Scribble Cave and the Misty Tower (their story comes back in the next acts). */
 const TOWER_ENCOUNTERS = {
-  rate: 0.1,
+  rate: 10,
   anyTile: true,
   table: [
     { id: '009', w: 45, min: 24, max: 25 },
@@ -58,7 +58,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
     ],
     items: [{ x: 2, y: 13, item: 'potion' }, { x: 22, y: 6, item: 'crayon-ball', count: 2 }, { x: 1, y: 13, item: 'crayon-orange' }, { x: 21, y: 1, item: 'pochoir-15' }, { x: 20, y: 1, item: 'super-potion' }],
     encounters: {
-      rate: 0.08,
+      rate: 7,
       anyTile: true,
       table: [
         { id: '004', w: 22, min: 9, max: 11 },
@@ -117,7 +117,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
       { x: 2, y: 9, item: 'loupe', showIf: 'fresque:grotte' }, { x: 3, y: 10, item: 'super-crayon-ball', count: 3, showIf: 'fresque:grotte' },
     ],
     encounters: {
-      rate: 0.08,
+      rate: 7,
       anyTile: true,
       table: [
         { id: '004', w: 20, min: 10, max: 12 },

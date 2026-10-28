@@ -11,6 +11,7 @@ import { createMon, xpAt, xpYield, MAX_LEVEL, type Mon } from '../engine/pk/crea
 import { footprint } from '../overworld/buildings';
 import { LEGEND, type MapDef } from '../overworld/mapTypes';
 import { TILES } from '../overworld/tiles';
+import { meanSteps } from '../overworld/encounterRate';
 import { MAPS } from './maps';
 import { rivalFinalTeam, TRAINERS, trainerLevel, type TrainerDef } from './trainers';
 
@@ -167,23 +168,23 @@ export function curve(difficulty: Difficulty = 'normal'): Curve {
   const rows: CurveRow[] = [];
   const wild: Record<string, number> = {};
   // a defeated (or caught) Bestiole's XP, shared evenly, each share scaled by its earner's level
-  const win = (foe: Mon, trainer: boolean) => {
-    for (const m of team) m.xp += Math.floor(xpYield(foe, trainer, team.length, levelOf(m.xp)));
+  const win = (foe: Mon) => {
+    for (const m of team) m.xp += Math.floor(xpYield(foe, team.length, levelOf(m.xp)));
   };
-  win(createMon('003', 4, { rng: 1 }), true);
+  win(createMon('003', 4, { rng: 1 }));
   for (const step of CURVE_PATH) {
     const def = MAPS[step.map];
     const table = (def?.encounters?.table ?? []).filter((e) => !e.time || e.time === 'day');
     const avg = table.length ? Math.round(table.reduce((s, e) => s + (e.min + e.max) / 2, 0) / table.length) : 0;
     const typical = table.length ? [...table].sort((a, b) => b.w - a.w)[0].id : '';
     if (step.from && step.to && def?.encounters) {
-      const n = Math.max(0, forcedSteps(step.map, step.from, step.to)) * def.encounters.rate;
+      const n = Math.max(0, forcedSteps(step.map, step.from, step.to)) / meanSteps(def.encounters.rate);
       wild[step.map] = Math.round(n * 10) / 10;
-      for (let k = 0; k < Math.round(n); k++) win(createMon(typical, avg, { rng: k }), false);
+      for (let k = 0; k < Math.round(n); k++) win(createMon(typical, avg, { rng: k }));
     }
     for (let j = 0; j < (step.join ?? 0) && typical; j++) {
       // catching it counts as a win, then it joins at its own level
-      win(createMon(typical, avg, { rng: 99 }), false);
+      win(createMon(typical, avg, { rng: 99 }));
       team.push({ xp: xpAt(avg) });
     }
     for (const id of [...pathTrainers(step.map), ...(step.fights ?? [])]) {
@@ -193,7 +194,7 @@ export function curve(difficulty: Difficulty = 'normal'): Curve {
         ace: Math.max(...t.party.map((p) => trainerLevel(p.level, difficulty))),
         starter: levelOf(team[0].xp), mates: team.slice(1).map((m) => levelOf(m.xp)),
       });
-      for (const p of t.party) win(createMon(p.species, trainerLevel(p.level, difficulty), { rng: 7 }), true);
+      for (const p of t.party) win(createMon(p.species, trainerLevel(p.level, difficulty), { rng: 7 }));
     }
   }
   return { rows, wild };

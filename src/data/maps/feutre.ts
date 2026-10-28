@@ -72,7 +72,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     ],
     berries: [{ x: 12, y: 20, item: 'baie-givree' }],
     encounters: {
-      rate: 0.14,
+      rate: 21,
       table: [
         { id: '004', w: 22, min: 16, max: 17 },
         { id: '013', w: 18, min: 16, max: 17 },

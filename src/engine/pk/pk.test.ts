@@ -275,7 +275,9 @@ describe('battle', () => {
   });
 
   /** XP a level `earner` Bestiole gets for beating a wild Lunelle (013) at L3. */
-  const lunelleXp = (earner: number) => Math.floor(Math.floor((creature('013').baseExp * 3) / 5) * levelFactor(3, earner));
+  /** A wild Bestiole gives ×1.5, as much as a trainer's (met as rarely as in FireRed). */
+  const wildXp = (base: number) => Math.floor(base * 1.5);
+  const lunelleXp = (earner: number) => Math.floor(wildXp(Math.floor((creature('013').baseExp * 3) / 5)) * levelFactor(3, earner));
 
   it('the Tracing Paper shares XP with a creature that did not fight (Gen 3 halves)', () => {
     const fighter = mon('002', 20);
@@ -303,7 +305,7 @@ describe('battle', () => {
     expect(levelFactor(10, 5)).toBeCloseTo(1.58, 1);
     expect(levelFactor(10, 15)).toBeCloseTo(0.67, 1);
     const beat = (lv: number) => act(battle([mon('002', lv)], [mon('013', 10, 1, { hp: 1 })], 'wild'), { type: 'move', slot: 0 }, { type: 'move', slot: 0 }).events.find((e) => e.t === 'xp');
-    expect(beat(10)).toMatchObject({ amount: Math.floor((creature('013').baseExp * 10) / 5) });
+    expect(beat(10)).toMatchObject({ amount: wildXp(Math.floor((creature('013').baseExp * 10) / 5)) });
   });
 
   it('catching a Bestiole gives XP and effort points, as beating it would', () => {
@@ -313,7 +315,7 @@ describe('battle', () => {
     const r = act(battle([me], [wild], 'wild'), { type: 'ball', item: 'crayon-ball' }, { type: 'move', slot: 0 });
     expect(r.state.result).toBe('capture');
     const xp = r.events.find((e) => e.t === 'xp');
-    expect(xp).toMatchObject({ idx: 0, amount: Math.floor(Math.floor((creature('062').baseExp * 4) / 5) * levelFactor(4, 8)) });
+    expect(xp).toMatchObject({ idx: 0, amount: Math.floor(wildXp(Math.floor((creature('062').baseExp * 4) / 5)) * levelFactor(4, 8)) });
     expect(r.events.some((e) => e.t === 'levelUp')).toBe(true);
     expect(r.state.sides[0].party[0].evs.atk).toBe(1);
     // the XP comes after the ball, the end of the battle after the XP

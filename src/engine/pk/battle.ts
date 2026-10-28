@@ -957,7 +957,7 @@ function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: nu
   const fighters = party.filter(({ m }) => st.participants.includes(m.uid));
   const holders = party.filter(({ m }) => m.item && ITEM_BY_ID[m.item]?.hold === 'shareXp');
   // each Bestiole's share depends on its own level (catch-up XP)
-  const full = (m: Mon) => xpYield(foeMon, st.kind === 'trainer', 1, m.level);
+  const full = (m: Mon) => xpYield(foeMon, 1, m.level);
   const part = (pool: number, n: number) => Math.max(1, Math.floor(pool / n));
   const gain = new Map<number, number>();
   if (!holders.length) for (const { m, i } of fighters) gain.set(i, part(full(m), fighters.length));

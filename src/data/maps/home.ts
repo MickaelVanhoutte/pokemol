@@ -71,7 +71,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
       'T*..~~~~.......**..T',
       'TTTTTTTTTTTTTTTTTTTT',
     ],
-    surf: { rate: 0.1, table: [{ id: '003', w: 100, min: 5, max: 8 }, { id: '101', w: 70, min: 5, max: 8 }] },
+    surf: { rate: 2, table: [{ id: '003', w: 100, min: 5, max: 8 }, { id: '101', w: 70, min: 5, max: 8 }] },
     fishing: { old: [{ id: '099', w: 150, min: 5, max: 8 }, { id: '003', w: 60, min: 5, max: 8 }], good: [{ id: '099', w: 100, min: 12, max: 16 }, { id: '003', w: 100, min: 12, max: 16 }], super: [{ id: '003', w: 100, min: 15, max: 21 }, { id: '099', w: 50, min: 15, max: 19 }] },
     buildings: [
       { kind: 'house', x: 2, y: 2, w: 4, h: 4, door: 1, to: { map: 'maison', x: 4, y: 6, facing: 'up' } },
@@ -197,7 +197,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
     ],
     berries: [{ x: 12, y: 5, item: 'baie-bleue' }, { x: 3, y: 21, item: 'baie-cerise' }],
     encounters: {
-      rate: 0.13,
+      rate: 21,
       table: [
         { id: '009', w: 8, min: 2, max: 3, time: 'night' },
         { id: '004', w: 24, min: 2, max: 3 },

@@ -3,7 +3,7 @@ import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
 const FUSAIN_ENCOUNTERS = {
-  rate: 0.11,
+  rate: 10,
   anyTile: true,
   table: [
     { id: '009', w: 26, min: 19, max: 21 },

@@ -96,6 +96,10 @@ describe('maps', () => {
         if (map.surf || map.fishing) expect(map.rows.some((r) => r.includes('~')), 'water tables need water').toBe(true);
       });
 
+      it('gives encounter rates in FireRed units (21 on a route, 7 in a cave, 2 on water)', () => {
+        for (const t of [map.encounters, map.surf]) if (t) expect(Number.isInteger(t.rate) && t.rate >= 1 && t.rate <= 30, `rate ${t.rate}`).toBe(true);
+      });
+
       it('puts obstacles on free ground and never two pick-ups on one tile', () => {
         for (const o of map.obstacles ?? []) expect(walkable(map, o.x, o.y, false), `${o.kind} at ${o.x},${o.y}`).toBe(true);
         const spots = (map.items ?? []).map((p) => `${p.x},${p.y}`);

@@ -67,7 +67,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
     items: [{ x: 22, y: 20, item: 'sucette-magique', hidden: true }, { x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }, { x: 15, y: 2, item: 'crayon-rose' }, { x: 2, y: 19, item: 'pochoir-17' }, { x: 2, y: 20, item: 'pochoir-18' }],
     berries: [{ x: 4, y: 8, item: 'baie-doree' }],
     encounters: {
-      rate: 0.14,
+      rate: 21,
       table: [
         { id: '005', w: 20, min: 22, max: 23 },
         { id: '006', w: 32, min: 22, max: 23, time: 'night' },

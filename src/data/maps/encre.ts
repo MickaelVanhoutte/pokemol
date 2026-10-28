@@ -75,7 +75,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     items: [{ x: 1, y: 15, item: 'sucette-magique' }, { x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'pochoir-11' }, { x: 14, y: 7, item: 'crayon-noir' }, { x: 16, y: 20, item: 'pochoir-16' }, { x: 15, y: 20, item: 'crayon-argent' }],
     berries: [{ x: 13, y: 17, item: 'baie-prisme' }],
     encounters: {
-      rate: 0.15,
+      rate: 21,
       table: [
         { id: '009', w: 26, min: 28, max: 29 },
         { id: '010', w: 16, min: 27, max: 29 },

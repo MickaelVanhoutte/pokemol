@@ -127,6 +127,8 @@ re-renders everything.
   `fromLook`). The player picks it in the prologue and changes it from the trainer card (`LookView`).
 - `controller.ts` is the glue between the save, the maps and the story:
   - movement, interactions, warps (including `to: 'back'` for shared interiors), trainer sight;
+  - wild encounters, rolled as FireRed does by `encounterRate.ts` (map `rate` 21 on a route, 7 in a cave, 2 on
+    water; calm steps after each battle, odds growing step by step);
   - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, evolutions, rematches;
   - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask`.
 

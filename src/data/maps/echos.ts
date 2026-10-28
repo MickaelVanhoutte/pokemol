@@ -45,7 +45,7 @@ export const ECHOS_MAPS: Record<string, MapDef> = {
     ],
     items: [{ x: 1, y: 7, item: 'sucette-magique' }, { x: 9, y: 1, item: 'super-potion', count: 2 }, { x: 12, y: 7, item: 'retouche', count: 2 }],
     encounters: {
-      rate: 0.08,
+      rate: 7,
       anyTile: true,
       table: [
         { id: '009', w: 40, min: 29, max: 32 },

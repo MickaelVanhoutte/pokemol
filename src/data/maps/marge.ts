@@ -55,7 +55,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
     ],
     items: [{ x: 22, y: 1, item: 'sucette-magique', hidden: true }, { x: 42, y: 1, item: 'super-potion', count: 2 }, { x: 24, y: 15, item: 'rappel', hidden: true }, { x: 1, y: 16, item: 'retouche' }, { x: 19, y: 15, item: 'super-crayon-ball', count: 3 }],
     encounters: {
-      rate: 0.16,
+      rate: 21,
       table: [
         { id: '036', w: 20, min: 32, max: 34, time: 'day' },
         { id: '057', w: 14, min: 32, max: 34 },
@@ -199,7 +199,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
     ],
     items: [{ x: 27, y: 20, item: 'sucette-magique', hidden: true }, { x: 26, y: 11, item: 'super-crayon-ball', count: 3 }, { x: 22, y: 19, item: 'baie-doree' }, { x: 37, y: 26, item: 'retouche' }, { x: 1, y: 9, item: 'rappel', hidden: true }, { x: 10, y: 5, item: 'super-potion', count: 2 }],
     encounters: {
-      rate: 0.15,
+      rate: 14,
       table: [
         { id: '010', w: 18, min: 35, max: 36 },
         { id: '066', w: 12, min: 35, max: 36 },

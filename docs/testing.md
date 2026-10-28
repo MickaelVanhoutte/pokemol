@@ -24,8 +24,8 @@ Vitest in a node environment, with no DOM. What they guard:
 
 `src/data/curve.ts` walks the story path (`CURVE_PATH`) like a player who never grinds:
 - they fight every trainer on the way and the wild Bestioles they can't avoid. That is the fewest
-  tall-grass steps between a route's way in and way out, or every step in a cave, times the
-  encounter rate;
+  tall-grass steps between a route's way in and way out, or every step in a cave, divided by the
+  average steps between two wild battles at the map's rate (`meanSteps`);
 - they catch a teammate where the path says so;
 - they share the XP evenly, with the catch-up factor.
 

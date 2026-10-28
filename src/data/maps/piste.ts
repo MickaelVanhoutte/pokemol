@@ -80,7 +80,7 @@ export const PISTE_MAPS: Record<string, MapDef> = {
       { x: 11, y: 1, item: 'super-potion', count: 2 }, { x: 3, y: 13, item: 'baie-prisme', hidden: true },
     ],
     encounters: {
-      rate: 0.1,
+      rate: 21,
       table: [
         { id: '004', w: 25, min: 28, max: 30 },
         { id: '013', w: 25, min: 28, max: 30 },

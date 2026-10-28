@@ -160,11 +160,12 @@ export function levelFactor(defeatedLevel: number, earnerLevel: number): number 
 
 /**
  * XP a defeated creature gives to each participant: the Gen 5 formula, `baseExp × level / 5` scaled by
- * the earner's level (`levelFactor`); ×1.5 against a trainer.
+ * the earner's level (`levelFactor`), ×1.5. Wild ones give as much as a trainer's: they are met as rarely as in
+ * FireRed, so a walk through the grass still gives the XP it used to.
  */
-export function xpYield(defeated: Mon, trainer: boolean, participants: number, earnerLevel = defeated.level): number {
+export function xpYield(defeated: Mon, participants: number, earnerLevel = defeated.level): number {
   const base = Math.floor((creature(defeated.species).baseExp * defeated.level) / 5);
-  const full = Math.floor((trainer ? Math.floor(base * 1.5) : base) * levelFactor(defeated.level, earnerLevel));
+  const full = Math.floor(Math.floor(base * 1.5) * levelFactor(defeated.level, earnerLevel));
   return Math.max(1, Math.floor(full / Math.max(1, participants)));
 }
 

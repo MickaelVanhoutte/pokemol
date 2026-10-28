@@ -39,8 +39,8 @@ Take them from the model:
 - starters: 45 at every stage (64 / 142 / 208 base XP).
 
 The rules test checks that an evolution is never easier to catch than its earlier form, and that it gives
-more XP. XP grows as `level³` (`xpAt`), and the yield is the Gen 3 one: `baseExp × level / 7`, ×1.5 from a
-trainer, ×1.5 for a traded Bestiole.
+more XP. XP grows as `level³` (`xpAt`), and the yield is `baseExp × level / 5` ×1.5 (wild or trainer, since
+wild ones are met as rarely as in FireRed), scaled by the level gap (`levelFactor`), ×1.5 for a traded Bestiole.
 
 ## 4. A power for every family
 

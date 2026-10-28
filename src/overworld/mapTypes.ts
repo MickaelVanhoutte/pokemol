@@ -113,6 +113,7 @@ export interface FresqueDef {
 export type FishingTables = Partial<Record<'old' | 'good' | 'super', EncounterTable['table']>>;
 
 export interface EncounterTable {
+  /** FireRed's encounter rate (`encounterRate.ts`): 21 on a route, 14 in a wood, 7 in a cave, 2 on water. */
   rate: number;
   /** Encounters on every walkable tile (caves), not only tall grass. */
   anyTile?: boolean;

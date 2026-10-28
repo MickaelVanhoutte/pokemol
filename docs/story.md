@@ -588,6 +588,22 @@ undone or toned down, and Chiroplie's base XP is the model's 54. On Normal only 
 (was 59/58/61); on Hard, Ambre's second row 57/49/89% (was 64/60/91) and the cycling track's Noé 78/87/83%. The four
 finals and Galibou joined `TOWER_POOL`.
 
+**Wild encounters as in FireRed (iteration 20).** The owner felt interrupted all the time. Each step in the grass had a
+flat 13–16% chance (8–11% in caves, 10% on water), and nothing kept a battle from starting one step after another: 1 in 4
+came within 2 steps. `src/overworld/encounterRate.ts` now follows FireRed's code (pret/pokefirered, `wild_encounter.c`):
+- FireRed's rates: 21 on routes; 14 in the woods (Bois Brumeux, Forêt des Esquisses, Bois Perdu); 7 in caves; 10 for
+  Mont Fusain and the Tour Brumeuse, which already had a little more; 2 on water;
+- 6 to 8 calm steps after any battle, during which only 1 step in 20 gets a roll; odds that grow with each failed roll;
+  the first step onto other ground (from the path into the grass) skipped 4 times in 10; ×0.8 on the bike; the spray
+  keeps the odds at their lowest.
+
+That makes a wild battle every 10 steps or so on a route (was 6–7), 13 in a wood, 21 in a cave (was 9–12) and 50 on water
+(was 10). The curve now divides the forced steps by `meanSteps`, and the forced wild battles of the whole story on Normal
+went from 38.6 to 24.3. To make up for it, a wild Bestiole gives ×1.5 XP like a trainer's, which brings the curve back
+(only one teammate a level down at Ambre). On Normal the sims are the same except Ambre 70/69/100% (was 77/74/100) and Kid
+Tim 77/49/57% (was 92/87/87). Tim's drop is the sim's: its Zigzou reaches L17 and forgets Petite Étincelle for Frisson,
+which a player chooses not to. On Hard: Gaspard 51/18/36% (was 63/27/46), Zélie 89/100/94% (was 46/96/58).
+
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be
 forgotten). Now only the innkeeper and the Pencil Balloon pilot are in every Inn; each town's Inn has its

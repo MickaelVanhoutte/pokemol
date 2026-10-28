@@ -17,7 +17,7 @@ import { LOOKS } from '../../overworld/sprites';
 const LOST = [[3, 14], [17, 14], [10, 10], [16, 11], [5, 6], [2, 8]] as const;
 
 const RATURES_ENCOUNTERS = {
-  rate: 0.08,
+  rate: 7,
   anyTile: true,
   table: [
     { id: '010', w: 30, min: 32, max: 35 },
@@ -66,7 +66,7 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
     ],
     items: [{ x: 14, y: 3, item: 'baie-doree' }],
     encounters: {
-      rate: 0.12,
+      rate: 14,
       table: [
         { id: '007', w: 25, min: 27, max: 30 },
         { id: '063', w: 20, min: 27, max: 30 },

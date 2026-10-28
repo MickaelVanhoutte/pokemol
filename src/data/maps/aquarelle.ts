@@ -60,7 +60,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     items: [{ x: 18, y: 1, item: 'super-potion' }, { x: 16, y: 10, item: 'baie-peche' }, { x: 4, y: 5, item: 'crayon-bleu' }],
     berries: [{ x: 16, y: 4, item: 'baie-bleue' }],
     encounters: {
-      rate: 0.14,
+      rate: 21,
       table: [
         { id: '013', w: 22, min: 14, max: 15 },
         { id: '006', w: 18, min: 14, max: 15 },
@@ -117,7 +117,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       '~~~~~sss~~~~~~~~~~~ssss~~~',
       '~~~~~~~~~~~~~~~~~~~~~~~~~~',
     ],
-    surf: { rate: 0.1, table: [{ id: '003', w: 45, min: 18, max: 24 }, { id: '013', w: 35, min: 18, max: 24 }, { id: '007', w: 20, min: 19, max: 24 }, { id: '032', w: 15, min: 18, max: 22 }, { id: '058', w: 18, min: 18, max: 22 }, { id: '101', w: 40, min: 18, max: 22 }] },
+    surf: { rate: 2, table: [{ id: '003', w: 45, min: 18, max: 24 }, { id: '013', w: 35, min: 18, max: 24 }, { id: '007', w: 20, min: 19, max: 24 }, { id: '032', w: 15, min: 18, max: 22 }, { id: '058', w: 18, min: 18, max: 22 }, { id: '101', w: 40, min: 18, max: 22 }] },
     fishing: { old: [{ id: '099', w: 150, min: 8, max: 12 }, { id: '003', w: 60, min: 8, max: 12 }], good: [{ id: '003', w: 100, min: 16, max: 22 }, { id: '069', w: 40, min: 16, max: 22 }, { id: '099', w: 80, min: 16, max: 19 }], super: [{ id: '003', w: 100, min: 25, max: 31 }, { id: '034', w: 8, min: 25, max: 29 }, { id: '069', w: 30, min: 25, max: 30 }] },
     buildings: [
       { kind: 'gym', x: 9, y: 1, w: 6, h: 4, door: 3, roof: '#5b9be0', to: { map: 'atelierAquarelle', x: 5, y: 10, facing: 'up' } },

@@ -22,6 +22,7 @@ import { applyPatches } from './patches';
 import { LOOKS, lookOf, type Look } from './sprites';
 import { OLD_AVATARS } from '../data/appearance';
 import { tile } from './tiles';
+import { calm, missed, wildOdds, wildStep } from './encounterRate';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
 import { prefs } from '../state/prefs';
@@ -32,6 +33,8 @@ import { trackForMap } from '../audio/mapMusic';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
+/** The calm after a battle and the odds growing step after step (FireRed's way). */
+const odds = wildOdds();
 
 /** Creatures shown big over the world (starter pick, evolutions, gifts). */
 export const monOverlay = signal<{ ids: string[]; title?: string; pick: boolean; resolve: (i: number) => void } | null>(null);
@@ -276,10 +279,14 @@ function onStep(x: number, y: number): boolean {
     return true;
   }
   // sailing: wild Bestioles of the water table, on water only
-  const onWater = g.surfing && g.map.tiles[y * g.map.w + x] === 'water';
+  const here = g.map.tiles[y * g.map.w + x];
+  const onWater = g.surfing && here === 'water';
   const enc = onWater ? g.map.def.surf : g.surfing ? undefined : g.map.def.encounters;
-  const grassy = enc && (onWater || enc.anyTile || tile(g.map.tiles[y * g.map.w + x]).encounter);
-  if (enc && grassy && partyAlive(s()) && Math.random() < enc.rate) {
+  // a cave's whole floor counts as one ground, like the GBA's
+  const ground = !enc ? '' : onWater ? 'water' : enc.anyTile ? 'cave' : tile(here).encounter ? here : '';
+  const repel = (s().repel ?? 0) > 0;
+  if (!enc) odds.ground = '';
+  if (enc && wildStep(odds, enc.rate, ground, { bike: g.biking, repel }) && partyAlive(s())) {
     const st = { rng: newSeed() };
     // some Bestioles only come out at night (or by day)
     const phase = dayPhase();
@@ -289,7 +296,10 @@ function onStep(x: number, y: number): boolean {
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));
     // the spray keeps away wild Bestioles weaker than the first one able to fight
     const lead = s().party.find((m) => m.hp > 0 && !m.egg);
-    if (s().repel && lead && level < lead.level) return false;
+    if (repel && lead && level < lead.level) {
+      missed(odds, enc.rate, true);
+      return false;
+    }
     void locked(async () => void (await wildBattle(e.id, level)));
     return true;
   }
@@ -794,6 +804,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   const d = s();
   const money = opts.trainer ? opts.trainer.money : 0;
   update((x) => enemy.forEach((m) => see(x, m.species)));
+  calm(odds);
   const g = getGame();
   await g.wipeTo(1, kind === 'wild' ? 480 : 620, opts.grey ? 'eraser' : 'pencil');
   let caught: string | null = null;

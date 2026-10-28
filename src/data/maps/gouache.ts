@@ -67,7 +67,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     items: [{ x: 22, y: 19, item: 'sucette-magique', hidden: true }, { x: 16, y: 1, item: 'rappel' }, { x: 15, y: 1, item: 'baie-menthe' }, { x: 13, y: 5, item: 'crayon-mauve' }, { x: 1, y: 1, item: 'pochoir-20' }, { x: 2, y: 1, item: 'crayon-indigo' }],
     berries: [{ x: 13, y: 13, item: 'baie-menthe' }, { x: 2, y: 2, item: 'baie-doree' }],
     encounters: {
-      rate: 0.15,
+      rate: 21,
       table: [
         { id: '007', w: 22, min: 25, max: 27 },
         { id: '012', w: 10, min: 26, max: 27 },

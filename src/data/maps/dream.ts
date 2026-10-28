@@ -42,7 +42,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     ],
     // the last stretch before the Edge of the Page: only sketched grass
     encounters: {
-      rate: 0.15,
+      rate: 21,
       table: [
         { id: '011', w: 4, min: 40, max: 41, time: 'night' },
         { id: '049', w: 20, min: 40, max: 41 },

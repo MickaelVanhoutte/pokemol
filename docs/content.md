@@ -88,7 +88,11 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
 - `berries`: `{ x, y, item }` bushes on a `B` (bush) tile next to a walkable one; A gives 1–3 berries
   once per local day (`src/overworld/berries.ts`).
 - `encounters`: `{ rate, table: [{ id, w, min, max }] }`, where `w` is the weight. Add
-  `anyTile: true` in caves.
+  `anyTile: true` in caves. `rate` is FireRed's encounter rate: 21 on a route, 14 in a wood, 7 in a cave
+  (10 for Mont Fusain and the Tour Brumeuse), 2 on water. `src/overworld/encounterRate.ts` rolls it the GBA's
+  way: rate/100 a step, a few calm steps after every battle (6 on a route, 8 in a cave), odds that grow with
+  each step without a Bestiole, a first step from the path into the grass that wakes nothing 4 times in 10,
+  ×0.8 on the bike. That makes about one wild battle every 10 steps on a route, 21 in a cave, 50 on water.
   An entry with `time: 'night'` (or `'day'`) only shows up then (evening counts as day): the clock
   is the device's, shifted by sleeping at an Inn or at home (`save.clockShift`, `src/state/clock.ts`).
   Keep at least one entry for each time in every table. The Bestiodex habitats say « la nuit ».

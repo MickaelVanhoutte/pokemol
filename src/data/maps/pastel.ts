@@ -138,7 +138,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     items: [{ x: 1, y: 12, item: 'potion' }, { x: 22, y: 10, item: 'crayon-ball', count: 2 }, { x: 17, y: 1, item: 'pochoir-12' }, { x: 6, y: 5, item: 'crayon-vert' }, { x: 22, y: 1, item: 'pochoir-19' }, { x: 21, y: 1, item: 'baie-doree', count: 2 }],
     berries: [{ x: 19, y: 9, item: 'baie-peche' }],
     encounters: {
-      rate: 0.15,
+      rate: 21,
       table: [
         { id: '013', w: 28, min: 5, max: 7, time: 'day' },
         { id: '012', w: 20, min: 5, max: 7 },
@@ -263,7 +263,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     ],
     berries: [{ x: 7, y: 12, item: 'baie-reveil' }],
     encounters: {
-      rate: 0.16,
+      rate: 14,
       table: [
         { id: '009', w: 45, min: 7, max: 9, time: 'night' },
         { id: '007', w: 14, min: 8, max: 9 },
