@@ -135,6 +135,10 @@
 .mvline.is-new { color: #2a6ad6; }
 .mvline.is-moving { color: var(--cursor); }
 .summary__move-btn { margin-top: 6px; font-size: 1rem; }
+/* choosing a move to forget: no pages to switch, a smaller head, so the list and the details both fit */
+.summary--learn .summary__tabs { display: none; }
+.summary--learn .summary__art { width: min(22vw, 96px); }
+.summary--learn .summary__name { font-size: 1.35rem; }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
 .kv dt { color: var(--ink-soft); }
 .kv dd { margin: 0; text-align: right; }

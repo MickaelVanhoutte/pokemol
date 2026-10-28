@@ -902,7 +902,13 @@ export async function checkEvolutions() {
   }
 }
 
-/** Teaches a move to the party creature `i` (asks which move to forget when it knows four). */
+/** The moves page of a Bestiole learning a fifth move, shown over the world (as in battle and in the bag). */
+export const learnOverlay = signal<{ mon: Mon; move: string; resolve: (forget: number | null) => void } | null>(null);
+
+/**
+ * Teaches a move to the party creature `i`. When it knows four, it asks whether to forget one, then shows its moves
+ * page with the new one as a fifth row, each with its type, power, accuracy and description, to pick which to forget.
+ */
 export async function teachMove(i: number, id: string) {
   const m = s().party[i];
   const vars = { n: monLabel(m), m: tr(move(id).name) };
@@ -912,9 +918,11 @@ export async function teachMove(i: number, id: string) {
     await say(L('{n} apprend {m} !', '{n} learned {m}!'), undefined, vars);
     return;
   }
-  const c = await ask(L('{n} veut apprendre {m}. Oublier quelle capacité ?', '{n} wants to learn {m}. Forget which move?'),
-    [...m.moves.map((mv) => move(mv.id).name), L('Ne pas apprendre', 'Don’t learn it')], undefined, vars);
-  if (c >= m.moves.length) {
+  const yes = await ask(L('{n} veut apprendre {m}, mais connaît déjà 4 capacités. En oublier une ?', '{n} wants to learn {m}, but already knows 4 moves. Forget one?'),
+    [L('Oui', 'Yes'), L('Non', 'No')], undefined, vars);
+  const c = yes === 0 ? await new Promise<number | null>((resolve) => (learnOverlay.value = { mon: m, move: id, resolve })) : null;
+  learnOverlay.value = null;
+  if (c === null) {
     await say(L('{n} n’a pas appris {m}.', '{n} did not learn {m}.'), undefined, vars);
     return;
   }
@@ -1122,5 +1130,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, hatchOverlay, nameOverlay, pictureOverlay, offerNickname, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, learnOverlay, hatchOverlay, nameOverlay, pictureOverlay, offerNickname, teachMove, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
 import { creature, dexNo, monLabel } from '../../data/creatures';
 import { monArtUrl } from '../monArt';
@@ -134,11 +134,13 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
   onMove?: (d: 1 | -1) => void;
 }) {
   const [page, setPage] = useState<Page>(learn ? 2 : 0);
-  const [sel, setSel] = useState<number | null>(null);
+  // learning a fifth move: its details show first, so the player can compare before choosing
+  const [sel, setSel] = useState<number | null>(learn ? 4 : null);
   // the move being moved: the next row picked takes its place
   const [moving, setMoving] = useState<number | null>(null);
   const pickMove = (i: number) => {
-    if (learn) return setConfirm(i);
+    // learning: a first tap reads the move, a second one (or the button under it) asks to forget it
+    if (learn) return sel === i ? setConfirm(i) : setSel(i);
     if (moving !== null) {
       if (i !== moving) onSwapMoves?.(moving, i);
       setMoving(null);
@@ -153,7 +155,7 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
   const arrow = (d: 1 | -1) => (onMove ? onMove(d) : turn(d));
   // another Bestiole: same page, nothing selected
   useEffect(() => {
-    setSel(null);
+    setSel(learn ? 4 : null);
     setMoving(null);
   }, [mon.uid]);
   useEffect(() => {
@@ -179,13 +181,18 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
     if (Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1);
   };
   const moves = learn ? [...mon.moves.map((m) => m.id), learn.move] : mon.moves.map((m) => m.id);
+  // on a small phone the details sit below the list: bring them into view when a move is picked
+  const detailBox = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (sel !== null && page === 2) detailBox.current?.scrollIntoView?.({ block: 'nearest' });
+  }, [sel, page]);
   const detail = sel !== null ? move(moves[sel]) : null;
   const stats = statsOf(mon);
   const toNext = mon.level >= MAX_LEVEL ? 0 : xpAt(mon.level + 1) - mon.xp;
   const xpPct = mon.level >= MAX_LEVEL ? 100 : ((mon.xp - xpAt(mon.level)) / (xpAt(mon.level + 1) - xpAt(mon.level))) * 100;
 
   return (
-    <div class="frame graph summary" style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
+    <div class={`frame graph summary ${learn ? 'summary--learn' : ''}`} style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
       <div class="summary__tabs">
         {!learn && <button class="pbtn" onClick={() => arrow(-1)} aria-label="◀">◀</button>}
         <div class="summary__tabnames">
@@ -276,9 +283,15 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
                   {onSwapMoves && !learn && moving === null && mon.moves.length > 1 && (
                     <button class="pbtn summary__move-btn" onClick={() => setMoving(sel)}>{tr(L('Déplacer', 'Move'))}</button>
                   )}
+                  {learn && (
+                    <button class="pbtn summary__move-btn" onClick={() => setConfirm(sel)}>
+                      {sel === 4 ? tr(L('Ne pas l’apprendre', 'Don’t learn it')) : tr(L('Oublier {m}', 'Forget {m}'), { m: tr(move(moves[sel]).name) })}
+                    </button>
+                  )}
                 </>
               ) : <p>{tr(L('Touche une capacité pour la décrire.', 'Tap a move to read about it.'))}</p>}
             </Window>
+            <div ref={detailBox} />
           </>
         )}
       </div>
