@@ -13,7 +13,9 @@ import type { Look } from '../../overworld/sprites';
 import { fromLook, type Appearance } from '../../data/appearance';
 import { personUrl } from '../personArt';
 import { dollUrl } from './fx/doll';
-import { MOTION_DEFAULTS, RIG_OF, idleOf, rigFile, type RigPart } from '../../data/rigs';
+import { FAIR_RIG_OF, MOTION_DEFAULTS, RIG_OF, fairFile, idleOf, rigFile, type RigPart } from '../../data/rigs';
+import { monTypes } from '../../data/fairCopies';
+import { FairStar } from './FairStar';
 import { prefs } from '../../state/prefs';
 
 export type Fx = Partial<Record<Side, string>>;
@@ -26,7 +28,7 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
     <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
       <div class="pk-hp__top">
         {/* just the name: "wild" / "foe" stay in the battle messages */}
-        <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦">✦</i>}</b>
+        <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦">✦</i>}{m.fair && <FairStar class="pk-hp__fair" />}</b>
         {m.status && <StatusTag s={m.status} />}
         <span>{lv(m.level)}</span>
       </div>
@@ -67,17 +69,20 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
 /**
  * A Bestiole on its platform: the box takes the move motions, mirroring and states (`cls`); inside, a
  * layer breathes or flies on the spot while it waits (`idleOf`), and a Bestiole with a battle rig moves
- * its parts (`src/data/rigs.ts`). The paper doll (`mon` null) keeps still.
+ * its parts (`src/data/rigs.ts`). A fair copy shows its own rig (`dark`: scribbled black by the Great
+ * Eraser). The paper doll (`mon` null) keeps still.
  */
-function Sprite({ side, mon, src, cls }: { side: Side; mon: Mon | null; src: string; cls: string }) {
-  const rig = mon ? RIG_OF[mon.species] : undefined;
+function Sprite({ side, mon, src, cls, dark = false }: { side: Side; mon: Mon | null; src: string; cls: string; dark?: boolean }) {
+  const fair = mon?.fair ? FAIR_RIG_OF[mon.species] : undefined;
+  const rig = fair ?? (mon ? RIG_OF[mon.species] : undefined);
+  const file = (layer: string) => (fair ? fairFile : rigFile)(mon!.species, rig!, layer);
   const part = (p: RigPart) => {
     const [amp, period] = MOTION_DEFAULTS[p.motion];
     const s = p.period ?? period;
     return (
       <img
         class={`pk-part pk-part--${p.motion} ${p.behind ? 'is-behind' : ''} ${p.inside ? 'is-inside' : ''}`}
-        src={rigLayerUrl(mon!, rigFile(mon!.species, rig!, p.name), false)}
+        src={rigLayerUrl(mon!, file(p.name), false, dark)}
         alt=""
         style={{
           left: `${p.left}%`, top: `${p.top}%`, width: `${p.width}%`, height: `${p.height}%`,
@@ -93,11 +98,11 @@ function Sprite({ side, mon, src, cls }: { side: Side; mon: Mon | null; src: str
   };
   return (
     <div class={`pk-sprite ${cls}`}>
-      <div class={`pk-idle pk-idle--${mon ? idleOf(mon.species) : 'still'} pk-idle--side${side} ${rig?.parts.some((p) => p.clip) ? 'is-clipped' : ''}`}>
+      <div class={`pk-idle pk-idle--${mon ? idleOf(mon.species, mon.fair ? monTypes(mon) : undefined) : 'still'} pk-idle--side${side} ${rig?.parts.some((p) => p.clip) ? 'is-clipped' : ''}`}>
         {rig && mon ? (
           <>
             {rig.parts.filter((p) => p.behind).map(part)}
-            <img class="pk-art pk-rig" src={rigLayerUrl(mon, rigFile(mon.species, rig, 'base'), true)} alt="" />
+            <img class="pk-art pk-rig" src={rigLayerUrl(mon, file('base'), true, dark)} alt="" />
             {rig.parts.filter((p) => !p.behind).map(part)}
           </>
         ) : <img class="pk-art" src={src} alt="" />}
@@ -137,6 +142,7 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
             side={1}
             mon={doll(1) ? null : foe}
             src={doll(1) ? dollUrl() : monArtUrl(foe)}
+            dark={!!foe.fair && !!view.sides[1].fairCopy?.dark}
             cls={`${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
           />
         )}

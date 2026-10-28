@@ -107,7 +107,7 @@ they are used.
 | 5 | `plume` (Village-Plume), `atelierPlume` | 🏅 **Gaspard**, Normal. The bridge east is erased, so the player goes through the cave | `badge:plume` |
 | 6 | `grotte1`, `grotte2` (Grotte Gribouillis) | Cave trainers and the optional strong `gardien`; exits to the port | — |
 | 7 | `route3`, `port` (Port-Aquarelle), `atelierAquarelle`, `tombola` | 🏅 **Marine**, Water (`marineAfter` restores the bridge). Fair with the **Tombola** side quest (golden ticket hidden on Route 4) | `badge:aquarelle`, `a2.bridge`, `a2.tombola` |
-| 8 | `route4`, `feutre` (Ville-Feutre), `entrepot1`/`entrepot2`, `atelierFluo` | The city is drained of colour (`drained`: real greys, `tintUnless: 'a2.feutre'`). Admin Rature in the warehouse; `feutreRestore`. 🏅 **Zélie**, Electric | `a2.feutre`, `badge:fluo` |
+| 8 | `route4`, `feutre` (Ville-Feutre), `entrepot1`/`entrepot2`, `atelierFluo` | The city is drained of colour (`drained`: real greys, `tintUnless: 'a2.feutre'`). Admin Rature in the warehouse; `feutreRestore`, where Zélie gives the Feutre d'Or (fair copies in battle). 🏅 **Zélie**, Electric | `a2.feutre`, `gift:feutre-or`, `badge:fluo` |
 | 9 | `montFusain1`/`2`, `braise` (Village-Braise), `atelierBraise` | 🏅 **Ambre**, Fire | `badge:braise` |
 | 10 | `route6`, `paillette` (Bourg-Paillette), `atelierPaillette` | 🏅 **Célestine**, Fairy | `badge:paillette` |
 | 11 | `tour1`–`tour3` (Tour Brumeuse) | Team Gomme holds it. The rival heals your team; Admin Blanche at the top | `a3.tour` |
@@ -147,7 +147,7 @@ down to Port-Aquarelle and its island), two optional places break the straight l
 town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).
 Holding B runs only once you own them. Older saves already past Bourg get them in `repair()`.
 
-**Touffou** (EN Fuzzkit, Eevee-like). Capucine in Ville-Pastel gives one at L8 (`touffouGift`, flag
+**Touffou** (EN Fuzzkit, a fox that changes shape). Capucine in Ville-Pastel gives one at L8 (`touffouGift`, flag
 `gift:touffou`); it is also a rare wild find on Route 6. It evolves with a magic pencil used from the
 bag: Water → **Touflot** (Fluffin), Fire → **Toufeu** (Flufflame), Lightning → **Toufoudre**
 (Fluffbolt). The three pencils are sold in shops from 4 badges, and Capucine gives one of the
@@ -610,6 +610,50 @@ scrolls, and in landscape it stands beside the text. The Bestiodex no longer sta
 A blackout cost half the purse; it now costs what FireRed charges (`blackoutLoss`: the party's top level × 4 × 2 to
 30 by badges, so 480 ₽ at L20 with two badges). The PC adds a box at the end whenever less than a box's worth of room
 is left (`spareBox`), so it never fills up.
+
+**Mise au propre, the fair copy (iteration 21).** The owner wanted a battle gimmick of our own, like the power-ups of
+the big monster games, about drawing. At school a brouillon is "mis au propre" in felt-tip: once per battle, a fully grown
+Bestiole (no evolution left: 55 of them, legendaries included) is redrawn in felt-tip until the battle ends.
+- **The Feutre d'Or** (`feutre-or`, key item): Team Gomme raided Ville-Feutre's felt-tip warehouse because no eraser
+  can rub a felt-tip line out. Freed at the end of `feutreRestore`, Zélie gives the player her Feutre d'Or
+  (`gift:feutre-or`; saves already past `a2.feutre` get it from `repair()`).
+- **In battle**: the AU PROPRE toggle sits next to RETOUR in the move menu while the active Bestiole can transform
+  (`canFairCopy`); the move then goes with `fair: true`. It transforms before anyone moves (its new Speed counts that
+  turn), stays a fair copy after switching out, and goes back to pencil when the battle ends (`Mon.fair` is
+  battle-only: the copy-back and `repair()` drop it). A gold felt-tip goes round it, a gold star is stamped, and the
+  star stays by its name.
+- **What it gets** (`src/data/fairCopies.ts`): HP unchanged, the rest of its base stats +20 % (rounded to 5), put
+  where its new look says, and a new talent that suits the drawing (most reuse a talent of the game: Rembourrage
+  for the round ones, Poings d'Acier for the boxers, Premier Envol for the new wings…; Ombrouille's Troisième Œil
+  and Lampyrette's Plein Phare are their own). It keeps its types: the owner found that changing
+  them spoiled Bestioles with a strong identity. Only six take a new type, where the drawing plainly shows it, with
+  a move of it their family learns by level 45 (the owner: otherwise the type is useless): Tortorrent Water/Steel
+  (its cannon), Dragobraise Fire/Dragon (blue flames), Montagnoc Rock/Fire (its volcano), Taupitrio Ground/Steel
+  (steel claws), Ciseaumante Bug/Steel (steel shears), Furisinge Fighting/Fire (its fur on fire). A drawing keeps
+  no accent of a type it doesn't get (Ombrouille's flames are ghost blue, Ossagarde's violet).
+- **Who else**: trainers with `fairCopy` make their ace (highest-level Bestiole that can) a fair copy on its first
+  turn (`aiChoose`, `fairAce`): Célestine, Basile and Nocturne (Ambre's ace, Braisaure, isn't fully grown), the final
+  rival, the Grand Concours, Masters' rematches, the Challenge Tower from round 3. The Great Eraser's is `'dark'`:
+  scribbled over in black felt-tip (`rigLayerUrl(…, dark)`). Grunts never.
+- **The drawings**: `tools/fair/<slug>.ts`, her coloured pencil under a felt-tip outline, each one her own drawing
+  grown up, bigger and fiercer (docs/bestioles.md, "Its fair copy"; docs/content.md, "Fair copies"). The owner
+  turned down two rounds (new poses, flat marker colours, costumes) and approved every form and the animation on
+  preview pages before they shipped.
+- **Balance** (Normal, win rates by starter Minousse / Braisou / Clapotin, before → after). Using the Feutre is the
+  player's reward: trainers without a fair copy get easier with it and stay as before without it. A trainer's fair
+  copy weighs a lot (+20 % on its ace and a talent), so the trainers who use one were retuned. Célestine and Basile
+  come before most players have a fully grown Bestiole, so they keep their old numbers for a player without one:
+  Célestine's Lamacorne and Lunéclat L26 with no berry (67/60/72 → 66/59/70 without, 90/85/94 with), Basile's
+  Bouquétigre with no berry (61/80/67 → 64/77/59 without, 86/90/82 with). From Nocturne on they keep them with both
+  sides using one: Nocturne's team L30/30/31/31/31 (82/85/84 → 90/93/93); the Great Eraser's Papivole and
+  Zigzéclair L38, Ombrouille L42 with no berry (69/64/65 → 66/61/60), Ombrouille's fair copy put into Defence
+  rather than Speed (Speed 115: faster, it swept every team); the final rival's Psymagus and Zigzéclair L40 and its
+  starter by the one it took (`RIVAL_ACE`: Bouquétigre L43, Dragobraise L40, Tortorrent L42 with its berry; a
+  Dragon Dragobraise shrugs off a water team): 75/40/73 → 63/43/62. Grand Concours: Ambre's Ronflon and Toufeu
+  L51 (68/74/95 → 95/71/97), Marine's Touflot L53 with no item (its rain made it 23–41 % on Hard), Prof. Fusain's
+  Dragobraise L50 (60/48/44 → 52/34/43). Bouquétigre's fair copy takes Herbier rather than Trait Assuré, which
+  doubled its Boue Toxique.
+- **Bestiodex**: once a fair copy has been seen in battle (`fair:<id>`), its entry gets an AU PROPRE button.
 
 **Inns of their own, natures, born qualities, talents and effort (Oct 2026).** The owner found the Inn
 too crowded from the start, all ten Inns alike, and the Move Forgetter useless (no move ever has to be

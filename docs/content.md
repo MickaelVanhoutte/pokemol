@@ -36,6 +36,8 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
 | `gc:<1-4>` | Grand Concours scripts | Grand Maître beaten in the current attempt (cleared at the door) |
 | `choix:<id>` (1 or 2), `choix:<id>:a` / `:b` | `choose()` in `src/story/choices.ts` | A story choice: 1 touches the drawing up (Libellune ending), 2 keeps it as it is (Noctaile ending). Maps use `:a` / `:b` to show its consequence ([story.md](story.md#the-two-endings)) |
+| `gift:feutre-or` | `feutreRestore` (Zélie, Ville-Feutre warehouse), or `repair()` for saves past `a2.feutre` | Feutre d'Or given: fair copies in battle |
+| `fair:<id>` | `fight()` | That Bestiole's fair copy was seen in a battle (Bestiodex button) |
 | `gift:coconfus` | `coconfusJoins()` (Misty Woods, or the next town for older saves) | Coconfus joined the team |
 | `prof:coconfus` | the Prof's wrapper in `src/story/coconfus.ts` | The Prof said he never photographed Coconfus |
 | `coconPale` | `usineEnd` (Eraser Factory) | The Great Eraser rubbed Coconfus: its card is washed out until the ending |
@@ -344,6 +346,26 @@ back together, each part framed with its pivot as a red dot. The card doesn't ch
   stay the same. A part drawn in two goes (some before something else, some after) is called twice with the
   same name.
 - `src/data/rigs.test.ts` checks each rig's pictures, boxes, pivots and motions.
+
+### Fair copies (« mise au propre »)
+
+Each fully grown Bestiole has a fair copy for battle ([story.md](story.md), "Mise au propre"): its data in
+`FAIR_COPY` (`src/data/fairCopies.ts`: the base stats and its new `talent`; `type2` for the few that take a new
+type, with `type` when the kept one isn't its first) and its drawing in `tools/fair/<slug>.ts`, a module like a redraw's
+(`{ id, slug, seed, size, tilt, draw(c) } satisfies Fair`) drawn with the `crayon` kit in felt-tip
+(`crayon(seed, { felt: true })`: her coloured pencil under a felt-tip outline, `c.shine()` for white glints,
+`c.star()` for the gold star every fair copy carries; `FAIR_STYLE=marker` tries flat felt-tip colouring instead). It
+starts from the pencil module's own shapes, faces the same way, and grows what defines it, bigger and fiercer
+(docs/bestioles.md, "Its fair copy"). It needs at least one moving part (`c.part`, as above). `make.ts` picks up
+every module of the folder.
+
+- `npm run fair [-- <slug>…]` writes its rig to `public/fair/<id>-<slug>/` and `src/data/fairRigs.json`, and
+  `tools/out/fair-sheet.png` (the pencil card, the fair copy, battle size).
+- `npm run fair -- --try <slug>…` only draws, into `tools/out/fair-try/` (several people can draw at once).
+- `npm run fair:preview` writes `tools/out/fair-preview.html`: each fair copy moving beside its pencil drawing, its
+  types, stats, talent and the moves of its new type, and the plan for those not drawn yet (`tools/out/fair-looks.json`). Show it to the owner.
+- `src/data/fairCopies.test.ts` checks one per fully grown Bestiole, +20 % but HP, a new talent (or a new type with a
+  move of it learned by level 45), and the rig's pictures.
 
 ### Brouillons (drafts)
 

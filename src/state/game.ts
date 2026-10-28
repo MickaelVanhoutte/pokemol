@@ -101,6 +101,11 @@ export function repair(s: SaveData): SaveData {
   }
   // stencils the Atelier Masters now give with their badge
   for (const b of BADGES) if (b.stencil && s.badges.includes(b.id) && !s.bag[b.stencil]) s.bag[b.stencil] = 1;
+  // Zélie now gives the Feutre d'Or once Ville-Feutre has its colours back
+  if (s.flags['a2.feutre'] && !s.bag['feutre-or']) {
+    s.bag['feutre-or'] = 1;
+    s.flags['gift:feutre-or'] = 1;
+  }
   return s;
 }
 
@@ -112,6 +117,8 @@ function repairMon(m: Mon) {
   // and talents too (1 in 4 hidden)
   m.talent ??= talentFromUid(m.uid);
   m.friendship ??= BASE_FRIENDSHIP;
+  // a fair copy lasts for the battle only
+  delete m.fair;
 }
 
 interface V2Save {

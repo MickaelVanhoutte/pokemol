@@ -10,6 +10,7 @@ export function DexScreen() {
       seen={d?.dex.seen ?? []}
       caught={d?.dex.caught ?? []}
       visited={(m) => !!d?.flags[`seen:${m}`] || !!d?.flags[`visit:${m}`]}
+      fairSeen={(id) => !!d?.flags[`fair:${id}`]}
       onClose={backToWorld}
     />
   );

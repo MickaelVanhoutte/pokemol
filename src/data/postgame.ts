@@ -18,7 +18,7 @@ export interface ConcoursStage {
 }
 
 const stage = (n: number, look: string, t: Omit<TrainerDef, 'money'> & { money?: number }): ConcoursStage =>
-  ({ n, look, trainer: { money: 5000 + n * 1000, ...t } });
+  ({ n, look, trainer: { money: 5000 + n * 1000, fairCopy: true, ...t } });
 
 /**
  * Four Atelier Masters at their best, then Prof. Fusain. Levels are for Normal (Easy and Hard
@@ -29,7 +29,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcMarine', name: L('Grande Maîtresse Marine', 'Grand Master Marine'),
     party: [
       { species: '005', level: 53 }, { species: '006', level: 53, item: 'clochette' }, { species: '060', level: 54 },
-      { species: '017', level: 54, item: 'crayon-bleu' }, { species: '003', level: 55, item: 'baie-doree' },
+      { species: '017', level: 53 }, { species: '003', level: 55, item: 'baie-doree' },
     ],
     before: [
       L('Bienvenue au Grand Concours ! Ici, quatre Grandes Maîtresses et un dernier artiste t’attendent, l’un après l’autre.', 'Welcome to the Grand Contest! Four Grand Masters and one last artist are waiting for you, one after the other.'),
@@ -40,8 +40,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(2, 'leaderBraise', {
     id: 'gcAmbre', name: L('Grande Maîtresse Ambre', 'Grand Master Amber'),
     party: [
-      { species: '081', level: 52 }, { species: '004', level: 53 }, { species: '008', level: 54 },
-      { species: '018', level: 53, item: 'plume-vive' }, { species: '002', level: 56, item: 'bille-ardente' },
+      { species: '081', level: 52 }, { species: '004', level: 53 }, { species: '008', level: 51 },
+      { species: '018', level: 51 }, { species: '002', level: 56, item: 'bille-ardente' },
     ],
     before: [L('Tu as éteint l’aquarelle de Marine ? Voyons si tu tiens la chaleur de mon crayon rouge !', 'You put out Marine’s watercolours? Let’s see if you can take the heat of my red crayon!')],
     after: [L('Mes braises sont froides… Bravo !', 'My embers have gone cold… Well done!')],
@@ -68,7 +68,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcFusain', name: L('Prof. Fusain', 'Prof. Charcoal'), money: 20000,
     party: [
       { species: '008', level: 51 }, { species: '014', level: 51 }, { species: '007', level: 51 },
-      { species: '024', level: 51 }, { species: '023', level: 51 }, { species: '025', level: 52 },
+      { species: '024', level: 51 }, { species: '023', level: 51 }, { species: '025', level: 50 },
     ],
     before: [
       L('Te voilà, {name}. Clic-clac : je voulais une photo de toi ici, au sommet du Concours.', 'Here you are, {name}. Click-clack: I wanted a picture of you here, at the top of the Contest.'),

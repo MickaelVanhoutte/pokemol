@@ -1,7 +1,9 @@
 import { L, tr } from '../i18n';
+import { sfx } from '../audio/sfx';
+import { item } from '../data/items';
 import { save, takeItem, update } from '../state/game';
 import {
-  ask, bubble, flag, flash, getGame, openScreen, say, sayAll, scripts, setFlag, showToast, warpTo,
+  ask, bubble, flag, flash, getGame, giveItem, openScreen, say, sayAll, scripts, setFlag, showToast, warpTo,
 } from '../overworld/controller';
 import { GRUNT } from './cast';
 import { choose, RETOUCHE } from './choices';
@@ -116,8 +118,20 @@ scripts.feutreRestore = async () => {
     way === RETOUCHE
       ? L('Alors on recolorie tout, jusqu’au dernier pavé ! Ville-Feutre va briller comme jamais.', 'Then we colour everything back, down to the last cobblestone! Felt City will shine like never before.')
       : L('Tu as raison. On gardera quelques traits gris par terre : comme ça, personne n’oubliera.', 'You’re right. We’ll keep a few grey lines on the ground: that way, nobody will forget.'),
-    L('Je file rouvrir mon Atelier. Viens m’y défier quand tu veux, je te dois bien ça !', 'I’m off to reopen my Atelier. Come and challenge me whenever you like, I owe you that!'),
   ], ZELIE);
+  // her Feutre d'Or: the mise au propre (src/data/fairCopies.ts)
+  if (!flag('gift:feutre-or')) {
+    await say(L('Tiens, prends mon Feutre d’Or. C’est lui qu’ils voulaient : aucune gomme ne peut l’effacer !', 'Here, take my Golden Felt-tip. That’s what they were after: no eraser can rub it out!'), ZELIE);
+    giveItem('feutre-or');
+    setFlag('gift:feutre-or');
+    sfx.capture();
+    await say(L('{name} reçoit : {i} !', '{name} received the {i}!'), undefined, { i: tr(item('feutre-or').name) });
+    await sayAll([
+      L('Une fois par combat, tu peux mettre au propre une Bestiole qui a fini de grandir : repassée au feutre, elle devient plus forte et gagne un nouveau talent, parfois même un nouveau type !', 'Once per battle, you can make a fair copy of a fully grown Critter: gone over in felt-tip, it gets stronger and gains a new talent, sometimes even a new type!'),
+      L('Touche AU PROPRE en choisissant ton attaque. Et méfie-toi : les Maîtres d’Atelier ont le leur !', 'Tap FAIR COPY when you pick your move. And watch out: the Atelier Masters have their own!'),
+    ], ZELIE);
+  }
+  await say(L('Je file rouvrir mon Atelier. Viens m’y défier quand tu veux, je te dois bien ça !', 'I’m off to reopen my Atelier. Come and challenge me whenever you like, I owe you that!'), ZELIE);
 };
 
 // ------------------------------------------------------------------ Village-Braise (end of act 2)

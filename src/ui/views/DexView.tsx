@@ -1,6 +1,10 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { CREATURES, artUrl, dexNo } from '../../data/creatures';
+import { FAIR_RIG_OF, fairFile } from '../../data/rigs';
+import { monTypes } from '../../data/fairCopies';
+import { RigPicture } from '../RigPicture';
+import { FairStar } from '../battle/FairStar';
 import { Frame, MenuList, PixelIcon, TypeBadges, Window } from '../paper';
 import { sfx } from '../../audio/sfx';
 import { evolutionHints } from '../evolutionText';
@@ -16,14 +20,17 @@ const HOW: Record<HabitatHow, LText> = {
 import './views.css';
 
 /** Bestiodex: numbered list, then an entry page (drawing on paper, kind, type, text). */
-export function DexView({ seen, caught, visited = () => true, onClose }: {
-  seen: string[]; caught: string[]; visited?: (map: string) => boolean; onClose: () => void;
+export function DexView({ seen, caught, visited = () => true, fairSeen = () => false, onClose }: {
+  seen: string[]; caught: string[]; visited?: (map: string) => boolean;
+  /** Its fair copy was seen in a battle (`fair:<id>`). */
+  fairSeen?: (id: string) => boolean;
+  onClose: () => void;
 }) {
   const [open, setOpen] = useState<number | null>(null);
   const isSeen = (id: string) => seen.includes(id);
   const isCaught = (id: string) => caught.includes(id);
 
-  if (open !== null) return <DexEntry index={open} isSeen={isSeen} isCaught={isCaught} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
+  if (open !== null) return <DexEntry key={open} index={open} isSeen={isSeen} isCaught={isCaught} fairSeen={fairSeen} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
   return (
     <Frame
       title={tr(L('Bestiodex', 'Critterdex'))}
@@ -67,10 +74,15 @@ function Habitats({ species, visited }: { species: string; visited: (map: string
   );
 }
 
-function DexEntry({ index, isSeen, isCaught, visited, onMove, onClose }: {
-  index: number; isSeen: (id: string) => boolean; isCaught: (id: string) => boolean; visited: (map: string) => boolean; onMove: (i: number) => void; onClose: () => void;
+function DexEntry({ index, isSeen, isCaught, fairSeen, visited, onMove, onClose }: {
+  index: number; isSeen: (id: string) => boolean; isCaught: (id: string) => boolean; fairSeen: (id: string) => boolean;
+  visited: (map: string) => boolean; onMove: (i: number) => void; onClose: () => void;
 }) {
   const sp = CREATURES[index];
+  // its fair copy (« mise au propre »), once seen in a battle
+  const fairRig = isCaught(sp.id) && fairSeen(sp.id) ? FAIR_RIG_OF[sp.id] : undefined;
+  const [inked, setInked] = useState(false);
+  const fair = inked && !!fairRig;
   const step = (d: 1 | -1) => {
     for (let k = 1; k < CREATURES.length; k++) {
       const j = (index + d * k + CREATURES.length) % CREATURES.length;
@@ -81,12 +93,18 @@ function DexEntry({ index, isSeen, isCaught, visited, onMove, onClose }: {
     <Frame title={`N°${dexNo(sp.id)} ${tr(sp.name)}`} onBack={onClose}>
       <Window class="dex__entry">
         <div class="dex__paper">
-          <img class="mon-art" src={artUrl(sp)} alt="" style={isCaught(sp.id) ? undefined : { filter: 'brightness(0) opacity(0.75)' }} />
+          {fair ? <RigPicture class="mon-art" rig={fairRig} file={(layer) => fairFile(sp.id, fairRig, layer)} />
+            : <img class="mon-art" src={artUrl(sp)} alt="" style={isCaught(sp.id) ? undefined : { filter: 'brightness(0) opacity(0.75)' }} />}
         </div>
         <div class="dex__facts">
           <b class="dex__name">{tr(sp.name)}</b>
           <span>{tr(sp.kind)}</span>
-          <TypeBadges species={sp.id} />
+          <TypeBadges species={sp.id} types={fair ? monTypes({ species: sp.id, fair: true }) : undefined} />
+          {fairRig && (
+            <button class={`pbtn dex__fair ${fair ? 'pbtn--accent' : ''}`} aria-pressed={fair} onClick={() => setInked((v) => !v)}>
+              <FairStar />{tr(L('Au propre', 'Fair copy'))}
+            </button>
+          )}
           {isCaught(sp.id) && <button class="pbtn dex__cry" onClick={() => sfx.cry(sp.id)}>♪ {tr(L('Cri', 'Cry'))}</button>}
         </div>
       </Window>

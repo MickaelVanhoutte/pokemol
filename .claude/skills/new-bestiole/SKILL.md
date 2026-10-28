@@ -67,6 +67,16 @@ An evolution joins its family's power: same talents (same number of them), or th
 - a final form gets a same-type move of power 80+ by level 40 and a coverage move by about level 35;
 - a level-0 entry is learned on evolving.
 
+## 5b. Its fair copy
+
+A fully grown Bestiole (final or single-stage) also needs its fair copy, the « mise au propre » of battles
+(docs/bestioles.md "Its fair copy", docs/content.md "Fair copies"): a `FAIR_COPY` entry in
+`src/data/fairCopies.ts` (HP unchanged, +20 % placed by its new look, its own types and a new talent; a new type
+only if the drawing plainly shows one, then with a move of it learned by level 45), and its felt-tip drawing
+`tools/fair/<slug>.ts`: its own drawing grown up, bigger and fiercer, with a change you see at battle size. Draw it with `npm run fair -- --try <slug>`,
+show the owner `npm run fair:preview` (an Artifact page) before `npm run fair -- <slug>`. When a Bestiole gains
+an evolution, its fair copy moves to the new final form.
+
 ## 6. Where to meet it
 
 - an `encounters` table on a map where its level fits the story (`src/data/maps/<area>.ts`), weighted by

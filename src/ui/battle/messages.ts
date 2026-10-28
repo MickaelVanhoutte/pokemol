@@ -3,7 +3,8 @@ import { monLabel } from '../../data/creatures';
 import { item } from '../../data/items';
 import { move } from '../../data/moves';
 import { talent } from '../../data/talents';
-import { STAT_NAMES } from '../../data/types';
+import { fairCopyOf, monTypes } from '../../data/fairCopies';
+import { STAT_NAMES, TYPES } from '../../data/types';
 import type { StageKey } from '../../data/schema';
 import type { BattleEvent, BattleState, Side } from '../../engine/pk/battle';
 
@@ -35,6 +36,18 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
         return lines;
       }
       return [f(L('Vas-y, {n} !', 'Go, {n}!'), { n: mine(e.idx) })];
+    case 'fairCopy': {
+      const m = st.sides[e.side].party[st.sides[e.side].active];
+      const a = monTypes(m).map((t) => tr(TYPES[t].name)).join(tr(L(' et ', ' and ')));
+      const t = tr(st.sides[e.side].name), n = nm(e.side), fc = fairCopyOf(m.species);
+      return [
+        e.dark ? f(L('{t} rature {n} au feutre noir !', '{t} scribbles {n} over in black felt-tip!'), { t, n })
+          : e.side === 0 ? f(L('{t} sort le Feutre d’Or : mise au propre !', '{t} takes out the Golden Felt-tip: a fair copy!'), { t })
+          : f(L('{t} met {n} au propre !', '{t} makes a fair copy of {n}!'), { t, n }),
+        // one that keeps its types shows its new talent next (a talent event)
+        ...(fc?.type2 ? [f(L('{n} devient {a} !', '{n} becomes {a}!'), { n, a })] : []),
+      ];
+    }
     case 'withdraw':
       return e.side === 0 ? [f(L('{n}, reviens !', '{n}, come back!'), { n: mine(e.idx) })] : [];
     case 'move':
@@ -237,6 +250,7 @@ export function eventDuration(e: BattleEvent): number {
     case 'berry': return 1400;
     case 'levelUp': return 1300;
     case 'sendOut': return 1000;
+    case 'fairCopy': return 2200;
     case 'drain': return 300;
     default: return 950;
   }

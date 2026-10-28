@@ -166,11 +166,59 @@ export function monArtUrl(m: { species: string; shiny?: boolean; egg?: unknown }
 }
 
 /**
- * A piece of a creature's battle rig (`src/data/rigs.ts`), recoloured like its card when it is sparkly
- * (the same hue turn, glitter only on its body) or rubbed pale.
+ * The Great Eraser's fair copy: the drawing greyed and darkened, scribbled over in black felt-tip (the same
+ * scribbles for the same picture).
  */
-export function rigLayerUrl(m: { species: string; shiny?: boolean }, src: string, body: boolean): string {
-  const how = isPale(m.species) ? 'pale' : m.shiny ? 'shiny' : null;
+function makeDark(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const g = c.getContext('2d')!;
+      g.drawImage(img, 0, 0, w, h);
+      const data = g.getImageData(0, 0, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const lum = 0.3 * px[i] + 0.59 * px[i + 1] + 0.11 * px[i + 2];
+        for (let j = 0; j < 3; j++) px[i + j] = Math.round((px[i + j] * 0.2 + lum * 0.8) * 0.62);
+      }
+      g.putImageData(data, 0, 0);
+      // zig-zag scribbles, only over the drawing
+      let seed = [...src].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
+      const rnd = () => ((seed = (seed * 1103515245 + 12345) >>> 0) / 4294967296);
+      g.globalCompositeOperation = 'source-atop';
+      g.strokeStyle = 'rgba(16, 12, 20, 0.7)';
+      g.lineWidth = Math.max(2, Math.min(w, h) * 0.02);
+      g.lineJoin = g.lineCap = 'round';
+      for (let n = 0; n < 4; n++) {
+        g.beginPath();
+        let x = rnd() * w * 0.3, y = h * (0.15 + rnd() * 0.7);
+        g.moveTo(x, y);
+        while (x < w) {
+          x += w * (0.04 + rnd() * 0.05);
+          y += (rnd() - 0.5) * h * 0.35;
+          g.lineTo(x, y);
+        }
+        g.stroke();
+      }
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror = () => reject(new Error(`dark ${src}`));
+    img.src = src;
+  });
+}
+
+/**
+ * A piece of a creature's battle rig (`src/data/rigs.ts`), recoloured like its card when it is sparkly
+ * (the same hue turn, glitter only on its body) or rubbed pale, or scribbled black (`dark`: the Great
+ * Eraser's fair copy).
+ */
+export function rigLayerUrl(m: { species: string; shiny?: boolean }, src: string, body: boolean, dark = false): string {
+  const how = dark ? 'dark' : isPale(m.species) ? 'pale' : m.shiny ? 'shiny' : null;
   if (!how) return src;
   void ready.value;
   const key = `${how}:${src}`;
@@ -178,7 +226,7 @@ export function rigLayerUrl(m: { species: string; shiny?: boolean }, src: string
   if (hit) return hit;
   if (!pending.has(key) && typeof document !== 'undefined') {
     pending.add(key);
-    (how === 'pale' ? makePale(src) : makeShiny(m.species, src, body))
+    (how === 'dark' ? makeDark(src) : how === 'pale' ? makePale(src) : makeShiny(m.species, src, body))
       .then((url) => {
         cache.set(key, url);
         ready.value++;

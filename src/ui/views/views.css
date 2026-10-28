@@ -168,6 +168,15 @@
   border-radius: 4px; box-shadow: inset 0 0 0 2px #e9e0c8;
 }
 .dex__paper img { position: absolute; inset: 6%; width: 88%; height: 88%; }
+/* a fair copy's rig put back together (RigPicture), its parts placed over its body */
+.rig-picture { container-type: size; display: grid; place-items: center; }
+.rig-picture__box { position: relative; line-height: 0; }
+.rig-picture__base { display: block; max-width: 100cqw; max-height: 100cqh; }
+.dex__paper .rig-picture { position: absolute; inset: 6%; }
+.dex__paper .rig-picture img { inset: auto; }
+.dex__paper .rig-picture .rig-picture__base { position: relative; width: auto; height: auto; }
+.dex__fair { display: inline-flex; align-items: center; gap: 4px; font-size: 1rem; }
+.dex__fair .fair-star { width: 1.3em; height: 1.3em; }
 .dex__facts { min-width: 0; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; font-size: 1.1rem; }
 /* long names stay whole on narrow phones with large text */
 .dex__name { font-weight: 400; font-size: min(1.5rem, 6.5vw); overflow-wrap: anywhere; }

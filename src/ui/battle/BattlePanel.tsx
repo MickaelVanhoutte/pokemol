@@ -4,6 +4,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { MoveButton, MoveInfo, TextBox, Window, YesNo } from '../paper';
 import { useMenuNav } from '../paper/nav';
 import type { PanelMode } from './panelMode';
+import { FairStar } from './FairStar';
 
 export interface PanelProps {
   mode: PanelMode;
@@ -21,6 +22,10 @@ export interface PanelProps {
   onParty: () => void;
   onRun: () => void;
   onMove: (slot: number) => void;
+  /** The Feutre d'Or can make the active Bestiole a fair copy now, and whether it is set for the next move. */
+  canFair: boolean;
+  fair: boolean;
+  onFair: () => void;
   onBack: () => void;
   onContinue: () => void;
   onLearnAnswer: (yes: boolean) => void;
@@ -117,7 +122,13 @@ export function BattlePanel(p: PanelProps) {
       {(m === 'command' || m === 'fight' || m === 'learnAsk') && (
         <div class="bpanel__split">
           <div class="window seyes bpanel__prompt">
-            <p>{p.text}{m === 'fight' && <small class="bpanel__hint">{tr(L('Appui long : détails', 'Hold for details'))}</small>}</p>
+            {/* the fair-copy toggle takes the question's place: both don't fit on a small phone with large text */}
+            {!(m === 'fight' && p.canFair) && <p>{p.text}{m === 'fight' && <small class="bpanel__hint">{tr(L('Appui long : détails', 'Hold for details'))}</small>}</p>}
+            {m === 'fight' && p.canFair && (
+              <button class={`pbtn bpanel__fair ${p.fair ? 'is-on' : ''}`} aria-pressed={p.fair} onClick={p.onFair}>
+                <FairStar />{tr(L('Au propre', 'Fair copy'))}
+              </button>
+            )}
             {m === 'fight' && <button class="pbtn pbtn--b bpanel__back" onClick={p.onBack}>{t('battle.btn.back')}</button>}
           </div>
           {m === 'command' && <CommandGrid {...p} />}

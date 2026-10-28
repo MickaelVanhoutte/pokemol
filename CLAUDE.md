@@ -66,6 +66,8 @@ npm run build                                 # typecheck + vite build to dist/ 
 npm run balance -- [easy|normal|hard] [n] [rows] # simulated trainer fights along the story (rows: ids, comma-separated)
 npm run curve -- [easy|normal|hard]          # the team's levels at each trainer without grinding (src/data/curve.ts)
 npm run redraws -- 013                        # draw a Bestiole in her style (card, mini, tools/out/redraws-sheet.png)
+npm run fair -- toufeu                        # draw a fair copy (its rig; `--try` only draws, into tools/out/fair-try)
+npm run fair:preview                          # tools/out/fair-preview.html: the fair copies moving, for the owner
 npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png
 npm run music -- title                        # record tunes into src/audio/recordings (Chrome + macOS afconvert)
@@ -164,6 +166,12 @@ conventions are in [docs/content.md](docs/content.md#flags).
     the battle;
   - a long press (or right click) on a move button (`MoveButton`'s `onHold`) shows `MoveInfo` over the
     scene: type, kind, power, accuracy, PP and description.
+- The fair copy (« mise au propre », `src/data/fairCopies.ts`): with the Feutre d'Or (`feutre-or`, from Zélie), a
+  side makes one fully grown Bestiole a fair copy per battle: the AU PROPRE toggle in the move menu, a move action
+  with `fair: true`, `canFairCopy`; it transforms before anyone moves. `Mon.fair` (battle only, dropped by the
+  copy-back and `repair()`) switches `statsOf`, `talentOf` and `monTypes` (use it instead of `typesOf(m.species)` in
+  battle) to the fair copy, and `Sprite` to its rig (`FAIR_RIG_OF`, `public/fair/`). Trainers with `fairCopy` (`true`,
+  or `'dark'` for the Great Eraser's black scribbles) transform their ace (`fairAce`) as soon as it fights.
 - `BattlePanel` has a fixed height. Its mode comes from the pure `panelMode()`. Long text is
   paginated by `TextBox` rather than growing the panel.
 - Backdrops are drawn in coloured pencil on a canvas (`backdrops.ts`, with the `Pencil` of
@@ -221,6 +229,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - the *brouillons* by `tools/drafts` (`npm run drafts`, rougher kid kit, `draft: true`, see
   [docs/content.md](docs/content.md#brouillons-drafts)).
 
+Each fully grown Bestiole also has a fair copy for battle, by `tools/fair/<slug>.ts` (`npm run fair`): its own
+drawing grown up, bigger and fiercer, in pencil under a felt-tip outline; a rig only, no card or miniature
+([docs/content.md](docs/content.md#fair-copies--mise-au-propre-)).
 A part that moves in battle is drawn inside `c.part(name, { pivot, motion… }, () => …)` (both kits);
 `npm run redraws` / `npm run drafts` then also write its battle rig (`tools/redraws/rig.ts`, checked on
 `tools/out/rigs-sheet.png`) without changing the card ([docs/content.md](docs/content.md#moving-parts-in-battle)).

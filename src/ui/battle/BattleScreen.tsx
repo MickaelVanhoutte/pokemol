@@ -6,7 +6,7 @@ import { move } from '../../data/moves';
 import { aiChoose } from '../../engine/pk/ai';
 import { DIFFICULTY } from '../../data/trainers';
 import {
-  act, activeMon, blocked, createBattle, itemUsable, usableSlots,
+  act, activeMon, blocked, canFairCopy, createBattle, itemUsable, usableSlots,
   type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Step,
 } from '../../engine/pk/battle';
 import { sfx } from '../../audio/sfx';
@@ -74,6 +74,8 @@ export function BattleScreen(props: BattleProps) {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(true);
   const [menu, setMenu] = useState<'main' | 'fight'>('main');
+  /** The AU PROPRE toggle: the next move goes with a fair copy (« mise au propre »). */
+  const [fair, setFair] = useState(false);
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [bagNote, setBagNote] = useState('');
   const [fx, setFx] = useState<Fx>({});
@@ -150,10 +152,15 @@ export function BattleScreen(props: BattleProps) {
       const fxe = eventFx(e, snap, covered);
       if (fxe) anim = stage.play(fxe.recipe, { side: fxe.side, speed: speed.current });
       if (e.t === 'talent' && e.note === 'phased') stage.ghost(e.side, speed.current);
+    } else if (e.t === 'fairCopy') {
+      // a fair copy is always drawn, like the Crayon-ball
+      const fxe = eventFx(e, snap, null);
+      if (fxe) anim = stage.play(fxe.recipe, { side: fxe.side, speed: speed.current });
     }
     switch (e.t) {
       case 'sendOut': pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
       case 'withdraw': pulse(e.side, 'out', 600); break;
+      case 'fairCopy': pulse(e.side, 'fair', 1300 * speed.current); break;
       case 'move': {
         hitting.current = null;
         const recipe = prefs.value.moveFx ? fxFor(e.move) : undefined;
@@ -235,6 +242,7 @@ export function BattleScreen(props: BattleProps) {
     if (!cur) return;
     setMenu('main');
     setOverlay(null);
+    setFair(false);
     setBusy(true);
     try {
       const enemy: Action = a.type === 'learn' || a.type === 'replace' ? { type: 'move', slot: 0 } : aiChoose(cur, DIFFICULTY[prefs.value.difficulty].slip);
@@ -302,6 +310,7 @@ export function BattleScreen(props: BattleProps) {
   const charging = !!me.vol.charging;
   const idle = !busy && !st.result && !blocked(st) && !charging;
   const coaching = coach === 0 || coach === 2;
+  const canFair = idle && canFairCopy(st, 0);
   const mode = panelMode({ busy: busy || charging || (!!st.result && !ended && !learner), ended, coach: coaching && idle, learnPending: !!learner, forced, menu });
 
   const rewardLines = ended && st.result ? props.rewardLines?.(st.result, st) ?? [] : [];
@@ -335,7 +344,10 @@ export function BattleScreen(props: BattleProps) {
         onBag={() => { setBagNote(''); setOverlay({ kind: 'bag' }); }}
         onParty={() => setOverlay({ kind: 'party' })}
         onRun={() => dispatch({ type: 'run' })}
-        onMove={(slot) => dispatch({ type: 'move', slot })}
+        onMove={(slot) => dispatch({ type: 'move', slot, ...(fair && canFair ? { fair: true } : {}) })}
+        canFair={canFair}
+        fair={fair && canFair}
+        onFair={() => setFair((f) => !f)}
         onBack={() => setMenu('main')}
         onContinue={() => (mode === 'coach' ? setCoach((c) => (c === 0 ? 1 : -1)) : leave())}
         onLearnAnswer={(yes) => (yes ? setOverlay({ kind: 'learn' }) : dispatch({ type: 'learn', forget: null }))}

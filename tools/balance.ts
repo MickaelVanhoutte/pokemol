@@ -11,12 +11,18 @@
  * chasing exact values. Targets on Normal: Act 1 route trainers mostly won by the starter alone,
  * leaders roughly 40–90% with a team, the last fights of the game harder. The Grand Concours rows
  * (post-game) use a level 58 team: each Grand Maître mostly won, the champion around 60–80%.
+ * From Zélie on the player has the Feutre d'Or: both sides make their ace a fair copy (« mise au propre »)
+ * when they have one and the trainer has a Feutre. The player, like a real one, waits for a turn its new type
+ * doesn't leave it weaker to the Bestiole in front of it.
  */
-import { act, createBattle, type Action, type BattleState } from '../src/engine/pk/battle.ts';
+import { act, activeMon, createBattle, type Action, type BattleState, type SideSetup } from '../src/engine/pk/battle.ts';
 import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
 import { DIFFICULTY, RIVAL_COUNTER, TRAINERS, partyOf, rivalFinalTeam } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
+import { monTypes } from '../src/data/fairCopies.ts';
+import { effectiveness } from '../src/data/types.ts';
+import type { TypeId } from '../src/data/schema.ts';
 import { CONCOURS } from '../src/data/postgame.ts';
 import { curve } from '../src/data/curve.ts';
 import type { Difficulty } from '../src/state/prefs.ts';
@@ -25,20 +31,31 @@ type Team = [species: string, level: number][];
 
 const L = (s: string) => ({ fr: s, en: s });
 
-function winRate(player: (seed: number) => Mon[], enemy: (seed: number) => Mon[], slip: number, n: number): number {
+type Pens = { me?: SideSetup['fairCopy']; foe?: SideSetup['fairCopy'] };
+
+/** The player's choice: the trainer AI on a mirrored state, keeping the fair copy for a turn it doesn't hurt. */
+function playerChoice(st: BattleState): Action {
+  const a = aiChoose({ ...st, sides: [st.sides[1], st.sides[0]] as BattleState['sides'] });
+  if (a.type !== 'move' || !a.fair) return a;
+  const me = activeMon(st.sides[0]), foe = monTypes(activeMon(st.sides[1]));
+  const worst = (types: TypeId[]) => Math.max(...foe.map((t) => effectiveness(t, types)));
+  return worst(monTypes({ ...me, fair: true })) > worst(monTypes(me)) ? { ...a, fair: undefined } : a;
+}
+
+function winRate(player: (seed: number) => Mon[], enemy: (seed: number) => Mon[], slip: number, n: number, pens: Pens = {}): number {
   let wins = 0;
   for (let seed = 1; seed <= n; seed++) {
     let st = createBattle({
       kind: 'trainer',
       seed: seed * 7919,
-      player: { name: L('player'), party: player(seed), isAI: false },
-      enemy: { name: L('trainer'), party: enemy(seed), isAI: true },
+      player: { name: L('player'), party: player(seed), isAI: false, fairCopy: pens.me },
+      enemy: { name: L('trainer'), party: enemy(seed), isAI: true, fairCopy: pens.foe },
     }).state;
     for (let guard = 0; !st.result && guard < 300; guard++) {
       let a: Action;
       if (st.learnQueue.length) a = { type: 'learn', forget: null };
       else if (st.needSwitch) a = { type: 'replace', to: st.sides[0].party.findIndex((m) => m.hp > 0) };
-      else a = aiChoose({ ...st, sides: [st.sides[1], st.sides[0]] as BattleState['sides'] });
+      else a = playerChoice(st);
       st = act(st, a, aiChoose(st, slip)).state;
     }
     if (st.result === 'win') wins++;
@@ -126,12 +143,20 @@ const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer
 /** The foe's team against this starter: the final rival picks the starter that beats yours. */
 const foeParty = (id: string, starter: string) => (id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter]) : trainer(id).party);
 
+/** Zélie gives the Feutre d'Or before her own battle. */
+const feutre = STEPS.findIndex(([id]) => id === 'zelie');
+/** Who makes a fair copy in this fight. */
+const pensAt = (k: number, id: string): Pens => {
+  const t = id === 'rivalFinal' ? { fairCopy: true as const } : trainer(id);
+  return { me: k >= feutre ? 'light' : undefined, foe: t.fairCopy === 'dark' ? 'dark' : t.fairCopy ? 'light' : undefined };
+};
+
 console.log(`difficulty ${difficulty}, ${n} fights per cell — Minousse / Braisou / Clapotin`);
-for (const [id, t] of STEPS) {
+for (const [k, [id, t]] of STEPS.entries()) {
   if (only && !only.includes(id)) continue;
   const cells = ['001', '002', '003'].map((starter) => {
     const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? grownForm(starter, lv) : sp, lv, { rng: seed * 13 + i }));
-    const rate = winRate(mk, (seed) => partyOf(foeParty(id, starter), seed, difficulty), DIFFICULTY[difficulty].slip, n);
+    const rate = winRate(mk, (seed) => partyOf(foeParty(id, starter), seed, difficulty), DIFFICULTY[difficulty].slip, n, pensAt(k, id));
     return `${Math.round(rate * 100)}%`.padStart(5);
   });
   const foe = foeParty(id, '001').map((m) => m.level).join('/');

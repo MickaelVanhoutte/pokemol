@@ -1,5 +1,6 @@
 import { L, type LText } from '../i18n';
 import { creature } from './creatures';
+import { fairCopyOf } from './fairCopies';
 import type { Major, StageKey, TypeId, Weather } from './schema';
 
 /** What a talent does in battle (read by src/engine/pk/battle.ts). */
@@ -59,8 +60,8 @@ export type TalentEffect =
   | { kind: 'galeWings'; type: TypeId }
   /** Its moves of that type hit Bestioles normally immune to them. */
   | { kind: 'ignoreImmunity'; type: TypeId }
-  /** At night, Sp. Atk and Sp. Def ×1.3. */
-  | { kind: 'nightBoost' }
+  /** At night (or always), Sp. Atk and Sp. Def ×1.3. */
+  | { kind: 'nightBoost'; always?: boolean }
   /** Asleep, it takes half damage and heals 1/8 of its HP each turn. */
   | { kind: 'sleepTank' }
   /** The first attack it receives after coming in passes through it. */
@@ -190,6 +191,24 @@ export const TALENTS: TalentDef[] = [
   T('pleine-lune', L('Pleine Lune', 'Full Moon'),
     L('La nuit, son Atq. Spé. et sa Déf. Spé. sont 30 % plus fortes.', 'At night, its Sp. Atk and Sp. Def are 30% higher.'),
     { kind: 'nightBoost' }),
+  T('clair-de-lune', L('Clair de Lune', 'Moonlight'),
+    L('Son Atq. Spé. et sa Déf. Spé. sont 30 % plus fortes, de jour comme de nuit.', 'Its Sp. Atk and Sp. Def are 30% higher, by day and by night.'),
+    { kind: 'nightBoost', always: true }),
+  T('trio-de-choc', L('Trio de Choc', 'Shock Trio'),
+    L('Ses attaques qui frappent une fois frappent encore, à un quart de la puissance : ils sont trois !', 'Its single-hit attacks hit again at a quarter of the power: there are three of them!'),
+    { kind: 'parentalBond' }),
+  T('cri-de-charge', L('Cri de Charge', 'Battle Cry'),
+    L('En entrant au combat, son Attaque augmente.', 'When it comes into battle, its Attack rises.'),
+    { kind: 'entryStage', target: 'self', stat: 'atk', stages: 1 }),
+  T('vol-de-nuit', L('Vol de Nuit', 'Night Flight'),
+    L('Sa Vitesse augmente à la fin de chaque tour.', 'Its Speed rises at the end of every turn.'),
+    { kind: 'speedBoost' }),
+  T('troisieme-oeil', L('Troisième Œil', 'Third Eye'),
+    L('Son troisième œil hante les rêves : un adversaire endormi perd un huitième de ses PV à chaque tour.', 'Its third eye haunts dreams: a sleeping foe loses an eighth of its HP every turn.'),
+    { kind: 'badDreams' }),
+  T('plein-phare', L('Plein Phare', 'Full Beam'),
+    L('Sa lanterne s’allume en grand : la Précision de l’adversaire baisse.', 'Its lantern blazes at full beam: the foe’s accuracy drops.'),
+    { kind: 'entryStage', target: 'foe', stat: 'acc', stages: -1 }),
   T('gros-dodo', L('Gros Dodo', 'Deep Nap'),
     L('Quand il dort, il ne prend que la moitié des dégâts et récupère 1/8 de ses PV à chaque tour.', 'While asleep, it takes half the damage and gets back 1/8 of its HP each turn.'),
     { kind: 'sleepTank' }),
@@ -310,14 +329,19 @@ export type TalentSlot = 0 | 1 | 2;
 /** Chance (out of 1) to be born with the hidden talent. */
 export const HIDDEN_TALENT_CHANCE = 0.25;
 
-/** A creature's talent: its species' talent in its slot (slot 1 falls back to 0 for one-talent species). */
-export function talentOf(m: { species: string; talent?: TalentSlot }): TalentDef {
+/**
+ * A creature's talent: its species' talent in its slot (slot 1 falls back to 0 for one-talent species), or its
+ * fair copy's when it is one and has its own.
+ */
+export function talentOf(m: { species: string; talent?: TalentSlot; fair?: boolean }): TalentDef {
+  const own = m.fair ? fairCopyOf(m.species)?.talent : undefined;
+  if (own) return talent(own);
   const sp = creature(m.species);
   return talent(m.talent === 2 ? sp.hiddenTalent : sp.talents[m.talent ?? 0] ?? sp.talents[0]);
 }
 
 /** The talent's effect when it is of that kind (typed), otherwise undefined. */
-export function talentEffect<K extends TalentEffect['kind']>(m: { species: string; talent?: TalentSlot }, kind: K): Extract<TalentEffect, { kind: K }> | undefined {
+export function talentEffect<K extends TalentEffect['kind']>(m: { species: string; talent?: TalentSlot; fair?: boolean }, kind: K): Extract<TalentEffect, { kind: K }> | undefined {
   const e = talentOf(m).effect;
   return e.kind === kind ? (e as Extract<TalentEffect, { kind: K }>) : undefined;
 }

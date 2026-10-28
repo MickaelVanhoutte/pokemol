@@ -815,8 +815,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         setup: {
           kind, seed: newSeed(), night: dayPhase() === 'night', noCatch: opts.noCatch,
           // eggs stay out of battles
-          player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false },
-          enemy: { name: enemyName, party: enemy, isAI: true },
+          player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false, fairCopy: d.bag['feutre-or'] ? 'light' : undefined },
+          enemy: { name: enemyName, party: enemy, isAI: true, fairCopy: opts.trainer?.fairCopy === 'dark' ? 'dark' : opts.trainer?.fairCopy ? 'light' : undefined },
         },
         bag: opts.borrowed ? {} : d.bag,
         onUseItem: (id) => update((x) => void takeItem(x, id)),
@@ -838,8 +838,11 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   update((x) => {
     // the battle worked on copies: bring back HP, XP, levels, moves and statuses
     x.stats.battles++;
+    // fair copies seen, for the Bestiodex
+    for (const side of res.state.sides) for (const m of side.party) if (m.fair) x.flags[`fair:${m.species}`] = 1;
     if (opts.borrowed) return;
-    const fought = new Map(res.state.sides[0].party.map((m) => [m.uid, m]));
+    // a fair copy lasts for the battle only
+    const fought = new Map(res.state.sides[0].party.map(({ fair: _fair, ...m }) => [m.uid, m]));
     x.party = x.party.map((m) => (fought.has(m.uid) ? { ...fought.get(m.uid)! } : m));
     if (res.result === 'win') x.money += money;
     if (res.result === 'capture') {

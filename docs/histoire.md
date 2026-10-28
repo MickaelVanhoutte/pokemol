@@ -83,6 +83,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   jusqu’aux alentours du niveau 45 à la fin de l’histoire. Attraper une Bestiole rapporte de
   l’expérience, et les Bestioles en retard rattrapent vite les autres.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
+- À Ville-Feutre, on te confie le **Feutre d’Or**, qu’aucune gomme ne peut effacer. Une fois par
+  combat, il **met au propre** une Bestiole qui a fini de grandir : repassée au feutre, elle devient
+  plus forte et gagne un nouveau talent (parfois même un nouveau type), le temps du combat. Les Maîtres d’Atelier ont le leur…
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
   gants.
@@ -191,6 +194,9 @@ The story has **two endings**, and your answers choose which one you will see.
   45 by the end of the story. Catching a Critter gives experience, and Critters that fall behind catch
   up fast.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
+- In Felt City you are given the **Golden Felt-tip**, which no eraser can rub out. Once per battle, it
+  makes a **fair copy** of a fully grown Critter: gone over in felt-tip, it gets stronger and takes a new
+  talent (sometimes even a new type) for the rest of the battle. The Atelier Masters have their own…
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few

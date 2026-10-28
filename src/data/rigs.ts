@@ -4,13 +4,16 @@
  * written by `npm run redraws` into `public/rigs/<id>-<slug>/` and `rigs.json`.
  */
 import { creature } from './creatures';
+import type { TypeId } from './schema';
 import RIGS from './rigs.json';
+import FAIR_RIGS from './fairRigs.json';
 
 export type Idle = 'breathe' | 'hover' | 'still';
 
-export function idleOf(species: string): Idle {
+/** `types`: a fair copy's, when it has taken to the air. */
+export function idleOf(species: string, types?: TypeId[]): Idle {
   const sp = creature(species);
-  return sp.type === 'vol' || sp.type2 === 'vol' ? 'hover' : 'breathe';
+  return (types ?? [sp.type, sp.type2]).includes('vol') ? 'hover' : 'breathe';
 }
 
 /**
@@ -75,3 +78,8 @@ export interface Rig {
 export const RIG_OF = RIGS as unknown as Record<string, Rig>;
 
 export const rigFile = (id: string, rig: Rig, layer: string) => `${import.meta.env.BASE_URL}rigs/${id}-${rig.slug}/${layer}.webp`;
+
+/** The fair copies' rigs (« mise au propre », written by `npm run fair` into `public/fair/<id>-<slug>/`). */
+export const FAIR_RIG_OF = FAIR_RIGS as unknown as Record<string, Rig>;
+
+export const fairFile = (id: string, rig: Rig, layer: string) => `${import.meta.env.BASE_URL}fair/${id}-${rig.slug}/${layer}.webp`;

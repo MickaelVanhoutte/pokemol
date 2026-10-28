@@ -68,8 +68,9 @@ export function TypeBadge({ type }: { type: TypeId }) {
 }
 
 /** The type badge(s) of a species: one, or two for dual-type Bestioles. */
-export function TypeBadges({ species }: { species: string }) {
-  return <>{typesOf(species).map((t) => <TypeBadge type={t} />)}</>;
+/** A species' type badges (or the types given: a fair copy's). */
+export function TypeBadges({ species, types }: { species: string; types?: TypeId[] }) {
+  return <>{(types ?? typesOf(species)).map((t) => <TypeBadge type={t} />)}</>;
 }
 
 export const lv = (l: number) => tr(L('N.{l}', 'Lv{l}'), { l });

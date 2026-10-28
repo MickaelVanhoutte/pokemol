@@ -143,6 +143,36 @@ looks silly in battle, and battles mirror the drawings so both Bestioles face ea
 checks that `faces` is set. Turned to the left, the near limbs are on the right and bigger, the far ones on
 the left start hidden behind the body; the face, snout and mouth sit toward the left edge.
 
+### Its fair copy
+
+A fully grown Bestiole (a final form or a single-stage one) also gets its fair copy, the « mise au propre » it
+becomes once per battle with the Feutre d'Or (`src/data/fairCopies.ts`, docs/content.md "Fair copies"):
+- HP unchanged, the base-stat total +20 % (rounded to 5), the gain put where its new look says;
+- its own types and a new talent (`talent`) that suits its new look: the owner wants each
+  Bestiole's identity kept;
+- a new type (`type2`, `type` for the one kept when it isn't its first) only when the drawing plainly grows one
+  (a steel cannon, a volcano, flames on its fur), and then a move of that type its family learns by level 45 (as this
+  form, or as an earlier form before it evolves): without one the new type does nothing for it. No accent of a type
+  it doesn't get (no fire-coloured flames on a Ghost).
+
+It is drawn the way a power-up form differs from its base form in the big monster games (the owner asked for that, after
+fair copies that looked invented):
+- **the same drawing**: same pose, same proportions, same colours, drawn in her coloured-pencil style like
+  every Bestiole, only gone over with a felt-tip outline. Start from its pencil module's own shapes and
+  coordinates, and keep facing the same way as its species (`faces`: battles mirror by the species);
+- **what defines it grows**, multiplies or sharpens: a flower opens into a double bloom and a second one
+  blooms on its head, two spouts become one huge cannon plus one on the arm, wings get bigger with more
+  fingers and small wings on the arms, spikes get longer and more numerous, flames longer;
+- **new things grow out of old ones** (a tail's fur becomes a mane, a ruff becomes wings, the baby in the
+  pouch grows up and fights): never a costume or a prop it didn't have (no hats, belts, capes, headbands,
+  guitars, necklaces);
+- **fiercer**: sharper points, a wider roar, longer claws and horns;
+- **a touch of its new type**, for the few that take one, in small places (white-hot blue flames for a Fire that
+  turns Dragon, a steel cannon for a Water that turns Steel), rarely more;
+- **a change you see at battle size**: one or two big changes to its outline (the owner sent back the ones that
+  "change too little"), on top of the brows, fangs and star;
+- the gold star (`c.star`) somewhere it shows, and at least one moving part.
+
 ## 7. Place it
 
 - Wild: an `encounters` table on a map at the story point where its level makes sense, with a weight

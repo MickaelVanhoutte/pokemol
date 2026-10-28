@@ -156,6 +156,11 @@ const FX = {
   heal: () => sfx.heal(),
   shield: () => play([{ f: 1200, dur: 0.25, type: 'triangle', vol: 0.05 }, { f: 1800, at: 0.04, dur: 0.3, type: 'triangle', vol: 0.03 }]),
   pop: () => play([{ f: 300, to: 900, dur: 0.08, vol: 0.04 }]),
+  /** A felt-tip squeaking round a drawing (« mise au propre »): little rising squeaks over a soft rub. */
+  marker: () => {
+    play([0, 1, 2, 3, 4].map((i) => ({ f: 1300 + i * 120, to: 1700 + i * 140, at: i * 0.11, dur: 0.07, type: 'sine' as const, vol: 0.03 })));
+    noise(0, 0.6, 2600, 0.05, 1800);
+  },
   tick: () => play([{ f: 1000, dur: 0.03, vol: 0.04 }]),
 } satisfies Record<string, () => void>;
 

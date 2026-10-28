@@ -16,6 +16,10 @@
  * the card keeps it, and `npm run redraws` also cuts it out on its own for the battle rig, over (or with
  * `behind`, under) the rest. An `extra` part is only in the rig (sparks, closed eyelids): draw it last, so
  * the card's random strokes stay the same.
+ *
+ * `crayon(seed, { marker: true })` draws a fair copy (« mise au propre », tools/fair) instead: felt-tip
+ * colouring in wide bright bands, a little darker where two bands overlap, a neat black felt-tip outline
+ * whose ends meet, white shines (`shine`) and the gold star every fair copy carries (`star`).
  */
 import type { PartMove } from '../../src/data/rigs.ts';
 
@@ -23,6 +27,8 @@ export type P = [number, number];
 export const GRAPHITE = '#3f3b46';
 export const FELT = '#27232d';
 export const PAPER = '#f7f3ea';
+/** The Feutre d'Or's gold, for the star of a fair copy. */
+export const GOLD = '#f4b81c';
 
 export type Crayon = ReturnType<typeof crayon>;
 
@@ -63,7 +69,8 @@ export interface Line {
   col?: string;
 }
 
-export function crayon(seed0: number, style: { felt?: boolean } = {}) {
+export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean } = {}) {
+  const marker = !!style.marker;
   let seed = seed0;
   const rnd = () => {
     seed = (seed + 0x6d2b79f5) >>> 0;
@@ -182,12 +189,14 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
   /** Coloured-pencil colouring of a shape (no outline). */
   function colour(shape: P[], col: string, o: Colour = {}, round = true): string {
     const id = `c${ids++}`;
-    const clip = grow(shape, o.spill ?? 4 + rnd() * 4);
+    const clip = grow(shape, o.spill ?? (marker ? 1 + rnd() * 1.5 : 4 + rnd() * 4));
     defs += `<clipPath id='${id}'><path d='${round ? smooth(clip, true) : sharp(clip, true)}'/></clipPath>`;
     const xs = shape.map((p) => p[0]), ys = shape.map((p) => p[1]);
     const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
     const R = Math.hypot(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) / 2 + 12;
     const press = o.press ?? 1;
+    // felt-tip: wide bands that overlap a little (darker streaks), ink that stays inside the line
+    const M = marker ? { gap: 11, w: 15, alpha: 0.62, wash: 0.62, over: 0.12, miss: 0.02 } : { gap: 3.8, w: 5.2, alpha: 0.85, wash: 0.38, over: 0.45, miss: 0.05 };
     let s = '';
     const layer = (deg: number, gap: number, w: number, alpha: number, from: number, to: number, miss: number) => {
       const a = (deg * Math.PI) / 180, u: P = [Math.cos(a), Math.sin(a)], v: P = [-u[1], u[0]];
@@ -196,8 +205,8 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
       let side = rnd() < 0.5 ? 1 : -1;
       const flush = () => {
         if (run.length > 1 && rnd() > miss) {
-          const op = Math.min(1, alpha * (0.65 + rnd() * 0.5));
-          s += `<path d='${sharp(run, false)}' fill='none' stroke='${col}' stroke-width='${r1(w * (0.8 + rnd() * 0.45))}' stroke-opacity='${r1(op * 100) / 100}' stroke-linejoin='round' stroke-linecap='round'/>`;
+          const op = Math.min(1, alpha * (marker ? 0.92 + rnd() * 0.12 : 0.65 + rnd() * 0.5));
+          s += `<path d='${sharp(run, false)}' fill='none' stroke='${col}' stroke-width='${r1(w * (marker ? 0.95 + rnd() * 0.1 : 0.8 + rnd() * 0.45))}' stroke-opacity='${r1(op * 100) / 100}' stroke-linejoin='round' stroke-linecap='round'/>`;
         }
         run = run.slice(-1);
       };
@@ -211,30 +220,31 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
       flush();
     };
     const deg = o.angle ?? 70 + j(40);
-    layer(deg, o.gap ?? 3.8, o.w ?? 5.2, 0.85 * press, -R, R, o.miss ?? 0.05);
+    layer(deg, o.gap ?? M.gap, o.w ?? M.w, M.alpha * press, -R, R, o.miss ?? M.miss);
     // over a part of it, a second pass across, pressed harder
-    const over = o.over ?? 0.45;
+    const over = o.over ?? M.over;
     if (over > 0) {
       const span = 2 * R * over, from = -R + rnd() * (2 * R - span);
-      layer(deg + 25 + j(30), (o.gap ?? 3.8) * 1.7, (o.w ?? 5.2) * 0.9, 0.75 * press, from, from + span, 0.15);
+      layer(deg + 25 + j(30), (o.gap ?? M.gap) * 1.7, (o.w ?? M.w) * 0.9, (marker ? 0.5 : 0.75) * press, from, from + span, 0.15);
     }
     // a light wash of the colour under the strokes: her strokes overlap, little paper shows
-    const wash = `<path d='${round ? smooth(shape, true) : sharp(shape, true)}' fill='${col}' opacity='${r1((o.wash ?? 0.38) * press * 100) / 100}'/>`;
-    return `<path d='${round ? smooth(shape, true) : sharp(shape, true)}' fill='${PAPER}'/><g clip-path='url(#${id})' filter='url(#grain)'>${wash}${s}</g>`;
+    const wash = `<path d='${round ? smooth(shape, true) : sharp(shape, true)}' fill='${col}' opacity='${r1((o.wash ?? M.wash) * press * 100) / 100}'/>`;
+    return `<path d='${round ? smooth(shape, true) : sharp(shape, true)}' fill='${PAPER}'/><g clip-path='url(#${id})'${marker ? '' : ` filter='url(#grain)'`}>${wash}${s}</g>`;
   }
 
   /** A pencil (or felt-tip) line: one pass, a slow wobble, ends that miss each other a little. */
   function line(pts: P[], closed: boolean, o: Line = {}, round = true): string {
-    const felt = o.felt ?? style.felt;
-    let p = wobble(round ? curve(pts, closed) : densify(pts, 24, closed), felt ? 1.8 : 2.6);
+    const felt = o.felt ?? (style.felt || marker);
+    let p = wobble(round ? curve(pts, closed) : densify(pts, 24, closed), marker ? 1.1 : felt ? 1.8 : 2.6);
     if (closed) {
       const k = Math.floor(rnd() * p.length);
       p = [...p.slice(k), ...p.slice(0, k)];
-      // back to the start: over it a little, or not quite
+      // back to the start: over it a little, or not quite (a fair copy closes it neatly)
       const a = p[0], b = p[1];
-      p.push(rnd() < 0.6 ? [a[0] + (b[0] - a[0]) * 0.35 + j(5), a[1] + (b[1] - a[1]) * 0.35 + j(5)] : [a[0] + j(7), a[1] + j(7)]);
+      p.push(marker ? [a[0] + (b[0] - a[0]) * 0.5, a[1] + (b[1] - a[1]) * 0.5]
+        : rnd() < 0.6 ? [a[0] + (b[0] - a[0]) * 0.35 + j(5), a[1] + (b[1] - a[1]) * 0.35 + j(5)] : [a[0] + j(7), a[1] + j(7)]);
     }
-    const w = r1((o.w ?? (felt ? 6.5 : 5)) * (0.9 + rnd() * 0.2));
+    const w = r1((o.w ?? (marker ? 8 : felt ? 6.5 : 5)) * (marker ? 0.97 + rnd() * 0.06 : 0.9 + rnd() * 0.2));
     const col = o.col ?? (felt ? FELT : GRAPHITE);
     const path = `<path d='${sharp(p, false)}' fill='none' stroke='${col}' stroke-width='${w}' stroke-opacity='${felt ? 0.95 : 0.9}' stroke-linecap='round' stroke-linejoin='round'/>`;
     return felt ? path : `<g filter='url(#lead)'>${path}</g>`;
@@ -259,12 +269,27 @@ export function crayon(seed0: number, style: { felt?: boolean } = {}) {
       seq += line(pts, false, l, round);
     },
     /** A filled pencil blob (pupils, nose). */
-    dot(x: number, y: number, rx: number, ry = rx, col = style.felt ? FELT : GRAPHITE) {
-      seq += `<g${style.felt ? '' : ` filter='url(#lead)'`}><ellipse cx='${r1(x + j(3))}' cy='${r1(y + j(3))}' rx='${rx}' ry='${ry}' fill='${col}' transform='rotate(${r1(j(20))} ${x} ${y})'/></g>`;
+    dot(x: number, y: number, rx: number, ry = rx, col = style.felt || marker ? FELT : GRAPHITE) {
+      seq += `<g${style.felt || marker ? '' : ` filter='url(#lead)'`}><ellipse cx='${r1(x + j(3))}' cy='${r1(y + j(3))}' rx='${rx}' ry='${ry}' fill='${col}' transform='rotate(${r1(j(20))} ${x} ${y})'/></g>`;
     },
     /** Raw SVG on top. */
     raw(svg: string) {
       seq += svg;
+    },
+    /** A white felt-tip shine along a path (a glint on an eye, a horn, a shell). */
+    shine(pts: P[], w = 7) {
+      seq += `<path d='${smooth(wobble(curve(pts, false), 0.8), false)}' fill='none' stroke='#ffffff' stroke-width='${w}' stroke-opacity='0.9' stroke-linecap='round' stroke-linejoin='round'/>`;
+    },
+    /** The gold felt-tip star every fair copy carries somewhere (r: outer radius, rot: degrees). */
+    star(x: number, y: number, r: number, rot = 0) {
+      const pts: P[] = Array.from({ length: 10 }, (_, i) => {
+        const a = ((rot - 90 + i * 36) * Math.PI) / 180, k = i % 2 ? 0.45 : 1;
+        return [x + Math.cos(a) * r * k, y + Math.sin(a) * r * k];
+      });
+      // no stroke run left out and a fuller wash: a skipped run left half the star pale
+      seq += colour(pts, GOLD, { angle: rot + 60, w: Math.max(6, r / 4), gap: Math.max(4, r / 5.5), over: 0, spill: 1, miss: 0, wash: 0.8 }, false)
+        + line(pts, true, { w: Math.max(4, r / 7) }, false);
+      seq += `<path d='M${r1(x - r * 0.2)} ${r1(y - r * 0.35)}l${r1(r * 0.12)} ${r1(-r * 0.16)}' stroke='#fff8d8' stroke-width='${r1(Math.max(3, r / 9))}' stroke-linecap='round'/>`;
     },
     /**
      * A part that moves in battle (see the top of this file). A part drawn in several goes (bits behind and
@@ -304,6 +329,16 @@ export interface Redraw {
   seed: number;
   /** Black felt-tip lines instead of graphite. */
   felt?: boolean;
+  size: [number, number];
+  tilt?: number;
+  draw(c: Crayon): void;
+}
+
+/** A final form's fair copy (« mise au propre »), drawn in felt-tip with `crayon(seed, { marker: true })` (tools/fair). */
+export interface Fair {
+  id: string;
+  slug: string;
+  seed: number;
   size: [number, number];
   tilt?: number;
   draw(c: Crayon): void;

@@ -156,7 +156,8 @@ async function climb(team: string[]) {
     g.remove('towerFoe');
     g.spawn('towerFoe', look, 4, 2, 'down');
     await say(L('Série {r}, défi {k}/7 : {f} entre dans la salle !', 'Round {r}, challenge {k}/7: {f} steps in!'), undefined, { r: round, k, f: tr(foe.name) });
-    const trainer: TrainerDef = { id: 'tower', name: foe.name, party: [], money: 0, before: [], after: [L('Bien joué ! Tu mérites ta place ici.', 'Well played! You deserve your place here.')] };
+    // from the third round on, the foes make fair copies too
+    const trainer: TrainerDef = { id: 'tower', name: foe.name, party: [], money: 0, ...(round >= 3 ? { fairCopy: true as const } : {}), before: [], after: [L('Bien joué ! Tu mérites ta place ici.', 'Well played! You deserve your place here.')] };
     const borrowed = team.map((uid) => towerCopy(save.value!.party.find((m) => m.uid === uid)!));
     const out = await fight('trainer', foe.name, foe.party, { trainer, borrowed, look, backdrop: 'tower', music: round >= 3 ? 'leader' : 'trainer' });
     g.remove('towerFoe');

@@ -35,8 +35,8 @@ export const turned = (tilt: number, cx: number, cy: number, dx = 0, dy = 0) => 
   return [cx + (x - cx) * Math.cos(a) - (y - cy) * Math.sin(a) + dx, cy + (x - cx) * Math.sin(a) + (y - cy) * Math.cos(a) + dy];
 };
 
-/** Draws the rig of `d` (null when it has no moving parts) and writes its pictures under `root`. */
-export async function makeRig(d: Rigged, root: string): Promise<{ rig: Rig; sheet: Buffer } | null> {
+/** Draws the rig of `d` (null when it has no moving parts) and writes its pictures under `root`, in `folder`. */
+export async function makeRig(d: Rigged, root: string, folder = 'public/rigs'): Promise<{ rig: Rig; sheet: Buffer } | null> {
   const { parts } = d;
   if (!parts.length) return null;
   const cut = async (view: View): Promise<CutoutResult> => {
@@ -51,7 +51,7 @@ export async function makeRig(d: Rigged, root: string): Promise<{ rig: Rig; shee
   const U = x1 - x0, V = y1 - y0, s = Math.min(1, SIZE / Math.max(U, V));
   const raw = (r: CutoutResult) => sharp(Buffer.from(r.data.buffer), { raw: { width: r.width, height: r.height, channels: 4 } });
   const size = (n: number) => Math.max(1, Math.round(n * s));
-  const dir = join(root, 'public/rigs', `${d.id}-${d.slug}`);
+  const dir = join(root, folder, `${d.id}-${d.slug}`);
   await rm(dir, { recursive: true, force: true });
   await mkdir(dir, { recursive: true });
   const webp = (img: Sharp, file: string) => img.webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(join(dir, file));
@@ -94,9 +94,9 @@ export async function makeRig(d: Rigged, root: string): Promise<{ rig: Rig; shee
   return { rig: { slug: d.slug, parts: rigParts }, sheet: small };
 }
 
-/** Puts a Bestiole's rig into src/data/rigs.json, or takes it out (null). */
-export async function saveRig(root: string, id: string, rig: Rig | null) {
-  const file = join(root, 'src/data/rigs.json');
+/** Puts a Bestiole's rig into src/data/rigs.json (or another list), or takes it out (null). */
+export async function saveRig(root: string, id: string, rig: Rig | null, list = 'src/data/rigs.json') {
+  const file = join(root, list);
   const rigs: Record<string, Rig> = existsSync(file) ? JSON.parse(await readFile(file, 'utf8')) : {};
   if (rig) rigs[id] = rig;
   else delete rigs[id];

@@ -266,7 +266,7 @@ describe('battle', () => {
   });
 
   it('the snack restores 1/16 of max HP at the end of each turn', () => {
-    const me = mon('008', 30, 1, { item: 'gouter' });
+    const me = mon('008', 29, 1, { item: 'gouter' });
     me.hp = 20;
     const st = battle([me], [mon('006', 30)]);
     const r = act(st, { type: 'move', slot: slotOf(me, 'grondement') }, { type: 'move', slot: slotOf(st.sides[1].party[0], 'chanson-douce') });

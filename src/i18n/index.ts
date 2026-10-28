@@ -43,8 +43,11 @@ function fill(s: string, vars?: Record<string, string | number>): string {
   if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
   for (const [k, v] of Object.entries(globals)) s = s.replaceAll(`{${k}}`, v);
   s = s.replace(/\{g:([^|}]*)\|([^}]*)\}/g, (_, f: string, m: string) => (gender.value === 'f' ? f : m));
+  if (locale.value !== 'fr') return s;
+  // « de » before a name that starts with a vowel: « Regard Noir d’Ombrouille »
+  s = s.replace(/\b([Dd])e ([AEIOUYÉÈÊÀÂÎÏÔŒ])/g, '$1’$2');
   // French puts a space before ! ? : ; — make it non-breaking so the mark never wraps alone
-  return locale.value === 'fr' ? s.replace(/ ([!?:;»])/g, '\u00a0$1') : s;
+  return s.replace(/ ([!?:;»])/g, '\u00a0$1');
 }
 
 /** UI string by key, with `{name}` placeholders. */

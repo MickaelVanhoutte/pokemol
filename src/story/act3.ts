@@ -324,7 +324,7 @@ scripts.rivalFinal = async () => {
   ], RIVAL);
   const party = partyOf(rivalFinalTeam(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0')), newSeed());
   const out = await fight('trainer', RIVAL, party, {
-    trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
+    trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, fairCopy: true, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
     look: LOOKS.rival, backdrop: 'sketch', music: 'rival',
   });
   if (out.result !== 'win') return;

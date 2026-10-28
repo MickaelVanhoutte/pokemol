@@ -35,6 +35,16 @@ describe('save migration', () => {
     expect(migrate(beforeIntro)!.bag.carte).toBeUndefined();
   });
 
+  it('gives the Feutre d’Or to a game already past Ville-Feutre, and drops a fair copy left on a Bestiole', () => {
+    const past = v3Save({ intro: 1, 'a2.feutre': 1 });
+    (past.party[0] as { fair?: boolean }).fair = true;
+    const s = migrate(past)!;
+    expect(s.bag['feutre-or']).toBe(1);
+    expect(s.flags['gift:feutre-or']).toBe(1);
+    expect(s.party[0].fair).toBeUndefined();
+    expect(migrate(v3Save({ intro: 1 }))!.bag['feutre-or']).toBeUndefined();
+  });
+
   it('still upgrades version 2 saves (creatures wait in the PC)', () => {
     const s = migrate({
       version: 2, createdAt: 1, playMs: 10, player: { name: 'Lou', avatar: 1 },

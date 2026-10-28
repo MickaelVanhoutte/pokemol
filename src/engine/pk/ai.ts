@@ -1,15 +1,31 @@
-import { typesOf } from '../../data/creatures';
+import { fairCopyOf, monTypes } from '../../data/fairCopies';
 import { move } from '../../data/moves';
 import { talentEffect } from '../../data/talents';
 import { nextRandom, randomInt } from '../rng';
-import { activeMon, moveEffectiveness, stabOf, stageMult, talentPowerMult, usableSlots, type Action, type BattleState } from './battle';
-import { maxHp } from './creature';
+import { activeMon, canFairCopy, moveEffectiveness, stabOf, stageMult, talentPowerMult, usableSlots, type Action, type BattleState } from './battle';
+import { maxHp, type Mon } from './creature';
+
+/** The Bestiole a team keeps its fair copy for: its highest-level one still standing that can be one (the last on a tie). */
+export function fairAce(party: Mon[]): number {
+  let best = -1;
+  party.forEach((m, i) => {
+    if (m.hp > 0 && !m.egg && fairCopyOf(m.species) && (best < 0 || m.level >= party[best].level)) best = i;
+  });
+  return best;
+}
 
 /**
  * Enemy choice for this turn: wild creatures pick a random move, trainers think a little.
  * `slip` is the chance a trainer picks a random move anyway (easy difficulty).
+ * A trainer with a Feutre makes its ace a fair copy as soon as it fights.
  */
 export function aiChoose(st: BattleState, slip = 0): Action {
+  const a = choose(st, slip);
+  const me = st.sides[1];
+  return a.type === 'move' && canFairCopy(st, 1) && me.active === fairAce(me.party) ? { ...a, fair: true } : a;
+}
+
+function choose(st: BattleState, slip: number): Action {
   const me = st.sides[1];
   const foe = st.sides[0];
   const m = activeMon(me);
@@ -18,7 +34,7 @@ export function aiChoose(st: BattleState, slip = 0): Action {
   if (!slots.length) return { type: 'move', slot: -1 };
   if (st.kind === 'wild' || (slip > 0 && nextRandom(st) < slip)) return { type: 'move', slot: slots[randomInt(st, slots.length)] };
 
-  const myTypes = typesOf(m.species);
+  const myTypes = monTypes(m);
 
   // stuck against an immune foe (e.g. Normal vs Ghost)? send a teammate that can hit it (not when tied up)
   const canHurt = (mon: typeof m) => mon.moves.some((sl) => sl.pp > 0 && move(sl.id).cat !== 'status' && moveEffectiveness(mon, move(sl.id), target) > 0);
@@ -64,10 +80,10 @@ export function aiChoose(st: BattleState, slip = 0): Action {
         if (e.kind === 'stage' && e.target === 'foe') score += foe.vol.stages[e.stat] <= -2 || (e.stages < 0 && foe.guard > 0) ? -30 : 25;
         if (e.kind === 'stage' && e.target === 'self') score += me.vol.stages[e.stat] >= 2 || hpRatio < 0.5 ? -30 : 30;
         if (e.kind === 'heal' || e.kind === 'rest') score += hpRatio < 0.4 ? 90 : -60;
-        if (e.kind === 'toxic') score += target.status || typesOf(target.species).some((t) => t === 'poison' || t === 'acier') ? -50 : 55;
+        if (e.kind === 'toxic') score += target.status || monTypes(target).some((t) => t === 'poison' || t === 'acier') ? -50 : 55;
         if (e.kind === 'weather') score += st.weather?.kind === e.weather ? -60 : likes(e.weather) ? 30 : 5;
         if (e.kind === 'protect') score += me.vol.protectChain > 0 ? -60 : foe.vol.charging ? 60 : 10;
-        if (e.kind === 'seed') score += foe.vol.seeded || typesOf(target.species).includes('plante') ? -60 : 40;
+        if (e.kind === 'seed') score += foe.vol.seeded || monTypes(target).includes('plante') ? -60 : 40;
         if (e.kind === 'substitute') score += me.vol.sub > 0 || hpRatio < 0.35 ? -60 : 22;
       }
       // the foe's paper doll blocks statuses and stat drops

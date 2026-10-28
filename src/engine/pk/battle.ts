@@ -1,5 +1,6 @@
 import type { LText } from '../../i18n';
-import { creature, typesOf } from '../../data/creatures';
+import { creature } from '../../data/creatures';
+import { fairCopyOf, monTypes } from '../../data/fairCopies';
 import { ITEM_BY_ID, item } from '../../data/items';
 import { move } from '../../data/moves';
 import type { HoldEffect, Major, MoveDef, StageKey, Weather } from '../../data/schema';
@@ -47,6 +48,8 @@ export interface SideState {
   vol: Volatile;
   /** Protective Varnish: turns left during which the foe can't lower this side's stats (whole side). */
   guard: number;
+  /** The Feutre d'Or: this side can make one fair copy in the battle (`dark`: the Great Eraser's, scribbled black). */
+  fairCopy?: { dark: boolean; used: boolean } | null;
 }
 
 export interface BattleState {
@@ -71,7 +74,8 @@ export interface BattleState {
 }
 
 export type Action =
-  | { type: 'move'; slot: number }
+  /** `fair`: made a fair copy first (« mise au propre », once per battle). */
+  | { type: 'move'; slot: number; fair?: boolean }
   | { type: 'switch'; to: number }
   | { type: 'item'; item: string; target: number }
   | { type: 'ball'; item: string }
@@ -81,6 +85,8 @@ export type Action =
 
 export type BattleEvent =
   | { t: 'sendOut'; side: Side; idx: number }
+  /** Made a fair copy (`dark`: scribbled over in black by the Great Eraser). */
+  | { t: 'fairCopy'; side: Side; dark?: boolean }
   | { t: 'withdraw'; side: Side; idx: number }
   | { t: 'move'; side: Side; move: string }
   | { t: 'miss'; side: Side }
@@ -168,6 +174,8 @@ export interface SideSetup {
   name: LText;
   party: Mon[];
   isAI: boolean;
+  /** Can make a fair copy (the player with the Feutre d'Or, Atelier Masters…), `dark` for the Great Eraser. */
+  fairCopy?: 'light' | 'dark';
 }
 
 export interface BattleSetup {
@@ -217,7 +225,8 @@ const alive = (m: Mon) => m.hp > 0;
 
 export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   const mk = (s: SideSetup): SideState => ({
-    name: s.name, party: structuredClone(s.party), active: Math.max(0, s.party.findIndex(alive)), isAI: s.isAI, vol: freshVol(), guard: 0,
+    name: s.name, party: structuredClone(s.party).map((m) => (delete m.fair, m)), active: Math.max(0, s.party.findIndex(alive)), isAI: s.isAI,
+    vol: freshVol(), guard: 0, fairCopy: s.fairCopy ? { dark: s.fairCopy === 'dark', used: false } : null,
   });
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
@@ -256,14 +265,15 @@ export function effectiveStat(side: SideState, key: 'atk' | 'def' | 'spa' | 'spd
   if (key === 'spe' && m.status === 'paralyze') v = Math.floor(v / 4);
   const h = held(m);
   if (h) v = Math.floor(v * (HELD_STAT[h]?.[key] ?? 1));
-  // Pleine Lune
-  if (night && (key === 'spa' || key === 'spd') && talentEffect(m, 'nightBoost')) v = Math.floor(v * 1.3);
+  // Pleine Lune (at night), Clair de Lune (always)
+  const moon = talentEffect(m, 'nightBoost');
+  if ((key === 'spa' || key === 'spd') && moon && (night || moon.always)) v = Math.floor(v * 1.3);
   return v;
 }
 
 /** Type effectiveness of a move used by `user` on `defender`, with Foudre Têtue (immunities ignored). */
 export function moveEffectiveness(user: Mon, mv: MoveDef, defender: Mon): number {
-  const types = typesOf(defender.species);
+  const types = monTypes(defender);
   const through = talentEffect(user, 'ignoreImmunity');
   if (through && through.type === mv.type) return types.reduce((e, t) => e * (effectiveness(mv.type, [t]) || 1), 1);
   return effectiveness(mv.type, types);
@@ -272,7 +282,7 @@ export function moveEffectiveness(user: Mon, mv: MoveDef, defender: Mon): number
 /** Same-type bonus of a move for `user` (Trait Assuré ×2, Arc-en-ciel: every move). */
 export function stabOf(user: Mon, mv: MoveDef): number {
   if (mv.id === STRUGGLE) return 1;
-  const own = typesOf(user.species).includes(mv.type) || !!talentEffect(user, 'allStab');
+  const own = monTypes(user).includes(mv.type) || !!talentEffect(user, 'allStab');
   return own ? (talentEffect(user, 'adaptability') ? 2 : 1.5) : 1;
 }
 
@@ -389,7 +399,7 @@ function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMov
     if (fromMove) out.push({ t: 'talent', side, talent: talentOf(m).id, note: 'immune' });
     return false;
   }
-  if (typesOf(m.species).some((t) => STATUS_IMMUNE[status]?.includes(t)) || (status === 'freeze' && st.weather?.kind === 'soleil')) {
+  if (monTypes(m).some((t) => STATUS_IMMUNE[status]?.includes(t)) || (status === 'freeze' && st.weather?.kind === 'soleil')) {
     if (fromMove) out.push({ t: 'noEffect', side });
     return false;
   }
@@ -451,6 +461,24 @@ function onEntry(st: BattleState, side: Side, out: Out) {
   if (!alive(activeMon(st.sides[targetSide]))) return;
   out.push({ t: 'talent', side, talent: talentOf(m).id });
   changeStage(st, targetSide, e.stat, e.stages, out, e.target === 'foe');
+}
+
+/** Whether `side` can make its active Bestiole a fair copy now (once per battle, a final form with one). */
+export function canFairCopy(st: BattleState, side: Side): boolean {
+  const s = st.sides[side], m = activeMon(s);
+  return !!s.fairCopy && !s.fairCopy.used && !!m && !m.egg && !m.fair && alive(m) && !!fairCopyOf(m.species);
+}
+
+/** « Mise au propre »: the active Bestiole is redrawn in felt-tip until the battle ends; a new talent shows, and acts as it comes in. */
+function makeFair(st: BattleState, side: Side, out: Out) {
+  const s = st.sides[side], m = activeMon(s), fc = fairCopyOf(m.species);
+  m.fair = true;
+  s.fairCopy!.used = true;
+  out.push({ t: 'fairCopy', side, ...(s.fairCopy!.dark ? { dark: true } : {}) });
+  if (!fc?.talent) return;
+  let shown = false;
+  onEntry(st, side, { push: (e) => { shown ||= e.t === 'talent'; out.push(e); } });
+  if (!shown) out.push({ t: 'talent', side, talent: fc.talent });
 }
 
 /** Talents that act quietly when the creature is withdrawn (Recolor, Self-Care). */
@@ -775,7 +803,7 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
         } else s.vol.protectChain = 0;
         break;
       case 'seed':
-        if (foe.vol.sub > 0 || foe.vol.seeded || typesOf(activeMon(foe).species).includes('plante')) break;
+        if (foe.vol.sub > 0 || foe.vol.seeded || monTypes(activeMon(foe)).includes('plante')) break;
         foe.vol.seeded = true;
         out.push({ t: 'seeded', side: foeSide });
         anything = true;
@@ -1062,8 +1090,8 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
   me.vol.protect = false;
   st.sides[1].vol.protect = false;
   // a charged two-turn move goes off whatever was chosen
-  if (me.vol.charging && action.type === 'move') action = { type: 'move', slot: me.vol.charging.slot };
-  if (st.sides[1].vol.charging) enemy = { type: 'move', slot: st.sides[1].vol.charging.slot };
+  if (me.vol.charging && action.type === 'move') action = { type: 'move', slot: me.vol.charging.slot, fair: action.fair };
+  if (st.sides[1].vol.charging) enemy = { type: 'move', slot: st.sides[1].vol.charging.slot, fair: enemy.type === 'move' && enemy.fair };
 
   // non-move actions resolve first
   if (action.type === 'run') {
@@ -1078,6 +1106,10 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
   }
 
   if (enemy.type === 'switch' && !st.sides[1].vol.trap && st.sides[1].party[enemy.to] && alive(st.sides[1].party[enemy.to])) switchIn(st, 1, enemy.to, out);
+
+  // fair copies before anyone moves (its new Speed counts this turn), the player's first
+  if (action.type === 'move' && action.fair) makeFair(st, 0, out);
+  if (enemy.type === 'move' && enemy.fair && canFairCopy(st, 1)) makeFair(st, 1, out);
 
   const plans: Planned[] = [];
   if (action.type === 'move') plans.push(plan(st, 0, action));
@@ -1120,7 +1152,7 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     for (const side of [0, 1] as Side[]) {
       const m = activeMon(st.sides[side]);
       const ok = safe[w];
-      if (st.result || !ok || !alive(m) || typesOf(m.species).some((t) => ok.includes(t))) continue;
+      if (st.result || !ok || !alive(m) || monTypes(m).some((t) => ok.includes(t))) continue;
       const amount = Math.min(m.hp, Math.max(1, Math.floor(maxHp(m) / 16)));
       m.hp -= amount;
       out.push({ t: 'weatherHurt', side, kind: w, amount });
@@ -1235,6 +1267,7 @@ function validate(st: BattleState, a: Action) {
       if (a.slot >= 0 && (!m.moves[a.slot] || m.moves[a.slot].pp <= 0)) throw new IllegalAction('no PP');
       if (a.slot >= 0 && !usableSlots(m, me.vol).includes(a.slot)) throw new IllegalAction('move not allowed (Stubborn item or Painter’s Apron)');
       if (a.slot < 0 && usableSlots(m, me.vol).length) throw new IllegalAction('struggle only without PP');
+      if (a.fair && !canFairCopy(st, 0)) throw new IllegalAction('no fair copy now');
       break;
     case 'switch':
       if (a.to === me.active || !me.party[a.to] || !alive(me.party[a.to])) throw new IllegalAction('cannot switch');

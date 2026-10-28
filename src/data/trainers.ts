@@ -29,6 +29,8 @@ export interface TrainerDef {
    * app during the cut-scene can't leave a road blocked forever.
    */
   storyFlag?: string;
+  /** Makes its ace a fair copy (« mise au propre ») in battle; the Great Eraser's is scribbled black. */
+  fairCopy?: true | 'dark';
 }
 
 /**
@@ -456,8 +458,8 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Le tour a raté…', 'The trick failed…')],
   }),
   T({
-    id: 'celestine', name: L('Maître d’Atelier Célestine', 'Atelier Master Celestine'), money: 3200, badge: 'paillette',
-    party: [{ species: '006', level: 25 }, { species: '005', level: 26, item: 'baie-reveil' }, { species: '014', level: 27 }, { species: '028', level: 28, item: 'baie-doree' }],
+    id: 'celestine', name: L('Maître d’Atelier Célestine', 'Atelier Master Celestine'), money: 3200, badge: 'paillette', fairCopy: true,
+    party: [{ species: '006', level: 25 }, { species: '005', level: 26, item: 'baie-reveil' }, { species: '014', level: 26 }, { species: '028', level: 26 }],
     before: [L('Bienvenue dans mon atelier étoilé ! Chaque paillette ici est un vœu. Voyons si le tien est le plus fort !', 'Welcome to my starry atelier! Every speck of glitter here is a wish. Let’s see if yours is the strongest!')],
     after: [
       L('Ton vœu brille plus que tous les miens. Voici le Badge Paillette !', 'Your wish shines brighter than all of mine. Here is the Glitter Badge!'),
@@ -518,8 +520,8 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Mes papillons sont partis butiner ailleurs…', 'My butterflies went to forage elsewhere…')],
   }),
   T({
-    id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache',
-    party: [{ species: '094', level: 28, item: 'baie-menthe' }, { species: '098', level: 29 }, { species: '063', level: 28 }, { species: '024', level: 31, item: 'baie-doree' }],
+    id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache', fairCopy: true,
+    party: [{ species: '094', level: 28, item: 'baie-menthe' }, { species: '098', level: 29 }, { species: '063', level: 28 }, { species: '024', level: 31 }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),
@@ -605,8 +607,8 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('…et le jour finit par se lever.', '…and the day finally broke.')],
   }),
   T({
-    id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre', afterScript: 'encreChoice',
-    party: [{ species: '097', level: 30 }, { species: '010', level: 31 }, { species: '066', level: 32 }, { species: '098', level: 32 }, { species: '011', level: 33 }],
+    id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre', afterScript: 'encreChoice', fairCopy: true,
+    party: [{ species: '097', level: 30 }, { species: '010', level: 30 }, { species: '066', level: 31 }, { species: '098', level: 31 }, { species: '011', level: 31 }],
     before: [
       L('Bonsoir. L’encre de nuit cache tout ce qu’on n’ose pas dessiner…', 'Good evening. Night ink hides everything we don’t dare to draw…'),
       L('Montre-moi que tu n’as peur de rien, même pas de tes propres ombres.', 'Show me you’re afraid of nothing, not even your own shadows.'),
@@ -783,18 +785,28 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon réveil, alors !', 'Have a nice waking up, then!')],
   }),
   T({
-    id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true,
-    party: [{ species: '008', level: 39 }, { species: '007', level: 39 }, { species: '027', level: 39 }, { species: '010', level: 40 }, { species: '011', level: 44, item: 'baie-doree' }],
+    id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true, fairCopy: 'dark',
+    party: [{ species: '008', level: 39 }, { species: '007', level: 38 }, { species: '027', level: 38 }, { species: '010', level: 40 }, { species: '011', level: 42 }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
   }),
 ].map((t) => [t.id, t]));
 
 /** The rival's team on Route Blanche: his starter, grown to its level, is the ace. */
+/**
+ * The rival's starter in the last battle, by the starter it took. As a fair copy each one weighs differently against
+ * the starter that beats it (a Dragon Dragobraise shrugs off a water team), so each is tuned on its own with
+ * `npm run balance`.
+ */
+const RIVAL_ACE: Record<string, { level: number; item?: string }> = {
+  '001': { level: 43 }, '002': { level: 40 }, '003': { level: 42, item: 'baie-doree' },
+};
+
 export function rivalFinalTeam(rivalStarter: string): TrainerDef['party'] {
+  const ace = RIVAL_ACE[rivalStarter] ?? RIVAL_ACE['001'];
   return [
-    { species: '036', level: 40, item: 'plume-vive' }, { species: '008', level: 40 }, { species: '053', level: 41, item: 'lunettes-tetues' },
-    { species: '007', level: 40 }, { species: '027', level: 41 }, { species: grownForm(rivalStarter, 45), level: 45, item: 'baie-doree' },
+    { species: '036', level: 40, item: 'plume-vive' }, { species: '008', level: 40 }, { species: '053', level: 40, item: 'lunettes-tetues' },
+    { species: '007', level: 40 }, { species: '027', level: 40 }, { species: grownForm(rivalStarter, ace.level), ...ace },
   ];
 }
 

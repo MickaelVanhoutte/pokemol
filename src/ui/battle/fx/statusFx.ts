@@ -234,6 +234,34 @@ export const popOut = (o: { who?: Who; dur?: number } = {}): Builder => (env) =>
   };
 };
 
+/**
+ * « Mise au propre »: a gold felt-tip goes round the drawing, then a big gold star is stamped on it. The Great
+ * Eraser's (`dark`) goes round in black scribbles and stamps a grey star.
+ */
+export const fairTrace = (o: { who?: Who; dur?: number; dark?: boolean } = {}): Builder => (env) => {
+  const dur = o.dur ?? 1300;
+  return {
+    start: 0, sounds: [['marker', 0], [o.dark ? 'ghost' : 'shiny', 720]], dur,
+    draw(b, t) {
+      const A = who(env, o.who ?? 'user'), s = A.size;
+      const u = seg(t, 0, 0.55), alpha = 1 - seg(t, 0.85, 1);
+      const pts: P[] = [];
+      const steps = Math.ceil(48 * u);
+      for (let k = 0; k <= steps; k++) {
+        const a = -Math.PI / 2 + (k / 48) * Math.PI * 2.1;
+        const r = o.dark ? 1 + 0.14 * Math.sin(k * 2.3) : 1;
+        pts.push([A.x + Math.cos(a) * s * 0.55 * r, A.y + Math.sin(a) * s * 0.5 * r]);
+      }
+      if (pts.length > 1) {
+        b.line(pts, o.dark ? '#1a1420' : '#f4b81c', 7, { alpha, seed: 520 });
+        if (!o.dark) b.line(pts, GRAPHITE, 1.4, { alpha: alpha * 0.8, seed: 521, passes: 1 });
+      }
+      const v = seg(t, 0.5, 0.95);
+      if (v > 0 && v < 1) b.doodle('star', o.dark ? '#4a4252' : '#ffd84a', A.x, A.y, s * 0.55 * bell(v), { seed: 522 });
+    },
+  };
+};
+
 /** A sparkly Bestiole coming out: two rings of gold stars bursting from it, then glitter twinkling all over. */
 export const shinyBurst = (o: { who?: Who; dur?: number } = {}): Builder => (env) => {
   const dur = o.dur ?? 1400;

@@ -41,6 +41,9 @@ English: [docs/histoire.md](docs/histoire.md).
   shields, two-turn moves, ties, greedy seeds and paper dolls.
 - Every family has a power of its own, a talent or a signature move, so each Bestiole has its place
   in a team up to level 100 ([docs/bestioles.md](docs/bestioles.md)).
+- The fair copy (« mise au propre »), our own battle gimmick: once per battle, the Golden Felt-tip
+  redraws a fully grown Bestiole in felt-tip, with a new look, a new type and stronger stats until the
+  battle ends. The Atelier Masters have theirs too.
 - Deeper battles, GBA style: talents (one or two per species plus a hidden one, 1 chance in 4),
   25 natures (+10% / −10%), IVs graded E to S next to each stat in the summary, effort points;
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the

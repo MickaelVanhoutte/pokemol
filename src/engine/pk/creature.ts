@@ -1,4 +1,5 @@
 import { creature } from '../../data/creatures';
+import { fairCopyOf } from '../../data/fairCopies';
 import { move } from '../../data/moves';
 import { NATURES, natureTenths } from '../../data/natures';
 import { HIDDEN_TALENT_CHANCE, type TalentSlot } from '../../data/talents';
@@ -44,6 +45,8 @@ export interface Mon {
   friendship?: number;
   /** Still an egg: it hatches after this many steps carried in the party (it can't fight). */
   egg?: { steps: number };
+  /** Made a fair copy in this battle (src/data/fairCopies.ts): battle only, dropped when it ends. */
+  fair?: boolean;
   /** Held item id (berries are eaten in battle). */
   item: string | null;
   hp: number;
@@ -75,9 +78,9 @@ export function calcStat(key: StatKey, base: number, iv: number, ev: number, lev
 }
 
 export function statsOf(m: Mon): Stats {
-  const sp = creature(m.species);
+  const base = (m.fair && fairCopyOf(m.species)?.base) || creature(m.species).base;
   const out = {} as Stats;
-  for (const k of STAT_KEYS) out[k] = calcStat(k, sp.base[k], m.ivs[k], m.evs[k], m.level, natureTenths(m.nature, k));
+  for (const k of STAT_KEYS) out[k] = calcStat(k, base[k], m.ivs[k], m.evs[k], m.level, natureTenths(m.nature, k));
   return out;
 }
 

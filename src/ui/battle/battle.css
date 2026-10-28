@@ -152,6 +152,13 @@
 .fx-in { animation: popIn 0.5s cubic-bezier(.3, 1.6, .5, 1); }
 /* sparkly Bestiole: a golden twinkle as it comes out */
 .fx-shiny { animation: shinyTwinkle 1.7s ease; }
+/* « mise au propre »: a white flash where the felt-tip goes over it, then the fair copy pops out */
+.fx-fair { animation: fairPop 1.3s ease; }
+@keyframes fairPop {
+  0% { filter: brightness(3) saturate(0); scale: 0.94; }
+  45% { filter: brightness(1.5) drop-shadow(0 0 10px #f4b81c); scale: 1.07; }
+  100% { scale: 1; }
+}
 /* a Team Gomme Bestiole gets its colours back: a happy little hop while the grey fades */
 .fx-recolor { animation: recolorHop 2.6s ease; }
 @keyframes recolorHop { 55% { translate: 0 0; } 65% { translate: 0 -8px; } 75% { translate: 0 0; } 85% { translate: 0 -4px; } }
@@ -240,6 +247,17 @@
 }
 .bpanel__prompt p { margin: 0; flex: 1; min-width: 0; }
 .bpanel__back { flex: none; font-size: 1rem; min-height: 0; padding: 0 6px; }
+/* the Feutre d'Or's toggle: it glows while it waits, gold once set for the next move */
+.bpanel__fair {
+  flex: 1; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 0;
+  align-self: stretch; margin: 6px 0; padding: 0 6px; line-height: 1.05; white-space: nowrap;
+  animation: fairGlow 1.8s ease-in-out infinite;
+}
+.bpanel__fair .fair-star { width: 1.4em; height: 1.4em; flex: none; }
+.bpanel__fair.is-on { --sk-fill: var(--butter); --sk-hatch: var(--hatch-butter); --pencil-frame: var(--frame-butter); animation: none; filter: drop-shadow(0 0 5px #f4b81c); }
+@keyframes fairGlow { 50% { filter: drop-shadow(0 0 4px #f4b81caa); } }
+@media (prefers-reduced-motion: reduce) { .bpanel__fair { animation: none; } }
+.pk-hp__fair { width: 1em; height: 1em; margin-left: 3px; vertical-align: -0.12em; }
 .bpanel__hint { display: block; font-size: 0.8em; color: var(--ink-soft); }
 /* a long press on a move: what it does, over the scene; any tap or key closes it */
 .bpanel__info {
