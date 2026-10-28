@@ -1,5 +1,6 @@
 import { signal } from '@preact/signals';
 import type { BattleProps } from '../ui/battle/BattleScreen';
+import type { CustomDesign } from '../data/custom';
 
 export type Screen =
   | { id: 'title' }
@@ -23,7 +24,9 @@ export type Screen =
   | { id: 'memo'; onEnd: (tries: number | null) => void }
   | { id: 'credits'; fromWorld?: boolean }
   /** The ending's drawing on the last page of the sketchbook (1: Libellune, 2: Noctaile). */
-  | { id: 'drawing'; ending: 1 | 2 };
+  | { id: 'drawing'; ending: 1 | 2 }
+  /** L'Atelier des Brouillons: the player's own Bestiole (`fresh`: start over); `onEnd` gets the design, or null. */
+  | { id: 'atelier'; fresh?: boolean; onEnd: (d: CustomDesign | null) => void };
 
 export const screen = signal<Screen>({ id: 'title' });
 

@@ -19,6 +19,7 @@ import { JukeboxScreen } from './ui/screens/JukeboxScreen';
 import { FresqueScreen } from './ui/screens/FresqueScreen';
 import { MemoScreen } from './ui/screens/MemoScreen';
 import { DrawingScreen } from './ui/screens/DrawingScreen';
+import { AtelierScreen } from './ui/screens/AtelierScreen';
 
 export function App() {
   // reading locale.value re-renders everything when the language changes
@@ -44,6 +45,7 @@ export function App() {
       {s.id === 'jukebox' && <JukeboxScreen />}
       {s.id === 'fresque' && <FresqueScreen key={s.species} species={s.species} size={s.size} onEnd={s.onEnd} />}
       {s.id === 'memo' && <MemoScreen onEnd={s.onEnd} />}
+      {s.id === 'atelier' && <AtelierScreen fresh={s.fresh} onEnd={s.onEnd} />}
     </div>
   );
 }

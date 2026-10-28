@@ -7,7 +7,7 @@ import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
 import { SpriteSheet, type Look } from './sprites';
 import { tile } from './tiles';
-import { creature } from '../data/creatures';
+import { CUSTOM_ID, creature, customMiniUrl, customRevision } from '../data/creatures';
 import { shinyRecolour } from '../art/shiny';
 
 export const TILE = 16;
@@ -136,13 +136,15 @@ const sheetCache = new Map<string, SpriteSheet>();
 const minis = new Map<string, HTMLImageElement>();
 /** A Bestiole's overworld miniature (public/minis, made by `npm run minis`), in its sparkly colours if `shiny`. */
 export function miniFor(species: string, shiny = false): HTMLImageElement {
-  const key = shiny ? `${species}*` : species;
+  // the player's own Bestiole: its miniature is in the save, and changes when it is redrawn
+  const id = species === CUSTOM_ID ? `${species}@${customRevision()}` : species;
+  const key = shiny ? `${id}*` : id;
   let img = minis.get(key);
   if (!img) {
     const sp = creature(species);
     const out = (img = new Image());
     minis.set(key, out);
-    if (!shiny) out.src = `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
+    if (!shiny) out.src = sp.id === CUSTOM_ID ? customMiniUrl() : `${import.meta.env.BASE_URL}minis/${sp.id}-${sp.slug}.png`;
     else {
       // recoloured from the plain miniature, like the card (src/art/shiny.ts)
       const base = miniFor(species);

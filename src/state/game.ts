@@ -8,6 +8,8 @@ import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
 import { prefs, setPref } from './prefs';
 import { OLD_AVATARS, type Appearance } from '../data/appearance';
+import { registerCustom, type CustomDesign } from '../data/custom';
+import { CUSTOM_ID } from '../data/creatures';
 
 const KEY = 'atelier-bestioles.save';
 /** Games that can live side by side on one device (a parent's and a child's…). Game 1 keeps the old key. */
@@ -76,6 +78,11 @@ export function repair(s: SaveData): SaveData {
   s.player.look ??= { ...(OLD_AVATARS[s.player.avatar] ?? OLD_AVATARS[0]) };
   // each game keeps its difficulty since there can be several: older ones take the device's
   s.difficulty ??= prefs.value.difficulty;
+  // the player's own Bestiole lives only with its design
+  if (!s.atelier) {
+    s.party = s.party.filter((m) => m.species !== CUSTOM_ID);
+    s.boxes = s.boxes.map((b) => b.filter((m) => m.species !== CUSTOM_ID));
+  }
   s.party.forEach(repairMon);
   s.boxes.forEach((b) => b.forEach(repairMon));
   s.daycare?.slots.forEach((x) => repairMon(x.mon));
@@ -170,12 +177,17 @@ export function loadSave(n = slot.value): SaveData | null {
   return s;
 }
 
+/** The last write failed (storage full or refused): SAUVER says so instead of pretending. */
+export const saveFailed = signal(false);
+
 export function persist() {
   if (!save.value) return;
   try {
     localStorage.setItem(keyOf(slot.value), JSON.stringify(save.value));
+    saveFailed.value = false;
   } catch {
     // quota or private mode: the game keeps running in memory
+    saveFailed.value = true;
   }
 }
 
@@ -342,3 +354,14 @@ export function takeHeld(s: SaveData, m: Mon): string | null {
   m.item = null;
   return id;
 }
+
+// the player's own Bestiole (src/data/custom.ts) is among the species while its game is played; registered again
+// only when its design changes (each update clones the save)
+const designKey = (d?: CustomDesign) => (d ? [d.name, d.kind, d.type, d.type2, Object.values(d.base).join(), d.talent, d.moves.join(), d.art.length, d.art.slice(-48), d.mini.length].join('|') : '');
+let registered: string | null = null;
+effect(() => {
+  const k = designKey(save.value?.atelier);
+  if (k === registered) return;
+  registered = k;
+  registerCustom(save.value?.atelier);
+});

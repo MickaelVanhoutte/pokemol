@@ -10,8 +10,12 @@ import { playMusic } from '../audio/music';
 import { LOOKS } from '../overworld/sprites';
 import { healParty, update } from '../state/game';
 import {
-  ask, bubble, flag, flash, getGame, mapMusic, say, sayAll, scripts, setFlag, shake, showToast, warpTo,
+  ask, bubble, flag, flash, getGame, giveMon, mapMusic, openScreen, say, sayAll, scripts, setFlag, shake, showToast, warpTo,
 } from '../overworld/controller';
+import { CUSTOM_ID, monLabel } from '../data/creatures';
+import { joinLevel, type CustomDesign } from '../data/custom';
+import { healMon } from '../engine/pk/creature';
+import { move } from '../data/moves';
 import { RIVAL } from './cast';
 import { choose, comeUp, findCoconfus, RETOUCHE } from './choices';
 
@@ -112,6 +116,74 @@ scripts.esquisse3 = async () => {
 
 scripts.esquisse4 = async () => {
   await say(L('La Team Gomme ? Ce ne sont pas des méchants comme les autres. Ils ressemblent à des pensées… des pensées tristes.', 'Team Gomme? They’re not baddies like the others. They’re more like thoughts… sad thoughts.'), L('Esquisse', 'Sketch'));
+};
+
+// ------------------------------------------------------------------ l'Atelier des Brouillons
+
+const DESSINATRICE = L('Dessinatrice', 'Sketcher');
+
+/**
+ * The finished design: kept in the save (which puts it among the species), then its Bestiole joins the first
+ * time, or is redrawn wherever it is (team, PC, day care), keeping its level: new moves, full health.
+ */
+function keepDesign(d: CustomDesign): 'new' | 'party' | 'box' | 'redrawn' {
+  const first = !save.value!.atelier;
+  update((x) => {
+    x.atelier = d;
+    const mons = [...x.party, ...x.boxes.flat(), ...(x.daycare?.slots.map((sl) => sl.mon) ?? [])];
+    for (const m of mons) {
+      if (m.species !== CUSTOM_ID) continue;
+      m.moves = d.moves.map((id) => ({ id, pp: move(id).pp }));
+      healMon(m);
+    }
+  });
+  if (!first && [...save.value!.party, ...save.value!.boxes.flat(), ...(save.value!.daycare?.slots ?? []).map((sl) => sl.mon)].some((m) => m.species === CUSTOM_ID)) return 'redrawn';
+  const full = save.value!.party.length >= 6;
+  const m = giveMon(CUSTOM_ID, joinLevel(save.value!.party.filter((p) => !p.egg).map((p) => p.level)));
+  // the only one of its kind: never a sparkly one
+  update((x) => {
+    for (const p of [...x.party, ...x.boxes.flat()]) if (p.uid === m.uid) p.shiny = false;
+  });
+  setFlag('atelier:made');
+  return full ? 'box' : 'party';
+}
+
+/** La Dessinatrice and her workshop: draw your own Bestiole, then come back to retouch it as often as you like. */
+scripts.atelierPerso = async () => {
+  let fresh = false;
+  if (!save.value?.atelier) {
+    await sayAll([
+      L('Oh ! Tu es en couleurs ! Ici, je dessine des Bestioles… mais elles restent toutes en brouillon.', 'Oh! You’re in colour! I draw Critters here… but they all stay drafts.'),
+      L('Toi, tu pourrais en dessiner une vraie. Une Bestiole à toi, comme tu l’imagines : son dessin, ses types, sa force, ses capacités.', 'You could draw a real one. A Critter of your own, just as you imagine it: its drawing, its types, its strength, its moves.'),
+      L('Il n’y en aura qu’une : la seule de son espèce. Et tu pourras revenir la retoucher quand tu veux.', 'There will be only one: the only one of its kind. And you can come back to retouch it whenever you like.'),
+    ], DESSINATRICE);
+    if (await ask(L('Tu veux dessiner ta Bestiole ?', 'Do you want to draw your Critter?'), [L('Oui !', 'Yes!'), L('Pas maintenant', 'Not now')], DESSINATRICE)) {
+      return say(L('Mes crayons t’attendent. Reviens quand l’envie te prend !', 'My pencils will wait for you. Come back whenever you feel like it!'), DESSINATRICE);
+    }
+  } else {
+    const name = monLabel({ species: CUSTOM_ID });
+    const pick = await ask(L('Que veux-tu faire avec {n} ?', 'What would you like to do with {n}?'), [L('La retoucher', 'Retouch it'), L('Tout recommencer', 'Start over'), L('Rien', 'Nothing')], DESSINATRICE, { n: name });
+    if (pick === 2) return say(L('{n} est très bien comme ça !', '{n} is just right as it is!'), DESSINATRICE, { n: name });
+    if (pick === 1) {
+      const sure = await ask(L('Tout recommencer ? Son dessin sera effacé, mais elle gardera son niveau.', 'Start over? Its drawing will be erased, but it keeps its level.'), [L('Oui', 'Yes'), L('Non', 'No')], DESSINATRICE);
+      if (sure) return;
+      fresh = true;
+    }
+  }
+  let design: CustomDesign | null = null;
+  await openScreen({ id: 'atelier', fresh, onEnd: (d) => (design = d) });
+  if (!design) return say(L('Pas d’inspiration ? Ça arrive aux meilleurs. Reviens quand tu veux !', 'No inspiration? It happens to the best of us. Come back whenever you like!'), DESSINATRICE);
+  const how = keepDesign(design);
+  const n = monLabel({ species: CUSTOM_ID });
+  if (how === 'redrawn') {
+    showToast(tr(L('{n} a été redessinée !', '{n} has been redrawn!'), { n }));
+    return say(L('Elle te ressemble encore plus, maintenant.', 'It looks even more like you now.'), DESSINATRICE);
+  }
+  await flash('white', 300);
+  await say(L('Elle est magnifique ! Regarde, elle bouge… Elle a envie de te suivre !', 'It’s wonderful! Look, it’s moving… It wants to come with you!'), DESSINATRICE);
+  await say(how === 'box'
+    ? L('Ton équipe est complète : {n} est envoyée dans le PC.', 'Your team is full: {n} was sent to the PC.')
+    : L('{n} rejoint ton équipe !', '{n} joined your team!'), undefined, { n });
 };
 
 scripts.brouillonHouse = async () => {

@@ -114,6 +114,9 @@ re-renders everything.
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in
   `src/overworld/mapTypes.ts` maps each character to a tile id;
+- `custom.ts`: the player's own Bestiole, drawn at the Atelier des Brouillons (`save.atelier`): registered as
+  species `CUSTOM_ID` (`'000'`) at load time, outside `CREATURES`; `artUrl` / `miniFor` read its saved drawing,
+  and Bestiodex totals use `dexCount`, which leaves it out;
 - `worldmap.ts`: the Town Map layout (`WORLD`), where-am-I (`regionOf`, `playerSpot`) and the
   balloon towns. Next objectives for the map live in `src/story/objective.ts`.
 

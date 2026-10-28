@@ -1,4 +1,5 @@
 import { L, tr } from '../../i18n';
+import { dexCount } from '../../data/creatures';
 import { badgeDef } from '../../data/badges';
 import { TYPES } from '../../data/types';
 import type { SaveData } from '../../save/schema';
@@ -37,7 +38,7 @@ export function TrainerCardView({ save, avatar, onLook, onClose }: { save: SaveD
           <dl class="kv tcard__kv">
             <dt>{tr(L('NOM', 'NAME'))}</dt><dd>{save.player.name}</dd>
             <dt>{tr(L('ARGENT', 'MONEY'))}</dt><dd>{save.money} ₽</dd>
-            <dt>{tr(L('BESTIODEX', 'CRITTERDEX'))}</dt><dd>{save.dex.caught.length}</dd>
+            <dt>{tr(L('BESTIODEX', 'CRITTERDEX'))}</dt><dd>{dexCount(save.dex.caught)}</dd>
             <dt>{tr(L('TEMPS', 'TIME'))}</dt><dd>{time(save.playMs)}</dd>
             <dt>{tr(L('HEURE', 'CLOCK'))}</dt><dd>{clock(hourNow(save.clockShift ?? 0))}</dd>
             {!!save.hallOfFame?.length && <><dt>{tr(L('CONCOURS', 'CONTEST'))}</dt><dd>×{save.hallOfFame.length}</dd></>}

@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
-import { CREATURES, artUrl, dexNo } from '../../data/creatures';
+import { CREATURES, CREATURE_BY_ID, CUSTOM_ID, artUrl, dexCount, dexNo } from '../../data/creatures';
+import type { SpeciesDef } from '../../data/schema';
 import { FAIR_RIG_OF, fairFile } from '../../data/rigs';
 import { monTypes } from '../../data/fairCopies';
 import { RigPicture } from '../RigPicture';
@@ -15,7 +16,7 @@ import type { LText } from '../../i18n';
 const HOW: Record<HabitatHow, LText> = {
   grass: L('hautes herbes', 'tall grass'), cave: L('grotte', 'cave'), surf: L('en bateau', 'sailing'),
   old: L('Canne en Bois', 'Old Rod'), good: L('Bonne Canne', 'Good Rod'), super: L('Super Canne', 'Super Rod'),
-  gift: L('cadeau', 'gift'), tombola: L('tirage', 'raffle'),
+  gift: L('cadeau', 'gift'), tombola: L('tirage', 'raffle'), drawn: L('dessinée à l’atelier', 'drawn at the workshop'),
 };
 import './views.css';
 
@@ -29,18 +30,20 @@ export function DexView({ seen, caught, visited = () => true, fairSeen = () => f
   const [open, setOpen] = useState<number | null>(null);
   const isSeen = (id: string) => seen.includes(id);
   const isCaught = (id: string) => caught.includes(id);
+  // the player's own Bestiole, drawn at the workshop, comes first: « N°000, hors série »
+  const list: SpeciesDef[] = isCaught(CUSTOM_ID) && CREATURE_BY_ID[CUSTOM_ID] ? [CREATURE_BY_ID[CUSTOM_ID], ...CREATURES] : CREATURES;
 
-  if (open !== null) return <DexEntry key={open} index={open} isSeen={isSeen} isCaught={isCaught} fairSeen={fairSeen} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
+  if (open !== null) return <DexEntry key={open} list={list} index={open} isSeen={isSeen} isCaught={isCaught} fairSeen={fairSeen} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
   return (
     <Frame
       title={tr(L('Bestiodex', 'Critterdex'))}
       onBack={onClose}
-      right={<Window class="dex__count"><span>{tr(L('VUS', 'SEEN'))} {seen.length}</span> <span>{tr(L('PRIS', 'OWN'))} {caught.length}</span></Window>}
+      right={<Window class="dex__count"><span>{tr(L('VUS', 'SEEN'))} {dexCount(seen)}</span> <span>{tr(L('PRIS', 'OWN'))} {dexCount(caught)}</span></Window>}
     >
       <Window class="dex__list">
         <MenuList
           onCancel={onClose}
-          items={CREATURES.map((c, i) => ({
+          items={list.map((c, i) => ({
             label: (
               <span class="dexrow">
                 <span class="dexrow__no">{dexNo(c.id)}</span>
@@ -74,19 +77,19 @@ function Habitats({ species, visited }: { species: string; visited: (map: string
   );
 }
 
-function DexEntry({ index, isSeen, isCaught, fairSeen, visited, onMove, onClose }: {
-  index: number; isSeen: (id: string) => boolean; isCaught: (id: string) => boolean; fairSeen: (id: string) => boolean;
+function DexEntry({ list, index, isSeen, isCaught, fairSeen, visited, onMove, onClose }: {
+  list: SpeciesDef[]; index: number; isSeen: (id: string) => boolean; isCaught: (id: string) => boolean; fairSeen: (id: string) => boolean;
   visited: (map: string) => boolean; onMove: (i: number) => void; onClose: () => void;
 }) {
-  const sp = CREATURES[index];
+  const sp = list[index];
   // its fair copy (« mise au propre »), once seen in a battle
   const fairRig = isCaught(sp.id) && fairSeen(sp.id) ? FAIR_RIG_OF[sp.id] : undefined;
   const [inked, setInked] = useState(false);
   const fair = inked && !!fairRig;
   const step = (d: 1 | -1) => {
-    for (let k = 1; k < CREATURES.length; k++) {
-      const j = (index + d * k + CREATURES.length) % CREATURES.length;
-      if (isSeen(CREATURES[j].id)) return onMove(j);
+    for (let k = 1; k < list.length; k++) {
+      const j = (index + d * k + list.length) % list.length;
+      if (isSeen(list[j].id)) return onMove(j);
     }
   };
   return (

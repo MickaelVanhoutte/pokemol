@@ -164,4 +164,27 @@ describe('several games on one device', async () => {
     expect(savedSlots()).toEqual([2]);
     expect(peekSlot(2)?.player.name).toBe('Lili');
   });
+
+  it('keeps the player’s own Bestiole with its game only, and its design survives a reload', async () => {
+    const { CUSTOM_ID, creature } = await import('../data/creatures');
+    const { update } = await import('./game');
+    store.clear();
+    slot.value = 1;
+    newGame('Papa', DEFAULT_LOOKS.m, 'm', 'Feutre');
+    persist();
+    slot.value = 2;
+    newGame('Lili', DEFAULT_LOOKS.f, 'f', 'Crayon');
+    update((x) => {
+      x.atelier = {
+        name: 'Gribouillon', kind: 'Rigolote', type: 'feu', base: { hp: 80, atk: 80, def: 80, spa: 80, spd: 80, spe: 80 },
+        talent: 'regard-noir', moves: ['flammeche'], art: 'data:image/webp;base64,AAAA', mini: 'data:image/png;base64,AAAA',
+      };
+    });
+    persist();
+    expect(creature(CUSTOM_ID).name.fr).toBe('Gribouillon');
+    loadSave(1);
+    expect(() => creature(CUSTOM_ID)).toThrow();
+    loadSave(2);
+    expect(creature(CUSTOM_ID).learnset).toEqual([[1, 'flammeche']]);
+  });
 });

@@ -1,7 +1,7 @@
-import { creature } from './creatures';
+import { CUSTOM_ID, creature } from './creatures';
 import { MAPS } from './maps';
 
-export type HabitatHow = 'grass' | 'cave' | 'surf' | 'old' | 'good' | 'super' | 'gift' | 'tombola';
+export type HabitatHow = 'grass' | 'cave' | 'surf' | 'old' | 'good' | 'super' | 'gift' | 'tombola' | 'drawn';
 
 export interface Habitat {
   map: string;
@@ -27,6 +27,8 @@ const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time
  * rod), gifts, and the Tombola, which can draw any Bestiole but the legendaries.
  */
 export function habitatsOf(species: string): Habitat[] {
+  // the player's own Bestiole was drawn at the workshop of Hameau-Brouillon
+  if (species === CUSTOM_ID) return [{ map: 'brouillon', how: 'drawn' }];
   const out: Habitat[] = [];
   const add = (map: string, how: HabitatHow, rows: { id: string; min: number; max: number; time?: 'day' | 'night' }[] | undefined) => {
     const mine = (rows ?? []).filter((r) => r.id === species);

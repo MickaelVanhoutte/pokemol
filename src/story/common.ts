@@ -10,7 +10,7 @@ import { ivGrade } from '../engine/pk/judge';
 import { NATURES, nature, type BattleStat } from '../data/natures';
 import { STAT_NAMES } from '../data/types';
 import { talent, type TalentSlot } from '../data/talents';
-import { creature, monLabel } from '../data/creatures';
+import { creature, monLabel, dexCount } from '../data/creatures';
 import { INNKEEPER } from './cast';
 
 /** You wake up here after a blackout, and the Ariadne Thread leads back here. */
@@ -83,7 +83,7 @@ scripts.innBed = async () => {
 /** Prof. Fusain's aide: the Tracing Paper (shares XP) once 3 kinds of Bestioles are caught. */
 scripts.calqueAide = async () => {
   const AIDE = L('Assistant du Prof.', 'Prof’s Aide');
-  const n = save.value!.dex.caught.length;
+  const n = dexCount(save.value!.dex.caught);
   if (n < 3) {
     await say(L('Je travaille avec le Prof. Fusain. Attrape au moins 3 sortes de Bestioles, et j’aurai un cadeau pour toi ! (Tu en as {n}.)', 'I work with Prof. Fusain. Catch at least 3 kinds of Critters and I’ll have a present for you! (You have {n}.)'), AIDE, { n });
     return;

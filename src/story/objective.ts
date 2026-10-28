@@ -1,6 +1,6 @@
 import { L, type LText } from '../i18n';
 import { BADGES } from '../data/badges';
-import { CREATURES } from '../data/creatures';
+import { CREATURES, dexCount } from '../data/creatures';
 import { TRAINERS } from '../data/trainers';
 import { townOfTrainer } from '../data/worldmap';
 import type { SaveData } from '../save/schema';
@@ -58,8 +58,8 @@ export const MAIN: Objective[] = [
 export const POST: Objective[] = [
   step('concours', 'galerie', L('Remporte le Grand Concours, après le Bord de la Page.', 'Win the Grand Contest past the Edge of the Page.'), ['champion']),
   {
-    ...step('dex', 'bourg', L('Complète ton Bestiodex ({c}/{t}).', 'Complete your Critterdex ({c}/{t}).'), [], (s) => s.dex.caught.length >= CREATURES.length || on(s, 'dexDiploma')),
-    vars: (s) => ({ c: s.dex.caught.length, t: CREATURES.length }),
+    ...step('dex', 'bourg', L('Complète ton Bestiodex ({c}/{t}).', 'Complete your Critterdex ({c}/{t}).'), [], (s) => dexCount(s.dex.caught) >= CREATURES.length || on(s, 'dexDiploma')),
+    vars: (s) => ({ c: dexCount(s.dex.caught), t: CREATURES.length }),
   },
   step('dexDiploma', 'bourg', L('Montre ton Bestiodex au Prof. Fusain.', 'Show your Critterdex to Prof. Charcoal.'), ['dexDiploma']),
   {

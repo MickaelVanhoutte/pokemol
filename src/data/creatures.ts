@@ -1452,6 +1452,31 @@ export const CREATURES: SpeciesDef[] = [
 
 export const CREATURE_BY_ID: Record<string, SpeciesDef> = Object.fromEntries(CREATURES.map((c) => [c.id, c]));
 
+/**
+ * The player's own Bestiole, drawn at the Atelier des Brouillons (src/data/custom.ts): one per game, kept in the
+ * save and put among the species when the game loads, never in CREATURES (dex numbers, the Tombola, tests).
+ */
+export const CUSTOM_ID = '000';
+let customArt = '';
+let customMini = '';
+let customRev = 0;
+
+/** Puts the player's own Bestiole among the species, with its drawing and miniature (or takes it out). */
+export function setCustomSpecies(sp?: SpeciesDef, art = '', mini = '') {
+  if (sp) CREATURE_BY_ID[CUSTOM_ID] = sp;
+  else delete CREATURE_BY_ID[CUSTOM_ID];
+  customArt = art;
+  customMini = mini;
+  customRev++;
+}
+
+/** Changes each time the player's own Bestiole is redrawn: the picture caches key on it. */
+export const customRevision = () => customRev;
+export const customMiniUrl = () => customMini;
+
+/** How many of these ids are Bestiodex species: the player's own Bestiole never completes the Bestiodex. */
+export const dexCount = (ids: readonly string[]) => ids.filter((id) => id !== CUSTOM_ID && id in CREATURE_BY_ID).length;
+
 export function creature(id: string): SpeciesDef {
   const c = CREATURE_BY_ID[id];
   if (!c) throw new Error(`Unknown creature ${id}`);
@@ -1492,5 +1517,6 @@ export function mirrored(c: SpeciesDef, foe: boolean): boolean {
 }
 
 export function artUrl(c: SpeciesDef): string {
+  if (c.id === CUSTOM_ID) return customArt;
   return `${import.meta.env.BASE_URL}cards/${c.id}-${c.slug}.webp`;
 }

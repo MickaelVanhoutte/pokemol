@@ -121,6 +121,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Les dresseurs des routes veulent leur **revanche** dès le lendemain.
 - La **Tombola**, le jeu de **Mémo-Bestioles**, la **Piste Cyclable**… et une grotte où quelque chose
   respire dans le noir.
+- Un **atelier où dessiner ta propre Bestiole** : au crayon, avec le doigt, puis tu choisis ses types, sa
+  force et ses capacités. C’est la seule de son espèce, et tu peux revenir la retoucher quand tu veux.
 - Jusqu’à **3 parties** sur le même appareil, chacune avec sa difficulté : une pour toi, une pour un
   frère, une sœur ou un parent. En Facile et en Normal, un pouce levé montre les attaques qui marchent le
   mieux contre une Bestiole déjà rencontrée.
@@ -243,6 +245,8 @@ The story has **two endings**, and your answers choose which one you will see.
 - Route trainers want a **rematch** the very next day.
 - The **Tombola**, the **Critter Memo** card game, the **Cycling Track**… and a cave where something
   breathes in the dark.
+- A **workshop where you draw your own Bestiole**: in pencil, with your finger, then you pick its types, its
+  strength and its moves. It is the only one of its kind, and you can come back to retouch it whenever you like.
 - Up to **3 games** on one device, each with its own difficulty: one for you, one for a brother, a sister
   or a parent. On Easy and Normal, a thumbs-up shows the moves that work best against a Bestiole you have
   already met.

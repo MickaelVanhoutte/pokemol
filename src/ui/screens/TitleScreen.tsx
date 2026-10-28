@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { effect } from '@preact/signals';
 import { L, t, tr } from '../../i18n';
-import { artUrl, dexNo } from '../../data/creatures';
+import { artUrl, dexNo, dexCount } from '../../data/creatures';
 import { originals } from '../../data/originals';
 import { enterWorld } from '../../overworld/controller';
 import { hasSave, loadSave, outdatedSave, peekSlot, savedSlots, slot, SLOTS } from '../../state/game';
@@ -96,7 +96,7 @@ function SlotCard({ n, s, onPick }: { n: number; s: SaveData | null; onPick: () 
       <span class="title__slot-text">
         <b>{tr(L('Partie {n}', 'Game {n}'), { n })}</b>
         {s ? (
-          <span>{s.player.name} · {s.badges.length} {tr(s.badges.length > 1 ? L('badges', 'badges') : L('badge', 'badge'))} · {tr(L('Bestiodex', 'Critterdex'))} {s.dex.caught.length} · {time(s.playMs)}</span>
+          <span>{s.player.name} · {s.badges.length} {tr(s.badges.length > 1 ? L('badges', 'badges') : L('badge', 'badge'))} · {tr(L('Bestiodex', 'Critterdex'))} {dexCount(s.dex.caught)} · {time(s.playMs)}</span>
         ) : (
           <span>{tr(L('— vide —', '— empty —'))}</span>
         )}

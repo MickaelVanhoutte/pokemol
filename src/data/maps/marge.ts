@@ -131,7 +131,8 @@ export const MARGE_MAPS: Record<string, MapDef> = {
       { kind: 'shop', x: 16, y: 3, w: 4, h: 4, door: 2, to: { map: 'boutique', x: 4, y: 6, facing: 'up' }, sketchUnless: 'choix:hameau:a' },
       { kind: 'house', x: 4, y: 12, w: 4, h: 4, door: 1, roof: '#d0805a', script: 'brouillonHouse', sketchUnless: 'choix:hameau:a' },
       { kind: 'house', x: 10, y: 12, w: 4, h: 4, door: 2, roof: '#5a9ad0', script: 'brouillonHouse', sketchUnless: 'choix:hameau:a' },
-      { kind: 'house', x: 16, y: 12, w: 4, h: 4, door: 2, roof: '#7ab05a', script: 'brouillonHouse', sketchUnless: 'choix:hameau:a' },
+      // l'Atelier des Brouillons, where you draw your own Bestiole (src/story/act4.ts)
+      { kind: 'house', x: 16, y: 12, w: 4, h: 4, door: 2, roof: '#7ab05a', script: 'atelierPerso', sketchUnless: 'choix:hameau:a' },
     ],
     warps: [
       { x: 23, y: 9, to: { map: 'route9', x: 1, y: 8, facing: 'left' } },
@@ -147,6 +148,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
       { id: 'esquisse2', x: 15, y: 17, look: DRAFT, facing: 'left', script: 'esquisse2' },
       { id: 'esquisse3', x: 20, y: 6, look: DRAFT_F, facing: 'down', script: 'esquisse3' },
       { id: 'esquisse4', x: 3, y: 8, look: DRAFT, facing: 'right', script: 'esquisse4' },
+      { id: 'dessinatrice', x: 20, y: 15, look: { ...DRAFT_F, hat: '#b8b0c4' }, facing: 'left', script: 'atelierPerso' },
     ],
   },
 

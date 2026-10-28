@@ -1,6 +1,6 @@
 import { L, tr } from '../i18n';
 import { playMusic } from '../audio/music';
-import { CREATURES } from '../data/creatures';
+import { CREATURES, dexCount } from '../data/creatures';
 import { partyOf, rivalFinalTeam } from '../data/trainers';
 import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
@@ -346,7 +346,7 @@ const prevProf = scripts.prof;
 scripts.prof = async () => {
   if (!flag('ending')) return prevProf();
   const pages = Object.keys(save.value!.bag).filter((k) => k.startsWith('page-')).length;
-  const caught = save.value!.dex.caught.length;
+  const caught = dexCount(save.value!.dex.caught);
   if (pages >= 12 && !flag('pagesReward')) {
     await sayAll([
       L('Tu as retrouvé les 12 pages du cahier ! Clic-clac, je les prends en photo… comme toujours.', 'You found all 12 sketchbook pages! Click-clack, I’ll take a picture of them… like always.'),

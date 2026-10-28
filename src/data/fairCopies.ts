@@ -1,4 +1,4 @@
-import { creature, typesOf } from './creatures';
+import { CUSTOM_ID, creature, typesOf } from './creatures';
 import type { SpeciesDef, Stats, TypeId } from './schema';
 
 /**
@@ -136,7 +136,25 @@ export const FAIR_COPY: Record<string, FairCopy> = {
 export const canTransform = (sp: SpeciesDef) => !sp.evolutions?.length;
 
 export function fairCopyOf(id: string): FairCopy | undefined {
+  if (id === CUSTOM_ID) return { base: grownBase(creature(id).base) };
   return canTransform(creature(id)) ? FAIR_COPY[id] : undefined;
+}
+
+/**
+ * The player's own Bestiole goes over its drawing in felt-tip too: HP kept, the total a fifth higher (rounded to
+ * 5), the gain spread over its other stats as they already are.
+ */
+export function grownBase(b: Stats): Stats {
+  const keys = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
+  const total = b.hp + keys.reduce((s, k) => s + b[k], 0);
+  const gain = Math.round((total * 1.2) / 5) * 5 - total;
+  const rest = keys.reduce((s, k) => s + b[k], 0);
+  const out = { ...b };
+  for (const k of keys) out[k] = b[k] + Math.floor((gain * b[k]) / rest);
+  // what rounding left goes to its best stat
+  const best = keys.reduce((a, k) => (b[k] > b[a] ? k : a), keys[0]);
+  out[best] += total + gain - (out.hp + keys.reduce((s, k) => s + out[k], 0));
+  return out;
 }
 
 /** A Bestiole's types in battle: its fair copy's while it is one. */

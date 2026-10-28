@@ -1,5 +1,5 @@
 import { signal } from '@preact/signals';
-import { artUrl, creature } from '../data/creatures';
+import { CUSTOM_ID, artUrl, creature, customRevision } from '../data/creatures';
 import { shinyHash, shinyRecolour } from '../art/shiny';
 import { save } from '../state/game';
 
@@ -128,10 +128,69 @@ function makePale(src: string): Promise<string> {
   });
 }
 
+/**
+ * The player's own Bestiole as a fair copy: its drawing gone over in felt-tip (colours brighter, a thick dark
+ * outline) with the gold star in a corner.
+ */
+function makeFair(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
+      const pad = Math.round(Math.max(w, h) * 0.06);
+      const c = document.createElement('canvas');
+      c.width = w + pad * 2;
+      c.height = h + pad * 2;
+      const g = c.getContext('2d')!;
+      // the felt-tip outline: the drawing's shape in ink, drawn around it a few pixels out
+      const ink = document.createElement('canvas');
+      ink.width = c.width;
+      ink.height = c.height;
+      const gi = ink.getContext('2d')!;
+      gi.drawImage(img, pad, pad, w, h);
+      gi.globalCompositeOperation = 'source-in';
+      gi.fillStyle = '#231d2b';
+      gi.fillRect(0, 0, ink.width, ink.height);
+      const r = Math.max(2, Math.round(Math.max(w, h) * 0.012));
+      for (let a = 0; a < 16; a++) g.drawImage(ink, Math.round(Math.cos((a / 16) * Math.PI * 2) * r), Math.round(Math.sin((a / 16) * Math.PI * 2) * r));
+      // the colours, brighter, like felt-tip over pencil
+      g.drawImage(img, pad, pad, w, h);
+      const data = g.getImageData(pad, pad, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const lum = 0.3 * px[i] + 0.59 * px[i + 1] + 0.11 * px[i + 2];
+        for (let j = 0; j < 3; j++) px[i + j] = Math.max(0, Math.min(255, Math.round(lum + (px[i + j] - lum) * 1.6)));
+      }
+      g.putImageData(data, pad, pad);
+      star(g, c.width - pad * 1.4, pad * 1.4, pad * 1.1);
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror = () => reject(new Error(`fair ${src}`));
+    img.src = src;
+  });
+}
+
 /** Image of a particular creature: its sparkly version when it is one, a paper egg for an egg. */
-export function monArtUrl(m: { species: string; shiny?: boolean; egg?: unknown }): string {
+export function monArtUrl(m: { species: string; shiny?: boolean; egg?: unknown; fair?: boolean }): string {
   if (m.egg) return eggArt();
   const sp = creature(m.species);
+  if (sp.id === CUSTOM_ID && m.fair) {
+    void ready.value;
+    const key = `fair:${sp.id}@${customRevision()}`;
+    const hit = cache.get(key);
+    if (hit) return hit;
+    if (!pending.has(key) && typeof document !== 'undefined') {
+      pending.add(key);
+      makeFair(artUrl(sp))
+        .then((url) => {
+          cache.set(key, url);
+          ready.value++;
+        })
+        .catch(() => pending.delete(key));
+    }
+    return artUrl(sp);
+  }
   if (isPale(sp.id)) {
     void ready.value;
     const key = `pale:${sp.id}`;

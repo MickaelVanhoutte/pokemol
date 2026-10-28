@@ -2,6 +2,7 @@ import type { Mon } from '../engine/pk/creature';
 import type { HallEntry } from '../data/postgame';
 import type { Appearance } from '../data/appearance';
 import type { Difficulty } from '../state/prefs';
+import type { CustomDesign } from '../data/custom';
 
 export type Dir = 'down' | 'up' | 'left' | 'right';
 
@@ -49,6 +50,8 @@ export interface SaveData {
   tower?: { streak: number; best: number; points: number };
   /** Each game keeps its own difficulty (a parent's game and a child's on one device); filled by `repair`. */
   difficulty?: Difficulty;
+  /** The player's own Bestiole, drawn at the Atelier des Brouillons (src/data/custom.ts). */
+  atelier?: CustomDesign;
   bag: Record<string, number>;
   money: number;
   dex: { seen: string[]; caught: string[] };

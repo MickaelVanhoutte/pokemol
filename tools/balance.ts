@@ -18,6 +18,8 @@
 import { act, activeMon, createBattle, type Action, type BattleState, type SideSetup } from '../src/engine/pk/battle.ts';
 import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
+import { CUSTOM_ID } from '../src/data/creatures.ts';
+import { designProblems, registerCustom, type CustomDesign } from '../src/data/custom.ts';
 import { DIFFICULTY, RIVAL_COUNTER, TRAINERS, partyOf, rivalFinalTeam } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
 import { monTypes } from '../src/data/fairCopies.ts';
@@ -88,13 +90,44 @@ function grown(id: string, lv: number): string {
   return g;
 }
 
+/**
+ * CUSTOM=<name>: the player's own Bestiole (src/data/custom.ts) takes the last teammate's place from Act 4 on (where
+ * it is drawn), to check that a design pushed to the limits doesn't make the end of the story easy.
+ */
+const DESIGNS: Record<string, CustomDesign> = {
+  glass: {
+    name: 'Verre', kind: 'Test', type: 'dragon', type2: 'vol', talent: 'coup-de-chance', art: 'x', mini: 'x',
+    base: { hp: 60, atk: 130, def: 50, spa: 30, spd: 80, spe: 130 }, moves: ['colere-dragon', 'grand-vol', 'griffe-dragon', 'grosse-voix'],
+  },
+  mage: {
+    name: 'Mage', kind: 'Test', type: 'psy', type2: 'feu', talent: 'rembourrage', art: 'x', mini: 'x',
+    base: { hp: 80, atk: 35, def: 70, spa: 130, spd: 70, spe: 95 }, moves: ['tempete-psy', 'grand-brasier', 'corne-arc-en-ciel', 'grosse-voix'],
+  },
+  wall: {
+    name: 'Mur', kind: 'Test', type: 'acier', type2: 'fee', talent: 'papier-epais', art: 'x', mini: 'x',
+    base: { hp: 120, atk: 70, def: 130, spa: 30, spd: 100, spe: 30 }, moves: ['tete-de-fer', 'eclat-de-lune', 'plat-du-ventre', 'griffe-metal'],
+  },
+};
+const mine = process.env.CUSTOM ? DESIGNS[process.env.CUSTOM] : undefined;
+if (process.env.CUSTOM && !mine) throw new Error(`unknown design ${process.env.CUSTOM} (${Object.keys(DESIGNS).join(' | ')})`);
+if (mine) {
+  const wrong = designProblems(mine).filter((p) => !p.fr.startsWith('Dessine'));
+  if (wrong.length) throw new Error(`design ${process.env.CUSTOM}: ${wrong.map((p) => p.fr).join(' ')}`);
+  registerCustom(mine);
+}
+const ACT4 = new Set(['r9d', 'es4', 'f2b', 'buvard2', 'rature3', 'blanche3', 'rivalFinal', 'effaceur']);
+
 /** The starter and the best `size - 1` teammates at this trainer (`species` replaces the usual mates). */
 function teamAt(id: string, size: number, species = MATES): Team {
   const r = CURVE.get(id);
   if (!r) throw new Error(`${id} is not on the curve's path`);
   const mates = [...r.mates].sort((a, b) => b - a).slice(0, size - 1);
   // teammates have grown like the starter (an evolution stone counts as found by then)
-  return [['S', r.starter], ...mates.map((lv, i): [string, number] => [grown(species[i], lv), lv])];
+  const team: Team = [['S', r.starter], ...mates.map((lv, i): [string, number] => [grown(species[i], lv), lv])];
+  if (mine && ACT4.has(id) && team.length > 1) team[team.length - 1] = [CUSTOM_ID, team[team.length - 1][1]];
+  // MATE=<id>: an ordinary Bestiole in that place instead, to compare
+  if (process.env.MATE && ACT4.has(id) && team.length > 1) team[team.length - 1] = [process.env.MATE, team[team.length - 1][1]];
+  return team;
 }
 
 const STEPS: [string, Team][] = [

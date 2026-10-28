@@ -8,7 +8,7 @@ import { HatchView } from '../views/HatchView';
 import { EvolutionView } from '../views/EvolutionView';
 import { SummaryView } from '../views/SummaryView';
 import { dialog } from '../../overworld/dialog';
-import { persist, save } from '../../state/game';
+import { persist, save, saveFailed } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { playMusic } from '../../audio/music';
 import { trackForMap } from '../../audio/mapMusic';
@@ -166,7 +166,9 @@ function StartMenu() {
             }} />
           </div>
         ) : saving === 'done' ? (
-          <TextBox text={tr(L('{name} a sauvegardé la partie.', '{name} saved the game.'))} keys onAdvance={close} />
+          <TextBox text={tr(saveFailed.value
+            ? L('La sauvegarde n’a pas marché : la mémoire du téléphone est pleine.', 'The game could not be saved: the phone’s storage is full.')
+            : L('{name} a sauvegardé la partie.', '{name} saved the game.'))} keys onAdvance={close} />
         ) : (
           <Window seyes class="startmenu__text">{tr(items[desc]?.info ?? items[0].info)}</Window>
         )}

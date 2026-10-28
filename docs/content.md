@@ -403,6 +403,25 @@ out like a photo and writes its card and miniature. Its creature entry gets `dra
 shows no stamp: the owner asked to drop it). New Bestioles use the `crayon` kit of `tools/redraws` instead; to redo a
 brouillon in her style, move it there and drop `draft: true`.
 
+### The player's own Bestiole (Atelier des Brouillons)
+
+In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens the workshop (screen `atelier`,
+`src/ui/views/AtelierView.tsx`): a drawing sheet, then types, stats, talent, moves and a name. The design is kept in
+`save.atelier` (`CustomDesign`, `src/data/custom.ts`) and becomes a species at load time: `registerCustom` puts
+`CUSTOM_ID` (`'000'`) into `CREATURE_BY_ID` (an effect on the `save` signal in `src/state/game.ts`), never into
+`CREATURES`, so dex numbers, the Tombola, tests and static pools don't see it.
+- Limits (`designProblems`): 1–2 types, a stat total of `STAT_TOTAL` (480), each stat 30–130 in steps of 5, a
+  talent of `CUSTOM_TALENTS`, 1–4 moves of `customMovePool` (its types and Normal, under 100 power, no family's
+  own move) with an attacking one of its own type.
+- Pictures: `artUrl` and `miniFor` read the saved drawing (webp, at most 384 px) and miniature (`src/art/drawn.ts`
+  `miniOfDrawing`, made in the browser); caches key on `customRevision()`. As a fair copy, `fairCopyOf` grows its
+  stats (`grownBase`) and `monArtUrl` goes over it in felt-tip (`makeFair`).
+- The fill pencil (`fillArea` in `src/art/drawn.ts`) closes small gaps in a line and refuses an open outline.
+- Counts that complete the Bestiodex use `dexCount`, which leaves it out. The Bestiodex lists it first as N°000.
+- Retouching keeps the Bestiole (level, IVs, nature): new moves, full health. Starting over keeps it too.
+- `npm run balance` with `CUSTOM=glass|mage|wall` puts a sample design in the team from Act 4 on (`MATE=<id>`: an
+  ordinary Bestiole there instead, to compare).
+
 ## UI
 
 - **A particular Bestiole** is shown with `monLabel(m)` (its nickname, or the species name) and

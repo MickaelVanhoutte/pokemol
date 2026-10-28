@@ -220,6 +220,17 @@ checks every step's flags are set somewhere and its target is on the map.
 - *The following Bestiole* has lines for each place and for its friendship, and once a day it may
   find an item.
 
+**L'Atelier des Brouillons** (Hameau-Brouillon, Act 4, and any time after): la Dessinatrice, by the house at
+(16,12), lets the player draw their own Bestiole and choose its types, stats (480 in all, 30–130 each), a common
+talent and four moves of its types or Normal (no other family's own move, nothing at 100 power or more). It joins
+at the strongest teammate's level minus two (at least L35), is never sparkly, and can be retouched or started over
+at will, keeping its level. One per game: the Bestiodex lists it as N°000 and it never counts toward the diploma.
+Balance (Normal, 300 runs, the weakest sim teammate replaced from Act 4 on): designs pushed to the limits
+(`CUSTOM=glass|mage|wall`) raise the last fights about as much as a strong ordinary catch does (`MATE=011`,
+Ombrouille: Rature 99 %, the rival 98 %, the Great Eraser 100 %; the "mage" design: 93 %, 91–100 %, 92 %), so it
+is a good teammate, not a broken one.
+Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillons).
+
 **Post-game** (`ending` set):
 - the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);
 - Atelier Masters offer rematches at +12 levels;
