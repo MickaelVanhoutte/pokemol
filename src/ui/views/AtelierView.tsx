@@ -35,11 +35,12 @@ export function AtelierView({ design, onDone, onCancel }: { design: CustomDesign
   const set = (patch: Partial<CustomDesign> | ((x: CustomDesign) => Partial<CustomDesign>)) => setD((x) => ({ ...x, ...(typeof patch === 'function' ? patch(x) : patch) }));
   const problems = designProblems(d);
   const dirty = d !== design;
+  const leave = () => (dirty ? setLeaving(true) : onCancel());
   return (
     <Frame
       class="atelier"
       title={tr(L('Atelier des Brouillons', 'Draft Workshop'))}
-      onBack={() => (dirty ? setLeaving(true) : onCancel())}
+      onBack={leave}
       backLabel={tr(L('Partir', 'Leave'))}
       foot={leaving ? (
         <div class="atelier__foot">
@@ -48,6 +49,8 @@ export function AtelierView({ design, onDone, onCancel }: { design: CustomDesign
         </div>
       ) : (
         <div class="atelier__foot">
+          {/* in landscape the title row is hidden: leaving is down here */}
+          <button class="pbtn atelier__leave" onClick={leave}>◀ {tr(L('Partir', 'Leave'))}</button>
           <Window seyes class="atelier__note">{problems.length ? tr(problems[0]) : tr(L('Elle est prête !', 'It’s ready!'))}</Window>
           <button class="pbtn pbtn--accent" disabled={!!problems.length} onClick={() => onDone(d)}>{tr(L('Terminer', 'Finish'))}</button>
         </div>
