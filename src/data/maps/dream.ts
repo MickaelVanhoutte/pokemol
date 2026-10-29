@@ -106,7 +106,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     onEnter: 'ending',
     rows: [
       'WWwWWWWwWW',
-      'bbfffffttf',
+      'bbfffffttU',
       'ffffffffff',
       'fhffffffff',
       'ffffffffff',
@@ -114,7 +114,44 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       'ffffffffff',
       'WWWWWWWWWW',
     ],
-    npcs: [{ id: 'papa', x: 3, y: 3, look: LOOKS.papa, facing: 'left', script: 'papa' }],
-    interact: [{ x: 7, y: 1, script: 'desk' }, { x: 8, y: 1, script: 'desk' }],
+    // after the credits, the real house to look around until you go back to bed (src/story/finale.ts)
+    warps: [{ x: 9, y: 1, to: { map: 'salon', x: 11, y: 2, facing: 'down' } }],
+    npcs: [{ id: 'papa', x: 3, y: 3, look: LOOKS.papa, facing: 'left', script: 'papa', hideIf: 'ending' }],
+    interact: [
+      { x: 7, y: 1, script: 'desk' }, { x: 8, y: 1, script: 'desk' }, { x: 1, y: 3, script: 'litReel' },
+      { x: 0, y: 1, script: 'livresReel' }, { x: 1, y: 1, script: 'livresReel' },
+    ],
+  },
+
+  salon: {
+    id: 'salon',
+    name: L('Le salon', 'The living room'),
+    indoor: true,
+    awake: true,
+    border: 'void',
+    backdrop: 'lab',
+    tint: 'rgba(255, 190, 120, 0.16)',
+    rows: [
+      'WWWWwWWwWWWW',
+      '&CCffbbffvfU',
+      'ffffffffffff',
+      'ffttffcccfff',
+      'ffttffcccfff',
+      'ffffffcccffp',
+      'ffffffffffff',
+      'WWWWWXWWWWWW',
+    ],
+    warps: [{ x: 11, y: 1, to: { map: 'chambre', x: 9, y: 2, facing: 'down' } }],
+    triggers: [{ x: 5, y: 7, script: 'porteReelle' }],
+    npcs: [
+      { id: 'maman', x: 4, y: 3, look: LOOKS.mom, facing: 'left', script: 'mamanReelle' },
+      { id: 'papa', x: 9, y: 3, look: LOOKS.papa, facing: 'left', script: 'papa' },
+    ],
+    interact: [
+      { x: 0, y: 1, script: 'frigo' }, { x: 1, y: 1, script: 'cuisine' }, { x: 2, y: 1, script: 'cuisine' },
+      { x: 5, y: 1, script: 'albums' }, { x: 6, y: 1, script: 'albums' }, { x: 9, y: 1, script: 'teleReelle' },
+      { x: 4, y: 0, script: 'fenetre' }, { x: 7, y: 0, script: 'fenetre' }, { x: 2, y: 3, script: 'trousse' },
+      { x: 3, y: 3, script: 'trousse' }, { x: 2, y: 4, script: 'trousse' }, { x: 3, y: 4, script: 'trousse' },
+    ],
   },
 };

@@ -75,8 +75,8 @@ export const WORLD: Record<string, WorldCell> = {
   grotteEchos: { kind: 'cave', rects: at(19, 4) },
 };
 
-/** Maps with no place on the Town Map (the real-world bedroom of the ending). */
-export const UNMAPPED = new Set(['chambre']);
+/** Maps with no place on the Town Map (the real house of the ending). */
+export const UNMAPPED = new Set(['chambre', 'salon']);
 
 /** Towns the Pencil Balloon can land in, in story order. */
 export const TOWNS: { map: string; name: LText; x: number; y: number }[] = Object.entries(WORLD)

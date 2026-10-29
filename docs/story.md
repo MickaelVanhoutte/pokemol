@@ -33,9 +33,13 @@ where every drawing is alive.
   shows that face), then the page turns white and the player wakes up in the real bedroom (`chambre`,
   `awake: true`: no Bestiole follows you there). Papa took photos of the new drawings, then
   notices the butterfly on the last page: the drawing screen (`DrawingScreen`, screen `drawing`) shows it
-  rubbed out and drawn again as Libellune, or growing into Noctaile from its smudges. Credits follow, then
-  "the next night" the player goes back to the dream, where Coconfus evolves into that drawing (party, PC or
-  daycare) and stops being pale.
+  rubbed out and drawn again as Libellune, or growing into Noctaile from its smudges. Credits follow. Then Papa
+  goes down to breakfast and the real house is the player's to look around (`chambre` and `salon`, both
+  `awake`): stairs down to the living room, Maman at the table, Papa (the butterfly is his phone's wallpaper),
+  the fridge covered with her real drawings (the originals, one more each time: `frigo`), Papa's photo albums, a
+  window onto a cat that looks like Minousse, a front door you don't go out of in pyjamas. Going to bed
+  (`litReel`) skips the day: "the next night" the player goes back to the dream, where Coconfus evolves into
+  that drawing (party, PC or daycare) and stops being pale.
 
 ## The two endings
 

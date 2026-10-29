@@ -8,15 +8,17 @@
 import { L, tr } from '../i18n';
 import { doubtLook, hoodedLook } from '../data/appearance';
 import { creature } from '../data/creatures';
+import { ORIGINALS, originalUrl } from '../data/originals';
 import { evolutionMoves, evolve } from '../engine/pk/creature';
 import { sheetFor, type Actor } from '../overworld/game';
 import { LOOKS, lookOf, type Look } from '../overworld/sprites';
 import { healParty, save, see, update } from '../state/game';
 import { personUrl } from '../ui/personArt';
 import {
-  bubble, evoOverlay, flag, flash, getGame, openScreen, playerLook, say, sayAll, scripts, setFlag, shake, showPicture,
+  ask, bubble, evoOverlay, flag, flash, getGame, openScreen, playerLook, say, sayAll, scripts, setFlag, shake, showPicture,
   teachMove, trainerBattle, wait, warpTo,
 } from '../overworld/controller';
+import { MOM } from './cast';
 import { choose, coconfusJoins, COCONFUS, endingOf, findCoconfus, RETOUCHE, type Way } from './choices';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
@@ -130,8 +132,11 @@ async function lastPage(fin: Way) {
 // ------------------------------------------------------------------ waking up
 
 scripts.ending = async () => {
-  // the app closed during the credits: the ending already counted, go home
-  if (flag('ending')) return backHome();
+  // the ending already counted (the app closed after the credits): the house is there to look around, until bed
+  if (flag('ending')) {
+    if (flag('reveil:dodo')) await backHome();
+    return;
+  }
   const g = getGame();
   await wait(500);
   await say(L('… {name} ? Ma puce ?', '… {name}? Sweetie?'), PAPA);
@@ -147,8 +152,95 @@ scripts.ending = async () => {
   await say(L('Tu me dessines une nouvelle Bestiole demain ?', 'Will you draw me a new Critter tomorrow?'), PAPA);
   setFlag('ending');
   await openScreen({ id: 'credits', fromWorld: true });
-  await g.fadeTo(1, 600, 'white');
+  await papaGoesDown();
+};
+
+/** After the credits: Papa goes downstairs, and the real house is the player's to look around until bedtime. */
+async function papaGoesDown() {
+  const g = getGame();
+  await wait(400);
+  const papa = g.npc('papa') ?? g.spawn('papa', LOOKS.papa, 3, 3, 'left');
+  g.faceToward(papa, g.player);
+  await say(L('Allez, viens prendre ton petit-déjeuner. Maman t’attend en bas !', 'Come on, come and have your breakfast. Mummy is waiting downstairs!'), PAPA);
+  await g.walk(papa, ['right', 'right', 'right', 'right', 'right', 'right', 'up', 'up']);
+  g.remove(papa.id);
+  await say(L('(Tu peux te promener dans la maison. Quand tu voudras retrouver Papeterre, va te coucher dans ton lit.)', '(You can walk around the house. When you want to go back to Papeterra, go to bed.)'));
+}
+
+// ------------------------------------------------------------------ the real house, awake
+
+/** The bed: the day goes by, and at night the dream takes you back to Papeterre. */
+scripts.litReel = async () => {
+  if (!flag('ending')) return;
+  const c = await ask(L('Ton lit. Attendre le soir et retrouver les Bestioles ?', 'Your bed. Wait for the evening and go back to the Critters?'), [L('Oui', 'Yes'), L('Non', 'No')]);
+  if (c !== 0) return;
+  // saved before the scene: a game closed midway goes back to the dream when it loads (`ending` above)
+  setFlag('reveil:dodo');
+  await say(L('La journée passe : tu dessines, tu joues, tu dessines encore… Le soir venu, tu te glisses sous la couette et tu fermes les yeux…', 'The day goes by: you draw, you play, you draw some more… When evening comes, you snuggle under the covers and close your eyes…'));
+  await getGame().fadeTo(1, 900, 'white');
   await backHome();
+};
+
+scripts.papa = async () => {
+  await sayAll([
+    finOf() === RETOUCHE
+      ? L('Ton papillon redessiné, je l’ai mis en fond d’écran sur mon téléphone. Regarde !', 'I’ve made your redrawn butterfly the wallpaper on my phone. Look!')
+      : L('Ton papillon plein de taches, je l’ai mis en fond d’écran sur mon téléphone. C’est mon préféré !', 'I’ve made your smudgy butterfly the wallpaper on my phone. It’s my favourite!'),
+    L('Tu sais, je garde les photos de tous tes dessins. Même ceux que tu trouves ratés… Surtout ceux-là.', 'You know, I keep pictures of all your drawings. Even the ones you think went wrong… Those most of all.'),
+    L('Ce soir, tu me montres ce que tu as dessiné aujourd’hui ?', 'Tonight, will you show me what you drew today?'),
+  ], PAPA);
+};
+
+scripts.mamanReelle = async () => {
+  if (flag('reveil:bisou')) {
+    await say(L('Finis ton chocolat, {name}, il va refroidir !', 'Finish your hot chocolate, {name}, it’s getting cold!'), MOM);
+    return;
+  }
+  setFlag('reveil:bisou');
+  await sayAll([
+    L('Ah, te voilà ! Papa t’a {g:retrouvée|retrouvé} {g:endormie|endormi} sur ton cahier… encore !', 'Ah, there you are! Daddy found you asleep on your sketchbook… again!'),
+    L('Tu parlais en dormant, tu sais. Des histoires de Bestioles… et de gomme géante !', 'You were talking in your sleep, you know. Stories about Critters… and a giant eraser!'),
+    L('Allez, assieds-toi : il y a des tartines. Tu me racontes ton rêve ?', 'Come on, sit down: there’s toast. Will you tell me about your dream?'),
+  ], MOM);
+};
+
+/** Her real drawings on the fridge, one more each time (the originals, as in the museum of the dream). */
+let fridgeAt = 0;
+scripts.frigo = async () => {
+  if (fridgeAt === 0) await say(L('Le frigo est couvert de tes dessins, tenus par des aimants. Exactement comme dans ton rêve…', 'The fridge is covered with your drawings, held up by magnets. Just like in your dream…'));
+  const c = creature(ORIGINALS[fridgeAt++ % ORIGINALS.length]);
+  await showPicture(originalUrl(c), tr(L('Sur le frigo : {n}', 'On the fridge: {n}'), { n: tr(c.name) }));
+};
+
+scripts.cuisine = async () => {
+  await say(L('Un bol de chocolat chaud et des tartines. Ça sent bon !', 'A bowl of hot chocolate and some toast. It smells good!'));
+};
+
+scripts.albums = async () => {
+  await say(L('Les albums photo de Papa. Des centaines de photos de tes dessins, du tout premier au dernier… Il y a déjà ton papillon.', 'Daddy’s photo albums. Hundreds of pictures of your drawings, from the very first to the last… Your butterfly is already in there.'));
+};
+
+scripts.teleReelle = async () => {
+  await say(L('La télé est éteinte. Dans l’écran noir, tu vois tes cheveux en bataille.', 'The TV is off. In the black screen, you see your messy hair.'));
+};
+
+scripts.fenetre = async () => {
+  await say(L('Dehors, le soleil se lève sur la rue. Pas une Bestiole en vue… Mais ce chat, sur le muret, ressemble drôlement à Minousse.', 'Outside, the sun is rising over the street. Not a Critter in sight… But that cat on the wall looks an awful lot like Minousse.'));
+};
+
+scripts.trousse = async () => {
+  await say(L('Ta trousse est restée sur la table. Il manque le crayon vert… Ah non : il est encore dans ta main !', 'Your pencil case is still on the table. The green pencil is missing… Oh no wait: it’s still in your hand!'));
+};
+
+scripts.livresReel = async () => {
+  await say(L('Tes livres préférés… et, coincé entre deux, ton tout premier cahier de dessin.', 'Your favourite books… and, squeezed between two of them, your very first sketchbook.'));
+};
+
+/** The front door: no going out in pyjamas. */
+scripts.porteReelle = async () => {
+  await say(L('Pas question de sortir en pyjama ! Et puis, le petit-déjeuner t’attend.', 'No going out in your pyjamas! Besides, breakfast is waiting.'));
+  const g = getGame();
+  await g.walk(g.player, ['up']);
 };
 
 /** After the credits: back to Papeterre, at home, where Coconfus has become the drawing. */
@@ -189,10 +281,6 @@ async function dreamEvolves() {
   }
   setFlag('coconPale', 0);
 }
-
-scripts.papa = async () => {
-  await say(L('Allez, au lit. Demain, il y a plein de dessins à faire !', 'Come on, bedtime. Tomorrow there are lots of drawings to do!'), PAPA);
-};
 
 scripts.desk = async () => {
   await say(L('Tes dessins sont étalés sur le bureau : une chenille, un oiseau, un fantôme qui rigole… et sur la dernière page, ton papillon.', 'Your drawings are spread over the desk: a caterpillar, a bird, a laughing ghost… and on the last page, your butterfly.'));

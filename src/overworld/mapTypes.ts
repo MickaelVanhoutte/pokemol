@@ -216,6 +216,7 @@ export const LEGEND: Record<string, string> = {
   'B': 'bush', '#': 'fence', 'S': 'sign', 'M': 'mailbox', 'R': 'rock', '_': 'ledge', 's': 'sand',
   'f': 'floor', 'W': 'wall', 'w': 'window', 'C': 'counter', 'c': 'carpet', 'X': 'mat', 'b': 'bookshelf',
   't': 'table', 'p': 'plant', 'P': 'pc', 'h': 'bed', 'v': 'tv', 'm': 'machine', 'H': 'keyrack', 'U': 'stairs',
+  '&': 'fridge',
   'K': 'cavewall', 'k': 'cavefloor', 'r': 'caverock', 'o': 'towerfloor', 'Q': 'towerwall', 'D': 'stairsdown', 'E': 'caveexit', ' ': 'void',
   'e': 'erased', '=': 'bridge', 'n': 'paper', 'Y': 'sketchtree', '|': 'margin',
   // puzzles: pits, plates, gates, crayon barriers (red/blue, up/down) and their switch, glossy paper, fresques

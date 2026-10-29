@@ -43,6 +43,8 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `coconPale` | `usineEnd` (Eraser Factory) | The Great Eraser rubbed Coconfus: its card is washed out until the ending |
 | `vision:<slug>` | `src/story/legends.ts` | The vision of a dream legendary was met (before the ending) |
 | `fin` (1 or 2) | the ending | The form Coconfus took: 1 Libellune, 2 Noctaile; the other one waits in its lair |
+| `reveil:bisou` | `mamanReelle` (the real living room) | Maman already said good morning |
+| `reveil:dodo` | `litReel` (the real bedroom) | The player went back to bed after the ending: a game loaded in the bedroom goes back to the dream |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
 Maps react without code:

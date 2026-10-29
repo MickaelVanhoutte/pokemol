@@ -340,6 +340,24 @@ export const TILES: Record<string, TileDef> = {
       p.rect(5, 13, 6, 2, '#2a2a3a');
     },
   },
+  fridge: {
+    // the real kitchen's fridge, covered with drawings held by magnets
+    solid: true,
+    paint: (p) => {
+      p.fill('#dcae74');
+      p.rect(1, 0, 14, 16, '#5a5f78');
+      p.rect(2, 0, 12, 15, '#eef1f8');
+      p.rect(2, 6, 12, 1, '#b8bdd0');
+      p.rect(12, 2, 1, 3, '#9aa0b8');
+      p.rect(12, 8, 1, 4, '#9aa0b8');
+      p.rect(3, 1, 4, 4, '#f8d030');
+      p.rect(4, 2, 2, 1, '#d65a5a');
+      p.rect(7, 8, 4, 4, '#a8dcff');
+      p.rect(8, 9, 1, 2, '#4fa046');
+      p.rect(3, 9, 3, 4, '#f08ab0');
+      for (const [x, y, c] of [[5, 1, '#d65a5a'], [9, 8, '#5a8ad6'], [4, 9, '#4fa046']] as const) p.px(x, y, c);
+    },
+  },
   machine: {
     solid: true,
     animated: true,

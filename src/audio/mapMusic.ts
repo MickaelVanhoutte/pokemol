@@ -4,7 +4,7 @@ import { regionOf } from '../data/worldmap';
 import type { TrackId } from './music';
 
 const BY_MAP: Record<string, TrackId> = {
-  routeBlanche: 'edge', bordPage: 'edge', chambre: 'ending',
+  routeBlanche: 'edge', bordPage: 'edge', chambre: 'ending', salon: 'ending',
   entrepot1: 'gomme', entrepot2: 'gomme', usine1: 'gomme', usine2: 'gomme', usine3: 'gomme',
   centre: 'center', boutique: 'center', tombola: 'center',
   phare1: 'gomme', phare2: 'gomme', phare3: 'gomme',
