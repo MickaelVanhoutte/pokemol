@@ -206,14 +206,15 @@
 /* one line: level, name, status and a short bar */
 .pk-hp__top { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; line-height: 1.15; }
 .pk-hp__top > span { flex: none; }
-.pk-hp__top b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
+.pk-hp__top b { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
 .pk-hp__top .shiny-mark { margin-left: 3px; }
-.pk-hp .hpbar { flex: 0 0 clamp(48px, 24%, 100px); }
+/* the bar takes the room the name leaves, never less than a short bar */
+.pk-hp .hpbar { flex: 1 1 0; min-width: 48px; }
 /* the foe's grows to the left when its column is too narrow for a long name (large text, small phones) */
 .pk-hp.pk-hp--foe { align-self: flex-end; width: max(100%, calc(7em + 90px)); }
 /* yours along the bottom of the scene, just over the panel, its bar longer with your HP written in it */
 .pk-hp.pk-hp--me { position: absolute; left: 4px; right: 4px; bottom: 0; }
-.pk-hp--me .hpbar { flex-basis: clamp(96px, 34%, 170px); }
+.pk-hp--me .hpbar { min-width: 96px; }
 /* your HP written inside the bar */
 .hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
 .hpbar__num { position: absolute; inset: 0 6px 0 0; display: flex; align-items: center; justify-content: flex-end; font-style: normal; font-size: 0.8rem; line-height: 1; color: var(--ink); text-shadow: 0 0 2px #fffaf0, 0 0 2px #fffaf0; }
@@ -334,7 +335,7 @@
   .pk-side--me { top: calc(6px + var(--hp-box) + 4px); bottom: -22%; width: min(44%, 320px); }
   /* your box stays at the top left, over your drawing */
   .pk-hp.pk-hp--me { top: 6px; right: auto; bottom: auto; width: max(min(44%, 320px), calc(11em + 100px)); }
-  .pk-hp--me .hpbar { flex-basis: clamp(72px, 26%, 120px); }
+  .pk-hp--me .hpbar { min-width: 72px; }
   /* yours stands lower in its (clipped) column: lift it so the whole doll shows */
   .pk-plat--me .pk-sprite.is-doll { margin-bottom: 30%; }
   .pk-plat--me .pk-sprite.is-doll .pk-art { max-height: 64cqh; }
