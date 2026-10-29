@@ -37,6 +37,15 @@ export const MAIN: Objective[] = [
   step('plume', 'plume', L('Bats Gaspard à l’Atelier de Village-Plume.', 'Beat Gaspard at the Featherby Atelier.'), ['badge:plume']),
   step('grotte', 'grotte1', L('Traverse la Grotte Gribouillis, à l’est.', 'Cross Scribble Cave, east of Pastel City.'), ['visit:port'], (s) => on(s, 'badge:aquarelle')),
   step('aquarelle', 'port', L('Bats Marine à l’Atelier de Port-Aquarelle.', 'Beat Marine at the Port Aquarelle Atelier.'), ['badge:aquarelle']),
+  // the Lac des Couleurs, between the third and fourth badges (src/story/lac.ts)
+  step('bateau', 'port', L('La Plieuse du port plie des bateaux en papier.', 'The Paper Folder at the port folds paper boats.'), ['gift:bateau'], (s) => on(s, 'lac.arrivee')),
+  step('lac', 'plume', L('Remonte en bateau la rivière de Village-Plume.', 'Sail up the river from Featherby.'), ['lac.arrivee']),
+  {
+    ...step('sources', 'lac', L('Libère les trois sources du Lac des Couleurs ({n}/3).', 'Free the three springs of the Lake of Colours ({n}/3).'), ['lac.sources']),
+    vars: (s) => ({ n: ['rouge', 'jaune', 'bleue'].filter((c) => on(s, `lac.source:${c}`)).length }),
+  },
+  step('rivalLac', 'lac', L('{rival} t’attend au camp du lac.', '{rival} is waiting at the lake camp.'), ['tr:rivalLac']),
+  step('bocal', 'lac', L('Retourne voir le Prof. Fusain au camp du lac.', 'Go back to Prof. Charcoal at the lake camp.'), ['gift:bocal']),
   step('entrepot', 'entrepot1', L('Libère Zélie dans l’Entrepôt Gomme.', 'Free Zelie from the Eraser Warehouse.'), ['a2.feutre']),
   step('fluo', 'feutre', L('Bats Zélie à l’Atelier de Ville-Feutre.', 'Beat Zelie at the Felt City Atelier.'), ['badge:fluo']),
   step('mont', 'montFusain1', L('Grimpe le Mont Fusain jusqu’à Village-Braise.', 'Climb Mount Charcoal to Embervale.'), ['visit:braise'], (s) => on(s, 'badge:braise')),
@@ -60,6 +69,10 @@ export const POST: Objective[] = [
   {
     ...step('dex', 'bourg', L('Complète ton Bestiodex ({c}/{t}).', 'Complete your Critterdex ({c}/{t}).'), [], (s) => dexCount(s.dex.caught) >= DEX_GOAL || on(s, 'ilePage')),
     vars: (s) => ({ c: dexCount(s.dex.caught), t: DEX_GOAL }),
+  },
+  {
+    ...step('perles', 'lac', L('Retrouve les sept Perles-souvenirs ({p}/7).', 'Find the seven memory pearls ({p}/7).'), ['legende']),
+    vars: (s) => ({ p: ['rouge', 'orange', 'jaune', 'verte', 'bleue', 'indigo', 'violette'].filter((c) => on(s, `perle:${c}`)).length }),
   },
   step('dexDiploma', 'bourg', L('Montre ton Bestiodex au Prof. Fusain.', 'Show your Critterdex to Prof. Charcoal.'), ['ilePage']),
   step('ilePage', 'port', L('Le passeur du Port connaît une île cachée.', 'The Port’s ferryman knows a hidden island.'), ['ile:visite']),

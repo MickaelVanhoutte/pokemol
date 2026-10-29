@@ -17,6 +17,7 @@ import { PISTE_MAPS } from './piste';
 import { ECHOS_MAPS } from './echos';
 import { LEGEND_MAPS } from './legendes';
 import { MARGE_MAPS } from './marge';
+import { LAC_MAPS } from './lac';
 
 /*
  * Legend: . grass  , grass2  " tall grass  : path  * flowers  ~ water  = bridge  e erased paper  T tree
@@ -44,6 +45,7 @@ export const MAPS: Record<string, MapDef> = {
   ...ECHOS_MAPS,
   ...LEGEND_MAPS,
   ...MARGE_MAPS,
+  ...LAC_MAPS,
 };
 
 // a town's residents go into the shared house room their door leads to (`maisonVille`, `maisonPetite`…)

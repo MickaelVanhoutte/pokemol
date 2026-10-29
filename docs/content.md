@@ -52,6 +52,12 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `fin` (1 or 2) | the ending | The form Coconfus took: 1 Libellune, 2 Noctaile; the other one waits in its lair |
 | `reveil:bisou` | `mamanReelle` (the real living room) | Maman already said good morning |
 | `reveil:dodo` | `litReel` (the real bedroom) | The player went back to bed after the ending: a game loaded in the bedroom goes back to the dream |
+| `lac.appel`, `lac.arrivee`, `lac.brief` | `src/story/lac.ts` | The lake expedition: the rival met at the Route 4 mud, arrived at the Lac des Couleurs, the Prof's briefing at the camp |
+| `lac.source:rouge` / `:jaune` / `:bleue`, `lac.sources` | `source`, `colourBack` (`src/story/lac.ts`) | A spring freed; all three (the colours come back, the Route 4 mud is gone: patch `boue`) |
+| `tr:rivalLac`, `gift:bocal`, `plongee` | `rivalBattle`, `profLac`, `diveDown` | The rival beaten at the lake; the Bocal-Scaphandre given (diving); the first dive (the tip is shown once) |
+| `perle:<colour>` (7, `PEARLS` in `src/data/items.ts`), `legende` | `pearl()`, `autel` (`src/story/lac.ts`) | A memory pearl found (its key item `perle-<colour>` goes back to the altar); the seven placed on the altar of the Abysses: Aquarelline is awake |
+| `abysses`, `vallon` | `abyssesEnter`, `vallonEnter` | First visit to the Abysses, to the hidden valley |
+| `static:aquarelline`, `ko:aquarelline` / `koDay:aquarelline`, `away:aquarelline` | `aquarelline`, `abyssesEnter` | Like the legendaries above: caught, knocked out until a night or a day has passed, or not woken yet |
 
 Read flags with `flag(name)` and write them with `setFlag(name, v?)` (`src/overworld/controller.ts`).
 Maps react without code:
@@ -218,11 +224,28 @@ searches (and caps pushes, slides and presses), so a new puzzle needs a case the
   `L` swaps them until the player leaves. Never put a barrier next to a switch.
 - **Glossy paper** (`I`): the player slides until something is in the way (`slideFrom` in
   `src/overworld/puzzles.ts`). No wild Bestioles while sliding; keep people off it.
-- **Fresques** (`F`) and `fresques: [{ x, y, id, species, size?, reward? }]`: a sliding picture
+- **Fresques** (`F`) and `fresques: [{ x, y, id, species, size?, reward?, script? }]`: a sliding picture
   puzzle of a drawing, where any piece can be put into the gap (`src/ui/logic/fresque.ts`). Solving it sets `fresque:<id>`; patches with `unless` hide the secret room,
-  and `items` with `showIf` fill it (or `reward` gives an item directly). The four fresques count
-  towards a reward in `src/story/puzzles.ts`.
+  and `items` with `showIf` fill it (or `reward` gives an item directly, or `script` plays a scene instead: the
+  sunken chapel's). Every fresque counts towards a reward in `src/story/puzzles.ts`.
 - **Signs** must sit on something solid (`S`, a wall, a rock): a test checks it.
+
+### Diving
+
+The Bocal-Scaphandre (`bocal`, from the Prof at the Lac des Couleurs) takes the player under the water:
+- a map with `dive: '<map below>'` has dark patches of water (`d`, tile `deep`, water for sailing). Sailing on one,
+  A asks to dive (`diveDown` in `controller.ts`) and warps to the same spot on the map below;
+- a map with `underwater: '<map above>'` has circles of light (`5`, `lightshaft`): A there goes back up, in the boat
+  (`surfaceUp`, `warpTo(…, { sail: true })`);
+- `depthsOf(rows, edits)` (`src/data/maps/lac.ts`) draws the bottom from the surface map's own rows: water and
+  bridges become sand (`1`), dark patches light, the rest rock (`4`); `edits` add seaweed (`2`, where Bestioles hide:
+  « algues, en plongée » in the Bestiodex), coral (`3`), a wreck (`6`), clams (`9`)…;
+- underwater maps spread `UNDERWATER` (the `underwater` battle backdrop, `dungeon` so no bike, a blue tint): the game
+  draws rising bubbles and a glass jar on the player's head, and hides the follower;
+- with the Carte des Fonds (`carte-fonds`), the Town Map marks every `d` tile of the maps that have a place on it.
+
+A warp on water lands on water and keeps the boat (`warpTo` keeps sailing when it lands on water): rivers between
+two maps, like Village-Plume's up to the lake. `maps.test.ts` checks that a warp on water lands on water.
 
 ## Story scripts
 

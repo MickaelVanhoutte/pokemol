@@ -45,6 +45,11 @@ describe('save migration', () => {
     expect(migrate(v3Save({ intro: 1 }))!.bag['feutre-or']).toBeUndefined();
   });
 
+  it('lets a game already past Route 4 skip the lake’s call at the mud', () => {
+    expect(migrate(v3Save({ intro: 1, 'a2.feutre': 1 }))!.flags['lac.appel']).toBe(1);
+    expect(migrate(v3Save({ intro: 1, 'badge:aquarelle': 1 }))!.flags['lac.appel']).toBeUndefined();
+  });
+
   it('still upgrades version 2 saves (creatures wait in the PC)', () => {
     const s = migrate({
       version: 2, createdAt: 1, playMs: 10, player: { name: 'Lou', avatar: 1 },

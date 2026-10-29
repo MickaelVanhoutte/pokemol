@@ -57,7 +57,12 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       { x: 9, y: 0, to: { map: 'feutre', x: 12, y: 18, facing: 'up' } },
     ],
     signs: [{ x: 10, y: 5, text: L('ROUTE DES FEUTRES\n↑ Ville-Feutre   ↓ Port-Aquarelle', 'MARKER ROAD\n↑ Felt City   ↓ Port Aquarelle') }],
+    // grey eraser mud from the Lac des Couleurs blocks the way until its three springs flow again (src/story/lac.ts)
+    // (games that crossed Route 4 before the lake existed find it clear: past the warehouse, the mud is gone)
+    patches: [{ id: 'boue', x: 14, y: 32, rows: ['777'], unless: 'lac.sources' }, { id: 'boueAvant', x: 14, y: 32, rows: ['"""'], if: 'a2.feutre' }],
+    triggers: [{ x: 14, y: 33, w: 3, script: 'lacAppel', unless: 'lac.appel' }],
     npcs: [
+      { id: 'r4boue', x: 13, y: 34, look: LOOKS.hiker, facing: 'up', script: 'r4boue', hideIf: 'lac.sources' },
       { id: 'r4maud', x: 14, y: 3, look: LOOKS.hiker, facing: 'left', trainer: 'r4maud', sight: 3 },
       { id: 'r4tim', x: 3, y: 10, look: LOOKS.kid, facing: 'right', trainer: 'r4tim', sight: 4 },
       { id: 'r4gomme', x: 13, y: 19, look: LOOKS.gomme, facing: 'left', trainer: 'r4gomme', sight: 3 },

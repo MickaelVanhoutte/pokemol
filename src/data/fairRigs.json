@@ -342,6 +342,65 @@
       }
     ]
   },
+  "114": {
+    "slug": "octopeintre",
+    "parts": [
+      {
+        "name": "frappe",
+        "motion": "reach",
+        "amp": -24,
+        "period": 1.8,
+        "left": 5.1,
+        "top": 4.1,
+        "width": 29.8,
+        "height": 52.4,
+        "ox": 88.3,
+        "oy": 87.2
+      }
+    ]
+  },
+  "115": {
+    "slug": "aquarelline",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 3,
+        "behind": true,
+        "left": 60.8,
+        "top": 47.3,
+        "width": 39.2,
+        "height": 14.2,
+        "ox": 10.6,
+        "oy": 20.3
+      },
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": -9,
+        "period": 2.6,
+        "behind": true,
+        "left": 33.1,
+        "top": 0,
+        "width": 65.9,
+        "height": 44.4,
+        "ox": 16.8,
+        "oy": 90.4
+      },
+      {
+        "name": "reflets",
+        "motion": "flicker",
+        "period": 2.6,
+        "left": 12.3,
+        "top": 21.4,
+        "width": 62.8,
+        "height": 73.5,
+        "ox": 40.1,
+        "oy": 48.1
+      }
+    ]
+  },
   "007": {
     "slug": "papivole",
     "parts": [

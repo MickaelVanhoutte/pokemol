@@ -13,7 +13,7 @@ import { LEGEND, type MapDef } from '../overworld/mapTypes';
 import { TILES } from '../overworld/tiles';
 import { meanSteps } from '../overworld/encounterRate';
 import { MAPS } from './maps';
-import { rivalFinalTeam, TRAINERS, trainerLevel, type TrainerDef } from './trainers';
+import { rivalFinalTeam, rivalLacTeam, TRAINERS, trainerLevel, type TrainerDef } from './trainers';
 
 export interface CurveStep {
   map: string;
@@ -37,6 +37,9 @@ export const CURVE_PATH: CurveStep[] = [
   { map: 'grotte2', from: 'grotte1', to: 'port', join: 1 },
   { map: 'route3', from: 'plume', to: 'port' },
   { map: 'atelierAquarelle' },
+  // the Lac des Couleurs: its islands, the blue spring's cave, then the rival
+  { map: 'lac' },
+  { map: 'sourceBleue', fights: ['rivalLac'] },
   { map: 'route4', from: 'port', to: 'feutre', join: 1 },
   { map: 'entrepot1' },
   { map: 'entrepot2' },
@@ -72,10 +75,11 @@ export const CURVE_PATH: CurveStep[] = [
 /** Trainers you can walk around or that are extras (the strong cave guard, the tower's shadow). */
 const OPTIONAL = new Set(['gardien', 'ombre']);
 /** Team Gomme's officers and the finale: like the Atelier Masters, a boss may stand a little above the team. */
-const ADMINS = new Set(['rature', 'blanche', 'buvard', 'rature2', 'blanche2', 'buvard2', 'rature3', 'blanche3', 'rivalFinal', 'effaceur']);
+const ADMINS = new Set(['lacChef', 'rivalLac', 'rature', 'blanche', 'buvard', 'rature2', 'blanche2', 'buvard2', 'rature3', 'blanche3', 'rivalFinal', 'effaceur']);
 
-/** A trainer of the path: the final rival is built by the story, the others are in TRAINERS. */
-const trainerOf = (id: string): Pick<TrainerDef, 'party' | 'badge'> => (id === 'rivalFinal' ? { party: rivalFinalTeam('001'), badge: undefined } : TRAINERS[id]);
+/** A trainer of the path: the rival's lake and final teams are built by the story, the others are in TRAINERS. */
+const trainerOf = (id: string): Pick<TrainerDef, 'party' | 'badge'> =>
+  id === 'rivalFinal' ? { party: rivalFinalTeam('001'), badge: undefined } : id === 'rivalLac' ? { party: rivalLacTeam('001'), badge: undefined } : TRAINERS[id];
 
 const solid = (def: MapDef, x: number, y: number, blocked: Set<string>) => {
   const row = def.rows[y];

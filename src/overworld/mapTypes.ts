@@ -111,6 +111,8 @@ export interface FresqueDef {
   size?: number;
   /** Given when solved (otherwise a patch with `unless: 'fresque:<id>'` opens a passage). */
   reward?: { item: string; count?: number };
+  /** A scene played once it is solved, in place of the reward or the secret passage's lines. */
+  script?: string;
 }
 
 /** What bites with each fishing rod (Old, Good, Super). */
@@ -186,6 +188,10 @@ export interface MapDef {
   fog?: boolean;
   /** The real world, awake: no Bestiole follows you there. */
   awake?: boolean;
+  /** Its dark patches of water (`deep`) lead down to this map, at the same coordinates (diving with the Bocal-Scaphandre). */
+  dive?: string;
+  /** Under water: its circles of light (`lightshaft`) lead back up to this map at the same coordinates; bubbles rise, no follower. */
+  underwater?: string;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
   /** Shared interior (Inn, shop…): its exits lead back to the door used to enter. */
@@ -235,4 +241,10 @@ export const LEGEND: Record<string, string> = {
   'u': 'bridgerun', 'x': 'greytrace', 'A': 'inkblot', 'V': 'inkfresco', 'N': 'inkmoon',
   // tall grass only sketched in pencil, beyond the margin
   'g': 'sketchgrass', 'a': 'bigeraser', 'i': 'sketchsign',
+  // the lake: dark water to dive in, and its depths
+  'd': 'deep', '1': 'seabed', '2': 'seaweed', '3': 'coral', '4': 'reef', '5': 'lightshaft', '6': 'wreck', '9': 'clam',
+  // the three springs of the Lac des Couleurs, a spring stopped up with an eraser, grey eraser mud
+  '!': 'springRed', '$': 'springYellow', '+': 'springBlue', '8': 'springPlug', '7': 'mud',
+  // the altar of the Abysses
+  '[': 'altar',
 };

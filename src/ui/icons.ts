@@ -7,6 +7,27 @@ import { ITEM_BY_ID } from '../data/items';
 import { MOVE_BY_ID } from '../data/moves';
 import { TYPES } from '../data/types';
 
+/** A pearl in its open shell, in one colour of the rainbow (`X`). */
+const PEARL = [
+  '................',
+  '................',
+  '................',
+  '......KKKK......',
+  '....KKXXXXKK....',
+  '...KXXWWXXXXK...',
+  '...KXWXXXXXXK...',
+  '...KXXXXXXXXK...',
+  '....KXXXXXXK....',
+  '..KKKKKKKKKKKK..',
+  '.KnNnNnNnNnNnNK.',
+  '.KNnNnNnNnNnNnK.',
+  '..KnNnNnNnNnNK..',
+  '...KKKKKKKKKK...',
+  '................',
+  '................',
+];
+const PEARL_COLOUR: Record<string, string> = { rouge: 'R', orange: 'O', jaune: 'Y', verte: 'E', bleue: 'B', indigo: 'b', violette: 'P' };
+
 const PAL: Record<string, string> = {
   K: '#2b2536', W: '#ffffff', C: '#fff3d6', Y: '#f2c14e', y: '#c98f1e', R: '#d64545', r: '#9c2d2d',
   B: '#5b8ad6', b: '#34589c', G: '#b8b0c4', g: '#e2dce9', P: '#9a6ad6', p: '#c7a6f0', N: '#8a5a32',
@@ -409,6 +430,42 @@ const ROWS: Record<string, string[]> = {
     '....K.......K...',
     '................',
   ],
+  'bocal': [
+    '................',
+    '....YYYYYYYY....',
+    '....yyyyyyyy....',
+    '...KKKKKKKKKK...',
+    '..KgWWggggggWK..',
+    '.KgWWgggggggggK.',
+    '.KgWggggggggggK.',
+    '.KgWggggggggggK.',
+    '.KggggggggggggK.',
+    '.KggggggggggggK.',
+    '.KggggggggggggK.',
+    '..KggggggggggK..',
+    '...KKKKKKKKKK...',
+    '................',
+    '................',
+    '................',
+  ],
+  'carte-fonds': [
+    '................',
+    '.KKKKKKKKKKKKK..',
+    '.KCCCCCCCCCCCCK.',
+    '.KCBBBBCCCCCCCK.',
+    '.KCBBBBBBCCECCK.',
+    '.KCBBbbBBBCEECK.',
+    '.KCBBbbbBBBCCCK.',
+    '.KCCBBbRbBBCCCK.',
+    '.KCCBBbbBBCCCCK.',
+    '.KCCCBBBBCCECCK.',
+    '.KCCCCCCCCEEECK.',
+    '.KCCCCCCCCCCCCK.',
+    '..KKKKKKKKKKKKK.',
+    '................',
+    '................',
+    '................',
+  ],
   'bateau': [
     '................',
     '................',
@@ -772,6 +829,7 @@ const ROWS: Record<string, string[]> = {
     '.KRRK....KRRK...',
     '..KK......KK....',
   ],
+  ...Object.fromEntries(Object.entries(PEARL_COLOUR).map(([id, c]) => [`perle-${id}`, PEARL.map((r) => r.replace(/X/g, c))])),
 };
 
 const cache = new Map<string, string>();

@@ -105,6 +105,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     backdrop: 'beach',
     // the town grew east (nothing shifts): the Painters' Square in the middle, the fishermen's quay with its
     // piers, the nets drying on a fence, and Gull Point looking out to the lighthouse
+    dive: 'portFonds',
     rows: [
       'TTTTT::TTTTTTTTTTTTTT::TTTTTTTTTTT',
       'T*.*.::........B....*::..........T',
@@ -129,8 +130,8 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
       '~~~~~sss~~~~~~~~~~~~~~~~~~~~~~~~~~',
       '~~~~sssss~~~~~~~~~~ssss~~~~~~~~~~~',
-      '~~~~ss*ss~~~~~~~~~ssBsss~~~~~~~~~~',
-      '~~~~sssss~~~~~~~~~ssssss~~~~~~~~~~',
+      '~~~~ss*ss~~~dd~~~~ssBsss~~~~~~~~~~',
+      '~~~~sssss~~~dd~~~~ssssss~~~~~~~~~~',
       '~~~~~sss~~~~~~~~~~~ssss~~~~~~~~~~~',
       '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
     ],

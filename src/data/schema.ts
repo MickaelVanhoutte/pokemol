@@ -5,7 +5,7 @@ export type TypeId =
   | 'normal' | 'spectre' | 'psy' | 'combat' | 'tenebres'
   | 'vol' | 'sol' | 'roche' | 'glace' | 'poison' | 'dragon' | 'acier';
 /** Battle background, drawn with colouring pencils (src/ui/battle/backdrops.ts). */
-export type Backdrop = 'grass' | 'forest' | 'cave' | 'tower' | 'lab' | 'beach' | 'city' | 'volcano' | 'sketch';
+export type Backdrop = 'grass' | 'forest' | 'cave' | 'tower' | 'lab' | 'beach' | 'city' | 'volcano' | 'sketch' | 'underwater';
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'legendary';
 /** Major status, kept outside battles like in the GBA games. */
 export type Major = 'sleep' | 'paralyze' | 'poison' | 'burn' | 'freeze';

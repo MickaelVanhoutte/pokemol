@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_LOOKS } from '../data/appearance';
+import { PEARLS } from '../data/items';
 
 // the story only needs the controller's registry and helpers; the canvas game is never created in tests
 vi.mock('../audio/sfx', () => ({ sfx: new Proxy({}, { get: () => () => undefined }) }));
@@ -30,6 +31,10 @@ function flagIsSet(name: string): boolean {
   if (name.startsWith('choix:')) return (CHOICES as readonly string[]).includes(name.split(':')[1]) && source.includes('setFlag(`choix:${id}`');
   // puzzles: set by the generic code from the map data
   if (name.startsWith('fresque:')) return Object.values(MAPS).some((m) => m.fresques?.some((f) => `fresque:${f.id}` === name)) && source.includes('setFlag(`fresque:${f.id}`)');
+  // the lake's springs and memory pearls (src/story/lac.ts), and the field items' givers (src/story/field.ts)
+  if (name.startsWith('lac.source:')) return ['rouge', 'jaune', 'bleue'].includes(name.slice(11)) && source.includes('setFlag(`lac.source:${sp.id}`)');
+  if (name.startsWith('perle:')) return PEARLS.some(([id]) => `perle:${id}` === name) && source.includes('setFlag(`perle:${id}`)');
+  if (name.startsWith('gift:') && source.includes(`item: '${name.slice(5)}'`) && source.includes('setFlag(`gift:${opts.item}`)')) return true;
   if (name.startsWith('puzzle:')) return Object.values(MAPS).some((m) => m.puzzles?.some((pz) => pz.flag === name)) && source.includes('solvedPuzzles(');
   if (name.startsWith('hole:')) {
     const [, map, at] = name.split(':');

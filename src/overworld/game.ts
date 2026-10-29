@@ -6,7 +6,7 @@ import { BERRY_DOT } from './berries';
 import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
 import { SpriteSheet, type Look } from './sprites';
-import { tile } from './tiles';
+import { isWater, tile } from './tiles';
 import { CUSTOM_ID, creature, customMiniUrl, customRevision } from '../data/creatures';
 import { shinyRecolour } from '../art/shiny';
 
@@ -265,6 +265,9 @@ export class Game {
   pickups: PickupDef[] = [];
   /** Bushes that have berries right now. */
   berries: BerryBushDef[] = [];
+  /** The colours coming back over a drained map: the grey draws back in growing circles from these tiles. */
+  private colourBack: { at: { x: number; y: number }[]; start: number; ms: number; done: () => void } | null = null;
+  private colourMask?: HTMLCanvasElement;
   /** Tiles glowing softly: what to do on a day in the real house (src/data/realLife.ts). */
   glows: { x: number; y: number }[] = [];
   player!: Actor;
@@ -334,7 +337,7 @@ export class Game {
 
   /** The follower is in its Crayon-ball while sailing or riding the bike, and stays in the dream when you wake up. */
   followerShown(): boolean {
-    return !!this.follower && !this.surfing && !this.biking && !this.map?.def.awake;
+    return !!this.follower && !this.surfing && !this.biking && !this.map?.def.awake && !this.map?.def.underwater;
   }
 
   /** Puts the follower one step behind the player (on the player when there is no room). */
@@ -448,14 +451,14 @@ export class Game {
 
   /** A tile `who` can't walk onto, whoever moves away: outside the map, a solid tile (water, unless sailing) or an obstacle. */
   walled(x: number, y: number, who?: Actor): boolean {
-    if (who === this.player && this.surfing && this.tileAt(x, y) === 'water') return false;
+    if (who === this.player && this.surfing && isWater(this.tileAt(x, y))) return false;
     return !this.inside(x, y) || !!this.map.solid[y * this.map.w + x] || !!this.obstacleAt(x, y);
   }
 
   blocked(x: number, y: number, who?: Actor): boolean {
     if (!this.inside(x, y)) return true;
     // sailing: the player can go on water (and lands by walking onto the shore)
-    if (this.map.solid[y * this.map.w + x] && !(who === this.player && this.surfing && this.tileAt(x, y) === 'water')) return true;
+    if (this.map.solid[y * this.map.w + x] && !(who === this.player && this.surfing && isWater(this.tileAt(x, y)))) return true;
     if (this.obstacleAt(x, y)) return true;
     if (this.pickups.some((p) => p.x === x && p.y === y)) return true;
     return !!this.actorAt(x, y, who);
@@ -477,7 +480,7 @@ export class Game {
         this.removeObstacle(o);
         this.hooks.onDrop?.(o, bx, by);
       } else {
-        if (this.blocked(bx, by) || this.tileAt(bx, by) === 'water' || tile(this.tileAt(bx, by)).ledge || this.map.warps.has(by * this.map.w + bx)) return false;
+        if (this.blocked(bx, by) || isWater(this.tileAt(bx, by)) || tile(this.tileAt(bx, by)).ledge || this.map.warps.has(by * this.map.w + bx)) return false;
         o.x = bx;
         o.y = by;
         this.hooks.onPush?.(o);
@@ -572,7 +575,7 @@ export class Game {
       if (fw.t >= 1) Object.assign(fw, { t: 0, moving: false, jumping: false, fromX: fw.x, fromY: fw.y, landed: performance.now() });
     }
     // landing on the shore puts the boat away
-    if (finished && this.surfing && this.tileAt(p.x, p.y) !== 'water') this.surfing = false;
+    if (finished && this.surfing && !isWater(this.tileAt(p.x, p.y))) this.surfing = false;
     if (finished) {
       if (tile(this.tileAt(p.x, p.y)).encounter) this.rustle.push({ x: p.x, y: p.y, t: 0 });
       const stop = this.hooks.onStep(p.x, p.y);
@@ -791,6 +794,18 @@ export class Game {
         if (a.mini.complete && a.mini.naturalWidth) ctx.drawImage(a.mini, Math.round(sx + (TILE - a.mini.naturalWidth) / 2), sy + TILE - a.mini.naturalHeight - 1);
       } else a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
       ctx.filter = 'none';
+      // under water: the Bocal-Scaphandre, a glass jar over the head
+      if (a === this.player && this.map.def.underwater) {
+        ctx.fillStyle = 'rgba(210, 236, 255, 0.28)';
+        ctx.strokeStyle = 'rgba(235, 248, 255, 0.9)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(sx + 8, sy + 3, 7.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.fillRect(sx + 4, sy - 1, 2, 2);
+      }
       // sailing: the paper boat hides the legs
       if (a === this.player && this.surfing) ctx.drawImage(fieldSprite('boat'), sx, sy + 9 + Math.round(Math.sin(performance.now() / 300)));
       // tall grass hides the legs
@@ -816,10 +831,12 @@ export class Game {
       ctx.fillRect(0, 0, this.viewW, this.viewH);
       ctx.globalCompositeOperation = 'source-over';
     }
+    if (this.colourBack) this.drawColourBack(ctx, camX, camY);
     if (def.tint) {
       ctx.fillStyle = def.tint;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
     }
+    if (def.underwater) this.drawBubbles(ctx, camX, camY);
     // evening and night outdoors: multiplied, so colours darken without going grey
     if (this.timeTint && !def.indoor) {
       ctx.globalCompositeOperation = 'multiply';
@@ -847,6 +864,74 @@ export class Game {
     if (this.fade > 0) {
       ctx.fillStyle = `rgba(${this.fadeColor},${this.fade})`;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
+    }
+  }
+
+  /**
+   * The cinematic of colours coming back: the map is drawn in greys that draw back in growing circles from `at`
+   * (tiles), sparkles running along their edge. The map's own drained greys must already be gone (its flag set).
+   */
+  colourReturn(at: { x: number; y: number }[], ms = 2800): Promise<void> {
+    return new Promise((done) => (this.colourBack = { at, start: performance.now(), ms, done }));
+  }
+
+  private drawColourBack(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
+    const fx = this.colourBack!;
+    const t = Math.min(1, (performance.now() - fx.start) / fx.ms);
+    // slow at first, so the colour is seen spreading round the spring before it races over the whole map
+    const ease = t ** 2.2;
+    const reach = Math.hypot(this.map.w, this.map.h) * TILE * ease;
+    // a mask of greys with holes where the colour has come back
+    const m = (this.colourMask ??= document.createElement('canvas'));
+    if (m.width !== this.viewW || m.height !== this.viewH) { m.width = this.viewW; m.height = this.viewH; }
+    const mc = m.getContext('2d')!;
+    mc.globalCompositeOperation = 'source-over';
+    mc.clearRect(0, 0, m.width, m.height);
+    mc.fillStyle = '#808080';
+    mc.fillRect(0, 0, m.width, m.height);
+    mc.globalCompositeOperation = 'destination-out';
+    for (const a of fx.at) {
+      const cx = a.x * TILE + 8 - camX, cy = a.y * TILE + 8 - camY;
+      const g = mc.createRadialGradient(cx, cy, Math.max(0, reach - 24), cx, cy, reach + 1);
+      g.addColorStop(0, 'rgba(0,0,0,1)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      mc.fillStyle = g;
+      mc.beginPath();
+      mc.arc(cx, cy, reach + 1, 0, Math.PI * 2);
+      mc.fill();
+    }
+    ctx.globalCompositeOperation = 'saturation';
+    ctx.drawImage(m, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    // sparkles of every colour along the edges
+    const cols = ['#f49ac2', '#f6cf5a', '#8fd38a', '#6fb6ea', '#a98ae0', '#ffffff'];
+    for (const a of fx.at) {
+      const cx = a.x * TILE + 8 - camX, cy = a.y * TILE + 8 - camY;
+      for (let k = 0; k < 28; k++) {
+        const ang = (k / 28) * Math.PI * 2 + t * 3, r = reach - 6 + Math.sin(k * 7 + t * 20) * 5;
+        ctx.fillStyle = cols[k % cols.length];
+        ctx.fillRect(Math.round(cx + Math.cos(ang) * r), Math.round(cy + Math.sin(ang) * r), 2, 2);
+      }
+    }
+    if (t >= 1) {
+      this.colourBack = null;
+      fx.done();
+    }
+  }
+
+  /** Bubbles rising under water, here and there. */
+  private drawBubbles(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
+    const now = performance.now() / 1000;
+    ctx.strokeStyle = 'rgba(235, 248, 255, 0.75)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 14; i++) {
+      const speed = 14 + (i % 5) * 4, span = this.viewH + 40;
+      const bx = ((i * 73 + 17) % (this.viewW + 20)) - ((camX * 0.2) % 20) + Math.sin(now * 1.3 + i) * 3;
+      const by = this.viewH + 20 - ((now * speed + i * 57 - camY * 0.2) % span);
+      const r = 1.5 + (i % 3);
+      ctx.beginPath();
+      ctx.arc(Math.round(bx), Math.round(by), r, 0, Math.PI * 2);
+      ctx.stroke();
     }
   }
 

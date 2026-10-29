@@ -49,23 +49,26 @@ dessins sont vivants : ce sont les **Bestioles**.
    nuit : il faut passer par la Grotte Gribouillis. Un pigeonnier, et l’atelier de la faiseuse de plumes.
 6. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola, le quai des pêcheurs, la
    Place des Peintres et la Pointe des Mouettes.
-7. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
+7. **Le Lac des Couleurs** : une boue grise bloque la route du nord ! Avec ton rival et le Prof.
+   Fusain, remonte en bateau la rivière de Village-Plume jusqu’à un grand lac tout gris. La Team Gomme
+   a bouché ses trois sources : rouge, jaune et bleue… Et sous l’eau, il y a peut-être autre chose.
+8. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
    cache quelque chose. Ses enseignes au néon, sa Fontaine Fluo et ses fabricants de feutres.
-8. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan, sa forge, sa source chaude
+9. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan, sa forge, sa source chaude
    et le souffleur de verre.
-9. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
+10. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
    occupe la Tour Brumeuse… Tout en haut, quelqu’un que tu connais bien a besoin d’être rassuré.
    On y fait des vœux à la Fontaine aux Vœux, et la Fabrique de Paillettes prépare le Bal des Étoiles.
-10. **Jardin-Gouache** : l’Atelier de Basile, une serre où même l’herbe est peinte à la main ; le
+11. **Jardin-Gouache** : l’Atelier de Basile, une serre où même l’herbe est peinte à la main ; le
     quartier des jardins, ses potagers partagés et son étang aux nénuphars.
-11. **Cité-Encre**, la ville où la nuit ne sèche jamais : lucioles en guise de lampadaires, canal
+12. **Cité-Encre**, la ville où la nuit ne sèche jamais : lucioles en guise de lampadaires, canal
     d’encre bleue, Bibliothèque de Nuit. L’Atelier de Nocturne est fermé : il faut
     d’abord prendre le bateau jusqu’au **Phare de l’Encrier**. Puis l’**Usine à Gommes**, où le Grand
     Effaceur se montre enfin.
-12. **À l’ouest, au-delà de la Marge rouge du cahier** : la page n’est plus que dessinée au crayon.
+13. **À l’ouest, au-delà de la Marge rouge du cahier** : la page n’est plus que dessinée au crayon.
     Le **Hameau-Brouillon**, où vivent des dessins que personne n’a finis, la **Forêt des
     Esquisses**, et tout au fond la **Forteresse Gomme** et sa machine géante.
-13. **Plus au nord**, le monde n’est même plus colorié… Jusqu’où va la page ?
+14. **Plus au nord**, le monde n’est même plus colorié… Jusqu’où va la page ?
 
 ## Tes choix comptent
 
@@ -94,6 +97,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Les routes sont longues, pleines d’herbes hautes et de dresseurs : ton équipe s’entraîne en chemin,
   jusqu’aux alentours du niveau 45 à la fin de l’histoire. Attraper une Bestiole rapporte de
   l’expérience, et les Bestioles en retard rattrapent vite les autres.
+- Avec le **Bocal-Scaphandre**, plonge là où l’eau est toute sombre : une épave, une chapelle
+  engloutie, des algues pleines de Bestioles… et sept perles qui se souviennent d’une très vieille
+  légende. Une vieille carte t’aidera à trouver où plonger.
 - Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
 - À Ville-Feutre, on te confie le **Feutre d’Or**, qu’aucune gomme ne peut effacer. Une fois par
   combat, il **met au propre** une Bestiole qui a fini de grandir : repassée au feutre, elle devient
@@ -186,22 +192,25 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
    instead. A dovecote, and the quill-maker’s studio.
 6. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola, the fishermen’s quay, Painters’
    Square and Gull Point.
-7. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
+7. **The Lake of Colours**: grey mud blocks the road north! With your rival and Prof. Charcoal, sail up
+   Featherby’s river to a big lake gone all grey. Team Gomme plugged its three springs: red, yellow and
+   blue… And under the water, there may be something else.
+8. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
    is hiding something. Its neon signs, its Fluo Fountain and its felt-tip makers.
-8. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano, its forge, its hot
+9. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano, its forge, its hot
    spring and the glassblower.
-9. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
+10. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
    At the top, someone you know well needs cheering up. Wishes are made at the Wishing Fountain, and
    the Glitter Works is getting ready for the Star Ball.
-10. **Gouache Garden**: Basil’s Atelier, a greenhouse where even the grass is hand-painted; the garden
+11. **Gouache Garden**: Basil’s Atelier, a greenhouse where even the grass is hand-painted; the garden
     quarter, its shared allotments and its lily pond.
-11. **Ink City**, where the night never dries: fireflies for street lamps, a canal of blue ink, the
+12. **Ink City**, where the night never dries: fireflies for street lamps, a canal of blue ink, the
     Night Library. Nocturne’s Atelier is closed: first take the boat to the
     **Inkwell Lighthouse**. Then the **Eraser Factory**, where the Great Eraser shows himself at last.
-12. **West, beyond the red Margin of the sketchbook**: the page is only drawn in pencil there. **Draft
+13. **West, beyond the red Margin of the sketchbook**: the page is only drawn in pencil there. **Draft
     Hamlet**, home to drawings nobody finished, the **Sketch Forest**, and deep inside, the **Eraser
     Fortress** and its giant machine.
-13. **Further north**, the world isn’t even coloured in anymore… How far does the page go?
+14. **Further north**, the world isn’t even coloured in anymore… How far does the page go?
 
 ## Your choices matter
 
@@ -229,6 +238,9 @@ The story has **two endings**, and your answers choose which one you will see.
 - The roads are long, full of tall grass and trainers: your team trains on the way, up to around level
   45 by the end of the story. Catching a Critter gives experience, and Critters that fall behind catch
   up fast.
+- With the **Jar Helmet**, dive wherever the water is very dark: a wreck, a sunken chapel, seaweed full
+  of Critters… and seven pearls that remember a very old legend. An old map will help you find where to
+  dive.
 - Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
 - In Felt City you are given the **Golden Felt-tip**, which no eraser can rub out. Once per battle, it
   makes a **fair copy** of a fully grown Critter: gone over in felt-tip, it gets stronger and takes a new

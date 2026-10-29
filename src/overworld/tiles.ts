@@ -25,6 +25,9 @@ export const C = {
   outline: '#2a2238',
 };
 
+/** Water the paper boat sails on: the lake's dark patches are water too (and deep enough to dive). */
+export const isWater = (id?: string) => id === 'water' || id === 'deep';
+
 const GRASSY = new Set(['grass', 'grass2', 'flowers', 'tallgrass', 'tree', 'bush', 'fence', 'sign', 'rock', 'ledge', 'mailbox']);
 const isGrassy = (id?: string) => !id || GRASSY.has(id);
 
@@ -100,7 +103,7 @@ function water(p: Painter, frame: number, near: Near, x: number, y: number) {
       p.px(xx, row + (i === 2 ? -1 : 0), C.w2);
     }
   }
-  const land = (dx: number, dy: number) => near(dx, dy) !== 'water';
+  const land = (dx: number, dy: number) => !isWater(near(dx, dy));
   if (land(0, -1)) { p.rect(0, 0, 16, 2, C.w4); p.rect(0, 2, 16, 1, C.w3); }
   if (land(0, 1)) { p.rect(0, 14, 16, 2, C.w4); p.rect(0, 13, 16, 1, C.w3); }
   if (land(-1, 0)) { p.rect(0, 0, 2, 16, C.w4); p.rect(2, 0, 1, 16, C.w3); }
@@ -764,6 +767,174 @@ Object.assign(TILES, {
       p.rect(5 + (x % 3), 9, 1, 2, '#3a3346');
       p.rect(8 + (x % 3), 9, 1, 2, '#3a3346');
       p.px(10 - (x % 3), 4 + (y % 2), '#3a3346');
+    },
+  },
+});
+
+// ------------------------------------------------------------------ the lake's depths (diving)
+
+const SEABED = '#dccfa2';
+/** Pale sand of the lake bottom, with ripples drawn by the water. */
+function seabed(p: Painter, x: number, y: number) {
+  p.fill(SEABED);
+  p.noise(0.06, '#c8b98a', x * 5 + y * 7);
+  p.noise(0.03, '#efe6c4', x * 11 + y);
+  const r = Math.floor(hash(x, y, 3) * 8) + 3;
+  for (let i = 0; i < 6; i++) p.px(r + i, 6 + (i % 2), '#c4b484');
+  for (let i = 0; i < 5; i++) p.px((r + 6 + i) % 16, 12 + (i % 2), '#c4b484');
+}
+
+Object.assign(TILES, {
+  // a dark patch on the surface: deep water, where one can dive
+  deep: {
+    solid: true,
+    animated: true,
+    paint: (p: Painter, f: number, n: Near, x: number, y: number) => {
+      p.fill('#3768b8');
+      const off = f * 3;
+      for (let row = 4; row < 16; row += 6) {
+        for (let i = 0; i < 4; i++) p.px((Math.floor(hash(x, y + row, 7) * 16) + off + i) % 16, row, '#5583cc');
+      }
+      p.disc(8, 8, 5.5, '#2c5aa4');
+      p.disc(7.5, 7.5, 3, '#244c90');
+      const land = (dx: number, dy: number) => !isWater(n(dx, dy));
+      if (land(0, -1)) { p.rect(0, 0, 16, 2, C.w4); p.rect(0, 2, 16, 1, C.w3); }
+      if (land(0, 1)) { p.rect(0, 14, 16, 2, C.w4); p.rect(0, 13, 16, 1, C.w3); }
+      if (land(-1, 0)) { p.rect(0, 0, 2, 16, C.w4); p.rect(2, 0, 1, 16, C.w3); }
+      if (land(1, 0)) { p.rect(14, 0, 2, 16, C.w4); p.rect(13, 0, 1, 16, C.w3); }
+    },
+  },
+  seabed: { paint: (p: Painter, _f: number, _n: Near, x: number, y: number) => seabed(p, x, y) },
+  // long seaweed swaying: Bestioles of the depths hide in it
+  seaweed: {
+    encounter: true,
+    over: true,
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      seabed(p, x, y);
+      for (const [bx, h, c] of [[2, 14, '#3f8f6a'], [6, 11, '#2f7a5a'], [10, 15, '#4fa37a'], [13, 10, '#2f7a5a']] as const) {
+        for (let i = 0; i < h; i++) {
+          const sway = Math.round(Math.sin((i + f * 2 + bx) / 2.2) * (i / h) * 2);
+          p.px(bx + sway, 15 - i, c);
+          if (i % 4 === 2) p.px(bx + sway + 1, 15 - i, '#7ccf9a');
+        }
+      }
+    },
+  },
+  // coral branches: go round them
+  coral: {
+    solid: true,
+    paint: (p: Painter, _f: number, _n: Near, x: number, y: number) => {
+      seabed(p, x, y);
+      const col = ['#f28aa0', '#f2a65a', '#c48ae6'][Math.floor(hash(x, y, 9) * 3)];
+      p.rect(7, 6, 2, 10, col);
+      p.rect(3, 4, 2, 7, col); p.rect(3, 10, 5, 2, col);
+      p.rect(11, 3, 2, 8, col); p.rect(8, 9, 5, 2, col);
+      for (const [cx, cy] of [[4, 3], [12, 2], [8, 5]] as const) p.disc(cx, cy, 1.6, col);
+      p.rect(7, 15, 2, 1, C.outline);
+    },
+  },
+  // the dark rock of the lake bottom
+  reef: {
+    solid: true,
+    paint: (p: Painter, _f: number, n: Near, x: number, y: number) => {
+      p.fill('#3a4a6a');
+      p.noise(0.12, '#2c3a56', x * 3 + y * 11);
+      p.noise(0.06, '#56688a', x * 7 + y * 5);
+      if (n(0, 1) && n(0, 1) !== 'reef') { p.rect(0, 13, 16, 3, '#34425e'); p.rect(0, 15, 16, 1, C.outline); }
+    },
+  },
+  // a circle of light from the surface: come up here
+  lightshaft: {
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      seabed(p, x, y);
+      p.disc(8, 8, 7.2, '#fff6d0');
+      p.disc(8, 8, 5.6, '#fffbe8');
+      for (let a = 0; a < 8; a++) {
+        const k = (a + f) % 8;
+        p.px(Math.round(8 + Math.cos(k) * 6.6), Math.round(8 + Math.sin(k) * 6.6), '#f6d860');
+      }
+    },
+  },
+  // a clam half open on the sand, a pearl shining inside (a memory of the lake)
+  clam: {
+    solid: true,
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      seabed(p, x, y);
+      p.rect(2, 9, 12, 5, '#c8a8d8'); p.rect(3, 14, 10, 1, C.outline); p.rect(2, 9, 12, 1, '#a888c0');
+      p.rect(3, 4, 10, 4, '#d8b8e8'); p.rect(3, 4, 10, 1, '#a888c0');
+      p.disc(8, 9, 2.6, '#fff4fb');
+      p.px(7, 8, '#ffffff');
+      if (f) { p.px(11, 6, '#ffffff'); p.px(12, 5, '#fff6d0'); }
+    },
+  },
+  // the planks of a sunken boat
+  wreck: {
+    solid: true,
+    paint: (p: Painter, _f: number, _n: Near, x: number, y: number) => {
+      seabed(p, x, y);
+      p.rect(1, 3, 14, 10, '#6a4a30');
+      for (const yy of [3, 6, 9]) p.rect(1, yy, 14, 1, '#4a3220');
+      p.rect(1 + Math.floor(hash(x, y, 2) * 8), 7, 3, 2, '#2a1a10');
+      p.rect(0, 13, 16, 1, C.outline);
+    },
+  },
+  // the altar of the Abysses: a pale stone with seven hollows, one for each memory pearl
+  altar: {
+    solid: true,
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      seabed(p, x, y);
+      p.rect(1, 5, 14, 9, '#d8d4e4'); p.rect(1, 5, 14, 1, '#f2f0f8'); p.rect(1, 13, 14, 1, '#a8a2bc');
+      p.rect(0, 14, 16, 1, C.outline); p.rect(0, 5, 1, 9, C.outline); p.rect(15, 5, 1, 9, C.outline);
+      ['#e2483f', '#f08a3a', '#f6cf5a', '#4fae5a', '#3e6fd0', '#5a4ab0', '#9a5ccc'].forEach((col, i) => {
+        // the hollows glimmer by turns with the colour of their pearl
+        p.px(2 + i * 2, i % 2 ? 8 : 9, i % 2 === f ? col : '#8a84a0');
+      });
+    },
+  },
+});
+
+// ------------------------------------------------------------------ the springs of the Lac des Couleurs
+
+/** A spring bubbling up in a ring of stones, in one of the three primary colours. */
+function spring(p: Painter, f: number, x: number, y: number, col: string, light: string) {
+  grass(p, x, y);
+  p.disc(8, 8.5, 7.5, '#8a8494');
+  p.disc(8, 8.5, 6.2, col);
+  for (let a = 0; a < 6; a++) {
+    const k = a + f * 0.5;
+    p.px(Math.round(8 + Math.cos(k) * 3.5), Math.round(8.5 + Math.sin(k) * 3.5), light);
+  }
+  p.disc(8, 8.5, 1.6, light);
+}
+
+Object.assign(TILES, {
+  springRed: { solid: true, animated: true, paint: (p: Painter, f: number, _n: Near, x: number, y: number) => spring(p, f, x, y, '#e2483f', '#ffb0a8') },
+  springYellow: { solid: true, animated: true, paint: (p: Painter, f: number, _n: Near, x: number, y: number) => spring(p, f, x, y, '#f2c14e', '#fff2b0') },
+  springBlue: { solid: true, animated: true, paint: (p: Painter, f: number, _n: Near, x: number, y: number) => spring(p, f, x, y, '#3e7fd6', '#b0d4ff') },
+  // a spring stopped up with a big grey eraser plug
+  springPlug: {
+    solid: true,
+    paint: (p: Painter, _f: number, _n: Near, x: number, y: number) => {
+      grass(p, x, y);
+      p.disc(8, 8.5, 7.5, '#8a8494');
+      p.disc(8, 8.5, 6.2, '#9a96a4');
+      p.rect(4, 5, 8, 7, '#c8c4d0'); p.rect(4, 5, 8, 1, '#e8e6ee'); p.rect(4, 11, 8, 1, C.outline);
+      p.rect(4, 5, 1, 7, C.outline); p.rect(11, 5, 1, 7, C.outline);
+    },
+  },
+  // grey eraser mud that ran down from the lake over the road
+  mud: {
+    solid: true,
+    animated: true,
+    paint: (p: Painter, f: number, _n: Near, x: number, y: number) => {
+      p.fill('#9a96a4');
+      p.noise(0.12, '#7e7a88', x * 5 + y * 3);
+      p.noise(0.06, '#c8c4d0', x * 3 + y * 7 + f);
+      p.disc(4 + (x % 3) * 3, 6 + (y % 2) * 4, 1.6 + f * 0.4, '#b8b4c2');
     },
   },
 });

@@ -114,6 +114,9 @@ export function repair(s: SaveData): SaveData {
     s.bag['feutre-or'] = 1;
     s.flags['gift:feutre-or'] = 1;
   }
+  // the Lac des Couleurs came between Marine and Zélie (Oct 2026): games already past Route 4 don't meet the mud's
+  // scene (the mud is drawn away for them on the map) and can go to the lake whenever they like
+  if (s.flags['a2.feutre']) s.flags['lac.appel'] = 1;
   // the colours come back to the Edge of the Page after rematches (Nov 2026): games already past them see it
   if (s.flags.ending && rematchesWon(s.flags) >= BORD_REMATCHES) s.flags['couleurs:bord'] = 1;
   return s;

@@ -205,6 +205,31 @@ const SCENES: Record<Backdrop, (p: Pencil) => void> = {
     p.hatch(ground, '#b48a72', { alpha: 0.6, angle: -0.3 });
     p.strokes(80, [0, HORIZON + 6, W, H], '#6a4a3a', 3, { alpha: 0.5, width: 2 });
   },
+  underwater(p) {
+    // the lake's depths: blue water, light falling from the surface, seaweed and coral on the sand
+    p.hatch(rect(0, 0, W, H), '#5f9fd8', { alpha: 0.55, angle: 1.2 });
+    p.hatch(rect(0, 0, W, HORIZON), '#3f7fc4', { alpha: 0.3, angle: 0.4, gap: 5 });
+    for (const x of [80, 230, 380]) {
+      const ray: Pt[] = [[x, 0], [x + 40, 0], [x + 90, HORIZON + 40], [x + 20, HORIZON + 40]];
+      p.hatch(ray, '#ffffff', { alpha: 0.25, angle: 1.1, gap: 4 });
+    }
+    const sand = hills(HORIZON + 30, 10, 2, H, p.r);
+    p.hatch(sand, '#d8cc9c', { alpha: 0.7, angle: -0.3 });
+    p.outline(sand.slice(0, 41), { close: false, alpha: 0.4 });
+    for (const [x, h] of [[30, 120], [60, 90], [420, 130], [450, 100]] as const) {
+      const pts: Pt[] = Array.from({ length: 8 }, (_, i) => [x + Math.sin(i * 0.9) * 8, HORIZON + 40 - (i / 7) * h] as Pt);
+      p.outline(pts, { color: '#3f8f6a', alpha: 0.85, width: 4, close: false });
+    }
+    for (const x of [130, 330]) {
+      const coral = ellipse(x, HORIZON + 44, 26, 14, p.r, 16, 0.3);
+      p.hatch(coral, x < 200 ? '#f28aa0' : '#f2a65a', { alpha: 0.8 });
+      p.outline(coral, { alpha: 0.5 });
+    }
+    for (let i = 0; i < 16; i++) {
+      const bub = ellipse(p.r() * W, p.r() * HORIZON, 3 + p.r() * 4, 3 + p.r() * 4, p.r, 10, 0.1);
+      p.outline(bub, { color: '#ffffff', alpha: 0.8, width: 1.2 });
+    }
+  },
   sketch(p) {
     // the edge of the page: almost nothing is coloured in
     const far = hills(HORIZON, 30, 2, HORIZON + 6, p.r);
@@ -224,7 +249,7 @@ const SCENES: Record<Backdrop, (p: Pencil) => void> = {
 const GROUND: Record<Backdrop, [string, string]> = {
   grass: ['#7cc06a', '#3f8a3a'], forest: ['#5f8a4a', '#2f5a2a'], cave: ['#8a7664', '#4a3c34'],
   tower: ['#7c74a4', '#3e3866'], lab: ['#b8915e', '#7a5a34'], beach: ['#e6c47c', '#b08a4a'],
-  city: ['#9a94a8', '#5e5870'], volcano: ['#8e624e', '#5a3a2e'], sketch: ['#c8c4d0', '#8a8494'],
+  city: ['#9a94a8', '#5e5870'], volcano: ['#8e624e', '#5a3a2e'], sketch: ['#c8c4d0', '#8a8494'], underwater: ['#d8cc9c', '#8a9ab0'],
 };
 
 const cache = new Map<string, string>();

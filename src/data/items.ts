@@ -13,6 +13,12 @@ export const STENCIL_MOVES = [
 ];
 export const stencilId = (n: number) => `pochoir-${String(n).padStart(2, '0')}`;
 
+/** The seven memory pearls of the lake's legend, one per colour of the rainbow: [id part, French, English]. */
+export const PEARLS = [
+  ['rouge', 'rouge', 'Red'], ['orange', 'orange', 'Orange'], ['jaune', 'jaune', 'Yellow'], ['verte', 'verte', 'Green'],
+  ['bleue', 'bleue', 'Blue'], ['indigo', 'indigo', 'Indigo'], ['violette', 'violette', 'Violet'],
+] as const;
+
 /** A stencil teaches its move to any compatible Bestiole, as often as you like (it never wears out). */
 function stencil(moveId: string, i: number): ItemDef {
   const mv = move(moveId);
@@ -255,6 +261,18 @@ export const ITEMS: ItemDef[] = [
     id: 'ciseaux', name: L('Ciseaux à Bouts Ronds', 'Safety Scissors'), price: 0, kind: 'key', amount: 0,
     desc: L('Des ciseaux d’école sans danger. Devant un petit buisson qui bloque le passage, appuie sur A pour le couper.', 'Safe school scissors. Facing a thin bush in the way, press A to cut it.'),
   },
+  {
+    id: 'bocal', name: L('Bocal-Scaphandre', 'Jar Helmet'), price: 0, kind: 'key', amount: 0,
+    desc: L('Un grand bocal de confiture, bien rincé, pour garder la tête au sec. En bateau sur une eau toute sombre, appuie sur A pour plonger.', 'A big jam jar, well rinsed, to keep your head dry. Sailing over very dark water, press A to dive.'),
+  },
+  {
+    id: 'carte-fonds', name: L('Carte des Fonds', 'Depths Map'), price: 0, kind: 'key', amount: 0,
+    desc: L('La carte dessinée sur la fresque de la chapelle engloutie. Sur la Carte de Papeterre, elle montre où plonger.', 'The map drawn on the sunken chapel’s fresco. On the Map of Papeterra, it shows where to dive.'),
+  },
+  ...PEARLS.map(([id, fr, en]): ItemDef => ({
+    id: `perle-${id}`, name: L(`Perle-souvenir ${fr}`, `${en} Memory Pearl`), price: 0, kind: 'key', amount: 0,
+    desc: L('Une perle trouvée au fond de l’eau. Quand on la regarde de près, on y voit un souvenir du lac.', 'A pearl found at the bottom of the water. Look at it closely and you see a memory of the lake.'),
+  })),
   {
     id: 'bateau', name: L('Bateau en Papier', 'Paper Boat'), price: 0, kind: 'key', amount: 0,
     desc: L('Un grand bateau plié dans une feuille. Devant l’eau, appuie sur A pour naviguer.', 'A big boat folded from one sheet. Facing water, press A to sail.'),

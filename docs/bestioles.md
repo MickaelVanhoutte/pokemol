@@ -113,6 +113,8 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
 | Baleincre (legendary, the Bestiodex's reward) | Averse d’Encre: rain as it comes in; Jet d’Encre Noire (Water special 100, 30% accuracy drop) | `entryWeather` + signature move | — |
+| Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow, mixed stats |
+| Aquarelline (legendary, the Lac des Couleurs) | Voile d’Aquarelle: super-effective hits halved, its status moves never miss; Marée arc-en-ciel (Water special 100, 30% +1 Sp. Def) | `prism` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a
 `touchStatus` that burns…) under a new talent name. A new kind needs:

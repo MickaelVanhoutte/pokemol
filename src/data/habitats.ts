@@ -1,7 +1,7 @@
 import { CUSTOM_ID, creature } from './creatures';
 import { MAPS } from './maps';
 
-export type HabitatHow = 'grass' | 'cave' | 'surf' | 'old' | 'good' | 'super' | 'gift' | 'tombola' | 'drawn';
+export type HabitatHow = 'grass' | 'cave' | 'seaweed' | 'surf' | 'old' | 'good' | 'super' | 'gift' | 'tombola' | 'drawn';
 
 export interface Habitat {
   map: string;
@@ -22,10 +22,12 @@ const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time
   '072': [{ map: 'ratures3', level: 55, how: 'cave' }],
   // the Bestiodex's reward, over the ink lake of its island
   '112': [{ map: 'ilePage', level: 60, how: 'surf' }],
+  // the lake's legend, woken on the altar of the Abysses by the seven memory pearls
+  '115': [{ map: 'abysses', level: 40, how: 'seaweed' }],
 };
 
 /**
- * Where a species can be met: every encounter table (tall grass or cave, sailing, each fishing
+ * Where a species can be met: every encounter table (tall grass, cave or seaweed, sailing, each fishing
  * rod), gifts, and the Tombola, which can draw any Bestiole but the legendaries.
  */
 export function habitatsOf(species: string): Habitat[] {
@@ -39,7 +41,8 @@ export function habitatsOf(species: string): Habitat[] {
     out.push({ map, how, min: Math.min(...mine.map((r) => r.min)), max: Math.max(...mine.map((r) => r.max)), ...(time ? { time } : {}) });
   };
   for (const m of Object.values(MAPS)) {
-    add(m.id, m.encounters?.anyTile ? 'cave' : 'grass', m.encounters?.table);
+    // under the water (diving), Bestioles hide in the seaweed
+    add(m.id, m.encounters?.anyTile ? 'cave' : m.underwater ? 'seaweed' : 'grass', m.encounters?.table);
     add(m.id, 'surf', m.surf?.table);
     for (const rod of ['old', 'good', 'super'] as const) add(m.id, rod, m.fishing?.[rod]);
   }

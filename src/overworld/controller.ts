@@ -24,7 +24,7 @@ import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
 import { LOOKS, lookOf, type Look } from './sprites';
 import { OLD_AVATARS } from '../data/appearance';
-import { tile } from './tiles';
+import { isWater, tile } from './tiles';
 import { calm, missed, wildOdds, wildStep } from './encounterRate';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
@@ -212,9 +212,11 @@ function target(to: WarpTarget | 'back'): WarpTarget {
   return r ? { map: r.map, x: r.x, y: r.y, facing: r.facing ?? 'down' } : { map: 'bourg', x: 9, y: 14, facing: 'down' };
 }
 
-export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boolean } = {}) {
+export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boolean; sail?: boolean } = {}) {
   const to = target(dest);
   const g = getGame();
+  // sailing from one map onto the water of the next (a river into the lake), or coming up from a dive
+  const sailing = g.surfing || !!opts.sail;
   g.lock++;
   sfx.door();
   await g.fadeTo(1, 180);
@@ -225,6 +227,7 @@ export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boole
   g.player.fromY = to.y;
   g.player.moving = false;
   if (to.facing) g.player.dir = to.facing;
+  if (sailing && isWater(g.tileAt(to.x, to.y))) g.surfing = true;
   g.placeFollower();
   savePosition();
   if (!opts.keepFade) await g.fadeTo(0, 180);
@@ -311,7 +314,7 @@ function onStep(x: number, y: number): boolean {
   }
   // sailing: wild Bestioles of the water table, on water only
   const here = g.map.tiles[y * g.map.w + x];
-  const onWater = g.surfing && here === 'water';
+  const onWater = g.surfing && isWater(here);
   const enc = onWater ? g.map.def.surf : g.surfing ? undefined : g.map.def.encounters;
   // a cave's whole floor counts as one ground, like the GBA's
   const ground = !enc ? '' : onWater ? 'water' : enc.anyTile ? 'cave' : tile(here).encounter ? here : '';
@@ -339,6 +342,10 @@ function onStep(x: number, y: number): boolean {
 
 function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: PickupDef; obstacle?: ObstacleDef; tileId?: string; x: number; y: number }) {
   const g = getGame();
+  // diving down from a dark patch of water, or coming back up through a circle of light
+  const here = g.tileAt(g.player.x, g.player.y);
+  if (!target.npc && !target.sign && g.surfing && here === 'deep' && g.map.def.dive) return void locked(diveDown);
+  if (!target.npc && !target.sign && here === 'lightshaft' && g.map.def.underwater) return void locked(surfaceUp);
   if (target.npc) {
     const npc = target.npc;
     if (npc.npc) g.faceToward(npc, g.player);
@@ -408,7 +415,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
   if (target.tileId === 'leverred' || target.tileId === 'leverblue') return void locked(toggleBarriers);
   const look = PUZZLE_LOOKS[target.tileId ?? ''];
   if (look) return void locked(() => say(look));
-  if (target.tileId === 'water') return void locked(waterSide);
+  if (isWater(target.tileId)) return void locked(waterSide);
   if (target.tileId === 'pc') return void runScript('pc');
   if (target.tileId === 'bookshelf') return void locked(() => say(L('Des livres pleins de dessins de Bestioles.', 'Books full of Critter drawings.')));
   if (target.tileId === 'tv') return void locked(() => say(L('À la télé : « Les Bestioles dessinées envahissent le pays ! »', 'On TV: "Drawn Critters are taking over the country!"')));
@@ -570,7 +577,8 @@ async function examineFresque(f: FresqueDef) {
   if (!solved) return;
   setFlag(`fresque:${f.id}`);
   sfx.sparkle();
-  if (f.reward) {
+  if (f.script && scripts[f.script]) await scripts[f.script]();
+  else if (f.reward) {
     const { item: id, count = 1 } = f.reward;
     update((d) => addItem(d, id, count));
     await say(L('C’est {n} ! … Derrière la toile, tu trouves {i}{c} !', 'It’s {n}! … Behind the canvas, you find {i}{c}!'), undefined, { n, i: tr(item(id).name), c: count > 1 ? ` ×${count}` : '' });
@@ -627,6 +635,29 @@ async function waterSide() {
   if (canSail) choices.push({ label: L('Naviguer', 'Sail'), act: sail });
   const c = await ask(L('L’eau est calme. Que faire ?', 'The water is calm. What will you do?'), [...choices.map((x) => x.label), L('Rien', 'Nothing')]);
   if (c < choices.length) await choices[c].act();
+}
+
+/** On a dark patch of water: with the Bocal-Scaphandre, dive to the depths below (the same spot on the map underneath). */
+async function diveDown() {
+  const g = getGame();
+  if (!has('bocal')) return say(L('L’eau est très sombre ici… On ne voit pas le fond.', 'The water is very dark here… You can’t see the bottom.'));
+  const c = await ask(L('Plonger avec le Bocal-Scaphandre ?', 'Dive with the Jar Helmet?'), [L('Oui', 'Yes'), L('Non', 'No')]);
+  if (c !== 0) return;
+  await say(L('Tu enfiles ton Bocal-Scaphandre… et tu plonges !', 'You put on your Jar Helmet… and dive!'));
+  g.biking = false;
+  await warpTo({ map: g.map.def.dive!, x: g.player.x, y: g.player.y, facing: 'down' });
+  if (!flag('plongee')) {
+    setFlag('plongee');
+    await say(L('(Pour remonter, appuie sur A dans un rond de lumière.)', '(To come back up, press A in a circle of light.)'));
+  }
+}
+
+/** In a circle of light under water: back up to the surface, in the boat. */
+async function surfaceUp() {
+  const g = getGame();
+  const c = await ask(L('Remonter à la surface ?', 'Go back up to the surface?'), [L('Oui', 'Yes'), L('Non', 'No')]);
+  if (c !== 0) return;
+  await warpTo({ map: g.map.def.underwater!, x: g.player.x, y: g.player.y, facing: 'down' }, { sail: true });
 }
 
 async function sail() {

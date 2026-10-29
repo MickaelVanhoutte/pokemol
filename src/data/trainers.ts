@@ -276,54 +276,91 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route des Feutres
   T({
-    id: 'r4a', name: L('Livreur Nino', 'Courier Nino'), party: [{ species: '013', level: 16 }, { species: '004', level: 16 }, { species: '056', level: 17 }], money: 500,
+    id: 'r4a', name: L('Livreur Nino', 'Courier Nino'), party: [{ species: '026', level: 18 }, { species: '004', level: 18 }, { species: '056', level: 19 }], money: 500,
     before: [L('Je livre des feutres neufs à Ville-Feutre. Mais d’abord, une petite livraison de coups !', 'I’m delivering new markers to Felt City. But first, a little delivery of hits!')],
     after: [L('Livraison annulée…', 'Delivery cancelled…')],
   }),
   T({
-    id: 'r4b', name: L('Musicienne Clara', 'Musician Clara'), party: [{ species: '013', level: 16 }, { species: '005', level: 17 }, { species: '067', level: 17 }], money: 520,
+    id: 'r4b', name: L('Musicienne Clara', 'Musician Clara'), party: [{ species: '026', level: 18 }, { species: '005', level: 19 }, { species: '067', level: 19 }], money: 520,
     before: [L('Ville-Feutre a perdu ses couleurs… et sa musique. Je joue pour la réveiller. Tu danses ?', 'Felt City lost its colours… and its music. I play to wake it up. Will you dance?')],
     after: [L('Tu as du rythme, toi !', 'You’ve got rhythm!')],
   }),
   T({
-    id: 'r4maud', name: L('Randonneuse Maud', 'Hiker Maud'), party: [{ species: '007', level: 17 }, { species: '067', level: 16 }, { species: '008', level: 18 }], money: 520,
+    id: 'r4maud', name: L('Randonneuse Maud', 'Hiker Maud'), party: [{ species: '007', level: 19 }, { species: '067', level: 18 }, { species: '008', level: 20 }], money: 520,
     before: [L('Mon Ronflon porte mon sac. Enfin, quand il ne dort pas.', 'My Snoozle carries my bag. Well, when it’s not asleep.')],
     after: [L('Il dort. Je porte le sac. Comme d’habitude.', 'It’s asleep. I carry the bag. As usual.')],
   }),
   T({
-    id: 'r4tim', name: L('Gamin Tim', 'Kid Tim'), party: [{ species: '007', level: 17 }, { species: '078', level: 16 }, { species: '035', level: 18 }], money: 400,
+    id: 'r4tim', name: L('Gamin Tim', 'Kid Tim'), party: [{ species: '007', level: 18 }, { species: '078', level: 18 }, { species: '035', level: 19 }], money: 400,
     before: [L('Mon cerf-volant fait des étincelles, regarde !', 'My kite throws sparks, look!')],
     after: [L('Zéro étincelle…', 'Zero sparks…')],
   }),
   T({
-    id: 'r4gomme', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '103', level: 17 }, { species: '033', level: 18 }, { species: '056', level: 18 }], money: 500, grey: true,
+    id: 'r4gomme', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '103', level: 19 }, { species: '033', level: 20 }, { species: '056', level: 20 }], money: 500, grey: true,
     before: [L('Ville-Feutre ? On l’a toute grisée ! C’est bien plus calme comme ça.', 'Felt City? We greyed it all out! It’s much quieter like that.')],
     after: [L('Pfff… Va donc voir Rature à l’entrepôt, il te gommera, lui !', 'Pfff… Go see Smudge at the warehouse, he’ll rub you out!')],
   }),
+  // ---------------------------------------------------------------- Lac des Couleurs (between the third and fourth badges)
+  T({
+    id: 'lacR1', name: L('Pêcheur Gaston', 'Fisherman Gaston'), party: [{ species: '099', level: 17 }, { species: '101', level: 18 }, { species: '069', level: 18 }], money: 450,
+    before: [L('Depuis que le lac est gris, ça ne mord plus. Alors je pêche des combats !', 'Since the lake went grey, nothing bites. So I fish for battles!')],
+    after: [L('Ça ne mord vraiment plus…', 'Nothing’s biting at all…')],
+  }),
+  T({
+    id: 'lacR2', name: L('Nageuse Iris', 'Swimmer Iris'), party: [{ species: '095', level: 18 }, { species: '032', level: 18 }], money: 450,
+    before: [L('Avant, en nageant ici, on ressortait toute colorée ! Maintenant, on ressort grise.', 'You used to come out of this water all colourful! Now you come out grey.')],
+    after: [L('Glou glou… perdu.', 'Glug glug… I lost.')],
+  }),
+  T({
+    id: 'lacG1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '103', level: 18 }, { species: '056', level: 18 }, { species: '033', level: 18 }], money: 500, grey: true,
+    before: [L('La source rouge ? On l’a bouchée avec une grosse gomme. Plus de couleurs, plus de taches ! Le lac est parfait comme ça.', 'The red spring? We plugged it with a big eraser. No more colours, no more stains! The lake is perfect like this.')],
+    after: [L('Bon, bon… Débouche-la, ta source, si tu y tiens.', 'Fine, fine… Unplug your spring if you care that much.')],
+  }),
+  T({
+    id: 'lacJ1', name: L('Peintre Lili', 'Painter Lili'), party: [{ species: '113', level: 17 }, { species: '091', level: 17 }, { species: '062', level: 18 }], money: 480,
+    before: [L('Je suis venue peindre le lac… mais il n’y a plus que du gris ! Tant pis, je peins tes Bestioles.', 'I came to paint the lake… but it’s all grey! Never mind, I’ll paint your Critters.')],
+    after: [L('Mon Poulpinceau a renversé tout le pot d’eau !', 'My Octobrush knocked over the whole water jar!')],
+  }),
+  T({
+    id: 'lacG2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '101', level: 18 }, { species: '103', level: 19 }, { species: '056', level: 19 }], money: 500, grey: true,
+    before: [L('Pas un pas de plus ! Le chef est en train d’éponger la dernière source.', 'Not one step further! The boss is mopping up the last spring.')],
+    after: [L('Chef ! Il y a un gamin qui recolorie tout !', 'Boss! There’s a kid colouring everything back in!')],
+  }),
+  T({
+    id: 'lacChef', name: L('Sbire-chef Éponge', 'Head Grunt Sponge'), party: [{ species: '103', level: 18 }, { species: '101', level: 18 }, { species: '056', level: 20 }], money: 1200, grey: true,
+    before: [
+      L('Ah, te voilà ! Moi, c’est Éponge. J’absorbe les couleurs, une à une, jusqu’à la dernière goutte.', 'Ah, there you are! I’m Sponge. I soak up colours, one by one, to the very last drop.'),
+      L('Un lac tout gris, tout propre, sans une tache. Le Grand Effaceur adorera. Va-t’en !', 'A lake all grey and clean, without a single stain. The Great Eraser will love it. Go away!'),
+    ],
+    after: [
+      L('Je suis… essoré…', 'I’m… wrung out…'),
+      L('Bah ! Libère-la, ta source bleue. Mais le Grand Effaceur gommera tout, un jour !', 'Bah! Free your blue spring, then. But the Great Eraser will rub everything out, one day!'),
+    ],
+  }),
   // ---------------------------------------------------------------- Entrepôt Gomme
   T({
-    id: 'e1g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '052', level: 18 }, { species: '026', level: 19 }, { species: '004', level: 19 }], money: 520, grey: true,
+    id: 'e1g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '052', level: 20 }, { species: '026', level: 21 }, { species: '004', level: 21 }], money: 520, grey: true,
     before: [L('Intrus ! Ici on stocke les couleurs aspirées. Tu n’en auras pas une goutte !', 'Intruder! This is where we store the sucked-up colours. You won’t get a drop!')],
     after: [L('Une goutte de rouge vient de s’échapper…', 'A drop of red just escaped…')],
   }),
   T({
-    id: 'e1g2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '074', level: 17 }, { species: '010', level: 18 }], money: 540, grey: true,
+    id: 'e1g2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '074', level: 19 }, { species: '010', level: 20 }], money: 540, grey: true,
     before: [L('Le Grand Effaceur dit que le monde serait plus beau tout blanc. Comme une page neuve !', 'The Great Eraser says the world would be prettier all white. Like a brand-new page!')],
     after: [L('Une page blanche, c’est quand même un peu triste…', 'A blank page is a bit sad, really…')],
   }),
   T({
-    id: 'e1g3', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '008', level: 18 }, { species: '054', level: 18 }, { species: '007', level: 19 }], money: 540, grey: true,
+    id: 'e1g3', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '008', level: 20 }, { species: '054', level: 20 }, { species: '007', level: 20 }], money: 540, grey: true,
     before: [L('Mes Bestioles n’ont plus de couleurs, mais elles mordent encore !', 'My Critters have no colours left, but they still bite!')],
     after: [L('Elles ont retrouvé leurs couleurs… et elles sont toutes contentes. Bizarre.', 'They got their colours back… and they look so happy. Weird.')],
   }),
   T({
-    id: 'e2g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '004', level: 19 }, { species: '056', level: 19 }, { species: '010', level: 20 }], money: 560, grey: true,
+    id: 'e2g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '004', level: 21 }, { species: '056', level: 20 }, { species: '010', level: 21 }], money: 560, grey: true,
     before: [L('Personne ne dérange l’Admin Rature !', 'Nobody disturbs Admin Smudge!')],
     after: [L('Bon… Dérange-le, alors.', 'Fine… Disturb him, then.')],
   }),
   T({
     id: 'rature', name: L('Admin Rature', 'Admin Smudge'), money: 2600, grey: true, afterScript: 'feutreRestore', storyFlag: 'a2.feutre',
-    party: [{ species: '026', level: 20 }, { species: '010', level: 19 }, { species: '010', level: 21 }],
+    party: [{ species: '026', level: 22 }, { species: '010', level: 21 }, { species: '010', level: 23 }],
     before: [
       L('Tiens, tiens. C’est toi qui recolories tout derrière nous ?', 'Well, well. So you’re the one colouring everything back in behind us?'),
       L('Et c’est toi qui caches ce cocon raté, tout embrouillé… Le patron le veut. Surtout celui-là.', 'And you’re hiding that muddled, failed little cocoon… The boss wants it. That one above all.'),
@@ -333,18 +370,18 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Fluo
   T({
-    id: 'fluoT1', name: L('Électricienne Volta', 'Electrician Volta'), party: [{ species: '078', level: 19 }, { species: '035', level: 19 }, { species: '004', level: 20 }], money: 540,
+    id: 'fluoT1', name: L('Électricienne Volta', 'Electrician Volta'), party: [{ species: '078', level: 21 }, { species: '035', level: 21 }, { species: '004', level: 22 }], money: 540,
     before: [L('Attention, ça pique ! Zzzt !', 'Careful, it stings! Bzzt!')],
     after: [L('Court-circuit…', 'Short circuit…')],
   }),
   T({
-    id: 'fluoT2', name: L('Rockeur Jimmy', 'Rocker Jimmy'), party: [{ species: '067', level: 19 }, { species: '092', level: 20 }, { species: '082', level: 20 }], money: 560,
+    id: 'fluoT2', name: L('Rockeur Jimmy', 'Rocker Jimmy'), party: [{ species: '067', level: 21 }, { species: '092', level: 22 }, { species: '082', level: 22 }], money: 560,
     before: [L('Ma Lampyrette et mon Lumignon font les lumières, mon Fâchinge tape sur la batterie. On est un groupe !', 'My Lampfly and my Glimmerkin do the lights, my Grumpape bangs the drums. We’re a band!')],
     after: [L('Le concert est annulé…', 'The concert is cancelled…')],
   }),
   T({
     id: 'zelie', name: L('Maître d’Atelier Zélie', 'Atelier Master Zelie'), money: 2400, badge: 'fluo',
-    party: [{ species: '035', level: 22 }, { species: '082', level: 22 }, { species: '004', level: 24, item: 'baie-bleue' }],
+    party: [{ species: '035', level: 24 }, { species: '082', level: 24 }, { species: '004', level: 26, item: 'baie-bleue' }],
     before: [
       L('Merci d’avoir rendu ses couleurs à ma ville ! Maintenant… on va voir si tu brilles autant que mes feutres fluo !', 'Thanks for giving my city its colours back! Now… let’s see if you shine as bright as my neon markers!'),
     ],
@@ -355,39 +392,39 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Mont Fusain
   T({
-    id: 'mfOlga', name: L('Montagnarde Olga', 'Mountaineer Olga'), party: [{ species: '026', level: 20 }, { species: '029', level: 21 }, { species: '067', level: 21 }], money: 600,
+    id: 'mfOlga', name: L('Montagnarde Olga', 'Mountaineer Olga'), party: [{ species: '026', level: 22 }, { species: '029', level: 23 }, { species: '067', level: 23 }], money: 600,
     before: [L('Le fusain, ça salit les mains ! Et les Bestioles aussi !', 'Charcoal makes your hands dirty! And your Critters too!')],
     after: [L('Je vais me laver les mains…', 'I’m going to wash my hands…')],
   }),
   T({
-    id: 'mfRemi', name: L('Spéléo Rémi', 'Caver Remi'), party: [{ species: '029', level: 20 }, { species: '105', level: 20 }, { species: '030', level: 21 }], money: 620,
+    id: 'mfRemi', name: L('Spéléo Rémi', 'Caver Remi'), party: [{ species: '029', level: 22 }, { species: '105', level: 22 }, { species: '030', level: 23 }], money: 620,
     before: [L('Dans le noir, on ne voit que les yeux des Brumouille. Brr !', 'In the dark you only see the Mistchiefs’ eyes. Brr!')],
     after: [L('Allume la lumière en sortant…', 'Turn off the light on your way out…')],
   }),
   T({
-    id: 'mfArmand', name: L('Géologue Armand', 'Geologist Armand'), party: [{ species: '021', level: 20 }, { species: '076', level: 21 }, { species: '067', level: 21 }], money: 640,
+    id: 'mfArmand', name: L('Géologue Armand', 'Geologist Armand'), party: [{ species: '021', level: 22 }, { species: '076', level: 23 }, { species: '067', level: 23 }], money: 640,
     before: [L('Ce mont est fait de fusain pur ! Touche, ça noircit les doigts. Et les Bestioles, ça les rend coriaces !', 'This mountain is pure charcoal! Touch it, it blackens your fingers. And it makes Critters tough!')],
     after: [L('J’ai les doigts noirs et le moral aussi.', 'Black fingers, and a black mood too.')],
   }),
   T({
-    id: 'mfErmite', name: L('Ermite du Fusain', 'Charcoal Hermit'), party: [{ species: '007', level: 20 }, { species: '010', level: 21 }, { species: '008', level: 19 }], money: 700,
+    id: 'mfErmite', name: L('Ermite du Fusain', 'Charcoal Hermit'), party: [{ species: '007', level: 22 }, { species: '010', level: 23 }, { species: '008', level: 21 }], money: 700,
     before: [L('Je dessine au fusain depuis cent ans. Tout est gris, ici… et c’est très bien comme ça.', 'I’ve drawn in charcoal for a hundred years. Everything is grey here… and that’s just fine.')],
     after: [L('Gris, oui… mais avec des nuances. Bien joué.', 'Grey, yes… but with shades. Well played.')],
   }),
   // ---------------------------------------------------------------- Atelier Braise
   T({
-    id: 'braiseT1', name: L('Jongleur Paco', 'Juggler Paco'), party: [{ species: '076', level: 21 }, { species: '080', level: 21 }, { species: '021', level: 22 }, { species: '026', level: 22 }], money: 600,
+    id: 'braiseT1', name: L('Jongleur Paco', 'Juggler Paco'), party: [{ species: '076', level: 23 }, { species: '080', level: 23 }, { species: '021', level: 24 }, { species: '026', level: 24 }], money: 600,
     before: [L('Je jongle avec des braises ! Enfin, mon Braisaure jongle.', 'I juggle embers! Well, my Emberoo does.')],
     after: [L('Aïe, ça brûle…', 'Ouch, that burns…')],
   }),
   T({
-    id: 'braiseT2', name: L('Forgeronne Inès', 'Smith Ines'), party: [{ species: '080', level: 21 }, { species: '008', level: 21 }, { species: '021', level: 22 }], money: 640,
+    id: 'braiseT2', name: L('Forgeronne Inès', 'Smith Ines'), party: [{ species: '080', level: 23 }, { species: '008', level: 23 }, { species: '021', level: 24 }], money: 640,
     before: [L('Ici on forge des crayons à la chaleur du volcan !', 'Here we forge pencils in the volcano’s heat!')],
     after: [L('Mon crayon a fondu…', 'My pencil melted…')],
   }),
   T({
     id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise',
-    party: [{ species: '002', level: 23 }, { species: '018', level: 22 }, { species: '021', level: 24, item: 'baie-bleue' }],
+    party: [{ species: '021', level: 25 }, { species: '018', level: 24 }, { species: '021', level: 26, item: 'baie-bleue' }],
     before: [
       L('Tu as monté le Mont Fusain jusqu’ici ? Courageux. Mais ici, ça chauffe !', 'You climbed all of Mount Charcoal? Brave. But here, things heat up!'),
     ],
@@ -428,39 +465,39 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route des Paillettes
   T({
-    id: 'r6c', name: L('Collégienne Jeanne', 'Schoolgirl Jeanne'), party: [{ species: '008', level: 22 }, { species: '052', level: 22 }, { species: '061', level: 23 }], money: 820,
+    id: 'r6c', name: L('Collégienne Jeanne', 'Schoolgirl Jeanne'), party: [{ species: '008', level: 23 }, { species: '052', level: 23 }, { species: '061', level: 24 }], money: 820,
     before: [L('J’ai eu dix sur dix en dessin ! Et en combat, on va voir…', 'I got full marks in drawing! And in battles, let’s see…')],
     after: [L('Zéro sur dix en combat. Je réviserai.', 'Zero out of ten in battles. I’ll revise.')],
   }),
   T({
-    id: 'r6d', name: L('Clown Pépin', 'Clown Pepin'), party: [{ species: '016', level: 22 }, { species: '068', level: 23 }, { species: '005', level: 22 }], money: 840,
+    id: 'r6d', name: L('Clown Pépin', 'Clown Pepin'), party: [{ species: '016', level: 23 }, { species: '068', level: 24 }, { species: '005', level: 23 }], money: 840,
     before: [L('Pouet pouet ! Tu veux voir un tour de magie ? Je fais disparaître tes points de vie !', 'Honk honk! Want to see a magic trick? I make your HP disappear!')],
     after: [L('Pouet… le tour a raté.', 'Honk… the trick failed.')],
   }),
   T({
-    id: 'r6a', name: L('Danseuse Coralie', 'Dancer Coralie'), party: [{ species: '007', level: 23 }, { species: '063', level: 24 }, { species: '006', level: 24 }], money: 700,
+    id: 'r6a', name: L('Danseuse Coralie', 'Dancer Coralie'), party: [{ species: '007', level: 24 }, { species: '063', level: 25 }, { species: '006', level: 25 }], money: 700,
     before: [L('Un pas à gauche, une paillette à droite… et on se bat !', 'A step to the left, glitter to the right… and we battle!')],
     after: [L('J’ai perdu le rythme…', 'I lost the beat…')],
   }),
   T({
-    id: 'r6b', name: L('Collégien Bastien', 'Schoolboy Bastien'), party: [{ species: '008', level: 22 }, { species: '052', level: 22 }, { species: '078', level: 23 }], money: 680,
+    id: 'r6b', name: L('Collégien Bastien', 'Schoolboy Bastien'), party: [{ species: '008', level: 23 }, { species: '052', level: 23 }, { species: '078', level: 24 }], money: 680,
     before: [L('J’ai dessiné mes Bestioles dans la marge de mon cahier de maths !', 'I drew my Critters in the margin of my maths notebook!')],
     after: [L('La maîtresse avait raison : il faut écouter en classe.', 'The teacher was right: you should listen in class.')],
   }),
   // ---------------------------------------------------------------- Atelier Paillette
   T({
-    id: 'paillT1', name: L('Paillettine Mia', 'Sparkler Mia'), party: [{ species: '084', level: 23 }, { species: '006', level: 24 }, { species: '005', level: 24 }], money: 720,
+    id: 'paillT1', name: L('Paillettine Mia', 'Sparkler Mia'), party: [{ species: '084', level: 24 }, { species: '006', level: 25 }, { species: '005', level: 25 }], money: 720,
     before: [L('Ça brille, ça brille ! Tu vas en avoir plein les yeux !', 'Sparkle, sparkle! You’ll be dazzled!')],
     after: [L('Il y a des paillettes partout maintenant…', 'There’s glitter everywhere now…')],
   }),
   T({
-    id: 'paillT2', name: L('Magicienne Luce', 'Magician Luce'), party: [{ species: '008', level: 23 }, { species: '005', level: 24 }, { species: '006', level: 24 }], money: 740,
+    id: 'paillT2', name: L('Magicienne Luce', 'Magician Luce'), party: [{ species: '008', level: 24 }, { species: '005', level: 25 }, { species: '006', level: 25 }], money: 740,
     before: [L('Un coup de baguette pailletée, et pouf !', 'One wave of my glitter wand, and poof!')],
     after: [L('Le tour a raté…', 'The trick failed…')],
   }),
   T({
     id: 'celestine', name: L('Maître d’Atelier Célestine', 'Atelier Master Celestine'), money: 3200, badge: 'paillette', fairCopy: true,
-    party: [{ species: '006', level: 26 }, { species: '005', level: 27, item: 'baie-reveil' }, { species: '014', level: 27 }, { species: '028', level: 28 }],
+    party: [{ species: '006', level: 27 }, { species: '005', level: 28, item: 'baie-reveil' }, { species: '014', level: 28 }, { species: '028', level: 29 }],
     before: [L('Bienvenue dans mon atelier étoilé ! Chaque paillette ici est un vœu. Voyons si le tien est le plus fort !', 'Welcome to my starry atelier! Every speck of glitter here is a wish. Let’s see if yours is the strongest!')],
     after: [
       L('Ton vœu brille plus que tous les miens. Voici le Badge Paillette !', 'Your wish shines brighter than all of mine. Here is the Glitter Badge!'),
@@ -811,6 +848,11 @@ export function rivalFinalTeam(rivalStarter: string): TrainerDef['party'] {
     { species: '036', level: 41, item: 'plume-vive' }, { species: '008', level: 41 }, { species: '053', level: 41, item: 'lunettes-tetues' },
     { species: '007', level: 41 }, { species: '027', level: 41 }, { species: grownForm(rivalStarter, ace.level), ...ace },
   ];
+}
+
+/** The rival's team at the Lac des Couleurs: his starter, grown, is the ace. */
+export function rivalLacTeam(rivalStarter: string): TrainerDef['party'] {
+  return [{ species: '026', level: 18 }, { species: '004', level: 18 }, { species: grownForm(rivalStarter, 20), level: 20 }];
 }
 
 /** The rival picks the starter that yours beats, so the very first battle is winnable. */

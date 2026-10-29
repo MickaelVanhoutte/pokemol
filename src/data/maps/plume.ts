@@ -50,6 +50,8 @@ export const PLUME_MAPS: Record<string, MapDef> = {
     warps: [
       { x: 11, y: 17, to: { map: 'bois', x: 18, y: 1, facing: 'down' } },
       { x: 21, y: 9, to: { map: 'route3', x: 1, y: 2, facing: 'right' } },
+      // up the river in the paper boat, to the Lac des Couleurs
+      ...[17, 18, 19].map((x, i) => ({ x, y: 0, to: { map: 'lac', x: 20 + i, y: 30, facing: 'up' as const } })),
     ],
     items: [{ x: 20, y: 1, item: 'page-5', hidden: true }],
     signs: [{ x: 12, y: 15, text: L('VILLAGE-PLUME\nOn y fait la sieste au chant des oiseaux.\nAtelier de Gaspard', 'FEATHERBY\nNaps to the sound of birdsong.\nGaspard’s Atelier') }],

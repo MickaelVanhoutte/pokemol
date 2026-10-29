@@ -6,7 +6,7 @@ import { ITEM_BY_ID } from './items';
 import { LEGEND, type MapDef } from '../overworld/mapTypes';
 import { footprint } from '../overworld/buildings';
 import { habitatsOf } from './habitats';
-import { TILES } from '../overworld/tiles';
+import { isWater, TILES } from '../overworld/tiles';
 
 function walkable(map: MapDef, x: number, y: number, allowDoor = true): boolean {
   if (y < 0 || y >= map.rows.length || x < 0 || x >= map.rows[0].length) return false;
@@ -35,7 +35,9 @@ describe('maps', () => {
 
       it('has warps that land on walkable tiles', () => {
         for (const wp of map.warps ?? []) {
-          expect(walkable(map, wp.x, wp.y), `warp tile ${wp.x},${wp.y}`).toBe(true);
+          // a warp on water is sailed through, onto water on the other side (a river between two maps)
+          const sailed = isWater(LEGEND[map.rows[wp.y]?.[wp.x]]);
+          expect(sailed || walkable(map, wp.x, wp.y), `warp tile ${wp.x},${wp.y}`).toBe(true);
           if (wp.to === 'back') {
             // only shared interiors send you back through the door you came in by
             expect(map.generic, `'back' warp outside a shared interior`).toBe(true);
@@ -43,7 +45,8 @@ describe('maps', () => {
           }
           const target = MAPS[wp.to.map];
           expect(target, wp.to.map).toBeDefined();
-          expect(walkable(target, wp.to.x, wp.to.y, false), `${wp.to.map} ${wp.to.x},${wp.to.y}`).toBe(true);
+          if (sailed) expect(isWater(LEGEND[target.rows[wp.to.y]?.[wp.to.x]]), `${wp.to.map} ${wp.to.x},${wp.to.y} is water`).toBe(true);
+          else expect(walkable(target, wp.to.x, wp.to.y, false), `${wp.to.map} ${wp.to.x},${wp.to.y}`).toBe(true);
         }
         for (const b of map.buildings ?? []) {
           expect(b.x + b.w <= map.rows[0].length && b.y + b.h <= map.rows.length, `building ${b.kind}`).toBe(true);

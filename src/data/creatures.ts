@@ -1514,6 +1514,47 @@ export const CREATURES: SpeciesDef[] = [
       'The Great Inkwell. They say its ink drew the very first lines of the world. It swims in the sky above an island you can only see once you have drawn everything.',
     ),
   },
+  // the Lac des Couleurs (src/data/maps/lac.ts)
+  {
+    id: '113', slug: 'poulpinceau', faces: 'left', name: L('Poulpinceau', 'Octobrush'), kind: L('Bestiole Pinceau', 'Paintbrush Critter'),
+    type: 'eau', base: { hp: 45, atk: 50, def: 45, spa: 70, spd: 45, spe: 45 },
+    catchRate: 190, baseExp: 64, evYield: { spa: 1 }, rarity: 'uncommon', evolutions: [{ to: '114', level: 30 }],
+    stencils: ['pochoir-03', 'pochoir-11', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
+    talents: ['huit-couleurs'], hiddenTalent: 'eponge',
+    learnset: [[1, 'bulles'], [1, 'coup-de-liane'], [7, 'souffle-glace'], [12, 'flammeche'], [16, 'jet-d-eau'], [20, 'pluie-d-aquarelle'],
+      [24, 'tourbillon-braises'], [28, 'grosse-vague']],
+    dex: L(
+      'Il vit au fond du Lac des Couleurs et peint les galets avec son pinceau. Quand il a peur, il crache un petit nuage d’aquarelle et s’enfuit.',
+      'It lives at the bottom of the Lake of Colours and paints the pebbles with its brush. When it gets scared, it puffs out a little cloud of watercolour and swims away.',
+    ),
+  },
+  {
+    id: '114', slug: 'octopeintre', faces: 'left', name: L('Octopeintre', 'Octopainter'), kind: L('Bestiole Kraken', 'Kraken Critter'),
+    type: 'eau', type2: 'combat', base: { hp: 80, atk: 100, def: 75, spa: 100, spd: 75, spe: 60 },
+    catchRate: 45, baseExp: 168, evYield: { atk: 1, spa: 1 }, rarity: 'uncommon', evolvesFrom: '113',
+    stencils: ['pochoir-02', 'pochoir-03', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-14', 'pochoir-15', 'pochoir-19'],
+    talents: ['huit-couleurs'], hiddenTalent: 'eponge',
+    learnset: [[0, 'poing-crayon'], [1, 'bulles'], [1, 'coup-de-liane'], [7, 'souffle-glace'], [12, 'flammeche'], [16, 'jet-d-eau'],
+      [20, 'pluie-d-aquarelle'], [24, 'tourbillon-braises'], [28, 'grosse-vague'], [33, 'rayon-givre'], [37, 'grand-brasier'], [41, 'gros-poing'],
+      [45, 'grand-zigzag']],
+    dex: L(
+      'Chacun de ses huit bras crache une couleur différente. Il peint des fresques géantes au fond de l’eau… et gare à qui marche dessus !',
+      'Each of its eight arms squirts a different colour. It paints giant murals at the bottom of the water… and woe betide anyone who treads on them!',
+    ),
+  },
+  {
+    id: '115', slug: 'aquarelline', faces: 'left', name: L('Aquarelline', 'Aquarelle'), kind: L('Bestiole Légende du Lac', 'Lake Legend Critter'),
+    type: 'eau', type2: 'fee', base: { hp: 100, atk: 70, def: 90, spa: 125, spd: 125, spe: 90 },
+    catchRate: 25, baseExp: 280, evYield: { spa: 2, spd: 1 }, rarity: 'legendary',
+    stencils: ['pochoir-03', 'pochoir-06', 'pochoir-07', 'pochoir-11', 'pochoir-12', 'pochoir-19'],
+    talents: ['voile-d-aquarelle'], hiddenTalent: 'averse-d-ete',
+    learnset: [[1, 'bulles'], [1, 'micro-magique'], [1, 'pluie-d-aquarelle'], [10, 'chanson-douce'], [20, 'grosse-vague'], [30, 'eclat-de-lune'],
+      [38, 'maree-arc-en-ciel'], [45, 'reve-eveille'], [52, 'poudre-arc-en-ciel'], [60, 'maree-arc-en-ciel']],
+    dex: L(
+      'La gardienne du Lac des Couleurs. Ses voiles laissent derrière elle des traînées de toutes les couleurs : c’est elle qui a donné leurs couleurs aux eaux du monde.',
+      'The keeper of the Lake of Colours. Its veils leave trails of every colour behind it: it gave the waters of the world their colours.',
+    ),
+  },
 ];
 
 /** How many species complete the Bestiodex: all of them but its reward. */

@@ -2,7 +2,7 @@ import type { LText } from '../i18n';
 import type { Place } from '../save/schema';
 import { MAPS } from './maps';
 
-export type CellKind = 'town' | 'route' | 'cave' | 'tower' | 'building';
+export type CellKind = 'town' | 'route' | 'cave' | 'tower' | 'building' | 'lake';
 export interface Rect { x: number; y: number; w: number; h: number }
 export interface WorldCell {
   kind: CellKind;
@@ -75,6 +75,14 @@ export const WORLD: Record<string, WorldCell> = {
   // the Piste Cyclable runs down the east side, from Gouache to Ville-Feutre
   piste: { kind: 'route', rects: [{ x: 19, y: 5, w: 1, h: 6 }, { x: 18, y: 11, w: 2, h: 1 }] },
   grotteEchos: { kind: 'cave', rects: at(19, 4) },
+  // north of Village-Plume, up its river: the Lac des Couleurs, and the hidden valley through the tunnel under it
+  lac: { kind: 'lake', rects: at(3, 6, 8, 6) },
+  vallon: { kind: 'route', rects: at(1, 8, 2, 3) },
+  // the depths under the water, dived to with the Bocal-Scaphandre
+  lacFonds: { kind: 'lake', rects: at(3, 6, 8, 6), of: 'lac' },
+  portFonds: { kind: 'town', rects: at(15, 14, 3, 1), of: 'port' },
+  phareFonds: { kind: 'tower', rects: at(16, 16), of: 'phareIle' },
+  encreFonds: { kind: 'town', rects: at(18, 3), of: 'encre' },
 };
 
 /** Maps with no place on the Town Map (the real house of the ending). */

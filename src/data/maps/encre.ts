@@ -118,6 +118,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     // the old city (columns 0-18) keeps its buildings; the Place de l'Encrier (its inkwell fountain and calligraphy on
     // stands) in the south-west, the blue ink canal with bookstalls and footbridges, fireflies (`y`) for street lamps,
     // and the east quarter: three houses, the fireflies' garden and the Night Library's tower
+    dive: 'encreFonds',
     rows: [
       'TTTTTTTTT::TTTTTTTTTTTTTTTTTTTTTTTTT',
       'T......y*::*y....B.....y....y.....BT',
@@ -131,8 +132,8 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       'T.......*::y......*....S##.##.y:*.BT',
       'T:::::::::::::::::::::::::::::::...T',
       'T.S....*.::S..bb.bb.....bb.....y.y.T',
-      'Tq.R~~R.q::R~~~~~~~~~==~~~~~==~~~~~T',
-      'T..R~~R..::.~~~~~~~~~==~~~~~==~~~~~T',
+      'Tq.R~~R.q::R~~~dd~~~~==~~~~~==~~~~~T',
+      'T..R~~R..::.~~~dd~~~~==~~~~~==~~~~~T',
       'Ty*.RR.yq::.*.y..*......y*.....*y.*T',
       'TTTTTTTTT::TTTTTTTTTTTTTTTTTTTTTTTTT',
     ],

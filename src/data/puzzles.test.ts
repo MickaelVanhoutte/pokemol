@@ -183,6 +183,34 @@ describe('puzzles: solvable and not too hard', () => {
   });
 });
 
+describe('puzzles: the Lac des Couleurs', () => {
+  it('Yellow spring: five eraser blocks moved out of the way in a few pushes', () => {
+    const def = MAPS.lac;
+    const rows = fresh(def);
+    // the tile in front of the spring is free and the player can walk to it from the way in
+    const reach = (b: Set<string>) => {
+      if (b.has('22,4')) return false;
+      const seen = new Set(['22,9']);
+      const todo: [number, number][] = [[22, 9]];
+      while (todo.length) {
+        const [x, y] = todo.pop()!;
+        if (x === 22 && y === 4) return true;
+        for (const [, dx, dy] of DIRS) {
+          const k = `${x + dx},${y + dy}`;
+          if (seen.has(k) || b.has(k) || solid(rows, x + dx, y + dy)) continue;
+          seen.add(k);
+          todo.push([x + dx, y + dy]);
+        }
+      }
+      return false;
+    };
+    const n = pushes(def, [22, 9], blocksOf(def), (b) => reach(b));
+    expect(n).not.toBeNull();
+    expect(n!).toBeGreaterThanOrEqual(4);
+    expect(n!).toBeLessThanOrEqual(8);
+  });
+});
+
 describe('puzzles: map data', () => {
   const maps = Object.values(MAPS);
 
@@ -231,6 +259,6 @@ describe('puzzles: map data', () => {
   it('names every fresque once (the collection reward counts them)', () => {
     const ids = maps.flatMap((m) => (m.fresques ?? []).map((f) => f.id));
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids.length).toBe(4);
+    expect(ids.length).toBe(5);
   });
 });

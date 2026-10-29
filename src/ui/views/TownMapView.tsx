@@ -28,7 +28,7 @@ const py = (v: number) => `${((v - VIEW.y) / VIEW.h) * 100}%`;
  */
 export function TownMapView({ save, avatar, onClose }: { save: SaveData; avatar: string; onClose: () => void }) {
   const visited = (id: string) => id === 'bourg' || !!save.flags[`visit:${id}`];
-  const art = useMemo(() => paintTownMap(visited), [save.flags]);
+  const art = useMemo(() => paintTownMap(visited, !!save.bag['carte-fonds']), [save.flags, save.bag]);
   const me = playerSpot(save.player);
   const goal = currentObjective(save);
   const [cursor, setCursor] = useState(me ? placeOf(me.place) : 'bourg');

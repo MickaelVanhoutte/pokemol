@@ -13,6 +13,7 @@ export const PHARE_MAPS: Record<string, MapDef> = {
     name: L('Île de l’Encrier', 'Inkwell Isle'),
     border: 'water',
     backdrop: 'beach',
+    dive: 'phareFonds',
     rows: [
       '~~~~~~~~~~~~~~~~',
       '~~~~~ssssss~~~~~',
@@ -25,8 +26,8 @@ export const PHARE_MAPS: Record<string, MapDef> = {
       '~~ss.......*ss~~',
       '~~~ss.....ss~~~~',
       '~~~~sss.sss~~~~~',
-      '~~~~~~s=s~~~~~~~',
-      '~~~~~~~=~~~~~~~~',
+      '~~~~~~s=s~~~~dd~',
+      '~~~~~~~=~~~~~dd~',
       '~~~~~~~~~~~~~~~~',
     ],
     buildings: [{ kind: 'tower', x: 6, y: 1, w: 4, h: 5, door: 1, roof: '#e04848', to: { map: 'phare1', x: 4, y: 8, facing: 'up' } }],

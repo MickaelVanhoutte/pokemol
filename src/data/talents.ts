@@ -316,6 +316,13 @@ export const TALENTS: TalentDef[] = [
   T('averse-d-encre', L('Averse d’Encre', 'Ink Shower'),
     L('Il fait tomber une pluie d’encre quand il entre en combat.', 'It brings a shower of ink when it comes in.'),
     { kind: 'entryWeather', weather: 'pluie' }),
+  // the Lac des Couleurs
+  T('huit-couleurs', L('Huit Couleurs', 'Eight Colours'),
+    L('Chacun de ses bras a sa couleur : toutes ses capacités ont le bonus de type.', 'Each of its arms has its own colour: all its moves get the same-type bonus.'),
+    { kind: 'allStab' }),
+  T('voile-d-aquarelle', L('Voile d’Aquarelle', 'Watercolour Veil'),
+    L('Ses voiles de couleur adoucissent tout : les coups super efficaces lui font moitié moins mal, et ses capacités de statut ne ratent jamais.', 'Its veils of colour soften everything: super-effective hits do half the damage, and its status moves never miss.'),
+    { kind: 'prism' }),
   T('pelage-d-hiver', L('Pelage d’Hiver', 'Winter Coat'),
     L('Bien emmitouflé, il ne prend que la moitié des dégâts des capacités Feu et Combat.', 'Snugly wrapped up, it takes only half the damage from Fire and Fighting moves.'),
     { kind: 'halve', types: ['feu', 'combat'] }),

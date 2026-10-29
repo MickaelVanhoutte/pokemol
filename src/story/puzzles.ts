@@ -41,7 +41,7 @@ scripts.memo = async () => {
   await say(L('Voici ton prix : {i}{n} !', 'Here’s your prize: {i}{n}!'), MEMO, { i: tr(item(id).name), n: n > 1 ? ` ×${n}` : '' });
 };
 
-// ------------------------------------------------------------------ the four fresques
+// ------------------------------------------------------------------ the fresques
 
 /** Every fresque of the region (`fresques` on maps). */
 const FRESQUES = Object.values(MAPS).flatMap((m) => (m.fresques ?? []).map((f) => f.id));
@@ -60,5 +60,5 @@ scripts.fresqueDone = async () => {
     addItem(d, 'baie-prisme', 3);
   });
   sfx.victory();
-  await say(L('Les quatre fresques sont complètes ! Un éclat de couleur jaillit et laisse un cadeau : 10 Super Crayon-balls et 3 Baies Prisme !', 'All four fresques are complete! A burst of colour leaves a gift: 10 Great Pencil Balls and 3 Prism Berries!'));
+  await say(L('Toutes les fresques sont complètes ! Un éclat de couleur jaillit et laisse un cadeau : 10 Super Crayon-balls et 3 Baies Prisme !', 'Every fresque is complete! A burst of colour leaves a gift: 10 Great Pencil Balls and 3 Prism Berries!'));
 };

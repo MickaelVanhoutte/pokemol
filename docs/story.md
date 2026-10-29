@@ -151,6 +151,7 @@ they are used.
 | 5 | `plume` (Village-Plume), `atelierPlume` | 🏅 **Gaspard**, Normal. The bridge east is erased, so the player goes through the cave | `badge:plume` |
 | 6 | `grotte1`, `grotte2` (Grotte Gribouillis) | Cave trainers and the optional strong `gardien`; exits to the port | — |
 | 7 | `route3`, `port` (Port-Aquarelle), `atelierAquarelle`, `tombola` | 🏅 **Marine**, Water (`marineAfter` restores the bridge). Fair with the **Tombola** side quest (golden ticket hidden on Route 4) | `badge:aquarelle`, `a2.bridge`, `a2.tombola` |
+| 7b | `route4` (its mud), `plume` → river → `lac` (Lac des Couleurs), `sourceBleue` | Grey eraser mud blocks Route 4 (patch `boue`); the rival meets you there (`lacAppel`) and sends you to the lake, up Village-Plume's river by boat. Prof. Fusain's camp (he heals you). Three springs plugged by Team Gomme: red (a grunt guards it), yellow (a room of eraser blocks, 5 pushes), blue (a cave, Head Grunt Sponge). The colours come back (`colourBack`), the rival battles you, the Prof gives the Bocal-Scaphandre | `lac.appel`, `lac.arrivee`, `lac.source:*`, `lac.sources`, `tr:rivalLac`, `gift:bocal` |
 | 8 | `route4`, `feutre` (Ville-Feutre), `entrepot1`/`entrepot2`, `atelierFluo` | The city is drained of colour (`drained`: real greys, `tintUnless: 'a2.feutre'`). Admin Rature in the warehouse; `feutreRestore`, where Zélie gives the Feutre d'Or (fair copies in battle). 🏅 **Zélie**, Electric | `a2.feutre`, `gift:feutre-or`, `badge:fluo` |
 | 9 | `montFusain1`/`2`, `braise` (Village-Braise), `atelierBraise` | 🏅 **Ambre**, Fire | `badge:braise` |
 | 10 | `route6`, `paillette` (Bourg-Paillette), `atelierPaillette` | 🏅 **Célestine**, Fairy | `badge:paillette` |
@@ -162,6 +163,30 @@ they are used.
 | 13d | `encre` (west exit) → `route9` (Route de la Marge), `brouillon` (Hameau-Brouillon), `esquisses` (Forêt des Esquisses), `forteresse1`–`3` (Forteresse Gomme) | Act 4 (`src/story/act4.ts`, maps in `src/data/maps/marge.ts`): a white wall closes the north of Cité-Encre (`murBlanc` patch, `encreNorth`). West past the red margin (`margeCross`, doodles of wings in the margin), the hamlet of unfinished drafts (choice 7, `hameauChoice`: coloured in, or left sketched: `sketchUnless` on the town and its buildings, so its Inn and shop are pencil too, and a patch), the sketched forest (sketch grass `g`), the fortress (1F crayon barriers, 2F glossy paper, 3F the rival heals you, then Buvard, Rature and Blanche, who say they are the little voices of doubt). Pulling the Giant Eraser's lever (`grandeGomme`) brings the wall down and blows you back to Cité-Encre | `a4.marge`, `choix:hameau`, `a4.rival`, `a4.machine` |
 | 14 | `routeBlanche`, `bordPage` (Le Bord de la Page) | Half-drawn world: final rival battle, then the Great Eraser with the choice | `tr:rivalFinal`, `tr:effaceur` |
 | 15 | `chambre` | The real bedroom, Papa, the drawings on the desk, credits | `ending` |
+
+**The Lac des Couleurs** (`src/story/lac.ts`, maps in `src/data/maps/lac.ts`), between the third and fourth badges,
+north-west of the Town Map. It gives the Prof and the rival a part of their own, and echoes the theme: the lake's
+legend is made of the stains a painter never threw away, and the one who wanted the lake "perfect" made it sink.
+- **The expedition** (mandatory: the mud on Route 4 only goes with `lac.sources`). The lake is grey (`drained`,
+  `tintUnless: 'lac.sources'`). Freeing the last spring plays the colours coming back: `Game.colourReturn` spreads the
+  colour from each spring over the map. The rival then points at the dark patches (« On pourrait peut-être plonger,
+  là-dedans ! ») and battles (`rivalLacTeam`, his starter grown L20), and the Prof gives the **Bocal-Scaphandre**.
+- **The depths** (dive on the dark patches, see [content.md](content.md#diving)): `lacFonds`, with Team Gomme's
+  sunken barge and its items, seaweed with the new **Poulpinceau** (Water, L18–20; it becomes **Octopeintre**,
+  Water/Fighting, at L30), the **sunken chapel** (`chapelle`) and its fresco of the legend (the 5th fresque: it gives
+  the **Carte des Fonds**, which marks the dive spots on the Town Map, and opens the crypt), the **Abysses** below
+  (`abysses`, deeper Bestioles L22–25), and a tunnel west to the **Vallon Caché** (`vallon`, the painter's
+  cottage, `maisonGardienne`: the Keeper tells the legend). Dark patches were added to the port, the lighthouse
+  isle and the Ink City canal, each with its own depths (`portFonds`, `phareFonds`, `encreFonds`).
+- **The legend**: seven **memory pearls** (`PEARLS`: red to violet), each a memory of the legend shown as a coloured
+  pencil picture (`src/ui/memoryArt.ts`) and a line: red in the barge, orange in the chapel, yellow in the Abysses,
+  green from the Keeper, blue under the port, indigo under the lighthouse, violet under the canal. A painter rinsed
+  her brushes in the lake every evening and never threw a stain away (« Une tache, c'est une couleur qui se
+  promène »); the rinsed colours became **Aquarelline**, who carried colours to every water. Someone found the lake too
+  stained, not perfect enough, and wanted to clean it: she dived to the bottom with her colours held like pearls, and
+  the chapel sank with her. With the seven on the altar of the Abysses (`legende`), **Aquarelline** (Water/Fairy,
+  legendary, 600) wakes up and battles at L40, like the dream legendaries (`static`, `ko`, `away`). The last pearls
+  need the lighthouse and Ink City, so it is met near the end of the story or after it.
 
 **Detours of the late game.** Besides the lighthouse trip (the story's back-and-forth from Cité-Encre
 down to Port-Aquarelle and its island), two optional places break the straight line north:
@@ -379,15 +404,23 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Atelier Pastel | L5–6 | Mireille L7/L9 (Chrysalou, Papivole) |
 | Route 2, Bois Brumeux | L7–10 (4 + 6 trainers) | — |
 | Atelier Plume | L11 | Gaspard L10/L8 |
-| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 trainers have three Bestioles | Marine L17/18/20 (Clapoflot) |
-| Route 4, Ville-Feutre | L16–20 (Route 4 has 5 trainers) | Rature L20/19/21, Zélie L21/21/23 |
-| Mont Fusain, Braise | L20–23 (wild L19–23) | Ambre L23/20/24 |
-| Route 6, Paillette, Tour | L23–27 | Célestine L26/27/28/29 (Lamacorne added), Blanche L23/24/23/24 |
+| Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 trainers have three Bestioles | Marine L16/16/19 (Clapoflot) |
+| Lac des Couleurs | L17–19 (4 trainers and 2 grunts; wild L16–18, depths L18–20) | Head Grunt Sponge L18/18/20, rival L18/18/20 |
+| Route 4, Ville-Feutre | L18–22 (Route 4 has 5 trainers) | Rature L22/21/23, Zélie L24/24/26 |
+| Mont Fusain, Braise | L22–25 (wild L19–23) | Ambre L25/24/26 |
+| Route 6, Paillette, Tour | L24–28 | Célestine L27/28/28/29 (Lamacorne added), Blanche L23/24/23/24 |
 | Routes 7–8, Gouache, Lighthouse, Encre, Factory | L27–33 (three Bestioles per trainer) | Basile L27–30 (four), Buvard L29–31, Nocturne L30–33 (five, an Ombrouille ace), Rature L31–32 and Blanche L33–34 (five each) |
 | Act 4: Route de la Marge, Forêt des Esquisses, Forteresse Gomme | L35–40, four Bestioles each (wild L34–39) | Buvard L40–42, Rature L39–40, Blanche L41–43 (five each, one after the other; the rival heals you first) |
 | Finale | Route Blanche: Gaston and Mila L40–41 (four each), sketch grass | Rival L40–41 and his starter L45 (6), Great Eraser L40–41 and Ombrouille L45 (5) |
 
 Run `npm run balance` for the current numbers instead of trusting this table.
+
+**The lake (Oct 2026).** The Lac des Couleurs adds seven fights and a wild stretch between Marine and Route 4, so
+the team reaches Route 4 two levels higher. Route 4, the warehouse, the Atelier Fluo and Zélie went up two levels,
+Mont Fusain and Braise two, Route 6 and Paillette one (`npm run curve` keeps every route trainer at or under the
+team's lead). The end of the curve hardly moves (the Great Eraser L42 against a team at L43). On Normal the sims
+give the Head Grunt 83–97% and the rival 69–98% (Braisou last), Route 4's Tim 69–82%, Zélie and Ambre about
+as before.
 
 **Training on the way (iteration 15, Oct 2026).** The owner had to grind on Normal. `npm run curve`
 showed why: with the XP spread over a team, a player who fought every trainer arrived at each Atelier

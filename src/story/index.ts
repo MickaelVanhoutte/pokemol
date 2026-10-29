@@ -13,4 +13,5 @@ import './world';
 import './legends';
 // wraps the real house's scripts (finale)
 import './realLife';
+import './lac';
 import './coconfus';

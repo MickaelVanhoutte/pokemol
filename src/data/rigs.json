@@ -475,6 +475,82 @@
       }
     ]
   },
+  "113": {
+    "slug": "poulpinceau",
+    "parts": [
+      {
+        "name": "pinceau",
+        "motion": "reach",
+        "amp": -22,
+        "period": 2.2,
+        "left": 0,
+        "top": 6.4,
+        "width": 35.9,
+        "height": 60.9,
+        "ox": 85.1,
+        "oy": 89.8
+      }
+    ]
+  },
+  "114": {
+    "slug": "octopeintre",
+    "parts": [
+      {
+        "name": "frappe",
+        "motion": "reach",
+        "amp": -24,
+        "period": 1.8,
+        "left": 5,
+        "top": 5.5,
+        "width": 29.4,
+        "height": 51.1,
+        "ox": 88.7,
+        "oy": 87.2
+      }
+    ]
+  },
+  "115": {
+    "slug": "aquarelline",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 3,
+        "behind": true,
+        "left": 60.3,
+        "top": 47.2,
+        "width": 39.7,
+        "height": 13.7,
+        "ox": 10.2,
+        "oy": 20.1
+      },
+      {
+        "name": "aile-loin",
+        "motion": "flap",
+        "amp": -9,
+        "period": 2.6,
+        "behind": true,
+        "left": 31.7,
+        "top": 0,
+        "width": 61.2,
+        "height": 44.2,
+        "ox": 18.7,
+        "oy": 90.4
+      },
+      {
+        "name": "reflets",
+        "motion": "flicker",
+        "period": 2.6,
+        "left": 10.6,
+        "top": 21.3,
+        "width": 64.3,
+        "height": 72.9,
+        "ox": 39.9,
+        "oy": 48.3
+      }
+    ]
+  },
   "001": {
     "slug": "minousse",
     "parts": [
