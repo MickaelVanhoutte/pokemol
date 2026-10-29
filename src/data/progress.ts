@@ -9,6 +9,7 @@ import type { SaveData } from '../save/schema';
 import { BADGES } from './badges';
 import { CREATURES, dexCount } from './creatures';
 import { TRAINERS } from './trainers';
+import { rematchesWon } from './afterStory';
 
 export interface Reward { item: string; n: number }
 export interface Milestone {
@@ -37,8 +38,6 @@ export const biscuits = (n = 1): Reward[] => ['pv', 'attaque', 'defense', 'atq-s
 
 /** Every species but the player's own counts for the Bestiodex. */
 export const DEX_GOAL = CREATURES.length;
-
-const leaders = BADGES.map((b) => Object.values(TRAINERS).find((t) => t.badge === b.id)!.id);
 
 export const TRACKS: Track[] = [
   {
@@ -91,7 +90,7 @@ export const TRACKS: Track[] = [
   {
     id: 'revanches', name: L('Revanches', 'Rematches'), post: true,
     label: L('Rebats {n} Maîtres d’Atelier', 'Beat {n} Atelier Masters again'),
-    count: (s) => leaders.filter((id) => s.flags[`rematch:${id}`]).length,
+    count: (s) => rematchesWon(s.flags),
     steps: [
       at(1, [of('crayon-lilas')], L('Rebats un Maître d’Atelier', 'Beat an Atelier Master again')),
       at(4, biscuits()),

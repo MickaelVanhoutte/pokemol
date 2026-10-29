@@ -44,6 +44,8 @@ export interface NpcDef {
   service?: LText;
   /** A Bestiole standing there, drawn as its miniature instead of a person (`look` is then unused). */
   mon?: string;
+  /** Once the story is over: lines said instead of `text`, and a present given the first time (`cadeau:<id>`). */
+  afterStory?: { text: LText[]; gift?: { item: string; n?: number; text: LText } };
 }
 
 export interface SignDef {
@@ -203,6 +205,8 @@ export interface MapDef {
   fishing?: FishingTables;
   /** Parts of the map redrawn while story flags are set (erased or restored areas). */
   patches?: PatchDef[];
+  /** Coloured in again once this flag is set: the border around the map and the battle backdrop change too. */
+  recolour?: { if: string; border?: string; backdrop?: Backdrop };
   interact?: InteractDef[];
   /** Pits boulders and blocks fall into. */
   holes?: HoleDef[];

@@ -6,6 +6,7 @@ import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
 import { waiting } from '../data/progress';
+import { BORD_REMATCHES, REPENT_GIFTS, REPENT_GIFT_LINE, RETIRED, rematchesWon, repentLine, repentLook, repentant } from '../data/afterStory';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
@@ -98,6 +99,8 @@ export function setFlag(name: string, v = 1) {
 
 function visibleNpc(n: NpcDef): boolean {
   if (n.showIf && !flag(n.showIf)) return false;
+  // after the ending, Team Gomme's admins wait at the fortress top only
+  if (n.trainer && RETIRED.includes(n.trainer) && flag('ending')) return false;
   if (n.hideIf && flag(n.hideIf)) return false;
   const back = save.value?.player.returnTo;
   if (n.fromMap && !n.fromMap.includes(back?.map ?? '')) return false;
@@ -130,6 +133,11 @@ function patched(def: MapDef): MapDef {
   if (barriersFlipped) out = { ...out, rows: flipBarriers(out.rows, true) };
   if (def.obstacles?.some((o) => o.showIf || o.hideIf || o.id)) out = { ...out, obstacles: def.obstacles.filter(visibleObstacle) };
   if (def.tintUnless && flag(def.tintUnless)) out = { ...out, tint: undefined, drained: undefined };
+  if (def.recolour && flag(def.recolour.if)) out = { ...out, border: def.recolour.border ?? out.border, backdrop: def.recolour.backdrop ?? out.backdrop };
+  // after the ending, Team Gomme wear uniforms they coloured in themselves
+  if (def.npcs?.some((n) => repentant(n.trainer, !!flag('ending')))) {
+    out = { ...out, npcs: def.npcs.map((n) => (repentant(n.trainer, true) ? { ...n, look: repentLook(n.id, n.look) } : n)) };
+  }
   if (def.buildings?.some((b) => b.sketchUnless)) out = { ...out, buildings: def.buildings.map((b) => (b.sketchUnless ? { ...b, sketch: !flag(b.sketchUnless) } : b)) };
   // the Inn and the shop of a town only sketched in pencil are sketched too
   const town = def.generic ? MAPS[save.value?.player.returnTo?.map ?? ''] : undefined;
@@ -333,10 +341,12 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     if (npc.npc) g.faceToward(npc, g.player);
     const def = npc.npc;
     if (!def) return;
+    if (repentant(def.trainer, !!flag('ending'))) return void locked(() => repentTalk(def.trainer!));
     if (def.trainer && !flag(`tr:${def.trainer}`)) return void locked(() => trainerBattle(def.trainer!, npc));
     if (def.trainer && TRAINERS[def.trainer].badge && flag('ending')) return void locked(() => rematch(def.trainer!, npc));
     if (def.trainer && routeRematchReady(def.trainer)) return void locked(() => routeRematch(def.trainer!, npc));
     if (def.trainer) return void locked(() => sayAll(TRAINERS[def.trainer!].after, TRAINERS[def.trainer!].name));
+    if (def.afterStory && flag('ending')) return void locked(() => afterStoryTalk(def));
     if (def.script && scripts[def.script]) return void runScript(def.script);
     if (def.text) return void locked(() => sayAll(def.text!));
     return;
@@ -672,7 +682,7 @@ function trainerSpotting(): Actor | null {
   const g = getGame();
   for (const n of g.npcs) {
     const def = n.npc;
-    if (!def?.trainer || flag(`tr:${def.trainer}`) || !partyAlive(s())) continue;
+    if (!def?.trainer || flag(`tr:${def.trainer}`) || !partyAlive(s()) || repentant(def.trainer, !!flag('ending'))) continue;
     const [dx, dy] = DIRS[n.dir];
     for (let i = 1; i <= (def.sight ?? 3); i++) {
       const x = n.x + dx * i, y = n.y + dy * i;
@@ -797,8 +807,36 @@ async function rematch(id: string, actor: Actor) {
   if (out.result === 'win') {
     // remembered for the Town Map's list of things left to do
     setFlag(`rematch:${id}`);
+    const colours = !flag('couleurs:bord') && rematchesWon(s().flags) >= BORD_REMATCHES;
+    if (colours) setFlag('couleurs:bord');
     await say(L('Incroyable… Tu dessines de mieux en mieux !', 'Incredible… You draw better and better!'), tdef.name);
+    if (colours) showToast(tr(L('Les couleurs gagnent le Bord de la Page…', 'Colours are spreading to the Edge of the Page…')));
   }
+}
+
+/** Gives a present once (its flag is set first), with a line from the giver. */
+async function giftOnce(flagName: string, gift: { item: string; n?: number }, line: LText, speaker?: LText) {
+  if (flag(flagName)) return;
+  const n = gift.n ?? 1;
+  setFlag(flagName);
+  giveItem(gift.item, n);
+  await say(line, speaker);
+  playJingle('item', { fallback: sfx.confirm });
+  await say(L('{name} reçoit {i}{n} !', '{name} received {i}{n}!'), undefined, { i: tr(item(gift.item).name), n: n > 1 ? ` ×${n}` : '' });
+}
+
+/** After the story: an old grunt of Team Gomme talks, and a few give back an eraser. */
+async function repentTalk(id: string) {
+  const who = id.startsWith('rature') || id.startsWith('buvard') || id.startsWith('blanche') ? TRAINERS[id].name : L('Ancien sbire', 'Former grunt');
+  await sayAll(repentLine(id), who);
+  if (REPENT_GIFTS[id]) await giftOnce(`cadeau:${id}`, REPENT_GIFTS[id], REPENT_GIFT_LINE, who);
+}
+
+/** A resident's lines once the story is over, and their present the first time. */
+async function afterStoryTalk(def: NpcDef) {
+  const a = def.afterStory!;
+  await sayAll(a.text);
+  if (a.gift) await giftOnce(`cadeau:${def.id}`, a.gift, a.gift.text);
 }
 
 // ------------------------------------------------------------------ battles

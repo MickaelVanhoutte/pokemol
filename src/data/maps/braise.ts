@@ -187,7 +187,10 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'verrier', x: 6, y: 2, look: { hair: '#8a5a2a', shirt: '#e8d8b8', pants: '#5a4a6a', hat: '#c0703a' }, facing: 'up', fromDoor: [['braise', 19, 5]], text: [
         L('Je souffle le verre à la chaleur du volcan. Regarde ces billes : on dirait des gouttes de soleil !', 'I blow glass in the volcano’s heat. Look at these marbles: like drops of sunshine!'),
         L('Une Bestiole Feu qui tient une Bille Ardente frappe bien plus fort. Ambre en a toujours une sur elle…', 'A Fire Critter holding a Fiery Marble hits much harder. Amber always keeps one on her…'),
-      ] },
+      ], afterStory: {
+        text: [L('Le volcan crache des étincelles de toutes les couleurs depuis quelques jours. Mes billes n’ont jamais été aussi belles !', 'The volcano has been spitting sparks of every colour for a few days. My marbles have never been so beautiful!')],
+        gift: { item: 'bille-ardente', text: L('Prends celle-ci : c’est la plus chaude de la fournée.', 'Take this one: it’s the hottest of the batch.') },
+      } },
       { id: 'verrierMon', x: 2, y: 5, mon: '021', look: LOOKS.kid, facing: 'right', fromDoor: [['braise', 19, 5]], text: [L('Le Braisaure garde le four bien chaud. Il ronronne comme une bouilloire.', 'The Emberoo keeps the kiln nice and hot. It purrs like a kettle.')] },
       // Village-Braise: a family by the hot spring
       { id: 'braiseMere', x: 3, y: 2, look: LOOKS.mom, facing: 'down', fromDoor: [['braise', 26, 5]], text: [
@@ -195,7 +198,9 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       ] },
       { id: 'braiseFils', x: 6, y: 5, look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['braise', 26, 5]], text: [
         L('Quand je serai grand, je serai Maître d’Atelier comme Ambre. Mais d’abord, je dois trouver une Bestiole qui ne brûle pas le canapé.', 'When I grow up I’ll be an Atelier Master like Amber. But first I need a Critter that doesn’t burn the sofa.'),
-      ] },
+      ], afterStory: {
+        text: [L('J’ai trouvé une Bestiole qui ne brûle pas le canapé ! … Elle brûle le tapis. C’est déjà un début.', 'I found a Critter that doesn’t burn the sofa! … It burns the rug. It’s a start.')],
+      } },
     ],
   },
 

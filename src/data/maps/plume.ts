@@ -56,7 +56,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'papiPlume', x: 14, y: 15, look: { hair: '#e8e8f0', shirt: '#8a5a32', pants: '#5a4a3a', hat: '#e0a030' }, facing: 'left', script: 'papiPlume' },
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },
-      { id: 'birdKid', x: 5, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')] },
+      { id: 'birdKid', x: 5, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')], afterStory: { text: [L('Les Piafou chantent de nouveau tous les matins. Et depuis quelques jours, ils chantent deux fois plus fort !', 'The Chirpies sing every morning again. And for a few days now, they’ve been singing twice as loud!')] } },
       { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!')] },
       { id: 'pecheurPlume', x: 16, y: 14, look: LOOKS.sailor, facing: 'right', script: 'canneBois' },
       { id: 'plumePiaf', x: 15, y: 12, mon: '013', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Piafou s’ébroue dans la vasque. Des gouttes partout ! Piou !', 'The Chirpie splashes about in the birdbath. Drops everywhere! Cheep!')] },
@@ -78,7 +78,10 @@ export const PLUME_MAPS: Record<string, MapDef> = {
         L('Je taille des plumes à dessin dans les plumes que perdent les Piafou. Les plus légères s’appellent des Plumes Vives.', 'I cut drawing quills from the feathers the Chirpies shed. The lightest ones are called Swift Quills.'),
         L('Une Bestiole qui tient une Plume Vive agit parfois avant tout le monde. Comme si le vent la poussait !', 'A Critter holding a Swift Quill sometimes moves before everyone else. As if the wind were pushing it!'),
         L('Le calligraphe de l’Auberge écrit les surnoms des Bestioles avec mes plumes. Va le voir !', 'The calligrapher at the Inn writes Critters’ nicknames with my quills. Go and see him!'),
-      ] },
+      ], afterStory: {
+        text: [L('Le vent m’a apporté une plume toute dorée. Je n’en avais jamais vu de pareille… J’en ai taillé une Plume Vive.', 'The wind brought me a golden feather. I’d never seen one like it… I cut a Swift Quill from it.')],
+        gift: { item: 'plume-vive', text: L('Prends-la : je crois bien qu’elle venait de chez toi.', 'Take it: I think it came from your way.') },
+      } },
       { id: 'plumassiereMon', x: 8, y: 4, mon: '013', look: LOOKS.kid, facing: 'left', fromDoor: [['plume', 13, 10]], text: [L('Le Piafou te tend une plume du bout du bec. C’est un cadeau… ou il veut que tu la tailles ?', 'The Chirpie holds out a feather in its beak. A present… or does it want you to sharpen it?')] },
       // Village-Plume: Gaspard's neighbour and her lullaby-singing Chantouille
       { id: 'voisineGaspard', x: 2, y: 2, look: LOOKS.grandma, facing: 'down', fromDoor: [['plume', 2, 11]], text: [

@@ -163,7 +163,10 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'couturiere', x: 6, y: 2, look: { hair: '#8a3a5a', shirt: '#b48ad6', pants: '#f2c8e8', longHair: true }, facing: 'down', fromDoor: [['paillette', 29, 5]], text: [
         L('Je couds des paillettes sur les costumes du Bal des Étoiles. Une par une. Plus que… quatre mille.', 'I sew sequins onto the costumes for the Star Ball. One at a time. Only… four thousand to go.'),
         L('Célestine m’a commandé une cape pleine d’étoiles. Elle dit qu’une Maître d’Atelier doit briller même dans le noir.', 'Celestine ordered a cape full of stars. She says an Atelier Master should shine even in the dark.'),
-      ] },
+      ], afterStory: {
+        text: [L('La cape de Célestine est enfin finie ! Quatre mille paillettes, et il me restait un bout de carton doré…', 'Celestine’s cape is finally done! Four thousand sequins, and I had a bit of golden card left…')],
+        gift: { item: 'couronne-carton', text: L('… alors je t’ai fait une couronne. Une vraie, pour {g:une vraie artiste|un vrai artiste} !', '… so I made you a crown. A real one, for a real artist!') },
+      } },
       { id: 'couturiereFils', x: 7, y: 3, look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['paillette', 29, 5]], text: [
         L('À l’Atelier, le sol est en papier glacé : on glisse jusqu’à ce qu’on se cogne ! Moi, je me cogne toujours dans le même chevalet.', 'At the Atelier the floor is glossy paper: you slide until you bump into something! I always bump into the same easel.'),
       ] },
@@ -172,7 +175,9 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
         L('Chaque nuit, je compte les étoiles filantes. Chacune emporte un vœu. Hier, j’en ai compté quarante-deux !', 'Every night I count shooting stars. Each one carries a wish. Last night I counted forty-two!'),
         L('Célestine venait regarder le ciel ici quand elle était petite. Elle voulait attraper une étoile… Maintenant, elle en sème partout dans son Atelier.', 'Celestine used to come and watch the sky here when she was little. She wanted to catch a star… Now she scatters them all over her Atelier.'),
         L('La nuit, sur la Route des Paillettes, les Lunelle sortent danser dans l’herbe haute.', 'At night, on Glitter Road, the Moonbuns come out to dance in the tall grass.'),
-      ] },
+      ], afterStory: {
+        text: [L('Il y a quelques nuits, une étoile filante est tombée tout près d’ici. Elle a laissé une traînée de paillettes jusqu’au Bord de la Page.', 'A few nights ago a shooting star fell close by. It left a trail of glitter all the way to the Edge of the Page.')],
+      } },
       { id: 'astroMon', x: 5, y: 3, mon: '028', look: LOOKS.kid, facing: 'left', fromDoor: [['paillette', 28, 13]], text: [L('Le Lunéclat somnole sur le tapis. Sa fourrure brille doucement, comme un clair de lune.', 'The Moonglow dozes on the rug. Its fur glows softly, like moonlight.')] },
     ],
   },

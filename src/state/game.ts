@@ -6,6 +6,7 @@ import { talentFromUid } from '../data/talents';
 import { BOX_COUNT, BOX_SIZE, PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
 import { BADGES } from '../data/badges';
 import { TRAINERS } from '../data/trainers';
+import { BORD_REMATCHES, rematchesWon } from '../data/afterStory';
 import { prefs, setPref } from './prefs';
 import { OLD_AVATARS, type Appearance } from '../data/appearance';
 import { registerCustom, type CustomDesign } from '../data/custom';
@@ -113,6 +114,8 @@ export function repair(s: SaveData): SaveData {
     s.bag['feutre-or'] = 1;
     s.flags['gift:feutre-or'] = 1;
   }
+  // the colours come back to the Edge of the Page after rematches (Nov 2026): games already past them see it
+  if (s.flags.ending && rematchesWon(s.flags) >= BORD_REMATCHES) s.flags['couleurs:bord'] = 1;
   return s;
 }
 

@@ -182,7 +182,9 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       ] },
       { id: 'gouaFils', x: 3, y: 2, look: LOOKS.kid, facing: 'right', fromDoor: [['gouache', 23, 5]], text: [
         L('J’ai fait pousser un radis gros comme un Ronflon ! Enfin… gros comme sa tête.', 'I grew a radish as big as a Snoozle! Well… as big as its head.'),
-      ] },
+      ], afterStory: {
+        text: [L('Mon radis a encore grossi ! Maintenant, il est gros comme un Ronflon tout entier. Je ne sais plus où le ranger.', 'My radish grew again! Now it’s as big as a whole Snoozle. I don’t know where to keep it any more.')],
+      } },
       { id: 'gouaErabou', x: 7, y: 5, mon: '093', look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['gouache', 23, 5]], text: [
         L('L’Érabou sème ses feuilles sur le tapis. La fleuriste les ramasse pour ses bouquets.', 'The Maplet sheds its leaves on the rug. The florist picks them up for her bouquets.'),
       ] },
@@ -198,7 +200,10 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'gouaPeintre', x: 2, y: 3, look: { hair: '#c0582a', shirt: '#4a6ad0', pants: '#2a2238', hat: '#2a2238', longHair: true }, facing: 'left', fromDoor: [['gouache', 28, 11]], text: [
         L('La gouache, c’est une peinture qui a du caractère : épaisse, mate, couvrante. Une bonne couche, et on ne voit plus du tout ce qu’il y avait dessous.', 'Gouache is paint with character: thick, matte, opaque. One good coat, and you can’t see what was underneath at all.'),
         L('Basile a gardé deux gros blocs de gomme pris à la Team Gomme. Il s’en sert de poids dans sa serre… Malin, non ?', 'Basil kept two big eraser blocks taken from Team Gomme. He uses them as weights in his greenhouse… Clever, right?'),
-      ] },
+      ], afterStory: {
+        text: [L('Une bonne couche de gouache cache tout ce qu’il y a dessous… Mais maintenant, je laisse toujours un petit coin du premier dessin. Pour me souvenir.', 'A good coat of gouache hides everything underneath… But now I always leave a little corner of the first drawing. To remember.')],
+        gift: { item: 'tablier-peintre', text: L('Tiens, mon vieux tablier. Il a vu plus de couleurs que moi !', 'Here, my old apron. It’s seen more colours than I have!') },
+      } },
       { id: 'gouaApprenti', x: 9, y: 5, look: { hair: '#f2d05a', shirt: '#e8e8e8', pants: '#4fae5a' }, facing: 'left', fromDoor: [['gouache', 28, 11]], text: [
         L('Un peu de jaune, un peu de bleu, je mélange… et voilà le « vert Basile » ! C’est le vert du toit de son Atelier.', 'A bit of yellow, a bit of blue, mix it up… and there’s “Basil green”! It’s the green of his Atelier’s roof.'),
       ] },

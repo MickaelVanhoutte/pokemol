@@ -186,7 +186,10 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       ] },
       { id: 'feutreMamieOk', x: 16, y: 2, look: LOOKS.granny, facing: 'down', showIf: 'a2.feutre', text: [
         L('Mes fleurs ont retrouvé leurs couleurs ! Le rose est revenu en premier. Le rose revient toujours en premier.', 'My flowers have their colours back! Pink came back first. Pink always comes back first.'),
-      ] },
+      ], afterStory: {
+        text: [L('Mes fleurs n’ont jamais été aussi roses. Et en les rempotant, j’ai trouvé quelque chose au fond du pot…', 'My flowers have never been so pink. And while repotting them, I found something at the bottom of the pot…')],
+        gift: { item: 'sucette-magique', text: L('Une Sucette Magique ! Elle est pour toi, ma petite fleur.', 'A Magic Lollipop! It’s for you, my little flower.') },
+      } },
       { id: 'feutreZig', x: 16, y: 17, mon: '004', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Zigzou file entre tes jambes en laissant une traînée d’étincelles. Bzzt !', 'The Ziggle zips between your legs, leaving a trail of sparks. Bzzt!')] },
       { id: 'feutreCycliste', x: 21, y: 12, look: LOOKS.cyclistF, facing: 'left', text: [
         L('À l’est, la Piste Cyclable grimpe jusqu’au Jardin-Gouache. Interdit aux piétons : on n’y passe qu’à vélo !', 'East, the Cycling Track climbs all the way to Gouache Garden. No walkers allowed: bikes only!'),
@@ -204,7 +207,9 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       ] },
       { id: 'feutreApprentie', x: 8, y: 4, look: { hair: '#c86a2a', shirt: '#3ec46d', pants: '#3a3a5a', longHair: true }, facing: 'left', fromDoor: [['feutre', 20, 5]], text: [
         L('Je suis apprentie. Pour l’instant, je dessine surtout les flèches des panneaux. C’est important, les flèches : sans elles, tout le monde se perd !', 'I’m an apprentice. For now I mostly draw the arrows on the signs. Arrows matter: without them, everyone gets lost!'),
-      ] },
+      ], afterStory: {
+        text: [L('J’ai dessiné une nouvelle flèche sur les panneaux : « Par ici, le Bord de la Page ». Tout le monde veut aller voir !', 'I drew a new arrow on the signs: “This way to the Edge of the Page”. Everyone wants to go and see!')],
+      } },
       { id: 'feutreLumignon', x: 2, y: 4, mon: '082', look: LOOKS.kid, facing: 'right', fromDoor: [['feutre', 20, 5]], text: [L('Le Lumignon éclaire l’atelier quand il fait nuit. Il bourdonne comme une ampoule.', 'The Glimmerkin lights up the studio at night. It hums like a light bulb.')] },
       // the green house: a retired felt-tip maker from the warehouse, and the Boltbit stuck to his fridge
       { id: 'feutrePapi', x: 2, y: 2, look: { hair: '#e8e8f0', shirt: '#3ec46d', pants: '#4a4458' }, facing: 'down', fromDoor: [['feutre', 2, 5]], hideIf: 'a2.feutre', text: [

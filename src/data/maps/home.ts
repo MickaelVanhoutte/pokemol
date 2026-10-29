@@ -104,7 +104,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
     ],
     npcs: [
       // kid1 wanders between home and the north road, off the street Mom runs along (momShoes)
-      { id: 'kid1', x: 6, y: 3, look: LOOKS.kid, facing: 'down', wander: true, text: [L('Tu as vu le ciel ? Il y a des lignes dedans, comme sur un cahier d’école !', 'Have you seen the sky? It has lines in it, like a school notebook!')] },
+      { id: 'kid1', x: 6, y: 3, look: LOOKS.kid, facing: 'down', wander: true, text: [L('Tu as vu le ciel ? Il y a des lignes dedans, comme sur un cahier d’école !', 'Have you seen the sky? It has lines in it, like a school notebook!')], afterStory: { text: [L('Le ciel a toujours ses lignes de cahier… Mais depuis que tu es {g:revenue|revenu}, j’ai l’impression que quelqu’un nous regarde, tout là-haut. Et qu’il sourit.', 'The sky still has its notebook lines… But since you came back, I feel like someone up there is watching us. And smiling.')] } },
       { id: 'girl1', x: 15, y: 11, look: LOOKS.girl, facing: 'left', wander: true, text: [L('Dans les hautes herbes, des Bestioles sauvages se cachent. Il faut une Bestiole pour s’y aventurer.', 'Wild Critters hide in the tall grass. You need a Critter of your own to go in there.')] },
       { id: 'bourgVoisine', x: 4, y: 11, look: { hair: '#c0582a', shirt: '#f2c14e', pants: '#4a7ad6', longHair: true }, facing: 'right', wander: true, text: [
         L('Le Prof. Fusain m’a encore prise en photo ce matin. J’avais les cheveux en bataille ! « Clic-clac », qu’il a fait.', 'Prof. Charcoal took my picture again this morning. My hair was a mess! “Click-clack,” he went.'),
@@ -136,7 +136,10 @@ export const HOME_MAPS: Record<string, MapDef> = {
         L('Bienvenue dans mon atelier ! J’apprends à dessiner à tous les enfants du bourg.', 'Welcome to my studio! I teach all the village children to draw.'),
         L('{rival} se dessine toujours plus grand que tout le monde. Et toi, tu dessinais des Bestioles partout, même sur mes murs !', '{rival} always draws himself taller than everyone else. And you drew Critters everywhere, even on my walls!'),
         L('Un conseil d’artiste : un dessin n’est jamais raté. C’est un dessin qui n’a pas fini de grandir.', 'An artist’s advice: a drawing is never a failure. It’s a drawing that hasn’t finished growing.'),
-      ] },
+      ], afterStory: {
+        text: [L('Mes élèves ne dessinent plus qu’une seule chose : toi et tes Bestioles ! Il y en a sur tous mes murs.', 'My pupils only draw one thing now: you and your Critters! They’re all over my walls.')],
+        gift: { item: 'sucette-magique', n: 2, text: L('Tiens, pour la peine. Un dessin n’a jamais fini de grandir… tes Bestioles non plus !', 'Here, for your trouble. A drawing never stops growing… and neither do your Critters!') },
+      } },
       { id: 'bourgEleve', x: 1, y: 4, look: { hair: '#f2d05a', shirt: '#f29ac8', pants: '#3a5aa8', longHair: true }, facing: 'right', fromDoor: [['bourg', 22, 6]], text: [
         L('Je dessine le Ronflon. C’est mon troisième dessin aujourd’hui… et il n’a toujours pas ouvert un œil.', 'I’m drawing the Snoozle. It’s my third drawing today… and it still hasn’t opened an eye.'),
       ] },

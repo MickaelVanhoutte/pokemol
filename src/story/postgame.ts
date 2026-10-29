@@ -80,6 +80,7 @@ scripts.gc5 = async () => {
   resetConcours();
   await warpTo({ map: 'galerie', x: 11, y: 6, facing: 'down' });
   if (first) await say(L('Le Grand Concours reste ouvert : reviens défier les Grandes Maîtresses quand tu veux !', 'The Grand Contest stays open: come back and challenge the Grand Masters any time!'));
+  if (first) showToast(tr(L('Les couleurs reviennent sur la Route Blanche…', 'Colours are coming back to the Blank Road…')));
 };
 
 scripts.pantheon = async () => {

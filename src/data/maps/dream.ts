@@ -34,6 +34,26 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       { x: 9, y: 0, to: { map: 'bordPage', x: 7, y: 12, facing: 'up' } },
       { x: 10, y: 0, to: { map: 'bordPage', x: 8, y: 12, facing: 'up' } },
     ],
+    // after the ending the colours come back: along the path first, then everywhere once the Grand Concours is won
+    patches: [
+      { id: 'rbPath', x: 8, y: 0, rows: ['?::?', '?::?', '*::?', '?::?', '?::*', '?::?', '*::?'], if: 'ending' },
+      {
+        id: 'rbColour', x: 0, y: 0, if: 'champion',
+        rows: [
+          'TTTTTTTTT::TTTTTTTTT',
+          'T..*...,.::.....*..T',
+          'T""T"""""::"""""T""T',
+          'T""""""""::""""""""T',
+          'T""""""""::""""""""T',
+          'T.T.....*::,.....T.T',
+          'T,.......::....*...T',
+          'T....T.*.::...T....T',
+          'T........::.,......T',
+          'T....,...::...,....T',
+        ],
+      },
+    ],
+    recolour: { if: 'champion', border: 'tree', backdrop: 'grass' },
     triggers: [{ x: 9, y: 9, w: 2, h: 1, script: 'rivalFinal', if: 'a3.usine', unless: 'tr:rivalFinal' }],
     npcs: [
       { id: 'rivalEnd', x: 9, y: 6, look: LOOKS.rival, facing: 'down', script: 'rivalFinal', showIf: 'a3.usine', hideIf: 'tr:rivalFinal' },
@@ -85,7 +105,30 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       { x: 8, y: 0, to: { map: 'galerie', x: 11, y: 16, facing: 'up' } },
     ],
     // after the ending, the next page opens at the top of the sheet
-    patches: [{ id: 'galerieWay', x: 7, y: 0, rows: ['ee'], unless: 'ending' }],
+    patches: [
+      { id: 'galerieWay', x: 7, y: 0, rows: ['ee'], unless: 'ending' },
+      // the colours reach the edge of the page after rematches with the Atelier Masters (src/data/afterStory.ts)
+      {
+        id: 'bordColour', x: 1, y: 1, if: 'couleurs:bord',
+        rows: [
+          '..*...::...,..',
+          '......::......',
+          '......::.*....',
+          '.,....::......',
+          '.T....::....T.',
+          '...*..::..,...',
+          '......::......',
+          '.T....::....T.',
+          '..,...::......',
+          '......::...*..',
+          '....*.::......',
+          '......::.,....',
+        ],
+      },
+      { id: 'bordPaths', x: 7, y: 13, rows: [':::'], if: 'couleurs:bord' },
+      { id: 'bordTop', x: 7, y: 0, rows: ['::'], if: 'couleurs:bord' },
+    ],
+    recolour: { if: 'couleurs:bord', backdrop: 'grass' },
     triggers: [{ x: 1, y: 6, w: 13, h: 1, script: 'finalBoss', unless: 'tr:effaceur' }],
     npcs: [
       { id: 'effaceur', x: 7, y: 3, look: LOOKS.effaceur, facing: 'down', script: 'finalBoss', hideIf: 'tr:effaceur' },

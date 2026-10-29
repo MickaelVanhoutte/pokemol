@@ -279,6 +279,17 @@ Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillo
 - the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);
 - Atelier Masters offer rematches at +12 levels;
 - Mom has new lines;
+- two residents per town have new lines (`afterStory` on the NPC), one of them a present once
+  (`cadeau:<npc>`): Lollipops, a Snack, and held items that fit the giver (the quill maker's Swift Quill,
+  the glassblower's Fierce Marble, the seamstress's Cardboard Crown…);
+- Team Gomme put their erasers away (`src/data/afterStory.ts`): grunts and admins no longer battle or
+  spot you, wear uniforms they coloured in themselves (`repentLook`), say a line each, and six give
+  back three erasers of one stat (`cadeau:<trainer>`); the admins only stand at the fortress top;
+- the colours come back in stages: the Blank Road's path at the ending (`rbPath`), the whole Blank Road
+  once the Grand Concours is won (`rbColour`, `recolour`: tree border, grass backdrop, a toast), and
+  the Edge of the Page after rematches with 4 Atelier Masters (`couleurs:bord`, set in `rematch()` or by
+  `repair()`; the margin and the erased edge stay). Hameau-Brouillon's pencil, Felt City's grey lines
+  and the moon fresco are the player's choices and never change;
 - the dream legendary Coconfus did not become waits in its lair at L55 (`src/story/legends.ts`);
 - a path opens at the top of the Edge of the Page (`bordPage` patch) to **Masterpiece Square**
   (`galerie`, `src/data/maps/galerie.ts`, a balloon stop once visited), with an Inn and a shop.

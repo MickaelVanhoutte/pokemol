@@ -191,7 +191,9 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       ] },
       { id: 'portMousse', x: 6, y: 5, look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['port', 18, 5]], text: [
         L('Plus tard, je serai capitaine ! J’ai déjà un bateau en papier. Il a coulé, mais c’était un très bon bateau.', 'When I grow up I’ll be a captain! I already have a paper boat. It sank, but it was a very good boat.'),
-      ] },
+      ], afterStory: {
+        text: [L('Mon nouveau bateau en papier a flotté ! Trois vagues entières avant de couler. C’est un record !', 'My new paper boat floated! Three whole waves before it sank. That’s a record!')],
+      } },
       { id: 'portClapotin', x: 7, y: 3, mon: '003', look: LOOKS.kid, facing: 'left', fromDoor: [['port', 18, 5]], text: [L('Le Clapotin fait des bulles dans l’évier. Pour lui, la vaisselle, c’est un jeu.', 'The Splashell blows bubbles in the sink. To it, washing up is a game.')] },
       // Port-Aquarelle: the seascape painter's studio
       { id: 'peintreMarines', x: 2, y: 3, look: { hair: '#e8e8f0', shirt: '#5a8ad6', pants: '#4a4458', hat: '#d65a5a' }, facing: 'left', fromDoor: [['port', 26, 5]], text: [
@@ -203,7 +205,10 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       { id: 'ravaudeur', x: 2, y: 3, look: { hair: '#e8e8f0', shirt: '#3a5aa8', pants: '#4a3a2a', hat: '#2a3a5a' }, facing: 'left', fromDoor: [['port', 30, 10]], text: [
         L('Je ravaude les filets du port. Un filet troué, c’est comme un dessin pas fini : il manque juste quelques traits.', 'I mend the harbour’s nets. A net with a hole is like an unfinished drawing: it only needs a few more lines.'),
         L('Ils sèchent sur la barrière, à côté de chez moi. Ne t’assois pas dessus, surtout !', 'They’re drying on the fence next to my house. Whatever you do, don’t sit on it!'),
-      ] },
+      ], afterStory: {
+        text: [L('Un filet avec quelques trous attrape quand même plein de choses. Comme un dessin pas fini : il est déjà très bien.', 'A net with a few holes still catches plenty. Like an unfinished drawing: it’s already very good.')],
+        gift: { item: 'ruban-tenace', text: L('Tiens, le ruban qui m’a servi à recoudre le plus gros trou. Il tient bon, celui-là !', 'Here, the ribbon I used to mend the biggest hole. That one holds fast!') },
+      } },
       { id: 'portMamie', x: 5, y: 2, look: LOOKS.grandma, facing: 'down', fromDoor: [['port', 30, 10]], text: [
         L('Le soir, je compte les éclats du phare, au large. Un, deux, trois… Je m’endors toujours avant dix.', 'In the evening I count the lighthouse’s flashes out at sea. One, two, three… I always fall asleep before ten.'),
       ] },

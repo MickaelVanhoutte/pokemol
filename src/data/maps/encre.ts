@@ -201,13 +201,18 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       { id: 'encreWatchman', x: 1, y: 2, look: { hair: '#6a6a7a', shirt: '#2a2238', pants: '#3a3448', hat: '#2a2238' }, facing: 'down', fromDoor: [['encre', 25, 5]], text: [
         L('Chut… Je suis veilleur de nuit : le jour je dors, la nuit je compte les lucioles pour vérifier qu’il n’en manque aucune.', 'Shh… I’m the night watchman: by day I sleep, by night I count the fireflies to make sure none are missing.'),
         L('Depuis que l’Usine à Gommes tourne, elles ont peur : elles brillent moins fort. Ça ne me plaît pas du tout.', 'Since the Eraser Factory started up, they’re scared: they glow less brightly. I don’t like it one bit.'),
-      ] },
+      ], afterStory: {
+        text: [L('Depuis que l’Usine à Gommes est arrêtée, les lucioles brillent comme jamais. Cette nuit, j’en ai même compté une de plus !', 'Since the Eraser Factory stopped, the fireflies glow like never before. Last night I even counted one more!')],
+      } },
       { id: 'encreWatchMon', x: 4, y: 3, mon: '009', look: LOOKS.kid, facing: 'left', fromDoor: [['encre', 25, 5]], text: [L('Le Brumouille flotte au-dessus du lit en bâillant. Lui aussi travaille de nuit.', 'The Mistchief floats above the bed, yawning. It works nights too.')] },
       // the calligrapher's studio
       { id: 'encreCalligrapher', x: 6, y: 2, look: { hair: '#e8e8f0', shirt: '#1a1a2a', pants: '#3a2a5a', longHair: true }, facing: 'down', fromDoor: [['encre', 21, 10]], text: [
         L('Un trait d’encre, ça ne se gomme pas. Alors on respire, on réfléchit… et on ose !', 'A stroke of ink can’t be rubbed out. So you breathe, you think… and you dare!'),
         L('Nocturne a appris à écrire ici, toute petite. Des pâtés partout… mais quelles belles lettres !', 'Nocturne learned to write here when she was tiny. Blots everywhere… but such beautiful letters!'),
-      ] },
+      ], afterStory: {
+        text: [L('Un trait d’encre ne se gomme pas. Alors, quand on rate, on en fait autre chose : une fleur, une étoile, un petit oiseau…', 'A stroke of ink can’t be rubbed out. So when you slip, you turn it into something else: a flower, a star, a little bird…')],
+        gift: { item: 'loupe', text: L('Tiens, ma loupe. Elle aide à voir ce qu’il y a de beau dans les petits ratés.', 'Here, my loupe. It helps you see the beauty in little slips.') },
+      } },
       { id: 'encrePupil', x: 2, y: 4, look: LOOKS.kid, facing: 'right', fromDoor: [['encre', 21, 10]], text: [
         L('J’apprends la calligraphie. Aujourd’hui : la lettre « B », comme Bestiole. Ça fait trois jours que je suis sur la boucle du haut.', 'I’m learning calligraphy. Today: the letter “C”, for Critter. I’ve been stuck on its curve for three days.'),
       ] },

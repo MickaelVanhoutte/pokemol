@@ -77,7 +77,9 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       ] },
       { id: 'pastelCraie', x: 10, y: 13, look: { hair: '#2a2238', shirt: '#9ad0f0', pants: '#f2a0c0' }, facing: 'down', wander: true, text: [
         L('Je dessine une marelle à la craie sur la place ! Quand il pleut, elle s’efface… alors on en dessine une nouvelle.', 'I’m drawing a hopscotch in chalk on the square! When it rains it washes away… so we draw a new one.'),
-      ] },
+      ], afterStory: {
+        text: [L('Depuis ton retour, ma marelle tient mieux. Quand il pleut, elle s’efface quand même un peu… Tant mieux : on en redessine une !', 'Since you came back, my hopscotch holds better. When it rains it still fades a little… Good: we draw a new one!')],
+      } },
       { id: 'pastelPapivole', x: 26, y: 9, mon: '007', look: LOOKS.kid, facing: 'left', wander: true, text: [
         L('Le Papivole volette de fleur en fleur. Il laisse derrière lui une traînée de poudre rose.', 'The Flutterbug flits from flower to flower, leaving a trail of pink powder behind it.'),
       ] },
@@ -102,7 +104,10 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       // a grandmother, and her grandson who draws bugs
       { id: 'pastelMamie', x: 3, y: 2, look: LOOKS.grandma, facing: 'down', fromDoor: [['ville', 30, 14]], text: [
         L('Quand j’étais petite, Ville-Pastel n’avait que trois couleurs. Aujourd’hui, on n’arrive même plus à les compter !', 'When I was little, Pastel City only had three colours. Today nobody can even count them!'),
-      ] },
+      ], afterStory: {
+        text: [L('Tu as fait un si long voyage ! Tu dois avoir faim, et ta Bestiole aussi.', 'You’ve been on such a long journey! You must be hungry, and your Critter too.')],
+        gift: { item: 'gouter', text: L('Tiens, un goûter. Un dessin qui a faim, c’est un dessin qui grandit !', 'Here, a snack. A hungry drawing is a growing drawing!') },
+      } },
       { id: 'pastelGamin', x: 4, y: 3, look: { hair: '#8a4a2a', shirt: '#9ed36a', pants: '#3a5aa8' }, facing: 'left', fromDoor: [['ville', 30, 14]], text: [
         L('À l’Atelier, Mireille garde son jardin derrière une grille. Pour l’ouvrir, on pousse de gros blocs de gomme sur des dalles.', 'At the Atelier, Mireille keeps her garden behind a gate. To open it, you push big eraser blocks onto plates.'),
         L('Moi, j’ai poussé le mien dans un coin… Coincé ! J’ai dû sortir et revenir pour qu’il retourne à sa place.', 'I pushed mine into a corner… Stuck! I had to go out and come back in for it to go back to its place.'),
