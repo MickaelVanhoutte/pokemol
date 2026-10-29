@@ -748,7 +748,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // the three admins, one last time: they are the little voices of doubt
   T({
-    id: 'buvard2', name: L('Capitaine Buvard', 'Captain Blotter'), money: 5000, grey: true,
+    id: 'buvard2', name: L('Capitaine Buvard', 'Captain Blotter'), money: 5000, grey: true, afterScript: 'buvardFresque',
     party: [{ species: '042', level: 40 }, { species: '059', level: 40 }, { species: '070', level: 41 }, { species: '100', level: 39 }, { species: '008', level: 42, item: 'baie-doree' }],
     before: [
       L('Ho ho… Te revoilà. Tu sais ce que je suis, au fond ?', 'Ho ho… You again. Do you know what I really am?'),
@@ -757,7 +757,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Les autres font autrement. Pas mieux. Je crois que je viens de comprendre…', 'The others do it differently. Not better. I think I just understood…')],
   }),
   T({
-    id: 'rature3', name: L('Admin Rature', 'Admin Smudge'), money: 5000, grey: true,
+    id: 'rature3', name: L('Admin Rature', 'Admin Smudge'), money: 5000, grey: true, afterScript: 'ratureTraits',
     party: [{ species: '036', level: 39 }, { species: '057', level: 39 }, { species: '055', level: 39 }, { species: '010', level: 40 }, { species: '011', level: 40, item: 'baie-doree' }],
     before: [
       L('Moi, je suis la voix qui dit : « ça dépasse, c’est raté, barre tout ». On n’est pas méchants, tu sais.', 'I’m the voice that says: “it goes over, it’s wrong, cross it all out”. We’re not mean, you know.'),

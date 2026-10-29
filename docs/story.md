@@ -87,10 +87,33 @@ Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redon
 lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`); his team
 does not change. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
 
+**Choices remembered later.** A few answers come back further on, shown rather than explained, and both ways
+are an act of care (nobody says which was right). Saves that skipped a choice keep the old lines.
+- **Choice 1, the Eraser Factory.** Once the Great Eraser has rubbed it pale, Coconfus (if in the party) huddles
+  up beside the player (`cocoonRemembers` in `choices.ts`, at the end of `usineEnd`; the follower itself when it
+  leads), then a ♥. It holds out the cheek you wiped on Route 1 (« même s’il n’y a plus rien à essuyer »), or
+  touches the mark you told it to keep (« elle lui va toujours aussi bien »).
+- **Choice 4, the fortress.** Beaten, Admin Rature grumbles (`ratureTraits`, `rature3`'s `afterScript`) that
+  Ville-Feutre coloured over his lines cobble by cobble, or kept them and the little ones play hopscotch on them.
+- **Choice 6, the fortress.** Captain Buvard (`buvardFresque`, `buvard2`) went to see Nocturne's fresco on the
+  sly: the sky painted again over his blot, with more stars (« je n’aurais jamais osé recommencer »), or his blot
+  turned into a moon (« je n’y aurais jamais pensé »).
+- **Choice 7, waking up.** In the margin of the real sketchbook (`desk`, the bedroom) are the hamlet's drafts:
+  coloured in a hurry, going over the lines, the Elder with new hands and his flower; or unfinished, the Elder
+  without hands and the little one with a single ear, looking happy.
+
+Choices 2, 3 and 5 already show theirs (Lison in the museum, Featherby's bridge, the rival to the end).
+
 **What the doubt becomes.** After the battle the Great Eraser listens: « je serai ta gomme… pour recommencer »
 (ending 1) or « je serai ton ombre, elle fait partie du dessin » (ending 2). Papa's first words on the last
 page follow the ending; then, for both, the proverb and « ce qui compte, c’est que tu aies pris plaisir à le
 dessiner ».
+
+**After the ending, the Prof's photo.** Back in the dream, the Prof (who could never photograph Coconfus:
+« il bouge tout le temps ») takes its picture at last when the form it became is in the party (`prof:photo`, 2 when
+sparkly; in the PC, he asks for it). The same scene for both endings, one line apart: Libellune's new wings
+« nettes comme du vitrail », or Noctaile's smudges shining « comme des étoiles »; then « Comme ça, il ne se perdra
+jamais », Papa's words. The photo then hangs beside the lab window (patch `profPhoto`, `labPhoto` shows it).
 
 **Saves that saw the old ending** (`ending` set, no `fin`): a pale Coconfus waits at the Edge of the Page
 (`coconBord`). Talking to it gives Coconfus if needed, then plays the face reveal, the last answer, a blink of

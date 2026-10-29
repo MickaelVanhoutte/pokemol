@@ -282,8 +282,11 @@ async function dreamEvolves() {
   setFlag('coconPale', 0);
 }
 
+/** The sketchbook on the desk; in its margin, the drafts of Hameau-Brouillon, coloured in or not (the seventh choice). */
 scripts.desk = async () => {
   await say(L('Tes dessins sont étalés sur le bureau : une chenille, un oiseau, un fantôme qui rigole… et sur la dernière page, ton papillon.', 'Your drawings are spread over the desk: a caterpillar, a bird, a laughing ghost… and on the last page, your butterfly.'));
+  if (flag('choix:hameau:a')) await say(L('Dans la marge, de tout petits bonshommes, coloriés en vitesse, en dépassant un peu. L’un d’eux a des mains toutes neuves… et il tient une fleur.', 'In the margin, tiny little people, coloured in a hurry, going over the lines a bit. One of them has brand-new hands… and he’s holding a flower.'));
+  else if (flag('choix:hameau:b')) await say(L('Dans la marge, de tout petits bonshommes pas finis : un vieux monsieur sans mains, une petite avec une seule oreille… Ils ont l’air contents.', 'In the margin, tiny unfinished little people: an old man with no hands, a little girl with only one ear… They look happy.'));
 };
 
 // ------------------------------------------------------------------ saves that saw the old ending

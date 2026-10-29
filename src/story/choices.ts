@@ -8,8 +8,8 @@ import { L, type LText } from '../i18n';
 import type { Mon } from '../engine/pk/creature';
 import type { SaveData } from '../save/schema';
 import type { Actor } from '../overworld/game';
-import type { Look } from '../overworld/sprites';
-import { ask, getGame, giveMon, offerNickname, say, setFlag } from '../overworld/controller';
+import { LOOKS, type Look } from '../overworld/sprites';
+import { ask, bubble, getGame, giveMon, offerNickname, say, setFlag } from '../overworld/controller';
 import { allMons, save } from '../state/game';
 
 /** The story's choices, in the order you meet them; 'final' is the answer to the Great Eraser. */
@@ -70,6 +70,40 @@ export async function choose(id: ChoiceId, question: LText, a: LText, b: LText, 
   setFlag(`choix:${id}:${way === RETOUCHE ? 'a' : 'b'}`);
   if (react) await cocoonReacts(way);
   return way;
+}
+
+/**
+ * Rubbed pale at the Eraser Factory, Coconfus (when it is in the party) huddles up against you, and remembers
+ * Route 1 (the first choice): it holds out the cheek you wiped, or touches the eraser mark you told it to keep.
+ * When it is the follower, it is the follower that comes.
+ */
+export async function cocoonRemembers() {
+  const d = save.value;
+  if (!d || !inParty()) return;
+  const g = getGame();
+  const lead = d.party.find((m) => !m.egg && m.hp > 0);
+  const f = g.followerShown() && lead?.species === COCONFUS ? g.follower : null;
+  let a: Actor;
+  if (f) {
+    g.follower = null;
+    a = g.spawn('coconUsine', LOOKS.kid, f.x, f.y, f.dir, COCONFUS);
+    a.mini = f.img;
+  } else {
+    a = await comeUp('coconUsine', LOOKS.kid, COCONFUS);
+  }
+  // beside you rather than right behind, so its little heart doesn't hide your face
+  const { x, y } = g.player;
+  const side = [-1, 1].find((dx) => a.x === x && a.y === y + 1 && !g.blocked(x + dx, y + 1) && !g.blocked(x + dx, y));
+  if (side) await g.walk(a, [side < 0 ? 'left' : 'right', 'up'], 200);
+  g.faceToward(a, g.player);
+  g.faceToward(g.player, a);
+  await say(L('Coconfus se serre contre toi, tout pâle. Il tremble.', 'Muddlecoon huddles up against you, all pale. It’s trembling.'));
+  if (d.flags['choix:tache:a']) await say(L('Il te tend sa joue, comme sur le Chemin des Crayons. Tu l’essuies doucement… même s’il n’y a plus rien à essuyer.', 'It holds out its cheek, like on Crayon Road. You wipe it gently… even though there’s nothing left to wipe.'));
+  else if (d.flags['choix:tache:b']) await say(L('Il touche sa trace de gomme, toute pâle elle aussi, et il te regarde. Tu lui souris : elle lui va toujours aussi bien.', 'It touches its eraser mark, all pale too, and looks at you. You smile at it: it still suits it just as well.'));
+  else await say(L('Tu le serres contre toi, jusqu’à ce qu’il arrête de trembler.', 'You hold it close until it stops trembling.'));
+  await bubble(a.id, '♥', 900);
+  g.remove(a.id);
+  if (f) g.follower = f;
 }
 
 /** Coconfus comes up to you (when it is on the map) and joins the team. */

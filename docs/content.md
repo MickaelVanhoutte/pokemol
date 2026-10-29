@@ -35,11 +35,12 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
 | `gc:<1-4>` | Grand Concours scripts | Grand Maître beaten in the current attempt (cleared at the door) |
-| `choix:<id>` (1 or 2), `choix:<id>:a` / `:b` | `choose()` in `src/story/choices.ts` | A story choice: 1 touches the drawing up (Libellune ending), 2 keeps it as it is (Noctaile ending). Maps use `:a` / `:b` to show its consequence ([story.md](story.md#the-two-endings)) |
+| `choix:<id>` (1 or 2), `choix:<id>:a` / `:b` | `choose()` in `src/story/choices.ts` | A story choice: 1 touches the drawing up (Libellune ending), 2 keeps it as it is (Noctaile ending). Maps use `:a` / `:b` to show its consequence, and some later scenes remember it ([story.md](story.md#the-two-endings)) |
 | `gift:feutre-or` | `feutreRestore` (Zélie, Ville-Feutre warehouse), or `repair()` for saves past `a2.feutre` | Feutre d'Or given: fair copies in battle |
 | `fair:<id>` | `fight()` | That Bestiole's fair copy was seen in a battle (Bestiodex button) |
 | `gift:coconfus` | `coconfusJoins()` (Misty Woods, or the next town for older saves) | Coconfus joined the team |
 | `prof:coconfus` | the Prof's wrapper in `src/story/coconfus.ts` | The Prof said he never photographed Coconfus |
+| `prof:photo` (1, or 2 when sparkly) | the Prof's wrapper in `src/story/coconfus.ts`, after the ending | The Prof photographed what Coconfus became: the photo hangs in the lab (patch `profPhoto`, `labPhoto`) |
 | `coconPale` | `usineEnd` (Eraser Factory) | The Great Eraser rubbed Coconfus: its card is washed out until the ending |
 | `vision:<slug>` | `src/story/legends.ts` | The vision of a dream legendary was met (before the ending) |
 | `fin` (1 or 2) | the ending | The form Coconfus took: 1 Libellune, 2 Noctaile; the other one waits in its lair |

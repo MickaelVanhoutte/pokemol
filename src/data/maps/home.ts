@@ -171,6 +171,8 @@ export const HOME_MAPS: Record<string, MapDef> = {
       'WWWWWXWWWWW',
     ],
     warps: [{ x: 5, y: 9, to: { map: 'bourg', x: 9, y: 14, facing: 'down' } }],
+    // after the ending, the Prof hangs his photo of what Coconfus became beside the window (src/story/coconfus.ts)
+    patches: [{ id: 'profPhoto', x: 6, y: 0, rows: ['q'], if: 'prof:photo' }],
     npcs: [
       { id: 'prof', x: 5, y: 2, look: LOOKS.prof, facing: 'down', script: 'prof' },
       { id: 'rival', x: 2, y: 4, look: LOOKS.rival, facing: 'right', script: 'rivalLab', hideIf: 'rival1' },
@@ -179,7 +181,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
     ],
     interact: [
       { x: 4, y: 3, script: 'labTable' }, { x: 5, y: 3, script: 'labTable' }, { x: 6, y: 3, script: 'labTable' }, { x: 7, y: 3, script: 'labTable' },
-      { x: 10, y: 1, script: 'labCamera' }, { x: 10, y: 2, script: 'labCamera' },
+      { x: 10, y: 1, script: 'labCamera' }, { x: 10, y: 2, script: 'labCamera' }, { x: 6, y: 0, script: 'labPhoto' },
     ],
   },
 

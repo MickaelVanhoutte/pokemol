@@ -214,6 +214,22 @@ scripts.forteresseTop = async () => {
   mapMusic();
 };
 
+/** Beaten at the top, Captain Buvard has been to see the fresco his stolen ink spilled on (the sixth choice). */
+scripts.buvardFresque = async () => {
+  if (!flag('choix:encre')) return;
+  await say(flag('choix:encre:a')
+    ? L('Ho ho… J’ai vu la fresque de Nocturne, en cachette. Elle a repeint le ciel par-dessus ma tache, avec encore plus d’étoiles. Moi, je n’aurais jamais osé recommencer.', 'Ho ho… I went to see Nocturne’s fresco, on the sly. She painted the sky again over my blot, with even more stars. I’d never have dared to start again.')
+    : L('Ho ho… J’ai vu la fresque de Nocturne, en cachette. Ma tache est devenue une lune. Une lune ! Moi, je n’y aurais jamais pensé.', 'Ho ho… I went to see Nocturne’s fresco, on the sly. My blot has become a moon. A moon! I’d never have thought of that.'), L('Capitaine Buvard', 'Captain Blotter'));
+};
+
+/** Admin Rature knows what Ville-Feutre did with the grey lines he left (the fourth choice). */
+scripts.ratureTraits = async () => {
+  if (!flag('choix:feutre')) return;
+  await say(flag('choix:feutre:a')
+    ? L('Ville-Feutre… Ils ont recolorié par-dessus mes traits, pavé par pavé. On ne voit même plus où je suis passé. Pfff.', 'Felt City… They coloured over my lines, cobble by cobble. You can’t even tell where I went anymore. Pfff.')
+    : L('Ville-Feutre… Ils ont gardé mes traits gris par terre. Les petits sautent dessus en jouant à la marelle. Pfff.', 'Felt City… They kept my grey lines on the ground. The little ones hop along them playing hopscotch. Pfff.'), L('Admin Rature', 'Admin Smudge'));
+};
+
 /** The Giant Eraser at the top of the fortress: stopping it brings the white wall down. */
 scripts.grandeGomme = async () => {
   if (flag('a4.machine')) {

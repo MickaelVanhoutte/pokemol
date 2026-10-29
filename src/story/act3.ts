@@ -12,7 +12,7 @@ import {
   trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
-import { choose, comeUp, findCoconfus, RETOUCHE } from './choices';
+import { choose, cocoonRemembers, comeUp, findCoconfus, RETOUCHE } from './choices';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const GRUNT = L('Sbire Gomme', 'Eraser Grunt');
@@ -303,6 +303,7 @@ scripts.usineEnd = async () => {
   g.remove(boss.id);
   await shake(700);
   await say(L('Au loin, un grondement… Un grand mur blanc vient de se dresser au nord de la Cité-Encre !', 'In the distance, a rumble… A great white wall has just risen north of Ink City!'));
+  if (flag('coconPale')) await cocoonRemembers();
 };
 
 // ------------------------------------------------------------------ the last rival battle
