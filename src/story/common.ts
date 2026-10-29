@@ -60,6 +60,12 @@ scripts.auberge = async () => {
     await getGame().fadeTo(0, 250);
     update((d) => healParty(d));
     innRespawn();
+    // after the ending, the first rest of a real day: a nap that ends at home (src/story/realLife.ts)
+    if (wakesAtHome(save.value!.flags, localDay()) && scripts.reveilMaison) {
+      await say(L('Bien au chaud sous la couverture, tu t’assoupis…', 'Snug under the blanket, you doze off…'));
+      await scripts.reveilMaison();
+      return;
+    }
     await say(L('Et voilà ! Tes Bestioles sont en pleine forme. À bientôt !', 'There you go! Your Critters are in top shape. See you soon!'), INNKEEPER);
   } else if (c === 1) {
     await say(morning

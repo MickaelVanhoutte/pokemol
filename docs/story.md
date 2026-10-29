@@ -281,7 +281,7 @@ Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillo
   (`ilePage`, also for games that had the diploma before new Bestioles came), and the ferryman at Port-Aquarelle offers
   it besides the Inkwell Isle;
 - **days in the real house** (`src/data/realLife.ts`, `src/story/realLife.ts`): once a real day (`localDay`), the
-  first night at an Inn (innkeeper or bed) ends in the real bedroom instead (`reveilMaison`, heals and turns the clock
+  first rest at an Inn (the innkeeper's quick rest or night, or a bed) ends in the real bedroom instead (`reveilMaison`, heals and turns the clock
   like a night). The player does one thing, its level shown first (5 dots) with what the next level gives: draw at the
   desk (catch rate +3 %/level, shows one of her originals as « ton dessin du jour »), daydream at a window (sparkly
   Bestioles 1 % → 3 %), read the books (XP +4 %/level), tell Mummy and Daddy about the dream (trainer prize money

@@ -66,6 +66,15 @@ describe('a day in the real house', () => {
     expect(fake.warps).toEqual([]);
   });
 
+  it('also comes with the innkeeper’s quick rest, and to games that ended before `reveil:dodo` existed', async () => {
+    start({ 'reveil:dodo': 0 });
+    fake.answers = [0];
+    await scripts.auberge();
+    expect(fake.warps).toEqual(['chambre']);
+    expect(said.join('\n')).toContain('tu t’assoupis');
+    expect(save.value!.respawn.map).toBe('centre');
+  });
+
   it('lets the player do one thing, which grows its level, then sends them back to the Inn', async () => {
     await scripts.innBed();
     said.length = 0;

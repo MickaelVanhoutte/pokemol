@@ -15,7 +15,7 @@ import {
 import { LEGEND } from '../overworld/mapTypes';
 import { TILES } from '../overworld/tiles';
 import { sleepUntil } from './common';
-import { choose, COCONFUS, coconfusJoins, RETOUCHE } from './choices';
+import { choose, COCONFUS, coconfusJoins, comeUp, RETOUCHE } from './choices';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
 // ------------------------------------------------------------------ home
@@ -365,11 +365,9 @@ scripts.boisRestore = async () => {
     await say(L('Le petit cocon de la route ! Le Sbire le gardait prisonnier… Il se blottit contre toi en tremblant.', 'The little cocoon from the road! The grunt was keeping it prisoner… It snuggles up to you, trembling.'));
     await coconfusJoins(10, cocon);
   }
-  const px = g.player.x, py = g.player.y;
   playMusic('rival');
-  const rival = g.spawn('rivalBois', LOOKS.rival, px, Math.min(g.map.h - 2, py + 3), 'up');
-  for (let i = 0; i < 2 && !(rival.x === px && rival.y === py + 1); i++) await g.walk(rival, ['up'], 180);
-  g.faceToward(g.player, rival);
+  // he comes up on free ground beside you (the woods round the clearing are thick)
+  const rival = await comeUp('rivalBois', LOOKS.rival);
   await sayAll([
     L('{name} ! Toi aussi tu les as vus ? Ces Gommeux effacent tout sur leur passage !', '{name}! You saw them too? Those Erasers rub out everything in their way!'),
     L('Mais regarde… quand on bat leurs Bestioles grises, les couleurs reviennent !', 'But look… when you beat their grey Critters, the colours come back!'),
@@ -381,7 +379,8 @@ scripts.boisRestore = async () => {
     L('Wouah… Les arbres sont revenus ! On dirait un dessin qu’on vient de finir.', 'Whoa… The trees are back! It looks like a drawing that was just finished.'),
     L('Je file à Village-Plume, juste au nord. Le premier arrivé à l’Atelier a gagné !', 'I’m off to Featherby, just north of here. First one to the Atelier wins!'),
   ], RIVAL);
-  await g.walk(rival, ['right'], 160);
+  // off north to Featherby, up the path while it is free
+  for (let i = 0; i < 6 && !g.blocked(rival.x, rival.y - 1, rival); i++) await g.walk(rival, ['up'], 160);
   g.remove('rivalBois');
   mapMusic();
 };

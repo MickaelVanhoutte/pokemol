@@ -446,6 +446,12 @@ export class Game {
     }
   }
 
+  /** A tile `who` can't walk onto, whoever moves away: outside the map, a solid tile (water, unless sailing) or an obstacle. */
+  walled(x: number, y: number, who?: Actor): boolean {
+    if (who === this.player && this.surfing && this.tileAt(x, y) === 'water') return false;
+    return !this.inside(x, y) || !!this.map.solid[y * this.map.w + x] || !!this.obstacleAt(x, y);
+  }
+
   blocked(x: number, y: number, who?: Actor): boolean {
     if (!this.inside(x, y)) return true;
     // sailing: the player can go on water (and lands by walking onto the shore)
@@ -510,8 +516,9 @@ export class Game {
       let tries = 0;
       let moved = true;
       while (!this.tryMove(a, d, ms)) {
-        // still blocked after 4 s: skip that step rather than wait forever for it
-        if (++tries > 40) { moved = false; break; }
+        // a tree or a wall won't move: skip that step at once; someone in the way may (wait up to 4 s)
+        const [dx, dy] = DIRS[d];
+        if (this.walled(a.x + dx, a.y + dy, a) || ++tries > 40) { moved = false; break; }
         await new Promise((r) => setTimeout(r, 100));
       }
       if (moved) await new Promise<void>((r) => (a.resolveMove = r));

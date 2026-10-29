@@ -22,9 +22,9 @@ describe('days in the real house', () => {
   });
 
   it('wake the player at home once a real day, after the ending, while something can still grow', () => {
-    const after = { ending: 1, 'reveil:dodo': 1 };
+    const after = { ending: 1 };
     expect(wakesAtHome({}, 100)).toBe(false);
-    expect(wakesAtHome({ ending: 1 }, 100)).toBe(false);
+    // games that ended before `reveil:dodo` existed wake up at home too
     expect(wakesAtHome(after, 100)).toBe(true);
     expect(wakesAtHome({ ...after, 'reel:jour': 100 }, 100)).toBe(false);
     expect(wakesAtHome({ ...after, 'reel:jour': 100 }, 101)).toBe(true);

@@ -82,6 +82,10 @@ export function glowingSpots(def: { interact?: { x: number; y: number; script: s
   return [...(def.interact ?? []), ...(def.npcs ?? [])].filter((s) => open(s.script)).map(({ x, y }) => ({ x, y }));
 }
 
-/** Whether tonight's sleep at an Inn wakes the player up at home: once a real day, after the ending, while a level can still grow. */
+/**
+ * Whether a rest at an Inn wakes the player up at home: once a real day, after the ending, while a level can still
+ * grow. (Being at an Inn after the ending means being back in Papeterre: games that ended before `reveil:dodo`
+ * existed never had it set.)
+ */
 export const wakesAtHome = (flags: Flags, today: number) =>
-  !!flags.ending && !!flags['reveil:dodo'] && flags['reel:jour'] !== today && ACTIVITIES.some((a) => realLevel(flags, a.id) < REAL_MAX);
+  !!flags.ending && flags['reel:jour'] !== today && ACTIVITIES.some((a) => realLevel(flags, a.id) < REAL_MAX);
