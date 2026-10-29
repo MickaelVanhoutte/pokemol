@@ -107,6 +107,8 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   An entry with `time: 'night'` (or `'day'`) only shows up then (evening counts as day): the clock
   is the device's, shifted by sleeping at an Inn or at home (`save.clockShift`, `src/state/clock.ts`).
   Keep at least one entry for each time in every table. The Bestiodex habitats say « la nuit ».
+  An entry with `if: '<flag>'` only shows up once that flag is set: the Bestioles met after the story
+  (`afterStory: true` on the species, which also keeps them out of the Tombola until the ending).
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
   sketch`).
 - `indoor`, `tint`, `fog`, `onEnter` (towns use `'visitTown'`), `awake` (the real world: no follower).

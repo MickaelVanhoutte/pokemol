@@ -15,10 +15,11 @@ import '../screens.css';
 export const MACHINE_PRICE = 1000;
 
 /** Picks a random creature (rarity-weighted) close to the player's strongest level. */
-export function machineRoll(seed: number, topLevel: number): Mon {
+export function machineRoll(seed: number, topLevel: number, ending = false): Mon {
   const st = { rng: seed };
-  // the dream legendaries and their cocoon belong to the story, never to the machine
-  const sp = pickWeighted(st, CREATURES.filter((c) => c.rarity !== 'legendary'), (c) => RARITIES[c.rarity].weight);
+  // the dream legendaries and their cocoon belong to the story, never to the machine; the Bestioles met only
+  // after the story wait for it
+  const sp = pickWeighted(st, CREATURES.filter((c) => c.rarity !== 'legendary' && (ending || !c.afterStory)), (c) => RARITIES[c.rarity].weight);
   const level = Math.max(3, Math.min(40, topLevel - 2));
   return createMon(sp.id, level, st);
 }
@@ -35,7 +36,7 @@ export function MachineScreen() {
     sfx.sparkle();
     setTimeout(() => {
       const top = Math.max(1, ...[...save.value!.party, ...save.value!.boxes.flat()].map((m) => m.level));
-      const mon = machineRoll(newSeed(), top);
+      const mon = machineRoll(newSeed(), top, !!d.flags.ending);
       let where: 'party' | 'box' = 'party';
       update((x) => {
         x.money -= MACHINE_PRICE;

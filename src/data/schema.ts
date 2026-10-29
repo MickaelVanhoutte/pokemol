@@ -108,6 +108,8 @@ export interface SpeciesDef {
    * the credits say so; her drawing replaces it with the same id and slug.
    */
   draft?: true;
+  /** Only met once the story is over: never out of the Tombola before (src/data/afterStory.ts). */
+  afterStory?: true;
 }
 
 /** What a held item does in battle (see `src/engine/pk/battle.ts`). */

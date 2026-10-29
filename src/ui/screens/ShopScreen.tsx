@@ -22,6 +22,8 @@ export const STOCK: Record<string, number | 'ending'> = {
   ...Object.fromEntries(ITEMS.filter((it) => it.kind === 'effort').map((it) => [it.id, 3])),
   // before the ending, Magic Lollipops are only found on the map
   'sucette-magique': 'ending',
+  // Floconnet's evolution, once it can be met
+  'crayon-magique-glace': 'ending',
 };
 
 /** Whether a shop sells this item now. */

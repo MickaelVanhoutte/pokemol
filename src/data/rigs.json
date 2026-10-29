@@ -304,6 +304,135 @@
       }
     ]
   },
+  "108": {
+    "slug": "floconnet",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 12,
+        "period": 1.7,
+        "behind": true,
+        "left": 77.1,
+        "top": 56.3,
+        "width": 22.9,
+        "height": 22.1,
+        "ox": 20.2,
+        "oy": 83.3
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 10,
+        "top": 35.2,
+        "width": 34,
+        "height": 17.2,
+        "ox": 49.1,
+        "oy": 53.6
+      }
+    ]
+  },
+  "109": {
+    "slug": "givrelynx",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 10,
+        "period": 2.1,
+        "behind": true,
+        "left": 72.3,
+        "top": 33.9,
+        "width": 27.7,
+        "height": 57.5,
+        "ox": 28.3,
+        "oy": 87.3
+      },
+      {
+        "name": "ailes",
+        "motion": "flap",
+        "amp": 12,
+        "period": 1.4,
+        "behind": true,
+        "left": 55.9,
+        "top": 24,
+        "width": 24.5,
+        "height": 30.4,
+        "ox": 24,
+        "oy": 90.1
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 8.6,
+        "top": 29.6,
+        "width": 31.5,
+        "height": 14.4,
+        "ox": 48,
+        "oy": 53
+      }
+    ]
+  },
+  "110": {
+    "slug": "gommichon",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 16,
+        "period": 1.1,
+        "behind": true,
+        "left": 82.5,
+        "top": 34,
+        "width": 13.7,
+        "height": 14.3,
+        "ox": 17.2,
+        "oy": 72.2
+      },
+      {
+        "name": "poing",
+        "motion": "reach",
+        "amp": -18,
+        "period": 1.2,
+        "left": 19.5,
+        "top": 57.1,
+        "width": 28.8,
+        "height": 16.6,
+        "ox": 87.3,
+        "oy": 49.4
+      }
+    ]
+  },
+  "111": {
+    "slug": "taillou",
+    "parts": [
+      {
+        "name": "copeau",
+        "motion": "nod",
+        "amp": 6,
+        "period": 2.2,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 75.9,
+        "height": 35.7,
+        "ox": 46.6,
+        "oy": 80.3
+      },
+      {
+        "name": "langue",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.4,
+        "left": 36.5,
+        "top": 75.8,
+        "width": 21.3,
+        "height": 24.2,
+        "ox": 45.4,
+        "oy": 16.5
+      }
+    ]
+  },
   "001": {
     "slug": "minousse",
     "parts": [

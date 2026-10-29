@@ -108,8 +108,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   raccourcis quand tu reviens avec le bon outil.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
   crédits. Quelques-unes sont des **brouillons**, griffonnés vite fait. On en croise dans les grottes,
-  sur la montagne, au bord de l’eau… Il y en a **107** à découvrir : certaines ne sortent que la nuit,
-  d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche.
+  sur la montagne, au bord de l’eau… Il y en a **111** à découvrir : certaines ne sortent que la nuit,
+  d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche, et quelques-unes
+  n’apparaissent qu’une fois l’histoire finie.
 - Des **énigmes** dans les grottes, les tours et les repaires, et des **fresques** à reconstituer.
 - Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
 - Dans chaque ville, une **Auberge** : l’aubergiste remet tes Bestioles en forme, et ses lits te
@@ -239,8 +240,8 @@ The story has **two endings**, and your answers choose which one you will see.
   waits for your boat, bushes and rocks that open shortcuts when you come back with the right tool.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few
   are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…
-  There are **107** to discover: some only come out at night, others hide in the tower, deep in the water
-  or at the end of a fishing line.
+  There are **111** to discover: some only come out at night, others hide in the tower, deep in the water
+  or at the end of a fishing line, and a few only show up once the story is over.
 - **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels.
 - Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let

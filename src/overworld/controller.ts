@@ -316,9 +316,9 @@ function onStep(x: number, y: number): boolean {
   if (!enc) odds.ground = '';
   if (enc && wildStep(odds, enc.rate, ground, { bike: g.biking, repel }) && partyAlive(s())) {
     const st = { rng: newSeed() };
-    // some Bestioles only come out at night (or by day)
+    // some Bestioles only come out at night (or by day), or once the story is over
     const phase = dayPhase();
-    const table = enc.table.filter((r) => meetsTime(r.time, phase));
+    const table = enc.table.filter((r) => meetsTime(r.time, phase) && (!r.if || flag(r.if)));
     if (!table.length) return false;
     const e = pickWeighted(st, table, (r) => r.w);
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));

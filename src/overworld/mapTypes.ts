@@ -121,8 +121,8 @@ export interface EncounterTable {
   rate: number;
   /** Encounters on every walkable tile (caves), not only tall grass. */
   anyTile?: boolean;
-  /** `time`: only by day (evening included) or only at night. */
-  table: { id: string; w: number; min: number; max: number; time?: 'day' | 'night' }[];
+  /** `time`: only by day (evening included) or only at night; `if`: only once this flag is set (after the story). */
+  table: { id: string; w: number; min: number; max: number; time?: 'day' | 'night'; if?: string }[];
 }
 
 /** An item lying on the ground (picked up once). */

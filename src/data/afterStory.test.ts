@@ -7,6 +7,9 @@ import { TRAINERS } from './trainers';
 import { applyPatches } from '../overworld/patches';
 import { LOOKS } from '../overworld/sprites';
 import { migrate } from '../state/game';
+import { CREATURES } from './creatures';
+import { onSale } from '../ui/screens/ShopScreen';
+import { machineRoll } from '../ui/screens/MachineScreen';
 import type { NpcDef } from '../overworld/mapTypes';
 
 const placed = new Set(Object.values(MAPS).flatMap((m) => (m.npcs ?? []).map((n) => n.trainer).filter(Boolean)));
@@ -83,5 +86,32 @@ describe('the colours coming back', () => {
     for (const id of leaders.slice(0, BORD_REMATCHES)) flags[`rematch:${id}`] = 1;
     const fresh = migrate(JSON.parse(JSON.stringify({ version: 5, flags, party: [], boxes: [], bag: {}, badges: [], dex: { seen: [], caught: [] }, player: { name: 'Lou', map: 'bourg', x: 1, y: 1, facing: 'down', avatar: 0 }, money: 0, playMs: 0, steps: 0, createdAt: 1, stats: { battles: 0, captures: 0 } })));
     expect(fresh?.flags['couleurs:bord']).toBe(1);
+  });
+});
+
+describe('the Bestioles met only after the story', () => {
+  const late = CREATURES.filter((c) => c.afterStory).map((c) => c.id);
+
+  it('are four, and wait for their flags in the wild', () => {
+    expect(late).toEqual(['108', '109', '110', '111']);
+    for (const m of Object.values(MAPS)) {
+      for (const row of m.encounters?.table ?? []) if (late.includes(row.id)) expect(row.if, `${m.id} ${row.id}`).toBeDefined();
+    }
+    const where = (id: string) => Object.values(MAPS).filter((m) => m.encounters?.table.some((r) => r.id === id)).map((m) => m.id);
+    expect(where('110')).toContain('routeBlanche');
+    expect(where('108')).toContain('routeBlanche');
+    expect(where('111')).toEqual(['bordPage']);
+  });
+
+  it('never come out of the Tombola before the ending', () => {
+    for (let seed = 1; seed < 400; seed++) expect(late, String(seed)).not.toContain(machineRoll(seed, 30).species);
+    const after = new Set(Array.from({ length: 2000 }, (_, i) => machineRoll(i + 1, 30, true).species));
+    expect(late.some((id) => after.has(id))).toBe(true);
+  });
+
+  it('sell the Magic Ice Pencil once the story is over, for Floconnet to grow up', () => {
+    const all = { badges: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], flags: {} };
+    expect(onSale('crayon-magique-glace', all)).toBe(false);
+    expect(onSale('crayon-magique-glace', { ...all, flags: { ending: 1 } })).toBe(true);
   });
 });

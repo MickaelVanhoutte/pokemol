@@ -106,6 +106,9 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Chiroplie → Vampapier | Croc-buvard (Poison physical 75, drains 50%) | signature move | Weak, no strong Poison move |
 | Ponçou → Râpépic | Poussière de Ponçage: a sandstorm as it comes in | `entryWeather` | Weak special side |
 | Galibou | Vernis: Water and Grass damage halved | `halve` (listed in `POWER_TALENTS`) | Water and Grass |
+| Floconnet → Givrelynx | Pelage d’Hiver: Fire and Fighting damage halved | `halve` (listed in `POWER_TALENTS`) | Pure Ice, four weaknesses |
+| Gommichon | Caoutchouc: physical damage halved | `fluffy` | Fighting ×2, few tools |
+| Taillou | Copeaux Amortis: Fighting and Ground damage halved | `halve` (listed in `POWER_TALENTS`) | Fighting and Ground |
 | Coconfus (legendary cocoon) | Pas Fini: at full HP it takes half the damage | `fullHpGuard` | — |
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |

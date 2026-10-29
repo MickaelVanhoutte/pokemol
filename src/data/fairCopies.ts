@@ -130,6 +130,12 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   '106': { base: { hp: 80, atk: 143, def: 172, spa: 45, spd: 55, spe: 70 }, talent: 'colere-noire' },
   // Galibou: its painted wings grown out into big spread wings, bigger eyes
   '107': { base: { hp: 75, atk: 90, def: 139, spa: 83, spd: 128, spe: 50 }, talent: 'premier-envol' },
+  // Givrelynx: frost wings spread wide, bigger ear crystals, longer icicles, a crown of frost on its snowflake
+  '109': { base: { hp: 75, atk: 70, def: 85, spa: 140, spd: 115, spe: 135 }, talent: 'patinoire' },
+  // Gommichon: both fists up and twice as big, longer ears, a wider sleeve, determined brows
+  '110': { base: { hp: 80, atk: 130, def: 105, spa: 45, spd: 95, spe: 120 }, talent: 'poings-d-acier' },
+  // Taillou: its collar of shaving doubled, blades glinting in both eye-holes, a polished blade
+  '111': { base: { hp: 70, atk: 130, def: 135, spa: 60, spd: 100, spe: 80 }, talent: 'coup-de-chance' },
 };
 
 /** A Bestiole that can be made a fair copy: one with no evolution left. */

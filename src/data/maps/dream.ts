@@ -72,6 +72,9 @@ export const DREAM_MAPS: Record<string, MapDef> = {
         { id: '036', w: 16, min: 40, max: 41, time: 'day' },
         { id: '057', w: 16, min: 40, max: 41 },
         { id: '079', w: 10, min: 40, max: 41 },
+        // after the story: Team Gomme's old mascot as soon as it is over, the snow kitten once the road is coloured in
+        { id: '110', w: 10, min: 40, max: 41, if: 'ending' },
+        { id: '108', w: 14, min: 40, max: 41, if: 'champion' },
       ],
     },
   },
@@ -112,15 +115,15 @@ export const DREAM_MAPS: Record<string, MapDef> = {
         id: 'bordColour', x: 1, y: 1, if: 'couleurs:bord',
         rows: [
           '..*...::...,..',
-          '......::......',
-          '......::.*....',
+          '."""".::."""".',
+          '."""".::."""".',
           '.,....::......',
           '.T....::....T.',
           '...*..::..,...',
           '......::......',
           '.T....::....T.',
-          '..,...::......',
-          '......::...*..',
+          '."""".::."""".',
+          '."""".::."""".',
           '....*.::......',
           '......::.,....',
         ],
@@ -129,6 +132,18 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       { id: 'bordTop', x: 7, y: 0, rows: ['::'], if: 'couleurs:bord' },
     ],
     recolour: { if: 'couleurs:bord', backdrop: 'grass' },
+    // tall grass only grows there once the colours are back (patch bordColour)
+    encounters: {
+      rate: 21,
+      table: [
+        { id: '111', w: 14, min: 41, max: 42, if: 'couleurs:bord' },
+        { id: '108', w: 10, min: 41, max: 42, if: 'couleurs:bord' },
+        { id: '110', w: 8, min: 41, max: 42, if: 'couleurs:bord' },
+        { id: '049', w: 20, min: 41, max: 42 },
+        { id: '064', w: 16, min: 41, max: 42 },
+        { id: '079', w: 12, min: 41, max: 42 },
+      ],
+    },
     triggers: [{ x: 1, y: 6, w: 13, h: 1, script: 'finalBoss', unless: 'tr:effaceur' }],
     npcs: [
       { id: 'effaceur', x: 7, y: 3, look: LOOKS.effaceur, facing: 'down', script: 'finalBoss', hideIf: 'tr:effaceur' },

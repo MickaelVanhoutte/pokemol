@@ -1448,6 +1448,59 @@ export const CREATURES: SpeciesDef[] = [
       'An owl painted on a pebble from the water’s edge, then varnished to make it shine. It flaps its painted wing, but it has never managed to take off.',
     ),
   },
+  {
+    id: '108', slug: 'floconnet', faces: 'left', name: L('Floconnet', 'Flakitten'), kind: L('Bestiole Flocon', 'Snowflake Critter'),
+    type: 'glace', base: { hp: 45, atk: 40, def: 45, spa: 65, spd: 60, spe: 65 },
+    catchRate: 190, baseExp: 64, evYield: { spa: 1 }, rarity: 'uncommon', afterStory: true,
+    evolutions: [{ to: '109', item: 'crayon-magique-glace' }],
+    stencils: ['pochoir-02', 'pochoir-06', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
+    talents: ['pelage-d-hiver'], hiddenTalent: 'pieds-legers',
+    learnset: [[1, 'griffe'], [1, 'souffle-glace'], [5, 'fretillement'], [9, 'pas-de-loup'], [14, 'crocs-givre'], [19, 'grele'], [24, 'coup-de-boule'],
+      [29, 'eclat-de-lune'], [35, 'rayon-givre']],
+    dex: L(
+      'Un chaton de neige dessiné au crayon blanc sur une page blanche. On ne le voit bien que quand il a les joues bleues de froid.',
+      'A snow kitten drawn in white pencil on a white page. You only really see it when its cheeks turn blue with cold.',
+    ),
+  },
+  {
+    id: '109', slug: 'givrelynx', faces: 'left', name: L('Givrelynx', 'Frostlynx'), kind: L('Bestiole Givre', 'Frost Critter'),
+    type: 'glace', base: { hp: 75, atk: 65, def: 70, spa: 110, spd: 95, spe: 100 },
+    catchRate: 45, baseExp: 180, evYield: { spa: 2 }, rarity: 'uncommon', afterStory: true, evolvesFrom: '108',
+    stencils: ['pochoir-02', 'pochoir-06', 'pochoir-09', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
+    talents: ['pelage-d-hiver'], hiddenTalent: 'pieds-legers',
+    learnset: [[0, 'rayon-givre'], [1, 'griffe'], [1, 'souffle-glace'], [5, 'fretillement'], [9, 'pas-de-loup'], [14, 'crocs-givre'], [19, 'grele'],
+      [24, 'coup-de-boule'], [29, 'eclat-de-lune'], [34, 'grosse-voix'], [40, 'tempete-psy']],
+    dex: L(
+      'Redessiné au Crayon Magique Glace, Floconnet grandit sans perdre sa bouille. Ses ailes de givre font tomber la neige en plein été.',
+      'Redrawn with a Magic Ice Pencil, Flakitten grows up without losing its sweet face. Its frost wings make snow fall in the middle of summer.',
+    ),
+  },
+  {
+    id: '110', slug: 'gommichon', faces: 'left', name: L('Gommichon', 'Rubbup'), kind: L('Bestiole Gomme', 'Eraser Critter'),
+    type: 'normal', type2: 'combat', base: { hp: 80, atk: 100, def: 85, spa: 40, spd: 80, spe: 95 },
+    catchRate: 45, baseExp: 160, evYield: { atk: 2 }, rarity: 'rare', afterStory: true,
+    stencils: ['pochoir-02', 'pochoir-10', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-19'],
+    talents: ['caoutchouc'], hiddenTalent: 'souple',
+    learnset: [[1, 'bousculade'], [1, 'grondement'], [6, 'pas-de-loup'], [11, 'balayette'], [16, 'coup-de-boule'], [21, 'mordillage'], [26, 'poing-crayon'],
+      [31, 'plat-du-ventre'], [36, 'tete-de-fer'], [40, 'gros-poing']],
+    dex: L(
+      'Une gomme rose en forme de chiot, comme celles qu’on garde au fond de la trousse. Elle ne gomme plus rien : elle corrige juste un petit peu.',
+      'A pink eraser shaped like a puppy, like the ones kept at the bottom of a pencil case. It doesn’t rub anything out any more: it just fixes things a little.',
+    ),
+  },
+  {
+    id: '111', slug: 'taillou', faces: 'left', name: L('Taillou', 'Sharpkin'), kind: L('Bestiole Taille-Crayon', 'Sharpener Critter'),
+    type: 'acier', base: { hp: 70, atk: 100, def: 110, spa: 55, spd: 80, spe: 65 },
+    catchRate: 45, baseExp: 160, evYield: { def: 2 }, rarity: 'rare', afterStory: true,
+    stencils: ['pochoir-02', 'pochoir-10', 'pochoir-12', 'pochoir-13', 'pochoir-15', 'pochoir-17', 'pochoir-19'],
+    talents: ['copeaux-amortis'], hiddenTalent: 'increvable',
+    learnset: [[1, 'griffe-metal'], [1, 'grondement'], [6, 'picore'], [10, 'jet-de-cailloux'], [15, 'coup-de-boule'], [20, 'aile-d-acier'], [25, 'mordillage'],
+      [30, 'tete-de-fer'], [35, 'eboulis'], [40, 'tremblement']],
+    dex: L(
+      'Un taille-crayon qui regarde le monde par ses deux trous. Il tire la langue aux crayons mal taillés, et sa collerette garde la couleur de tous ceux qu’il a aiguisés.',
+      'A pencil sharpener that looks at the world through its two holes. It sticks its tongue out at blunt pencils, and its collar keeps the colour of every pencil it has sharpened.',
+    ),
+  },
 ];
 
 /**

@@ -313,6 +313,15 @@ export const TALENTS: TalentDef[] = [
   T('vernis', L('Vernis', 'Varnish'),
     L('Une couche de vernis le protège : les capacités Eau et Plante ne lui font que la moitié des dégâts.', 'A coat of varnish shields it: Water and Grass moves do only half the damage to it.'),
     { kind: 'halve', types: ['eau', 'plante'] }),
+  T('pelage-d-hiver', L('Pelage d’Hiver', 'Winter Coat'),
+    L('Bien emmitouflé, il ne prend que la moitié des dégâts des capacités Feu et Combat.', 'Snugly wrapped up, it takes only half the damage from Fire and Fighting moves.'),
+    { kind: 'halve', types: ['feu', 'combat'] }),
+  T('caoutchouc', L('Caoutchouc', 'Rubbery'),
+    L('Tout en gomme, il rebondit : les capacités physiques ne lui font que la moitié des dégâts.', 'All rubber, it bounces back: physical moves do only half the damage to it.'),
+    { kind: 'fluffy' }),
+  T('copeaux-amortis', L('Copeaux Amortis', 'Shaving Cushion'),
+    L('Sa collerette de copeaux amortit les coups : les capacités Combat et Sol ne lui font que la moitié des dégâts.', 'Its collar of shavings cushions the blows: Fighting and Ground moves do only half the damage to it.'),
+    { kind: 'halve', types: ['combat', 'sol'] }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

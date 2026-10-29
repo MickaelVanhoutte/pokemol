@@ -178,7 +178,7 @@ export function curve(difficulty: Difficulty = 'normal'): Curve {
   win(createMon('003', 4, { rng: 1 }));
   for (const step of CURVE_PATH) {
     const def = MAPS[step.map];
-    const table = (def?.encounters?.table ?? []).filter((e) => !e.time || e.time === 'day');
+    const table = (def?.encounters?.table ?? []).filter((e) => (!e.time || e.time === 'day') && !e.if);
     const avg = table.length ? Math.round(table.reduce((s, e) => s + (e.min + e.max) / 2, 0) / table.length) : 0;
     const typical = table.length ? [...table].sort((a, b) => b.w - a.w)[0].id : '';
     if (step.from && step.to && def?.encounters) {

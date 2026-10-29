@@ -666,6 +666,23 @@ undone or toned down, and Chiroplie's base XP is the model's 54. On Normal only 
 (was 59/58/61); on Hard, Ambre's second row 57/49/89% (was 64/60/91) and the cycling track's Noé 78/87/83%. The four
 finals and Galibou joined `TOWER_POOL`.
 
+**After the story: four more (Nov 2026), 111 in all.** Met only once the story is over (`afterStory: true` on the
+species: no Tombola before the ending; encounter rows carry `if`, see docs/content.md), drawn with the `crayon` kit and
+approved by the owner (Taillou from the owner's own sketch: a classic sharpener, its holes for eyes):
+- Floconnet → Givrelynx (Ice, the first pure Ice; Crayon Magique Glace, sold in shops after the ending): a snow
+  kitten in white and pale blue pencil, then a snow lynx sitting tall that keeps its sweet face, with frost wings,
+  crystal-tipped ears and a long snowball tail. Route Blanche once the Grand Concours is won (`champion`, L40–41) and
+  the Edge of the Page once coloured. Power: Pelage d’Hiver (Fire and Fighting halved).
+- Gommichon (Normal/Fighting, rare): a puppy of pink eraser with its blue paper sleeve and a taped fist, Team Gomme's
+  old mascot that only "corrects" now. Route Blanche from the ending (L40–41) and the Edge of the Page. Power:
+  Caoutchouc (`fluffy`, physical damage halved).
+- Taillou (Steel, rare, the first pure Steel): a metal pencil sharpener, its two holes for eyes, a collar of pencil
+  shaving with a zig-zag painted edge, a little tongue. Only on the Edge of the Page once its colours are back
+  (`couleurs:bord`, L41–42). Power: Copeaux Amortis (Fighting and Ground halved).
+
+Givrelynx, Gommichon and Taillou have fair copies (Patinoire, Poings d’Acier, Coup de Chance) and joined
+`TOWER_POOL`. No story trainer uses them, so the sims don't move (`curve.ts` leaves `if` rows out).
+
 **Wild encounters as in FireRed (iteration 20).** The owner felt interrupted all the time. Each step in the grass had a
 flat 13–16% chance (8–11% in caves, 10% on water), and nothing kept a battle from starting one step after another: 1 in 4
 came within 2 steps. `src/overworld/encounterRate.ts` now follows FireRed's code (pret/pokefirered, `wild_encounter.c`):
