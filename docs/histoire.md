@@ -81,6 +81,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 ## À côté de l’aventure
 
 - Attrape les Bestioles et remplis ton **Bestiodex**.
+- Ta **carte de dresseur** a une page **Progrès** : Bestioles attrapées, badges, dresseurs battus…
+  Chaque palier atteint te donne une récompense à récupérer, des Crayon-balls du début jusqu’aux
+  objets à faire tenir, qu’aucune boutique ne vend. Et après l’histoire, d’autres défis s’ajoutent.
 - Chaque Bestiole a **un pouvoir bien à elle** (un talent ou une attaque que personne d’autre n’a) :
   même la plus petite a sa place dans ton équipe, jusqu’au niveau 100.
 - Retrouve les **12 pages déchirées** d’un cahier, cachées un peu partout. Lis-les bien.
@@ -208,6 +211,9 @@ The story has **two endings**, and your answers choose which one you will see.
 ## Besides the adventure
 
 - Catch Critters and fill your **Critterdex**.
+- Your **trainer card** has a **Progress** page: Critters caught, badges, trainers beaten… Each
+  milestone you reach gives you a reward to collect, from the first Pencil Balls to items to hold,
+  which no shop sells. And after the story, more challenges join in.
 - Every Critter has **a power of its own** (a talent or a move nobody else has): even the smallest
   one has its place in your team, all the way to level 100.
 - Find the **12 torn pages** of a sketchbook, hidden all over the place. Read them carefully.

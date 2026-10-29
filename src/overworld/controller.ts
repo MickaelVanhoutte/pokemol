@@ -5,6 +5,7 @@ import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
+import { waiting } from '../data/progress';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
@@ -62,8 +63,21 @@ export function getGame(): Game {
       void prefs.value;
       refreshFollower();
     });
+    effect(tellRewards);
   }
   return game;
+}
+
+/** The rewards waiting on the trainer card at the last look, for the game being played. */
+let rewardsSeen: { game: number; n: number } | null = null;
+/** Back in the world, a toast says when a Progress reward is waiting (and once after loading a game that has some). */
+function tellRewards() {
+  const d = save.value;
+  if (!d || screen.value.id !== 'overworld') return;
+  const n = waiting(d);
+  const seen = rewardsSeen?.game === d.createdAt ? rewardsSeen.n : 0;
+  if (n > seen) showToast(tr(L('Une récompense t’attend sur ta carte !', 'A reward is waiting on your card!')));
+  rewardsSeen = { game: d.createdAt, n };
 }
 
 const s = (): SaveData => save.value!;

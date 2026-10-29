@@ -1450,6 +1450,18 @@ export const CREATURES: SpeciesDef[] = [
   },
 ];
 
+/**
+ * The last four stencils (Progress rewards, src/data/progress.ts) are the stronger move of an earlier one:
+ * every Bestiole that learns the earlier stencil learns them too.
+ */
+const STENCIL_HEIRS: [heir: string, from: string][] = [
+  ['pochoir-21', 'pochoir-15'], // Quake, after Tremor
+  ['pochoir-22', 'pochoir-13'], // Stone Blade, after Rockslide
+  ['pochoir-23', 'pochoir-02'], // Booming Voice, after Headbonk
+  ['pochoir-24', 'pochoir-18'], // Toxic Mud, after Gooey Paste
+];
+for (const c of CREATURES) for (const [heir, from] of STENCIL_HEIRS) if (c.stencils.includes(from) && !c.stencils.includes(heir)) c.stencils.push(heir);
+
 export const CREATURE_BY_ID: Record<string, SpeciesDef> = Object.fromEntries(CREATURES.map((c) => [c.id, c]));
 
 /**

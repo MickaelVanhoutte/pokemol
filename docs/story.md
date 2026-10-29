@@ -303,6 +303,14 @@ breaks and ends on a loss. Points buy `TOWER_STOCK` items (and missing stencils)
 (`ShopScreen` with `tower`). The trainer card shows a gold star each for the Concours, the
 Bestiodex diploma, the 12 pages and a tower streak of 21.
 
+**Progress rewards** (trainer card, PROGRÈS page, `src/data/progress.ts`), from the start: Bestiodex
+(5 → all caught), Adventure (badges 1–8, then the ending) and Trainers beaten (10 → 100); after the
+ending, Rematches (1, 4, 8 Masters), Grand Concours (1, 3, 5 wins) and Tower streak (7, 14, 21). Rewards
+grow from balls and potions to the held items no shop sells any more (the 4-, 5- and 6-badge ones and
+the four pencils found nowhere else: sky blue, brown, ochre, lilac), biscuit packs (one of each),
+Magic Lollipops and stencils 21–24 (Quake at 100 caught, Stone Blade at the ending, Booming Voice at
+8 rematches, Toxic Mud at the first Concours).
+
 These work by wrapping the Act 1 scripts: `const prev = scripts.prof; scripts.prof = …`. That is why
 `src/story/index.ts` imports the acts in order.
 

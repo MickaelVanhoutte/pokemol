@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { waiting } from '../../data/progress';
 import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
 import { evoOverlay, getGame, hatchOverlay, learnOverlay, menuOpen, monOverlay, nameOverlay, openScreen, pictureOverlay, showToast, toast, toggleBike } from '../../overworld/controller';
@@ -142,7 +143,11 @@ function StartMenu() {
     }] : []),
     { icon: 'bag', label: tr(L('SAC', 'BAG')), info: L('Tes objets, rangés dans ta trousse.', 'Your items, packed in your pencil case.'), onSelect: () => open({ id: 'bag' }) },
     ...(d.bag.carte ? [{ icon: 'carte', label: tr(L('CARTE', 'MAP')), info: L('Où tu es, et où aller ensuite.', 'Where you are, and where to go next.'), onSelect: () => open({ id: 'townmap' }) }] : []),
-    { icon: 'card', label: d.player.name.toUpperCase(), info: L('Ta carte de dresseur et tes badges.', 'Your trainer card and badges.'), onSelect: () => open({ id: 'trainercard' }) },
+    {
+      icon: 'card', label: d.player.name.toUpperCase(), info: L('Ta carte de dresseur, tes badges et tes progrès.', 'Your trainer card, badges and progress.'),
+      side: waiting(d) > 0 ? <b class="newdot" aria-label={tr(L('Récompense', 'Reward'))}>!</b> : undefined,
+      onSelect: () => open({ id: 'trainercard' }),
+    },
     { icon: 'save', label: tr(L('SAUVER', 'SAVE')), info: L('Enregistrer ta progression.', 'Save your progress.'), onSelect: () => setSaving('ask') },
     { icon: 'options', label: tr(L('OPTIONS', 'OPTIONS')), info: L('Vitesse du texte, sons, langue, sauvegarde.', 'Text speed, sound, language, save file.'), onSelect: () => { close(); go({ id: 'settings', back: { id: 'overworld' } }); } },
     { icon: 'close', label: tr(L('FERMER', 'EXIT')), info: L('Fermer ce menu.', 'Close this menu.'), onSelect: close },

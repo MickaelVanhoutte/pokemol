@@ -40,6 +40,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `fair:<id>` | `fight()` | That Bestiole's fair copy was seen in a battle (Bestiodex button) |
 | `gift:coconfus` | `coconfusJoins()` (Misty Woods, or the next town for older saves) | Coconfus joined the team |
 | `prof:coconfus` | the Prof's wrapper in `src/story/coconfus.ts` | The Prof said he never photographed Coconfus |
+| `prix:<track>:<id>` | `collect()` in `src/data/progress.ts` (trainer card, Progress page) | That Progress reward was collected |
 | `prof:photo` (1, or 2 when sparkly) | the Prof's wrapper in `src/story/coconfus.ts`, after the ending | The Prof photographed what Coconfus became: the photo hangs in the lab (patch `profPhoto`, `labPhoto`) |
 | `coconPale` | `usineEnd` (Eraser Factory) | The Great Eraser rubbed Coconfus: its card is washed out until the ending |
 | `vision:<slug>` | `src/story/legends.ts` | The vision of a dream legendary was met (before the ending) |
@@ -348,11 +349,22 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
   - `stencil` (Pochoir): teaches its `move` to a compatible Bestiole as often as you like (never used
     up, POCHOIRS pocket, no ×count). Add the move to `STENCIL_MOVES` in `items.ts` (the id becomes
     `pochoir-NN`), list it in the `stencils` of every species that can learn it, and place it (a pick-up,
-    or `stencil` on a badge in `src/data/badges.ts` for a leader's reward). A test checks every
+    `stencil` on a badge in `src/data/badges.ts` for a leader's reward, or a Progress reward). Stencils
+    21–24 are Progress rewards that every species learning an earlier stencil learns too (`STENCIL_HEIRS`
+    in `creatures.ts`). A test checks every
     stencil teaches a real move and fits at least one species.
   - Any non-key item except stencils can be held (party ITEM menu or bag GIVE). Trainer parties can give an `item`,
     and species a `wildItem` (`{ id, pct }`) that wild ones sometimes carry.
-  - The shop sells the list in `STOCK` (`ShopScreen.tsx`), each item after a number of badges.
+  - The shop sells the list in `STOCK` (`ShopScreen.tsx`), each item after a number of badges. No shop
+    sells held items: they are found, given by quests, won as Progress rewards or exchanged at the tower
+    (`TOWER_STOCK`); `src/data/progress.test.ts` checks the old shop ones are all Progress rewards.
+  - **Progress rewards** (`TRACKS` in `src/data/progress.ts`, the trainer card's PROGRÈS page): tracks
+    of milestones, each with a `count(save)` and `steps` of `{ id, goal, reward }`; the page shows each
+    track's first milestone not collected, and « Récupérer » once it is reached (`collect`, flag
+    `prix:<track>:<id>`). Post-game tracks (`post: true`) show after the ending. Keep a step's `id` when
+    changing its goal or reward (saves remember it); a new step on a track an old save finished simply
+    waits to be collected. Back in the world, a toast says when a reward waits (`tellRewards` in
+    `controller.ts`), and the start menu entry shows a « ! ».
   - Item icons are pixel art in `src/ui/icons.ts` (`ROWS`, or a painter in `PAINTED`).
 
 ### Moving parts in battle

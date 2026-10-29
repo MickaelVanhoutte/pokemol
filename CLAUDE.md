@@ -267,7 +267,8 @@ by `src/art/shiny.ts`, the same hue turn for the card (`monArtUrl`) and the foll
   `fromMap`: only the innkeeper and the pilot are in every Inn, each town's Inn has its own helper,
   and a helper's `service` label is listed on the Town Map (`src/data/inns.test.ts`). The shop sells
   the `STOCK` list in `ShopScreen.tsx`, each item after a number of badges (`'ending'`: after the
-  story, the Magic Lollipop). The houses you can enter in towns share three rooms too (`maisonVille`,
+  story, the Magic Lollipop); no held items, which come from the trainer card's Progress rewards
+  (`src/data/progress.ts`, flags `prix:*`), quests, pick-ups and the tower. The houses you can enter in towns share three rooms too (`maisonVille`,
   `maisonPetite`, `maisonAtelier`): who lives there is in the town map's `residents`, each with a `fromDoor`
   (the tile in front of its door), and `src/data/maps/index.ts` puts them in the room that door leads to.
 - Sideways drawings set `faces: 'left' | 'right'`. Battle sprites are mirrored so ours looks right and

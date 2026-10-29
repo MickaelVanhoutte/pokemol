@@ -6,7 +6,10 @@ import { addItem, save, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { ShopView } from '../views/ShopView';
 
-/** What every shop sells, and how many badges each item needs (`ending`: only once the story is over). */
+/**
+ * What every shop sells, and how many badges each item needs (`ending`: only once the story is over). No shop
+ * sells held items: they are found, won (the trainer card's Progress rewards) or exchanged at the tower.
+ */
 export const STOCK: Record<string, number | 'ending'> = {
   'crayon-ball': 0, potion: 0, retouche: 0, spray: 0,
   'fil-ariane': 1, 'super-spray': 2,
@@ -15,9 +18,6 @@ export const STOCK: Record<string, number | 'ending'> = {
   'taille-crayon': 3, 'vernis': 3,
   // the magic pencils Touffou's evolutions need
   'crayon-magique-eau': 4, 'crayon-magique-feu': 4, 'crayon-magique-electrique': 4,
-  'plume-vive': 4, 'loupe': 4, 'couronne-carton': 4, 'clochette': 4,
-  'ruban-tenace': 5, 'casque-pointes': 5,
-  'bandeau-tetu': 6, 'lunettes-tetues': 6, 'echarpe-tetue': 6, 'bille-ardente': 6, 'tablier-peintre': 6,
   // effort biscuits and erasers
   ...Object.fromEntries(ITEMS.filter((it) => it.kind === 'effort').map((it) => [it.id, 3])),
   // before the ending, Magic Lollipops are only found on the map

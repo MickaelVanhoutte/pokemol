@@ -255,6 +255,38 @@
 .tcard__look { font-size: 0.95rem; min-height: 0; padding: 2px 8px; }
 .tcard__label { margin: 8px 0 4px; color: var(--ink-soft); }
 .tcard__badges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.tcard__pages { --type: #f2c14e; --th: var(--hatch-butter); display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.tcard__tabs .summary__tab { position: relative; overflow: visible; }
+/* a reward waiting: a little coral blob with « ! » on the PROGRÈS tab and on the start menu entry */
+.newdot {
+  display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; margin-left: 4px; vertical-align: middle;
+  background: var(--blob-coral) center / 100% 100% no-repeat; color: var(--ink); font-size: 0.8em; font-weight: normal;
+}
+/* the Progress page: one row per track */
+.prog { font-size: 1.05rem; }
+.prog__note {
+  margin: 0 0 6px; padding: 2px 8px; text-align: center;
+  border: 6px solid transparent; border-image: var(--frame-mint) 24 / 6px stretch; background: var(--hatch-mint) 0 0 / 72px 72px padding-box, var(--mint) padding-box;
+}
+.prog__list { display: grid; gap: 8px; }
+.prog__row {
+  display: flex; flex-direction: column; gap: 2px; padding: 4px 8px 6px;
+  border: 6px solid transparent; border-image: var(--frame-thin-paper) 16 / 6px stretch; background: var(--paper) padding-box;
+}
+.prog__row.is-on { border-image-source: var(--frame-thin-butter); }
+.prog__row.is-ready { background: var(--hatch-butter) 0 0 / 72px 72px padding-box, var(--butter) padding-box; }
+.prog__row.is-locked { color: var(--ink-soft); background: var(--paper-2) padding-box; }
+.prog__head, .prog__goal { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin: 0; }
+.prog__name { color: var(--ink-soft); font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px; }
+.prog__done { color: var(--ink-soft); font-size: 0.85em; }
+.prog__goal > span:first-child { min-width: 0; }
+.prog__count { flex: none; color: var(--ink-soft); }
+.prog__bar { display: block; height: 12px; overflow: hidden; border: 4px solid transparent; border-image: var(--frame-thin-paper) 16 / 4px stretch; background: #efe5d2 padding-box; }
+.prog__bar span { display: block; height: 100%; background: var(--hatch-mint) 0 0 / 36px 36px, #a6dea0; }
+.prog__prize { display: flex; align-items: center; gap: 6px; margin: 2px 0 0; color: var(--ink-soft); font-size: 0.95em; }
+.prog__prize span, .prog__get span { min-width: 0; text-align: left; }
+.prog__get { --sk-fill: var(--coral); --sk-hatch: var(--hatch-coral); --pencil-frame: var(--frame-coral); display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 1rem; min-height: 0; padding: 2px 10px; }
+.prog__row.is-done .prog__goal { color: #b07a10; }
 .sticker {
   aspect-ratio: 1; display: grid; place-items: center;
   background: var(--blob-paper) center / 100% 100% no-repeat; opacity: 0.55;
@@ -341,6 +373,14 @@
   .summary__box { font-size: 1rem; }
   .summary__foot { grid-column: 1; grid-row: 3; justify-content: flex-start; }
   .tcard__badges { grid-template-columns: repeat(8, 1fr); }
+  .tcard__tabs .summary__tab { font-size: min(1rem, 2.6vw); border-width: 5px; border-image-width: 5px; padding: 0 4px; }
+  .tcard__tabs .summary__tab.is-on { font-size: min(1.1rem, 2.8vw); }
+  .tcard__tabs .pbtn { min-height: 0; padding: 0 8px; }
+  .prog { font-size: 0.95rem; }
+  .prog__list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .prog__row { padding: 0 6px 2px; gap: 0; }
+  .prog__bar { height: 9px; border-width: 3px; }
+  .prog__get { margin-top: 2px; padding: 0 8px; }
   .tcard__avatar { width: 76px; height: 98px; }
   .dex__entry { align-items: flex-start; }
   .dex__paper { width: min(34vw, 40dvh, 210px); }

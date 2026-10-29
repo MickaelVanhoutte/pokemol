@@ -3,11 +3,13 @@ import { move } from './moves';
 import { TYPES } from './types';
 import type { ItemDef, StatKey } from './schema';
 
-/** Stencils, in order (pochoir-01…): the first eight are the Atelier Masters' rewards. */
+/** Stencils, in order (pochoir-01…): the first eight are the Atelier Masters' rewards, the last four Progress rewards. */
 export const STENCIL_MOVES = [
   'rayon-d-ailes', 'coup-de-boule', 'pluie-d-aquarelle', 'eclair-fluo', 'queue-ardente', 'eclat-de-lune',
   'rafale-de-graines', 'ombre-farceuse', 'reve-eveille', 'poing-crayon', 'tache-d-encre', 'gros-baillement',
   'eboulis', 'rayon-givre', 'secousse', 'griffe-dragon', 'aile-d-acier', 'pate-gluante', 'bouclier-papier', 'grand-vol',
+  // Progress rewards (src/data/progress.ts)
+  'tremblement', 'lame-de-pierre', 'grosse-voix', 'boue-toxique',
 ];
 export const stencilId = (n: number) => `pochoir-${String(n).padStart(2, '0')}`;
 
