@@ -8,9 +8,9 @@
 import { L, locale, tr } from '../i18n';
 import { creature } from '../data/creatures';
 import { ORIGINALS, originalUrl } from '../data/originals';
-import { ACTIVITY, REAL_MAX, pips, realLevel, type ActivityId } from '../data/realLife';
+import { ACTIVITY, ACTIVITY_SPOTS, REAL_MAX, pips, realLevel, type ActivityId } from '../data/realLife';
 import { localDay } from '../overworld/berries';
-import { ask, dayPhase, flag, getGame, say, sayAll, scripts, showPicture, updateTime, wait, warpTo } from '../overworld/controller';
+import { ask, dayPhase, flag, getGame, say, sayAll, scripts, setFlag, showPicture, updateTime, wait, warpTo } from '../overworld/controller';
 import { healParty, save, update } from '../state/game';
 import { shiftTo } from '../state/clock';
 import { playJingle } from '../audio/music';
@@ -64,10 +64,9 @@ async function activity(id: ActivityId) {
   const c = await ask(L('{q} {n} {pips} → {e}.', '{q} {n} {pips} → {e}.'), [L('Oui', 'Yes'), L('Non', 'No')], undefined,
     { q: tr(a.ask), n: tr(a.name), pips: pips(lv), e: tr(a.effect, { p: fmt(a.amount(lv + 1)) }) });
   if (c !== 0) return;
-  update((d) => {
-    d.flags[`reel:${id}`] = lv + 1;
-    d.flags['reel:fait'] = 1;
-  });
+  // through setFlag: the map is rebuilt after the scene, and the house's spots stop glowing
+  setFlag(`reel:${id}`, lv + 1);
+  setFlag('reel:fait');
   await sayAll(a.scene);
   // the drawing of the day: one of hers
   if (id === 'dessin') {
@@ -90,11 +89,7 @@ function during(script: string, id: ActivityId) {
     await say(L('(Tu as déjà fait quelque chose aujourd’hui. Retourne te coucher pour retrouver Papeterre.)', '(You’ve already done something today. Go back to bed to return to Papeterra.)'));
   };
 }
-during('desk', 'dessin');
-during('fenetre', 'fenetre');
-during('livresReel', 'livre');
-during('papa', 'parents');
-during('mamanReelle', 'parents');
+for (const [script, id] of Object.entries(ACTIVITY_SPOTS)) during(script, id);
 
 const prevBed = scripts.litReel;
 scripts.litReel = async () => {

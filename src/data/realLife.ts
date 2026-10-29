@@ -72,6 +72,16 @@ export const xpBoost = (flags: Flags) => 1 + 0.04 * realLevel(flags, 'livre');
 /** Multiplies the prize money of trainer battles (pocket money). */
 export const moneyBoost = (flags: Flags) => 1 + 0.05 * realLevel(flags, 'parents');
 
+/** The real house's spots (their scripts, src/data/maps/dream.ts) and the activity each offers. */
+export const ACTIVITY_SPOTS: Record<string, ActivityId> = { desk: 'dessin', fenetre: 'fenetre', livresReel: 'livre', papa: 'parents', mamanReelle: 'parents' };
+
+/** The tiles that glow softly in the house: during a day there, until the day's thing is done, where a level can still grow. */
+export function glowingSpots(def: { interact?: { x: number; y: number; script: string }[]; npcs?: { x: number; y: number; script?: string }[] }, flags: Flags) {
+  if (!flags['reel:visite'] || flags['reel:fait']) return [];
+  const open = (script?: string) => !!script && script in ACTIVITY_SPOTS && realLevel(flags, ACTIVITY_SPOTS[script]) < REAL_MAX;
+  return [...(def.interact ?? []), ...(def.npcs ?? [])].filter((s) => open(s.script)).map(({ x, y }) => ({ x, y }));
+}
+
 /** Whether tonight's sleep at an Inn wakes the player up at home: once a real day, after the ending, while a level can still grow. */
 export const wakesAtHome = (flags: Flags, today: number) =>
   !!flags.ending && !!flags['reveil:dodo'] && flags['reel:jour'] !== today && ACTIVITIES.some((a) => realLevel(flags, a.id) < REAL_MAX);

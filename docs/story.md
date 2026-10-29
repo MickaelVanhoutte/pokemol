@@ -286,7 +286,8 @@ Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillo
   desk (catch rate +3 %/level, shows one of her originals as « ton dessin du jour »), daydream at a window (sparkly
   Bestioles 1 % → 3 %), read the books (XP +4 %/level), tell Mummy and Daddy about the dream (trainer prize money
   +5 %/level). Then the bed takes the player back to the Inn they slept in (`respawn`). Gentle on purpose (the owner's
-  pick); no wake-up any more once all four are at 5. The levels show on the card's Progrès page after the first day;
+  pick); no wake-up any more once all four are at 5. The levels show on the card's Progrès page after the first day; until the day's thing is done, the spots that can still
+  grow glow softly (`glowingSpots`, `Game.glows`);
   the battle engine takes them as `BattleSetup.boosts` (catch, XP), `fight()` adds the money, `wildBattle` the sparkle;
 - the **Île de la Première Page** (`ilePage` in `src/data/maps/phare.ts`, south of the Inkwell Isle on the Town Map,
   music `ending`): a dock, tall grass at L50–52 (rare Givrelynx among them), and an ink lake where **Baleincre**, the

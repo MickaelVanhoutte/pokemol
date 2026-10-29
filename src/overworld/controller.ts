@@ -6,7 +6,7 @@ import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
 import { waiting } from '../data/progress';
-import { catchBoost, moneyBoost, shinyChance, xpBoost } from '../data/realLife';
+import { catchBoost, glowingSpots, moneyBoost, shinyChance, xpBoost } from '../data/realLife';
 import { BORD_REMATCHES, REPENT_GIFTS, REPENT_GIFT_LINE, RETIRED, rematchesWon, repentLine, repentLook, repentant } from '../data/afterStory';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
@@ -155,6 +155,8 @@ function loadMap(id: string) {
   const free = (p: PickupDef) => !flag(pickupFlag(def.id, p)) && (!p.showIf || flag(p.showIf));
   g.setMap(patched(def), visibleNpc, (p) => !p.hidden && free(p), (b) => isRipe(save.value?.flags[berryFlag(def.id, b)]));
   hiddenPickups = (def.items ?? []).filter((p) => p.hidden && free(p));
+  // the people of the map as shown (Papa is not in the bedroom any more)
+  g.glows = glowingSpots({ interact: def.interact, npcs: g.npcs.flatMap((n) => (n.npc ? [n.npc] : [])) }, save.value?.flags ?? {});
   // places visited (the Bestiodex only names habitats you have been to)
   if (save.value) save.value.flags[`seen:${def.id}`] = 1;
   updateTime();

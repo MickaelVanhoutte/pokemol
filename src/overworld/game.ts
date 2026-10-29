@@ -265,6 +265,8 @@ export class Game {
   pickups: PickupDef[] = [];
   /** Bushes that have berries right now. */
   berries: BerryBushDef[] = [];
+  /** Tiles glowing softly: what to do on a day in the real house (src/data/realLife.ts). */
+  glows: { x: number; y: number }[] = [];
   player!: Actor;
   /** While > 0, player input is ignored (scripts, dialogs, menus). */
   lock = 0;
@@ -739,6 +741,18 @@ export class Game {
         ctx.fillRect(bx + dx, by + dy, 2, 2);
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(bx + dx, by + dy, 1, 1);
+      }
+    }
+    if (this.glows.length) {
+      // a soft golden square that breathes, under the people standing there
+      const a = 0.28 + 0.14 * Math.sin(performance.now() / 380);
+      ctx.lineWidth = 1;
+      for (const s of this.glows) {
+        const gx = s.x * TILE - camX, gy = s.y * TILE - camY;
+        ctx.fillStyle = `rgba(255, 238, 150, ${a})`;
+        ctx.fillRect(gx + 1, gy + 1, TILE - 2, TILE - 2);
+        ctx.strokeStyle = `rgba(255, 196, 50, ${a + 0.45})`;
+        ctx.strokeRect(gx + 1.5, gy + 1.5, TILE - 3, TILE - 3);
       }
     }
     for (const o of this.obstacles) {

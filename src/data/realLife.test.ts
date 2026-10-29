@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ACTIVITIES, REAL_MAX, catchBoost, moneyBoost, pips, realLevel, shinyChance, wakesAtHome, xpBoost } from './realLife';
+import { ACTIVITIES, REAL_MAX, catchBoost, glowingSpots, moneyBoost, pips, realLevel, shinyChance, wakesAtHome, xpBoost } from './realLife';
 import { act, createBattle, type BattleState } from '../engine/pk/battle';
 import { SHINY_CHANCE, createMon } from '../engine/pk/creature';
 import { L } from '../i18n';
@@ -55,5 +55,16 @@ describe('the bonuses in battle', () => {
     };
     expect(xp(1.2)).toBeGreaterThan(xp(1));
     expect(xp(1.2) / xp(1)).toBeCloseTo(1.2, 1);
+  });
+});
+
+describe('the spots of the house', () => {
+  const room = { interact: [{ x: 7, y: 1, script: 'desk' }, { x: 2, y: 0, script: 'fenetre' }, { x: 1, y: 3, script: 'litReel' }], npcs: [{ x: 4, y: 3, script: 'mamanReelle' }, { x: 6, y: 3, script: 'chat' }] };
+
+  it('glow during a day there until the day’s thing is done, where a level can still grow', () => {
+    expect(glowingSpots(room, {})).toEqual([]);
+    expect(glowingSpots(room, { 'reel:visite': 1 })).toEqual([{ x: 7, y: 1 }, { x: 2, y: 0 }, { x: 4, y: 3 }]);
+    expect(glowingSpots(room, { 'reel:visite': 1, 'reel:fenetre': 5 })).toEqual([{ x: 7, y: 1 }, { x: 4, y: 3 }]);
+    expect(glowingSpots(room, { 'reel:visite': 1, 'reel:fait': 1 })).toEqual([]);
   });
 });
