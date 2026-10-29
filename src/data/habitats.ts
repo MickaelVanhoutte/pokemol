@@ -20,6 +20,8 @@ const STATIC: Record<string, { map: string; level: number; how: HabitatHow; time
   // after the ending, the one Coconfus did not become (before it, only visions: src/story/legends.ts)
   '071': [{ map: 'boisPerdu', level: 55, how: 'grass', time: 'night' }],
   '072': [{ map: 'ratures3', level: 55, how: 'cave' }],
+  // the Bestiodex's reward, over the ink lake of its island
+  '112': [{ map: 'ilePage', level: 60, how: 'surf' }],
 };
 
 /**

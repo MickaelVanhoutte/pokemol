@@ -198,6 +198,8 @@ export const MOVE_FX: Record<string, Recipe> = {
   gigotage: calm({ user: 'wiggle', layers: [sparkle({ who: 'user', kind: 'bubble', color: C.eau[1], n: 5, size: 0.2 })] }),
   deferlante: { user: 'lunge', shake: 0.3, layers: [wave(), at(300, impactStar({ size: 0.55 }))] },
   'croc-buvard': { user: 'lunge', hit: 'squash', layers: [bite({ gum: C.poison[2], tooth: '#f7f3ea', n: 4 }), at(380, drain({ color: C.poison[1] }))] },
+  // the Great Inkwell's jet of black ink, a wave of it, then the ink raining down on the foe
+  'jet-d-encre-noire': { shake: 0.4, layers: [projectile({ kind: 'ink', color: '#14151f', n: 5, gap: 60, size: 0.4, burst: false }), at(300, wave()), at(420, splat({ color: '#14151f', size: 1 })), at(480, sparkle({ kind: 'ink', color: '#3b4472', n: 6, size: 0.2 }))] },
   'giclee-d-encre': { layers: [projectile({ kind: 'ink', color: C.spectre[2], n: 4, gap: 70, size: 0.36, burst: false }), at(360, splat({ color: C.spectre[2], size: 0.95 })), at(420, sparkle({ kind: 'ink', color: C.spectre[1], n: 4, size: 0.18 }))] },
 };
 

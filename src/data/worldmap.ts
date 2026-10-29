@@ -70,6 +70,8 @@ export const WORLD: Record<string, WorldCell> = {
   galerie: { kind: 'town', rects: at(18, 0), fly: { x: 4, y: 6 } },
   // reached by the ferry from Port-Aquarelle
   phareIle: { kind: 'tower', rects: at(16, 16) },
+  // farther south, seen only once the Bestiodex is complete (the ferry again)
+  ilePage: { kind: 'route', rects: at(18, 18) },
   // the Piste Cyclable runs down the east side, from Gouache to Ville-Feutre
   piste: { kind: 'route', rects: [{ x: 19, y: 5, w: 1, h: 6 }, { x: 18, y: 11, w: 2, h: 1 }] },
   grotteEchos: { kind: 'cave', rects: at(19, 4) },

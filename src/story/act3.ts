@@ -1,6 +1,6 @@
 import { L, tr } from '../i18n';
 import { playMusic } from '../audio/music';
-import { CREATURES, dexCount } from '../data/creatures';
+import { DEX_GOAL, dexCount } from '../data/creatures';
 import { partyOf, rivalFinalTeam } from '../data/trainers';
 import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
@@ -140,18 +140,28 @@ scripts.atelierEncreDoor = async () => {
 /** The ferryman: Port-Aquarelle ⇄ Île de l’Encrier. */
 scripts.passeur = async () => {
   const who = L('Passeur', 'Ferryman');
-  const onIsle = getGame().map.def.id === 'phareIle';
-  const c = await ask(onIsle
-    ? L('On rentre à Port-Aquarelle ?', 'Shall we head back to Port Aquarelle?')
-    : L('L’Île de l’Encrier ? Son phare est tombé aux mains de la Team Gomme… Je t’y emmène quand même ?', 'Inkwell Isle? Its lighthouse fell into Team Gomme’s hands… Shall I take you there anyway?'),
-  [L('Oui', 'Yes'), L('Non', 'No')], who);
-  if (c !== 0) return;
+  const here = getGame().map.def.id;
+  const onIsle = here === 'phareIle' || here === 'ilePage';
+  // once the Bestiodex is complete (and the Prof told about it), the hidden island to the south
+  const hidden = !onIsle && flag('ilePage') && dexCount(save.value!.dex.caught) >= DEX_GOAL;
+  let to: 'port' | 'phareIle' | 'ilePage' | null;
+  if (onIsle) {
+    to = (await ask(L('On rentre à Port-Aquarelle ?', 'Shall we head back to Port Aquarelle?'), [L('Oui', 'Yes'), L('Non', 'No')], who)) === 0 ? 'port' : null;
+  } else if (hidden) {
+    await say(L('L’île tout au sud ? Celle qu’on ne voit que quand on a tout dessiné ? … Tiens, c’est vrai qu’on la voit, aujourd’hui.', 'The island far to the south? The one you only see once you have drawn everything? … Well, I can see it today.'), who);
+    const c = await ask(L('Où va-t-on ?', 'Where to?'), [L('Île de l’Encrier', 'Inkwell Isle'), L('Île de la Première Page', 'First Page Isle'), L('Nulle part', 'Nowhere')], who);
+    to = c === 0 ? 'phareIle' : c === 1 ? 'ilePage' : null;
+  } else {
+    to = (await ask(L('L’Île de l’Encrier ? Son phare est tombé aux mains de la Team Gomme… Je t’y emmène quand même ?', 'Inkwell Isle? Its lighthouse fell into Team Gomme’s hands… Shall I take you there anyway?'),
+      [L('Oui', 'Yes'), L('Non', 'No')], who)) === 0 ? 'phareIle' : null;
+  }
+  if (!to) return;
   await say(L('En route ! Accroche-toi au bastingage.', 'Off we go! Hold on to the rail.'), who);
   const g = getGame();
   await g.fadeTo(1, 500);
   showToast(tr(L('~ La barque fend les vagues ~', '~ The boat cuts through the waves ~')));
   await wait(900);
-  await warpTo(onIsle ? { map: 'port', x: 19, y: 16, facing: 'down' } : { map: 'phareIle', x: 7, y: 10, facing: 'up' });
+  await warpTo(to === 'port' ? { map: 'port', x: 19, y: 16, facing: 'down' } : to === 'phareIle' ? { map: 'phareIle', x: 7, y: 10, facing: 'up' } : { map: 'ilePage', x: 10, y: 2, facing: 'down' });
 };
 
 scripts.buvardStop = async () => {
@@ -362,16 +372,24 @@ scripts.prof = async () => {
     showToast(tr(L('+5 Rappels · +10 Super Crayon-balls', '+5 Revives · +10 Great Pencil Balls')));
     return;
   }
-  if (caught >= CREATURES.length && !flag('dexDiploma')) {
+  if (caught >= DEX_GOAL && !flag('ilePage')) {
+    // the diploma (once), then the island it opens (for games that had the diploma before new Bestioles came, too)
+    if (!flag('dexDiploma')) {
+      await sayAll([
+        L('Ton Bestiodex est complet ! Toutes les Bestioles de la petite artiste, réunies !', 'Your Critterdex is complete! Every one of the little artist’s Critters, all together!'),
+        L('Je te décerne le Diplôme du Bestiodex. Clic-clac !', 'I award you the Critterdex Diploma. Click-clack!'),
+      ], PROF);
+      setFlag('dexDiploma');
+      showToast(tr(L('Diplôme du Bestiodex !', 'Critterdex Diploma!')));
+    }
+    setFlag('ilePage');
     await sayAll([
-      L('Ton Bestiodex est complet ! Toutes les Bestioles de la petite artiste, réunies !', 'Your Critterdex is complete! Every one of the little artist’s Critters, all together!'),
-      L('Je te décerne le Diplôme du Bestiodex. Et quand de nouveaux dessins arriveront… je compte sur toi !', 'I award you the Critterdex Diploma. And when new drawings arrive… I’m counting on you!'),
+      L('Tu sais… Les vieux marins du Port racontent qu’au sud, il y a une île qu’on ne voit que quand on a tout dessiné.', 'You know… The old sailors at the Port say that to the south there is an island you can only see once you have drawn everything.'),
+      L('Une île où quelque chose a tracé les tout premiers traits du monde. Je ne l’ai jamais vue… Va demander au passeur !', 'An island where something drew the very first lines of the world. I have never seen it… Go and ask the ferryman!'),
     ], PROF);
-    setFlag('dexDiploma');
-    showToast(tr(L('Diplôme du Bestiodex !', 'Critterdex Diploma!')));
     return;
   }
-  await say(L('Bon retour à Papeterre ! Cherche les pages déchirées ({p}/12) et complète ton Bestiodex ({c}/{t}).', 'Welcome back to Papeterra! Look for the torn pages ({p}/12) and complete your Critterdex ({c}/{t}).'), PROF, { p: pages, c: caught, t: CREATURES.length });
+  await say(L('Bon retour à Papeterre ! Cherche les pages déchirées ({p}/12) et complète ton Bestiodex ({c}/{t}).', 'Welcome back to Papeterra! Look for the torn pages ({p}/12) and complete your Critterdex ({c}/{t}).'), PROF, { p: pages, c: caught, t: DEX_GOAL });
   if (!flag('champion')) await say(L('Et au-delà du Bord de la Page, une nouvelle page s’est ouverte : le Grand Concours t’y attend !', 'And beyond the Edge of the Page, a new page has opened: the Grand Contest awaits you there!'), PROF);
 };
 

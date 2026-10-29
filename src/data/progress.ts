@@ -7,7 +7,7 @@
 import { L, type LText } from '../i18n';
 import type { SaveData } from '../save/schema';
 import { BADGES } from './badges';
-import { CREATURES, dexCount } from './creatures';
+import { DEX_GOAL, dexCount } from './creatures';
 import { TRAINERS } from './trainers';
 import { rematchesWon } from './afterStory';
 
@@ -36,8 +36,7 @@ const of = (item: string, n = 1): Reward => ({ item, n });
 /** One biscuit of each stat (n of each). */
 export const biscuits = (n = 1): Reward[] => ['pv', 'attaque', 'defense', 'atq-spe', 'def-spe', 'vitesse'].map((s) => of(`biscuit-${s}`, n));
 
-/** Every species but the player's own counts for the Bestiodex. */
-export const DEX_GOAL = CREATURES.length;
+export { DEX_GOAL };
 
 export const TRACKS: Track[] = [
   {

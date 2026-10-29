@@ -136,6 +136,8 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   '110': { base: { hp: 80, atk: 130, def: 105, spa: 45, spd: 95, spe: 120 }, talent: 'poings-d-acier' },
   // Taillou: its collar of shaving doubled, blades glinting in both eye-holes, a polished blade
   '111': { base: { hp: 70, atk: 130, def: 135, spa: 60, spd: 100, spe: 80 }, talent: 'coup-de-chance' },
+  // Baleincre: its fin grown into a great feather pen, a bigger black jet, the writing glowing gold
+  '112': { base: { hp: 110, atk: 95, def: 120, spa: 165, spd: 135, spe: 95 }, talent: 'nage-eclair' },
 };
 
 /** A Bestiole that can be made a fair copy: one with no evolution left. */

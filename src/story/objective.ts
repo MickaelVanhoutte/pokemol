@@ -1,6 +1,6 @@
 import { L, type LText } from '../i18n';
 import { BADGES } from '../data/badges';
-import { CREATURES, dexCount } from '../data/creatures';
+import { DEX_GOAL, dexCount } from '../data/creatures';
 import { TRAINERS } from '../data/trainers';
 import { townOfTrainer } from '../data/worldmap';
 import type { SaveData } from '../save/schema';
@@ -58,10 +58,11 @@ export const MAIN: Objective[] = [
 export const POST: Objective[] = [
   step('concours', 'galerie', L('Remporte le Grand Concours, après le Bord de la Page.', 'Win the Grand Contest past the Edge of the Page.'), ['champion']),
   {
-    ...step('dex', 'bourg', L('Complète ton Bestiodex ({c}/{t}).', 'Complete your Critterdex ({c}/{t}).'), [], (s) => dexCount(s.dex.caught) >= CREATURES.length || on(s, 'dexDiploma')),
-    vars: (s) => ({ c: dexCount(s.dex.caught), t: CREATURES.length }),
+    ...step('dex', 'bourg', L('Complète ton Bestiodex ({c}/{t}).', 'Complete your Critterdex ({c}/{t}).'), [], (s) => dexCount(s.dex.caught) >= DEX_GOAL || on(s, 'ilePage')),
+    vars: (s) => ({ c: dexCount(s.dex.caught), t: DEX_GOAL }),
   },
-  step('dexDiploma', 'bourg', L('Montre ton Bestiodex au Prof. Fusain.', 'Show your Critterdex to Prof. Charcoal.'), ['dexDiploma']),
+  step('dexDiploma', 'bourg', L('Montre ton Bestiodex au Prof. Fusain.', 'Show your Critterdex to Prof. Charcoal.'), ['ilePage']),
+  step('ilePage', 'port', L('Le passeur du Port connaît une île cachée.', 'The Port’s ferryman knows a hidden island.'), ['ile:visite']),
   {
     ...step('pages', 'bourg', L('Rapporte les pages déchirées au Prof. ({p}/12).', 'Bring the torn pages to the Prof. ({p}/12).'), ['pagesReward']),
     vars: (s) => ({ p: pagesFound(s) }),

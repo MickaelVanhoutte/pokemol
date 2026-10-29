@@ -60,6 +60,31 @@ async function meet(o: { id: string; slug: string; level: number; intro: LText[]
   }
 }
 
+// ------------------------------------------------------------------ the First Page Isle and the Great Inkwell
+
+/** The Bestiodex's reward (src/data/maps/phare.ts): caught, it is gone for good; knocked out, back after a night. */
+const inkAway = () => flag('static:baleincre') || !(num('nuits') >= num('ko:baleincre') || localDay() >= num('koDay:baleincre'));
+
+scripts.ilePageEnter = async () => {
+  setFlag('ile:visite');
+  setFlag('away:baleincre', inkAway() ? 1 : 0);
+};
+
+scripts.baleincre = async () => {
+  if (inkAway()) return;
+  await meet({
+    id: '112', slug: 'baleincre', level: 60,
+    intro: [
+      L('Au-dessus du lac d’encre, une ombre immense nage dans le ciel… Le Grand Encrier !', 'Above the ink lake, a huge shadow swims in the sky… The Great Inkwell!'),
+      L('Il te regarde de son petit œil sage, puis souffle un grand jet d’encre noire.', 'It looks at you with its small wise eye, then spouts a great jet of black ink.'),
+    ],
+    caught: L('Baleincre est dans ta Crayon-ball… Elle pèse aussi lourd qu’une bouteille d’encre pleine.', 'Inkwhale is in your Pencil Ball… It’s as heavy as a full bottle of ink.'),
+    gone: L('Le Grand Encrier remonte dans les nuages… Il reviendra peut-être après une nuit de sommeil.', 'The Great Inkwell rises into the clouds… Maybe it will come back after a night’s sleep.'),
+    waits: L('Le Grand Encrier n’a pas bougé. Il nage en rond au-dessus du lac.', 'The Great Inkwell hasn’t moved. It is swimming in circles above the lake.'),
+  });
+  setFlag('away:baleincre', inkAway() ? 1 : 0);
+};
+
 // ------------------------------------------------------------------ the Lost Woods and Libellune
 
 scripts.boisPerduGate = async () => {

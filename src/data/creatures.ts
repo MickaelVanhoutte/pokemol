@@ -1501,7 +1501,23 @@ export const CREATURES: SpeciesDef[] = [
       'A pencil sharpener that looks at the world through its two holes. It sticks its tongue out at blunt pencils, and its collar keeps the colour of every pencil it has sharpened.',
     ),
   },
+  {
+    id: '112', slug: 'baleincre', faces: 'left', name: L('Baleincre', 'Inkwhale'), kind: L('Bestiole Grand Encrier', 'Great Inkwell Critter'),
+    type: 'eau', type2: 'tenebres', base: { hp: 110, atk: 80, def: 95, spa: 125, spd: 110, spe: 80 },
+    catchRate: 15, baseExp: 290, evYield: { hp: 1, spa: 2 }, rarity: 'legendary', dexReward: true,
+    stencils: ['pochoir-03', 'pochoir-08', 'pochoir-11', 'pochoir-12', 'pochoir-14', 'pochoir-19'],
+    talents: ['averse-d-encre'], hiddenTalent: 'regard-noir',
+    learnset: [[1, 'jet-d-eau'], [1, 'grondement'], [1, 'tache-d-encre'], [10, 'mordillage'], [20, 'grosse-vague'], [30, 'griffe-de-nuit'],
+      [38, 'jet-d-encre-noire'], [45, 'tempete-psy'], [52, 'deferlante'], [60, 'jet-d-encre-noire']],
+    dex: L(
+      'Le Grand Encrier. On raconte que c’est son encre qui a tracé les tout premiers traits du monde. Il nage dans le ciel, au-dessus d’une île qu’on ne voit que quand on a tout dessiné.',
+      'The Great Inkwell. They say its ink drew the very first lines of the world. It swims in the sky above an island you can only see once you have drawn everything.',
+    ),
+  },
 ];
+
+/** How many species complete the Bestiodex: all of them but its reward. */
+export const DEX_GOAL = CREATURES.filter((c) => !c.dexReward).length;
 
 /**
  * The last four stencils (Progress rewards, src/data/progress.ts) are the stronger move of an earlier one:

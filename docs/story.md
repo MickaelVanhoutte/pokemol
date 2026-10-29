@@ -276,7 +276,16 @@ is a good teammate, not a broken one.
 Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillons).
 
 **Post-game** (`ending` set):
-- the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`);
+- the Prof rewards the 12 pages (`pagesReward`) and a complete Bestiodex (`dexDiploma`): `DEX_GOAL`, every species
+  but the Bestiodex's own reward (`dexReward`); then he tells of an island seen only once everything is drawn
+  (`ilePage`, also for games that had the diploma before new Bestioles came), and the ferryman at Port-Aquarelle offers
+  it besides the Inkwell Isle;
+- the **Île de la Première Page** (`ilePage` in `src/data/maps/phare.ts`, south of the Inkwell Isle on the Town Map,
+  music `ending`): a dock, tall grass at L50–52 (rare Givrelynx among them), and an ink lake where **Baleincre**, the
+  Grand Encrier, hovers over a sandbar: a dark humpback of ink curved in a U, a black ink jet from the inkwell on its
+  head, gold-nib flukes (Water/Dark, legendary, 600; Averse d’Encre: rain as it comes in; signature Jet d’Encre Noire).
+  L60, met like the dream legendaries (`meet`): caught, gone for good; knocked out, back after a night or the next day.
+  Drawn after the owner asked for a real, darker whale in a dynamic U pose; it has a fair copy (Nage Éclair);
 - Atelier Masters offer rematches at +12 levels;
 - Mom has new lines;
 - two residents per town have new lines (`afterStory` on the NPC), one of them a present once

@@ -116,7 +116,8 @@ re-renders everything.
   `src/overworld/mapTypes.ts` maps each character to a tile id;
 - `custom.ts`: the player's own Bestiole, drawn at the Atelier des Brouillons (`save.atelier`): registered as
   species `CUSTOM_ID` (`'000'`) at load time, outside `CREATURES`; `artUrl` / `miniFor` read its saved drawing,
-  and Bestiodex totals use `dexCount`, which leaves it out;
+  and Bestiodex totals use `dexCount`, which leaves it out; a complete Bestiodex is `DEX_GOAL` (every species but its
+  reward, `dexReward: true`: Baleincre on the hidden island);
 - `worldmap.ts`: the Town Map layout (`WORLD`), where-am-I (`regionOf`, `playerSpot`) and the
   balloon towns. Next objectives for the map live in `src/story/objective.ts`.
 

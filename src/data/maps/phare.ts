@@ -4,7 +4,8 @@ import { LOOKS } from '../../overworld/sprites';
 
 /**
  * L’Île de l’Encrier, south of Port-Aquarelle (the ferryman takes you there), and its lighthouse,
- * where Captain Buvard keeps the Midnight Ink he stole from Nocturne.
+ * where Captain Buvard keeps the Midnight Ink he stole from Nocturne. Farther south, the Île de la Première
+ * Page, only seen once the Bestiodex is complete: the Great Inkwell swims over its ink lake (src/story/legends.ts).
  */
 export const PHARE_MAPS: Record<string, MapDef> = {
   phareIle: {
@@ -43,6 +44,53 @@ export const PHARE_MAPS: Record<string, MapDef> = {
     },
     surf: { rate: 2, table: [{ id: '003', w: 70, min: 27, max: 31 }, { id: '013', w: 30, min: 27, max: 30 }, { id: '032', w: 20, min: 27, max: 30 }, { id: '042', w: 8, min: 29, max: 31 }, { id: '060', w: 5, min: 29, max: 31 }, { id: '059', w: 8, min: 28, max: 31 }, { id: '101', w: 30, min: 27, max: 29 }, { id: '102', w: 8, min: 30, max: 31 }] },
     fishing: { old: [{ id: '099', w: 150, min: 2, max: 6 }, { id: '003', w: 60, min: 2, max: 6 }], good: [{ id: '099', w: 100, min: 14, max: 18 }, { id: '003', w: 100, min: 14, max: 18 }], super: [{ id: '003', w: 100, min: 29, max: 33 }, { id: '100', w: 6, min: 29, max: 32 }, { id: '034', w: 12, min: 29, max: 32 }, { id: '044', w: 4, min: 31, max: 32 }, { id: '070', w: 30, min: 29, max: 32 }, { id: '058', w: 20, min: 27, max: 30 }] },
+  },
+
+  ilePage: {
+    id: 'ilePage',
+    name: L('Île de la Première Page', 'First Page Isle'),
+    border: 'water',
+    backdrop: 'beach',
+    onEnter: 'ilePageEnter',
+    rows: [
+      '~~~~~~~~~~=~~~~~~~~~~~',
+      '~~~~~~~~~~=~~~~~~~~~~~',
+      '~~~~~~~sss:Ssss~~~~~~~',
+      '~~~~~ss.T.:.T..ss~~~~~',
+      '~~~ss"""..:..""""ss~~~',
+      '~~ss""""..:.."""""ss~~',
+      '~~s"""""..:..""""".s~~',
+      '~ss......*:*.......ss~',
+      '~s....ssss:ssss....Ts~',
+      '~s""".s~~~s~~~s.""".s~',
+      '~s""".s~~~~~~~s.""".s~',
+      '~ss"".s~~~~~~~s."""ss~',
+      '~ss"".s~~~~~~~s."""ss~',
+      '~~ss..sssssssss..*ss~~',
+      '~~~ss""""....""""ss~~~',
+      '~~~~ss""".*.."""ss~~~~',
+      '~~~~~~ssss..ssss~~~~~~',
+      '~~~~~~~~~ssss~~~~~~~~~',
+    ],
+    signs: [{ x: 11, y: 2, text: L('« Ici fut tracé le tout premier trait. »', '“Here the very first line was drawn.”') }],
+    npcs: [
+      { id: 'passeurPage', x: 10, y: 1, look: LOOKS.passeur, facing: 'down', script: 'passeur' },
+      // the Great Inkwell, hovering over a sandbar in the ink lake
+      { id: 'baleincre', x: 10, y: 9, look: LOOKS.kid, mon: '112', facing: 'left', script: 'baleincre', hideIf: 'away:baleincre' },
+    ],
+    items: [{ x: 18, y: 7, item: 'sucette-magique' }, { x: 17, y: 13, item: 'sucette-magique', hidden: true }, { x: 10, y: 16, item: 'baie-prisme', count: 3, hidden: true }],
+    encounters: {
+      rate: 21,
+      table: [
+        { id: '053', w: 16, min: 50, max: 52 },
+        { id: '070', w: 16, min: 50, max: 52 },
+        { id: '104', w: 16, min: 50, max: 52 },
+        { id: '100', w: 14, min: 50, max: 52 },
+        { id: '086', w: 6, min: 50, max: 52 },
+        { id: '109', w: 4, min: 50, max: 52, if: 'ilePage' },
+      ],
+    },
+    surf: { rate: 2, table: [{ id: '100', w: 30, min: 50, max: 52 }, { id: '102', w: 30, min: 50, max: 52 }, { id: '070', w: 20, min: 50, max: 52 }] },
   },
 
   phare1: {

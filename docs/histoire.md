@@ -134,7 +134,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   mieux contre une Bestiole déjà rencontrée.
 - Et après la fin ? Papeterre a encore des surprises. Le monde continue de changer : écoute ce que
   les habitants ont à te dire (certains ont un cadeau pour toi), et retourne voir les endroits restés
-  tout pâles… plus tu avances, plus ils reprennent des couleurs.
+  tout pâles… plus tu avances, plus ils reprennent des couleurs. Et on raconte qu’une récompense
+  attend ceux qui auront rempli tout le Bestiodex.
 
 ---
 
@@ -264,4 +265,5 @@ The story has **two endings**, and your answers choose which one you will see.
   already met.
 - And after the ending? Papeterra still has surprises. The world keeps changing: listen to what the
   people have to say (some have a present for you), and go back to the places that stayed all pale…
-  the further you go, the more colour they get back.
+  the further you go, the more colour they get back. And they say a reward awaits whoever fills
+  the whole Critterdex.

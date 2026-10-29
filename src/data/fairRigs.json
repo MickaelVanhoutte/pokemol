@@ -300,6 +300,48 @@
       }
     ]
   },
+  "112": {
+    "slug": "baleincre",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 3,
+        "behind": true,
+        "left": 71.8,
+        "top": 10.5,
+        "width": 28.2,
+        "height": 24.4,
+        "ox": 33.5,
+        "oy": 109.3
+      },
+      {
+        "name": "jet",
+        "motion": "nod",
+        "amp": 6,
+        "period": 1.7,
+        "left": 11.7,
+        "top": 0,
+        "width": 37.7,
+        "height": 30.6,
+        "ox": 50.6,
+        "oy": 92.1
+      },
+      {
+        "name": "nageoire",
+        "motion": "nod",
+        "amp": 8,
+        "period": 2.6,
+        "left": 0,
+        "top": 54.8,
+        "width": 31.4,
+        "height": 45.2,
+        "ox": 74.3,
+        "oy": 2.7
+      }
+    ]
+  },
   "007": {
     "slug": "papivole",
     "parts": [

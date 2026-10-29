@@ -33,7 +33,8 @@ describe('Progress tracks', () => {
     const last = (id: string) => TRACKS.find((t) => t.id === id)!.steps.at(-1)!.goal;
     expect(last('dresseurs')).toBeLessThanOrEqual(placed.size - 20);
     expect(last('dex')).toBe(DEX_GOAL);
-    expect(DEX_GOAL).toBe(CREATURES.length);
+    // every species but the Bestiodex's own reward
+    expect(DEX_GOAL).toBe(CREATURES.length - 1);
     expect(last('aventure')).toBe(BADGES.length + 1);
     expect(last('revanches')).toBe(BADGES.length);
   });

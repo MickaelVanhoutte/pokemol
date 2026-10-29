@@ -433,6 +433,48 @@
       }
     ]
   },
+  "112": {
+    "slug": "baleincre",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 7,
+        "period": 3,
+        "behind": true,
+        "left": 70.6,
+        "top": 9.5,
+        "width": 29.4,
+        "height": 26.3,
+        "ox": 33.7,
+        "oy": 108.8
+      },
+      {
+        "name": "jet",
+        "motion": "nod",
+        "amp": 6,
+        "period": 1.7,
+        "left": 12,
+        "top": 0,
+        "width": 31.3,
+        "height": 30.8,
+        "ox": 50.7,
+        "oy": 92.3
+      },
+      {
+        "name": "nageoire",
+        "motion": "nod",
+        "amp": 8,
+        "period": 2.6,
+        "left": 0,
+        "top": 56.9,
+        "width": 27.8,
+        "height": 39.9,
+        "ox": 72.4,
+        "oy": 3.9
+      }
+    ]
+  },
   "001": {
     "slug": "minousse",
     "parts": [

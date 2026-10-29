@@ -112,6 +112,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Coconfus (legendary cocoon) | Pas Fini: at full HP it takes half the damage | `fullHpGuard` | — |
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
+| Baleincre (legendary, the Bestiodex's reward) | Averse d’Encre: rain as it comes in; Jet d’Encre Noire (Water special 100, 30% accuracy drop) | `entryWeather` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a
 `touchStatus` that burns…) under a new talent name. A new kind needs:

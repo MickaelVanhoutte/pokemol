@@ -110,6 +110,8 @@ export interface SpeciesDef {
   draft?: true;
   /** Only met once the story is over: never out of the Tombola before (src/data/afterStory.ts). */
   afterStory?: true;
+  /** The Bestiodex's reward, met once it is complete: it doesn't count towards completing it (`DEX_GOAL`). */
+  dexReward?: true;
 }
 
 /** What a held item does in battle (see `src/engine/pk/battle.ts`). */
