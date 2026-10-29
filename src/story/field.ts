@@ -67,7 +67,7 @@ giver('superCanne', L('Pêcheuse', 'Fisher'), {
 
 giver('velociste', L('Vélociste', 'Bike Maker'), {
   item: 'velo', need: 'a2.feutre',
-  notYet: L('Plus de couleurs, plus de vélos… Si quelqu’un chassait la Team Gomme, je lui offrirais mon plus beau vélo !', 'No colours, no bikes… If someone chased Team Eraser away, I’d give them my finest bike!'),
+  notYet: L('Plus de couleurs, plus de vélos… Si quelqu’un chassait la Team Gomme, je lui offrirais mon plus beau vélo !', 'No colours, no bikes… If someone chased Team Gomme away, I’d give them my finest bike!'),
   before: [L('Les couleurs sont revenues grâce à toi ! Tiens, mon Vélo-Crayon : ses roues sont des taille-crayons, ça file !', 'The colours are back thanks to you! Here, my Pencil Bike: its wheels are pencil sharpeners, it zooms!')],
   after: L('Monte dessus avec VÉLO dans le menu. Pas à l’intérieur, hein !', 'Get on it with BIKE in the menu. Not indoors, mind!'),
 });

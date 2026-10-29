@@ -15,7 +15,7 @@ type Step = { at: number; text: LText };
 const STEPS: Record<1 | 2, Step[]> = {
   1: [
     { at: 0, text: L('Sur la dernière page de ton cahier, le papillon d’hier soir… pas fini.', 'On the last page of your sketchbook, last night’s butterfly… unfinished.') },
-    { at: 1600, text: L('Tu prends ta gomme. Doucement, cette fois.', 'You pick up your eraser. Gently, this time.') },
+    { at: 1600, text: L('Tu prends ta gomme. Doucement, cette fois, juste pour le plaisir.', 'You pick up your eraser. Gently, this time, just for fun.') },
     { at: 4600, text: L('Et tu recommences, en prenant ton temps.', 'And you start again, taking your time.') },
     { at: 9400, text: L('Libellune ! Ses ailes sont enfin finies.', 'Glassfly! Its wings are finished at last.') },
   ],
@@ -23,7 +23,7 @@ const STEPS: Record<1 | 2, Step[]> = {
     { at: 0, text: L('Sur la dernière page de ton cahier, le papillon d’hier soir… pas fini.', 'On the last page of your sketchbook, last night’s butterfly… unfinished.') },
     { at: 1600, text: L('Tu ne gommes rien. Les taches deviennent des spirales…', 'You rub nothing out. The smudges turn into spirals…') },
     { at: 4800, text: L('… et le trou devient un œil, au milieu de ses ailes.', '… and the hole becomes an eye, right in its wings.') },
-    { at: 8200, text: L('Noctaile ! Ton dessin, avec toutes ses taches.', 'Nightmoth! Your drawing, smudges and all.') },
+    { at: 8200, text: L('Noctaile ! Fini, à ta façon, avec toutes ses taches.', 'Nightmoth! Finished your way, smudges and all.') },
   ],
 };
 const END = { 1: 11000, 2: 9800 };

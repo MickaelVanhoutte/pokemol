@@ -57,7 +57,7 @@ const inParty = () => !!save.value?.party.some((m) => m.species === COCONFUS);
 export async function cocoonReacts(way: Way) {
   await say(way === RETOUCHE
     ? L('Coconfus frissonne. Une petite lueur rose traverse son cocon…', 'Muddlecoon shivers. A little pink glow runs through its cocoon…')
-    : L('Coconfus frissonne. Une spirale sombre se dessine sur son cocon…', 'Muddlecoon shivers. A dark spiral draws itself on its cocoon…'));
+    : L('Coconfus frissonne. Une jolie spirale se dessine sur son cocon, comme un motif…', 'Muddlecoon shivers. A pretty spiral draws itself on its cocoon, like a pattern…'));
 }
 
 /**

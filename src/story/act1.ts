@@ -170,6 +170,7 @@ scripts.labTable = async () => {
   await flash('white', 160);
   await sayAll([
     L('Clic-clac ! Une photo de vous deux, pour l’album.', 'Click-clack! A picture of you two, for the album.'),
+    L('Oh, elle est un peu floue… Tant pis, je la garde ! Le mieux est l’ennemi du bien, comme on dit.', 'Oh, it’s a bit blurry… Never mind, I’m keeping it! Perfect is the enemy of good, as they say.'),
     L('Tiens, voici 5 Crayon-balls et 2 Potions.', 'Here are 5 Pencil Balls and 2 Potions.'),
     L('Lance une Crayon-ball sur une Bestiole sauvage affaiblie : elle se dessine dedans et rejoint ton équipe !', 'Throw a Pencil Ball at a weakened wild Critter: it draws itself inside and joins your team!'),
     L('Ton Bestiodex note toutes les Bestioles que tu croises. Essaie de le remplir !', 'Your Critterdex records every Critter you meet. Try to fill it up!'),
@@ -294,7 +295,7 @@ scripts.route1Gomme = async () => {
     L('Elle te va bien, garde-la !', 'It suits you, keep it!'), undefined, false);
   await say(way === RETOUCHE
     ? L('Tu essuies la trace. Le petit cocon ferme les yeux… et une lueur rose traverse son cocon.', 'You wipe the mark off. The little cocoon closes its eyes… and a pink glow runs through its cocoon.')
-    : L('Tu lui souris. Le petit cocon touche sa trace… et une spirale sombre se dessine autour, comme un motif.', 'You smile at it. The little cocoon touches its mark… and a dark spiral draws itself around it, like a pattern.'));
+    : L('Tu lui souris. Le petit cocon touche sa trace… et une jolie spirale se dessine autour, comme un motif.', 'You smile at it. The little cocoon touches its mark… and a pretty spiral draws itself around it, like a pattern.'));
   await say(L('Il te fait un petit signe… puis il file vers le nord et disparaît dans les hautes herbes.', 'It gives you a little wave… then dashes north and disappears into the tall grass.'));
   g.remove('coconR1');
 };

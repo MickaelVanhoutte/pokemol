@@ -24,7 +24,7 @@ scripts.marineAfter = async () => {
     L('Repeins-le bien net !', 'Paint it again, nice and neat!'),
     L('Laisse couler, ça fait des reflets !', 'Let it run, it makes reflections!'), MARINE);
   await say(way === RETOUCHE
-    ? L('D’accord ! Une deuxième couche, bien propre. Il sera parfait.', 'All right! A second coat, nice and clean. It’ll be perfect.')
+    ? L('D’accord ! Une deuxième couche, bien propre. Il sera encore plus joli !', 'All right! A second coat, nice and clean. It’ll be even prettier!')
     : L('Tu as raison… Avec les coulures, on dirait qu’il se reflète dans la rivière. Je le laisse comme ça !', 'You’re right… With the runs, it looks like it’s reflected in the river. I’ll leave it like that!'), MARINE);
 };
 

@@ -42,23 +42,25 @@ async function reveal(boss?: Actor) {
   ]);
   if (boss) boss.sheet = sheetFor(unmasked());
   await sayAll([
-    L('Tu ne m’avais pas reconnu ? Je suis toi. Le toi qui doute.', 'You didn’t recognise me? I am you. The you who doubts.'),
-    L('Hier soir, tu as dessiné un papillon. Tu n’arrivais pas à faire ses ailes. Alors tu as gommé, gommé… jusqu’à faire un trou dans la page.', 'Last night, you drew a butterfly. You couldn’t get its wings right. So you rubbed out, and rubbed out… until you made a hole in the page.'),
-    L('Ce cocon tout pâle, c’est lui. Ton dessin raté. Laisse-moi finir de l’effacer.', 'That pale little cocoon is it. Your failed drawing. Let me finish rubbing it out.'),
+    L('Tu ne m’avais pas reconnu ? Je suis toi. La petite voix qui veut que tout soit parfait.', 'You didn’t recognise me? I am you. The little voice that wants everything to be perfect.'),
+    L('Toi, tu dessines pour t’amuser. Moi, je veux que ce soit parfait. Au fond, on veut la même chose : un beau dessin.', 'You draw for fun. I want it to be perfect. Deep down, we want the same thing: a beautiful drawing.'),
+    L('Hier soir, tu as dessiné un papillon. Ses ailes n’étaient jamais assez belles. Alors tu as gommé, gommé… jusqu’à faire un trou dans la page.', 'Last night, you drew a butterfly. Its wings were never beautiful enough. So you rubbed out, and rubbed out… until you made a hole in the page.'),
+    L('Ce cocon tout pâle, c’est lui. Pas parfait, alors raté. Laisse-moi finir de l’effacer : une page blanche, au moins, c’est parfait.', 'That pale little cocoon is it. Not perfect, so a failure. Let me finish rubbing it out: a blank page, at least, is perfect.'),
   ], EFFACEUR);
 }
 
 /** The last answer (it counts double). */
 const lastAnswer = () => choose('final', L('Que réponds-tu ?', 'What do you answer?'),
-  L('Tu as raison, il peut être plus beau. On ne l’efface pas : on le redessine !', 'You’re right, it can be better. We don’t rub it out: we draw it again!'),
+  L('Tu as raison, il peut être plus beau. Je vais le refaire… pour m’amuser, pas par peur !', 'You’re right, it can be more beautiful. I’ll draw it again… for fun, not out of fear!'),
   L('Il n’est pas parfait. C’est pour ça qu’il est à moi.', 'It isn’t perfect. That’s why it’s mine.'), EFFACEUR);
 
 /** What the doubt becomes, for each ending. */
 async function doubtListens(fin: Way) {
+  await say(L('Gommer pour faire plus beau, ou gommer parce qu’on a peur de rater… c’est la même gomme. Mais ce n’est pas pareil.', 'Rubbing out to make it more beautiful, or rubbing out because you’re scared of getting it wrong… it’s the same eraser. But it isn’t the same thing.'), EFFACEUR);
   await sayAll(fin === RETOUCHE
     ? [
-        L('Le redessiner… Alors je ne suis pas là pour effacer. Je suis là pour t’aider à faire mieux.', 'Draw it again… So I’m not here to rub things out. I’m here to help you do better.'),
-        L('Je serai ta gomme. Pas pour tout effacer : pour recommencer.', 'I’ll be your eraser. Not to rub everything out: to start again.'),
+        L('Le refaire pour t’amuser… Alors je ne suis pas là pour effacer. Je suis là pour t’aider à faire encore plus beau.', 'Drawing it again for fun… So I’m not here to rub things out. I’m here to help you make it even more beautiful.'),
+        L('Je serai ta gomme. Pas pour tout effacer : pour recommencer quand tu en as envie.', 'I’ll be your eraser. Not to rub everything out: to start again whenever you feel like it.'),
       ]
     : [
         L('Le garder… même avec ses taches ? Alors les taches aussi font partie du dessin.', 'Keep it… even with its smudges? Then the smudges are part of the drawing too.'),
@@ -116,10 +118,13 @@ async function lastPage(fin: Way) {
   await openScreen({ id: 'drawing', ending: fin });
   await sayAll([
     fin === RETOUCHE
-      ? L('Tu l’as gommé et redessiné ? Il est magnifique ! Tu as écouté la petite voix… et tu as fait encore mieux.', 'You rubbed it out and drew it again? It’s beautiful! You listened to the little voice… and did even better.')
-      : L('Tu l’as gardé, avec toutes ses taches ? Il est magnifique ! Tu as écouté la petite voix… et tu as gardé ton dessin à toi.', 'You kept it, smudges and all? It’s beautiful! You listened to the little voice… and kept your very own drawing.'),
-    L('Clic-clac ! Comme ça, il ne se perdra jamais.', 'Click-clack! That way, it will never get lost.'),
+      ? L('Tu l’as gommé et redessiné ? Il est magnifique !', 'You rubbed it out and drew it again? It’s beautiful!')
+      : L('Tu l’as gardé, avec toutes ses taches ? Il est magnifique !', 'You kept it, smudges and all? It’s beautiful!'),
+    L('Hier soir, tu voulais qu’il soit parfait… et tu as fait un trou dans la page. Le mieux est parfois l’ennemi du bien.', 'Last night, you wanted it to be perfect… and you made a hole in the page. Sometimes perfect is the enemy of good.'),
+    L('Ce qui compte, c’est que tu aies pris plaisir à le dessiner.', 'What matters is that you enjoyed drawing it.'),
   ], PAPA);
+  await say(L('(Le Prof. Fusain disait exactement la même chose…)', '(Prof. Charcoal said exactly the same thing…)'));
+  await say(L('Clic-clac ! Comme ça, il ne se perdra jamais.', 'Click-clack! That way, it will never get lost.'), PAPA);
 }
 
 // ------------------------------------------------------------------ waking up

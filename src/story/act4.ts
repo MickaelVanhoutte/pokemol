@@ -201,7 +201,7 @@ scripts.forteresseTop = async () => {
   playMusic('rival');
   const r = await comeUp('rivalFort', LOOKS.rival);
   await say(flag('choix:rival:a')
-    ? L('{name} ! Je me suis entraîné comme jamais depuis la Tour. Regarde-moi ces muscles !', '{name}! I’ve trained like never before since the Tower. Look at these muscles!')
+    ? L('{name} ! Je me suis entraîné depuis la Tour… et je me suis bien amusé ! Regarde-moi ces muscles !', '{name}! I’ve been training since the Tower… and I had a great time! Look at these muscles!')
     : flag('choix:rival:b')
       ? L('{name} ! Je suis venu. Pas parce que je suis le meilleur… juste parce que je suis ton ami.', '{name}! I came. Not because I’m the best… just because I’m your friend.')
       : L('{name} ! Je t’ai suivi jusqu’ici. Cette fois encore, on fait équipe.', '{name}! I followed you all the way here. Once again, we’re a team.'), RIVAL);

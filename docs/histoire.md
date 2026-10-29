@@ -72,7 +72,8 @@ dessins sont vivants : ce sont les **Bestioles**.
 En chemin, on te demande parfois ton avis. Un dessin raté : on le recommence, ou on le garde tel
 qu’il est ? Un pont dont les couleurs ont coulé, une ville qui retrouve ses couleurs, un ami qui se
 trouve nul, une fresque tachée d’encre, un village que personne n’a jamais fini… Il n’y a pas de
-mauvaise réponse, et le petit cocon réagit à chacune.
+mauvaise réponse, et le petit cocon réagit à chacune. Le mieux est parfois l’ennemi du bien : un dessin n’a
+pas besoin d’être parfait pour être beau, et ce qui compte, c’est le plaisir de dessiner.
 
 L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle tu verras.
 
@@ -198,7 +199,8 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
 Along the way, people sometimes ask what you think. A failed drawing: do you start it again, or keep
 it as it is? A bridge whose colours ran, a city getting its colours back, a friend who thinks he’s
 rubbish, a fresco with an ink blot, a village nobody ever finished… There is no wrong answer, and the
-little cocoon reacts to each one.
+little cocoon reacts to each one. Sometimes perfect is the enemy of good: a drawing doesn’t need to be
+perfect to be beautiful, and what matters is the fun of drawing it.
 
 The story has **two endings**, and your answers choose which one you will see.
 

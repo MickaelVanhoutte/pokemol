@@ -80,7 +80,7 @@ scripts.rivalTower = async () => {
 scripts.towerFreed = async () => {
   const g = getGame();
   await bubble('blanche', '…', 700);
-  await say(L('Le patron vous attend à l’Usine à Gommes, à la Cité-Encre. Là-bas, il préparera la page blanche…', 'The boss awaits you at the Eraser Factory, in Ink City. There, he’ll prepare the blank page…'), L('Admin Blanche', 'Admin Whiteout'));
+  await say(L('Le patron t’attend à l’Usine à Gommes, à la Cité-Encre. Là-bas, il préparera la page blanche…', 'The boss awaits you at the Eraser Factory, in Ink City. There, he’ll prepare the blank page…'), L('Admin Blanche', 'Admin Whiteout'));
   const b = g.npc('blanche');
   if (b) {
     await g.walk(b, ['down'], 120);
@@ -295,6 +295,7 @@ scripts.usineEnd = async () => {
     L('Assez.', 'Enough.'),
     L('Alors c’est toi, la petite main qui recolorie tout ce que j’efface…', 'So you’re the little hand colouring back everything I rub out…'),
     L('Les dessins, ça dépasse, ça bave, c’est tordu. Une page blanche, elle, n’a jamais tort.', 'Drawings go over the lines, they smudge, they’re crooked. A blank page is never wrong.'),
+    L('Moi, je veux seulement que tout soit beau. Parfait. Mais rien n’est jamais parfait… alors je gomme.', 'All I want is for everything to be beautiful. Perfect. But nothing is ever perfect… so I rub it out.'),
   ], EFFACEUR);
   if (save.value && findCoconfus(save.value)) await paleCocoon();
   await say(L('Viens donc me trouver au Bord de la Page, là où tout finit. Nous verrons bien ce qu’il restera de tes gribouillis.', 'Come and find me at the Edge of the Page, where everything ends. We’ll see what’s left of your scribbles.'), EFFACEUR);
@@ -317,7 +318,7 @@ scripts.rivalFinal = async () => {
   await sayAll([
     L('{name}… Je savais que tu viendrais jusqu’ici.', '{name}… I knew you’d make it here.'),
     flag('choix:rival:a')
-      ? L('Je me suis entraîné tous les jours depuis la Tour, comme tu me l’as dit. Montre-moi si ça a servi !', 'I’ve trained every day since the Tower, like you told me. Show me if it paid off!')
+      ? L('Je me suis entraîné tous les jours depuis la Tour, comme tu me l’as dit. Et tu sais quoi ? J’adore ça ! Montre-moi si ça a servi !', 'I’ve trained every day since the Tower, like you told me. And you know what? I love it! Show me if it paid off!')
       : flag('choix:rival:b')
         ? L('Tu m’as dit que j’étais génial comme j’étais. Alors ce combat, je le fais juste pour le plaisir. Sans retenue !', 'You told me I was great just as I am. So this battle is just for fun. Hold nothing back!')
         : L('Avant d’affronter le Grand Effaceur, montre-moi tout ce que tu as appris. Sans retenue !', 'Before you face the Great Eraser, show me everything you’ve learned. Hold nothing back!'),

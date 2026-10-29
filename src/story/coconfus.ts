@@ -37,7 +37,7 @@ scripts.prof = async () => {
     await sayAll([
       L('Oh ! Montre-moi cette Bestiole… Clic-cl… Tiens ? C’est bizarre.', 'Oh! Show me that Critter… Click-cl… Huh? That’s odd.'),
       L('Je n’ai jamais pris {n} en photo. Jamais ! Moi qui photographie tous les dessins…', 'I’ve never taken a picture of {n}. Never! And I photograph every drawing…'),
-      L('On dirait… qu’il n’est pas fini. Je ne photographie que les dessins finis, tu sais.', 'It looks like… it isn’t finished. I only photograph finished drawings, you know.'),
+      L('On dirait… qu’il n’est pas fini. Il bouge tout le temps, je n’arrive pas à le prendre !', 'It looks like… it isn’t finished. It keeps moving, I can’t get a shot of it!'),
     ], PROF, { n: tr(creature(COCONFUS).name) });
     setFlag('prof:coconfus');
     return;

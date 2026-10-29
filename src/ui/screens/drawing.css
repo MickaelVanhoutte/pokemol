@@ -35,6 +35,8 @@
 }
 @media (orientation: landscape) and (max-height: 540px) {
   .drawing { flex-direction: row; }
-  .drawing__caption { align-self: center; max-width: 38%; }
+  /* the canvas sets its own pixel size: without min-width 0 it would push the caption off the screen */
+  .drawing__page { flex: 1 1 0; width: auto; min-width: 0; }
+  .drawing__caption { align-self: center; flex: 0 0 36%; box-sizing: border-box; }
   .drawing__next { position: absolute; bottom: 0.5rem; right: 1rem; margin: 0; }
 }

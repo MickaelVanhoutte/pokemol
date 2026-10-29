@@ -28,8 +28,8 @@ where every drawing is alive.
   Great Eraser's face comes back, and it is the player's own (`doubtLook`: their look, greyed, in his
   uniform, with their eyes and smile). The reveal picture shows it happen: his rubbed-out face fills in, then
   Team Gomme's eraser cap slowly fades away over the player's own hair and hat (`hoodedLook`, `showPicture`
-  with `before` steps), and his map sprite becomes the player's too. « Je suis toi. Le toi qui doute. » He
-  wants to rub out Coconfus, last night's unfinished butterfly. The last answer, the battle (his battle intro
+  with `before` steps), and his map sprite becomes the player's too. « Je suis toi. La petite voix qui veut que
+  tout soit parfait. » He wants to rub out Coconfus, last night's unfinished butterfly. The last answer, the battle (his battle intro
   shows that face), then the page turns white and the player wakes up in the real bedroom (`chambre`,
   `awake: true`: no Bestiole follows you there). Papa took photos of the new drawings, then
   notices the butterfly on the last page: the drawing screen (`DrawingScreen`, screen `drawing`) shows it
@@ -38,6 +38,19 @@ where every drawing is alive.
   daycare) and stops being pale.
 
 ## The two endings
+
+**Theme** (the owner's words): « le mieux est parfois l’ennemi du bien ». Team Gomme is the little artist's
+inner voice that wants everything perfect; the child just wants to create and have fun. Neither way is wrong:
+the intention is what matters, redoing a drawing for fun or rubbing it out for fear of getting it wrong.
+- The proverb is said twice: by the Prof after the first rival battle (a blurry photo he keeps anyway,
+  `act1.ts`) and by Papa on waking up (`lastPage`), then « (Le Prof. Fusain disait exactement la même
+  chose…) », one more clue.
+- The Great Eraser says what he wants at the factory (« je veux seulement que tout soit beau. Parfait. Mais rien
+  n’est jamais parfait… alors je gomme »), at the reveal (« Toi, tu dessines pour t’amuser. Moi, je veux que ce
+  soit parfait ») and after the battle, in both endings: « c’est la même gomme. Mais ce n’est pas pareil ».
+- Answer A of the last question redoes the drawing « pour m’amuser, pas par peur », and both
+  endings finish it (Libellune's wings, Noctaile « fini, à ta façon »). Neither path's texts lean darker or
+  more driven than the other (Coconfus's spiral is « jolie », the rival enjoys training).
 
 Iteration 16 (Oct 2026), the owner's design. **Team Gomme are the little artist's doubts**, and the Great
 Eraser is the doubting self. **Coconfus** (EN *Muddlecoon*, id 073, Bug/Dark, `src/story/coconfus.ts`) is the
@@ -52,7 +65,7 @@ evolutions are the legendaries, by a story-only rule (`evolutions: [{ to, story:
 Neither answer is wrong. Each choice is `choose(id, …)` in `src/story/choices.ts`: flag `choix:<id>` = 1 or
 2, plus `choix:<id>:a` / `:b` for the maps. `endingOf()` takes the majority of the seven story choices and the
 final answer to the Great Eraser, which counts double; a tie (an older save that missed some) goes to the final
-answer. When Coconfus is in the party it reacts to each answer (a pink glow, or a dark spiral).
+answer. When Coconfus is in the party it reacts to each answer (a pink glow, or a pretty spiral).
 
 | # | Id | Where | Touch it up (1) | Keep it (2) |
 |---|---|---|---|---|
@@ -64,15 +77,16 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 | 6 | `encre` | Atelier Encre, Nocturne after the badge (`encreChoice`): the ink blot on her fresco | rub it out, paint it again (`V` stars) | turn it into a moon (`N`) |
 | 7 | `hameau` | Hameau-Brouillon, the Elder of Sketches (`hameauChoice`): « tu veux bien nous finir ? » | colour the hamlet in (patch `hameauColour`, buildings coloured) | « vous êtes beaux comme ça, pas finis » (it stays sketched) |
 
-| final | `final` (counts double) | Edge of the Page, the Great Eraser with the player's face (`finalBoss`) | « on ne l’efface pas : on le redessine ! » | « il n’est pas parfait, c’est pour ça qu’il est à moi » |
+| final | `final` (counts double) | Edge of the Page, the Great Eraser with the player's face (`finalBoss`) | « je vais le refaire… pour m’amuser, pas par peur ! » | « il n’est pas parfait, c’est pour ça qu’il est à moi » |
 
 Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was. The rival's
 lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`); his team
 does not change. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
 
 **What the doubt becomes.** After the battle the Great Eraser listens: « je serai ta gomme… pour recommencer »
-(ending 1) or « je serai ton ombre, elle fait partie du dessin » (ending 2), and Papa's words on the last page
-follow the ending too.
+(ending 1) or « je serai ton ombre, elle fait partie du dessin » (ending 2). Papa's first words on the last
+page follow the ending; then, for both, the proverb and « ce qui compte, c’est que tu aies pris plaisir à le
+dessiner ».
 
 **Saves that saw the old ending** (`ending` set, no `fin`): a pale Coconfus waits at the Edge of the Page
 (`coconBord`). Talking to it gives Coconfus if needed, then plays the face reveal, the last answer, a blink of

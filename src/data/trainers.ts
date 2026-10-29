@@ -327,7 +327,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [
       L('Tiens, tiens. C’est toi qui recolories tout derrière nous ?', 'Well, well. So you’re the one colouring everything back in behind us?'),
       L('Et c’est toi qui caches ce cocon raté, tout embrouillé… Le patron le veut. Surtout celui-là.', 'And you’re hiding that muddled, failed little cocoon… The boss wants it. That one above all.'),
-      L('Le Grand Effaceur a raison : ces gribouillis d’enfant ne valent rien. Je vais t’effacer, toi aussi !', 'The Great Eraser is right: these childish scribbles are worthless. I’ll rub you out too!'),
+      L('Le Grand Effaceur veut un monde parfait : pas une rature, pas une tache. Tes gribouillis, je vais les effacer… et toi avec !', 'The Great Eraser wants a perfect world: not one scribble, not one smudge. I’ll rub out your scribbles… and you with them!'),
     ],
     after: [L('Impossible… Les couleurs… elles reviennent toutes !', 'Impossible… The colours… they’re all coming back!')],
   }),
@@ -547,7 +547,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'r8b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '010', level: 29 }, { species: '057', level: 30 }, { species: '004', level: 30 }], money: 860, grey: true,
-    before: [L('Le patron prépare la Grande Gomme. Bientôt, tout sera blanc !', 'The boss is preparing the Big Rub. Soon everything will be white!')],
+    before: [L('Le patron prépare la Grande Gomme. Bientôt, tout sera blanc !', 'The boss is preparing the Giant Eraser. Soon everything will be white!')],
     after: [L('Pas si vite, alors…', 'Not so fast, then…')],
   }),
   // ---------------------------------------------------------------- Phare de l’Encrier (lighthouse)
@@ -570,8 +570,8 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     id: 'buvard', name: L('Capitaine Buvard', 'Captain Blotter'), money: 4200, grey: true, afterScript: 'phareEnd', storyFlag: 'a3.phare',
     party: [{ species: '006', level: 32 }, { species: '042', level: 31 }, { species: '010', level: 32 }, { species: '008', level: 33, item: 'baie-doree' }],
     before: [
-      L('Ho ho ! Une petite artiste dans mon phare ?', 'Ho ho! A little artist in my lighthouse?'),
-      L('Le buvard boit tout : l’encre, les couleurs, et la nuit de Nocturne. Je garde l’Encre de Minuit pour le Grand Effaceur !', 'A blotter soaks up everything: ink, colours, and Nocturne’s night. I’m keeping the Midnight Ink for the Great Eraser!'),
+      L('Ho ho ! {g:Une petite artiste|Un petit artiste} dans mon phare ?', 'Ho ho! A little artist in my lighthouse?'),
+      L('Le buvard boit tout avant que ça tache : l’encre, les couleurs, la nuit de Nocturne. L’Encre de Minuit ? Une goutte de trop, et c’est la catastrophe. Je la garde !', 'A blotter soaks everything up before it can smudge: ink, colours, Nocturne’s night. The Midnight Ink? One drop too many and it’s a disaster. I’m keeping it!'),
     ],
     after: [L('Mon buvard est tout mouillé… Reprends ton encre, va !', 'My blotter is all soggy… Take your ink back, go on!')],
   }),
