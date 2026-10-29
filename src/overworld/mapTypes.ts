@@ -182,6 +182,8 @@ export interface MapDef {
   sketch?: boolean;
   /** Drifting fog wisps. */
   fog?: boolean;
+  /** The real world, awake: no Bestiole follows you there. */
+  awake?: boolean;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
   /** Shared interior (Inn, shop…): its exits lead back to the door used to enter. */

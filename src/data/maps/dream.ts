@@ -99,6 +99,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     id: 'chambre',
     name: L('Ta chambre', 'Your bedroom'),
     indoor: true,
+    awake: true,
     border: 'void',
     backdrop: 'lab',
     tint: 'rgba(255, 190, 120, 0.16)',

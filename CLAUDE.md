@@ -225,6 +225,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
   `src/audio/music.ts` downloads them all after launch (`preloadMusic`), decodes on demand (jingles and
   the last 3 tunes kept decoded) and loops each inside its recording (`LOOP_MARGIN`). After changing a
   tune's notes, run `npm run music -- <id>`. The title menu's music box (`JukeboxScreen`) plays each one. `mapMusic.ts` picks the track for each map; battles pick theirs in `fight()`.
+- Both audio contexts are suspended while the page is hidden (app in the background, phone locked):
+  `src/audio/background.ts`.
 - `sfx.ts` plays sound effects, and `fxSound(kind)` the sounds of the move animations: each effect
   layer lists its `sounds` (fire whoosh, splash, thunder, slash, stat arpeggios…). Everything respects the prefs.
 

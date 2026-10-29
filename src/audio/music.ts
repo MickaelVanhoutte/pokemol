@@ -9,6 +9,7 @@
  * only the jingles and the last few tunes are kept decoded.
  */
 import { prefs } from '../state/prefs';
+import { hidden, silentWhenHidden } from './background';
 import { LOOP_MARGIN, jingleIds, trackIds, trackSeconds, type JingleId, type TrackId } from './tunes';
 
 export { jingleIds, trackIds, trackSeconds, type JingleId, type TrackId } from './tunes';
@@ -24,6 +25,7 @@ const urlOf = (id: TuneId): string | undefined => FILES[`./recordings/${id}.m4a`
 const isTrack = new Set<TuneId>(trackIds());
 
 let ctx: AudioContext | null = null;
+silentWhenHidden(() => ctx);
 /** The tune playing or loading. */
 let current: TrackId | null = null;
 let playing: (Sound & { id: TrackId }) | null = null;
@@ -36,7 +38,8 @@ function audio(): AudioContext | null {
   try {
     // music needs no quick reaction: a bigger buffer keeps it steady on a busy phone
     ctx ??= new AudioContext({ latencyHint: 'playback' });
-    if (ctx.state === 'suspended') void ctx.resume();
+    // a tune started in the background waits, silent, for the app to come back
+    if (ctx.state === 'suspended' && !hidden()) void ctx.resume();
     return ctx;
   } catch {
     return null;

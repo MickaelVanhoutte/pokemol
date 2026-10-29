@@ -1,14 +1,17 @@
 /** Tiny chiptune sound effects synthesized with WebAudio (no audio files needed). */
 import { prefs } from '../state/prefs';
+import { hidden, silentWhenHidden } from './background';
 
 let ctx: AudioContext | null = null;
+silentWhenHidden(() => ctx);
 
 export function sfxEnabled(): boolean {
   return prefs.value.sound;
 }
 
 function audio(): AudioContext | null {
-  if (!sfxEnabled()) return null;
+  // a sound asked for in the background would all play at once on coming back
+  if (!sfxEnabled() || hidden()) return null;
   try {
     ctx ??= new AudioContext();
     if (ctx.state === 'suspended') void ctx.resume();
