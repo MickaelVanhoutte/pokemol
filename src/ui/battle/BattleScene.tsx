@@ -1,4 +1,3 @@
-import { L, tr } from '../../i18n';
 import { creature, mirrored, monLabel } from '../../data/creatures';
 import { monArtUrl, rigLayerUrl } from '../monArt';
 import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
@@ -24,16 +23,14 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
   const m = activeMon(st.sides[side]);
   const max = maxHp(m);
   const xpPct = side === 0 && m.level < MAX_LEVEL ? ((m.xp - xpAt(m.level)) / (xpAt(m.level + 1) - xpAt(m.level))) * 100 : 0;
+  // one line: level, name, status and a short bar (yours with your HP written in it)
   return (
     <div class={`pk-hp pk-hp--${side === 0 ? 'me' : 'foe'}`}>
       <div class="pk-hp__top">
+        <span>{lv(m.level)}</span>
         {/* just the name: "wild" / "foe" stay in the battle messages */}
         <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦">✦</i>}{m.fair && <FairStar class="pk-hp__fair" />}</b>
         {m.status && <StatusTag s={m.status} />}
-        <span>{lv(m.level)}</span>
-      </div>
-      <div class="pk-hp__bar">
-        <span class="hp-label">{tr(L('PV', 'HP'))}</span>
         <HpBar hp={m.hp} max={max} numbers={side === 0} />
       </div>
       {side === 1 && st.kind === 'trainer' && <TeamBalls st={st} />}
@@ -148,8 +145,9 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
         )}
       </div>
       </div>
-      <div class="pk-side pk-side--me">
+      {/* your box: just over the panel in portrait, top left in landscape (battle.css) */}
       {!playerBack && !intro && <HpBox st={view} side={0} />}
+      <div class="pk-side pk-side--me">
       <div class="pk-plat pk-plat--me">
         {playerBack ? (
           <img class="pk-trainer pk-trainer--me" src={personUrl(playerBack, 'back')} alt="" />

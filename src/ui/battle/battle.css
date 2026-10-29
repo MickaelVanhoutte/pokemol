@@ -1,5 +1,7 @@
 .battle {
   --bp-h: clamp(176px, 33dvh, 240px);
+  /* height of an HP box: one line (text or the bar, whichever is taller) in its pencil frame */
+  --hp-box: calc(1.4rem + 14px);
   position: relative;
   isolation: isolate;
   background: #fbf6ea;
@@ -44,8 +46,8 @@
  */
 .pk-side { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
 .pk-side--foe { right: 4px; top: 6px; bottom: 47%; width: min(52%, 250px); align-items: stretch; }
-/* yours is big and runs past the bottom edge: close to you, while the foe stands further away */
-.pk-side--me { left: 4px; top: 55%; bottom: -10%; width: min(66%, 300px); align-items: stretch; }
+/* yours is big and close to you, standing just over your HP box, while the foe stands further away */
+.pk-side--me { left: 4px; top: 50%; bottom: calc(var(--hp-box) + 2px); width: min(66%, 300px); align-items: stretch; }
 /* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
 .pk-plat { position: relative; display: grid; grid-template: 100% / 100%; place-items: end center; container-type: size; }
 .pk-plat::after {
@@ -143,9 +145,6 @@
 /* a paper doll stands in for a Bestiole behind a Pantin de papier */
 .pk-sprite.is-doll { margin-bottom: 8%; }
 .pk-sprite.is-doll .pk-art { max-height: 72cqh; }
-/* yours stands lower in its (clipped) column: lift it so the whole doll shows */
-.pk-plat--me .pk-sprite.is-doll { margin-bottom: 30%; }
-.pk-plat--me .pk-sprite.is-doll .pk-art { max-height: 64cqh; }
 .pk-sprite.is-captured { animation: intoBall 0.35s ease forwards; }
 @keyframes intoBall { to { transform: scaleX(var(--flip)) scale(0.05); opacity: 0; } }
 
@@ -196,16 +195,25 @@
   background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box;
   border: 7px solid transparent;
   border-image: var(--pencil-frame) 24 / 7px stretch;
-  padding: 0 4px 3px;
+  height: var(--hp-box);
+  box-sizing: border-box;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  font-size: clamp(0.9rem, 3.6vw, 1.1rem);
   z-index: 2;
 }
-/* name and level on one line, the bar under it: two short rows */
-.pk-hp__top { display: flex; align-items: baseline; gap: 6px; font-size: clamp(0.9rem, 3.6vw, 1.1rem); line-height: 1.15; }
+/* one line: level, name, status and a short bar */
+.pk-hp__top { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; line-height: 1.15; }
+.pk-hp__top > span { flex: none; }
 .pk-hp__top b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
 .pk-hp__top .shiny-mark { margin-left: 3px; }
-.pk-hp__bar { display: flex; align-items: center; gap: 4px; }
-.pk-hp__bar .hpbar { flex: 1; }
-.pk-hp__bar .hp-label { font-size: 0.65rem; }
+.pk-hp .hpbar { flex: 0 0 clamp(48px, 24%, 100px); }
+/* the foe's grows to the left when its column is too narrow for a long name (large text, small phones) */
+.pk-hp.pk-hp--foe { align-self: flex-end; width: max(100%, calc(7em + 90px)); }
+/* yours along the bottom of the scene, just over the panel, its bar longer with your HP written in it */
+.pk-hp.pk-hp--me { position: absolute; left: 4px; right: 4px; bottom: 0; }
+.pk-hp--me .hpbar { flex-basis: clamp(96px, 34%, 170px); }
 /* your HP written inside the bar */
 .hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
 .hpbar__num { position: absolute; inset: 0 6px 0 0; display: flex; align-items: center; justify-content: flex-end; font-style: normal; font-size: 0.8rem; line-height: 1; color: var(--ink); text-shadow: 0 0 2px #fffaf0, 0 0 2px #fffaf0; }
@@ -323,7 +331,13 @@
   /* short scene: both columns go down to the bottom, so each drawing gets the whole height left
      under its box (the horizon is at about 52–56% of a wide scene, well above the feet) */
   .pk-side--foe { bottom: 6px; width: min(36%, 260px); }
-  .pk-side--me { top: 6px; bottom: -22%; width: min(44%, 320px); }
+  .pk-side--me { top: calc(6px + var(--hp-box) + 4px); bottom: -22%; width: min(44%, 320px); }
+  /* your box stays at the top left, over your drawing */
+  .pk-hp.pk-hp--me { top: 6px; right: auto; bottom: auto; width: max(min(44%, 320px), calc(11em + 100px)); }
+  .pk-hp--me .hpbar { flex-basis: clamp(72px, 26%, 120px); }
+  /* yours stands lower in its (clipped) column: lift it so the whole doll shows */
+  .pk-plat--me .pk-sprite.is-doll { margin-bottom: 30%; }
+  .pk-plat--me .pk-sprite.is-doll .pk-art { max-height: 64cqh; }
   .pk-plat--foe, .pk-plat--me { flex: 1 1 0; min-height: 0; height: auto; }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
