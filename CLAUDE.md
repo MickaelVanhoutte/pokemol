@@ -164,6 +164,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
   - randomness comes from `state.rng`;
   - `blocked()` means waiting for a forced switch or a move-learn choice;
   - `ai.ts` has `aiChoose(st, slip)`;
+  - catching is FireRed's formula (`catchChance`) with a hidden pity counter (`missedBalls`: the 16th ball of a
+    battle always holds); `boosts.catch` multiplies the ball (×2 on Easy, `DIFFICULTY.catch`, and the real house);
   - `creature.ts` covers stats, XP (`level³`, Gen 3 yield, ×1.5 for traded Bestioles) and evolutions; the level cap is 100
     (`MAX_LEVEL`; the Challenge Tower still battles at 50);
 - `src/ui/battle/BattleScreen.tsx` dispatches actions:

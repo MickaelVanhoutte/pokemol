@@ -137,7 +137,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   force et ses capacités. C’est la seule de son espèce, et tu peux revenir la retoucher quand tu veux.
 - Jusqu’à **3 parties** sur le même appareil, chacune avec sa difficulté : une pour toi, une pour un
   frère, une sœur ou un parent. En Facile et en Normal, un pouce levé montre les attaques qui marchent le
-  mieux contre une Bestiole déjà rencontrée.
+  mieux contre une Bestiole déjà rencontrée, et en Facile, les Crayon-balls attrapent deux fois mieux.
 - Et après la fin ? Papeterre a encore des surprises. Le monde continue de changer : écoute ce que
   les habitants ont à te dire (certains ont un cadeau pour toi), et retourne voir les endroits restés
   tout pâles… plus tu avances, plus ils reprennent des couleurs. Une nuit à l’Auberge, chaque jour,
@@ -275,7 +275,7 @@ The story has **two endings**, and your answers choose which one you will see.
   strength and its moves. It is the only one of its kind, and you can come back to retouch it whenever you like.
 - Up to **3 games** on one device, each with its own difficulty: one for you, one for a brother, a sister
   or a parent. On Easy and Normal, a thumbs-up shows the moves that work best against a Bestiole you have
-  already met.
+  already met, and on Easy, Pencil Balls catch twice as well.
 - And after the ending? Papeterra still has surprises. The world keeps changing: listen to what the
   people have to say (some have a present for you), and go back to the places that stayed all pale…
   the further you go, the more colour they get back. A night at the Inn, once a day, also has a

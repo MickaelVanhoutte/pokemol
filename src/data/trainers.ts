@@ -40,10 +40,11 @@ export interface TrainerDef {
  * fixed IVs (so battles feel the same every time) and, in battle, how often their AI picks a random
  * move instead of the best one.
  */
-export const DIFFICULTY: Record<Difficulty, { levels: number; iv: number; slip: number }> = {
-  easy: { levels: -0.15, iv: 6, slip: 0.35 },
-  normal: { levels: 0, iv: 12, slip: 0 },
-  hard: { levels: 0.1, iv: 20, slip: 0 },
+/** Per difficulty: trainer levels (a share added), their Bestioles' IVs, the AI's slips, and the catch rate's multiplier. */
+export const DIFFICULTY: Record<Difficulty, { levels: number; iv: number; slip: number; catch: number }> = {
+  easy: { levels: -0.15, iv: 6, slip: 0.35, catch: 2 },
+  normal: { levels: 0, iv: 12, slip: 0, catch: 1 },
+  hard: { levels: 0.1, iv: 20, slip: 0, catch: 1 },
 };
 
 export function trainerLevel(level: number, difficulty: Difficulty): number {

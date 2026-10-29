@@ -65,13 +65,15 @@ export interface BattleState {
   /** Player creatures that fought the current enemy (they share the XP). */
   participants: string[];
   escapes: number;
+  /** Balls that missed in this battle (the hidden pity counter of `throwBall`). */
+  missedBalls?: number;
   /** Rain, sunshine, sandstorm or hail, with the turns left. */
   weather: { kind: Weather; turns: number } | null;
   /** Night in Papeterre (Pleine Lune). */
   night?: boolean;
   /** A vision (the dream legendaries before the ending): balls go right through it. */
   noCatch?: boolean;
-  /** The player's bonuses from days in the real house (src/data/realLife.ts): catch rate and XP multipliers. */
+  /** The player's catch rate and XP multipliers: days in the real house (src/data/realLife.ts), and Easy doubles the catch rate. */
   boosts?: { catch?: number; xp?: number };
 }
 
@@ -865,6 +867,14 @@ export function catchChance(target: Mon, ballBonus: number): { a: number; p: num
   return { a, p: (b / 65536) ** 4 };
 }
 
+/** After this many balls missed in a battle, the next one always holds. */
+export const PITY_BALLS = 15;
+
+/**
+ * A ball: FireRed's four shake checks. Then a hidden pity counter: a ball that broke free still holds with a
+ * chance of (balls missed before it) / `PITY_BALLS`, so each miss adds a fifteenth of what was left, and after 15
+ * misses the next ball always holds.
+ */
 function throwBall(st: BattleState, ballId: string, out: Out) {
   if (st.kind !== 'wild' || st.noCatch) {
     out.push(st.noCatch ? { t: 'blocked', reflet: true } : { t: 'blocked' });
@@ -879,9 +889,14 @@ function throwBall(st: BattleState, ballId: string, out: Out) {
     const b = Math.floor(1048560 / Math.sqrt(Math.sqrt(16711680 / Math.max(1, a))));
     while (shakes < 4 && randomInt(st, 65536) < b) shakes++;
   }
+  const missed = st.missedBalls ?? 0;
+  if (shakes < 4 && missed > 0 && randomInt(st, PITY_BALLS) < missed) shakes = 4;
   const caught = shakes === 4;
   out.push({ t: 'ball', item: ballId, shakes: Math.min(3, shakes), caught });
-  if (!caught) return;
+  if (!caught) {
+    st.missedBalls = missed + 1;
+    return;
+  }
   // a catch counts like a win: XP and effort points for the Bestioles that fought it (Gen 6)
   awardXp(st, target, out);
   finish(st, 'capture', out);

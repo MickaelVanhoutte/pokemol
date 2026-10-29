@@ -1,7 +1,7 @@
 import { effect, signal } from '@preact/signals';
 import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
-import { TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
+import { DIFFICULTY, TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
@@ -913,7 +913,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       props: {
         setup: {
           kind, seed: newSeed(), night: dayPhase() === 'night', noCatch: opts.noCatch,
-          ...(opts.borrowed ? {} : { boosts: { catch: catchBoost(d.flags), xp: xpBoost(d.flags) } }),
+          ...(opts.borrowed ? {} : { boosts: { catch: catchBoost(d.flags) * DIFFICULTY[prefs.value.difficulty].catch, xp: xpBoost(d.flags) } }),
           // eggs stay out of battles
           player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false, fairCopy: d.bag['feutre-or'] ? 'light' : undefined },
           enemy: { name: enemyName, party: enemy, isAI: true, fairCopy: opts.trainer?.fairCopy === 'dark' ? 'dark' : opts.trainer?.fairCopy ? 'light' : undefined },

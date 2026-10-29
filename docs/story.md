@@ -384,7 +384,7 @@ coming back resets it (a mechanism once triggered stays open).
 | Masterpiece Square (`galerie`) | 4×4 fresque of Ombrouille on an easel (Stubborn Band) | post-game |
 | Fair tent, Port-Aquarelle (`tombola`) | Mémo-Bestioles: 6 pairs, a prize a day by tries (≤10 gold, ≤14 silver) | optional |
 
-Completing the four fresques (`fresqueDone`) gives 10 Super Crayon-balls and 3 Prism Berries
+Completing every fresque (`fresqueDone`, five with the sunken chapel's) gives 10 Super Crayon-balls and 3 Prism Berries
 (`fresquesReward`).
 
 **Page locations**: pages 1–2 in `home.ts`, 3–4 in `pastel.ts`, 5 in `plume.ts`, 6 in `aquarelle.ts`,
@@ -502,11 +502,20 @@ Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Ha
 **Difficulty** is a per-device pref (`prefs.difficulty`, Options row DIFFICULTÉ). `DIFFICULTY` in
 `src/data/trainers.ts` sets:
 
-| | Levels | Trainer IVs | AI |
-|---|---|---|---|
-| Easy | −15% (at least −1) | 6 | Random move 35% of the time (`aiChoose` `slip`) |
-| Normal | as written | 12 | Best move |
-| Hard | +10% | 20 | Best move |
+| | Levels | Trainer IVs | AI | Catch rate |
+|---|---|---|---|---|
+| Easy | −15% (at least −1) | 6 | Random move 35% of the time (`aiChoose` `slip`) | ×2 |
+| Normal | as written | 12 | Best move | ×1 |
+| Hard | +10% | 20 | Best move | ×1 |
+
+**Catching** is FireRed's formula (`catchChance`, `throwBall` in `src/engine/pk/battle.ts`): the HP left, the
+species' catch rate, the ball (Crayon-ball ×1, Super ×1.5), sleep or freeze ×2 and the other statuses ×1.5, four
+shake checks. At full HP a common first form (catch rate 190) holds one ball in three, a starter (45) one in
+sixteen, a legendary (25) one in thirty. The difficulty's multiplier and the real house's drawing days multiply the
+ball (`boosts.catch`). The owner found it failed a lot, so a hidden pity counter (`missedBalls`, Oct 2026) helps: a
+ball that broke free still holds with a chance of (balls missed before it in this battle) / 15, so each miss adds a
+fifteenth of what was left and the 16th ball always holds. A legendary at full HP is then caught by the 5th ball
+half the time, and never later than the 16th.
 
 On Easy and Normal, a pencil thumb marks the moves that hit the foe's weak spot (super effective against its
 current types, a fair copy's included), once its species was met in an earlier battle: the Bestiodex's `seen`

@@ -7,7 +7,7 @@ import { BADGES } from '../../data/badges';
 import { TYPES, effectiveness } from '../../data/types';
 import { L } from '../../i18n';
 import { aiChoose } from './ai';
-import { act, activeMon, catchChance, computeDamage, createBattle, effectiveStat, IllegalAction, itemUsable, usableSlots, type Action, type BattleState } from './battle';
+import { act, activeMon, catchChance, computeDamage, createBattle, effectiveStat, IllegalAction, itemUsable, PITY_BALLS, usableSlots, type Action, type BattleState } from './battle';
 import { addXp, calcStat, createMon, evolutionOf, evolve, gainEvs, levelFactor, maxHp, movesAt, statsOf, xpAt, type Mon } from './creature';
 
 const IV0 = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
@@ -306,6 +306,24 @@ describe('battle', () => {
     expect(levelFactor(10, 15)).toBeCloseTo(0.67, 1);
     const beat = (lv: number) => act(battle([mon('002', lv)], [mon('013', 10, 1, { hp: 1 })], 'wild'), { type: 'move', slot: 0 }, { type: 'move', slot: 0 }).events.find((e) => e.t === 'xp');
     expect(beat(10)).toMatchObject({ amount: wildXp(Math.floor((creature('013').baseExp * 10) / 5)) });
+  });
+
+  it('keeps a hidden pity counter: each missed ball helps the next, the 16th always holds', () => {
+    // a legendary at full HP: about 3% a ball on its own
+    const throwUntilCaught = (seed: number) => {
+      let st = battle([mon('018', 100)], [mon('115', 40)], 'wild', seed);
+      for (let n = 1; n <= PITY_BALLS + 1; n++) {
+        const r = act(st, { type: 'ball', item: 'crayon-ball' }, { type: 'move', slot: 0 });
+        if (r.state.result === 'capture') return n;
+        expect(r.state.missedBalls).toBe(n);
+        st = r.state;
+      }
+      return Infinity;
+    };
+    const balls = Array.from({ length: 200 }, (_, i) => throwUntilCaught(i + 1));
+    expect(Math.max(...balls)).toBeLessThanOrEqual(PITY_BALLS + 1);
+    // without the counter, 16 balls at 3% catch it about 4 times in 10; with it, every time and half of them by the 6th
+    expect(balls.filter((n) => n <= 6).length).toBeGreaterThan(80);
   });
 
   it('catching a Bestiole gives XP and effort points, as beating it would', () => {
