@@ -882,6 +882,12 @@ the phone it crackled (5 to 8 times the work of the 8-bit sound, measured offlin
 now recorded once (`npm run music`) and the game plays the recordings, downloaded in the background at
 launch (4 MB).
 
+**Battle music with more bite (Oct 2026).** The owner found the battle tunes cute but not intense or suspenseful
+enough. The music box keeps every melody, but the battles got a string section (a bass running in sixteenths, held or
+trembling chords), brass and real drums (timpani, snare, crash). The wild and trainer battles have new melodies in
+minor keys; the rival, Team Gomme, Atelier Masters, Great Eraser and champion themes kept theirs. Each recording is as
+loud as before (within 10 %).
+
 **Evolutions redrawn (Oct 2026).** The owner found some evolved forms too close to their earlier form (a
 recolour, a bigger copy). Redrawn with a new silhouette: Clochegueule slimmer, Gloutoflor with vines and a
 flytrap jaw, Ossagarde tall with a raised club, Furisinge punching in iron cuffs, Hippoplume with quills and a

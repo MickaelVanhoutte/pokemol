@@ -15,9 +15,21 @@ export type TrackId =
 /** Short tunes played once over the music, which comes back after them. */
 export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal';
 
-/** The first voice is the melody, the second the bass, the third the harmony. */
+/**
+ * What plays a voice: the music box, the felt piano and the chimes everywhere; the battles add a string
+ * section (bowed, or short and bouncing) and brass.
+ */
+export type Instrument = 'box' | 'piano' | 'chime' | 'strings' | 'staccato' | 'brass';
+
+/** The first voice is the melody, the second the bass, the third the harmony (unless `inst` says otherwise). */
 export interface Voice {
   notes: string;
+  /** Its instrument: by default the music box for the first voice, the felt piano for the second, chimes after. */
+  inst?: Instrument;
+  /** Its loudness (1 by default). */
+  vol?: number;
+  /** Other instruments playing the same notes (`oct` octaves up or down): a melody doubled by strings. */
+  with?: { inst: Instrument; oct?: number; vol?: number }[];
   /** A second, out-of-tune music box this many cents off: a wobbly, uneasy chorus (Team Gomme). */
   detune?: number;
   /** A soft repeat of each note this many eighths later (caves, dreams). */
@@ -33,8 +45,9 @@ export interface Track {
   /** The melody first. */
   voices: Voice[];
   /**
-   * k soft kick, s brush, h shaker, o long shaker, r wood block, t low tom, c bell, . nothing; one
-   * character per `drumStep` eighths (spaces and bar lines ignored).
+   * k soft kick, s brush, h shaker, o long shaker, r wood block, t low tom, c bell, and for battles K a
+   * heavy kick, n a snare, T a timpani, C a crash, X a heavy kick with a crash; . nothing. One character per
+   * `drumStep` eighths (spaces and bar lines ignored).
    */
   drums?: string;
   drumStep?: number;
@@ -75,6 +88,34 @@ const strum = (r: string) => {
 };
 /** Off-beat chord stabs for one bar. */
 const stab = (a: string, b = a) => `. ${a} . ${a} . ${b} ${b} .`;
+
+// ------------------------------------------------------------------ battle writing helpers
+
+/** Each note of a pattern played again and again in sixteenths: a running bass, or a string tremolo. */
+const sixteenths = (p: string) =>
+  p.split('|').map((bar) => bar.trim().split(/\s+/).filter(Boolean).flatMap((t) => {
+    const [n, len] = t.split(':');
+    return Array.from({ length: Math.round((len ? Number(len) : 1) * 2) }, () => `${n}:.5`);
+  }).join(' ')).join(' | ');
+/** A running string bass for one bar, in sixteenths, the octave above on a 3 + 3 + 2 lilt: tense and driving. */
+const pump = (r: string) => {
+  const o = transpose(r, 12);
+  return [r, r, o, r, r, o, r, o, r, r, o, r, r, o, r, o].map((n) => `${n}:.5`).join(' ');
+};
+/** Brass for one bar: a hit on the beat, the off-beat after it, and another. */
+const hit = (n: string) => `${n}:1 .:1.5 ${n}:.5 .:1 ${n}:1 .:3`;
+/** Brass for one bar: pushed hits just before the beat. */
+const push = (n: string) => `${n}:1.5 ${n}:.5 .:2 ${n}:1.5 ${n}:.5 .:2`;
+/** Brass closing a phrase: three blasts on the last beats. */
+const cad = (n: string) => `.:4 ${n}:.5 .:.5 ${n}:.5 .:.5 ${n}:2`;
+/**
+ * Battle drums, one bar in sixteenths (with `drumStep: 0.5`): heavy kick, snare on 2 and 4, a shaker between;
+ * a crash to open a phrase, a timpani boom, a fill and a snare roll to close one.
+ */
+const BEAT = 'KhhhnhKhKhhhnhhh', BEAT2 = 'KhhKnhhhKhKhnhKh', START = 'XhhhnhKhKhhhnhhh', BOOM = 'ThhhnhKhThhhnhhh';
+const FILL = 'KhhhnhKhnhnnnnnn', ROLL = 'Thhhnnnnnnnnnnnn';
+/** Team Gomme's: a kick on every beat, pounding. */
+const POUND = 'KhKhnhKhKhKhnhKh', POUND_START = 'XhKhnhKhKhKhnhKh';
 
 // ------------------------------------------------------------------ the tunes
 
@@ -359,80 +400,109 @@ export const TRACKS: Record<TrackId, Track> = {
     drums: 'k.h.s.hkk.h.s.h.',
   },
 
-  // the rival: cheeky and sure of himself, E major
+  // the rival: cheeky and sure of himself, E major; strings gallop, brass stabs
   rival: {
     bpm: 152,
     voices: [
-      { notes: bars('B4 E5 G#5 B5:2 G#5 E5:2', 'C#6:2 B5 G#5 E5:2 C#5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'D#6:3 C#6 B5:4', 'E6 D#6 E6 B5 G#5:2 E5:2', 'D#5 F#5 B5 D#6 C#6:2 B5:2', 'A5 G#5 F#5 E5 F#5 G#5 A5 B5', 'E6:4 B5:2 E5:2') },
-      { notes: bars(gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('E2'), gallop('G#2'), `${oct('A2', 4)} ${oct('B2', 4)}`, 'E2 E2:.5 E2:.5 E3 E2 E2:4') },
-      { notes: bars(stab('G#4', 'B4'), stab('E4', 'G#4'), stab('C#5', 'E5'), stab('D#5', 'F#4'), stab('G#4', 'B4'), stab('D#5', 'B4'), stab('C#5', 'D#5'), stab('G#4', 'E4')) },
+      {
+        with: [{ inst: 'strings', oct: -1, vol: 0.45 }],
+        notes: bars('B4 E5 G#5 B5:2 G#5 E5:2', 'C#6:2 B5 G#5 E5:2 C#5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'D#6:3 C#6 B5:4', 'E6 D#6 E6 B5 G#5:2 E5:2', 'D#5 F#5 B5 D#6 C#6:2 B5:2', 'A5 G#5 F#5 E5 F#5 G#5 A5 B5', 'E6:4 B5:2 E5:2'),
+      },
+      { inst: 'staccato', vol: 1.4, notes: bars(gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('E2'), gallop('G#2'), `${oct('A2', 4)} ${oct('B2', 4)}`, 'E2 E2:.5 E2:.5 E3 E2 E2:4') },
+      { inst: 'brass', vol: 0.6, notes: bars(stab('G#4', 'B4'), stab('E4', 'G#4'), stab('C#5', 'E5'), stab('D#5', 'F#4'), stab('G#4', 'B4'), stab('D#5', 'B4'), stab('C#5', 'D#5'), stab('G#4', 'E4')) },
+      { inst: 'strings', vol: 0.5, notes: bars('E4:8', 'C#4:8', 'C#4:8', 'D#4:8', 'E4:8', 'D#4:8', 'C#4:4 D#4:4', 'E4:8') },
     ],
-    drums: 'k.hsk.hsk.hsk.ss',
+    drums: [START, BEAT, BEAT2, BOOM, START, BEAT, BEAT2, FILL].join(' | '),
+    drumStep: 0.5,
   },
 
-  // B minor, fast: a burst of sixteenths, syncopated stabs
+  // E minor, on the edge of your seat: a running string bass, held string chords that tremble in the second half,
+  // the music box doubled by strings, brass hits and timpani
   wild: {
-    bpm: 158,
+    bpm: 160,
     voices: [
       {
+        with: [{ inst: 'strings', oct: -1, vol: 0.5 }],
         notes: bars(
-          'B4:.5 C#5:.5 D5:.5 F#5:.5 B5:2 A5 F#5 D5:2', 'G5:2 F#5 E5 D5 E5 G5:2', 'A5:.5 G5:.5 F#5:.5 E5:.5 C#5:2 E5 A5 C#6:2', 'A#5:3 C#6 A#5:2 F#5:2',
-          'D6:.5 C#6:.5 B5 F#5 D5 B4:2 D5 F#5', 'G5 B5 D6 B5 G5:2 E5:2', 'E5 G5 B5 G5 F#5 A#5 C#6 E6', 'D6:2 B5:2 F#5:.5 E5:.5 D5:.5 C#5:.5 B4:2',
+          'E5 .:.5 E5:.5 G5 B5 A#5:.5 B5:.5 G5 E5 D#5', 'E5:3 F#5:.5 G5:.5 A5:2 G5 F#5', 'E5 .:.5 E5:.5 G5 C6 B5:.5 C6:.5 G5 E5 G5', 'F#5:3 G5 F#5 D#5 B4 C5',
+          'B5 .:.5 B5:.5 E6 B5 C6:.5 B5:.5 A5 G5 F#5', 'G5:3 A5:.5 B5:.5 C6:2 B5 A5', 'C6 B5 A5 E5 C6 B5 A5 C6', 'B5:2 A#5 B5 D#6:2 F#5:2',
+          'G5:.5 A5:.5 B5:.5 C6:.5 E6:2 D6 C6 B5 G5', 'F#5:.5 G5:.5 A5:.5 D6:.5 F#6:2 E6 D6 C6 A5', 'B5:3 D6 F#6:2 E6 D6', 'E6:4 B5:2 G5:2',
+          'A5 C6 E6 A6 G6 E6 C6 A5', 'A5 C6 F6 E6 D6:2 C6 B5', 'F#5 A5 B5 D#6 F#6:2 E6 D#6', 'C6:.5 B5:.5 A5:.5 G5:.5 F#5:.5 E5:.5 D#5:.5 C5:.5 B4:2 D#5:2',
         ),
       },
-      { notes: bars(oct('B2'), oct('G2'), oct('A2'), oct('F#2'), oct('B2'), oct('G2'), `${oct('E2', 4)} ${oct('F#2', 4)}`, oct('B2')) },
-      { notes: bars(stab('D5'), stab('B4'), stab('C#5'), stab('A#4'), stab('D5'), stab('B4'), stab('G4', 'A#4'), stab('D5', 'F#4')) },
+      { inst: 'staccato', notes: bars(...['E2', 'E2', 'C2', 'B1', 'E2', 'E2', 'A1', 'B1', 'C2', 'D2', 'B1', 'E2', 'A1', 'F1', 'B1', 'B1'].map(pump)) },
+      {
+        inst: 'strings', vol: 0.7,
+        notes: bars('B4:8', 'B4:8', 'C5:8', 'D#5:8', 'B4:8', 'B4:8', 'C5:8', 'D#5:8', ...['E5', 'F#5', 'F#5', 'G5', 'E5', 'F5', 'D#5', 'A4'].map((n) => sixteenths(`${n}:8`))),
+      },
+      { inst: 'strings', vol: 0.6, notes: bars('G4:8', 'G4:8', 'E4:8', 'F#4:8', 'G4:8', 'G4:8', 'A4:8', 'F#4:8', 'G4:8', 'A4:8', 'D5:8', 'E5:8', 'C5:8', 'A4:8', 'F#4:8', 'F#4:8') },
+      {
+        inst: 'brass', vol: 0.8,
+        notes: bars(hit('E3'), '.:8', '.:8', cad('B2'), hit('E3'), '.:8', '.:8', cad('B2'), hit('C3'), hit('D3'), hit('B2'), hit('E3'), hit('A2'), hit('F2'), cad('B2'), 'B2:2 .:2 B2:.5 .:.5 B2:.5 .:.5 B2:2'),
+      },
     ],
-    drums: 'kkhsk.hskkhsk.ss',
+    drums: [START, BEAT, BEAT, BOOM, START, BEAT, BEAT, FILL, START, BEAT2, BEAT2, BOOM, START, BEAT2, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
   },
 
-  // D minor trainer battle with a running bass and chord stabs
+  // D minor, a duel: pushed brass, a running string bass, a dark climb through a diminished chord
   trainer: {
-    bpm: 164,
+    bpm: 168,
     voices: [
       {
+        with: [{ inst: 'strings', oct: -1, vol: 0.5 }],
         notes: bars(
-          'D5 F5 A5 D6 C6 A5 F5 A5', 'G5 A5 A#5 A5 G5 F5 E5 C5', 'D5 F5 A5 D6 E6 D6 C6 A5', 'A#5 A5 G5 E5 F5:4',
-          'A#5 A5 G5 F5 E5 F5 G5 A5', 'C6 A#5 A5 G5 F5 E5 D5 E5', 'F5 G5 A5 C6 D6 C6 A5 F5', 'E5 C#5 E5 A5 D5:4',
+          'D5:1.5 D5:.5 A5:2 G5:.5 F5:.5 E5 F5:2', 'D5:1.5 D5:.5 A#5:2 A5:.5 G5:.5 F5 G5:2', 'G5:1.5 G5:.5 D6:2 C6:.5 A#5:.5 A5 A#5:2', 'A5:3 C#6 E6:2 C#6 A5',
+          'D6:1.5 D6:.5 C6 A5 F5:.5 G5:.5 A5 D5:2', 'D6:1.5 D6:.5 C6 A#5 F5:.5 G5:.5 A#5 D5:2', 'E5 G5 C6 E6 D6 C6 A#5 G5', 'A5:2 G#5 A5 C#6:2 E5:2',
+          'F5 A5 C6 F6:2 E6 D6 C6', 'E5 G5 C6 E6:2 D6 C6 A#5', 'A5 D6 F6:2 E6 D6 C#6 D6', 'F6:3 D6 A#5:2 F5:2',
+          'G5:.5 A5:.5 A#5:.5 C6:.5 D6:2 A#5 G5 D6 C6', 'A#5 G5 E5 G5 A#5 C#6 E6 G6', 'F6:2 E6:2 D6 C#6 B5 A5', 'G5:.5 A5:.5 G5:.5 F5:.5 E5:.5 F5:.5 E5:.5 D5:.5 C#5:2 E5:2',
         ),
       },
+      { inst: 'staccato', notes: bars(...['D2', 'A#1', 'G1', 'A1', 'D2', 'A#1', 'C2', 'A1', 'F1', 'C2', 'D2', 'A#1', 'G1', 'A#1', 'A1', 'A1'].map(pump)) },
       {
-        notes: bars(
-          oct('D3'), `${oct('G2', 4)} ${oct('C3', 4)}`, `${oct('D3', 4)} ${oct('A2', 4)}`, 'A#2 A#3 C3 C4 F3 F4 F3 F4',
-          `${oct('A#2', 4)} ${oct('C3', 4)}`, `${oct('F3', 4)} ${oct('G3', 4)}`, `${oct('D3', 4)} ${oct('A#2', 4)}`, `${oct('A2', 4)} ${oct('D3', 4)}`,
-        ),
+        inst: 'strings', vol: 0.7,
+        notes: bars('A4:8', 'A#4:8', 'A#4:8', 'A4:8', 'A4:8', 'A#4:8', 'C5:8', 'C#5:8', ...['C5', 'C5', 'D5', 'D5', 'D5', 'E5', 'E5', 'C#5'].map((n) => sixteenths(`${n}:8`))),
       },
+      { inst: 'strings', vol: 0.6, notes: bars('F4:8', 'F4:8', 'G4:8', 'E4:8', 'F4:8', 'F4:8', 'G4:8', 'E4:8', 'A4:8', 'G4:8', 'A4:8', 'A#4:8', 'A#4:8', 'A#4:8', 'C#5:8', 'A4:8') },
       {
-        notes: bars(stab('F4'), stab('A#4', 'E4'), stab('F4', 'E4'), stab('D4', 'F4'), stab('D4', 'E4'), stab('A4', 'B4'), stab('F4', 'D4'), stab('C#4', 'D4')),
+        inst: 'brass', vol: 0.8,
+        notes: bars(push('D3'), push('A#2'), push('G2'), cad('A2'), push('D3'), push('A#2'), push('C3'), cad('A2'), push('F2'), push('C3'), push('D3'), push('A#2'), push('G2'), push('A#2'), cad('A2'), 'A2:2 .:2 A2:.5 .:.5 A2:.5 .:.5 A2:2'),
       },
     ],
-    drums: 'k.hsk.hsk.hsk.ss',
+    drums: [START, BEAT2, BEAT, BOOM, START, BEAT2, BEAT, FILL, START, BEAT2, BEAT, BOOM, START, BEAT2, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
   },
 
-  // Team Gomme battles: diminished (octatonic) runs, tritone leaps, out-of-tune sawtooth, pounding drums
+  // Team Gomme battles: diminished (octatonic) runs, tritone leaps, the out-of-tune music box with brass under it,
+  // a pounding string bass, strings trembling on a tritone, a kick on every beat
   gommeBattle: {
     bpm: 156,
     voices: [
       {
         detune: 14,
+        with: [{ inst: 'brass', oct: -1, vol: 0.35 }],
         notes: bars(
           'A5 C6 A5 D#5 E5 .:3', 'A5:.5 A#5:.5 A5 G5 E5 D#5:2 C5:2', 'C6 D#6 C6 F#5 G5 .:3', 'C6:.5 C#6:.5 C6 A#5 G5 F#5:2 D#5:2',
           'D#5:2 F#5:2 A5:2 C6:2', 'D#6:3 C6 A5:2 F#5:2', 'F#5 G5 F#5 F5 E5 D#5 D5 C#5', 'E5:4 G#5:2 A#5:2',
         ),
       },
       {
-        notes: bars(oct('A2'), 'A2 A3 A2 A3 D#3 D#2 E3 E2', oct('C3'), 'C3 C4 C3 C4 F#3 F#2 G3 G2', oct('D#3'), 'D#3 D#2 D#3 D#2 C3 C2 A2 A3', 'F#2 F#3 F#2 F#3 F2 F3 E2 E3', 'E2 E3 E2 E3 E2 E3 G#2 A#2'),
+        inst: 'staccato',
+        notes: sixteenths(bars(oct('A2'), 'A2 A3 A2 A3 D#3 D#2 E3 E2', oct('C3'), 'C3 C4 C3 C4 F#3 F#2 G3 G2', oct('D#3'), 'D#3 D#2 D#3 D#2 C3 C2 A2 A3', 'F#2 F#3 F#2 F#3 F2 F3 E2 E3', 'E2 E3 E2 E3 E2 E3 G#2 A#2')),
       },
-      { notes: bars('.:2 D#5 .:3 D#5 .', '.:2 D#5 .:3 D#5 .', '.:2 F#5 .:3 F#5 .', '.:2 F#5 .:3 F#5 .', '.:2 A5 .:3 A5 .', '.:2 A5 .:3 A5 .', '.:2 C6 .:3 C6 .', '.:2 D6 .:3 D6 .') },
+      { inst: 'strings', vol: 0.55, notes: sixteenths(bars('D#5:8', 'D#5:8', 'F#5:8', 'F#5:8', 'A5:8', 'A5:8', 'C6:8', 'D6:8')) },
+      { inst: 'strings', vol: 0.5, notes: bars('A3:8', 'A3:8', 'C4:8', 'C4:8', 'D#4:8', 'D#4:8', 'F#3:8', 'E3:8') },
     ],
-    drums: 'k.s.kks.k.s.kkss',
+    drums: [POUND_START, POUND, POUND, BOOM, POUND_START, POUND, POUND, ROLL].join(' | '),
+    drumStep: 0.5,
   },
 
-  // Atelier Masters: E major and proud, galloping bass, power-chord pads, crash on every phrase
+  // Atelier Masters: E major and proud, the melody doubled by brass, a galloping string bass, held strings
   leader: {
     bpm: 172,
     voices: [
       {
+        with: [{ inst: 'brass', oct: -1, vol: 0.35 }],
         notes: bars(
           'E5:2 B5:2 G#5 B5 E6:2', 'D6:3 C#6 B5:2 A5:2', 'A5 C#6 E6:2 C#6 A5 E5:2', 'G#5:4 B5:4',
           'C#6:2 B5 G#5 E5:2 G#5:2', 'A5:2 C#6:2 E6:2 C#6:2', 'D#6:3 C#6 B5:2 F#5:2', 'B5:.5 C#6:.5 D#6:.5 E6:.5 F#6:2 D#6:2 B5:2',
@@ -441,26 +511,31 @@ export const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
+        inst: 'staccato', vol: 1.4,
         notes: bars(
           gallop('E2'), gallop('D2'), gallop('A2'), gallop('E2'), gallop('C#2'), gallop('A2'), gallop('B2'), gallop('B2'),
           gallop('E2'), gallop('G#2'), gallop('A2'), gallop('E2'), gallop('F#2'), gallop('A2'), gallop('B2'), 'E2 E2:.5 E2:.5 E3 E2 E2:4',
         ),
       },
       {
+        inst: 'strings', vol: 0.6,
         notes: bars(
           'B4:8', 'A4:8', 'E5:8', 'B4:8', 'G#4:8', 'E5:8', 'F#4:4 A4:4', 'D#5:8',
           'B4:8', 'D#5:8', 'E5:8', 'B4:8', 'C#5:8', 'E5:8', 'F#5:4 A5:4', 'G#4:4 B4:4',
         ),
       },
     ],
-    drums: `c.hsk.hs | ${rep('k.hskkhs', 6)} | k.sssssc | c.hsk.hs | ${rep('k.hskkhs', 6)} | kssskscc`,
+    drums: [START, BEAT, BEAT2, BEAT, BEAT2, BEAT, BEAT2, FILL, START, BEAT, BEAT2, BEAT, BEAT2, BEAT, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
   },
 
-  // the Great Eraser: C harmonic minor and a pounding tonic, then a desperate climb through A flat and B flat
+  // the Great Eraser: C harmonic minor and a pounding tonic, then a desperate climb through A flat and B flat;
+  // brass under the melody, strings trembling all along, timpani
   final: {
-    bpm: 150,
+    bpm: 154,
     voices: [
       {
+        with: [{ inst: 'brass', oct: -1, vol: 0.4 }],
         notes: bars(
           'C5 D#5 G5 C6 B5 G5 D#5 G5', 'G#5 G5 F5 D#5 D5 D#5 F5 D5', 'C5 D#5 G5 C6 D6 C6 B5 G5', 'G#5 G5 F5 D5 G5:4',
           'D#6 D6 C6 G#5 G5 G#5 G5 F5', 'D#5 F5 G5 G#5 G5 F5 D#5 D5', 'C5 D5 D#5 F5 G5 G#5 B5 D6', 'C6:4 G5:4',
@@ -469,28 +544,31 @@ export const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
-        notes: bars(
+        inst: 'staccato',
+        notes: sixteenths(bars(
           oct('C3'), `${oct('F2', 4)} ${oct('G2', 4)}`, `${oct('C3', 4)} ${oct('G#2', 4)}`, `${oct('F2', 4)} ${oct('G2', 4)}`,
           `${oct('G#2', 4)} ${oct('D#3', 4)}`, `${oct('F2', 4)} ${oct('G2', 4)}`, `${oct('G#2', 4)} ${oct('G2', 4)}`, `${oct('C3', 4)} ${oct('G2', 4)}`,
           oct('G#2'), oct('A#2'), oct('D#2'), oct('G2'), oct('G#2'), oct('A#2'), `${oct('C3', 4)} ${oct('G#2', 4)}`, oct('G2'),
-        ),
+        )),
       },
       {
-        detune: 8,
-        notes: bars(
+        inst: 'strings', vol: 0.6,
+        notes: sixteenths(bars(
           'G4:8', 'C5:4 B4:4', 'G4:4 G#4:4', 'C5:4 B4:4', 'C5:4 A#4:4', 'C5:4 B4:4', 'D#5:4 D5:4', 'D#5:4 D5:4',
           'D#5:8', 'F5:8', 'G5:8', 'G5:8', 'D#5:8', 'F5:8', 'G5:4 D#5:4', 'F5:4 D5:4',
-        ),
+        )),
       },
     ],
-    drums: `${rep('c.hsk.hsk.hsk.ks', 3)} k.hskshsk.sssscs | ${rep('k.hsk.hsk.hsk.hs', 3)} kssskssskksskscc`,
+    drums: [START, BEAT2, BOOM, BEAT2, START, BEAT2, BOOM, FILL, START, BEAT2, BOOM, BEAT2, START, BEAT2, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
   },
 
-  // Grand Concours champion: a D major fanfare, bright and on the tonic
+  // Grand Concours champion: a D major fanfare, bright and on the tonic; brass with the music box, strings, timpani
   champion: {
     bpm: 168,
     voices: [
       {
+        with: [{ inst: 'brass', oct: -1, vol: 0.4 }],
         notes: bars(
           'D5:.5 D5:.5 D5 A5:2 F#5 A5 D6:2', 'B5:3 A5 G5:2 D5:2', 'E5:.5 E5:.5 E5 C#6:2 A5 C#6 E6:2', 'F#6:4 D6:4',
           'D6:2 C#6 B5 F#5:2 B5:2', 'G5 B5 D6 G6:2 D6 B5 G5', 'E6:2 D6 B5 C#6:2 A5 E5', 'D6:6 .:2',
@@ -499,19 +577,22 @@ export const TRACKS: Record<TrackId, Track> = {
         ),
       },
       {
+        inst: 'staccato', vol: 1.4,
         notes: bars(
           gallop('D2'), gallop('G2'), gallop('A2'), gallop('D2'), gallop('B2'), gallop('G2'), `${oct('E2', 4)} ${oct('A2', 4)}`, gallop('D2'),
           gallop('G2'), gallop('A2'), gallop('F#2'), gallop('B2'), gallop('G2'), gallop('A2'), `${oct('G2', 4)} ${oct('A2', 4)}`, 'D2 D2:.5 D2:.5 D3 D2 D2:4',
         ),
       },
       {
+        inst: 'strings', vol: 0.6,
         notes: bars(
           'F#4:4 A4:4', 'D5:4 B4:4', 'C#5:4 E5:4', 'A4:4 F#4:4', 'F#4:4 D5:4', 'B4:4 D5:4', 'G4:4 A4:4', 'F#4:8',
           'D5:4 B4:4', 'E5:4 C#5:4', 'C#5:4 A4:4', 'F#4:4 B4:4', 'B4:4 G4:4', 'A4:4 C#5:4', 'B4:4 C#5:4', 'A4:4 F#4:4',
         ),
       },
     ],
-    drums: `c.hsk.hs | ${rep('k.hsk.hs', 6)} | k.ssk.sc | c.hsk.hs | ${rep('k.hsk.hs', 6)} | sssssscc`,
+    drums: [START, BEAT, BEAT2, BEAT, BEAT2, BEAT, BOOM, FILL, START, BEAT, BEAT2, BEAT, BEAT2, BEAT, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
   },
 
   // a lullaby in 6/8: music-box melody with an echo over rocking arpeggios

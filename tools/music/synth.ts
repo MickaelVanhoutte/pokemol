@@ -7,7 +7,7 @@
  * there at its start, and its randomness (each note a few cents off, as if played by hand) is seeded
  * by the note's place in the tune: every loop is the same, and the recording loops without a seam.
  */
-import { JINGLES, LOOP_MARGIN, TRACKS, drumHits, parse, trackSeconds, type JingleId, type TrackId, type Voice } from '../../src/audio/tunes';
+import { JINGLES, LOOP_MARGIN, TRACKS, drumHits, parse, trackSeconds, type Instrument, type JingleId, type TrackId, type Voice } from '../../src/audio/tunes';
 
 /** Loudness of the recordings, the same as the 8-bit music had beside the sound effects. */
 const LEVEL = 0.042;
@@ -144,11 +144,111 @@ function piano(r: Room, f: number, t: number, dur: number, amp: number) {
   }
 }
 
-/** Plays one note of a voice: the melody on a music box, the bass on a felt piano, the harmony on chimes. */
+/** A few sawtooths a little out of tune with each other: a section of players, not one. */
+function section(r: Room, f: number, t: number, end: number, cents: number[], filter: BiquadFilterNode, vibrato: boolean) {
+  const { c } = r;
+  const lfo = vibrato ? osc(c, 'sine', 5.2 + rand() * 0.6) : null, depth = c.createGain();
+  if (lfo) {
+    // the vibrato comes in once the note is held
+    depth.gain.setValueAtTime(0, t);
+    depth.gain.linearRampToValueAtTime(7, t + 0.35);
+    lfo.connect(depth);
+    lfo.start(t);
+    lfo.stop(end + 0.4);
+  }
+  for (const cent of cents) {
+    const o = osc(c, 'sawtooth', f, cent + wobble(6)), g = c.createGain();
+    g.gain.value = 1 / cents.length;
+    if (lfo) depth.connect(o.detune);
+    o.connect(g).connect(filter);
+    o.start(t);
+    o.stop(end + 0.4);
+  }
+}
+
+/** Bowed strings: a soft bow stroke, held, a little vibrato; tremolo when written in short notes. */
+function strings(r: Room, f: number, t: number, dur: number, amp: number) {
+  const { c } = r;
+  const fl = c.createBiquadFilter();
+  fl.type = 'lowpass';
+  fl.Q.value = 0.5;
+  fl.frequency.value = Math.min(4200, f * 4.5);
+  const g = c.createGain(), attack = Math.min(0.07, dur * 0.35), end = t + dur;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(amp * 1, t + attack);
+  g.gain.setTargetAtTime(amp * 0.85, t + attack, 0.2);
+  g.gain.setTargetAtTime(0.0001, end, 0.08);
+  fl.connect(g);
+  out(r, g);
+  section(r, f, t, end, [-9, 0, 8], fl, dur > 0.4);
+}
+
+/** Short bouncing bow strokes (spiccato), bright then dark at once: a running string bass. */
+function staccato(r: Room, f: number, t: number, dur: number, amp: number) {
+  const { c } = r;
+  const fl = c.createBiquadFilter();
+  fl.type = 'lowpass';
+  fl.Q.value = 1.2;
+  fl.frequency.setValueAtTime(Math.min(5000, f * 9), t);
+  fl.frequency.exponentialRampToValueAtTime(Math.max(180, f * 2), t + 0.09);
+  // each stroke dies away over its note, then is damped
+  const g = c.createGain(), len = Math.min(0.24, Math.max(0.08, dur * 0.95));
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(amp * 1.05, t + 0.004);
+  g.gain.setTargetAtTime(0.0001, t + 0.01, len * 0.45);
+  g.gain.setTargetAtTime(0.0001, t + len, 0.015);
+  fl.connect(g);
+  out(r, g, false);
+  section(r, f, t, t + len, [-6, 5], fl, false);
+  // the body of the low string
+  const s = osc(c, 'sine', f), sg = c.createGain();
+  sg.gain.setValueAtTime(0.0001, t);
+  sg.gain.linearRampToValueAtTime(amp * 1.2, t + 0.004);
+  sg.gain.setTargetAtTime(0.0001, t + 0.01, len * 0.5);
+  sg.gain.setTargetAtTime(0.0001, t + len, 0.015);
+  s.connect(sg);
+  out(r, sg, false);
+  s.start(t);
+  s.stop(t + len + 0.1);
+}
+
+/** Brass: a buzzing note that opens up as it is blown, for stabs and swells. */
+function brass(r: Room, f: number, t: number, dur: number, amp: number) {
+  const { c } = r;
+  const fl = c.createBiquadFilter();
+  fl.type = 'lowpass';
+  fl.Q.value = 1;
+  fl.frequency.setValueAtTime(f * 1.5, t);
+  fl.frequency.linearRampToValueAtTime(Math.min(5000, f * 7), t + 0.06);
+  fl.frequency.setTargetAtTime(Math.min(3500, f * 3.5), t + 0.07, 0.15);
+  const g = c.createGain(), end = t + Math.max(dur, 0.1);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(amp * 0.9, t + 0.03);
+  g.gain.setTargetAtTime(amp * 0.68, t + 0.04, 0.15);
+  g.gain.setTargetAtTime(0.0001, end, 0.07);
+  fl.connect(g);
+  out(r, g);
+  section(r, f, t, end, [-4, 4], fl, dur > 0.5);
+}
+
+/** One note on an instrument. */
+function sound(r: Room, inst: Instrument, v: Voice, f: number, t: number, dur: number, amp: number) {
+  if (inst === 'box') struck(r, f, t, dur, amp, MUSIC_BOX, 1.7, v.detune);
+  else if (inst === 'piano') piano(r, f, t, dur, 0.85 * amp);
+  else if (inst === 'chime') chime(r, f, t, dur, 0.42 * amp, v.detune);
+  else if (inst === 'strings') strings(r, f, t, dur, amp);
+  else if (inst === 'staccato') staccato(r, f, t, dur, amp);
+  else brass(r, f, t, dur, amp);
+}
+
+/**
+ * Plays one note of a voice: by default the melody on a music box, the bass on a felt piano, the harmony
+ * on chimes; a voice can name its instrument, and others doubling it.
+ */
 function play(r: Room, role: number, v: Voice, f: number, t: number, dur: number, soft = 1) {
-  if (role === 0) struck(r, f, t, dur, soft, MUSIC_BOX, 1.7, v.detune);
-  else if (role === 1) piano(r, f, t, dur, 0.85 * soft);
-  else chime(r, f, t, dur, 0.42 * soft, v.detune);
+  const amp = soft * (v.vol ?? 1);
+  sound(r, v.inst ?? (role === 0 ? 'box' : role === 1 ? 'piano' : 'chime'), v, f, t, dur, amp);
+  for (const w of v.with ?? []) sound(r, w.inst, v, f * 2 ** (w.oct ?? 0), t, dur, amp * (w.vol ?? 1));
 }
 
 /** A soft burst of filtered noise: brushes and shakers. */
@@ -171,10 +271,45 @@ function hiss(r: Room, type: BiquadFilterType, hz: number, q: number, vol: numbe
   s.stop(t + len + 0.02);
 }
 
+/** A falling sine: kicks, toms and the timpani's boom. */
+function thump(r: Room, from: number, to: number, glide: number, len: number, vol: number, t: number, wet: boolean) {
+  const o = osc(r.c, 'sine', from), g = r.c.createGain();
+  o.frequency.setValueAtTime(from, t);
+  o.frequency.exponentialRampToValueAtTime(to, t + glide);
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + len);
+  o.connect(g);
+  out(r, g, wet);
+  o.start(t);
+  o.stop(t + len + 0.02);
+}
+
+/** The battles' drums: a heavy kick, a snare, a timpani and a crash. */
+function battleDrum(r: Room, kind: string, t: number) {
+  if (kind === 'K' || kind === 'X') {
+    thump(r, 140, 44, 0.09, 0.32, 0.8, t, false);
+    hiss(r, 'highpass', 3000, 0.7, 0.1, 0.001, 0.02, t);
+  }
+  if (kind === 'n') {
+    thump(r, 210, 160, 0.05, 0.1, 0.35, t, false);
+    hiss(r, 'bandpass', 1900, 0.9, 0.32, 0.002, 0.17, t);
+    hiss(r, 'highpass', 5500, 0.7, 0.11, 0.002, 0.12, t);
+  }
+  if (kind === 'T') {
+    thump(r, 78, 64, 0.3, 1.1, 0.8, t, true);
+    hiss(r, 'lowpass', 260, 0.7, 0.22, 0.004, 0.12, t);
+  }
+  if (kind === 'C' || kind === 'X') {
+    hiss(r, 'highpass', 4800, 0.6, 0.15, 0.005, 1.5, t);
+    hiss(r, 'bandpass', 7200, 1.5, 0.07, 0.005, 0.9, t);
+  }
+}
+
 /** Brushes, a shaker, a wood block and a little bell keep the beat, softly. */
 function drum(r: Room, kind: string, t: number) {
   const { c } = r;
   const lvl = 0.45;
+  if ('KnTCX'.includes(kind)) return battleDrum(r, kind, t);
   if (kind === 'k' || kind === 't') {
     // a soft kick (dry), or a low tom ringing in the room: [from, to, glide, length, volume]
     const [from, to, glide, len, vol] = kind === 'k' ? [110, 48, 0.14, 0.18, 0.55] : [160, 100, 0.25, 0.3, 0.45];

@@ -174,7 +174,15 @@ box, the bass on a felt piano, the harmony or arpeggio on chimes (struck notes r
 longer, each a few cents off as if played by hand). A voice can add `detune` (cents: an out-of-tune
 double, the uneasy music box of Team Gomme) and `echo` (eighths). Drums are soft: `k` kick, `s` brush,
 `h` shaker, `o` long shaker, `r` wood block, `t` tom, `c` a little bell. Helpers (`arp`, `oct`,
-`drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts. Give every tune its own
+`drive`, `gallop`, `stab`, `rep`, `transpose`) write the repetitive parts.
+
+The battles are more intense: a voice can name its instrument (`inst`: `strings`, bowed and held, a tremolo when
+written in sixteenths; `staccato`, short bouncing strings for a running bass; `brass`), its loudness (`vol`) and
+instruments doubling it (`with`, an octave apart with `oct`), so the music box keeps the melody with strings or brass
+under it. Their drums add `K` a heavy kick, `n` a snare, `T` a timpani, `C` a crash and `X` kick and crash, written
+in sixteenths (`drumStep: 0.5`) with the bars `BEAT`, `START`, `BOOM`, `FILL`, `ROLL`, `POUND`; `pump`, `sixteenths`,
+`hit`, `push` and `cad` write the running basses, tremolos and brass. Keep a battle tune as loud as the others (an RMS
+around 0.045 in its WAV): measure it rather than guess, as the instruments differ a lot. Give every tune its own
 key, tempo and texture, and a name in the music box (`JukeboxScreen.tsx`). Then record it:
 `npm run music -- <id>` writes `src/audio/recordings/<id>.m4a` (the game plays only recordings; a test
 checks that every tune has one). It needs Google Chrome and macOS's `afconvert`; the WAVs stay in

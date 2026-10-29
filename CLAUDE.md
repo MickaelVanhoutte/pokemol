@@ -221,7 +221,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
 **Audio.**
 - The original tunes are notes in `src/audio/tunes.ts`. `npm run music` plays them on a music box
   (`tools/music/synth.ts`, in headless Chrome: the melody on a music box, the bass on a felt piano, the
-  harmony on chimes by voice order, brushes, shaker, wood block and bell, a small room reverb) and
+  harmony on chimes by voice order, brushes, shaker, wood block and bell, a small room reverb; battles add
+  strings, brass and real drums through a voice's `inst` / `with`, see [docs/content.md](docs/content.md)) and
   records each into `src/audio/recordings/<id>.m4a` (committed; Vite hashes the names, so a re-recorded
   tune is downloaded again). Phones only play the recordings: synthesizing on the phone crackled.
   `src/audio/music.ts` downloads them all after launch (`preloadMusic`), decodes on demand (jingles and
