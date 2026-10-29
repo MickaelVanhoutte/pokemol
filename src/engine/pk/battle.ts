@@ -71,6 +71,8 @@ export interface BattleState {
   night?: boolean;
   /** A vision (the dream legendaries before the ending): balls go right through it. */
   noCatch?: boolean;
+  /** The player's bonuses from days in the real house (src/data/realLife.ts): catch rate and XP multipliers. */
+  boosts?: { catch?: number; xp?: number };
 }
 
 export type Action =
@@ -185,6 +187,7 @@ export interface BattleSetup {
   enemy: SideSetup;
   night?: boolean;
   noCatch?: boolean;
+  boosts?: BattleState['boosts'];
 }
 
 export class IllegalAction extends Error {}
@@ -232,6 +235,7 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
     needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: null, night: !!setup.night,
     ...(setup.noCatch ? { noCatch: true } : {}),
+    ...(setup.boosts ? { boosts: setup.boosts } : {}),
   };
   const out = new Recorder(state, withSnaps);
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
@@ -867,7 +871,7 @@ function throwBall(st: BattleState, ballId: string, out: Out) {
     return;
   }
   const target = activeMon(st.sides[1]);
-  const bonus = item(ballId).amount / 10;
+  const bonus = (item(ballId).amount / 10) * (st.boosts?.catch ?? 1);
   const { a } = catchChance(target, bonus);
   let shakes = 0;
   if (a >= 255) shakes = 4;
@@ -985,7 +989,7 @@ function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: nu
   const fighters = party.filter(({ m }) => st.participants.includes(m.uid));
   const holders = party.filter(({ m }) => m.item && ITEM_BY_ID[m.item]?.hold === 'shareXp');
   // each Bestiole's share depends on its own level (catch-up XP)
-  const full = (m: Mon) => xpYield(foeMon, 1, m.level);
+  const full = (m: Mon) => Math.floor(xpYield(foeMon, 1, m.level) * (st.boosts?.xp ?? 1));
   const part = (pool: number, n: number) => Math.max(1, Math.floor(pool / n));
   const gain = new Map<number, number>();
   if (!holders.length) for (const { m, i } of fighters) gain.set(i, part(full(m), fighters.length));

@@ -11,4 +11,6 @@ import './postgame';
 import './puzzles';
 import './world';
 import './legends';
+// wraps the real house's scripts (finale)
+import './realLife';
 import './coconfus';

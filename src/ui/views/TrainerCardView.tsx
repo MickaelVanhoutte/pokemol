@@ -39,13 +39,18 @@ export function rewardText(reward: Reward[]): string {
  * FRLG trainer card: name, ID, money, Bestiodex, play time and the 8 badge slots; a second page shows the
  * Progress tracks and their rewards to collect.
  */
-export function TrainerCardView({ save, avatar, onLook, onClose, progress = [], more, onCollect, note, initialPage = 0 }: {
+/** A level grown in the real house, as the card shows it. */
+export interface RealRow { name: string; pips: string; effect: string }
+
+export function TrainerCardView({ save, avatar, onLook, onClose, progress = [], more, onCollect, note, initialPage = 0, real }: {
   save: SaveData; avatar: string; onLook?: () => void; onClose: () => void;
   /** The Progress tracks shown; `more`: the post-game ones are still to come. */
   progress?: TrackState[]; more?: boolean; onCollect?: (track: string) => void;
   /** What was just collected. */
   note?: string | null;
   initialPage?: Page;
+  /** The levels grown in the real house (after the first day there). */
+  real?: RealRow[];
 }) {
   const [page, setPage] = useState<Page>(initialPage);
   const turn = (d: 1 | -1) => setPage((p) => (((p + d + 2) % 2) as Page));
@@ -77,7 +82,7 @@ export function TrainerCardView({ save, avatar, onLook, onClose, progress = [], 
           <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
         </div>
         {page === 0 ? <CardPage save={save} avatar={avatar} onLook={onLook} /> : (
-          <ProgressPage progress={progress} more={more} cur={cur} onCursor={setCur} onCollect={onCollect} note={note} />
+          <ProgressPage progress={progress} more={more} cur={cur} onCursor={setCur} onCollect={onCollect} note={note} real={real} />
         )}
       </div>
     </Frame>
@@ -125,8 +130,8 @@ function CardPage({ save, avatar, onLook }: { save: SaveData; avatar: string; on
 }
 
 /** One row per track: its next milestone, how far along you are, and its reward (a button once reached). */
-function ProgressPage({ progress, more, cur, onCursor, onCollect, note }: {
-  progress: TrackState[]; more?: boolean; cur: number; onCursor: (i: number) => void; onCollect?: (track: string) => void; note?: string | null;
+function ProgressPage({ progress, more, cur, onCursor, onCollect, note, real }: {
+  progress: TrackState[]; more?: boolean; cur: number; onCursor: (i: number) => void; onCollect?: (track: string) => void; note?: string | null; real?: RealRow[];
 }) {
   return (
     <Window class="tcard prog">
@@ -161,6 +166,14 @@ function ProgressPage({ progress, more, cur, onCursor, onCollect, note }: {
             </div>
           );
         })}
+        {real && (
+          <div class="prog__row prog__real">
+            <div class="prog__head"><span class="prog__name">{tr(L('Dans ta vraie chambre', 'In your real bedroom'))}</span></div>
+            {real.map((r) => (
+              <p class="prog__goal"><span>{r.name} <span class="prog__pips">{r.pips}</span></span><span class="prog__count">{r.effect}</span></p>
+            ))}
+          </div>
+        )}
         {more && (
           <div class="prog__row is-locked">
             <div class="prog__head"><span class="prog__name">{tr(L('Après l’histoire', 'After the story'))}</span><span>?</span></div>

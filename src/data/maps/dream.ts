@@ -178,6 +178,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     interact: [
       { x: 7, y: 1, script: 'desk' }, { x: 8, y: 1, script: 'desk' }, { x: 1, y: 3, script: 'litReel' },
       { x: 0, y: 1, script: 'livresReel' }, { x: 1, y: 1, script: 'livresReel' },
+      { x: 2, y: 0, script: 'fenetre' },
     ],
   },
 

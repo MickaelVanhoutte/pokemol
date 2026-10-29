@@ -1,9 +1,10 @@
 import { useState } from 'preact/hooks';
-import { L, tr } from '../../i18n';
+import { L, locale, tr } from '../../i18n';
 import { SpriteSheet, lookOf } from '../../overworld/sprites';
 import { backToWorld, playerLook, refreshPlayerLook } from '../../overworld/controller';
 import { addItem, save, update } from '../../state/game';
 import { TRACKS, collect, trackState, tracksFor, type Milestone } from '../../data/progress';
+import { ACTIVITIES, pips, realLevel } from '../../data/realLife';
 import { playJingle } from '../../audio/music';
 import { sfx } from '../../audio/sfx';
 import type { Appearance } from '../../data/appearance';
@@ -61,6 +62,10 @@ export function TrainerCardScreen() {
       onCollect={onCollect}
       note={note}
       initialPage={first}
+      real={d.flags['reel:jour'] ? ACTIVITIES.map((a) => {
+        const l = realLevel(d.flags, a.id);
+        return { name: tr(a.name), pips: pips(l), effect: tr(a.effect, { p: a.amount(l).toLocaleString(locale.value === 'fr' ? 'fr-FR' : 'en-GB') }) };
+      }) : undefined}
     />
   );
 }

@@ -132,9 +132,10 @@ async function lastPage(fin: Way) {
 // ------------------------------------------------------------------ waking up
 
 scripts.ending = async () => {
-  // the ending already counted (the app closed after the credits): the house is there to look around, until bed
+  // the ending already counted (the app closed after the credits): the house is there to look around, until bed;
+  // on a day in the real house (src/story/realLife.ts) the player stays
   if (flag('ending')) {
-    if (flag('reveil:dodo')) await backHome();
+    if (flag('reveil:dodo') && !flag('reel:visite')) await backHome();
     return;
   }
   const g = getGame();

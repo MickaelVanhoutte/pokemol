@@ -12,6 +12,8 @@ import { STAT_NAMES } from '../data/types';
 import { talent, type TalentSlot } from '../data/talents';
 import { creature, monLabel, dexCount } from '../data/creatures';
 import { INNKEEPER } from './cast';
+import { wakesAtHome } from '../data/realLife';
+import { localDay } from '../overworld/berries';
 
 /** You wake up here after a blackout, and the Ariadne Thread leads back here. */
 const innRespawn = () => update((d) => void (d.respawn = { map: 'centre', x: 5, y: 4, returnTo: d.player.returnTo }));
@@ -37,6 +39,13 @@ export async function sleepUntil(morning: boolean) {
     : L('Bonsoir ! La nuit est tombée sur Papeterre… Certaines Bestioles ne sortent qu’à cette heure-ci.', 'Good evening! Night has fallen over Papeterra… Some Critters only come out at this time.'));
 }
 
+/** A night at an Inn; after the ending, once a real day, it ends in the real house instead (src/story/realLife.ts). */
+async function innSleep(morning: boolean) {
+  innRespawn();
+  if (wakesAtHome(save.value!.flags, localDay()) && scripts.reveilMaison) return scripts.reveilMaison();
+  await sleepUntil(morning);
+}
+
 /** The Inn (shared by every town): a quick rest heals the party, a night's sleep also turns the clock. */
 scripts.auberge = async () => {
   const first = !flag('visitedCenter');
@@ -56,8 +65,7 @@ scripts.auberge = async () => {
     await say(morning
       ? L('Ta chambre est prête. Je te réveille au lever du soleil !', 'Your room is ready. I’ll wake you at sunrise!')
       : L('Ta chambre est prête. Je te réveille à la nuit tombée !', 'Your room is ready. I’ll wake you at nightfall!'), INNKEEPER);
-    innRespawn();
-    await sleepUntil(morning);
+    await innSleep(morning);
   }
   if (first) {
     setFlag('visitedCenter');
@@ -76,8 +84,7 @@ scripts.innBed = async () => {
     : L('Un lit douillet qui sent la lavande. Dormir jusqu’à la nuit ?', 'A cosy bed that smells of lavender. Sleep till night?'),
   [L('Oui', 'Yes'), L('Non', 'No')]);
   if (c !== 0) return;
-  innRespawn();
-  await sleepUntil(morning);
+  await innSleep(morning);
 };
 
 /** Prof. Fusain's aide: the Tracing Paper (shares XP) once 3 kinds of Bestioles are caught. */

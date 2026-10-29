@@ -6,11 +6,12 @@ import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
 import { waiting } from '../data/progress';
+import { catchBoost, moneyBoost, shinyChance, xpBoost } from '../data/realLife';
 import { BORD_REMATCHES, REPENT_GIFTS, REPENT_GIFT_LINE, RETIRED, rematchesWon, repentLine, repentLook, repentant } from '../data/afterStory';
 import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { BASE_FRIENDSHIP, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, SHINY_CHANCE, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, allMons, autosave, blackoutLoss, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
@@ -864,7 +865,8 @@ export interface FightOptions {
 /** Runs a battle from the world and applies its outcome to the save. */
 export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], opts: FightOptions = {}): Promise<{ result: BattleResult; state: BattleState }> {
   const d = s();
-  const money = opts.trainer ? opts.trainer.money : 0;
+  // pocket money from the real house adds to the prize
+  const money = opts.trainer ? Math.round(opts.trainer.money * (opts.borrowed ? 1 : moneyBoost(d.flags))) : 0;
   // met before this battle: their weak spots get marked on the moves (Easy and Normal)
   const met = [...d.dex.seen];
   update((x) => enemy.forEach((m) => see(x, m.species)));
@@ -878,6 +880,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       props: {
         setup: {
           kind, seed: newSeed(), night: dayPhase() === 'night', noCatch: opts.noCatch,
+          ...(opts.borrowed ? {} : { boosts: { catch: catchBoost(d.flags), xp: xpBoost(d.flags) } }),
           // eggs stay out of battles
           player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false, fairCopy: d.bag['feutre-or'] ? 'light' : undefined },
           enemy: { name: enemyName, party: enemy, isAI: true, fairCopy: opts.trainer?.fairCopy === 'dark' ? 'dark' : opts.trainer?.fairCopy ? 'light' : undefined },
@@ -1023,6 +1026,9 @@ export async function wildBattle(species: string, level: number, opts: { music?:
     await g.fadeTo(0, 90);
   }
   const wild = createMon(species, level, { rng: newSeed() });
+  // daydreaming at the real window makes sparkly ones a little less rare
+  const extra = (shinyChance(s().flags) - SHINY_CHANCE) / (1 - SHINY_CHANCE);
+  if (!wild.shiny && extra > 0 && Math.random() < extra) wild.shiny = true;
   // like the GBA games, some wild creatures carry an item (kept when caught)
   const held = creature(species).wildItem;
   if (held && Math.random() * 100 < held.pct) wild.item = held.id;

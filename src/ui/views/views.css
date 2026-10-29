@@ -287,6 +287,11 @@
 .prog__prize span, .prog__get span { min-width: 0; text-align: left; }
 .prog__get { --sk-fill: var(--coral); --sk-hatch: var(--hatch-coral); --pencil-frame: var(--frame-coral); display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 1rem; min-height: 0; padding: 2px 10px; }
 .prog__row.is-done .prog__goal { color: #b07a10; }
+.prog__real { background: var(--hatch-peach) 0 0 / 72px 72px padding-box, var(--peach) padding-box; }
+.prog__pips { color: #b07a10; letter-spacing: 1px; }
+.prog__real .prog__goal { flex-wrap: wrap; column-gap: 8px; row-gap: 0; }
+.prog__real .prog__goal > span:first-child { white-space: nowrap; }
+.prog__real .prog__count { margin-left: auto; }
 .sticker {
   aspect-ratio: 1; display: grid; place-items: center;
   background: var(--blob-paper) center / 100% 100% no-repeat; opacity: 0.55;

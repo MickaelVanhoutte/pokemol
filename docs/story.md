@@ -280,6 +280,14 @@ Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillo
   but the Bestiodex's own reward (`dexReward`); then he tells of an island seen only once everything is drawn
   (`ilePage`, also for games that had the diploma before new Bestioles came), and the ferryman at Port-Aquarelle offers
   it besides the Inkwell Isle;
+- **days in the real house** (`src/data/realLife.ts`, `src/story/realLife.ts`): once a real day (`localDay`), the
+  first night at an Inn (innkeeper or bed) ends in the real bedroom instead (`reveilMaison`, heals and turns the clock
+  like a night). The player does one thing, its level shown first (5 dots) with what the next level gives: draw at the
+  desk (catch rate +3 %/level, shows one of her originals as « ton dessin du jour »), daydream at a window (sparkly
+  Bestioles 1 % → 3 %), read the books (XP +4 %/level), tell Mummy and Daddy about the dream (trainer prize money
+  +5 %/level). Then the bed takes the player back to the Inn they slept in (`respawn`). Gentle on purpose (the owner's
+  pick); no wake-up any more once all four are at 5. The levels show on the card's Progrès page after the first day;
+  the battle engine takes them as `BattleSetup.boosts` (catch, XP), `fight()` adds the money, `wildBattle` the sparkle;
 - the **Île de la Première Page** (`ilePage` in `src/data/maps/phare.ts`, south of the Inkwell Isle on the Town Map,
   music `ending`): a dock, tall grass at L50–52 (rare Givrelynx among them), and an ink lake where **Baleincre**, the
   Grand Encrier, hovers over a sandbar: a dark humpback of ink curved in a U, a black ink jet from the inkwell on its

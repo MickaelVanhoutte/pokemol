@@ -44,6 +44,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `couleurs:bord` | `rematch()` after the 4th Atelier Master rematch, or `repair()` | The Edge of the Page is coloured in again (patch `bordColour`) |
 | `ilePage` | the Prof's post-game wrapper (`act3.ts`), once the Bestiodex is complete (`DEX_GOAL`) | The Prof told about the hidden island: the ferryman goes there |
 | `ile:visite`, `away:baleincre`, `static:baleincre`, `ko:baleincre` / `koDay:baleincre` | `ilePageEnter` / `baleincre` in `src/story/legends.ts` | The First Page Isle was visited; the Great Inkwell is away, caught, or knocked out until a night or a day has passed |
+| `reel:dessin`, `reel:fenetre`, `reel:livre`, `reel:parents` (0–5); `reel:jour` (a real day), `reel:visite`, `reel:fait` | `src/story/realLife.ts` | Levels grown in the real house after the ending; the real day of the last wake-up there; the player is in the house today; the day's one thing is done |
 | `prix:<track>:<id>` | `collect()` in `src/data/progress.ts` (trainer card, Progress page) | That Progress reward was collected |
 | `prof:photo` (1, or 2 when sparkly) | the Prof's wrapper in `src/story/coconfus.ts`, after the ending | The Prof photographed what Coconfus became: the photo hangs in the lab (patch `profPhoto`, `labPhoto`) |
 | `coconPale` | `usineEnd` (Eraser Factory) | The Great Eraser rubbed Coconfus: its card is washed out until the ending |
