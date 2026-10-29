@@ -284,8 +284,10 @@ checks every step's flags are set somewhere and its target is on the map.
   - Mamie Encre (Cité-Encre) sends a letter to her brother Papi Plume (Village-Plume): he gives
     5 Super Crayon-balls and a reply; bringing it back gives a Spiky Helmet.
 - *Route rematches*: once beaten, route trainers want a rematch the next day (a ♪ bubble), with
-  their team raised to `REMATCH_LEVEL[badges]` (L7 with no badge, L42 with eight, L55 after the ending). Prize
-  as usual.
+  their team raised to `REMATCH_LEVEL[badges]` (L7 with no badge, L42 with eight, L55 after the ending), but
+  never above the player's own level (`rematchParty`, Oct 2026: the owner found them outgrowing the team): the
+  average of the three strongest Bestioles (`teamLevel`) caps the ace, the others a level apart under it, Hard's
+  extra levels included (`partyOf`'s `cap`). Prize ×1.5.
 - *The following Bestiole* has lines for each place and for its friendship, and once a day it may
   find an item.
 

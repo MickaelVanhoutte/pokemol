@@ -53,10 +53,36 @@ export function trainerLevel(level: number, difficulty: Difficulty): number {
   return Math.min(MAX_LEVEL, Math.max(2, level + shift));
 }
 
-export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty): Mon[] {
+/** A trainer's team at a difficulty; `cap`: no Bestiole above this level, the difficulty's shift included. */
+export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty, cap = MAX_LEVEL): Mon[] {
   const iv = DIFFICULTY[difficulty].iv;
   const ivs = { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv };
-  return list.map((t, i) => ({ ...createMon(t.species, trainerLevel(t.level, difficulty), { rng: seed + i }, ivs), item: t.item ?? null, nature: NEUTRAL_NATURE, talent: 0, shiny: false }));
+  return list.map((t, i) => ({
+    ...createMon(t.species, Math.min(cap, trainerLevel(t.level, difficulty)), { rng: seed + i }, ivs),
+    item: t.item ?? null, nature: NEUTRAL_NATURE, talent: 0, shiny: false,
+  }));
+}
+
+/** The player's level for rematches: the average of the three strongest Bestioles in the team (eggs left out). */
+export function teamLevel(party: Mon[]): number {
+  const best = party.filter((m) => !m.egg).map((m) => m.level).sort((a, b) => b - a).slice(0, 3);
+  return best.length ? Math.round(best.reduce((a, b) => a + b, 0) / best.length) : 1;
+}
+
+/** Top level of a route trainer's rematch team, by badges owned (the last one after the ending). */
+const REMATCH_LEVEL = [7, 13, 19, 22, 25, 29, 32, 36, 42, 55];
+
+/**
+ * A route trainer's team for a rematch: its ace at the level the player's badges call for (`step`: badges, +1 after
+ * the ending), the others a level apart below it, and at least as strong as the first time. But never above the
+ * player's own level (`teamLevel`), which wins: the ace at most that level, the others a level apart under it.
+ */
+export function rematchParty(t: TrainerDef, step: number, level: number): TrainerMon[] {
+  const top = REMATCH_LEVEL[Math.min(REMATCH_LEVEL.length - 1, step)];
+  return t.party.map((m, i) => {
+    const below = t.party.length - 1 - i;
+    return { ...m, level: Math.max(1, Math.min(MAX_LEVEL, level - below, Math.max(m.level, top - below))) };
+  });
 }
 
 export function trainerParty(t: TrainerDef, seed: number): Mon[] {

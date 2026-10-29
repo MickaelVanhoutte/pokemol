@@ -130,7 +130,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   dans ton lit). Certaines Bestioles ne sortent que la nuit…
 - Les habitants te proposent des **échanges** de Bestioles, et certains ont besoin d’un coup de main :
   une Bestiole perdue, une lettre à porter, une curiosité à satisfaire…
-- Les dresseurs des routes veulent leur **revanche** dès le lendemain.
+- Les dresseurs des routes veulent leur **revanche** dès le lendemain, avec une équipe qui progresse avec
+  toi sans jamais te dépasser.
 - La **Tombola**, le jeu de **Mémo-Bestioles**, la **Piste Cyclable**… et une grotte où quelque chose
   respire dans le noir.
 - Un **atelier où dessiner ta propre Bestiole** : au crayon, avec le doigt, puis tu choisis ses types, sa
@@ -268,7 +269,8 @@ The story has **two endings**, and your answers choose which one you will see.
   Some Critters only come out at night…
 - Townspeople offer Critter **trades**, and some need a hand: a lost Critter, a letter to carry, a
   curiosity to satisfy…
-- Route trainers want a **rematch** the very next day.
+- Route trainers want a **rematch** the very next day, with a team that grows with yours but never outgrows
+  it.
 - The **Tombola**, the **Critter Memo** card game, the **Cycling Track**… and a cave where something
   breathes in the dark.
 - A **workshop where you draw your own Bestiole**: in pencil, with your finger, then you pick its types, its

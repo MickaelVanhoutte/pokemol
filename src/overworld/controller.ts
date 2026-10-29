@@ -1,7 +1,7 @@
 import { effect, signal } from '@preact/signals';
 import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
-import { DIFFICULTY, TRAINERS, trainerParty, type TrainerDef } from '../data/trainers';
+import { DIFFICULTY, TRAINERS, partyOf, rematchParty, teamLevel, trainerParty, type TrainerDef } from '../data/trainers';
 import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
@@ -788,12 +788,10 @@ export async function trainerBattle(id: string, actor?: Actor, look?: Look) {
   }
 }
 
-/** Top level of a route trainer's rematch team, by badges owned (the last one after the ending). */
-const REMATCH_LEVEL = [7, 13, 19, 22, 25, 29, 32, 36, 42, 55];
-
 /**
  * Route and cave trainers already beaten want a rematch once a day (not Atelier trainers, Team
- * Gomme or story fights), with a team that keeps up with the player's badges.
+ * Gomme or story fights), with a team that keeps up with the player's badges but stays at or under the
+ * player's own level (`rematchParty`).
  */
 export function routeRematchReady(id: string): boolean {
   const t = TRAINERS[id];
@@ -811,10 +809,10 @@ async function routeRematch(id: string, actor: Actor) {
     await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), t.name);
     return;
   }
-  const top = REMATCH_LEVEL[Math.min(REMATCH_LEVEL.length - 1, s().badges.length + (flag('ending') ? 1 : 0))];
-  const party = t.party.map((m, i) => ({ ...m, level: Math.min(MAX_LEVEL, Math.max(m.level, top - (t.party.length - 1 - i))) }));
-  const strong: TrainerDef = { ...t, id: `${id}:re`, money: Math.round(t.money * 1.5), party };
-  const out = await fight('trainer', t.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
+  // they keep up with your badges, but never outgrow your team (Hard's extra levels included)
+  const level = teamLevel(s().party);
+  const strong: TrainerDef = { ...t, id: `${id}:re`, money: Math.round(t.money * 1.5), party: rematchParty(t, s().badges.length + (flag('ending') ? 1 : 0), level) };
+  const out = await fight('trainer', t.name, partyOf(strong.party, newSeed(), prefs.value.difficulty, level), { trainer: strong, look: actor.npc?.look });
   if (out.result !== 'win') return;
   update((d) => (d.flags[`re:${id}`] = localDay()));
   actor.bubble = undefined;
