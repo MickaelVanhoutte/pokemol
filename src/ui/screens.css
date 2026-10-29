@@ -119,7 +119,16 @@
 .picture__img { width: 100%; max-height: 58dvh; object-fit: contain; background: #fffdf6; padding: 8px; box-sizing: border-box; }
 .picture__caption { margin: 0; text-align: center; font-size: clamp(1rem, 4.4vw, 1.25rem); }
 .picture__ok { min-width: 8em; }
+/* pictures fading one into the next, the caption and OK coming once they are done */
+.picture__stack { display: grid; justify-items: center; width: 100%; }
+.picture__stack > .picture__img { grid-area: 1 / 1; position: relative; }
+.picture__layer { transition-property: opacity; transition-timing-function: ease-in-out; }
+.picture__layer.is-gone { opacity: 0; }
+.picture__caption, .picture__ok { transition: opacity 0.5s ease; }
+.picture__caption.is-waiting, .picture__ok.is-waiting { opacity: 0; }
 @media (orientation: landscape) and (max-height: 540px) {
-  .picture { gap: 6px; padding-top: 6px; }
-  .picture__img { max-height: 62dvh; }
+  /* OK beside the frame, so the picture gets the height */
+  .picture { flex-direction: row; gap: 12px; padding: 6px max(10px, env(safe-area-inset-right)) 6px max(10px, env(safe-area-inset-left)); }
+  .picture__frame { width: auto; max-width: calc(100vw - 11em); }
+  .picture__img { width: auto; max-width: 100%; max-height: calc(100dvh - 5.5rem); }
 }

@@ -6,10 +6,11 @@
  * Coconfus has become that drawing. Saves that saw the old ending replay it here, without the battle.
  */
 import { L, tr } from '../i18n';
-import { doubtLook } from '../data/appearance';
+import { doubtLook, hoodedLook } from '../data/appearance';
 import { creature } from '../data/creatures';
 import { evolutionMoves, evolve } from '../engine/pk/creature';
-import { LOOKS, type Look } from '../overworld/sprites';
+import { sheetFor, type Actor } from '../overworld/game';
+import { LOOKS, lookOf, type Look } from '../overworld/sprites';
 import { healParty, save, see, update } from '../state/game';
 import { personUrl } from '../ui/personArt';
 import {
@@ -21,14 +22,25 @@ import { choose, coconfusJoins, COCONFUS, endingOf, findCoconfus, RETOUCHE, type
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const PAPA = L('Papa', 'Daddy');
 
-/** The Great Eraser once his face is back: the player's look, greyed, in his uniform. */
-const unmasked = (): Look => ({ ...LOOKS.effaceur, appearance: doubtLook(playerLook()) });
+/** The Great Eraser once his face is back: the player's look, greyed, in his uniform and cape, without the cap. */
+const unmasked = (): Look => {
+  const a = doubtLook(playerLook());
+  return { ...lookOf(a), gang: 'boss', cape: LOOKS.effaceur.cape, appearance: a };
+};
 
-/** He takes his hood off: the player's own face. */
-async function reveal() {
+/**
+ * His face comes back, and it is the player's own: the rubbed-out face fills in with the player's eyes and smile,
+ * then Team Gomme's cap slowly fades away. On the map too, he now looks like the player.
+ */
+async function reveal(boss?: Actor) {
   await say(L('Le Grand Effaceur porte la main à son visage effacé… Les miettes de gomme tombent une à une.', 'The Great Eraser raises a hand to his rubbed-out face… The eraser crumbs fall away one by one.'));
   await shake(500);
-  await showPicture(personUrl(doubtLook(playerLook())), tr(L('Le Grand Effaceur… a ton visage !', 'The Great Eraser… has your face!')));
+  const me = playerLook();
+  await showPicture(personUrl(doubtLook(me)), tr(L('Le Grand Effaceur… a ton visage !', 'The Great Eraser… has your face!')), [
+    { src: personUrl(hoodedLook(me, 'blank')), hold: 900, fade: 1600 },
+    { src: personUrl(hoodedLook(me)), hold: 900, fade: 3200 },
+  ]);
+  if (boss) boss.sheet = sheetFor(unmasked());
   await sayAll([
     L('Tu ne m’avais pas reconnu ? Je suis toi. Le toi qui doute.', 'You didn’t recognise me? I am you. The you who doubts.'),
     L('Hier soir, tu as dessiné un papillon. Tu n’arrivais pas à faire ses ailes. Alors tu as gommé, gommé… jusqu’à faire un trou dans la page.', 'Last night, you drew a butterfly. You couldn’t get its wings right. So you rubbed out, and rubbed out… until you made a hole in the page.'),
@@ -63,7 +75,7 @@ scripts.finalBoss = async () => {
     L('Te voilà. Regarde autour de toi : ici, plus rien n’est dessiné. C’est calme. C’est propre.', 'Here you are. Look around: nothing is drawn here anymore. It’s calm. It’s clean.'),
     L('Tu as arrêté ma Gomme Géante. Mais il me reste la mienne. Et tu sais très bien qui je suis.', 'You stopped my Giant Eraser. But I still have my own. And you know very well who I am.'),
   ], EFFACEUR);
-  await reveal();
+  await reveal(boss);
   await lastAnswer();
   await shake(600);
   await say(L('Alors montre-moi !', 'Then show me!'), EFFACEUR);
@@ -202,7 +214,7 @@ scripts.coconBord = async () => {
   await shake(400);
   const boss = g.spawn('effaceurReve', LOOKS.effaceur, g.player.x, Math.max(1, g.player.y - 2), 'down');
   await say(L('Le Grand Effaceur ! Ce n’était donc pas fini…', 'The Great Eraser! So it wasn’t over…'));
-  await reveal();
+  await reveal(boss);
   await lastAnswer();
   const fin = endingOf(save.value!.flags);
   setFlag('fin', fin);

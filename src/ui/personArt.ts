@@ -90,7 +90,7 @@ function spiky(path: P[], h: number): P[] {
 }
 
 class Crayon {
-  constructor(private g: CanvasRenderingContext2D, private r: Rand) {}
+  constructor(private g: CanvasRenderingContext2D, public r: Rand) {}
 
   private path(pts: P[], closed: boolean, round: boolean) {
     const p = round ? curve(pts, closed) : pts;
@@ -320,14 +320,6 @@ function head(c: Crayon, a: Appearance, view: View) {
       c.dot(x - 1.8, 87.5, 1.8, 2.2, '#ffffff');
     }
   }
-  if (a.face === 'sad') {
-    // worried brows, a small wobbly frown, a grey smudge on the cheek
-    c.line([[70, 81], [90, 76]], false, { w: 2.4 });
-    c.line([[130, 81], [110, 76]], false, { w: 2.4 });
-    c.line([[90, 111], [96, 107], [104, 107], [110, 111]], false, { w: 1.6 });
-    c.colour(ellipse(132, 104, 9, 5, 10), '#b8b4c4', { over: 0, paper: false, press: 0.6 });
-    return;
-  }
   if (a.face === 'mean') {
     // frowning brows and a smirk
     c.line([[70, 77], [91, 85]], false, { w: 2.8 });
@@ -405,16 +397,23 @@ export function personUrl(a: Appearance, view: View = 'front'): string {
   cv.height = H * K;
   const g = cv.getContext('2d')!;
   g.scale(K, K);
-  const c = new Crayon(g, seeded(hash(key)));
-  if (view === 'front') cape(c, a);
-  if (view === 'front') hairBack(c, a);
-  legs(c, a);
-  body(c, a, view);
-  if (view === 'back') cape(c, a);
-  collar(c, a);
-  head(c, a, view);
-  hairFront(c, a, view);
-  extras(c, a, view);
+  // each part draws its own strokes, the same whatever the face and the hat: two looks that differ only there
+  // differ only there, so one fades into the other (the Great Eraser's face coming back, src/story/finale.ts)
+  const same = `${lookKey({ ...a, face: undefined, extra: 'aucun', extraColor: undefined })}|${view}`;
+  const c = new Crayon(g, seeded(hash(same)));
+  const part = (name: string, draw: () => void) => {
+    c.r = seeded(hash(`${same}|${name}`));
+    draw();
+  };
+  if (view === 'front') part('cape', () => cape(c, a));
+  if (view === 'front') part('hairBack', () => hairBack(c, a));
+  part('legs', () => legs(c, a));
+  part('body', () => body(c, a, view));
+  if (view === 'back') part('cape', () => cape(c, a));
+  part('collar', () => collar(c, a));
+  part('head', () => head(c, a, view));
+  part('hairFront', () => hairFront(c, a, view));
+  part('extras', () => extras(c, a, view));
   const url = cv.toDataURL('image/png');
   cache.set(key, url);
   return url;

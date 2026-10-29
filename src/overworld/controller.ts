@@ -879,11 +879,15 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   return res;
 }
 
-/** A picture shown big over the world with its caption (the museum's frames). */
-export const pictureOverlay = signal<{ src: string; caption: string; resolve: () => void } | null>(null);
+/** A picture shown first: it stays `hold` ms, then fades into the next one over `fade` ms. */
+export interface PictureStep { src: string; hold: number; fade: number }
 
-export function showPicture(src: string, caption: string): Promise<void> {
-  return new Promise((resolve) => (pictureOverlay.value = { src, caption, resolve }));
+/** A picture shown big over the world with its caption (the museum's frames). */
+export const pictureOverlay = signal<{ src: string; caption: string; before?: PictureStep[]; resolve: () => void } | null>(null);
+
+/** Shows a picture; `before`: pictures fading one into the next before it, the caption coming last. */
+export function showPicture(src: string, caption: string, before?: PictureStep[]): Promise<void> {
+  return new Promise((resolve) => (pictureOverlay.value = { src, caption, before, resolve }));
 }
 
 /** Evolution scene shown over the world (or null). */

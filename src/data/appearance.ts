@@ -17,8 +17,8 @@ export interface Appearance {
   extra: Extra;
   /** Colour of the cap, beanie or bow (the top's colour when unset). */
   extraColor?: string;
-  /** Story characters only: a frown and a smirk, a face rubbed out (the Great Eraser), or worried (him, unmasked). */
-  face?: 'mean' | 'blank' | 'sad';
+  /** Story characters only: a frown and a smirk, or a face rubbed out (the Great Eraser). */
+  face?: 'mean' | 'blank';
   /** Team Gomme grunts hide behind a dark mask. */
   mask?: boolean;
   /** Admins and the boss wear a cape with a high collar. */
@@ -144,12 +144,15 @@ function greyed(hex: string, k: number): string {
 
 /**
  * The Great Eraser once his face comes back (src/story/finale.ts): the player's own look, greyed, in the boss's
- * uniform and cape, with a worried face. The doubt was the player all along.
+ * uniform and cape, with the player's face, eyes and smile. The doubt was the player all along.
  */
 export function doubtLook(a: Appearance): Appearance {
   return {
     ...a, hairColor: greyed(a.hairColor, 0.7), skin: greyed(a.skin, 0.45),
     top: 'uniforme', topColor: '#5a5670', bottom: 'pantalon', bottomColor: '#2e2a3c',
-    extra: 'gomme', extraColor: '#f27fa0', face: 'sad', mask: false, cape: '#3a3448',
+    extraColor: a.extra === 'aucun' ? undefined : greyed(a.extraColor ?? a.topColor, 0.6), face: undefined, mask: false, cape: '#3a3448',
   };
 }
+
+/** The same, still wearing Team Gomme's eraser cap, and his face rubbed out until it comes back. */
+export const hoodedLook = (a: Appearance, face?: 'blank'): Appearance => ({ ...doubtLook(a), extra: 'gomme', extraColor: '#f27fa0', face });

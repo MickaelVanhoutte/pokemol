@@ -100,7 +100,7 @@ export function OverworldScreen() {
           onClose={() => learnOverlay.value!.resolve(null)}
         />
       )}
-      {pictureOverlay.value && <PictureView key={pictureOverlay.value.src} src={pictureOverlay.value.src} caption={pictureOverlay.value.caption} onClose={() => { const o = pictureOverlay.value!; pictureOverlay.value = null; o.resolve(); }} />}
+      {pictureOverlay.value && <PictureView key={pictureOverlay.value.src} src={pictureOverlay.value.src} caption={pictureOverlay.value.caption} before={pictureOverlay.value.before} onClose={() => { const o = pictureOverlay.value!; pictureOverlay.value = null; o.resolve(); }} />}
       {nameOverlay.value && <NicknameView key={nameOverlay.value.mon.uid} mon={nameOverlay.value.mon} onDone={nameOverlay.value.resolve} />}
       {menuOpen.value && <StartMenu />}
       <TouchControls />

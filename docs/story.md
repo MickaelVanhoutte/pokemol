@@ -26,9 +26,12 @@ where every drawing is alive.
   pages (key items `page-1`…`page-12`, texts in `src/data/pages.ts`), each a memory of the real world.
 - **Ending** (iteration 16, `src/story/finale.ts`, see "The two endings"): at the Edge of the Page the
   Great Eraser's face comes back, and it is the player's own (`doubtLook`: their look, greyed, in his
-  uniform, a worried face): « Je suis toi. Le toi qui doute. » He wants to rub out Coconfus, last night's
-  unfinished butterfly. The last answer, the battle (his battle intro shows that face), then the page turns
-  white and the player wakes up in the real bedroom (`chambre`). Papa took photos of the new drawings, then
+  uniform, with their eyes and smile). The reveal picture shows it happen: his rubbed-out face fills in, then
+  Team Gomme's eraser cap slowly fades away over the player's own hair and hat (`hoodedLook`, `showPicture`
+  with `before` steps), and his map sprite becomes the player's too. « Je suis toi. Le toi qui doute. » He
+  wants to rub out Coconfus, last night's unfinished butterfly. The last answer, the battle (his battle intro
+  shows that face), then the page turns white and the player wakes up in the real bedroom (`chambre`,
+  `awake: true`: no Bestiole follows you there). Papa took photos of the new drawings, then
   notices the butterfly on the last page: the drawing screen (`DrawingScreen`, screen `drawing`) shows it
   rubbed out and drawn again as Libellune, or growing into Noctaile from its smudges. Credits follow, then
   "the next night" the player goes back to the dream, where Coconfus evolves into that drawing (party, PC or

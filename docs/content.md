@@ -103,7 +103,7 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   Keep at least one entry for each time in every table. The Bestiodex habitats say « la nuit ».
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
   sketch`).
-- `indoor`, `tint`, `fog`, `onEnter` (towns use `'visitTown'`).
+- `indoor`, `tint`, `fog`, `onEnter` (towns use `'visitTown'`), `awake` (the real world: no follower).
 - `generic: true` marks a shared interior. Town houses share three rooms (`maisonVille`, `maisonPetite`,
   `maisonAtelier` in `maps/interiors.ts`): the town lists who lives in each house in its `residents`, with
   `fromDoor: [[town, x, y]]` (the tile in front of the door); they are put in the room that door leads to, and a
@@ -181,7 +181,8 @@ as solid), and `src/data/curve.test.ts` checks that a player who never grinds ke
 Ville-Pastel's **Musée des premiers croquis** (`musee` in `src/data/maps/pastel.ts`) hangs her original
 drawings (`src/data/originals.ts`) in frames: the `q` tile (`cadre`, on a wall or on a stand). Each frame is
 an `interact` spot whose script `musee:<id>` (`src/story/world.ts`) calls `showPicture(url, caption)`
-(`src/overworld/controller.ts`, the `PictureView` overlay). A new original needs a frame there:
+(`src/overworld/controller.ts`, the `PictureView` overlay; a third argument lists pictures that fade one into
+the next before it, as at the Great Eraser's reveal). A new original needs a frame there:
 `src/data/originals.test.ts` checks it.
 
 ### Puzzles
