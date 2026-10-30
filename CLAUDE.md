@@ -110,7 +110,8 @@ re-renders everything.
   the first talent being the family's power; `evolutions` rules by level, item or friendship, or
   `story` (Coconfus becomes Libellune or Noctaile only at the ending);
   `grownForm(id, level)` for trainer teams), natures;
-- moves, the type chart, items (`kind: 'key'` for story items);
+- moves, the type chart, items (`kind: 'key'` for story items); one fishing rod, whose catch follows the
+  team's level (`fishing.ts`, a map's `fishing: { low, mid, high }`);
 - trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in
   `src/overworld/mapTypes.ts` maps each character to a tile id;
@@ -135,6 +136,8 @@ re-renders everything.
   - movement, interactions, warps (including `to: 'back'` for shared interiors), trainer sight;
   - wild encounters, rolled as FireRed does by `encounterRate.ts` (map `rate` 21 on a route, 7 in a cave, 2 on
     water; calm steps after each battle, odds growing step by step);
+  - `arrivals`: scenes that start by themselves once the player is free on a map (checked after every warp and
+    every script): the seven Colour Guides bringing the field tools (`src/data/guides.ts`, `src/story/guides.ts`);
   - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, rematches, evolutions (`checkEvolutions(grown)`:
     as on the GBA, only a Bestiole that just grew a level evolves, never one caught or received past its level);
   - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask`.

@@ -108,8 +108,10 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   qui barrent le chemin, sols glissants…) et ses élèves à battre avant le Maître. Dans les villes, on
   entre chez les habitants : chacun a son histoire.
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
-- Des **outils** pour aller plus loin : ciseaux, bateau en papier, cannes à pêche, vélo, maillet,
-  gants. Chaque route a ses recoins : prairies à l’écart, objets cachés, rebords pour redescendre d’un
+- Des **outils** pour aller plus loin : ciseaux, canne à pêche, bateau en papier, bocal pour plonger,
+  vélo, maillet, gants. Ce sont les sept **Guides des Couleurs**, un par couleur de l’arc-en-ciel, qui
+  te les apportent : quand une couleur peut t’aider sur ton chemin, son guide vient te trouver. Avec la
+  canne, ce qui mord dépend de l’eau… et de la force de ton équipe. Chaque route a ses recoins : prairies à l’écart, objets cachés, rebords pour redescendre d’un
   saut, étangs et rivières dont l’autre rive attend ton bateau, buissons et rochers qui ouvrent des
   raccourcis quand tu reviens avec le bon outil.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
@@ -251,8 +253,10 @@ The story has **two endings**, and your answers choose which one you will see.
   block the way, slippery floors…) and its pupils to beat before the Master. In towns you can visit
   people at home: each has a story.
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
-- **Tools** to go further: scissors, a paper boat, fishing rods, a bike, a mallet, gloves. Every road has
-  its corners: meadows off the way, hidden items, ledges to jump back down, ponds and rivers whose far bank
+- **Tools** to go further: scissors, a fishing rod, a paper boat, a jar to dive with, a bike, a mallet,
+  gloves. The seven **Colour Guides**, one per colour of the rainbow, bring them to you: when a colour can
+  help you on your way, its guide comes to find you. With the rod, what bites depends on the water… and on
+  how strong your team is. Every road has its corners: meadows off the way, hidden items, ledges to jump back down, ponds and rivers whose far bank
   waits for your boat, bushes and rocks that open shortcuts when you come back with the right tool.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few
   are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…

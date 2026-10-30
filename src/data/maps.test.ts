@@ -128,7 +128,7 @@ describe('habitats', () => {
   it('finds wild places, sailing and fishing spots, gifts and the Tombola', () => {
     expect(habitatsOf('012').some((h) => h.map === 'route1' && h.how === 'grass')).toBe(true);
     expect(habitatsOf('003').some((h) => h.map === 'port' && h.how === 'surf')).toBe(true);
-    expect(habitatsOf('003').some((h) => h.map === 'bourg' && h.how === 'old')).toBe(true);
+    expect(habitatsOf('003').some((h) => h.map === 'bourg' && h.how === 'fish')).toBe(true);
     expect(habitatsOf('016').some((h) => h.how === 'gift' && h.map === 'ville')).toBe(true);
     expect(habitatsOf('011').at(-1)?.how).toBe('tombola');
   });

@@ -115,8 +115,8 @@ export interface FresqueDef {
   script?: string;
 }
 
-/** What bites with each fishing rod (Old, Good, Super). */
-export type FishingTables = Partial<Record<'old' | 'good' | 'super', EncounterTable['table']>>;
+/** What bites on the fishing rod, by the team's level (`src/data/fishing.ts`): low, from N.20, from N.35. */
+export type FishingTables = Partial<Record<'low' | 'mid' | 'high', EncounterTable['table']>>;
 
 export interface EncounterTable {
   /** FireRed's encounter rate (`encounterRate.ts`): 21 on a route, 14 in a wood, 7 in a cave, 2 on water. */
@@ -207,7 +207,7 @@ export interface MapDef {
   obstacles?: ObstacleDef[];
   /** Wild Bestioles met while sailing on water. */
   surf?: EncounterTable;
-  /** Wild Bestioles caught with each fishing rod. */
+  /** Wild Bestioles caught with the fishing rod, by the team's level. */
   fishing?: FishingTables;
   /** Parts of the map redrawn while story flags are set (erased or restored areas). */
   patches?: PatchDef[];

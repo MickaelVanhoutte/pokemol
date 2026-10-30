@@ -1,4 +1,5 @@
 import { L } from '../../i18n';
+import { guideNpc } from '../guides';
 import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 import { AQUARELLE_MAPS } from './aquarelle';
@@ -102,6 +103,7 @@ export const LAC_MAPS: Record<string, MapDef> = {
     signs: [{ x: 11, y: 28, text: L('Camp d’expédition du Prof. Fusain. « Défense de gommer ! »', 'Prof. Charcoal’s expedition camp. “No rubbing out!”') }],
     npcs: [
       { id: 'profLac', x: 14, y: 28, look: LOOKS.prof, facing: 'down', script: 'profLac', showIf: 'badge:aquarelle' },
+      guideNpc('indigo'),
       { id: 'rivalLacNpc', x: 16, y: 28, look: LOOKS.rival, facing: 'left', script: 'rivalLac', showIf: 'badge:aquarelle', hideIf: 'tr:rivalLac' },
       { id: 'lacG1', x: 7, y: 8, look: LOOKS.gomme, facing: 'down', trainer: 'lacG1', sight: 3 },
       { id: 'lacR1', x: 9, y: 11, look: { hair: '#2a2238', shirt: '#3ec4c4', pants: '#3a5aa8', longHair: true }, facing: 'left', trainer: 'lacR1', sight: 3 },
@@ -121,7 +123,7 @@ export const LAC_MAPS: Record<string, MapDef> = {
       ],
     },
     surf: { rate: 2, table: [{ id: '003', w: 40, min: 16, max: 18 }, { id: '099', w: 40, min: 16, max: 18 }, { id: '101', w: 30, min: 16, max: 18 }, { id: '069', w: 15, min: 16, max: 18 }, { id: '095', w: 8, min: 17, max: 18 }] },
-    fishing: { old: [{ id: '099', w: 150, min: 6, max: 10 }], good: [{ id: '099', w: 100, min: 14, max: 18 }, { id: '101', w: 60, min: 14, max: 18 }], super: [{ id: '069', w: 60, min: 18, max: 22 }, { id: '095', w: 30, min: 18, max: 22 }, { id: '060', w: 6, min: 20, max: 22 }] },
+    fishing: { low: [{ id: '099', w: 150, min: 6, max: 10 }], mid: [{ id: '099', w: 100, min: 14, max: 18 }, { id: '101', w: 60, min: 14, max: 18 }], high: [{ id: '069', w: 60, min: 18, max: 22 }, { id: '095', w: 30, min: 18, max: 22 }, { id: '060', w: 6, min: 20, max: 22 }] },
   },
 
   // the blue spring, in a cave on the east island, guarded by Team Gomme's colour-soaker

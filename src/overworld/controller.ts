@@ -29,6 +29,7 @@ import { calm, missed, wildOdds, wildStep } from './encounterRate';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
 import { FIND_EVERY, FOLLOWER_FINDS, rareFind, rollFind } from '../data/followerFinds';
+import { fishLevel, fishingTable } from '../data/fishing';
 import { prefs } from '../state/prefs';
 import { hourNow, meetsTime, phaseAt, type DayPhase } from '../state/clock';
 import { sfx } from '../audio/sfx';
@@ -246,6 +247,7 @@ export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boole
   g.lock--;
   const onEnter = g.map.def.onEnter;
   if (onEnter) await runScript(onEnter);
+  else maybeArrival();
 }
 
 export async function runScript(id: string) {
@@ -263,6 +265,22 @@ async function locked(fn: () => Promise<void>) {
     if (mapDirty) refreshMap();
     g.lock--;
     g.input.clear();
+    maybeArrival();
+  }
+}
+
+/**
+ * Scenes that start by themselves once the player is free on a map, each check returning its scene or null:
+ * a Colour Guide walking up with a tool (`src/story/guides.ts`). Checked after every warp and every script.
+ */
+export const arrivals: (() => (() => Promise<void>) | null)[] = [];
+
+function maybeArrival() {
+  const g = game;
+  if (!g?.player || g.lock > 0 || screen.value.id !== 'overworld') return;
+  for (const check of arrivals) {
+    const scene = check();
+    if (scene) return void locked(scene);
   }
 }
 
@@ -648,14 +666,14 @@ const has = (id: string) => !!save.value?.bag[id];
 async function clearObstacle(o: ObstacleDef) {
   const g = getGame();
   if (o.kind === 'bush') {
-    if (!has('ciseaux')) return say(L('Un petit buisson tout touffu bloque le passage. Des ciseaux pourraient le couper…', 'A thin, bushy shrub blocks the way. Scissors could cut it…'));
+    if (!has('ciseaux')) return say(L('Un petit buisson tout touffu bloque le passage. Des ciseaux pourraient le couper… Pistache, le guide vert, en a une paire.', 'A thin, bushy shrub blocks the way. Scissors could cut it… Pistachio, the green guide, has a pair.'));
     if ((await ask(L('Ce petit buisson gêne. Le couper avec les Ciseaux ?', 'This thin bush is in the way. Cut it with the Scissors?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
     sfx.blip();
     g.removeObstacle(o);
     return say(L('Clic-clac ! Le buisson est coupé.', 'Snip-snip! The bush is cut.'));
   }
   if (o.kind === 'rock') {
-    if (!has('maillet')) return say(L('Un rocher tout fissuré. Un bon coup de maillet le casserait…', 'A rock full of cracks. A good whack with a mallet would break it…'));
+    if (!has('maillet')) return say(L('Un rocher tout fissuré. Un bon coup de maillet le casserait… Lavande, la guide violette, en a un.', 'A rock full of cracks. A good whack with a mallet would break it… Lavender, the violet guide, has one.'));
     if ((await ask(L('Ce rocher est fissuré. Le casser avec le Maillet ?', 'This rock is cracked. Break it with the Mallet?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
     await shake(300);
     sfx.hit();
@@ -664,25 +682,21 @@ async function clearObstacle(o: ObstacleDef) {
   }
   if (o.kind === 'block') return say(L('Un gros bloc de gomme rose. Il a l’air léger : marche dedans pour le pousser !', 'A big pink eraser block. It looks light: walk into it to push it!'));
   if (g.strength) return say(L('Tu as les Gants Costauds : marche dans le rocher pour le pousser !', 'You have the Strong Gloves on: walk into the boulder to push it!'));
-  if (!has('gants')) return say(L('Un gros rocher rond. Il est bien trop lourd à pousser…', 'A big round boulder. It’s far too heavy to push…'));
+  if (!has('gants')) return say(L('Un gros rocher rond. Il est bien trop lourd à pousser… Clémentine, la guide orange, a des gants très costauds.', 'A big round boulder. It’s far too heavy to push… Clementine, the orange guide, has very strong gloves.'));
   if ((await ask(L('Un gros rocher rond. Enfiler les Gants Costauds ?', 'A big round boulder. Put on the Strong Gloves?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
   g.strength = true;
   await say(L('Tu enfiles les Gants Costauds. Tu peux pousser les rochers !', 'You put on the Strong Gloves. You can push boulders now!'));
 }
 
-/** The best fishing rod in the bag (null without one). */
-function bestRod(): 'old' | 'good' | 'super' | null {
-  return has('super-canne') ? 'super' : has('bonne-canne') ? 'good' : has('canne-bois') ? 'old' : null;
-}
 
 /** Facing water: fish, sail, or just look. */
 async function waterSide() {
   const g = getGame();
-  const rod = bestRod();
+  const rod = has('canne-bois');
   const canSail = has('bateau') && !g.surfing;
   if (!rod && !canSail) return say(L('L’eau est calme et brille au soleil.', 'The water is calm and sparkles in the sun.'));
   const choices: { label: LText; act: () => Promise<void> }[] = [];
-  if (rod) choices.push({ label: L('Pêcher', 'Fish'), act: () => fish(rod) });
+  if (rod) choices.push({ label: L('Pêcher', 'Fish'), act: fish });
   if (canSail) choices.push({ label: L('Naviguer', 'Sail'), act: sail });
   const c = await ask(L('L’eau est calme. Que faire ?', 'The water is calm. What will you do?'), [...choices.map((x) => x.label), L('Rien', 'Nothing')]);
   if (c < choices.length) await choices[c].act();
@@ -719,9 +733,11 @@ async function sail() {
   await g.walk(g.player, [g.player.dir], 210);
 }
 
-async function fish(rod: 'old' | 'good' | 'super') {
+/** Fishing: the list of the water for the team's level, and a Bestiole close under it (`src/data/fishing.ts`). */
+async function fish() {
   const g = getGame();
-  const table = g.map.def.fishing?.[rod];
+  const team = teamLevel(s().party);
+  const table = fishingTable(g.map.def.fishing, team);
   sfx.blip();
   await bubble('player', '…', 900 + Math.floor(Math.random() * 900));
   // a bite three times in four, when something lives here
@@ -730,7 +746,7 @@ async function fish(rod: 'old' | 'good' | 'super') {
   await say(L('Oh ! Ça mord !', 'Oh! A bite!'));
   const st = { rng: newSeed() };
   const e = pickWeighted(st, table, (r) => r.w);
-  await wildBattle(e.id, e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1)));
+  await wildBattle(e.id, fishLevel(team, e, nextRandom(st)));
 }
 
 /** Gets on or off the Pencil Bike (outdoors only). Returns a reason when it can't. */

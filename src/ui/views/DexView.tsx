@@ -15,7 +15,7 @@ import type { LText } from '../../i18n';
 
 const HOW: Record<HabitatHow, LText> = {
   grass: L('hautes herbes', 'tall grass'), cave: L('grotte', 'cave'), seaweed: L('algues, en plongée', 'seaweed, diving'), surf: L('en bateau', 'sailing'),
-  old: L('Canne en Bois', 'Old Rod'), good: L('Bonne Canne', 'Good Rod'), super: L('Super Canne', 'Super Rod'),
+  fish: L('pêche', 'fishing'), fishMid: L('pêche, équipe N.20+', 'fishing, team Lv20+'), fishHigh: L('pêche, équipe N.35+', 'fishing, team Lv35+'),
   gift: L('cadeau', 'gift'), tombola: L('tirage', 'raffle'), drawn: L('dessinée à l’atelier', 'drawn at the workshop'),
 };
 import './views.css';

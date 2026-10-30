@@ -105,7 +105,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     },
     // the ink river: by paper boat, or with a rod from the bank
     surf: { rate: 2, table: [{ id: '003', w: 50, min: 27, max: 29 }, { id: '101', w: 40, min: 27, max: 29 }, { id: '032', w: 20, min: 27, max: 29 }, { id: '058', w: 18, min: 27, max: 29 }, { id: '096', w: 20, min: 27, max: 29 }, { id: '102', w: 6, min: 28, max: 29 }] },
-    fishing: { old: [{ id: '099', w: 150, min: 10, max: 14 }, { id: '003', w: 60, min: 10, max: 14 }], good: [{ id: '003', w: 100, min: 20, max: 25 }, { id: '069', w: 40, min: 20, max: 25 }, { id: '099', w: 80, min: 20, max: 24 }], super: [{ id: '003', w: 100, min: 27, max: 29 }, { id: '069', w: 30, min: 27, max: 29 }, { id: '034', w: 8, min: 27, max: 29 }] },
+    fishing: { low: [{ id: '099', w: 150, min: 10, max: 14 }, { id: '003', w: 60, min: 10, max: 14 }], mid: [{ id: '003', w: 100, min: 20, max: 25 }, { id: '069', w: 40, min: 20, max: 25 }, { id: '099', w: 80, min: 20, max: 24 }], high: [{ id: '003', w: 100, min: 27, max: 29 }, { id: '069', w: 30, min: 27, max: 29 }, { id: '034', w: 8, min: 27, max: 29 }] },
   },
 
   encre: {

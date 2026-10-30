@@ -1,4 +1,5 @@
 import { L } from '../../i18n';
+import { guideNpc } from '../guides';
 import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
@@ -177,7 +178,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       { id: 'theo', x: 2, y: 17, look: LOOKS.kid, facing: 'right', script: 'theo' },
       { id: 'feutreMan', x: 10, y: 17, look: LOOKS.hiker, facing: 'left', script: 'feutreMan' },
       { id: 'feutreKid', x: 15, y: 18, look: LOOKS.kid, facing: 'left', wander: true, script: 'feutreKid' },
-      { id: 'velociste', x: 5, y: 16, look: { hair: '#3a2a1a', shirt: '#d64545', pants: '#2a2238', hat: '#5b8ad6' }, facing: 'right', script: 'velociste' },
+      guideNpc('rouge'),
       // the poster man, in front of his poster board: grey posters until the colours come back
       { id: 'feutreAffiche', x: 13, y: 6, look: { hair: '#6a4a2a', shirt: '#f2d23e', pants: '#3a3a5a', hat: '#ff4fa3' }, facing: 'up', hideIf: 'a2.feutre', text: [
         L('Je colle des affiches dans toute la ville. Mais qui a envie de lire une affiche grise ? Même la colle a perdu sa couleur.', 'I put up posters all over the city. But who wants to read a grey poster? Even the glue has lost its colour.'),

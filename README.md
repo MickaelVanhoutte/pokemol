@@ -24,8 +24,9 @@ English: [docs/histoire.md](docs/histoire.md).
 - A gentle start (the first trainers have one or two low-level Bestioles) and a difficulty
   option: Easy (weaker trainers that sometimes misplay), Normal, Hard (stronger, higher-level teams).
   On Easy and Normal, a thumb shows which moves work best against a Bestiole you have already met.
-- Field tools: scissors, foam mallet and strong gloves for bushes, rocks and boulders, a paper
-  boat to sail, three fishing rods, a pencil bike; the Bestiodex tells where each Bestiole lives.
+- Field tools, each brought by one of the seven Colour Guides when it becomes useful: scissors, foam
+  mallet and strong gloves for bushes, rocks and boulders, a paper boat to sail, a jar to dive, a pencil
+  bike, and one fishing rod (what bites follows the team's level); the Bestiodex tells where each Bestiole lives.
 - The Pencil Day Care on Route 2: leave two Bestioles to gain XP while you walk; two of one
   family sometimes leave an egg, which hatches as you carry it (inheriting IVs, the hidden talent,
   and the nature of a parent holding the Everstone).

@@ -5,7 +5,7 @@ import './act2';
 import './act3';
 import './act4';
 import './finale';
-import './field';
+import './guides';
 import './daycare';
 import './postgame';
 import './puzzles';

@@ -19,6 +19,8 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `badge:<badgeId>` | `trainerBattle()` for leaders | Badge owned (also pushed to `save.badges`) |
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
+| `gift:<tool>` (ciseaux, canne-bois, bateau, bocal, velo, maillet, gants) | `guideTalk` (`src/story/guides.ts`) | A Colour Guide gave its tool |
+| `guides` | `guideTalk` | The first Colour Guide told about the seven of them |
 | `gift:calque` | Prof. Fusain's aide (Inn) | Tracing Paper given |
 | `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
 | `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
@@ -55,7 +57,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `reveil:dodo` | `litReel` (the real bedroom) | The player went back to bed after the ending: a game loaded in the bedroom goes back to the dream |
 | `lac.appel`, `lac.arrivee`, `lac.brief` | `src/story/lac.ts` | The lake expedition: the rival met at the Route 4 mud, arrived at the Lac des Couleurs, the Prof's briefing at the camp |
 | `lac.source:rouge` / `:jaune` / `:bleue`, `lac.sources` | `source`, `colourBack` (`src/story/lac.ts`) | A spring freed; all three (the colours come back, the Route 4 mud is gone: patch `boue`) |
-| `tr:rivalLac`, `gift:bocal`, `plongee` | `rivalBattle`, `profLac`, `diveDown` | The rival beaten at the lake; the Bocal-Scaphandre given (diving); the first dive (the tip is shown once) |
+| `tr:rivalLac`, `gift:bocal`, `plongee` | `rivalBattle`, `profLac` (Myrtille comes), `diveDown` | The rival beaten at the lake; the Bocal-Scaphandre given (diving); the first dive (the tip is shown once) |
 | `perle:<colour>` (7, `PEARLS` in `src/data/items.ts`), `legende` | `pearl()`, `autel` (`src/story/lac.ts`) | A memory pearl found (its key item `perle-<colour>` goes back to the altar); the seven placed on the altar of the Abysses: Aquarelline is awake |
 | `abysses`, `vallon` | `abyssesEnter`, `vallonEnter` | First visit to the Abysses, to the hidden valley |
 | `static:aquarelline`, `ko:aquarelline` / `koDay:aquarelline`, `away:aquarelline` | `aquarelline`, `abyssesEnter` | Like the legendaries above: caught, knocked out until a night or a day has passed, or not woken yet |
@@ -143,9 +145,10 @@ their doors) resolves to a place.
   items (Scissors cut bushes, the Mallet breaks cracked rocks, the Strong Gloves push boulders).
   They stand on walkable ground and come back when the map is entered again. They are used to
   hide optional pockets with items (stencils 13–20), never the main road.
-- `surf: { rate, table }` and `fishing: { old, good, super }` (tables like `encounters`): water
-  encounters while sailing (Paper Boat) or fishing with each rod. Water tables hold Clapotin,
-  Givrinou (surfing) and Dragounet (Super Rod): add new water drawings there.
+- `surf: { rate, table }` and `fishing: { low, mid, high }` (tables like `encounters`): water
+  encounters while sailing (Paper Boat) or fishing. The one rod uses the list of the team's level (`low`, then
+  `mid` from N.20, `high` from N.35, `src/data/fishing.ts`) and hooks a Bestiole close under the team, within the
+  list's range. Water tables hold Clapotin, Givrinou (surfing) and Dragounet (high lists): add new water drawings there.
 
 A **new tile** needs:
 - a `TileDef` in `src/overworld/tiles.ts` (`paint` with the `Painter`; flags `solid`, `encounter`,

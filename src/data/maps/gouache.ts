@@ -156,7 +156,10 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'rosalie', x: 16, y: 13, look: LOOKS.granny, facing: 'left', script: 'rosalie' },
       { id: 'gouaKid', x: 8, y: 13, look: LOOKS.kid, facing: 'left', text: [L('Au nord, la Cité-Encre est toute noire… On dit que le chef des Gomme s’y cache.', 'Up north, Ink City is all black… They say the Team Gomme boss hides there.')] },
       // the fisher gave up on the town's flower beds: she sits by the lily pond now
-      { id: 'pecheuseGouache', x: 26, y: 8, look: LOOKS.girl, facing: 'left', script: 'superCanne' },
+      {
+        id: 'pecheuseGouache', x: 26, y: 8, look: LOOKS.girl, facing: 'left',
+        text: [L('Je pêche dans toute Papeterre. Chaque eau a ses Bestioles : la rivière, la mer, le lac…', 'I fish all over Papeterra. Every water has its own Critters: the river, the sea, the lake…'), L('Quand ton équipe grandit, des Bestioles plus fortes viennent mordre, même là où tu as déjà pêché !', 'As your team grows, stronger Critters come to bite, even where you’ve fished before!')],
+      },
       { id: 'gouaGardener', x: 24, y: 13, look: { hair: '#e8e8f0', shirt: '#6cae5a', pants: '#7a5a3a', hat: '#e0a030', longHair: true }, facing: 'down', wander: true, text: [
         L('La gouache, c’est épais : quand Basile peint une fleur, elle pousse vraiment !', 'Gouache is thick: when Basil paints a flower, it really grows!'),
         L('Ma parcelle, c’est celle des radis. Je les peins en rouge bien épais : comme ça, ils poussent plus vite.', 'My plot is the radish one. I paint them a nice thick red: that way they grow faster.'),

@@ -1,7 +1,7 @@
 import { CUSTOM_ID, creature } from './creatures';
 import { MAPS } from './maps';
 
-export type HabitatHow = 'grass' | 'cave' | 'seaweed' | 'surf' | 'old' | 'good' | 'super' | 'gift' | 'tombola' | 'drawn';
+export type HabitatHow = 'grass' | 'cave' | 'seaweed' | 'surf' | 'fish' | 'fishMid' | 'fishHigh' | 'gift' | 'tombola' | 'drawn';
 
 export interface Habitat {
   map: string;
@@ -44,7 +44,9 @@ export function habitatsOf(species: string): Habitat[] {
     // under the water (diving), Bestioles hide in the seaweed
     add(m.id, m.encounters?.anyTile ? 'cave' : m.underwater ? 'seaweed' : 'grass', m.encounters?.table);
     add(m.id, 'surf', m.surf?.table);
-    for (const rod of ['old', 'good', 'super'] as const) add(m.id, rod, m.fishing?.[rod]);
+    add(m.id, 'fish', m.fishing?.low);
+    add(m.id, 'fishMid', m.fishing?.mid);
+    add(m.id, 'fishHigh', m.fishing?.high);
   }
   for (const map of GIFTS[species] ?? []) out.push({ map, how: 'gift' });
   for (const s of STATIC[species] ?? []) out.push({ map: s.map, how: s.how, min: s.level, max: s.level, ...(s.time ? { time: s.time } : {}) });

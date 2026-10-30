@@ -1,4 +1,5 @@
 import { L } from '../../i18n';
+import { guideNpc } from '../guides';
 import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
@@ -67,7 +68,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'mfOlga', x: 7, y: 5, look: LOOKS.hiker, facing: 'right', trainer: 'mfOlga', sight: 4 },
       { id: 'mfArmand', x: 17, y: 6, look: { hair: '#6a6a7a', shirt: '#8a6a3a', pants: '#4a4a5a', hat: '#c8a060' }, facing: 'right', trainer: 'mfArmand', sight: 2 },
       { id: 'mfRemi', x: 13, y: 9, look: { hair: '#3a2a1a', shirt: '#c08030', pants: '#4a4a5a', hat: '#f2c14e' }, facing: 'up', trainer: 'mfRemi', sight: 3 },
-      { id: 'mineur', x: 13, y: 10, look: LOOKS.hiker, facing: 'down', script: 'mineur' },
+      guideNpc('violet'),
     ],
     items: [
       { x: 5, y: 1, item: 'sucette-magique' },
@@ -172,7 +173,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'tradeBraise', x: 11, y: 12, look: LOOKS.hiker, facing: 'down', script: 'trade_braise' },
       { id: 'braiseOld', x: 21, y: 5, look: LOOKS.granny, facing: 'down', text: [L('Le volcan ? Il crache des étincelles de crayon orange quand il est content.', 'The volcano? It spits orange crayon sparks when it’s happy.')] },
       { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embersal. So cool!')] },
-      { id: 'forgeron', x: 15, y: 9, look: { hair: '#2a2238', shirt: '#b5582e', pants: '#4a4458' }, facing: 'right', script: 'forgeron' },
+      guideNpc('orange'),
       { id: 'braiseBain', x: 29, y: 9, look: LOOKS.grandma, facing: 'left', text: [
         L('Rien de tel qu’un bain de pieds dans la source chaude après une journée à dessiner.', 'Nothing beats a foot bath in the hot spring after a day of drawing.'),
         L('Les Bestioles Feu adorent y faire des bulles. Les Bestioles Eau, un peu moins.', 'Fire Critters love blowing bubbles in it. Water Critters, not so much.'),

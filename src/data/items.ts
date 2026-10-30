@@ -278,16 +278,9 @@ export const ITEMS: ItemDef[] = [
     desc: L('Un grand bateau plié dans une feuille. Devant l’eau, appuie sur A pour naviguer.', 'A big boat folded from one sheet. Facing water, press A to sail.'),
   },
   {
-    id: 'canne-bois', name: L('Canne en Bois', 'Old Rod'), price: 0, kind: 'key', amount: 0,
-    desc: L('Une petite canne à pêche. Devant l’eau, appuie sur A pour pêcher des Bestioles.', 'A little fishing rod. Facing water, press A to fish for Critters.'),
-  },
-  {
-    id: 'bonne-canne', name: L('Bonne Canne', 'Good Rod'), price: 0, kind: 'key', amount: 0,
-    desc: L('Une bonne canne à pêche : des Bestioles plus fortes viennent mordre.', 'A good fishing rod: stronger Critters bite.'),
-  },
-  {
-    id: 'super-canne', name: L('Super Canne', 'Super Rod'), price: 0, kind: 'key', amount: 0,
-    desc: L('La meilleure canne à pêche de Papeterre.', 'The best fishing rod in Papeterra.'),
+    // the only rod (its id is the old Old Rod's, kept for the saves): what bites follows the team's level
+    id: 'canne-bois', name: L('Canne à Pêche', 'Fishing Rod'), price: 0, kind: 'key', amount: 0,
+    desc: L('La canne à pêche de Mimosa. Devant l’eau, appuie sur A pour pêcher. Plus ton équipe est forte, plus les Bestioles qui mordent sont fortes.', 'Mimosa’s fishing rod. Facing water, press A to fish. The stronger your team, the stronger the Critters that bite.'),
   },
   {
     id: 'gants', name: L('Gants Costauds', 'Strong Gloves'), price: 0, kind: 'key', amount: 0,

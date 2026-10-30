@@ -1,4 +1,5 @@
 import { L } from '../../i18n';
+import { guideNpc } from '../guides';
 import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
@@ -94,7 +95,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     },
     // the stream and its ponds: by paper boat, or with a rod from the bank
     surf: { rate: 2, table: [{ id: '003', w: 60, min: 13, max: 15 }, { id: '013', w: 30, min: 13, max: 15 }, { id: '101', w: 50, min: 13, max: 15 }] },
-    fishing: { old: [{ id: '099', w: 150, min: 8, max: 12 }, { id: '003', w: 60, min: 8, max: 12 }], good: [{ id: '003', w: 100, min: 13, max: 15 }, { id: '069', w: 40, min: 13, max: 15 }, { id: '099', w: 80, min: 13, max: 15 }], super: [{ id: '003', w: 100, min: 14, max: 15 }, { id: '069', w: 30, min: 14, max: 15 }, { id: '034', w: 8, min: 14, max: 15 }] },
+    fishing: { low: [{ id: '099', w: 150, min: 8, max: 12 }, { id: '003', w: 60, min: 8, max: 12 }], mid: [{ id: '003', w: 100, min: 13, max: 15 }, { id: '069', w: 40, min: 13, max: 15 }, { id: '099', w: 80, min: 13, max: 15 }], high: [{ id: '003', w: 100, min: 14, max: 15 }, { id: '069', w: 30, min: 14, max: 15 }, { id: '034', w: 8, min: 14, max: 15 }] },
   },
 
   port: {
@@ -136,7 +137,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
     ],
     surf: { rate: 2, table: [{ id: '003', w: 45, min: 18, max: 24 }, { id: '013', w: 35, min: 18, max: 24 }, { id: '007', w: 20, min: 19, max: 24 }, { id: '032', w: 15, min: 18, max: 22 }, { id: '058', w: 18, min: 18, max: 22 }, { id: '101', w: 40, min: 18, max: 22 }] },
-    fishing: { old: [{ id: '099', w: 150, min: 8, max: 12 }, { id: '003', w: 60, min: 8, max: 12 }], good: [{ id: '003', w: 100, min: 16, max: 22 }, { id: '069', w: 40, min: 16, max: 22 }, { id: '099', w: 80, min: 16, max: 19 }], super: [{ id: '003', w: 100, min: 25, max: 31 }, { id: '034', w: 8, min: 25, max: 29 }, { id: '069', w: 30, min: 25, max: 30 }] },
+    fishing: { low: [{ id: '099', w: 150, min: 8, max: 12 }, { id: '003', w: 60, min: 8, max: 12 }], mid: [{ id: '003', w: 100, min: 16, max: 22 }, { id: '069', w: 40, min: 16, max: 22 }, { id: '099', w: 80, min: 16, max: 19 }], high: [{ id: '003', w: 100, min: 25, max: 31 }, { id: '034', w: 8, min: 25, max: 29 }, { id: '069', w: 30, min: 25, max: 30 }] },
     buildings: [
       { kind: 'gym', x: 9, y: 1, w: 6, h: 4, door: 3, roof: '#5b9be0', to: { map: 'atelierAquarelle', x: 7, y: 17, facing: 'up' } },
       { kind: 'cave', x: 1, y: 6, w: 5, h: 4, door: 2, to: { map: 'grotte2', x: 8, y: 10, facing: 'up' } },
@@ -172,9 +173,12 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       { id: 'portSailor', x: 21, y: 15, look: LOOKS.sailor, facing: 'down', wander: true, text: [L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!')] },
       { id: 'portKid', x: 14, y: 12, look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le monsieur de la tombola a perdu son Ticket d’or sur la route du nord. Il est tout triste.', 'The fair man lost his Golden Ticket on the north road. He’s so sad.')] },
       { id: 'portGranny', x: 4, y: 14, look: LOOKS.granny, facing: 'right', text: [L('Tu viens de la grotte ? Les gens en gris aussi… Ils sont partis vers Ville-Feutre, au nord-est.', 'You came out of the cave? So did the people in grey… They went to Felt City, up north-east.')] },
-      { id: 'plieuse', x: 12, y: 15, look: { hair: '#e07aa6', shirt: '#ffffff', pants: '#5b9be0', longHair: true }, facing: 'up', script: 'bateauPapier' },
+      guideNpc('bleu'),
       // fishing off the end of the ferry pier (the ferry lands you on the beach beside it)
-      { id: 'pecheurPort', x: 21, y: 18, look: LOOKS.sailor, facing: 'down', script: 'bonneCanne' },
+      {
+        id: 'pecheurPort', x: 21, y: 18, look: LOOKS.sailor, facing: 'down',
+        text: [L('Ici, au Port, ce qui mord dépend de toi : plus ton équipe est forte, plus les Bestioles qui mordent sont fortes.', 'Here at the Port, what bites depends on you: the stronger your team, the stronger the Critters that bite.'), L('Et les plus rares ne mordent que pour les équipes vraiment costaudes !', 'And the rarest ones only bite for really strong teams!')],
+      },
       { id: 'portPeintre', x: 9, y: 12, look: { hair: '#c8a060', shirt: '#f2d06a', pants: '#5a8ad6', hat: '#e07aa6' }, facing: 'up', text: [
         L('Sur la Place des Peintres, chacun a son chevalet. Moi, je peins le port… mais les bateaux bougent tout le temps !', 'On Painters’ Square everyone has an easel. I paint the harbour… but the boats keep moving!'),
         L('Marine dit qu’une aquarelle, il faut la laisser couler. Alors je la laisse couler. Jusque par terre.', 'Marine says you have to let a watercolour run. So I let it run. All the way to the ground.'),

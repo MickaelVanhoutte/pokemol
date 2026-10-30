@@ -33,12 +33,14 @@ export const MAIN: Objective[] = [
   // the app may close during the lab battle: the starter is given before rival1 is set
   step('starter', 'bourg', L('Choisis ta Bestiole au labo du Prof. Fusain.', 'Pick a Critter at Prof. Charcoal’s lab.'), ['rival1'], (s) => s.party.length > 0),
   step('pastel', 'ville', L('Bats Mireille à l’Atelier de Ville-Pastel.', 'Beat Mireille at the Pastel City Atelier.'), ['badge:pastel']),
+  // the Colour Guides come by themselves (src/story/guides.ts): these only show if a game missed one, until the next badge
+  step('ciseaux', 'ville', L('Pistache, le guide vert, t’attend à Ville-Pastel.', 'Pistachio, the green guide, waits in Pastel City.'), ['gift:ciseaux'], (s) => on(s, 'badge:plume')),
   step('bois', 'bois', L('Chasse la Team Gomme du Bois Brumeux.', 'Chase Team Gomme out of the Misty Woods.'), ['a1.bois']),
   step('plume', 'plume', L('Bats Gaspard à l’Atelier de Village-Plume.', 'Beat Gaspard at the Featherby Atelier.'), ['badge:plume']),
   step('grotte', 'grotte1', L('Traverse la Grotte Gribouillis, à l’est.', 'Cross Scribble Cave, east of Pastel City.'), ['visit:port'], (s) => on(s, 'badge:aquarelle')),
   step('aquarelle', 'port', L('Bats Marine à l’Atelier de Port-Aquarelle.', 'Beat Marine at the Port Aquarelle Atelier.'), ['badge:aquarelle']),
   // the Lac des Couleurs, between the third and fourth badges (src/story/lac.ts)
-  step('bateau', 'port', L('La Plieuse du port plie des bateaux en papier.', 'The Paper Folder at the port folds paper boats.'), ['gift:bateau'], (s) => on(s, 'lac.arrivee')),
+  step('bateau', 'port', L('Azur, le guide bleu, t’attend au Port.', 'Azure, the blue guide, waits for you at the Port.'), ['gift:bateau'], (s) => on(s, 'lac.arrivee')),
   step('lac', 'plume', L('Remonte en bateau la rivière de Village-Plume.', 'Sail up the river from Featherby.'), ['lac.arrivee']),
   {
     ...step('sources', 'lac', L('Libère les trois sources du Lac des Couleurs ({n}/3).', 'Free the three springs of the Lake of Colours ({n}/3).'), ['lac.sources']),
@@ -47,9 +49,11 @@ export const MAIN: Objective[] = [
   step('rivalLac', 'lac', L('{rival} t’attend au camp du lac.', '{rival} is waiting at the lake camp.'), ['tr:rivalLac']),
   step('bocal', 'lac', L('Retourne voir le Prof. Fusain au camp du lac.', 'Go back to Prof. Charcoal at the lake camp.'), ['gift:bocal']),
   step('entrepot', 'entrepot1', L('Libère Zélie dans l’Entrepôt Gomme.', 'Free Zelie from the Eraser Warehouse.'), ['a2.feutre']),
+  step('velo', 'feutre', L('Coquelicot, le guide rouge, t’attend à Ville-Feutre.', 'Poppy, the red guide, waits for you in Felt City.'), ['gift:velo'], (s) => on(s, 'badge:fluo')),
   step('fluo', 'feutre', L('Bats Zélie à l’Atelier de Ville-Feutre.', 'Beat Zelie at the Felt City Atelier.'), ['badge:fluo']),
   step('mont', 'montFusain1', L('Grimpe le Mont Fusain jusqu’à Village-Braise.', 'Climb Mount Charcoal to Embervale.'), ['visit:braise'], (s) => on(s, 'badge:braise')),
   step('braise', 'braise', L('Bats Ambre à l’Atelier de Village-Braise.', 'Beat Amber at the Embervale Atelier.'), ['badge:braise']),
+  step('gants', 'braise', L('Clémentine, la guide orange, t’attend à Village-Braise.', 'Clementine, the orange guide, waits in Embervale.'), ['gift:gants'], (s) => on(s, 'badge:paillette')),
   step('paillette', 'paillette', L('Bats Célestine à l’Atelier de Bourg-Paillette.', 'Beat Celestine at the Glimmerton Atelier.'), ['badge:paillette']),
   step('tour', 'tour1', L('Chasse la Team Gomme de la Tour Brumeuse.', 'Drive Team Gomme out of the Misty Tower.'), ['a3.tour']),
   step('gouache', 'gouache', L('Bats Basile à l’Atelier du Jardin-Gouache.', 'Beat Basil at the Gouache Garden Atelier.'), ['badge:gouache']),

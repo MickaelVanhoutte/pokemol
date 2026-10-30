@@ -1,4 +1,5 @@
 import { L } from '../../i18n';
+import { guideNpc } from '../guides';
 import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
@@ -70,7 +71,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'lison', x: 15, y: 8, look: { hair: '#c0582a', shirt: '#f6a7c8', pants: '#5a4a8a', longHair: true }, facing: 'right', script: 'pastelDrawing', showIf: 'badge:pastel', hideIf: 'choix:musee' },
       { id: 'granny', x: 8, y: 9, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!')] },
       { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire!')] },
-      { id: 'jardinier', x: 14, y: 16, look: { hair: '#5a3a20', shirt: '#4f9a3c', pants: '#7a5230', hat: '#f2c14e' }, facing: 'down', script: 'jardinier' },
+      guideNpc('vert'),
       // the Chalk Square: a painter at her easel, a kid drawing a hopscotch
       { id: 'pastelPeintre', x: 14, y: 11, look: { hair: '#5a3a2a', shirt: '#f6c8a0', pants: '#7a6aa8', hat: '#e88aa8', longHair: true }, facing: 'left', text: [
         L('Je peins la fontaine aux pastels. Le problème, c’est qu’elle change de couleur chaque fois que le soleil bouge !', 'I’m painting the fountain in pastels. The trouble is, it changes colour every time the sun moves!'),

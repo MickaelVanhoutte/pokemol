@@ -25,6 +25,8 @@ import { healParty, save, update } from '../state/game';
 import { memoryUrl } from '../ui/memoryArt';
 import { PROF, RIVAL } from './cast';
 import { comeUp } from './choices';
+import { guideComes, guideTalk } from './guides';
+import { guide } from '../data/guides';
 
 const num = (name: string) => save.value?.flags[name] ?? 0;
 const has = (id: string) => !!save.value?.bag[id];
@@ -100,13 +102,12 @@ scripts.profLac = async () => {
       await sayAll([
         L('Bravo, {name} ! Le lac a retrouvé toutes ses couleurs. Clic-clac !', 'Well done, {name}! The lake has all its colours back. Click-clack!'),
         L('{rival} t’a montré les taches sombres ? Elles sont très profondes. On raconte que le fond du lac garde une vieille légende…', 'Did {rival} show you the dark patches? They are very deep. They say the bottom of the lake keeps an old legend…'),
-        L('Tiens, prends mon Bocal-Scaphandre. Moi, je suis trop vieux pour plonger… et le bocal est trop petit pour ma moustache !', 'Here, take my Jar Helmet. I’m too old to dive… and the jar is too small for my moustache!'),
+        L('Moi, je suis trop vieux pour plonger… Mais je connais quelqu’un qui plonge mieux que personne.', 'I’m too old to dive… But I know someone who dives better than anyone.'),
       ], PROF);
-      giveItem('bocal');
-      setFlag('gift:bocal');
-      playJingle('item', { fallback: sfx.capture });
-      await say(L('{name} reçoit : {i} !', '{name} received the {i}!'), undefined, { i: tr(item('bocal').name) });
-      await say(L('En bateau, sur une eau toute sombre, appuie sur A pour plonger. Et la boue de la Route des Feutres est partie : Ville-Feutre t’attend !', 'Sailing over very dark water, press A to dive. And the mud on Marker Road is gone: Felt City is waiting!'), PROF);
+      // Myrtille, the indigo guide, brings the Jar Helmet (src/story/guides.ts)
+      const myrtille = guide('indigo');
+      if (!(await guideComes(myrtille, { text: L('Myrtille ! Par ici !', 'Bilberry! Over here!'), who: PROF }))) await guideTalk(myrtille);
+      await say(L('Et la boue de la Route des Feutres est partie : Ville-Feutre t’attend !', 'And the mud on Marker Road is gone: Felt City is waiting!'), PROF);
     }
   } else {
     await say(flag('legende')

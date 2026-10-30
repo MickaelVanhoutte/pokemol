@@ -1,4 +1,5 @@
 import { L } from '../../i18n';
+import { guideNpc } from '../guides';
 import type { MapDef } from '../../overworld/mapTypes';
 import { LOOKS } from '../../overworld/sprites';
 
@@ -30,7 +31,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       'TTTTTTTTTTT:TTTTT~~~TT',
     ],
     surf: { rate: 2, table: [{ id: '003', w: 60, min: 11, max: 15 }, { id: '013', w: 40, min: 11, max: 15 }, { id: '101', w: 50, min: 11, max: 15 }] },
-    fishing: { old: [{ id: '099', w: 150, min: 6, max: 10 }, { id: '003', w: 60, min: 6, max: 10 }], good: [{ id: '099', w: 100, min: 14, max: 18 }, { id: '003', w: 100, min: 14, max: 18 }], super: [{ id: '003', w: 100, min: 17, max: 23 }, { id: '099', w: 50, min: 17, max: 19 }] },
+    fishing: { low: [{ id: '099', w: 150, min: 6, max: 10 }, { id: '003', w: 60, min: 6, max: 10 }], mid: [{ id: '099', w: 100, min: 14, max: 18 }, { id: '003', w: 100, min: 14, max: 18 }], high: [{ id: '003', w: 100, min: 17, max: 23 }, { id: '099', w: 50, min: 17, max: 19 }] },
     // the bridge to the east was rubbed out by Team Gomme (rebuilt later in the story)
     patches: [
       { id: 'plumeBridge', x: 17, y: 9, rows: ['eee'], unless: 'a2.bridge' },
@@ -60,7 +61,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },
       { id: 'birdKid', x: 5, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')], afterStory: { text: [L('Les Piafou chantent de nouveau tous les matins. Et depuis quelques jours, ils chantent deux fois plus fort !', 'The Chirpies sing every morning again. And for a few days now, they’ve been singing twice as loud!')] } },
       { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!')] },
-      { id: 'pecheurPlume', x: 16, y: 14, look: LOOKS.sailor, facing: 'right', script: 'canneBois' },
+      guideNpc('jaune'),
       { id: 'plumePiaf', x: 15, y: 12, mon: '013', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Piafou s’ébroue dans la vasque. Des gouttes partout ! Piou !', 'The Chirpie splashes about in the birdbath. Drops everywhere! Cheep!')] },
       { id: 'plumeKite', x: 9, y: 13, look: { hair: '#e0a030', shirt: '#5ab0e0', pants: '#4a4a6a' }, facing: 'up', wander: true, text: [
         L('Ici, le vent ne s’arrête jamais. Mon cerf-volant vole depuis mardi : je n’arrive plus à le faire redescendre !', 'The wind here never stops. My kite has been flying since Tuesday: I can’t get it back down!'),

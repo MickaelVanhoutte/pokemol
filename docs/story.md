@@ -224,18 +224,29 @@ player's choice once they have 4 badges (`gift:crayonMagique`). The new form lea
 type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Touflot and
 Toufeu, and all three are in the battle tower pool.
 
-**Field tools** (key items, each given once by someone, `src/story/field.ts`):
+**The Colour Guides and the field tools** (Nov 2026: the owner found the tools too easy to miss, handed out by
+people standing in towns; `src/data/guides.ts`, `src/story/guides.ts`). Seven guides, one per colour of the rainbow,
+each bring one tool the moment it becomes useful: arriving on their map once `need` is set, they call out, walk up
+(`guideComes`, from a free straight line of up to 5 tiles), introduce themselves and give it (`gift:<tool>`). The
+first one met also tells about the seven of them (`guides`). Afterwards each waits on that map (`guideNpc`,
+`showIf: gift:<tool>`) with a tip. The scenes run from the controller's `arrivals` checks, after every warp and every
+script, so a scene missed in an old game plays the next time the player is free on that map; the Town Map objective
+also points at a missed one until the next badge, and bushes, rocks and boulders name the guide who can help.
 
-| Tool | Giver | Condition |
-|---|---|---|
-| Safety Scissors | Gardener, Ville-Pastel | badge 1 |
-| Old Rod | Fisher, Village-Plume | — |
-| Paper Boat | Paper Folder, Port-Aquarelle | badge 3 |
-| Good Rod | Fisher, Port-Aquarelle | — |
-| Pencil Bike | Bike maker, Ville-Feutre | `a2.feutre` |
-| Foam Mallet | Miner, Mont Fusain | — |
-| Strong Gloves | Smith, Village-Braise | badge 5 |
-| Super Rod | Fisher, Jardin-Gouache | — |
+| Guide | Colour | Tool | Comes | Map |
+|---|---|---|---|---|
+| Pistache (Pistachio) | green | Safety Scissors | after Mireille's badge | Ville-Pastel |
+| Mimosa | yellow | Fishing Rod | first arrival | Village-Plume |
+| Azur (Azure) | blue | Paper Boat | after Marine's badge | Port-Aquarelle |
+| Myrtille (Bilberry) | indigo | Jar Helmet | the Prof calls her at the lake camp, after the rival (`profLac`) | Lac des Couleurs |
+| Coquelicot (Poppy) | red | Pencil Bike | after Zélie is freed (`a2.feutre`) | Ville-Feutre |
+| Lavande (Lavender) | violet | Foam Mallet | first arrival | Mont Fusain |
+| Clémentine (Clementine) | orange | Strong Gloves | after Ambre's badge | Village-Braise |
+
+**Fishing** (`src/data/fishing.ts`): one rod (the item kept the Old Rod's id, `canne-bois`; `repair()` turns the
+old Good and Super Rods into it). Each spot has three lists, `low`, `mid` and `high`: the one used follows the team's
+level (`teamLevel`, the average of the three best): from N.20 the mid one, from N.35 the high one (the rarest
+Bestioles), falling back to the list below. The Bestiole hooked is the team's level −3 to 0, within the list's range.
 
 **Pension Crayonnée** (Pencil Day Care, `pension` map, house on Route 2, `src/story/daycare.ts`,
 rules in `src/state/daycare.ts`): Mamie Pension keeps up to 2 Bestioles in `save.daycare`. They
@@ -463,7 +474,7 @@ Act 3 last:
   the hardest, at 40–95%.
 - The finale came down by about 12 levels (rival L28–31, Great Eraser L27–31). So did the wild Bestioles
   of Act 3, the Cycling Track, the lighthouse, the echo cave and the legendaries' places (Ombrouille L36,
-  Libellune L30, Noctaile L34), and the Super Rod (−7).
+  Libellune L30, Noctaile L34), and fishing's high lists (−7).
 - Post-game is unchanged: the Grand Concours at L44–49, rematches at +12.
 
 The sim's teammates now grow like a player's: level evolutions, plus the electric Magic Pencil and
@@ -486,7 +497,7 @@ admins got bigger teams (Célestine Lamacorne, Basile Clochegueule, Nocturne Oss
 Ombrouille ace, Rature Fumerax, Blanche Triboulon). Levels follow the curve: route trainers at the team's lead,
 then each boss tuned with the sims to about 70–90% on Normal (some sit at the team's level: five Bestioles at
 equal level are a fight). Wild levels rose by 1 (Act 2) to 4 (Act 3), the optional places with them (Piste,
-echo cave L38 Ombrouille, Bois Perdu, Grotte des Ratures, the island, the Super Rod).
+echo cave L38 Ombrouille, Bois Perdu, Grotte des Ratures, the island, fishing's high lists).
 
 The curve now brings the team to Marine at L17, Ambre L23, Célestine L25, Basile L29, Nocturne L32 and the end
 of the Factory at L34 (it was L29). Act 4, beyond the margin (23 trainers with four Bestioles, about 6 forced wild
@@ -566,7 +577,7 @@ finale stays around 50–75% on Normal). The finals made Nocturne and the Great 
 - Taupinou (Ground: Route 3, the cave entrance);
 - Givrinou (Ice/Water: surfing at Port-Aquarelle and Inkwell Isle);
 - Sifflasse (Poison: Route 4);
-- Dragounet (Dragon: Super Rod at Port-Aquarelle and Inkwell Isle);
+- Dragounet (Dragon: fishing at Port-Aquarelle and Inkwell Isle, team N.35+);
 - Boulonnet (Electric/Steel: Route 4).
 
 New moves: Balayette, Gros poing, Tête de fer, Tremblement, Crochet venin, Crocs givrés.
@@ -598,7 +609,7 @@ Where to meet the middle forms:
 - the Grotte des Échos: Musclouille, Rocailloux, Taupitrio;
 - Route 8: Cobrasse, and Piafurie by day;
 - the Piste Cyclable: Triboulon;
-- around Inkwell Isle: Banquisette surfing, Dragondine on the Super Rod.
+- around Inkwell Isle: Banquisette surfing, Dragondine fishing (team N.35+).
 
 Trainers using them:
 - Admin Blanche (Cobrasse, both fights) and the Factory grunts (Cobrasse, Triboulon);
@@ -629,13 +640,13 @@ Ghost, Fighting, Dragon), each line inspired by a gen-1 one with all its gen-1 f
 - Dormipsy → Cuillipsy → Psymagus (Psychic, L16/L36, rare): Route 3 and Route 4 (rare), Cuillipsy on Route 7.
 - Chapardou → Pantharuse (Dark, L28): Route 3 and Route 6 at night, Piste Cyclable.
 - Fumeron → Fumerax (Poison/Dark, L35): Route 4, Route 8. Team Gomme grunts use them.
-- Coquilou → Coquifort (Ice/Steel, L30): surfing at Port-Aquarelle, Super Rod and surf at the lighthouse island.
+- Coquilou → Coquifort (Ice/Steel, L30): surfing at Port-Aquarelle, fishing (team N.35+) and surf at the lighthouse island.
 - Glissonde (Water/Ice, rare): surfing around the lighthouse island.
 - Canarmure (Steel/Flying): Route 6 by day, Piste Cyclable.
 - Clochiflor → Clochegueule → Gloutoflor (Grass, L21/L36): Route 2, Misty Woods, Route 6, Route 7.
 - Osselot → Ossagarde (Ground/Ghost, L28): Mont Fusain, the Misty Tower, the echo cave.
 - Fâchinge → Furisinge (Fighting, L28): Route 4, Mont Fusain, Route 7, the echo cave.
-- Hippomine → Hippoplume (Water/Dragon, L32): Good and Super Rods at Port-Aquarelle, Super Rod at the lighthouse.
+- Hippomine → Hippoplume (Water/Dragon, L32): fishing at Port-Aquarelle (team N.20+), and at the lighthouse (N.35+).
 
 26 trainers without a balance row use them (route trainers, Atelier apprentices, Team Gomme grunts),
 and the Grand Concours got Glissonde (Marine), Canarmure L44 (Ambre), Psymagus L44 (Célestine) and
