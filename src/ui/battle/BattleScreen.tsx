@@ -68,7 +68,7 @@ const sleep = (ms: number) => (ms <= 0 ? Promise.resolve() : new Promise((r) => 
 
 const COACH = [
   L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
-  L('Dans le SAC : tes Potions et tes Crayon-balls. BESTIOLES sert à changer de Bestiole, et FUITE marche contre les Bestioles sauvages.', 'The BAG holds your Potions and Pencil Balls. CRITTERS lets you switch, and RUN works against wild Critters.'),
+  L('Dans le SAC : tes Potions et tes Croque-Carnets. BESTIOLES sert à changer de Bestiole, et FUITE marche contre les Bestioles sauvages.', 'The BAG holds your Potions and Snapbooks. CRITTERS lets you switch, and RUN works against wild Critters.'),
 ];
 
 export function BattleScreen(props: BattleProps) {
@@ -148,7 +148,7 @@ export function BattleScreen(props: BattleProps) {
     }
     const lines = describe(e, snap);
     // the ball shakes first, the result comes after
-    if (e.t === 'ball') setMsg(tr(L('Tu lances une {i} !', 'You threw a {i}!'), { i: tr(item(e.item).name) }));
+    if (e.t === 'ball') setMsg(tr(L('Tu lances un {i} !', 'You threw a {i}!'), { i: tr(item(e.item).name) }));
     else if (lines.length) setMsg(lines.join('\n'));
     if (e.t === 'move') shown.current = null;
     if (prefs.value.moveFx) {
@@ -157,7 +157,7 @@ export function BattleScreen(props: BattleProps) {
       if (fxe) anim = stage.play(fxe.recipe, { side: fxe.side, speed: speed.current });
       if (e.t === 'talent' && e.note === 'phased') stage.ghost(e.side, speed.current);
     } else if (e.t === 'fairCopy') {
-      // a fair copy is always drawn, like the Crayon-ball
+      // a fair copy is always drawn, like the Croque-Carnet
       const fxe = eventFx(e, snap, null);
       if (fxe) anim = stage.play(fxe.recipe, { side: fxe.side, speed: speed.current });
     }

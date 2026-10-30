@@ -310,7 +310,7 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
   },
 };
 
-/** A Crayon-ball: a little sketchbook, closed, its spiral along the top, a star drawn on its cover (and a band). */
+/** A Croque-Carnet: a little sketchbook, closed, its spiral along the top, a star drawn on its cover (and a band). */
 function sketchbook(p: Pencil, r: Rand, cover: string, band?: string) {
   // the pages peeking out under the cover
   paint(p, [[C - 34, C - 28], [C + 44, C - 32], [C + 48, C + 46], [C - 30, C + 50]], '#ffffff', { line: GRAPHITE, gap: 9 });

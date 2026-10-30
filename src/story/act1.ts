@@ -110,12 +110,12 @@ scripts.prof = async () => {
     return;
   }
   if (!save.value!.bag['crayon-ball']) {
-    await say(L('Plus de Crayon-balls ? Tiens, en voici 3. Tu en trouveras aussi à la Boutique.', 'Out of Pencil Balls? Here, take 3. The Shop sells them too.'), PROF);
+    await say(L('Plus de Croque-Carnets ? Tiens, en voici 3. Tu en trouveras aussi à la Boutique.', 'Out of Snapbooks? Here, take 3. The Shop sells them too.'), PROF);
     update((d) => { d.bag['crayon-ball'] = (d.bag['crayon-ball'] ?? 0) + 3; });
     return;
   }
   const tips = [
-    L('Affaiblis une Bestiole sauvage avant de lancer une Crayon-ball. Endormie, c’est encore mieux !', 'Weaken a wild Critter before throwing a Pencil Ball. Asleep is even better!'),
+    L('Affaiblis une Bestiole sauvage avant de lancer un Croque-Carnet. Endormie, c’est encore mieux !', 'Weaken a wild Critter before throwing a Snapbook. Asleep is even better!'),
     L('Les Bestioles apprennent de nouvelles capacités en montant de niveau.', 'Critters learn new moves as they level up.'),
     L('Le Feu bat la Plante, l’Eau bat le Feu, la Plante bat l’Eau. Les Spectres ne craignent pas les attaques Normales !', 'Fire beats Grass, Water beats Fire, Grass beats Water. Ghosts ignore Normal attacks!'),
     L('Même si quelqu’un efface un dessin, une photo s’en souvient toujours. Clic-clac !', 'Even if someone erases a drawing, a photo always remembers it. Click-clack!'),
@@ -171,8 +171,8 @@ scripts.labTable = async () => {
   await sayAll([
     L('Clic-clac ! Une photo de vous deux, pour l’album.', 'Click-clack! A picture of you two, for the album.'),
     L('Oh, elle est un peu floue… Tant pis, je la garde ! Le mieux est l’ennemi du bien, comme on dit.', 'Oh, it’s a bit blurry… Never mind, I’m keeping it! Perfect is the enemy of good, as they say.'),
-    L('Tiens, voici 5 Crayon-balls et 2 Potions.', 'Here are 5 Pencil Balls and 2 Potions.'),
-    L('Lance une Crayon-ball sur une Bestiole sauvage affaiblie : elle se dessine dedans et rejoint ton équipe !', 'Throw a Pencil Ball at a weakened wild Critter: it draws itself inside and joins your team!'),
+    L('Tiens, voici 5 Croque-Carnets et 2 Potions.', 'Here are 5 Snapbooks and 2 Potions.'),
+    L('Lance un Croque-Carnet sur une Bestiole sauvage affaiblie : il la dessine, l’aspire dans sa page, et elle rejoint ton équipe !', 'Throw a Snapbook at a weakened wild Critter: it draws it, pulls it into its page, and it joins your team!'),
     L('Ton Bestiodex note toutes les Bestioles que tu croises. Essaie de le remplir !', 'Your Critterdex records every Critter you meet. Try to fill it up!'),
   ], PROF);
   update((d) => {
@@ -181,7 +181,7 @@ scripts.labTable = async () => {
     d.respawn = { map: 'maison', x: 4, y: 5 };
     d.flags.dex = 1;
   });
-  showToast(tr(L('+5 Crayon-balls · +2 Potions', '+5 Pencil Balls · +2 Potions')));
+  showToast(tr(L('+5 Croque-Carnets · +2 Potions', '+5 Snapbooks · +2 Potions')));
   await sayAll([
     L('Pars vers le nord, sur le Chemin des Crayons, jusqu’à Ville-Pastel. Mireille t’attend à son Atelier.', 'Head north along Crayon Road to Pastel City. Mireille is waiting at her Atelier.'),
     L('Ah, et… on raconte que des gens en gris effacent des choses, en ce moment. Sois {g:prudente|prudent}, ma pu… euh, {name} !', 'Oh, and… people say folks in grey have been rubbing things out lately. Be careful, sweet… er, {name}!'),

@@ -19,7 +19,7 @@ export interface PlayOpts {
   charge?: boolean;
   /** Second and later hits of a multi-hit move: a bit quicker. */
   quick?: boolean;
-  /** Leaves the last frame on screen (a caught Crayon-ball) until the next animation. */
+  /** Leaves the last frame on screen (a caught Croque-Carnet) until the next animation. */
   keep?: boolean;
   seed?: number;
 }

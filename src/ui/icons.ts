@@ -34,7 +34,7 @@ const PAL: Record<string, string> = {
   n: '#c08a52', S: '#f4c7a0', E: '#5cae5a', e: '#3a7a3a', O: '#f08a3a', T: '#3fb6b0', M: '#e07aa6',
 };
 
-/** Draws a "Crayon-ball": a little sketchbook, its spiral along the top, a star on its cover (and a red band). */
+/** Draws a "Croque-Carnet": a little sketchbook, its spiral along the top, a star on its cover (and a red band). */
 function sketchbook(p: Painter, cover: string, shade: string, band?: string) {
   // the pages showing under the cover
   p.rect(3, 4, 12, 12, PAL.K);

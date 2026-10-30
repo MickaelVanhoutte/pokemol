@@ -377,7 +377,7 @@ scripts.prof = async () => {
       d.bag['super-crayon-ball'] = (d.bag['super-crayon-ball'] ?? 0) + 10;
     });
     setFlag('pagesReward');
-    showToast(tr(L('+5 Rappels · +10 Super Crayon-balls', '+5 Revives · +10 Great Pencil Balls')));
+    showToast(tr(L('+5 Rappels · +10 Super Croque-Carnets', '+5 Revives · +10 Great Snapbooks')));
     return;
   }
   if (caught >= DEX_GOAL && !flag('ilePage')) {

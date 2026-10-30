@@ -75,7 +75,7 @@ English: [docs/histoire.md](docs/histoire.md).
   a complete Bestiodex.
 - Draw your own Bestiole at a workshop late in the story: a drawing sheet (pencils, a fill pencil that
   colours in like a crayon, an eraser), then its types, stats (480 points), talent and four moves. One per
-  game, retouched as often as you like. A Pencil Balloon in every Inn flies you to visited towns.
+  game, retouched as often as you like. A Pencil Balloon moored by every Inn flies you to visited towns.
 - Girl or boy (French texts agree), French and English, saves in the browser (export/import from
   Options), installable as an app (PWA: the title screen offers it). On phones, touch the screen
   anywhere to show the joystick.

@@ -32,7 +32,7 @@ export const ACTIVITIES: Activity[] = [
     id: 'dessin', name: L('Dessin', 'Drawing'), ask: L('S’entraîner au dessin ?', 'Practise drawing?'),
     effect: L('capture +{p} %', 'catching +{p}%'), amount: (l) => 3 * l,
     scene: [L('Tu t’installes au bureau et tu dessines une Bestiole, encore et encore, jusqu’à ce que le trait soit juste.', 'You sit at the desk and draw a Critter, again and again, until the line is just right.')],
-    maxed: L('Tu dessines déjà comme {g:une grande artiste|un grand artiste}. Tes Crayon-balls n’ont plus rien à apprendre !', 'You already draw like a real artist. Your Pencil Balls have nothing left to learn!'),
+    maxed: L('Tu dessines déjà comme {g:une grande artiste|un grand artiste}. Tes Croque-Carnets n’ont plus rien à apprendre !', 'You already draw like a real artist. Your Snapbooks have nothing left to learn!'),
   },
   {
     id: 'fenetre', name: L('Imagination', 'Imagination'), ask: L('Regarder par la fenêtre et rêvasser ?', 'Look out of the window and daydream?'),

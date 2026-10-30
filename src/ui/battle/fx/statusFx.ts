@@ -1,6 +1,6 @@
 /**
  * Effect builders for status moves and battle events: stat arrows, things rising or circling around
- * a drawing, powders, a paper shield, weather arriving, the Crayon-ball… Same rules as `effects.ts`.
+ * a drawing, powders, a paper shield, weather arriving, the Croque-Carnet… Same rules as `effects.ts`.
  */
 import { GRAPHITE } from '../../paper/pencilCanvas';
 import type { DoodleKind } from './doodles';
@@ -362,14 +362,14 @@ export const batter = (o: { kind: 'sable' | 'grele'; who?: Who; dur?: number }):
 
 const BALL = { THROW: 450, OPEN: 260, DRAW: 650, SUCK: 450, SHUT: 360, ERASE: 520 };
 
-/** When a thrown Crayon-ball sucks the Bestiole into its page (if caught), and when it is all over (ms). */
+/** When a thrown Croque-Carnet sucks the Bestiole into its page (if caught), and when it is all over (ms). */
 export function ballTimes(shakes: number, caught: boolean): { suck: number; end: number } {
   const suck = BALL.THROW + BALL.OPEN + BALL.DRAW * shakes;
   return { suck, end: suck + (caught ? BALL.SUCK + BALL.SHUT : BALL.ERASE) };
 }
 
 /**
- * A thrown Crayon-ball, a little sketchbook: it flies shut and opens at the foe's feet; at each tick a crayon draws a
+ * A thrown Croque-Carnet, a little sketchbook: it flies shut and opens at the foe's feet; at each tick a crayon draws a
  * bit more of the Bestiole on its page; caught, pencil lines pull the Bestiole into the page and the book snaps shut
  * under stars; broke free, the drawing is rubbed out in eraser crumbs and the book shuts empty.
  */

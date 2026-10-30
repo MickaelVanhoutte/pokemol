@@ -60,5 +60,5 @@ scripts.fresqueDone = async () => {
     addItem(d, 'baie-prisme', 3);
   });
   sfx.victory();
-  await say(L('Toutes les fresques sont complètes ! Un éclat de couleur jaillit et laisse un cadeau : 10 Super Crayon-balls et 3 Baies Prisme !', 'Every fresque is complete! A burst of colour leaves a gift: 10 Great Pencil Balls and 3 Prism Berries!'));
+  await say(L('Toutes les fresques sont complètes ! Un éclat de couleur jaillit et laisse un cadeau : 10 Super Croque-Carnets et 3 Baies Prisme !', 'Every fresque is complete! A burst of colour leaves a gift: 10 Great Snapbooks and 3 Prism Berries!'));
 };

@@ -956,7 +956,7 @@ export interface FightOptions {
    * no bag, no prize money and no blackout.
    */
   borrowed?: Mon[];
-  /** A vision: Crayon-balls go right through it. */
+  /** A vision: Croque-Carnets go right through it. */
   noCatch?: boolean;
 }
 

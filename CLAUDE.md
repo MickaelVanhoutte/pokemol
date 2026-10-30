@@ -19,7 +19,7 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 ## Standing rules from the project owner
 
 - **Original names only.** No Pokémon names, branding or assets anywhere: the site is public.
-  The game's own words are Bestiole, Crayon-ball, Atelier (gym), Maître d'Atelier (leader),
+  The game's own words are Bestiole, Croque-Carnet, Atelier (gym), Maître d'Atelier (leader),
   Bestiodex, Team Gomme.
 - **Every Bestiole is drawn three-quarters, turned to the left** (`faces: 'left'`), never straight
   from the front: it looks silly in battle, and battles mirror the drawings so both Bestioles face each
@@ -200,11 +200,11 @@ conventions are in [docs/content.md](docs/content.md#flags).
   - `outcome.ts` reads the events after a `move`: only a move that lands animates, as on the GBA;
   - `events.ts` (with the builders of `statusFx.ts`) animates the other events: a status taking hold,
     stat chevrons, healing, weather arriving, the paper shield and doll (`doll.ts` stands in for the
-    Bestiole while `vol.sub > 0`), talents, held items, send-out and the Crayon-ball (always drawn): a little
+    Bestiole while `vol.sub > 0`), talents, held items, send-out and the Croque-Carnet (always drawn): a little
     sketchbook that opens at the foe's feet, draws it a bit more at each tick and pulls it into its page if caught
     (`crayonBall`, `ballTimes` in `statusFx.ts`, which also time the sprite's `is-captured`);
   - a new move needs a recipe (`recipes.test.ts` fails without one). The option ANIMATIONS
-    (`prefs.moveFx`) turns them off, except the Crayon-ball.
+    (`prefs.moveFx`) turns them off, except the Croque-Carnet.
 - A battle drawing (`Sprite` in `BattleScene.tsx`) is a `.pk-sprite` box, which takes the move motions,
   the mirroring and every state (grey, faint, doll, capture, the victory dance `fx-victory`), around a
   `.pk-idle` layer that breathes or hovers while it waits (`idleOf`, `src/data/rigs.ts`). A Bestiole drawn

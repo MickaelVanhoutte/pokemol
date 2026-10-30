@@ -27,7 +27,7 @@ export function cardStars(save: SaveData): number {
 type Page = 0 | 1;
 const PAGES = [L('CARTE', 'CARD'), L('PROGRÈS', 'PROGRESS')];
 
-/** What a milestone gives, as words: « Super Crayon-ball ×5 », or a biscuit pack. */
+/** What a milestone gives, as words: « Super Croque-Carnet ×5 », or a biscuit pack. */
 export function rewardText(reward: Reward[]): string {
   if (reward.length > 1 && reward.every((r) => r.item.startsWith('biscuit-'))) {
     return tr(reward[0].n > 1 ? L('Lot de biscuits ×{n}', 'Biscuit pack ×{n}') : L('Lot de biscuits', 'Biscuit pack'), { n: reward[0].n });

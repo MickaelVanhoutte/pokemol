@@ -61,12 +61,12 @@ function effortItems(): ItemDef[] {
 
 export const ITEMS: ItemDef[] = [
   {
-    id: 'crayon-ball', name: L('Crayon-ball', 'Pencil Ball'), price: 200, kind: 'ball', amount: 10,
+    id: 'crayon-ball', name: L('Croque-Carnet', 'Snapbook'), price: 200, kind: 'ball', amount: 10,
     desc: L('Un petit carnet à dessin : lancé sur une Bestiole sauvage, il essaie de la dessiner… et l’aspire dans sa page s’il y arrive.', 'A little sketchbook: thrown at a wild Critter, it tries to draw it… and pulls it into its page if it manages.'),
   },
   {
-    id: 'super-crayon-ball', name: L('Super Crayon-ball', 'Great Pencil Ball'), price: 600, kind: 'ball', amount: 15,
-    desc: L('Un carnet à dessin bleu, tenu par un élastique rouge : il dessine mieux que la Crayon-ball.', 'A blue sketchbook held shut by a red band: it draws better than a Pencil Ball.'),
+    id: 'super-crayon-ball', name: L('Super Croque-Carnet', 'Great Snapbook'), price: 600, kind: 'ball', amount: 15,
+    desc: L('Un carnet à dessin bleu, tenu par un élastique rouge : il dessine mieux que le Croque-Carnet.', 'A blue sketchbook held shut by a red band: it draws better than a Snapbook.'),
   },
   {
     id: 'potion', name: L('Potion', 'Potion'), price: 300, kind: 'heal', amount: 20,

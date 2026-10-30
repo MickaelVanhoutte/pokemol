@@ -528,7 +528,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [L('Bienvenue dans mon atelier étoilé ! Chaque paillette ici est un vœu. Voyons si le tien est le plus fort !', 'Welcome to my starry atelier! Every speck of glitter here is a wish. Let’s see if yours is the strongest!')],
     after: [
       L('Ton vœu brille plus que tous les miens. Voici le Badge Paillette !', 'Your wish shines brighter than all of mine. Here is the Glitter Badge!'),
-      L('La Tour Brumeuse, dans le Bois, a été envahie par la Team Gomme. Avec mon badge, tu pourras y entrer. Le Ballon-Crayon de l’Auberge t’y emmènera vite !', 'The Misty Tower, in the Woods, has been taken over by Team Gomme. With my badge you can go in. The Pencil Balloon at the Inn will take you there fast!'),
+      L('La Tour Brumeuse, dans le Bois, a été envahie par la Team Gomme. Avec mon badge, tu pourras y entrer. Le Ballon-Crayon devant l’Auberge t’y emmènera vite !', 'The Misty Tower, in the Woods, has been taken over by Team Gomme. With my badge you can go in. The Pencil Balloon by the Inn will take you there fast!'),
     ],
   }),
   // ---------------------------------------------------------------- Tour Brumeuse (taken by Team Gomme)

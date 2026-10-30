@@ -78,7 +78,7 @@ scripts.baleincre = async () => {
       L('Au-dessus du lac d’encre, une ombre immense nage dans le ciel… Le Grand Encrier !', 'Above the ink lake, a huge shadow swims in the sky… The Great Inkwell!'),
       L('Il te regarde de son petit œil sage, puis souffle un grand jet d’encre noire.', 'It looks at you with its small wise eye, then spouts a great jet of black ink.'),
     ],
-    caught: L('Baleincre est dans ta Crayon-ball… Elle pèse aussi lourd qu’une bouteille d’encre pleine.', 'Inkwhale is in your Pencil Ball… It’s as heavy as a full bottle of ink.'),
+    caught: L('Baleincre est dans ton Croque-Carnet… Il pèse aussi lourd qu’une bouteille d’encre pleine.', 'Inkwhale is in your Snapbook… It’s as heavy as a full bottle of ink.'),
     gone: L('Le Grand Encrier remonte dans les nuages… Il reviendra peut-être après une nuit de sommeil.', 'The Great Inkwell rises into the clouds… Maybe it will come back after a night’s sleep.'),
     waits: L('Le Grand Encrier n’a pas bougé. Il nage en rond au-dessus du lac.', 'The Great Inkwell hasn’t moved. It is swimming in circles above the lake.'),
   });
@@ -128,7 +128,7 @@ scripts.libellune = async () => {
       L('Une libellule de vitrail boit au petit étang. Ses ailes brillent de toutes les couleurs…', 'A stained-glass dragonfly is drinking at the little pond. Its wings shine with every colour…'),
       L('Elle se retourne vers toi !', 'It turns towards you!'),
     ],
-    caught: L('Libellune s’est posée dans ta Crayon-ball. Elle brille encore un peu à travers.', 'Glassfly settled into your Pencil Ball. It still glows a little through it.'),
+    caught: L('Libellune s’est posée dans ton Croque-Carnet. Elle brille encore un peu à travers les pages.', 'Glassfly settled into your Snapbook. It still glows a little through the pages.'),
     gone: L('Libellune s’envole au-dessus des arbres… Elle reviendra peut-être après une nuit de sommeil.', 'Glassfly flies off above the trees… Maybe it will come back after a night’s sleep.'),
     waits: L('Libellune n’a pas bougé. Elle te regarde toujours.', 'Glassfly hasn’t moved. It is still watching you.'),
   });
@@ -162,7 +162,7 @@ scripts.noctaile = async () => {
       L('Un grand papillon d’ombre ouvre ses ailes. Des spirales roses y tournent… Tu as la tête qui tourne.', 'A great shadow moth opens its wings. Pink spirals turn on them… Your head is spinning.'),
       L('Noctaile fonce sur toi !', 'Nightmoth swoops at you!'),
     ],
-    caught: L('Noctaile est dans ta Crayon-ball. Tout est calme… Ce soir, on dormira tranquille.', 'Nightmoth is in your Pencil Ball. All is calm… Tonight, everyone will sleep soundly.'),
+    caught: L('Noctaile est dans ton Croque-Carnet. Tout est calme… Ce soir, on dormira tranquille.', 'Nightmoth is in your Snapbook. All is calm… Tonight, everyone will sleep soundly.'),
     gone: L('Noctaile se dissout dans le noir… Il reviendra sûrement après une nuit.', 'Nightmoth melts into the dark… It will surely be back after a night.'),
     waits: L('Noctaile flotte toujours au fond de la grotte.', 'Nightmoth is still floating at the bottom of the cave.'),
   });

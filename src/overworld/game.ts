@@ -369,7 +369,7 @@ export class Game {
     this.pickups = this.pickups.filter((q) => q !== p);
   }
 
-  /** The follower is in its Crayon-ball while sailing or riding the bike, and stays in the dream when you wake up. */
+  /** The follower is in its Croque-Carnet while sailing or riding the bike, and stays in the dream when you wake up. */
   followerShown(): boolean {
     return !!this.follower && !this.surfing && !this.biking && !this.passenger && !this.map?.def.awake && !this.map?.def.underwater;
   }

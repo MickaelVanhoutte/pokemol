@@ -303,7 +303,7 @@ scripts.aquarelline = async () => {
   const out = await wildBattle('115', 40, { music: 'final' });
   if (out === 'capture') {
     setFlag('static:aquarelline');
-    await say(L('Aquarelline est dans ta Crayon-ball… Elle laisse une petite traînée de couleur derrière elle.', 'Aquarelline is in your Pencil Ball… It leaves a little trail of colour behind.'));
+    await say(L('Aquarelline est dans ton Croque-Carnet… Elle laisse une petite traînée de couleur derrière elle.', 'Aquarelline is in your Snapbook… It leaves a little trail of colour behind.'));
   } else if (out === 'win') {
     setFlag('ko:aquarelline', num('nuits') + 1);
     setFlag('koDay:aquarelline', localDay() + 1);

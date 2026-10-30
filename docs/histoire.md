@@ -88,7 +88,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 
 - Attrape les Bestioles et remplis ton **Bestiodex**.
 - Ta **carte de dresseur** a une page **Progrès** : Bestioles attrapées, badges, dresseurs battus…
-  Chaque palier atteint te donne une récompense à récupérer, des Crayon-balls du début jusqu’aux
+  Chaque palier atteint te donne une récompense à récupérer, des Croque-Carnets du début jusqu’aux
   objets à faire tenir, qu’aucune boutique ne vend. Et après l’histoire, d’autres défis s’ajoutent.
 - Chaque Bestiole a **un pouvoir bien à elle** (un talent ou une attaque que personne d’autre n’a) :
   même la plus petite a sa place dans ton équipe, jusqu’au niveau 100.
@@ -145,7 +145,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   force et ses capacités. C’est la seule de son espèce, et tu peux revenir la retoucher quand tu veux.
 - Jusqu’à **3 parties** sur le même appareil, chacune avec sa difficulté : une pour toi, une pour un
   frère, une sœur ou un parent. En Facile et en Normal, un pouce levé montre les attaques qui marchent le
-  mieux contre une Bestiole déjà rencontrée, et en Facile, les Crayon-balls attrapent deux fois mieux.
+  mieux contre une Bestiole déjà rencontrée, et en Facile, les Croque-Carnets attrapent deux fois mieux.
 - Et après la fin ? Papeterre a encore des surprises. Le monde continue de changer : écoute ce que
   les habitants ont à te dire (certains ont un cadeau pour toi), et retourne voir les endroits restés
   tout pâles… plus tu avances, plus ils reprennent des couleurs. Une nuit à l’Auberge, chaque jour,
@@ -237,7 +237,7 @@ The story has **two endings**, and your answers choose which one you will see.
 
 - Catch Critters and fill your **Critterdex**.
 - Your **trainer card** has a **Progress** page: Critters caught, badges, trainers beaten… Each
-  milestone you reach gives you a reward to collect, from the first Pencil Balls to items to hold,
+  milestone you reach gives you a reward to collect, from the first Snapbooks to items to hold,
   which no shop sells. And after the story, more challenges join in.
 - Every Critter has **a power of its own** (a talent or a move nobody else has): even the smallest
   one has its place in your team, all the way to level 100.
@@ -291,7 +291,7 @@ The story has **two endings**, and your answers choose which one you will see.
   strength and its moves. It is the only one of its kind, and you can come back to retouch it whenever you like.
 - Up to **3 games** on one device, each with its own difficulty: one for you, one for a brother, a sister
   or a parent. On Easy and Normal, a thumbs-up shows the moves that work best against a Bestiole you have
-  already met, and on Easy, Pencil Balls catch twice as well.
+  already met, and on Easy, Snapbooks catch twice as well.
 - And after the ending? Papeterra still has surprises. The world keeps changing: listen to what the
   people have to say (some have a present for you), and go back to the places that stayed all pale…
   the further you go, the more colour they get back. A night at the Inn, once a day, also has a

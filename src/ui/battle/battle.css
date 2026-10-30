@@ -224,7 +224,7 @@
 .pk-hp__xp.is-on { opacity: 1; }
 .pk-hp__xp .xpbar { height: 5px; border: 0; border-image: none; background: rgba(255, 255, 255, 0.7); border-radius: 3px; }
 .pk-hp__xp .xpbar span { background: #4a90e2; }
-/* a trainer's team: little Crayon-balls just under the foe's box, from its left edge */
+/* a trainer's team: little Croque-Carnets just under the foe's box, from its left edge */
 .pk-team { position: absolute; left: 6px; top: calc(100% + 9px); display: flex; gap: 2px; pointer-events: none; }
 .pk-team img { width: 16px; height: 16px; }
 .pk-team img.is-status { filter: grayscale(1) opacity(0.75); }

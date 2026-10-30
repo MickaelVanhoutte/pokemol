@@ -8,7 +8,7 @@ import './views.css';
 
 const POCKET_NAMES: Record<Pocket, ReturnType<typeof L>> = {
   items: L('OBJETS', 'ITEMS'),
-  balls: L('CRAYON-BALLS', 'PENCIL BALLS'),
+  balls: L('CROQUE-CARNETS', 'SNAPBOOKS'),
   berries: L('BAIES', 'BERRIES'),
   stencils: L('POCHOIRS', 'STENCILS'),
   key: L('OBJETS RARES', 'KEY ITEMS'),
@@ -67,10 +67,10 @@ export function BagView({ bag, context, wild, memory = context, onUse, onGive, o
   const why = (id: string): string | null => {
     const def = item(id);
     if (context === 'battle' && (def.kind === 'key' || def.kind === 'hold' || def.kind === 'stencil' || def.kind === 'evo' || def.kind === 'effort' || def.kind === 'level')) return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
-    if (context === 'battle' && def.kind === 'ball' && !wild) return tr(L('On ne lance pas de Crayon-ball sur la Bestiole d’un dresseur !', 'You can’t throw a Pencil Ball at a trainer’s Critter!'));
+    if (context === 'battle' && def.kind === 'ball' && !wild) return tr(L('On ne lance pas de Croque-Carnet sur la Bestiole d’un dresseur !', 'You can’t throw a Snapbook at a trainer’s Critter!'));
     if (context === 'battle' && def.kind === 'field') return tr(L('Ce n’est pas le moment d’utiliser ça !', 'This isn’t the time to use that!'));
     if (context === 'field' && def.kind === 'battle') return tr(L('Cet objet ne s’utilise qu’en combat, sur la Bestiole qui se bat.', 'This item only works in battle, on the Critter fighting.'));
-    if (context === 'field' && def.kind === 'ball') return tr(L('Les Crayon-balls se lancent sur les Bestioles sauvages, en combat.', 'Pencil Balls are thrown at wild Critters, in battle.'));
+    if (context === 'field' && def.kind === 'ball') return tr(L('Les Croque-Carnets se lancent sur les Bestioles sauvages, en combat.', 'Snapbooks are thrown at wild Critters, in battle.'));
     return null;
   };
 

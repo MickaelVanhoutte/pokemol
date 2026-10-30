@@ -124,7 +124,7 @@ of the Eraser Factory (`usineEnd` → `paleCocoon`), the Great Eraser recognises
 and rubs it: flag `coconPale`, and its card is drawn washed out (`monArtUrl`) until the ending.
 
 **The legendaries are visions until the ending** (`src/story/legends.ts`). Libellune (L32, Bois Perdu, at
-night) and Noctaile (L38, Grotte des Ratures) are met once as a battle where Crayon-balls go through them
+night) and Noctaile (L38, Grotte des Ratures) are met once as a battle where Croque-Carnets go through them
 (`wildBattle(…, { noCatch })`, the `blocked` event with `reflet`), flag `vision:<slug>`; the player notices
 Coconfus's eyes, or its spirals. After the ending, the one Coconfus did not become waits there for real at L55
 (flag `fin`: 1 Libellune, 2 Noctaile). Older saves that caught them keep them.
@@ -280,7 +280,7 @@ entries of `WORLD` in `src/data/worldmap.ts`, next to each basket). `scripts.bal
 by the other town's Inn (`balloonFly('down')`). `src/data/balloons.test.ts` checks every balloon stands on free
 ground and blocks no door or exit.
 
-**Crayon-balls are little sketchbooks** (the owner's idea): a yellow one, and a blue one held shut by a red band
+**Croque-Carnets are little sketchbooks** (the owner's idea; they were « Crayon-balls » before, EN Snapbooks): a yellow one, and a blue one held shut by a red band
 for the Super. Thrown, it opens at the foe's feet and a crayon draws the Bestiole a bit more at each tick; caught,
 pencil lines pull the Bestiole into the page and the book snaps shut; broken free, the drawing is rubbed out and
 the book shuts empty. The items keep their names; the bag icons and the pick-ups on the maps are sketchbooks too.
@@ -313,7 +313,7 @@ checks every step's flags are set somewhere and its target is on the map.
   - Théo (Ville-Feutre) has never seen a Fire Bestiole: show him one for a Fierce Marble.
   - Rosalie (Jardin-Gouache) wants a Bestiole at 220+ friendship: a Snack and a Prism Berry.
   - Mamie Encre (Cité-Encre) sends a letter to her brother Papi Plume (Village-Plume): he gives
-    5 Super Crayon-balls and a reply; bringing it back gives a Spiky Helmet.
+    5 Super Croque-Carnets and a reply; bringing it back gives a Spiky Helmet.
 - *Route rematches*: once beaten, route trainers want a rematch the next day (a ♪ bubble), with
   their team raised to `REMATCH_LEVEL[badges]` (L7 with no badge, L42 with eight, L55 after the ending), but
   never above the player's own level (`rematchParty`, Oct 2026: the owner found them outgrowing the team): the
@@ -412,7 +412,7 @@ coming back resets it (a mechanism once triggered stays open).
 
 | Where | Puzzle | Needed? |
 |---|---|---|
-| Scribble Cave depths (`grotte2`) | Fresque of Clapotin by the exit: a secret room (Loupe, Super Crayon-balls) | optional |
+| Scribble Cave depths (`grotte2`) | Fresque of Clapotin by the exit: a secret room (Loupe, Super Croque-Carnets) | optional |
 | Eraser Warehouse 1F (`entrepot1`) | Crayon barriers: the south switch opens the red gate, the north one the blue line to the stairs | story (Act 2) |
 | Mount Charcoal crater (`montFusain2`) | Two boulders (gloves) into two holes; they land on the plates of the vault in `montFusain1` (Bille Ardente, Golden Berries) | optional |
 | Mount Charcoal crater | Fresque of Braisou by the exit: a secret room (Painter’s Apron, Super Potions) | optional |
@@ -422,7 +422,7 @@ coming back resets it (a mechanism once triggered stays open).
 | Masterpiece Square (`galerie`) | 4×4 fresque of Ombrouille on an easel (Stubborn Band) | post-game |
 | Fair tent, Port-Aquarelle (`tombola`) | Mémo-Bestioles: 6 pairs, a prize a day by tries (≤10 gold, ≤14 silver) | optional |
 
-Completing every fresque (`fresqueDone`, five with the sunken chapel's) gives 10 Super Crayon-balls and 3 Prism Berries
+Completing every fresque (`fresqueDone`, five with the sunken chapel's) gives 10 Super Croque-Carnets and 3 Prism Berries
 (`fresquesReward`).
 
 **Page locations**: pages 1–2 in `home.ts`, 3–4 in `pastel.ts`, 5 in `plume.ts`, 6 in `aquarelle.ts`,
@@ -547,7 +547,7 @@ Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Ha
 | Hard | +10% | 20 | Best move | ×1 |
 
 **Catching** is FireRed's formula (`catchChance`, `throwBall` in `src/engine/pk/battle.ts`): the HP left, the
-species' catch rate, the ball (Crayon-ball ×1, Super ×1.5), sleep or freeze ×2 and the other statuses ×1.5, four
+species' catch rate, the ball (Croque-Carnet ×1, Super ×1.5), sleep or freeze ×2 and the other statuses ×1.5, four
 shake checks. At full HP a common first form (catch rate 190) holds one ball in three, a starter (45) one in
 sixteen, a legendary (25) one in thirty. The difficulty's multiplier and the real house's drawing days multiply the
 ball (`boosts.catch`). The owner found it failed a lot, so a hidden pity counter (`missedBalls`, Oct 2026) helps: a

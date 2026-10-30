@@ -39,7 +39,7 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
   );
 }
 
-/** A trainer's team as little Crayon-balls: black when knocked out, grey with a status. */
+/** A trainer's team as little Croque-Carnets: black when knocked out, grey with a status. */
 function TeamBalls({ st }: { st: BattleState }) {
   const src = sketchIconUrl('party')!;
   return (

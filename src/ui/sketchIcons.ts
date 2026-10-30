@@ -64,12 +64,17 @@ const DRAW: Record<string, (seed: number) => string> = {
     for (const y of [12, 20, 28, 36]) d.line([[8, y], [14, y]], 2);
     return d.svg();
   },
-  // a Crayon-ball: yellow top, white bottom, a red button
+  // a Croque-Carnet: a little yellow sketchbook, its spiral along the top, a star on the cover
   party: (s) => {
     const d = doodle(s);
-    d.shape([[8, 24], [10, 14], [18, 8], [30, 8], [38, 14], [40, 24]], '#fdea8c', '#ecc85a');
-    d.shape([[8, 24], [40, 24], [38, 34], [30, 40], [18, 40], [10, 34]], '#fffaf0', '#d9c9a6');
-    d.shape(d.circle(24, 24, 5, 8), '#f4a093', '#e06a6a');
+    d.shape([[12, 13], [41, 12], [42, 42], [13, 43]], '#fffaf0', '#d9c9a6');
+    d.shape([[8, 10], [37, 9], [38, 39], [9, 40]], '#fdea8c', '#ecc85a');
+    const star: [number, number][] = Array.from({ length: 10 }, (_, i) => {
+      const a = -Math.PI / 2 + (i / 10) * Math.PI * 2, q = i % 2 ? 3.5 : 8;
+      return [23 + Math.cos(a) * q, 25 + Math.sin(a) * q];
+    });
+    d.shape(star, '#fffaf0', '#ecc85a');
+    for (const x of [12, 18, 24, 30, 35]) d.line([[x, 6], [x, 13]], 2);
     return d.svg();
   },
   // a blue pencil case with its zip

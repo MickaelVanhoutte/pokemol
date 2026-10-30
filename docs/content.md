@@ -516,7 +516,7 @@ In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens
   you bottom left. The foe's column ends low enough that its feet are always
   below the backdrop's horizon (46% of the picture). Boxes are two short rows (name and level; the
   bar, with your HP written inside it); experience is a thin blue line over your box, shown only
-  while it fills. Trainer battles show the foe's team as little Crayon-balls under its box (black: knocked out,
+  while it fills. Trainer battles show the foe's team as little Croque-Carnets under its box (black: knocked out,
   grey: status). Your Bestiole is drawn bigger and runs past the bottom edge (the scene clips it),
   so it feels closer than the foe.
 - The battle panel never changes height. If something doesn't fit, it pages (`TextBox`) or opens an
