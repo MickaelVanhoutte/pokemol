@@ -88,6 +88,7 @@ scripts.profLac = async () => {
         L('Mais la Team Gomme les a bouchées avec de grosses gommes. Le lac est devenu gris, et la boue grise descend jusqu’à la Route des Feutres.', 'But Team Gomme plugged them with big erasers. The lake turned grey, and the grey mud runs all the way down to Marker Road.'),
         L('La source rouge est sur l’île de l’ouest. La jaune au nord, au fond d’un enclos de rochers. La bleue dans une grotte, sur l’île de l’est.', 'The red spring is on the west island. The yellow one is up north, inside a ring of rocks. The blue one is in a cave on the east island.'),
         L('Libère-les, et le lac retrouvera ses couleurs ! Moi, je reste au camp pour étudier l’eau… et prendre des photos.', 'Free them, and the lake will get its colours back! I’ll stay at the camp to study the water… and take pictures.'),
+        L('Si tu vois une plongeuse sortir de l’eau, c’est Myrtille, la guide indigo. Elle connaît le fond du lac mieux que personne.', 'If you see a diver climbing out of the water, that’s Bilberry, the indigo guide. She knows the bottom of the lake better than anyone.'),
       ], PROF);
     } else {
       const n = springsLeft();
@@ -102,11 +103,11 @@ scripts.profLac = async () => {
       await sayAll([
         L('Bravo, {name} ! Le lac a retrouvé toutes ses couleurs. Clic-clac !', 'Well done, {name}! The lake has all its colours back. Click-clack!'),
         L('{rival} t’a montré les taches sombres ? Elles sont très profondes. On raconte que le fond du lac garde une vieille légende…', 'Did {rival} show you the dark patches? They are very deep. They say the bottom of the lake keeps an old legend…'),
-        L('Moi, je suis trop vieux pour plonger… Mais je connais quelqu’un qui plonge mieux que personne.', 'I’m too old to dive… But I know someone who dives better than anyone.'),
+        L('Moi, je suis trop vieux pour plonger… et le bocal est trop petit pour ma moustache ! Mais Myrtille, elle…', 'I’m too old to dive… and the jar is too small for my moustache! But Bilberry, now…'),
       ], PROF);
       // Myrtille, the indigo guide, brings the Jar Helmet (src/story/guides.ts)
       const myrtille = guide('indigo');
-      if (!(await guideComes(myrtille, { text: L('Myrtille ! Par ici !', 'Bilberry! Over here!'), who: PROF }))) await guideTalk(myrtille);
+      if (!(await guideComes(myrtille, PROF))) await guideTalk(myrtille);
       await say(L('Et la boue de la Route des Feutres est partie : Ville-Feutre t’attend !', 'And the mud on Marker Road is gone: Felt City is waiting!'), PROF);
     }
   } else {

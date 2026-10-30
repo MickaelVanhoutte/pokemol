@@ -210,6 +210,7 @@ scripts.momShoes = async () => {
   setFlag('shoes');
   await sayAll([
     L('Maintiens le bouton B en marchant pour courir. Sur un écran tactile, garde un doigt sur B pendant que l’autre glisse !', 'Hold the B button while walking to run. On a touch screen, keep one finger on B while the other one slides!'),
+    L('Et si tu as besoin d’aide en chemin, rappelle-toi la comptine que je te chantais : « Sept couleurs pour t’aider ! » Les Guides des Couleurs ne sont jamais loin.', 'And if you need help on the way, remember the rhyme I used to sing you: “Seven colours have your back!” The Colour Guides are never far away.'),
     L('Sois {g:prudente|prudent}, mange bien… et reviens me voir de temps en temps. Bonne chance, mon cœur !', 'Be careful, eat well… and come and see me now and then. Good luck, sweetheart!'),
   ], MOM);
   await g.walk(mom, [...Array(ups).fill('down'), ...Array(px - 3).fill('left')], 150);

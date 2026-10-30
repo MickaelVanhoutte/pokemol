@@ -110,7 +110,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - La **Pension Crayonnée** garde tes Bestioles… et on y trouve parfois des œufs.
 - Des **outils** pour aller plus loin : ciseaux, canne à pêche, bateau en papier, bocal pour plonger,
   vélo, maillet, gants. Ce sont les sept **Guides des Couleurs**, un par couleur de l’arc-en-ciel, qui
-  te les apportent : quand une couleur peut t’aider sur ton chemin, son guide vient te trouver. Avec la
+  te les apportent : une vieille tradition de Papeterre, que tous les enfants connaissent par la comptine des
+  sept couleurs. Quand une couleur peut t’aider sur ton chemin, son guide vient te trouver. Avec la
   canne, ce qui mord dépend de l’eau… et de la force de ton équipe. Chaque route a ses recoins : prairies à l’écart, objets cachés, rebords pour redescendre d’un
   saut, étangs et rivières dont l’autre rive attend ton bateau, buissons et rochers qui ouvrent des
   raccourcis quand tu reviens avec le bon outil.
@@ -254,8 +255,9 @@ The story has **two endings**, and your answers choose which one you will see.
   people at home: each has a story.
 - The **Pencil Day Care** looks after your Critters… and sometimes there are eggs.
 - **Tools** to go further: scissors, a fishing rod, a paper boat, a jar to dive with, a bike, a mallet,
-  gloves. The seven **Colour Guides**, one per colour of the rainbow, bring them to you: when a colour can
-  help you on your way, its guide comes to find you. With the rod, what bites depends on the water… and on
+  gloves. The seven **Colour Guides**, one per colour of the rainbow, bring them to you: an old tradition of
+  Papeterra that every child knows from the seven colours rhyme. When a colour can help you on your way, its guide
+  comes to find you. With the rod, what bites depends on the water… and on
   how strong your team is. Every road has its corners: meadows off the way, hidden items, ledges to jump back down, ponds and rivers whose far bank
   waits for your boat, bushes and rocks that open shortcuts when you come back with the right tool.
 - The Critters were born from the little artist's drawings: her originals are in the credits. A few

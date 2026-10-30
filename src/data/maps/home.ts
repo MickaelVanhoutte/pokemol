@@ -22,7 +22,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
     ],
     warps: [{ x: 4, y: 7, to: { map: 'bourg', x: 3, y: 6, facing: 'down' } }],
     npcs: [{ id: 'mom', x: 3, y: 3, look: LOOKS.mom, facing: 'left', script: 'mom' }],
-    interact: [{ x: 7, y: 4, script: 'bed' }, { x: 0, y: 1, script: 'homeTv' }],
+    interact: [{ x: 7, y: 4, script: 'bed' }, { x: 0, y: 1, script: 'homeTv' }, { x: 7, y: 1, script: 'comptine' }],
     items: [{ x: 8, y: 1, item: 'page-1', hidden: true }],
   },
 

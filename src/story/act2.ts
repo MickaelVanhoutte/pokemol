@@ -26,6 +26,7 @@ scripts.marineAfter = async () => {
   await say(way === RETOUCHE
     ? L('D’accord ! Une deuxième couche, bien propre. Il sera encore plus joli !', 'All right! A second coat, nice and clean. It’ll be even prettier!')
     : L('Tu as raison… Avec les coulures, on dirait qu’il se reflète dans la rivière. Je le laisse comme ça !', 'You’re right… With the runs, it looks like it’s reflected in the river. I’ll leave it like that!'), MARINE);
+  if (!flag('gift:bateau')) await say(L('Ah, et Azur t’attend sur le quai. Je crois qu’il a plié quelque chose pour toi !', 'Oh, and Azure is waiting for you on the quay. I think he’s folded something for you!'), MARINE);
 };
 
 // ------------------------------------------------------------------ the fair (side quest)

@@ -182,6 +182,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       // the poster man, in front of his poster board: grey posters until the colours come back
       { id: 'feutreAffiche', x: 13, y: 6, look: { hair: '#6a4a2a', shirt: '#f2d23e', pants: '#3a3a5a', hat: '#ff4fa3' }, facing: 'up', hideIf: 'a2.feutre', text: [
         L('Je colle des affiches dans toute la ville. Mais qui a envie de lire une affiche grise ? Même la colle a perdu sa couleur.', 'I put up posters all over the city. But who wants to read a grey poster? Even the glue has lost its colour.'),
+        L('Même Coquelicot, notre guide rouge, ne roule plus : son vélo a perdu son rouge. Il dit qu’il remontera dessus quand les couleurs reviendront.', 'Even Poppy, our red guide, has stopped riding: his bike lost its red. He says he’ll ride again when the colours come back.'),
       ] },
       { id: 'feutreAfficheOk', x: 13, y: 6, look: { hair: '#6a4a2a', shirt: '#f2d23e', pants: '#3a3a5a', hat: '#ff4fa3' }, facing: 'up', showIf: 'a2.feutre', text: [
         L('Affiche toute neuve ! Le Rockeur Jimmy donne un concert à l’Atelier. Sa Lampyrette et son Lumignon font les lumières : on y voit comme en plein jour !', 'Brand-new poster! Rocker Jimmy is giving a concert at the Atelier. His Lampfly and Glimmerkin do the lights: it’s as bright as day in there!'),
@@ -199,6 +200,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       { id: 'feutreZig', x: 16, y: 17, mon: '004', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Zigzou file entre tes jambes en laissant une traînée d’étincelles. Bzzt !', 'The Ziggle zips between your legs, leaving a trail of sparks. Bzzt!')] },
       { id: 'feutreCycliste', x: 21, y: 12, look: LOOKS.cyclistF, facing: 'left', text: [
         L('À l’est, la Piste Cyclable grimpe jusqu’au Jardin-Gouache. Interdit aux piétons : on n’y passe qu’à vélo !', 'East, the Cycling Track climbs all the way to Gouache Garden. No walkers allowed: bikes only!'),
+        L('Tu entends ces « bong » qui viennent du Mont Fusain ? C’est Lavande, la guide violette. Elle casse les rochers pour trouver des améthystes.', 'Hear those “bonks” coming from Mount Charcoal? That’s Lavender, the violet guide. She breaks rocks to find amethysts.'),
       ] },
     ],
     residents: [

@@ -181,7 +181,10 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'braisePen', x: 27, y: 13, look: LOOKS.girl, facing: 'left', text: [L('C’est mon Braisou ! Il se roule dans la cendre tiède pour garder sa flamme bien orange.', 'That’s my Embersal! It rolls in warm ashes to keep its flame nice and orange.')] },
       { id: 'braisePenMon', x: 23, y: 13, mon: '002', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Brai ! Braiii !', 'Ember! Emberrr!')] },
       { id: 'braiseFox', x: 25, y: 5, mon: '018', look: LOOKS.kid, facing: 'down', wander: true, text: [L('Le Toufeu se blottit contre tes chaussures. Elles sont toutes chaudes, maintenant.', 'The Flufflame curls up against your shoes. They’re all warm now.')] },
-      { id: 'braiseRunner', x: 11, y: 7, look: LOOKS.cyclist, facing: 'left', wander: true, text: [L('Je fais le tour de l’Atelier en courant chaque matin. Ambre dit que ça réchauffe les idées !', 'I run round the Atelier every morning. Amber says it warms up your ideas!')] },
+      { id: 'braiseRunner', x: 11, y: 7, look: LOOKS.cyclist, facing: 'left', wander: true, text: [
+        L('Je fais le tour de l’Atelier en courant chaque matin. Ambre dit que ça réchauffe les idées !', 'I run round the Atelier every morning. Amber says it warms up your ideas!'),
+        L('Clémentine, la guide orange, forge des gants si costauds qu’on pousse des rochers avec. Elle les garde pour qui battra Ambre !', 'Clementine, the orange guide, forges gloves so strong you can push boulders with them. She keeps them for whoever beats Amber!'),
+      ] },
     ],
     residents: [
       // Village-Braise: the glassblower, who blows glass in the heat of the volcano

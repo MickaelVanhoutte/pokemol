@@ -225,10 +225,18 @@ type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams u
 Toufeu, and all three are in the battle tower pool.
 
 **The Colour Guides and the field tools** (Nov 2026: the owner found the tools too easy to miss, handed out by
-people standing in towns; `src/data/guides.ts`, `src/story/guides.ts`). Seven guides, one per colour of the rainbow,
-each bring one tool the moment it becomes useful: arriving on their map once `need` is set, they call out, walk up
-(`guideComes`, from a free straight line of up to 5 tiles), introduce themselves and give it (`gift:<tool>`). The
-first one met also tells about the seven of them (`guides`). Afterwards each waits on that map (`guideNpc`,
+people standing in towns; `src/data/guides.ts`, `src/story/guides.ts`). An old tradition of Papeterre: when travellers
+need help, their colour comes to find them. Every child knows it from « La comptine des sept couleurs » (`COMPTINE`:
+the picture book on the shelf at home, `comptine`; Mom quotes it when she gives the sneakers), each guide having its
+line of the rhyme. The owner wanted them heard of before they are met, so townsfolk talk about their guide beforehand
+(Ville-Pastel: Pistache, and Mimosa as a painter's cousin; the Port: Azur; grey Ville-Feutre: Coquelicot, whose bike
+lost its red; Ville-Feutre after: Lavande's « bong » on the mountain; Village-Braise and its forge: Clémentine), Marine
+sends the player to Azur (`marineAfter`) and the Prof's brief at the lake names Myrtille. Each guide then brings one
+tool the moment it becomes useful: arriving on their map once `need` is set, its call is heard, it comes up
+(`guideComes`, from a free straight line of up to 5 tiles) and has a little moment of its own (`MEETINGS`: Pistache
+trims the hedge, Mimosa needs a hand with a bite that splashes everyone, Azur folds a boat, Myrtille climbs out of the
+lake, Coquelicot rides in with no brakes, Lavande is heard breaking rocks, Clémentine came to see who beat Ambre),
+quotes its line and gives the tool (`gift:<tool>`). The first one met tells the tradition (`guides`). Afterwards each waits on that map (`guideNpc`,
 `showIf: gift:<tool>`) with a tip. The scenes run from the controller's `arrivals` checks, after every warp and every
 script, so a scene missed in an old game plays the next time the player is free on that map; the Town Map objective
 also points at a missed one until the next badge, and bushes, rocks and boulders name the guide who can help.
