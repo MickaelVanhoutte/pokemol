@@ -15,14 +15,22 @@ const POCKET_NAMES: Record<Pocket, ReturnType<typeof L>> = {
 };
 
 /**
+ * Where each bag was left (field, give, a battle): its pocket and the cursor in each pocket. As on the GBA it
+ * opens there again, also after a trip to the party (a stencil to teach, a potion to use) that closed it.
+ */
+const left: Partial<Record<string, { key: string; pocket: Pocket; cursor: Partial<Record<Pocket, number>> }>> = {};
+
+/**
  * FRLG bag: a pencil case with pockets. Picking an item and USE calls `onUse`, GIVE calls `onGive`
  * (a Bestiole holds it); key items with a text (sketchbook pages) can be READ. The `give` context
  * only shows what can be held (opened from the party's ITEM menu).
  */
-export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, note }: {
+export function BagView({ bag, context, wild, memory = context, onUse, onGive, onRead, onClose, note }: {
   bag: Record<string, number>;
   context: 'field' | 'battle' | 'give';
   wild?: boolean;
+  /** Which visit of the bag this is: the same key opens where it was left (a battle passes its own). */
+  memory?: string;
   onUse: (id: string) => void;
   onGive?: (id: string) => void;
   onRead?: (id: string) => void;
@@ -31,20 +39,25 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
   note?: string;
 }) {
   const pockets = context === 'give' ? POCKETS.filter((p) => p !== 'key') : POCKETS;
-  const [pocket, setPocket] = useState<Pocket>(context === 'battle' && wild ? 'balls' : 'items');
-  const [cursor, setCursor] = useState(0);
+  const mem = left[context]?.key === memory ? left[context]! : (left[context] = { key: memory, pocket: context === 'battle' && wild ? 'balls' : 'items', cursor: {} });
+  const [pocket, setPocketState] = useState<Pocket>(pockets.includes(mem.pocket) ? mem.pocket : 'items');
+  const setPocket = (f: (p: Pocket) => Pocket) => setPocketState((p) => (mem.pocket = f(p)));
   const [action, setAction] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
   // a message from outside ("X learned Y") stays until the cursor moves
   const [noteOn, setNoteOn] = useState(true);
   useEffect(() => setNoteOn(true), [note]);
-  const lastCursor = useRef(0);
+  const listOf = (p: Pocket) => pocketItems(bag, p).filter((it) => context !== 'give' || canHold(it));
+  const list = listOf(pocket);
+  const keep = (p: Pocket) => Math.max(0, Math.min(mem.cursor[p] ?? 0, listOf(p).length - 1));
+  const [cursor, setCursor] = useState(() => keep(pocket));
+  const lastCursor = useRef(cursor);
   const moveCursor = (i: number) => {
     if (i !== lastCursor.current) { setMsg(''); setNoteOn(false); }
     lastCursor.current = i;
+    mem.cursor[pocket] = i;
     setCursor(i);
   };
-  const list = pocketItems(bag, pocket).filter((it) => context !== 'give' || canHold(it));
   const turn = (d: 1 | -1) => {
     setPocket((p) => pockets[(pockets.indexOf(p) + d + pockets.length) % pockets.length]);
     setMsg('');
@@ -103,7 +116,7 @@ export function BagView({ bag, context, wild, onUse, onGive, onRead, onClose, no
         <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
       </div>
       <Window class="bag__list">
-        <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={moveCursor} tapFocus />
+        <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={moveCursor} tapFocus initial={keep(pocket)} />
       </Window>
       <div class="bag__foot">
         <Window seyes class="bag__desc">

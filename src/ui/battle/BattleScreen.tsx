@@ -361,6 +361,7 @@ export function BattleScreen(props: BattleProps) {
         <BagView
           bag={bag}
           context="battle"
+          memory={`battle:${props.setup.seed}`}
           note={bagNote}
           wild={st.kind === 'wild'}
           onClose={() => setOverlay(null)}
