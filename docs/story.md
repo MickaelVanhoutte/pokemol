@@ -956,7 +956,7 @@ berries, the Tracing Paper and battle items of their own, which the simulation d
 **Physical or special (Oct 2026).** The owner wants a player to build the team they like, a physical or a
 special attacker in any type ([docs/bestioles.md](bestioles.md) §5). Zigzéclair turned physical (Attack 102,
 Sp. Atk 76; Zigzou 58/49), Octopeintre special (Attack 85, Sp. Atk 115, Coup de Pinceau on evolving and
-Fresque Furieuse at 41 in place of its punches; its fair copy has Huit Couleurs). 21 moves give each type the
+Fresque Furieuse at 41 in place of its punches; its fair copy has Bonne Étoile: its many added effects twice as often). 21 moves give each type the
 side it lacked, learned by the Bestioles of that side. Retuned with the sims:
 - Chenillou keeps no attack: a Dard at 5 doubled against Minousse and the Pastel apprentices fell from
   95–100% to 20%. Piqué comes at 15, after Gaspard's birds; Sève Sucrée at 24 for Minoufleur (the lake

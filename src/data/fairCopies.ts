@@ -139,7 +139,7 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   // Baleincre: its fin grown into a great feather pen, a bigger black jet, the writing glowing gold
   '112': { base: { hp: 110, atk: 95, def: 120, spa: 165, spd: 135, spe: 95 }, talent: 'nage-eclair' },
   // Octopeintre: a crest of spikes down its mantle, thick jets of paint, a fiercer scowl
-  '114': { base: { hp: 80, atk: 105, def: 85, spa: 145, spd: 85, spe: 90 }, talent: 'huit-couleurs' },
+  '114': { base: { hp: 80, atk: 105, def: 85, spa: 145, spd: 85, spe: 90 }, talent: 'bonne-etoile' },
   // Aquarelline: its veils twice as long, gold along its wings, taller horn fins, a halo of paint drops
   '115': { base: { hp: 100, atk: 80, def: 105, spa: 160, spd: 150, spe: 125 }, talent: 'recoloriage' },
   // Sablerette: its frill grown into a wide fan of crystals, a sandstorm whirling round it as it comes in
