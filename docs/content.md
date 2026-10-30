@@ -67,7 +67,9 @@ Maps react without code:
 - NPC `showIf` / `hideIf`;
 - trigger `if` / `unless`;
 - `patches[].if` / `unless`;
-- `tintUnless` (with `drained: true`, the map is drawn in greys until the flag is set: Ville-Feutre).
+- `tintUnless` (with `drained: true`, the map is drawn in greys until the flag is set: Ville-Feutre). With
+  `primaries` (flag and red, yellow or blue), the greys take on the colour of each flag set, mixed like paints
+  (`src/data/primaries.ts`: the Lac des Couleurs and its springs).
 - `sketchUnless` on a building (only its pencil lines until the flag) and on a town (Hameau-Brouillon): the shared
   Inn and shop entered from it are drawn in pencil too, their people included, and its Inn's windows stay unlit.
   A sign there is the pencil sign `i`.

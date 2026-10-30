@@ -13,6 +13,7 @@ import { L, tr, type LText } from '../i18n';
 import { playJingle } from '../audio/music';
 import { sfx } from '../audio/sfx';
 import { item, PEARLS } from '../data/items';
+import { mixPrimaries, PRIMARY_COLOUR, type DrainMix } from '../data/primaries';
 import { partyOf, rivalLacTeam } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { localDay } from '../overworld/berries';
@@ -59,14 +60,28 @@ scripts.lacAppel = async () => {
 
 // ------------------------------------------------------------------ the camp and the three springs
 
+/** The three springs, and where each one's colour comes from on the lake (`spot`: the blue one through its cave's mouth). */
 const SPRINGS = [
-  { id: 'rouge', name: L('rouge', 'red'), map: 'lac', x: 7, y: 7, guard: 'lacG1' },
-  { id: 'jaune', name: L('jaune', 'yellow'), map: 'lac', x: 22, y: 3, guard: '' },
-  { id: 'bleue', name: L('bleue', 'blue'), map: 'sourceBleue', x: 5, y: 1, guard: 'lacChef' },
+  { id: 'rouge', name: L('rouge', 'red'), map: 'lac', x: 7, y: 7, guard: 'lacG1', colour: 'red', spot: { x: 7, y: 7 } },
+  { id: 'jaune', name: L('jaune', 'yellow'), map: 'lac', x: 22, y: 3, guard: '', colour: 'yellow', spot: { x: 22, y: 3 } },
+  { id: 'bleue', name: L('bleue', 'blue'), map: 'sourceBleue', x: 5, y: 1, guard: 'lacChef', colour: 'blue', spot: { x: 37, y: 13 } },
 ] as const;
+type Spring = (typeof SPRINGS)[number];
 const springsLeft = () => SPRINGS.filter((s) => !flag(`lac.source:${s.id}`)).length;
-/** Where each spring's colour comes from on the lake (the blue one through its cave's mouth). */
-const SPRING_SPOTS = [{ x: 7, y: 7 }, { x: 22, y: 3 }, { x: 37, y: 13 }];
+const SPRING_SPOTS = SPRINGS.map((s) => s.spot);
+
+/**
+ * The colour of springs just freed spreads over the lake from where they flow in, over the shades of those whose
+ * colour the lake already showed (`lac.vu:<spring>`): grey, then red, then orange…
+ */
+function springColours(fresh: Spring[]): Promise<void> {
+  const seen = SPRINGS.filter((s) => flag(`lac.vu:${s.id}`));
+  for (const s of fresh) setFlag(`lac.vu:${s.id}`);
+  return getGame().colourReturn(fresh.map((s) => s.spot), 2600, {
+    from: mixPrimaries(seen.map((s) => s.colour)),
+    sparkles: [...fresh.map((s) => PRIMARY_COLOUR[s.colour]), '#ffffff'],
+  });
+}
 
 scripts.lacEnter = async () => {
   if (!flag('lac.arrivee')) {
@@ -74,8 +89,12 @@ scripts.lacEnter = async () => {
     await say(L('Ohé, {name} ! Par ici, au camp, sur la rive !', 'Ahoy, {name}! Over here, at the camp on the shore!'), PROF);
     return;
   }
+  if (flag('lac.sources')) return;
   // the last spring was freed in the cave: the colours come back as you step out
-  if (!springsLeft() && !flag('lac.sources')) await colourBack();
+  if (!springsLeft()) return void (await colourBack(getGame().map.def.drainMix));
+  // a spring freed away from the lake (the blue one, in its cave): its colour spreads from there as you come back
+  const unseen = SPRINGS.filter((s) => flag(`lac.source:${s.id}`) && !flag(`lac.vu:${s.id}`));
+  if (unseen.length) await springColours(unseen);
 };
 
 scripts.profLac = async () => {
@@ -133,22 +152,26 @@ scripts.source = async () => {
   setFlag(`lac.source:${sp.id}`);
   refreshMap();
   sfx.sparkle();
+  // on the lake, its colour spreads from the spring while it gushes up
+  const onLake = g.map.def.id === 'lac';
+  const spread = onLake && springsLeft() ? springColours([sp]) : null;
   await say(L('Plop ! La gomme saute, et l’eau {c} jaillit !', 'Pop! The eraser flies out, and {c} water gushes up!'), undefined, { c: tr(sp.name) });
+  await spread;
   if (springsLeft()) {
     showToast(tr(L('Sources libérées : {n}/3', 'Springs freed: {n}/3'), { n: 3 - springsLeft() }));
-  } else if (g.map.def.id === 'lac') {
-    await colourBack();
+  } else if (onLake) {
+    await colourBack(g.map.def.drainMix);
   } else {
     await say(L('L’eau bleue file vers le lac… Il faut aller voir dehors !', 'The blue water rushes off towards the lake… Go and see outside!'));
   }
 };
 
-/** The three springs flow again: the colours spread over the lake from each of them, then {rival} comes along. */
-async function colourBack() {
+/** The three springs flow again: the colours spread over the lake from each of them (over its shades `from`), then {rival} comes along. */
+async function colourBack(from?: DrainMix) {
   const g = getGame();
   setFlag('lac.sources');
   await wait(300);
-  const spread = g.colourReturn(SPRING_SPOTS, 4500);
+  const spread = g.colourReturn(SPRING_SPOTS, 4500, { from });
   refreshMap();
   sfx.sparkle();
   await spread;

@@ -155,7 +155,7 @@ evolution; `coconfus.ts` wraps other scripts, so it is imported last. Maps refer
 Progress lives in `save.flags`. Maps react to flags declaratively:
 - `showIf` / `hideIf` on NPCs, and `if` / `unless` on triggers;
 - `patches`, which redraw part of the map (erased or restored areas; `?` keeps the tile underneath);
-- `tintUnless` (and `drained`, real greys until the flag);
+- `tintUnless` (and `drained`, real greys until the flag; `primaries` tint them one paint colour at a time);
 - `sketchUnless` on buildings and on a town (only pencil lines until the flag; its Inn and shop rooms too).
 
 `setFlag` marks the map dirty, and the map is rebuilt after the running script ends. The flag

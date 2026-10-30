@@ -1,4 +1,5 @@
 import type { Backdrop } from '../data/schema';
+import type { DrainMix, Primary } from '../data/primaries';
 import type { LText } from '../i18n';
 import type { Dir } from '../save/schema';
 import type { BuildingDef } from './buildings';
@@ -194,6 +195,10 @@ export interface MapDef {
   underwater?: string;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
+  /** While drained: its colours come back one primary at a time, as these flags are set (src/data/primaries.ts). */
+  primaries?: { flag: string; colour: Primary }[];
+  /** How it is drained right now (worked out from `primaries` when the map loads; greys without it). */
+  drainMix?: DrainMix;
   /** The Pencil Balloon moored here: its basket's left tile (src/data/balloons.ts, set by maps/index.ts). */
   balloon?: { x: number; y: number };
   /** Shared interior (Inn, shop…): its exits lead back to the door used to enter. */

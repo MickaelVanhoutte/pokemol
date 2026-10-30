@@ -88,6 +88,8 @@ export const LAC_MAPS: Record<string, MapDef> = {
     drained: true,
     tint: 'rgba(150, 150, 170, 0.15)',
     tintUnless: 'lac.sources',
+    // each spring freed gives back its colour, mixing with the others like paints
+    primaries: [{ flag: 'lac.source:rouge', colour: 'red' }, { flag: 'lac.source:jaune', colour: 'yellow' }, { flag: 'lac.source:bleue', colour: 'blue' }],
     rows: LAC_ROWS,
     patches: [
       // each spring stopped up with a big eraser until it is freed

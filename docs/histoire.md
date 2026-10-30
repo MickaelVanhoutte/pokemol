@@ -51,7 +51,8 @@ dessins sont vivants : ce sont les **Bestioles**.
    Place des Peintres et la Pointe des Mouettes.
 7. **Le Lac des Couleurs** : une boue grise bloque la route du nord ! Avec ton rival et le Prof.
    Fusain, remonte en bateau la rivière de Village-Plume jusqu’à un grand lac tout gris. La Team Gomme
-   a bouché ses trois sources : rouge, jaune et bleue… Et sous l’eau, il y a peut-être autre chose.
+   a bouché ses trois sources : rouge, jaune et bleue. Chaque source débouchée rend au lac sa couleur, et
+   elles se mélangent comme des peintures… Et sous l’eau, il y a peut-être autre chose.
 8. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
    cache quelque chose. Ses enseignes au néon, sa Fontaine Fluo et ses fabricants de feutres. Sur la
    route qui y mène, Spiragneau, un agneau aux petites cornes en spirale, broute dans l’herbe le jour.
@@ -202,7 +203,8 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
    Square and Gull Point.
 7. **The Lake of Colours**: grey mud blocks the road north! With your rival and Prof. Charcoal, sail up
    Featherby’s river to a big lake gone all grey. Team Gomme plugged its three springs: red, yellow and
-   blue… And under the water, there may be something else.
+   blue. Each spring you free gives the lake back its colour, and they mix like paints… And under the
+   water, there may be something else.
 8. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
    is hiding something. Its neon signs, its Fluo Fountain and its felt-tip makers. On the road there,
    Spirlamb, a lamb with little spiral horns, grazes in the grass by day.

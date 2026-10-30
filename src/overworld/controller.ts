@@ -31,6 +31,7 @@ import { daycareStep } from '../state/daycare';
 import { FIND_EVERY, FOLLOWER_FINDS, rareFind, rollFind } from '../data/followerFinds';
 import { fishLevel, fishingTable } from '../data/fishing';
 import { prefs } from '../state/prefs';
+import { mixPrimaries } from '../data/primaries';
 import { hourNow, meetsTime, phaseAt, type DayPhase } from '../state/clock';
 import { sfx } from '../audio/sfx';
 import { playJingle, playMusic, type TrackId } from '../audio/music';
@@ -146,6 +147,11 @@ function patched(def: MapDef): MapDef {
   if (filled.length) out = { ...out, rows: out.rows.map((r, y) => [...r].map((c, x) => (filled.some((h) => h.x === x && h.y === y) ? '0' : c)).join('')) };
   if (barriersFlipped) out = { ...out, rows: flipBarriers(out.rows, true) };
   if (def.obstacles?.some((o) => o.showIf || o.hideIf || o.id)) out = { ...out, obstacles: def.obstacles.filter(visibleObstacle) };
+  if (def.drained && def.primaries) {
+    // once a spring flows, its colour shows through: the grey veil goes
+    const freed = def.primaries.filter((p) => flag(p.flag)).map((p) => p.colour);
+    out = { ...out, drainMix: mixPrimaries(freed), ...(freed.length ? { tint: undefined } : {}) };
+  }
   if (def.tintUnless && flag(def.tintUnless)) out = { ...out, tint: undefined, drained: undefined };
   if (def.recolour && flag(def.recolour.if)) out = { ...out, border: def.recolour.border ?? out.border, backdrop: def.recolour.backdrop ?? out.backdrop };
   // after the ending, Team Gomme wear uniforms they coloured in themselves

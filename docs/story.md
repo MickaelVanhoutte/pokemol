@@ -168,8 +168,12 @@ they are used.
 north-west of the Town Map. It gives the Prof and the rival a part of their own, and echoes the theme: the lake's
 legend is made of the stains a painter never threw away, and the one who wanted the lake "perfect" made it sink.
 - **The expedition** (mandatory: the mud on Route 4 only goes with `lac.sources`). The lake is grey (`drained`,
-  `tintUnless: 'lac.sources'`). Freeing the last spring plays the colours coming back: `Game.colourReturn` spreads the
-  colour from each spring over the map. The rival then points at the dark patches (« On pourrait peut-être plonger,
+  `tintUnless: 'lac.sources'`). Its colours come back one spring at a time, mixing like paints (`primaries` on the
+  map, `src/data/primaries.ts`): one spring freed tints the greys in its colour, two in their mix (orange, green or
+  violet), whatever the order; each new colour spreads from its spring (`springColours`, `Game.colourReturn` with
+  `from`: the lake's earlier shades; the blue one from the cave's mouth when you come back out, `lac.vu:<spring>`
+  noting what the lake already showed, so older saves see their colours spread once). Freeing the last spring plays
+  the colours coming back: `colourReturn` spreads every colour from the three springs over the map. The rival then points at the dark patches (« On pourrait peut-être plonger,
   là-dedans ! ») and battles (`rivalLacTeam`, his starter grown L20), and the Prof gives the **Bocal-Scaphandre**.
 - **The depths** (dive on the dark patches, see [content.md](content.md#diving)): `lacFonds`, with Team Gomme's
   sunken barge and its items, seaweed with the new **Poulpinceau** (Water, L18–20; it becomes **Octopeintre**,

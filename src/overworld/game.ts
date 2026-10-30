@@ -2,6 +2,7 @@ import type { Dir } from '../save/schema';
 import { footprint, lights, paintBuilding } from './buildings';
 import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type ObstacleDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
 import { balloonSprite, fieldSprite } from './fieldSprites';
+import { GREY, type DrainMix } from '../data/primaries';
 import { BERRY_DOT } from './berries';
 import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
@@ -280,7 +281,7 @@ export class Game {
   /** Bushes that have berries right now. */
   berries: BerryBushDef[] = [];
   /** The colours coming back over a drained map: the grey draws back in growing circles from these tiles. */
-  private colourBack: { at: { x: number; y: number }[]; start: number; ms: number; done: () => void } | null = null;
+  private colourBack: { at: { x: number; y: number }[]; start: number; ms: number; done: () => void; from: DrainMix; sparkles?: string[] } | null = null;
   private colourMask?: HTMLCanvasElement;
   /** Tiles glowing softly: what to do on a day in the real house (src/data/realLife.ts). */
   glows: { x: number; y: number }[] = [];
@@ -909,10 +910,14 @@ export class Game {
     }
     const def = this.map.def;
     // colours sucked out: every pixel keeps its lightness and loses its hue
+    // (or, as its springs flow again one by one, replaced by the shades of their mix)
     if (def.drained) {
-      ctx.globalCompositeOperation = 'saturation';
-      ctx.fillStyle = '#808080';
+      const mix = def.drainMix ?? GREY;
+      ctx.globalCompositeOperation = mix.op;
+      ctx.globalAlpha = mix.strength;
+      ctx.fillStyle = mix.colour;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
+      ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = 'source-over';
     }
     if (this.colourBack) this.drawColourBack(ctx, camX, camY);
@@ -952,11 +957,12 @@ export class Game {
   }
 
   /**
-   * The cinematic of colours coming back: the map is drawn in greys that draw back in growing circles from `at`
-   * (tiles), sparkles running along their edge. The map's own drained greys must already be gone (its flag set).
+   * The cinematic of colours coming back: the map is drawn in greys (or in its earlier shades, `from`) that draw
+   * back in growing circles from `at` (tiles), sparkles running along their edge (`sparkles`, every colour by
+   * default). The map must already be drawn the new way (its flag set).
    */
-  colourReturn(at: { x: number; y: number }[], ms = 2800): Promise<void> {
-    return new Promise((done) => (this.colourBack = { at, start: performance.now(), ms, done }));
+  colourReturn(at: { x: number; y: number }[], ms = 2800, o: { from?: DrainMix; sparkles?: string[] } = {}): Promise<void> {
+    return new Promise((done) => (this.colourBack = { at, start: performance.now(), ms, done, from: o.from ?? GREY, sparkles: o.sparkles }));
   }
 
   private drawColourBack(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
@@ -971,7 +977,7 @@ export class Game {
     const mc = m.getContext('2d')!;
     mc.globalCompositeOperation = 'source-over';
     mc.clearRect(0, 0, m.width, m.height);
-    mc.fillStyle = '#808080';
+    mc.fillStyle = fx.from.colour;
     mc.fillRect(0, 0, m.width, m.height);
     mc.globalCompositeOperation = 'destination-out';
     for (const a of fx.at) {
@@ -984,11 +990,13 @@ export class Game {
       mc.arc(cx, cy, reach + 1, 0, Math.PI * 2);
       mc.fill();
     }
-    ctx.globalCompositeOperation = 'saturation';
+    ctx.globalCompositeOperation = fx.from.op;
+    ctx.globalAlpha = fx.from.strength;
     ctx.drawImage(m, 0, 0);
+    ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';
     // sparkles of every colour along the edges
-    const cols = ['#f49ac2', '#f6cf5a', '#8fd38a', '#6fb6ea', '#a98ae0', '#ffffff'];
+    const cols = fx.sparkles ?? ['#f49ac2', '#f6cf5a', '#8fd38a', '#6fb6ea', '#a98ae0', '#ffffff'];
     for (const a of fx.at) {
       const cx = a.x * TILE + 8 - camX, cy = a.y * TILE + 8 - camY;
       for (let k = 0; k < 28; k++) {
