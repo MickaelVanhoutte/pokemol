@@ -203,6 +203,32 @@ export const MOVE_FX: Record<string, Recipe> = {
   'maree-arc-en-ciel': { shake: 0.4, layers: [...RAINBOW.slice(0, 4).map((color, i) => at(i * 110, wave({ color, dur: 700 }))), at(480, rainOn({ colors: RAINBOW, n: 18, size: 0.2 }))] },
   'jet-d-encre-noire': { shake: 0.4, layers: [projectile({ kind: 'ink', color: '#14151f', n: 5, gap: 60, size: 0.4, burst: false }), at(300, wave()), at(420, splat({ color: '#14151f', size: 1 })), at(480, sparkle({ kind: 'ink', color: '#3b4472', n: 6, size: 0.2 }))] },
   'giclee-d-encre': { layers: [projectile({ kind: 'ink', color: C.spectre[2], n: 4, gap: 70, size: 0.36, burst: false }), at(360, splat({ color: C.spectre[2], size: 0.95 })), at(420, sparkle({ kind: 'ink', color: C.spectre[1], n: 4, size: 0.18 }))] },
+
+  // ------------------------------------------------ physical or special: a move for every side
+  pique: { user: 'drop', layers: [speedLines({ who: 'target', down: true, n: 7, dur: 300 }), at(220, jab({ color: BEAK, n: 1, size: 0.5 })), at(260, impactStar({ size: 0.5 }))] },
+  'croc-de-dragon': { user: 'lunge', layers: [bite({ gum: C.dragon[2], tooth: '#fdf6e4' }), at(240, sparkle({ kind: 'spark', color: C.dragon[1], n: 4, size: 0.2 }))] },
+  // a paw print in flames
+  'patte-brulante': { user: 'lunge', layers: [fist({ kind: 'foot', color: C.feu[1] }), at(220, swirl({ kind: 'flame', color: C.feu[1], n: 5, dur: 420, size: 0.28 }))] },
+  'coup-de-nageoire': { user: 'lunge', hit: 'squash', layers: [sweep({ color: C.eau[1] }), at(200, sparkle({ kind: 'drop', color: C.eau[1], n: 5, size: 0.22 }))] },
+  'bombe-a-eau': { user: 'rear', shake: 0.4, layers: [projectile({ kind: 'balloon', color: C.eau[1], size: 0.46, fly: 420, spin: 1, burst: false }), at(420, splat({ color: C.eau[1], size: 0.85 })), at(440, sparkle({ kind: 'drop', color: C.eau[0], n: 7, size: 0.22 }))] },
+  'chute-de-stalactite': { shake: 0.6, layers: [rainOn({ colors: [C.glace[1], '#ffffff'], kind: 'shard', n: 6, size: 0.42, dur: 600 }), at(380, impactStar({ size: 0.6, color: C.glace[0] }))] },
+  'baguette-magique': { user: 'lunge', layers: [sparkle({ who: 'user', kind: 'star', color: C.fee[0], n: 3 }), at(120, slash({ color: '#f2c43a', n: 1, width: 1.4 })), at(260, pop({ kind: 'star', color: '#f2c43a', size: 0.5, dur: 520 })), at(300, sparkle({ kind: 'star', color: C.fee[1], n: 6, size: 0.22 }))] },
+  // the ghost's sheet wraps round the foe, then the slam
+  'coup-de-drap': { user: 'dash', hit: 'squash', layers: [darken({ alpha: 0.28, dur: 700 }), at(100, wrap({ color: '#f4efe4', loops: 3, dur: 520 })), at(380, impactStar({ size: 0.6, color: C.spectre[0] }))] },
+  mandibules: { user: 'lunge', hit: 'squash', shake: 0.4, layers: [bite({ gum: C.insecte[2], tooth: C.insecte[0], n: 3 }), at(300, impactStar({ size: 0.6, color: C.insecte[1] }))] },
+  'queue-venin': { user: 'spin', layers: [whip({ color: C.poison[1], kind: 'plain', width: 0.7 }), at(260, sparkle({ kind: 'bubble', color: C.poison[1], n: 5, size: 0.2 }))] },
+  'coup-de-jus': { user: 'dash', layers: [sparks({ who: 'user', n: 4, dur: 300 }), at(160, impactStar({ size: 0.45, color: C.electrique[0] })), at(180, sparks({ dur: 360 }))] },
+  'confettis-de-feuilles': { layers: [projectile({ kind: 'leaf', color: [C.plante[1], C.plante[0], C.fee[1]], n: 8, gap: 40, spin: 3, size: 0.17, spread: 0.6, burst: false })] },
+  'seve-sucree': { layers: [projectile({ kind: 'drop', color: '#e0a23a', n: 2, gap: 90, size: 0.3, burst: false }), at(360, splat({ color: '#e0a23a', size: 0.5 })), at(420, drain({ color: C.plante[1] }))] },
+  'avion-en-papier': { user: 'rear', layers: [projectile({ kind: 'plane', color: '#f4efe4', size: 0.42, fly: 520, lift: 0.5, steady: true, trail: false, burst: 'star' })] },
+  'tempete-de-plumes': { shake: 0.4, layers: [gust({ n: 4, bits: 'feather', bitColor: C.vol[0] }), at(260, swirl({ kind: 'feather', color: C.vol[0], n: 10, dur: 640, size: 0.3 }))] },
+  'nuee-de-moucherons': { layers: [buzz({ color: C.insecte[2] }), at(100, swirl({ kind: 'seed', color: '#4a4436', n: 14, dur: 700, size: 0.09 }))] },
+  'flocons-dansants': { layers: [swirl({ kind: 'snow', color: C.glace[1], n: 10, dur: 720, size: 0.26 }), at(300, sparkle({ kind: 'snow', color: '#ffffff', n: 5, size: 0.2 }))] },
+  'poussiere-d-etoile': { layers: [sparkle({ who: 'user', kind: 'star', color: '#f2c43a', n: 4 }), at(120, rainOn({ colors: ['#f2c43a', C.fee[0], '#ffffff'], kind: 'star', n: 16, size: 0.16 }))] },
+  'murmure-noir': { layers: [darken({ alpha: 0.35, dur: 900 }), notes({ colors: [C.tenebres[1], C.spectre[2]], n: 4, size: 0.22 }), at(380, eyes({ dur: 500 }))] },
+  'coup-de-pinceau': { user: 'lunge', layers: [slash({ color: C.combat[1], n: 1, width: 2.2, len: 1.2 }), at(220, splat({ color: C.combat[1], size: 0.45 })), at(240, impactStar({ size: 0.45 }))] },
+  // four strokes in four colours, criss-crossing, then a splash of paint
+  'fresque-furieuse': { user: 'shake', shake: 0.6, layers: [...RAINBOW.slice(0, 4).map((color, i) => at(i * 80, slash({ color, n: 1, width: 1.8, len: 1.1, angle: [2.2, 0.95, 1.7, 0.4][i] }))), at(420, splat({ color: RAINBOW[5], size: 0.9 })), at(460, impactStar({ size: 0.7 }))] },
 };
 
 /** The animation of a move, if it has one. */

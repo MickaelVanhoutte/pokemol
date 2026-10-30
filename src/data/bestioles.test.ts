@@ -14,6 +14,19 @@ const root = (c: SpeciesDef): SpeciesDef => (c.evolvesFrom ? root(creature(c.evo
 const family = (c: SpeciesDef) => CREATURES.filter((x) => root(x).id === root(c).id);
 const depth = (c: SpeciesDef): number => (c.evolvesFrom ? 1 + depth(creature(c.evolvesFrom)) : 0);
 const isFinal = (c: SpeciesDef) => !c.evolutions?.length;
+/** The side it hits with: physical, special, or both when Attack and Sp. Atk are within 5. */
+const sides = (c: SpeciesDef): ('phys' | 'spec')[] => {
+  const d = c.base.atk - c.base.spa;
+  return Math.abs(d) <= 5 ? ['phys', 'spec'] : d > 0 ? ['phys'] : ['spec'];
+};
+/** A same-type attack on its own side, learnt by level-up by `level`. */
+const ownAttack = (c: SpeciesDef, level: number, power = 1) => {
+  const types = [c.type, c.type2].filter(Boolean);
+  return c.learnset.some(([lv, id]) => {
+    const m = move(id);
+    return lv <= level && m.cat !== 'status' && sides(c).includes(m.cat) && types.includes(m.type) && m.power >= power;
+  });
+};
 
 /** Base-stat total bands by stage (docs/bestioles.md). */
 export function band(c: SpeciesDef): [number, number] {
@@ -59,14 +72,16 @@ describe('Bestiole design rules (docs/bestioles.md)', () => {
     }
   });
 
-  it('teaches every final form a same-type move of 80+ power by level 40', () => {
+  it('teaches every final form a same-type move of 80+ power by level 40, on the side it hits with', () => {
     for (const c of CREATURES.filter(isFinal)) {
-      const types = [c.type, c.type2].filter(Boolean);
-      const strong = c.learnset.some(([lv, id]) => {
-        const m = move(id);
-        return lv <= 40 && m.cat !== 'status' && types.includes(m.type) && m.power >= 80;
-      });
-      expect(strong, `${c.id} ${c.slug}: no same-type move of 80+ power by level 40`).toBe(true);
+      expect(ownAttack(c, 40, 80), `${c.id} ${c.slug}: no same-type ${sides(c).join('/')} move of 80+ power by level 40`).toBe(true);
+    }
+  });
+
+  it('gives every line an attack of its own type, on its side, by level 15', () => {
+    // like their models, Chenillou only spins silk before its cocoon and Avrilou only flops about until it evolves
+    for (const c of CREATURES.filter((x) => !x.evolvesFrom && x.id !== '012' && x.id !== '099')) {
+      expect(ownAttack(c, 15), `${c.id} ${c.slug}: no same-type ${sides(c).join('/')} attack by level 15`).toBe(true);
     }
   });
 

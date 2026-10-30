@@ -50,7 +50,7 @@ describe('evolution rules', () => {
 
   it('teaches a move of the new type the moment Touffou evolves, at any level', () => {
     expect(evolutionMoves('017', 24)).toEqual(['jet-d-eau']);
-    expect(evolutionMoves('018', 30)).toEqual(['flammeche', 'coup-de-boule']);
+    expect(evolutionMoves('018', 30)).toEqual(['flammeche', 'patte-brulante', 'coup-de-boule']);
     expect(evolutionMoves('019', 9)).toEqual(['petite-etincelle']);
     // wild or trainer ones know it too
     expect(movesAt('017', 5)).toContain('jet-d-eau');

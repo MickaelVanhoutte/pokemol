@@ -70,18 +70,18 @@ describe('creatures', () => {
   });
 
   it('knows the last four level-up moves', () => {
-    expect(movesAt('009', 13)).toEqual(['langue-fantome', 'coup-en-douce', 'regard-hypnotique', 'grimace']);
+    expect(movesAt('009', 13)).toEqual(['coup-en-douce', 'regard-hypnotique', 'murmure-noir', 'grimace']);
     expect(movesAt('001', 1)).toEqual(['griffe', 'grondement']);
     expect(movesAt('001', 5)).toEqual(['griffe', 'grondement', 'coup-de-liane']);
   });
 
   it('levels up, learns moves and keeps missing HP', () => {
-    const m = mon('001', 7);
+    const m = mon('001', 5);
     m.hp -= 5;
     const before = maxHp(m) - m.hp;
-    const ups = addXp(m, xpAt(8) - m.xp);
-    expect(m.level).toBe(8);
-    expect(ups[0].learned).toEqual(['graine-gourmande']);
+    const ups = addXp(m, xpAt(6) - m.xp);
+    expect(m.level).toBe(6);
+    expect(ups[0].learned).toEqual(['confettis-de-feuilles']);
     expect(maxHp(m) - m.hp).toBe(before);
   });
 
@@ -223,7 +223,7 @@ describe('battle', () => {
     const me = mon('009', 17);
     me.xp = 18 ** 3 - 1;
     const st = battle([me], [mon('004', 3)]);
-    const r = act(st, { type: 'move', slot: slotOf(me, 'langue-fantome') }, { type: 'move', slot: 0 });
+    const r = act(st, { type: 'move', slot: slotOf(me, 'coup-en-douce') }, { type: 'move', slot: 0 });
     expect(r.state.learnQueue[0]).toMatchObject({ move: 'cauchemar' });
     const r2 = act(r.state, { type: 'learn', forget: 0 }, { type: 'move', slot: 0 });
     expect(activeMon(r2.state.sides[0]).moves[0].id).toBe('cauchemar');

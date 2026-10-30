@@ -41,7 +41,7 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   // Piafurie: a long crest, bigger steel-tipped wings and tail fan, a hooked beak
   '036': { base: { hp: 85, atk: 123, def: 103, spa: 70, spd: 84, spe: 125 }, talent: 'coup-de-chance' },
   // Zigzéclair: a spiky mane of electric fur, longer spiral ears, two huge lightning bolts, big fists
-  '027': { base: { hp: 60, atk: 124, def: 79, spa: 101, spd: 80, spe: 131 }, talent: 'poils-electriques' },
+  '027': { base: { hp: 60, atk: 128, def: 79, spa: 97, spd: 80, spe: 131 }, talent: 'poils-electriques' },
   // Chantouffe: its fluff grown into a big spiky halo
   '047': { base: { hp: 140, atk: 86, def: 79, spa: 126, spd: 89, spe: 50 }, talent: 'fourrure-douce' },
   // Ronflon: rounder, its cream fur grown into a cloud mane and a cloud tummy
@@ -139,7 +139,7 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   // Baleincre: its fin grown into a great feather pen, a bigger black jet, the writing glowing gold
   '112': { base: { hp: 110, atk: 95, def: 120, spa: 165, spd: 135, spe: 95 }, talent: 'nage-eclair' },
   // Octopeintre: a crest of spikes down its mantle, thick jets of paint, a fiercer scowl
-  '114': { base: { hp: 80, atk: 125, def: 85, spa: 125, spd: 85, spe: 90 }, talent: 'poings-d-acier' },
+  '114': { base: { hp: 80, atk: 105, def: 85, spa: 145, spd: 85, spe: 90 }, talent: 'huit-couleurs' },
   // Aquarelline: its veils twice as long, gold along its wings, taller horn fins, a halo of paint drops
   '115': { base: { hp: 100, atk: 80, def: 105, spa: 160, spd: 150, spe: 125 }, talent: 'recoloriage' },
 };

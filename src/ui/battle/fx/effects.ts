@@ -20,7 +20,7 @@ export type Who = 'user' | 'target';
 const KIND_SOUND: Partial<Record<DoodleKind, FxSound>> = {
   flame: 'fire', drop: 'water', bubble: 'bubble', rock: 'rock', clod: 'rock', leaf: 'wind', seed: 'whoosh', feather: 'wind',
   blob: 'sludge', ink: 'sludge', spark: 'spark', orb: 'beam', heart: 'twinkle', star: 'twinkle', note: 'song', snow: 'ice',
-  shard: 'ice', puff: 'wind', zzz: 'snore', plus: 'heal',
+  shard: 'ice', puff: 'wind', zzz: 'snore', plus: 'heal', plane: 'wind', balloon: 'water',
 };
 /** The sound of a doodle flying or rising. */
 export const kindSound = (k: DoodleKind): FxSound => KIND_SOUND[k] ?? 'whoosh';
@@ -400,6 +400,8 @@ export interface ProjectileOpts {
   lift?: number;
   spread?: number;
   spin?: number;
+  /** Flies level, nose first (a paper plane), instead of tumbling. */
+  steady?: boolean;
   trail?: boolean;
   /** Little burst when it lands. */
   burst?: DoodleKind | 'star' | false;
@@ -427,7 +429,7 @@ export const projectile = (o: ProjectileOpts): Builder => (env) => {
         if (u < 0) return;
         if (u < 1) {
           const size = lerp(U.size, T.size, u) * (o.size ?? 0.28);
-          const rot = sh.rot + u * (o.spin ?? 0) * Math.PI * 2;
+          const rot = (o.steady ? 0 : sh.rot) + u * (o.spin ?? 0) * Math.PI * 2;
           if (o.trail !== false) for (let k = 3; k >= 1; k--) {
             const v = u - k * 0.07;
             if (v <= 0) continue;

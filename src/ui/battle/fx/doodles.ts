@@ -9,7 +9,8 @@ import { mix, PAPER, SPARK } from './core';
 export type DoodleKind =
   | 'flame' | 'drop' | 'bubble' | 'rock' | 'leaf' | 'seed' | 'shard' | 'note' | 'star' | 'heart'
   | 'spark' | 'puff' | 'fist' | 'feather' | 'zzz' | 'blob' | 'ink' | 'moon' | 'sun' | 'orb'
-  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'ball' | 'superball' | 'doll' | 'scrap' | 'bone' | 'acorn';
+  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'ball' | 'superball' | 'doll' | 'scrap' | 'bone' | 'acorn'
+  | 'plane' | 'balloon';
 
 const C = 64;
 const circle = (cx: number, cy: number, rx: number, ry: number, r: Rand, n = 22, wob = 0.06): Pt[] =>
@@ -277,6 +278,20 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
   scrap(ctx, color, r) {
     const p = new Pencil(ctx, r);
     paint(p, [[30 + r() * 10, 20], [100, 34 + r() * 10], [92 + r() * 10, 100], [24, 90 + r() * 10]], mix(color, PAPER, 0.8), { line: GRAPHITE, gap: 9 });
+  },
+  plane(ctx, color, r) {
+    const p = new Pencil(ctx, r);
+    // a folded paper plane flying to the right: the far wing, the near wing, the fold down the middle
+    paint(p, [[118, C - 2], [14, C - 34], [44, C + 2]], mix(color, GRAPHITE, 0.12), { line: GRAPHITE, gap: 8 });
+    paint(p, [[118, C - 2], [10, C + 14], [44, C + 2], [34, C + 30]], color, { line: GRAPHITE, gap: 8 });
+    line(p, [[118, C - 2], [44, C + 2]], GRAPHITE, 2.5);
+  },
+  balloon(ctx, color, r) {
+    const p = new Pencil(ctx, r);
+    // a water balloon, a little lopsided, its knot at the bottom
+    paint(p, circle(C, C - 6, 44, 48, r, 20, 0.1), color);
+    paint(p, [[C - 8, C + 40], [C + 8, C + 40], [C + 4, C + 54], [C - 4, C + 54]], mix(color, GRAPHITE, 0.35), { lw: 3 });
+    line(p, [[C - 20, C - 34], [C - 30, C - 14], [C - 28, C + 4]], '#ffffff', 6);
   },
 };
 

@@ -113,7 +113,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
 | Baleincre (legendary, the Bestiodex's reward) | Averse d’Encre: rain as it comes in; Jet d’Encre Noire (Water special 100, 30% accuracy drop) | `entryWeather` + signature move | — |
-| Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow, mixed stats |
+| Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow; the special Fighting attacker |
 | Aquarelline (legendary, the Lac des Couleurs) | Voile d’Aquarelle: super-effective hits halved, its status moves never miss; Marée arc-en-ciel (Water special 100, 30% +1 Sp. Def) | `prism` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a
@@ -132,10 +132,22 @@ Moves can carry `punch: true` or `cut: true` (`MoveDef` in `src/data/schema.ts`)
 
 ## 5. Moves
 
-- Every final form learns a same-type move of power 80+ by level 40 (the rules test checks it), and one
-  coverage move of another type by about level 35.
+- A Bestiole hits on one side: physical when its Attack beats its Sp. Atk by more than 5, special the other
+  way round, both when they are within 5. Its own-type moves are on that side (the rules test checks both
+  rules below with it).
+- Every final form learns a same-type move of power 80+ on its side by level 40, and one coverage move of
+  another type by about level 35.
+- Every line learns an attack of its own type on its side by level 15. Chenillou and Avrilou are left out:
+  like their models, one only spins silk and the other only flops about until they evolve.
 - The first moves stay weak: Act 1 must stay gentle, so no 80-power move before level 19 (Boulonnet’s
-  Tête de fer is the earliest).
+  Tête de fer is the earliest). An early move that doubles against a starter (Bug or Flying against
+  Minousse) stays out of the Act 1 trainers’ levels: Piqué comes at 15, after Gaspard.
+- Each type has moves on both sides, in three steps where its Bestioles need them: early (40–60, by about
+  level 15), mid (60–75) and strong (80–100, from level 30). The moves added for the side a type lacked:
+  Piqué, Croc de Dragon, Patte Brûlante, Coup de Nageoire, Bombe à Eau, Chute de Stalactite, Baguette
+  Magique, Coup de Drap, Mandibules, Queue-Venin and Coup de Jus (physical); Confettis de Feuilles, Sève
+  Sucrée, Avion en Papier, Tempête de Plumes, Nuée de Moucherons, Flocons Dansants, Poussière d’Étoile,
+  Murmure Noir, Coup de Pinceau and Fresque Furieuse (special).
 - Gap fillers exist for types that lacked strong moves: Bourdonnement (Bug), Boue Toxique (Poison), Lame
   de Pierre (Rock), Colère du Dragon (Dragon), Griffe de Nuit (Dark), Tempête Psy (Psychic).
 - A level-0 learnset entry is learned on evolving (see docs/content.md).

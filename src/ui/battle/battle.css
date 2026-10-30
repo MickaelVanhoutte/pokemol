@@ -283,7 +283,7 @@
 .bpanel__grid .pk-move.is-on { border-image-source: var(--pencil-frame-on); }
 /* a name or a type line too long for its button gets smaller rather than cut (--n, --m: their lengths, MoveButton),
    and the name's line never gets squeezed under its letters */
-.bpanel__grid .pk-move b { --fs: clamp(1rem, 4.4vw, 1.25rem); font-size: min(var(--fs), 100cqi / (var(--n) * 0.41)); line-height: 1.15; flex: none; }
+.bpanel__grid .pk-move b { --fs: clamp(1rem, 4.4vw, 1.25rem); font-size: min(var(--fs), 100cqi / (var(--n) * 0.46)); line-height: 1.15; flex: none; }
 .bpanel__grid .pk-move small { --fs: 0.85rem; font-size: min(var(--fs), 100cqi / (var(--m) * 0.47)); line-height: 1.15; }
 .bpanel--learnAsk .bpanel__split { flex-direction: row; align-items: stretch; }
 .bpanel--learnAsk .bpanel__prompt { flex: 1; height: auto; }

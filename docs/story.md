@@ -950,3 +950,23 @@ Basile), and the Great Eraser's last Bestiole and the final rival hold one too. 
 includes them; each was kept only if the leader's row stayed within about 10 points of the version
 without items (Nocturne's and the second Admin Rature's were removed for that reason). Players have
 berries, the Tracing Paper and battle items of their own, which the simulation doesn't use.
+
+**Physical or special (Oct 2026).** The owner wants a player to build the team they like, a physical or a
+special attacker in any type ([docs/bestioles.md](bestioles.md) §5). Zigzéclair turned physical (Attack 102,
+Sp. Atk 76; Zigzou 58/49), Octopeintre special (Attack 85, Sp. Atk 115, Coup de Pinceau on evolving and
+Fresque Furieuse at 41 in place of its punches; its fair copy has Huit Couleurs). 21 moves give each type the
+side it lacked, learned by the Bestioles of that side. Retuned with the sims:
+- Chenillou keeps no attack: a Dard at 5 doubled against Minousse and the Pastel apprentices fell from
+  95–100% to 20%. Piqué comes at 15, after Gaspard's birds; Sève Sucrée at 24 for Minoufleur (the lake
+  rival's Minoufleur L20 dropped Braisou from 50% to 24% on Hard). Coup de Nageoire stays off the Clapotin
+  line, which hits special.
+- Nocturne's Papivole at the Grand Concours lost its Écharpe Têtue: with Tempête de Plumes it took the row
+  from 58/77/70 to 36/60/49 (now 57/66/66).
+- The Great Eraser reads 100%: the simulated team's Lunéclat used to keep no Fairy move among its last four
+  (Éclat de Lune is learned on evolving and was pushed out), and Poussière d'Étoile now hits his Dark ace.
+  A real Lunéclat keeps Éclat de Lune, so nothing changed for players; a team with no Fairy attack stays at
+  74% (+2 levels took it to 13–27%, so his team kept its levels). Nocturne and Admin Rature's last fight on
+  Hard rose for the same reason.
+
+On Normal, Basile went from 93/94/86 to 71/84/66 (Sève Sucrée on his Grass team), the champion from
+52/34/43 to 66/47/60; the other rows stayed within 10 points, a few route trainers a little easier.

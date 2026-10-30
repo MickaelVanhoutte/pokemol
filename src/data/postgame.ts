@@ -59,7 +59,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcNocturne', name: L('Grande Maîtresse Nocturne', 'Grand Master Nocturne'),
     party: [
       { species: '055', level: 53 }, { species: '010', level: 53 }, { species: '008', level: 53, item: 'baie-menthe' },
-      { species: '007', level: 53, item: 'echarpe-tetue' }, { species: '011', level: 57, item: 'baie-doree' },
+      { species: '007', level: 53 }, { species: '011', level: 57, item: 'baie-doree' },
     ],
     before: [L('L’encre de minuit efface les hésitations. Tu es là pour la dernière page ? Il faudra passer par moi.', 'Midnight ink washes away doubts. Here for the last page? You’ll have to get past me.')],
     after: [L('Ton trait est sûr. Va. Il t’attend depuis le début.', 'Your line is steady. Go. He has been waiting for you from the start.')],
