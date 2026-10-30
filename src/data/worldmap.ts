@@ -8,7 +8,7 @@ export interface WorldCell {
   kind: CellKind;
   /** Cells covered on the Town Map: one rect, or two for an L-shaped route. */
   rects: Rect[];
-  /** Pencil Balloon landing tile (in front of the Inn; home for Bourg-Gribouille). */
+  /** Pencil Balloon landing tile: by the town's balloon, next to its basket (src/data/balloons.ts). */
   fly?: { x: number; y: number };
   /** Another floor of this place: not a separate stop for the map cursor. */
   of?: string;
@@ -26,48 +26,48 @@ const at = (x: number, y: number, w = 1, h = 1): Rect[] => [{ x, y, w, h }];
  * balloon lists the `fly` towns in this order.
  */
 export const WORLD: Record<string, WorldCell> = {
-  bourg: { kind: 'town', rects: at(11, 18), fly: { x: 3, y: 6 } },
+  bourg: { kind: 'town', rects: at(11, 18), fly: { x: 7, y: 6 } },
   route1: { kind: 'route', rects: at(11, 15, 1, 3) },
-  ville: { kind: 'town', rects: at(11, 14), fly: { x: 5, y: 7 } },
+  ville: { kind: 'town', rects: at(11, 14), fly: { x: 8, y: 8 } },
   route2: { kind: 'route', rects: at(7, 14, 4, 1) },
   bois: { kind: 'route', rects: at(5, 13, 2, 2) },
   tour1: { kind: 'tower', rects: at(4, 13) },
   tour2: { kind: 'tower', rects: at(4, 13), of: 'tour1' },
   tour3: { kind: 'tower', rects: at(4, 13), of: 'tour1' },
-  plume: { kind: 'town', rects: at(6, 12), fly: { x: 6, y: 5 } },
+  plume: { kind: 'town', rects: at(6, 12), fly: { x: 4, y: 6 } },
   route3: { kind: 'route', rects: [{ x: 7, y: 12, w: 9, h: 1 }, { x: 15, y: 13, w: 1, h: 1 }] },
   grotte1: { kind: 'cave', rects: at(12, 14, 2, 1) },
   grotte2: { kind: 'cave', rects: at(14, 14), of: 'grotte1' },
-  port: { kind: 'town', rects: at(15, 14, 3, 1), fly: { x: 11, y: 10 } },
+  port: { kind: 'town', rects: at(15, 14, 3, 1), fly: { x: 15, y: 10 } },
   route4: { kind: 'route', rects: at(17, 12, 1, 2) },
-  feutre: { kind: 'town', rects: at(17, 11), fly: { x: 6, y: 9 } },
+  feutre: { kind: 'town', rects: at(17, 11), fly: { x: 11, y: 9 } },
   entrepot1: { kind: 'building', rects: at(16, 11) },
   entrepot2: { kind: 'building', rects: at(16, 11), of: 'entrepot1' },
   montFusain1: { kind: 'cave', rects: at(17, 10) },
   montFusain2: { kind: 'cave', rects: at(18, 10), of: 'montFusain1' },
-  braise: { kind: 'town', rects: at(18, 9), fly: { x: 4, y: 6 } },
+  braise: { kind: 'town', rects: at(18, 9), fly: { x: 8, y: 6 } },
   route6: { kind: 'route', rects: at(18, 8) },
-  paillette: { kind: 'town', rects: at(18, 7), fly: { x: 4, y: 5 } },
+  paillette: { kind: 'town', rects: at(18, 7), fly: { x: 8, y: 6 } },
   route7: { kind: 'route', rects: at(18, 6) },
-  gouache: { kind: 'town', rects: at(18, 5), fly: { x: 4, y: 5 } },
+  gouache: { kind: 'town', rects: at(18, 5), fly: { x: 8, y: 6 } },
   route8: { kind: 'route', rects: at(18, 4) },
   ratures1: { kind: 'cave', rects: at(17, 4) },
   ratures2: { kind: 'cave', rects: at(17, 4), of: 'ratures1' },
   ratures3: { kind: 'cave', rects: at(17, 4), of: 'ratures1' },
-  encre: { kind: 'town', rects: at(18, 3), fly: { x: 4, y: 5 } },
+  encre: { kind: 'town', rects: at(18, 3), fly: { x: 8, y: 6 } },
   usine1: { kind: 'building', rects: at(19, 3) },
   usine2: { kind: 'building', rects: at(19, 3), of: 'usine1' },
   usine3: { kind: 'building', rects: at(19, 3), of: 'usine1' },
   // Act 4: west of Cité-Encre, beyond the margin
   route9: { kind: 'route', rects: at(13, 3, 5, 1) },
-  brouillon: { kind: 'town', rects: at(12, 3), fly: { x: 5, y: 7 } },
+  brouillon: { kind: 'town', rects: at(12, 3), fly: { x: 8, y: 8 } },
   esquisses: { kind: 'route', rects: at(9, 3, 3, 2) },
   forteresse1: { kind: 'tower', rects: at(8, 4) },
   forteresse2: { kind: 'tower', rects: at(8, 4), of: 'forteresse1' },
   forteresse3: { kind: 'tower', rects: at(8, 4), of: 'forteresse1' },
   routeBlanche: { kind: 'route', rects: at(18, 2) },
   bordPage: { kind: 'town', rects: at(17, 1, 3, 1) },
-  galerie: { kind: 'town', rects: at(18, 0), fly: { x: 4, y: 6 } },
+  galerie: { kind: 'town', rects: at(18, 0), fly: { x: 7, y: 9 } },
   // reached by the ferry from Port-Aquarelle
   phareIle: { kind: 'tower', rects: at(16, 16) },
   // farther south, seen only once the Bestiodex is complete (the ferry again)

@@ -16,6 +16,8 @@ export type Screen =
   | { id: 'machine' }
   | { id: 'trainercard' }
   | { id: 'townmap' }
+  /** The Pencil Balloon's trip over the Town Map, from one town to another. */
+  | { id: 'flight'; from: string; to: string }
   | { id: 'hall'; fresh?: boolean }
   | { id: 'jukebox' }
   /** Sliding picture puzzle; `onEnd` gets whether it was solved. */

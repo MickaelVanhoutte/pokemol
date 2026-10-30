@@ -18,6 +18,7 @@ import { ECHOS_MAPS } from './echos';
 import { LEGEND_MAPS } from './legendes';
 import { MARGE_MAPS } from './marge';
 import { LAC_MAPS } from './lac';
+import { BALLOONS, PILOT_LOOK } from '../balloons';
 
 /*
  * Legend: . grass  , grass2  " tall grass  : path  * flowers  ~ water  = bridge  e erased paper  T tree
@@ -47,6 +48,12 @@ export const MAPS: Record<string, MapDef> = {
   ...MARGE_MAPS,
   ...LAC_MAPS,
 };
+
+// each town's Pencil Balloon by its Inn, and its pilot
+for (const [id, b] of Object.entries(BALLOONS)) {
+  MAPS[id].balloon = b.basket;
+  (MAPS[id].npcs ??= []).push({ id: 'pilot', ...b.pilot, look: PILOT_LOOK, script: 'balloon' });
+}
 
 // a town's residents go into the shared house room their door leads to (`maisonVille`, `maisonPetite`…)
 for (const town of Object.values(MAPS)) {

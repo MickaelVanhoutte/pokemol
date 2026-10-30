@@ -473,3 +473,23 @@
   .lookv__front { height: auto; width: 62%; }
   .lookv__back { height: auto; width: 36%; }
 }
+
+/* ---------- the Pencil Balloon's trip over the Town Map (FlightScreen) */
+.flight {
+  position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 12px; background: var(--paper, #fbf7ee); cursor: pointer;
+}
+.flight__where { margin: 0; font-family: var(--pixel); font-synthesis: none; font-size: 1.4rem; color: var(--ink, #2b2536); text-align: center; }
+.flight__map {
+  position: relative; width: min(100%, calc((100dvh - 90px) * var(--ratio))); aspect-ratio: var(--ratio);
+  border: 2px solid var(--ink); border-radius: 4px; box-shadow: 3px 3px 0 rgba(43, 37, 54, 0.25);
+}
+.flight__dot {
+  position: absolute; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: var(--ink); opacity: 0.6;
+}
+.flight__balloon { position: absolute; width: clamp(26px, 8vw, 44px); height: auto; pointer-events: none; }
+@media (orientation: landscape) and (max-height: 540px) {
+  .flight { flex-direction: row; }
+  .flight__where { writing-mode: horizontal-tb; max-width: 30%; }
+  .flight__map { width: auto; height: calc(100dvh - 40px); }
+}

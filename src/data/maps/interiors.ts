@@ -26,7 +26,6 @@ export const INTERIOR_MAPS: Record<string, MapDef> = {
     interact: [{ x: 0, y: 4, script: 'innBed' }, { x: 0, y: 5, script: 'innBed' }, { x: 10, y: 4, script: 'innBed' }, { x: 10, y: 5, script: 'innBed' }],
     npcs: [
       { id: 'aubergiste', x: 5, y: 1, look: LOOKS.innkeeper, facing: 'down', script: 'auberge' },
-      { id: 'pilot', x: 9, y: 4, look: { hair: '#c0582a', shirt: '#f2c14e', pants: '#5a3a20', hat: '#d64545' }, facing: 'left', script: 'balloon' },
       // every Inn has its own helpers: only there when entered from that town (`fromMap`), and listed
       // on the Town Map by their `service`. Prof. Fusain's aide gives the Tracing Paper (shares XP), then
       // goes back to the lab

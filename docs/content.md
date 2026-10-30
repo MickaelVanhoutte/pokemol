@@ -100,7 +100,7 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   - `text: LText[]` for simple talkers, `script` for story NPCs;
   - `trainer` plus `sight` (tiles) for trainers who spot the player;
   - `wander`, `showIf` / `hideIf`, and `fromMap` in shared interiors: the Inn's helpers each stand in
-    one town's Inn only (only the innkeeper and the pilot are everywhere), and a helper's `service`
+    one town's Inn only (only the innkeeper is everywhere; the balloon pilot stands outside), and a helper's `service`
     (« Natures ») is listed for that town on the Town Map. `src/data/inns.test.ts` checks it.
   - `mon: '<creature id>'` draws the NPC as that Bestiole's little overworld sprite (`public/minis/`),
     for Bestioles living on the map (Lulu).

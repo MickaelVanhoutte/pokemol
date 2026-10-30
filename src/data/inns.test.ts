@@ -13,9 +13,9 @@ const INN_TOWNS = Object.values(MAPS)
 const npcs = MAPS.centre.npcs ?? [];
 
 describe('Inns', () => {
-  it('gives every Inn its own helpers, and only the innkeeper and the pilot are in all of them', () => {
+  it('gives every Inn its own helpers, and only the innkeeper is in all of them', () => {
     for (const n of npcs) {
-      if (n.id === 'aubergiste' || n.id === 'pilot') expect(n.fromMap, n.id).toBeUndefined();
+      if (n.id === 'aubergiste') expect(n.fromMap, n.id).toBeUndefined();
       else expect(n.fromMap?.length, n.id).toBeGreaterThan(0);
       for (const t of n.fromMap ?? []) expect(INN_TOWNS, `${n.id} in ${t}`).toContain(t);
     }

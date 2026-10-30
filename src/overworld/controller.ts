@@ -225,13 +225,13 @@ function target(to: WarpTarget | 'back'): WarpTarget {
   return r ? { map: r.map, x: r.x, y: r.y, facing: r.facing ?? 'down' } : { map: 'bourg', x: 9, y: 14, facing: 'down' };
 }
 
-export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boolean; sail?: boolean } = {}) {
+export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boolean; sail?: boolean; quiet?: boolean } = {}) {
   const to = target(dest);
   const g = getGame();
   // sailing from one map onto the water of the next (a river into the lake), or coming up from a dive
   const sailing = g.surfing || !!opts.sail;
   g.lock++;
-  sfx.door();
+  if (!opts.quiet) sfx.door();
   await g.fadeTo(1, 180);
   loadMap(to.map);
   g.player.x = to.x;

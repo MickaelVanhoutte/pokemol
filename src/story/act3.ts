@@ -9,7 +9,7 @@ import { healParty, save, update } from '../state/game';
 import { sfx } from '../audio/sfx';
 import {
   mapMusic, ask, bubble, fight, flag, flash, getGame, say, sayAll, scripts, setFlag, shake, showToast,
-  trainerBattle, wait, warpTo, wildBattle,
+  openScreen, trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
 import { choose, cocoonRemembers, comeUp, findCoconfus, RETOUCHE } from './choices';
@@ -27,7 +27,8 @@ scripts.visitTown = async () => {
 
 scripts.balloon = async () => {
   const who = L('Pilote', 'Pilot');
-  const here = save.value!.player.returnTo?.map;
+  const g = getGame();
+  const here = g.map.def.id;
   const towns = TOWNS.filter((t) => (flag(`visit:${t.map}`) || t.map === 'bourg') && t.map !== here);
   if (!towns.length) {
     await say(L('Mon Ballon-Crayon vole vers les villes que tu as déjà visitées. Reviens quand tu auras voyagé un peu !', 'My Pencil Balloon flies to towns you’ve already visited. Come back once you’ve travelled a bit!'), who);
@@ -36,10 +37,17 @@ scripts.balloon = async () => {
   const c = await ask(L('Envie d’un tour en Ballon-Crayon ? On va où ?', 'Fancy a ride in the Pencil Balloon? Where to?'), [...towns.map((t) => t.name), L('Nulle part', 'Nowhere')], who);
   if (c >= towns.length) return;
   const t = towns[c];
-  await say(L('Accroche-toi ! On décolle !', 'Hold on tight! Lift-off!'), who);
-  await getGame().fadeTo(1, 400, 'white');
-  if (save.value) save.value.player.returnTo = undefined;
-  await warpTo({ map: t.map, x: t.x, y: t.y, facing: 'down' });
+  await say(L('Monte dans la nacelle… Accroche-toi, on décolle !', 'Climb into the basket… Hold on tight, lift-off!'), who);
+  // into the basket, up and away, the trip over the Town Map, and down by the other town's Inn
+  g.passenger = true;
+  await g.balloonFly('up');
+  await g.fadeTo(1, 400, 'white');
+  await openScreen({ id: 'flight', from: here, to: t.map });
+  await warpTo({ map: t.map, x: t.x, y: t.y, facing: 'down' }, { keepFade: true, quiet: true });
+  const landing = getGame().balloonFly('down');
+  await getGame().fadeTo(0, 400);
+  await landing;
+  getGame().passenger = false;
 };
 
 // ------------------------------------------------------------------ Bourg-Paillette

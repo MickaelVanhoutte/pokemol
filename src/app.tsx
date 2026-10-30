@@ -14,6 +14,7 @@ import { MachineScreen } from './ui/screens/MachineScreen';
 import { CreditsScreen } from './ui/screens/CreditsScreen';
 import { TrainerCardScreen } from './ui/screens/TrainerCardScreen';
 import { TownMapScreen } from './ui/screens/TownMapScreen';
+import { FlightScreen } from './ui/screens/FlightScreen';
 import { HallScreen } from './ui/screens/HallScreen';
 import { JukeboxScreen } from './ui/screens/JukeboxScreen';
 import { FresqueScreen } from './ui/screens/FresqueScreen';
@@ -41,6 +42,7 @@ export function App() {
       {s.id === 'drawing' && <DrawingScreen ending={s.ending} />}
       {s.id === 'trainercard' && <TrainerCardScreen />}
       {s.id === 'townmap' && <TownMapScreen />}
+      {s.id === 'flight' && <FlightScreen from={s.from} to={s.to} />}
       {s.id === 'hall' && <HallScreen fresh={s.fresh} />}
       {s.id === 'jukebox' && <JukeboxScreen />}
       {s.id === 'fresque' && <FresqueScreen key={s.species} species={s.species} size={s.size} onEnd={s.onEnd} />}

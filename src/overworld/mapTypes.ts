@@ -194,6 +194,8 @@ export interface MapDef {
   underwater?: string;
   /** Story script id run every time the map is entered. */
   onEnter?: string;
+  /** The Pencil Balloon moored here: its basket's left tile (src/data/balloons.ts, set by maps/index.ts). */
+  balloon?: { x: number; y: number };
   /** Shared interior (Inn, shop…): its exits lead back to the door used to enter. */
   generic?: boolean;
   /** Cave, tower or hideout: the Ariadne Thread works here. */

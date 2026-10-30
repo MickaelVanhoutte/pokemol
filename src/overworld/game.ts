@@ -1,7 +1,7 @@
 import type { Dir } from '../save/schema';
 import { footprint, lights, paintBuilding } from './buildings';
 import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type ObstacleDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
-import { fieldSprite } from './fieldSprites';
+import { balloonSprite, fieldSprite } from './fieldSprites';
 import { BERRY_DOT } from './berries';
 import { makeCanvas, Painter } from './pixel';
 import { pencilize } from './pencil';
@@ -180,6 +180,9 @@ export function sheetFor(look: Look): SpriteSheet {
   return s;
 }
 
+/** How high the Pencil Balloon rises out of sight (px). */
+const BALLOON_SKY = 190;
+
 export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map: LoadedMap; npcs: Actor[] } {
   const h = def.rows.length;
   const w = Math.max(...def.rows.map((r) => r.length));
@@ -195,6 +198,8 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
       if (f.door) doors.set(f.y * w + f.x, b);
     }
   }
+  // the Pencil Balloon's basket can't be walked through
+  if (def.balloon) for (const dx of [0, 1]) solid[def.balloon.y * w + def.balloon.x + dx] = 1;
   const warps = new Map<number, Warp>((def.warps ?? []).map((wp) => [wp.y * w + wp.x, wp]));
   const signs = new Map<number, SignDef>((def.signs ?? []).map((s) => [s.y * w + s.x, s]));
 
@@ -254,6 +259,11 @@ export class Game {
   canRun: () => boolean = () => true;
   /** Sailing on the paper boat (water is walkable for the player, landing ends it). */
   surfing = false;
+  /** Riding in the Pencil Balloon: the player (and follower) are hidden, a head peeks over the basket. */
+  passenger = false;
+  private balloonFlight: { dir: 'up' | 'down'; start: number; ms: number; done: () => void } | null = null;
+  /** The balloon took off and stays up in the sky until the next map. */
+  private balloonAway = false;
   /** Riding the Pencil Bike. */
   biking = false;
   /** Strong Gloves on: walking into a boulder pushes it (until the next map). */
@@ -320,7 +330,27 @@ export class Game {
     this.obstacles = (def.obstacles ?? []).map((o) => ({ ...o }));
     this.surfing = false;
     this.strength = false;
+    this.balloonFlight = null;
+    this.balloonAway = false;
     if (def.indoor || def.dungeon) this.biking = false;
+  }
+
+  /** The moored balloon takes off and stays up in the sky (`up`), or comes down out of it to land (`down`). */
+  balloonFly(dir: 'up' | 'down', ms = 1800): Promise<void> {
+    return new Promise((resolve) => {
+      let over = false;
+      const done = () => {
+        if (over) return;
+        over = true;
+        this.balloonFlight = null;
+        this.balloonAway = dir === 'up';
+        resolve();
+      };
+      this.balloonAway = false;
+      this.balloonFlight = { dir, start: performance.now(), ms, done };
+      // if no frame is drawn (the page hidden), the flight still ends
+      setTimeout(done, ms + 400);
+    });
   }
 
   obstacleAt(x: number, y: number): ObstacleDef | undefined {
@@ -341,7 +371,7 @@ export class Game {
 
   /** The follower is in its Crayon-ball while sailing or riding the bike, and stays in the dream when you wake up. */
   followerShown(): boolean {
-    return !!this.follower && !this.surfing && !this.biking && !this.map?.def.awake && !this.map?.def.underwater;
+    return !!this.follower && !this.surfing && !this.biking && !this.passenger && !this.map?.def.awake && !this.map?.def.underwater;
   }
 
   /** Puts the follower one step behind the player (on the player when there is no room). */
@@ -704,6 +734,36 @@ export class Game {
   }
 
   /** Little gold stars blinking on a sparkly follower, two at a time, somewhere new each time. */
+  /** The Pencil Balloon on its moorings, taking off or landing (its shadow shrinking on the ground), a passenger's head over the basket. */
+  private drawBalloon(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
+    const b = this.map.def.balloon!, f = this.balloonFlight, now = performance.now();
+    let lift = this.balloonAway ? BALLOON_SKY : 0;
+    if (f) {
+      const t = Math.min(1, (now - f.start) / f.ms);
+      lift = BALLOON_SKY * (f.dir === 'up' ? t * t : (1 - t) * (1 - t));
+      if (t >= 1) f.done();
+    }
+    const bx = b.x * TILE - camX, ground = (b.y + 1) * TILE - camY;
+    if (lift > 0) {
+      const k = 1 - lift / BALLOON_SKY;
+      ctx.fillStyle = `rgba(0,0,0,${0.25 * k})`;
+      ctx.beginPath();
+      ctx.ellipse(bx + 16, ground - 3, 4 + 10 * k, 2 + 2 * k, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    const x = Math.round(bx + (lift > 0 ? Math.sin(now / 380) * 2 : 0)), y = Math.round(ground - 48 - lift);
+    ctx.drawImage(balloonSprite(), x, y);
+    if (this.passenger && this.player) {
+      // the player's head over the basket's rim
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, 32, 39);
+      ctx.clip();
+      this.player.sheet.draw(ctx, 'down', false, 0, x + 8, y + 29);
+      ctx.restore();
+    }
+  }
+
   private drawTwinkle(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
     const now = performance.now(), cycle = Math.floor(now / 1100), u = (now % 1100) / 1100;
     const rand = (n: number) => { const r = Math.sin(n * 12.9898) * 43758.5453; return r - Math.floor(r); };
@@ -786,11 +846,19 @@ export class Game {
     const fw = this.followerShown() ? this.follower! : null;
     const fwY = fw ? this.followerPos(fw)[1] : 0;
     let fwDrawn = !fw;
+    // the moored balloon too, behind whoever stands lower on screen
+    const bl = this.map.def.balloon;
+    let blDrawn = !bl;
     for (const a of actors) {
       if (!fwDrawn && fwY <= this.pos(a)[1]) {
         this.drawFollower(ctx, fw!, camX, camY);
         fwDrawn = true;
       }
+      if (!blDrawn && bl!.y * TILE < this.pos(a)[1]) {
+        this.drawBalloon(ctx, camX, camY);
+        blDrawn = true;
+      }
+      if (a === this.player && this.passenger) continue;
       const [ax, ay] = this.pos(a);
       const sx = Math.round(ax - camX), sy = Math.round(ay - camY);
       if (sx < -16 || sy < -16 || sx > this.viewW || sy > this.viewH) continue;
@@ -827,6 +895,7 @@ export class Game {
       if (a.bubble) this.drawBubble(ctx, a.bubble, sx, sy);
     }
     if (!fwDrawn) this.drawFollower(ctx, fw!, camX, camY);
+    if (!blDrawn) this.drawBalloon(ctx, camX, camY);
     for (const r of this.rustle) {
       const k = r.t / 260;
       ctx.fillStyle = '#2c6f2a';

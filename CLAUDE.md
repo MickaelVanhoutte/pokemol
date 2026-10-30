@@ -273,7 +273,8 @@ by `src/art/shiny.ts`, the same hue turn for the card (`monArtUrl`) and the foll
 - Shared interiors: one `centre` (the Inn, « Auberge », in place of a Healing Center: the innkeeper
   heals, its beds sleep until night or morning) and one `boutique` (shop) map serve every town
   (`generic: true`). Their exits warp `to: 'back'`, which uses `player.returnTo`. Per-town NPCs use
-  `fromMap`: only the innkeeper and the pilot are in every Inn, each town's Inn has its own helper,
+  `fromMap`: only the innkeeper is in every Inn (the balloon pilot stands outside by his balloon, `src/data/balloons.ts`),
+  each town's Inn has its own helper,
   and a helper's `service` label is listed on the Town Map (`src/data/inns.test.ts`). The shop sells
   the `STOCK` list in `ShopScreen.tsx`, each item after a number of badges (`'ending'`: after the
   story, the Magic Lollipop); no held items, which come from the trainer card's Progress rewards

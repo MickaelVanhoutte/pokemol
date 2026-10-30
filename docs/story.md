@@ -271,9 +271,14 @@ They open optional pockets with the new stencils: Route 2 garden, Scribble Cave 
 Poing Étincelle (25) on Mont Fusain, Poing Givré (26) on Route 6, Cri de Karaté (27) and Griffe de Nuit (29) on
 Route 7, Grand Brasier (28) on Route 8.
 
-**Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
-Inn flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in
-`src/data/worldmap.ts`).
+**Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. A Pencil Balloon is moored outside each
+town's Inn (by the house in Bourg-Gribouille), its pilot standing by it (`src/data/balloons.ts`, put on the maps by
+`maps/index.ts`; its basket is solid). The pilot flies to visited towns (the list and landing tiles are the `fly`
+entries of `WORLD` in `src/data/worldmap.ts`, next to each basket). `scripts.balloon`: the player climbs in
+(`Game.passenger`: hidden, a head peeking over the basket), the balloon rises (`Game.balloonFly('up')`), the
+`flight` screen (`FlightScreen`) shows it drifting over the Town Map from one town to the other, and it comes down
+by the other town's Inn (`balloonFly('down')`). `src/data/balloons.test.ts` checks every balloon stands on free
+ground and blocks no door or exit.
 
 **Town Map.** Mom gives the Carte de Papeterre with her first lines (`bag.carte`; old saves get it on
 load). START > CARTE shows the region drawn from `WORLD` (`src/data/worldmap.ts`), the player's place
