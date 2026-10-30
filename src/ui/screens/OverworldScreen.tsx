@@ -87,7 +87,7 @@ export function OverworldScreen() {
       <div class="ow__stage">
         <div class="ow__view" ref={host} />
         {mapName && <Window class="ow__mapname">{mapName}</Window>}
-        <button class="ow__menu-btn" onClick={() => (menuOpen.value = true)} aria-label="Menu"><img class="sicon" src={sketchIconUrl('bag')!} width={34} height={34} alt="" /></button>
+        <button class="ow__menu-btn" onClick={() => getGame().input.pressMenu()} aria-label="Menu"><img class="sicon" src={sketchIconUrl('bag')!} width={34} height={34} alt="" /></button>
         {toast.value && <Window class="ow__toast">{toast.value}</Window>}
         <DialogBox />
       </div>

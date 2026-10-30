@@ -294,6 +294,8 @@ by `src/art/shiny.ts`, the same hue turn for the card (`monArtUrl`) and the foll
   `mickaelvanhoutte.github.io` is the cause (Chrome mixes up apps sharing an origin). Uninstalling
   that app fixes it; the manifest doesn't. In that case Chrome sends no install offer, so the
   title-screen install toast (`installWay` in `src/state/pwa.ts`) stays hidden.
+- The start menu (and so SAUVER) opens only through `menuAllowed()`: the menu button queues a press like the
+  keyboard, and `Game.update` drops it while a script runs (`lock`); dialogs and overlays keep it shut too.
 - Progress must be saved before a cut-scene's dialog, not after: a trainer's `storyFlag` is set with
   its win, and the final scenes resume from their map's `onEnter` (`bordPage`, `ending`) if the app was
   closed midway.

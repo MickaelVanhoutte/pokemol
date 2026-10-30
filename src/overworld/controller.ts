@@ -45,6 +45,17 @@ export const monOverlay = signal<{ ids: string[]; title?: string; pick: boolean;
 /** Nickname entry shown over the world (resolves with the name, or null for none). */
 export const nameOverlay = signal<{ mon: Mon; resolve: (name: string | null) => void } | null>(null);
 export const menuOpen = signal(false);
+
+/**
+ * The start menu only opens when the player is free, as START on the GBA: not during a script, a cut-scene, a
+ * dialog or an overlay (evolution, nickname…), nor in the middle of a step. Saving there could store a
+ * cut-scene halfway, and a menu over a script would let it carry on underneath.
+ */
+export function menuAllowed(): boolean {
+  const g = game;
+  return !!g?.player && g.lock === 0 && !g.player.moving && !dialog.value && !monOverlay.value && !nameOverlay.value
+    && !evoOverlay.value && !learnOverlay.value && !hatchOverlay.value && !pictureOverlay.value && screen.value.id === 'overworld';
+}
 export const toast = signal<string | null>(null);
 
 export function showToast(msg: string) {
@@ -56,7 +67,7 @@ export function showToast(msg: string) {
 
 export function getGame(): Game {
   if (!game) {
-    game = new Game({ onStep, onInteract, onDoor, onMenu: () => (menuOpen.value = true), onPush, onDrop, canFall, onFollower: () => void locked(talkFollower) });
+    game = new Game({ onStep, onInteract, onDoor, onMenu: () => void (menuAllowed() && (menuOpen.value = true)), onPush, onDrop, canFall, onFollower: () => void locked(talkFollower) });
     game.canRun = () => !!save.value?.bag.baskets;
     // the sky follows the clock
     setInterval(updateTime, 30000);

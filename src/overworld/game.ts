@@ -603,7 +603,11 @@ export class Game {
       }
     }
     if (this.lock > 0 || p.moving) {
-      if (this.lock > 0) this.input.takeA();
+      // a script is running: A and the menu pressed meanwhile are dropped (a step only delays them)
+      if (this.lock > 0) {
+        this.input.takeA();
+        this.input.takeMenu();
+      }
       return;
     }
     if (this.input.takeMenu()) {
