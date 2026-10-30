@@ -439,6 +439,15 @@ export const MOVES: MoveDef[] = [
     desc: L('Un grand trait de peinture, vif comme un coup de karaté.', 'One big stroke of paint, as swift as a karate chop.') }),
   M({ id: 'fresque-furieuse', name: L('Fresque furieuse', 'Furious Fresco'), type: 'combat', cat: 'spec', power: 90, acc: 90, pp: 10,
     desc: L('Ses huit bras peignent une fresque de coups, en huit couleurs à la fois.', 'Its eight arms paint a fresco of blows, in eight colours at once.') }),
+  // coverage stencils: the side a type was missing
+  M({ id: 'poing-etincelle', name: L('Poing étincelle', 'Spark Fist'), type: 'electrique', cat: 'phys', power: 75, acc: 100, punch: true, pp: 15,
+    effects: [{ kind: 'status', status: 'paralyze', chance: 10 }],
+    desc: L('Un coup de poing qui crépite d’étincelles. Peut paralyser.', 'A punch crackling with sparks. May paralyze.') }),
+  M({ id: 'poing-givre', name: L('Poing givré', 'Frost Fist'), type: 'glace', cat: 'phys', power: 75, acc: 100, punch: true, pp: 15,
+    effects: [{ kind: 'status', status: 'freeze', chance: 10 }],
+    desc: L('Un coup de poing tout givré. Peut geler.', 'A frosty punch. May freeze.') }),
+  M({ id: 'cri-de-karate', name: L('Cri de karaté', 'Karate Shout'), type: 'combat', cat: 'spec', power: 80, acc: null, pp: 15,
+    desc: L('Un « Kiaï ! » si fort qu’il frappe l’ennemi sans le toucher. Ne rate jamais.', 'A “Kiai!” so loud it strikes the foe without touching it. Never misses.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

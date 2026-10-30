@@ -65,7 +65,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'r6d', x: 13, y: 33, look: { hair: '#d64545', shirt: '#f2c14e', pants: '#3a7ad6', hat: '#d64545' }, facing: 'left', trainer: 'r6d', sight: 4 },
       { id: 'r6b', x: 4, y: 12, look: LOOKS.kid, facing: 'right', trainer: 'r6b', sight: 4 },
     ],
-    items: [{ x: 22, y: 20, item: 'sucette-magique', hidden: true }, { x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }, { x: 15, y: 2, item: 'crayon-rose' }, { x: 2, y: 19, item: 'pochoir-17' }, { x: 2, y: 20, item: 'pochoir-18' }, { x: 3, y: 32, item: 'super-crayon-ball', hidden: true }],
+    items: [{ x: 22, y: 20, item: 'sucette-magique', hidden: true }, { x: 16, y: 1, item: 'page-7', hidden: true }, { x: 1, y: 19, item: 'super-potion', count: 2 }, { x: 1, y: 20, item: 'baie-doree' }, { x: 15, y: 2, item: 'crayon-rose' }, { x: 2, y: 19, item: 'pochoir-17' }, { x: 1, y: 17, item: 'pochoir-26' }, { x: 2, y: 20, item: 'pochoir-18' }, { x: 3, y: 32, item: 'super-crayon-ball', hidden: true }],
     berries: [{ x: 4, y: 8, item: 'baie-doree' }],
     encounters: {
       rate: 21,

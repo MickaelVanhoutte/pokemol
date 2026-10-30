@@ -76,7 +76,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       { id: 'r8b', x: 12, y: 14, look: LOOKS.gomme, facing: 'right', trainer: 'r8b', sight: 4 },
     ],
     items: [
-      { x: 1, y: 15, item: 'sucette-magique' }, { x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'pochoir-11' }, { x: 14, y: 7, item: 'crayon-noir' },
+      { x: 1, y: 15, item: 'sucette-magique' }, { x: 9, y: 3, item: 'baie-prisme' }, { x: 2, y: 2, item: 'pochoir-11' }, { x: 1, y: 2, item: 'pochoir-28' }, { x: 14, y: 7, item: 'crayon-noir' },
       // in the rock pile by the water, behind the cracked rock (the mallet)
       { x: 16, y: 20, item: 'pochoir-16' }, { x: 15, y: 20, item: 'crayon-argent' },
       // on the sandbar where the river runs into the forest: by paper boat

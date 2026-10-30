@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CREATURES, creature } from './creatures';
+import { STENCIL_MOVES } from './items';
 import { move } from './moves';
 import { talent } from './talents';
 import type { SpeciesDef } from './schema';
@@ -82,6 +83,16 @@ describe('Bestiole design rules (docs/bestioles.md)', () => {
     // like their models, Chenillou only spins silk before its cocoon and Avrilou only flops about until it evolves
     for (const c of CREATURES.filter((x) => !x.evolvesFrom && x.id !== '012' && x.id !== '099')) {
       expect(ownAttack(c, 15), `${c.id} ${c.slug}: no same-type ${sides(c).join('/')} attack by level 15`).toBe(true);
+    }
+  });
+
+  it('lets every final form hit two other types on its side, by level-up or stencil', () => {
+    for (const c of CREATURES.filter(isFinal)) {
+      const types = [c.type, c.type2].filter(Boolean);
+      const taught = c.stencils.map((id) => STENCIL_MOVES[Number(id.split('-')[1]) - 1]);
+      const others = new Set([...c.learnset.map(([, id]) => id), ...taught].map(move)
+        .filter((m) => m.cat !== 'status' && sides(c).includes(m.cat) && !types.includes(m.type) && m.power >= 60).map((m) => m.type));
+      expect(others.size, `${c.id} ${c.slug}: hits only ${[...others].join(', ') || 'its own types'} on its ${sides(c).join('/')} side`).toBeGreaterThanOrEqual(2);
     }
   });
 

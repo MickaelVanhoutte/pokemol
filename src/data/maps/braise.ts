@@ -72,7 +72,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     ],
     items: [
       { x: 5, y: 1, item: 'sucette-magique' },
-      { x: 1, y: 10, item: 'super-potion' }, { x: 4, y: 10, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }, { x: 2, y: 8, item: 'pochoir-13' },
+      { x: 1, y: 10, item: 'super-potion' }, { x: 4, y: 10, item: 'retouche', count: 2 }, { x: 8, y: 5, item: 'crayon-rouge' }, { x: 2, y: 8, item: 'pochoir-13' }, { x: 1, y: 8, item: 'pochoir-25' },
       { x: 1, y: 1, item: 'bille-ardente' }, { x: 5, y: 2, item: 'baie-doree', count: 2 },
     ],
     encounters: FUSAIN_ENCOUNTERS,

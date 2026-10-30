@@ -267,7 +267,9 @@ fight (`partyAlive`, battles and the repel ignore it), counts down per step in t
 hatches in `HatchView` with the nickname prompt.
 
 They open optional pockets with the new stencils: Route 2 garden, Scribble Cave nook, Port islets
-(by boat), Mont Fusain boulder, Route 6, Route 7 and Route 8.
+(by boat), Mont Fusain boulder, Route 6, Route 7 and Route 8. The coverage stencils lie in the same pockets:
+Poing Étincelle (25) on Mont Fusain, Poing Givré (26) on Route 6, Cri de Karaté (27) and Griffe de Nuit (29) on
+Route 7, Grand Brasier (28) on Route 8.
 
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. The Pencil Balloon pilot in the
 Inn flies to visited towns (the list and landing tiles are the `fly` entries of `WORLD` in

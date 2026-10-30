@@ -51,8 +51,8 @@ English: [docs/histoire.md](docs/histoire.md).
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the
   Painter’s Apron, the Spiky Helmet, the Steadfast Ribbon and more, and a coloured pencil for every
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
-  battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 12 Pochoirs: stencils that
-  teach a move as often as you like, one from each Atelier Master.
+  battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 29 Pochoirs: stencils that
+  teach a move as often as you like, one from each Atelier Master and the others found along the way.
 - Dungeon puzzles: crayon-barrier switches, glossy paper to slide on, eraser blocks and boulders
   to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the
   drawings) hiding secret rooms. A Mémo-Bestioles card game at the fair.

@@ -228,6 +228,10 @@ export const MOVE_FX: Record<string, Recipe> = {
   'murmure-noir': { layers: [darken({ alpha: 0.35, dur: 900 }), notes({ colors: [C.tenebres[1], C.spectre[2]], n: 4, size: 0.22 }), at(380, eyes({ dur: 500 }))] },
   'coup-de-pinceau': { user: 'lunge', layers: [slash({ color: C.combat[1], n: 1, width: 2.2, len: 1.2 }), at(220, splat({ color: C.combat[1], size: 0.45 })), at(240, impactStar({ size: 0.45 }))] },
   // four strokes in four colours, criss-crossing, then a splash of paint
+  'poing-etincelle': { user: 'lunge', layers: [sparks({ who: 'user', color: C.electrique[1], n: 4, dur: 260 }), at(100, fist({ color: SKIN })), at(300, impactStar({ size: 0.55, color: C.electrique[0] })), at(300, sparks({ dur: 420 }))] },
+  'poing-givre': { user: 'lunge', layers: [fist({ color: '#cfe8f7' }), at(300, impactStar({ size: 0.55, color: C.glace[0] })), at(320, sparkle({ kind: 'shard', color: C.glace[1], n: 6, size: 0.22 }))] },
+  // the shout itself: big notes and rings, then the blow lands without a touch
+  'cri-de-karate': { user: 'rear', shake: 0.4, layers: [rings({ colors: [C.combat[1], C.combat[0]], n: 4 }), at(80, notes({ colors: [C.combat[1], C.normal[2]], n: 4, size: 0.3 })), at(420, impactStar({ size: 0.6, color: C.combat[1] }))] },
   'fresque-furieuse': { user: 'shake', shake: 0.6, layers: [...RAINBOW.slice(0, 4).map((color, i) => at(i * 80, slash({ color, n: 1, width: 1.8, len: 1.1, angle: [2.2, 0.95, 1.7, 0.4][i] }))), at(420, splat({ color: RAINBOW[5], size: 0.9 })), at(460, impactStar({ size: 0.7 }))] },
 };
 

@@ -144,7 +144,7 @@ their doors) resolves to a place.
 - `obstacles: [{ x, y, kind: 'bush' | 'boulder' | 'rock' }]`: things in the way, cleared with key
   items (Scissors cut bushes, the Mallet breaks cracked rocks, the Strong Gloves push boulders).
   They stand on walkable ground and come back when the map is entered again. They are used to
-  hide optional pockets with items (stencils 13–20), never the main road.
+  hide optional pockets with items (stencils 13–20, 25–29), never the main road.
 - `surf: { rate, table }` and `fishing: { low, mid, high }` (tables like `encounters`): water
   encounters while sailing (Paper Boat) or fishing. The one rod uses the list of the team's level (`low`, then
   `mid` from N.20, `high` from N.35, `src/data/fishing.ts`) and hooks a Bestiole close under the team, within the
@@ -397,7 +397,8 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
     `pochoir-NN`), list it in the `stencils` of every species that can learn it, and place it (a pick-up,
     `stencil` on a badge in `src/data/badges.ts` for a leader's reward, or a Progress reward). Stencils
     21–24 are Progress rewards that every species learning an earlier stencil learns too (`STENCIL_HEIRS`
-    in `creatures.ts`). A test checks every
+    in `creatures.ts`). 25–29 give the side a Bestiole hits with more types to hit (two punches, Cri de Karaté,
+    Grand Brasier, Griffe de Nuit): the rules test wants every final form to hit two other types on its side. A test checks every
     stencil teaches a real move and fits at least one species.
   - Any non-key item except stencils can be held (party ITEM menu or bag GIVE). Trainer parties can give an `item`,
     and species a `wildItem` (`{ id, pct }`) that wild ones sometimes carry.

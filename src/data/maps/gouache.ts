@@ -72,7 +72,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { x: 16, y: 1, item: 'rappel' },
       { x: 15, y: 1, item: 'baie-menthe' },
       { x: 13, y: 5, item: 'crayon-mauve' },
-      { x: 1, y: 1, item: 'pochoir-20' },
+      { x: 1, y: 1, item: 'pochoir-20' }, { x: 1, y: 2, item: 'pochoir-27' }, { x: 1, y: 3, item: 'pochoir-29' },
       { x: 2, y: 1, item: 'crayon-indigo' },
       // at the end of a dead end in the maze
       { x: 17, y: 13, item: 'fil-ariane' },
