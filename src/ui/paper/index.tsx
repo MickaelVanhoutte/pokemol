@@ -88,16 +88,18 @@ export interface MenuItem {
 /**
  * Vertical GBA menu with the pencil cursor. Keyboard: ↑↓ A B; touch: tap an entry. With `tapFocus`, a
  * tap on another entry only moves the cursor there (to read its description) and a second tap picks it.
+ * With `tapReads`, a finger only ever moves the cursor: picking takes A, a mouse click or a button of the page.
  */
-export function MenuList({ items, onCancel, active = true, class: cls = '', onCursor, tapFocus }: {
+export function MenuList({ items, onCancel, active = true, class: cls = '', onCursor, tapFocus, tapReads, initial }: {
   items: MenuItem[]; onCancel?: () => void; active?: boolean; class?: string; onCursor?: (i: number) => void; tapFocus?: boolean;
+  tapReads?: boolean; initial?: number;
 }) {
   const pick = (i: number) => {
     if (items[i]?.disabled) return;
     sfx.blip();
     items[i].onSelect();
   };
-  const [cur, setCur] = useMenuNav(items.length, { onSelect: pick, onCancel, active });
+  const [cur, setCur] = useMenuNav(items.length, { onSelect: pick, onCancel, active, initial });
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => onCursor?.(cur), [cur]);
   // in a list too long for its box, the keys bring the cursor into view
@@ -112,7 +114,8 @@ export function MenuList({ items, onCancel, active = true, class: cls = '', onCu
           onPointerEnter={(e) => e.pointerType === 'mouse' && setCur(i)}
           onClick={(e) => {
             // a mouse already moved the cursor on hover; a finger shows the description first
-            if (tapFocus && i !== cur && (e as unknown as PointerEvent).pointerType !== 'mouse') return setCur(i);
+            const finger = (e as unknown as PointerEvent).pointerType !== 'mouse';
+            if (finger && (tapReads || (tapFocus && i !== cur))) return setCur(i);
             setCur(i);
             pick(i);
           }}

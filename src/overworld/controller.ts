@@ -905,6 +905,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   const g = getGame();
   await g.wipeTo(1, kind === 'wild' ? 480 : 620, opts.grey ? 'eraser' : 'pencil');
   let caught: string | null = null;
+  // Bestioles that grew a level in this battle: only they may evolve after it
+  let grown: string[] = [];
   const res = await new Promise<{ result: BattleResult; state: BattleState }>((resolve) => {
     go({
       id: 'battle',
@@ -942,6 +944,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
     if (opts.borrowed) return;
     // a fair copy lasts for the battle only
     const fought = new Map(res.state.sides[0].party.map(({ fair: _fair, ...m }) => [m.uid, m]));
+    grown = x.party.filter((m) => (fought.get(m.uid)?.level ?? m.level) > m.level).map((m) => m.uid);
     x.party = x.party.map((m) => (fought.has(m.uid) ? { ...fought.get(m.uid)! } : m));
     if (res.result === 'win') x.money += money;
     if (res.result === 'capture') {
@@ -959,7 +962,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   void g.fadeTo(0, 320, 'black');
   await wait(250);
   if (caught) await offerNickname(caught);
-  await checkEvolutions();
+  await checkEvolutions(grown);
   if (res.result === 'lose' && !opts.friendly && !opts.borrowed) await blackout();
   if (opts.friendly) update((x) => healParty(x));
   return res;
@@ -981,9 +984,14 @@ export function showPicture(src: string, caption: string, before?: PictureStep[]
 export const hatchOverlay = signal<{ mon: Mon; resolve: () => void } | null>(null);
 export const evoOverlay = signal<{ mon: Mon; to: string; resolve: (evolved: boolean) => void } | null>(null);
 
-export async function checkEvolutions() {
+/**
+ * Evolves the party Bestioles in `grown` (uids) whose level or friendship now allows it. As on the GBA, only a
+ * Bestiole that just grew a level evolves: one caught or received past its evolution level waits for its next one.
+ */
+export async function checkEvolutions(grown: string[]) {
   for (let i = 0; i < s().party.length; i++) {
     const m = s().party[i];
+    if (!grown.includes(m.uid)) continue;
     const into = evolutionOf(m);
     // stopped with B: asked again at the next level
     if (!into || s().flags[`noevo:${m.uid}`] === m.level) continue;
@@ -1162,7 +1170,7 @@ export async function useLollipop(i: number) {
       await say(L('Crounch ! {n} monte au niveau {l} !', 'Crunch! {n} grew to level {l}!'), undefined, { ...vars, l: s().party[i].level });
       for (const id of ups.flatMap((u) => u.learned)) await say(L('{n} apprend {m} !', '{n} learned {m}!'), undefined, { ...vars, m: tr(move(id).name) });
       for (const id of ups.flatMap((u) => u.pending)) await teachMove(i, id);
-      await checkEvolutions();
+      await checkEvolutions([s().party[i].uid]);
       const left = s().bag[LOLLIPOP] ?? 0;
       if (!left || s().party[i].level >= MAX_LEVEL) return;
       const again = await ask(L('Encore une Sucette Magique ? (Il t’en reste {k}.)', 'Another Magic Lollipop? ({k} left.)'), [L('Oui', 'Yes'), L('Non', 'No')], undefined, { k: left });

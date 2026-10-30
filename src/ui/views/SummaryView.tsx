@@ -86,17 +86,84 @@ const natureLabel = (mon: Mon) => {
   return locale.value === 'fr' ? `Nature ${name.toLowerCase()}` : `${name} nature`;
 };
 
+interface Learn { move: string; onPick: (forget: number | null) => void }
+
 /**
- * FRLG summary: INFOS / STATS / CAPACITÉS. With `learn`, opens on the moves page with the new
- * move as a 5th row: picking a row forgets it (`null` = give up the new move). With `onSwapMoves`,
- * the moves can be put in another order (DÉPLACER, then the row to swap with).
+ * FRLG summary: INFOS / STATS / CAPACITÉS. With `learn`, it is the page to choose which move to forget for
+ * the new one (`null` = give up the new move). With `onSwapMoves`, the moves can be put in another order
+ * (DÉPLACER, then the row to swap with).
  */
 export function SummaryView(props: {
-  mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void }; onSwapMoves?: (a: number, b: number) => void;
+  mon: Mon; onClose: () => void; learn?: Learn; onSwapMoves?: (a: number, b: number) => void;
   /** The ◀ ▶ arrows show the previous or next Bestiole (without it they turn the pages). */
   onMove?: (d: 1 | -1) => void;
 }) {
-  return props.mon.egg ? <EggSummary mon={props.mon} onClose={props.onClose} /> : <SummaryMain {...props} />;
+  if (props.mon.egg) return <EggSummary mon={props.mon} onClose={props.onClose} />;
+  return props.learn ? <LearnMoves mon={props.mon} learn={props.learn} /> : <SummaryMain {...props} />;
+}
+
+/**
+ * A Bestiole that knows four moves learning a fifth. Landscape: the new move with the known move being read
+ * under it on the left, the list of known moves and the two choices on the right; portrait stacks them. A tap
+ * on a known move only reads it, so both can be compared; the button under the list (or A) asks to forget it.
+ */
+function LearnMoves({ mon, learn }: { mon: Mon; learn: Learn }) {
+  const [sel, setSel] = useState(0);
+  // the move to forget being confirmed, or 'skip' to give up the new one
+  const [confirm, setConfirm] = useState<number | 'skip' | null>(null);
+  const name = (id: string) => tr(move(id).name);
+  const old = mon.moves[sel];
+  // portrait: a move picked in the list shows below it, with the choices: bring them into view
+  const acts = useRef<HTMLDivElement>(null);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) first.current = false;
+    else acts.current?.scrollIntoView?.({ block: 'nearest' });
+  }, [sel]);
+  return (
+    <div class="frame graph learnmv">
+      <div class="learnmv__side">
+        <p class="summary__hint learnmv__label">{tr(L('Nouvelle capacité', 'New move'))}</p>
+        <Window class="summary__box summary__detail learnmv__new"><MoveInfo id={learn.move} /></Window>
+        {old && <Window class="summary__box summary__detail learnmv__old"><MoveInfo id={old.id} pp={old.pp} /></Window>}
+      </div>
+      <div class="learnmv__side">
+        <p class="summary__hint learnmv__ask">{tr(L('{n} : quelle capacité oublier ?', '{n}: which move should be forgotten?'), { n: monLabel(mon) })}</p>
+        <Window class="summary__box summary__moves learnmv__list">
+          <MenuList
+            active={confirm === null}
+            tapReads
+            onCursor={setSel}
+            onCancel={() => setConfirm('skip')}
+            items={mon.moves.map((m, i) => ({
+              label: <span class="mvline"><TypeBadge type={move(m.id).type} /> {name(m.id)}</span>,
+              side: `PP ${m.pp}/${move(m.id).pp}`,
+              onSelect: () => setConfirm(i),
+            }))}
+          />
+        </Window>
+        <div class="learnmv__acts" ref={acts}>
+          {old && <button class="pbtn pbtn--accent" onClick={() => setConfirm(sel)}>{tr(L('Oublier {m}', 'Forget {m}'), { m: name(old.id) })}</button>}
+          <button class="pbtn" onClick={() => setConfirm('skip')}>{tr(L('Ne pas l’apprendre', 'Don’t learn it'))}</button>
+        </div>
+      </div>
+
+      {confirm !== null && (
+        <div class="view-modal">
+          <Window seyes class="view-modal__text">
+            {confirm === 'skip'
+              ? tr(L('Abandonner l’apprentissage de {m} ?', 'Stop learning {m}?'), { m: name(learn.move) })
+              : tr(L('Oublier {o} pour apprendre {m} ?', 'Forget {o} to learn {m}?'), { o: name(mon.moves[confirm].id), m: name(learn.move) })}
+          </Window>
+          <YesNo onAnswer={(yes) => {
+            const c = confirm;
+            setConfirm(null);
+            if (yes) learn.onPick(c === 'skip' ? null : c);
+          }} />
+        </div>
+      )}
+    </div>
+  );
 }
 
 /** An egg: its drawing and a hint of how soon it hatches. */
@@ -129,37 +196,32 @@ export function nextMon(list: Mon[], i: number, d: 1 | -1): number {
   return i;
 }
 
-function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
-  mon: Mon; onClose: () => void; learn?: { move: string; onPick: (forget: number | null) => void }; onSwapMoves?: (a: number, b: number) => void;
-  onMove?: (d: 1 | -1) => void;
+function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
+  mon: Mon; onClose: () => void; onSwapMoves?: (a: number, b: number) => void; onMove?: (d: 1 | -1) => void;
 }) {
-  const [page, setPage] = useState<Page>(learn ? 2 : 0);
-  // learning a fifth move: its details show first, so the player can compare before choosing
-  const [sel, setSel] = useState<number | null>(learn ? 4 : null);
+  const [page, setPage] = useState<Page>(0);
+  const [sel, setSel] = useState<number | null>(null);
   // the move being moved: the next row picked takes its place
   const [moving, setMoving] = useState<number | null>(null);
   const pickMove = (i: number) => {
-    // learning: a first tap reads the move, a second one (or the button under it) asks to forget it
-    if (learn) return sel === i ? setConfirm(i) : setSel(i);
     if (moving !== null) {
       if (i !== moving) onSwapMoves?.(moving, i);
       setMoving(null);
     }
     setSel(i);
   };
-  const back = () => (learn ? setConfirm(4) : moving !== null ? setMoving(null) : onClose());
-  const [confirm, setConfirm] = useState<number | null>(null);
+  const back = () => (moving !== null ? setMoving(null) : onClose());
   const sp = creature(mon.species);
   const color = TYPES[sp.type].color;
-  const turn = (d: 1 | -1) => !learn && setPage((p) => (((p + d + 3) % 3) as Page));
+  const turn = (d: 1 | -1) => setPage((p) => (((p + d + 3) % 3) as Page));
   const arrow = (d: 1 | -1) => (onMove ? onMove(d) : turn(d));
   // another Bestiole: same page, nothing selected
   useEffect(() => {
-    setSel(learn ? 4 : null);
+    setSel(null);
     setMoving(null);
   }, [mon.uid]);
   useEffect(() => {
-    if (!onMove || learn) return;
+    if (!onMove) return;
     const key = (e: KeyboardEvent) => {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       e.preventDefault();
@@ -167,12 +229,8 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
     };
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
-  }, [onMove, learn]);
-  useMenuNav(0, {
-    active: confirm === null,
-    onSelect: () => undefined,
-    onCancel: back,
-  });
+  }, [onMove]);
+  useMenuNav(0, { onSelect: () => undefined, onCancel: back });
   // swipe between pages
   let x0 = 0;
   const down = (e: PointerEvent) => (x0 = e.clientX);
@@ -180,7 +238,7 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
     const dx = e.clientX - x0;
     if (Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1);
   };
-  const moves = learn ? [...mon.moves.map((m) => m.id), learn.move] : mon.moves.map((m) => m.id);
+  const moves = mon.moves.map((m) => m.id);
   // on a small phone the details sit below the list: bring them into view when a move is picked
   const detailBox = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -192,13 +250,13 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
   const xpPct = mon.level >= MAX_LEVEL ? 100 : ((mon.xp - xpAt(mon.level)) / (xpAt(mon.level + 1) - xpAt(mon.level))) * 100;
 
   return (
-    <div class={`frame graph summary ${learn ? 'summary--learn' : ''}`} style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
+    <div class="frame graph summary" style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
       <div class="summary__tabs">
-        {!learn && <button class="pbtn" onClick={() => arrow(-1)} aria-label="◀">◀</button>}
+        <button class="pbtn" onClick={() => arrow(-1)} aria-label="◀">◀</button>
         <div class="summary__tabnames">
-          {PAGES.map((p, i) => <button class={`summary__tab ${i === page ? 'is-on' : ''}`} onClick={() => !learn && setPage(i as Page)}>{tr(p)}</button>)}
+          {PAGES.map((p, i) => <button class={`summary__tab ${i === page ? 'is-on' : ''}`} onClick={() => setPage(i as Page)}>{tr(p)}</button>)}
         </div>
-        {!learn && <button class="pbtn" onClick={() => arrow(1)} aria-label="▶">▶</button>}
+        <button class="pbtn" onClick={() => arrow(1)} aria-label="▶">▶</button>
       </div>
       <Window class="summary__head">
         <div class="summary__art"><img class="mon-art" src={monArtUrl(mon)} alt="" /></div>
@@ -258,19 +316,16 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
         )}
         {page === 2 && (
           <>
-            {learn && <p class="summary__hint">{tr(L('Quelle capacité oublier ?', 'Which move should be forgotten?'))}</p>}
             {moving !== null && <p class="summary__hint">{tr(L('Où mettre {m} ?', 'Where should {m} go?'), { m: tr(move(moves[moving]).name) })}</p>}
             <Window class="summary__box summary__moves">
               <MenuList
-                active={confirm === null}
                 onCursor={(i) => setSel(i)}
                 onCancel={back}
                 items={moves.map((id, i) => {
                   const mv = move(id);
-                  const pp = i < mon.moves.length ? mon.moves[i].pp : mv.pp;
                   return {
-                    label: <span class={`mvline ${learn && i === 4 ? 'is-new' : ''} ${i === moving ? 'is-moving' : ''}`}><TypeBadge type={mv.type} /> {tr(mv.name)}</span>,
-                    side: `PP ${pp}/${mv.pp}`,
+                    label: <span class={`mvline ${i === moving ? 'is-moving' : ''}`}><TypeBadge type={mv.type} /> {tr(mv.name)}</span>,
+                    side: `PP ${mon.moves[i].pp}/${mv.pp}`,
                     onSelect: () => pickMove(i),
                   };
                 })}
@@ -279,14 +334,9 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
             <Window class="summary__box summary__detail">
               {detail && sel !== null ? (
                 <>
-                  <MoveInfo id={moves[sel]} pp={sel < mon.moves.length ? mon.moves[sel].pp : undefined} />
-                  {onSwapMoves && !learn && moving === null && mon.moves.length > 1 && (
+                  <MoveInfo id={moves[sel]} pp={mon.moves[sel].pp} />
+                  {onSwapMoves && moving === null && mon.moves.length > 1 && (
                     <button class="pbtn summary__move-btn" onClick={() => setMoving(sel)}>{tr(L('Déplacer', 'Move'))}</button>
-                  )}
-                  {learn && (
-                    <button class="pbtn summary__move-btn" onClick={() => setConfirm(sel)}>
-                      {sel === 4 ? tr(L('Ne pas l’apprendre', 'Don’t learn it')) : tr(L('Oublier {m}', 'Forget {m}'), { m: tr(move(moves[sel]).name) })}
-                    </button>
                   )}
                 </>
               ) : <p>{tr(L('Touche une capacité pour la décrire.', 'Tap a move to read about it.'))}</p>}
@@ -300,20 +350,6 @@ function SummaryMain({ mon, onClose, learn, onSwapMoves, onMove }: {
         <button class="pbtn pbtn--b" onClick={back}>{tr(L('Retour', 'Back'))}</button>
       </div>
 
-      {learn && confirm !== null && (
-        <div class="view-modal">
-          <Window seyes class="view-modal__text">
-            {confirm === 4
-              ? tr(L('Abandonner l’apprentissage de {m} ?', 'Stop learning {m}?'), { m: tr(move(learn.move).name) })
-              : tr(L('Oublier {o} pour apprendre {m} ?', 'Forget {o} to learn {m}?'), { o: tr(move(moves[confirm]).name), m: tr(move(learn.move).name) })}
-          </Window>
-          <YesNo onAnswer={(yes) => {
-            const c = confirm;
-            setConfirm(null);
-            if (yes) learn.onPick(c === 4 ? null : c);
-          }} />
-        </div>
-      )}
     </div>
   );
 }

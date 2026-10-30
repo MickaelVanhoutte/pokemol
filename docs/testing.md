@@ -52,7 +52,7 @@ what-ifs, copy it to `tools/out/` (gitignored) and edit freely.
   - `save`, `update(fn)`, `flag`, `setFlag`;
   - `warpTo({ map, x, y, facing })`, `runScript(id)`, `scripts`, `refreshMap()`;
   - `dialog` / `closeDialog()`, `monOverlay`, `screen`;
-  - `fight(...)`, `trainerBattle(id)`, `createMon(species, level, { rng })`, `checkEvolutions()`.
+  - `fight(...)`, `trainerBattle(id)`, `createMon(species, level, { rng })`, `checkEvolutions(uids)` (only those Bestioles, as after a battle).
 - `window.__battle` (while a battle is open): `dispatch(action)`, `state()`, `speed`.
   `dispatch` resolves when the whole turn has played: call it without awaiting to watch the turn.
 - `window.__fx` (while a battle is open): `ids()`, `play(moveId, side)`, `freeze(moveId, 0…1, side,

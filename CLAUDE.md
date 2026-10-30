@@ -135,7 +135,8 @@ re-renders everything.
   - movement, interactions, warps (including `to: 'back'` for shared interiors), trainer sight;
   - wild encounters, rolled as FireRed does by `encounterRate.ts` (map `rate` 21 on a route, 7 in a cave, 2 on
     water; calm steps after each battle, odds growing step by step);
-  - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, evolutions, rematches;
+  - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, rematches, evolutions (`checkEvolutions(grown)`:
+    as on the GBA, only a Bestiole that just grew a level evolves, never one caught or received past its level);
   - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask`.
 
 **Story** (`src/story`): async functions registered as `scripts.<id>`. `world.ts` holds the town trades

@@ -132,13 +132,19 @@
 .summary__detail p { margin: 0; }
 .summary__foot { display: flex; justify-content: flex-end; gap: 6px; }
 .mvline { display: inline-flex; gap: 6px; align-items: center; }
-.mvline.is-new { color: #2a6ad6; }
 .mvline.is-moving { color: var(--cursor); }
 .summary__move-btn { margin-top: 6px; font-size: 1rem; }
-/* choosing a move to forget: no pages to switch, a smaller head, so the list and the details both fit */
-.summary--learn .summary__tabs { display: none; }
-.summary--learn .summary__art { width: min(22vw, 96px); }
-.summary--learn .summary__name { font-size: 1.35rem; }
+/* choosing a move to forget (LearnMoves): portrait stacks the new move, the list, the move being read, the choices */
+.frame.learnmv { gap: 6px; overflow-y: auto; }
+.learnmv__side { display: contents; }
+.learnmv__label { order: 1; }
+.learnmv__new { order: 2; }
+.learnmv__ask { order: 3; }
+.learnmv__list { order: 4; }
+.learnmv__old { order: 5; }
+.learnmv__acts { order: 6; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.learnmv > *, .learnmv__side > * { flex: none; }
+.learnmv__new .move-info__head b { color: #2a6ad6; }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
 .kv dt { color: var(--ink-soft); }
 .kv dd { margin: 0; text-align: right; }
@@ -377,6 +383,15 @@
   .summary__page { grid-column: 2; grid-row: 2 / 4; }
   .summary__box { font-size: 1rem; }
   .summary__foot { grid-column: 1; grid-row: 3; justify-content: flex-start; }
+  /* the new move and the one being read on the left, the list and the choices on the right */
+  .frame.learnmv { flex-direction: row; align-items: stretch; overflow: hidden; }
+  .learnmv__side { display: flex; flex-direction: column; gap: 6px; flex: 1 1 0; min-width: 0; overflow-y: auto; }
+  .learnmv .summary__hint { font-size: 1rem; line-height: 1.2; }
+  .learnmv .summary__box, .learnmv .move-info__head { font-size: 0.95rem; }
+  .learnmv .move-info__head b { font-size: 1.1rem; }
+  .learnmv .mlist__item { font-size: 1rem; min-height: 1.75em; }
+  .learnmv__acts { justify-content: flex-start; }
+  .learnmv__acts .pbtn { font-size: 1rem; min-height: 2.3em; }
   .tcard__badges { grid-template-columns: repeat(8, 1fr); }
   .tcard__tabs .summary__tab { font-size: min(1rem, 2.6vw); border-width: 5px; border-image-width: 5px; padding: 0 4px; }
   .tcard__tabs .summary__tab.is-on { font-size: min(1.1rem, 2.8vw); }

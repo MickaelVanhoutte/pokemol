@@ -21,6 +21,8 @@ import { SwapAsk, giveToParty } from './give';
 export function BagScreen() {
   const d = save.value!;
   const [using, setUsing] = useState<string | null>(null);
+  // a biscuit or an eraser just used: the party stays open for the next one, with what it did
+  const [again, setAgain] = useState('');
   const [note, setNote] = useState('');
   const [reading, setReading] = useState<number | null>(null);
   const [map, setMap] = useState(false);
@@ -175,7 +177,9 @@ export function BagScreen() {
         // effort items show the points each Bestiole already has in that stat
         tag={def.kind === 'effort' && def.stat ? (i) => (d.party[i].egg ? '' : `${tr(L('Efforts', 'Effort'))} ${d.party[i].evs[def.stat!]}/255`) : undefined}
         canPick={(i) => canUseOn(using, d.party[i])}
-        message={tr(L('Utiliser {i} sur quelle Bestiole ?', 'Use {i} on which Critter?'), { i: tr(def.name) })}
+        message={again
+          ? `${again} ${tr(L('Encore une ? (Il en reste {k}.)', 'Another one? ({k} left.)'), { k: d.bag[using] ?? 0 })}`
+          : tr(L('Utiliser {i} sur quelle Bestiole ?', 'Use {i} on which Critter?'), { i: tr(def.name) })}
         onPick={(i) => {
           if (def.kind === 'level') {
             setUsing(null);
@@ -187,12 +191,20 @@ export function BagScreen() {
           });
           sfx.heal();
           const m = save.value!.party[i];
-          setNote(def.kind === 'effort' && def.stat
+          const done = def.kind === 'effort' && def.stat
             ? tr(L('Les efforts en {s} de {n} passent à {v}.', '{n}’s {s} effort is now {v}.'), { s: tr(STAT_NAMES[def.stat]), n: monLabel(m), v: m.evs[def.stat] })
-            : tr(L('Tu utilises {i} sur {n}.', 'You used {i} on {n}.'), { i: tr(def.name), n: monLabel(m) }));
+            : tr(L('Tu utilises {i} sur {n}.', 'You used {i} on {n}.'), { i: tr(def.name), n: monLabel(m) });
+          // biscuits are often eaten ten in a row: stay here while some are left
+          if (def.kind === 'effort' && save.value!.bag[using]) return setAgain(done);
+          setNote(done);
+          setAgain('');
           setUsing(null);
         }}
-        onClose={() => setUsing(null)}
+        onClose={() => {
+          setNote(again);
+          setAgain('');
+          setUsing(null);
+        }}
       />
     );
   }

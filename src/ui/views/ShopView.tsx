@@ -36,7 +36,8 @@ export function ShopView({ money, stock, bag, onBuy, onClose, title, priceOf = (
       <Window class="shop__list">
         <MenuList
           active={!picked}
-          onCursor={setCursor}
+          // « Voilà ! » or « pas assez d’argent » is about one item: another one shows its description again
+          onCursor={(i) => { setCursor(i); setSay(''); }}
           onCancel={onClose}
           tapFocus
           items={stock.map((it) => ({ label: tr(it.name), icon: it.id, side: fmt(priceOf(it)), onSelect: () => choose(it) }))}
