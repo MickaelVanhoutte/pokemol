@@ -468,6 +468,12 @@ export const MOVES: MoveDef[] = [
     desc: L('Fonce tête baissée en faisant tourner des spirales. Peut rendre l’ennemi confus.', 'Charges head down, spirals spinning. May confuse the foe.') }),
   M({ id: 'corne-spirale', name: L('Corne spirale', 'Spiral Horn'), type: 'psy', cat: 'phys', power: 90, acc: 100, pp: 10,
     desc: L('Un grand coup de ses cornes en spirale, qui brillent de toutes leurs forces.', 'A great blow of its spiral horns, glowing with all their might.') }),
+  // Ratpiécé's fencing with its needle
+  M({ id: 'botte-secrete', name: L('Botte secrète', 'Secret Thrust'), type: 'acier', cat: 'phys', power: 40, acc: 100, pp: 25, priority: 1,
+    desc: L('Une botte d’escrime si rapide qu’elle frappe toujours en premier.', 'A fencing thrust so quick it always strikes first.') }),
+  M({ id: 'estocade', name: L('Estocade', 'Rapier Lunge'), type: 'acier', cat: 'phys', power: 85, acc: 100, pp: 15,
+    effects: [{ kind: 'highCrit' }],
+    desc: L('Un grand coup de rapière droit devant. Coup critique fréquent.', 'A great lunge of the rapier, straight ahead. Often a critical hit.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

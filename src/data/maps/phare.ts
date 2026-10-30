@@ -41,6 +41,7 @@ export const PHARE_MAPS: Record<string, MapDef> = {
         { id: '007', w: 25, min: 28, max: 30 },
         { id: '005', w: 20, min: 27, max: 29 },
         { id: '087', w: 6, min: 27, max: 30 },
+        { id: '120', w: 12, min: 27, max: 30 },
       ],
     },
     surf: { rate: 2, table: [{ id: '003', w: 70, min: 27, max: 31 }, { id: '013', w: 30, min: 27, max: 30 }, { id: '032', w: 20, min: 27, max: 30 }, { id: '042', w: 8, min: 29, max: 31 }, { id: '060', w: 5, min: 29, max: 31 }, { id: '059', w: 8, min: 28, max: 31 }, { id: '101', w: 30, min: 27, max: 29 }, { id: '102', w: 8, min: 30, max: 31 }] },

@@ -460,6 +460,36 @@
       }
     ]
   },
+  "120": {
+    "slug": "ratpiece",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 10,
+        "period": 1.4,
+        "behind": true,
+        "left": 65,
+        "top": 56.8,
+        "width": 35,
+        "height": 28.6,
+        "ox": 8.6,
+        "oy": 72.7
+      },
+      {
+        "name": "rapiere",
+        "motion": "reach",
+        "amp": 14,
+        "period": 1.3,
+        "left": 0,
+        "top": 49.6,
+        "width": 55,
+        "height": 30.7,
+        "ox": 95.5,
+        "oy": 14
+      }
+    ]
+  },
   "007": {
     "slug": "papivole",
     "parts": [

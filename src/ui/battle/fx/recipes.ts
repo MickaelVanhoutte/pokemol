@@ -241,6 +241,9 @@ export const MOVE_FX: Record<string, Recipe> = {
   'charge-hypnotique': { user: 'dash', shake: 0.3, layers: [rings({ colors: [C.psy[1], C.psy[0]], n: 3 }), at(140, speedLines({ n: 10 })), at(300, impactStar({ size: 0.6, color: C.psy[0] }))] },
   // the ram rears, its horns glow in rings, then the blow
   'corne-spirale': { user: 'rear', hit: 'knock', shake: 0.6, layers: [at(100, rings({ colors: [C.psy[1], C.fee[1], C.psy[0]], n: 5 })), at(330, impactStar({ size: 0.75, color: C.psy[1] })), at(360, sparkle({ kind: 'star', color: C.psy[1], n: 6 }))] },
+  // the needle flashes in so fast only its streak shows
+  'botte-secrete': { user: 'dash', layers: [speedLines({ n: 8, dur: 300 }), at(110, jab({ color: '#c9ced6', n: 1, size: 0.55 })), at(160, impactStar({ size: 0.45, color: C.acier[0] }))] },
+  'estocade': { user: 'lunge', layers: [sparkle({ who: 'user', color: '#ffffff', n: 3 }), at(120, jab({ color: '#c9ced6', n: 3, gap: 90, size: 0.6 })), at(360, impactStar({ size: 0.65, color: C.acier[0] }))] },
   'fresque-furieuse': { user: 'shake', shake: 0.6, layers: [...RAINBOW.slice(0, 4).map((color, i) => at(i * 80, slash({ color, n: 1, width: 1.8, len: 1.1, angle: [2.2, 0.95, 1.7, 0.4][i] }))), at(420, splat({ color: RAINBOW[5], size: 0.9 })), at(460, impactStar({ size: 0.7 }))] },
 };
 

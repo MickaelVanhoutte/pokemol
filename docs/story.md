@@ -987,3 +987,10 @@ down) and turned down two mime designs before the ram:
 Both finals are in `TOWER_POOL`, with fair copies (Vent de Sable, Trait Assuré). The rules test now wants a
 physical and a special catchable final form in every type. The Normal rows stayed within 10 points; on Hard
 the lake rival with Braisou went back up from 24% to 41%.
+
+**Ratpiécé** (Normal/Steel, 120, never evolves), the owner's idea: a rat in patched rags, a thimble for a helmet,
+a sewing needle for a rapier. Fast with a good Attack and Defence (60/105/95/40/60/115), and a priority move on each
+of its sides: Pas-de-loup, Botte Secrète (its own, Steel 40, +1) and Coup-en-douce, then Estocade (Steel 85, high
+crit). Power Rapiéçage (Fighting halved: its ×4). Wild on the lighthouse isle (`phareIle`, L27–30); a Team Gomme
+grunt there (`ph1b`) uses one (100% → about 90% on Normal). In `TOWER_POOL`, with a fair copy (a patched cape, a
+feather in its thimble, Coup de Chance).

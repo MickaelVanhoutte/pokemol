@@ -65,7 +65,8 @@ dessins sont vivants : ce sont les **Bestioles**.
     quartier des jardins, ses potagers partagés et son étang aux nénuphars.
 12. **Cité-Encre**, la ville où la nuit ne sèche jamais : lucioles en guise de lampadaires, canal
     d’encre bleue, Bibliothèque de Nuit. L’Atelier de Nocturne est fermé : il faut
-    d’abord prendre le bateau jusqu’au **Phare de l’Encrier**. Puis l’**Usine à Gommes**, où le Grand
+    d’abord prendre le bateau jusqu’au **Phare de l’Encrier**, sur une île où Ratpiécé, un rat en haillons
+    rapiécés, se bat avec une aiguille à coudre. Puis l’**Usine à Gommes**, où le Grand
     Effaceur se montre enfin.
 13. **À l’ouest, au-delà de la Marge rouge du cahier** : la page n’est plus que dessinée au crayon.
     Le **Hameau-Brouillon**, où vivent des dessins que personne n’a finis, la **Forêt des
@@ -215,7 +216,8 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
     quarter, its shared allotments and its lily pond.
 12. **Ink City**, where the night never dries: fireflies for street lamps, a canal of blue ink, the
     Night Library. Nocturne’s Atelier is closed: first take the boat to the
-    **Inkwell Lighthouse**. Then the **Eraser Factory**, where the Great Eraser shows himself at last.
+    **Inkwell Lighthouse**, on an island where Ratchwork, a rat in patched rags, fights with a sewing
+    needle. Then the **Eraser Factory**, where the Great Eraser shows himself at last.
 13. **West, beyond the red Margin of the sketchbook**: the page is only drawn in pencil there. **Draft
     Hamlet**, home to drawings nobody finished, the **Sketch Forest**, and deep inside, the **Eraser
     Fortress** and its giant machine.

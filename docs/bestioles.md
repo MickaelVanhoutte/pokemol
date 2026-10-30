@@ -116,6 +116,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow; the special Fighting attacker |
 | Gecaillou → Sablerette | Sable Sec: Water and Grass damage halved | `halve` | Water and Grass ×4 |
 | Spiragneau → Hypnobélier | Laine Douillette: physical damage halved | `fluffy` | Bug and Dark, mostly physical |
+| Ratpiécé | Rapiéçage: Fighting damage halved | `halve` | Fighting ×4 |
 | Aquarelline (legendary, the Lac des Couleurs) | Voile d’Aquarelle: super-effective hits halved, its status moves never miss; Marée arc-en-ciel (Water special 100, 30% +1 Sp. Def) | `prism` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a

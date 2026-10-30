@@ -45,7 +45,7 @@ export function band(c: SpeciesDef): [number, number] {
 const POWER_KINDS = new Set(['regen', 'statOnKO', 'fullHpGuard', 'prism', 'galeWings', 'ignoreImmunity', 'nightBoost', 'sleepTank',
   'phaseFirst', 'allStab', 'fluffy', 'flagBoost', 'entryWeather', 'touchStatus', 'parentalBond', 'badDreams']);
 const POWER_TALENTS = new Set(['peau-de-mousse', 'gaz-piquant', 'coquille-de-fer', 'peinture-rupestre', 'chasse-cauchemar', 'atchoum', 'bouclier-punaise',
-  'poisson-d-avril', 'soie-urticante', 'vernis', 'pelage-d-hiver', 'copeaux-amortis', 'sable-sec']);
+  'poisson-d-avril', 'soie-urticante', 'vernis', 'pelage-d-hiver', 'copeaux-amortis', 'sable-sec', 'rapiecage']);
 const hasPowerTalent = (c: SpeciesDef) => c.talents.some((t) => POWER_KINDS.has(talent(t).effect.kind) || POWER_TALENTS.has(t));
 
 /** Moves only one family learns by level-up: its signature moves. */

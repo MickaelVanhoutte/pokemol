@@ -621,7 +621,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Le capitaine va être fâché…', 'The captain is going to be cross…')],
   }),
   T({
-    id: 'ph1b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '010', level: 29 }, { species: '004', level: 29 }, { species: '008', level: 30 }], money: 880, grey: true,
+    id: 'ph1b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '010', level: 29 }, { species: '120', level: 29 }, { species: '008', level: 30 }], money: 880, grey: true,
     before: [L('L’Encre de Minuit, c’est pour éteindre toutes les étoiles du dessin !', 'The Midnight Ink is for putting out every star in the drawing!')],
     after: [L('Bon, peut-être pas toutes les étoiles…', 'Well, maybe not all the stars…')],
   }),

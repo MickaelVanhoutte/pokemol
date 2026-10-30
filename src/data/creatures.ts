@@ -1643,6 +1643,20 @@ export const CREATURES: SpeciesDef[] = [
       'It charges head down, and its great spiral horns glow so brightly that the foe can’t tell where it’s coming from.',
     ),
   },
+  {
+    id: '120', slug: 'ratpiece', faces: 'left', name: L('Ratpiécé', 'Ratchwork'), kind: L('Bestiole Bretteur', 'Swashbuckler Critter'),
+    type: 'normal', type2: 'acier', base: { hp: 60, atk: 105, def: 95, spa: 40, spd: 60, spe: 115 },
+    catchRate: 45, baseExp: 160, evYield: { atk: 1, spe: 1 }, rarity: 'uncommon',
+    stencils: ['pochoir-02', 'pochoir-10', 'pochoir-12', 'pochoir-13', 'pochoir-17', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
+    talents: ['rapiecage'], hiddenTalent: 'pieds-legers',
+    learnset: [[1, 'griffe'], [1, 'grondement'], [4, 'pas-de-loup'], [8, 'mordillage'], [11, 'botte-secrete'],
+      [15, 'coup-en-douce'], [19, 'griffe-metal'], [23, 'grimace'], [27, 'coup-de-boule'], [31, 'estocade'],
+      [36, 'griffe-de-nuit'], [42, 'tete-de-fer']],
+    dex: L(
+      'Il a cousu ses habits lui-même avec des chutes de tissu, et il se bat avec la plus grande aiguille de la boîte à couture. Il pique d’abord, il pose les questions ensuite.',
+      'It sewed its own clothes from scraps of cloth, and it fights with the biggest needle in the sewing box. It stabs first and asks questions later.',
+    ),
+  },
 ];
 
 /** How many species complete the Bestiodex: all of them but its reward. */
