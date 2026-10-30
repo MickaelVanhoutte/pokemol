@@ -16,6 +16,8 @@
   width: 100%;
   margin: 0 auto;
 }
+/* room for the speaker's name above the box (the choices stand above it in portrait) */
+.dialog:has(.textbox__speaker) { margin-top: 1.4em; }
 .dialog-choices {
   align-self: flex-end;
   min-width: 7em;

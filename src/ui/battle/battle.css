@@ -347,5 +347,5 @@
   .bpanel__grid .pk-move b { --fs: min(1.25rem, 6dvh); line-height: 1.1; }
   .bpanel__grid .pk-move small { --fs: min(0.85rem, 4.2dvh); line-height: 1.1; }
   /* the speaker label goes in the corner so the text keeps its lines */
-  .bpanel__text .textbox__speaker { position: absolute; top: 2px; left: auto; right: 8px; margin: 0; z-index: 1; }
+  .bpanel__text .textbox__speaker { position: absolute; top: 2px; bottom: auto; left: auto; right: 8px; margin: 0; z-index: 1; }
 }

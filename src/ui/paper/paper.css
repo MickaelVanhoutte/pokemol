@@ -158,8 +158,9 @@ img.picon { image-rendering: pixelated; image-rendering: crisp-edges; }
 .textbox { --lh: 1.45em; --lines: 2; cursor: pointer; font-size: clamp(1.05rem, 4.2vw, 1.35rem); display: flex; flex-direction: column; }
 .textbox__text { margin: 0; white-space: pre-line; overflow-wrap: anywhere; height: calc(var(--lines) * var(--lh)); overflow: hidden; flex: none; }
 .textbox__measure { position: absolute; left: 0; top: 0; height: auto; visibility: hidden; pointer-events: none; }
+/* the speaker's name sits on top of the box, outside it, so it never covers the first line */
 .textbox__speaker {
-  position: absolute; top: -1.55em; left: 1em;
+  position: absolute; bottom: calc(100% + 6px); left: 1em;
   color: var(--ink); font-size: 0.75em; padding: 0 6px; line-height: 1.35;
   border: 5px solid transparent; border-image: var(--frame-thin-lavender) 16 / 5px stretch;
   background: var(--hatch-lavender) 0 0 / 48px 48px padding-box, var(--lavender) padding-box;
