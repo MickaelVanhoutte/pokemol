@@ -448,6 +448,26 @@ export const MOVES: MoveDef[] = [
     desc: L('Un coup de poing tout givré. Peut geler.', 'A frosty punch. May freeze.') }),
   M({ id: 'cri-de-karate', name: L('Cri de karaté', 'Karate Shout'), type: 'combat', cat: 'spec', power: 80, acc: null, pp: 15,
     desc: L('Un « Kiaï ! » si fort qu’il frappe l’ennemi sans le toucher. Ne rate jamais.', 'A “Kiai!” so loud it strikes the foe without touching it. Never misses.') }),
+  // Gecaillou's line: Ground and Rock on the special side
+  M({ id: 'sable-fin', name: L('Sable fin', 'Fine Sand'), type: 'sol', cat: 'spec', power: 45, acc: 100, pp: 25,
+    desc: L('Souffle un petit nuage de sable fin qui pique.', 'Blows a little cloud of fine sand that stings.') }),
+  M({ id: 'sable-colore', name: L('Sable coloré', 'Coloured Sand'), type: 'sol', cat: 'spec', power: 65, acc: 100, pp: 20,
+    effects: [{ kind: 'stage', target: 'foe', stat: 'spe', stages: -1, chance: 20 }],
+    desc: L('Lance du sable de toutes les couleurs. Peut baisser la Vitesse de l’ennemi.', 'Throws sand of every colour. May lower the foe’s Speed.') }),
+  M({ id: 'sable-mouvant', name: L('Sable mouvant', 'Quicksand'), type: 'sol', cat: 'spec', power: 85, acc: 100, pp: 10,
+    desc: L('Le sol se met à tourbillonner et engloutit l’ennemi.', 'The ground starts to swirl and swallows the foe.') }),
+  M({ id: 'eclats-de-cristal', name: L('Éclats de cristal', 'Crystal Shards'), type: 'roche', cat: 'spec', power: 50, acc: 100, pp: 25,
+    desc: L('Des éclats de cristal volent vers l’ennemi.', 'Shards of crystal fly at the foe.') }),
+  M({ id: 'pluie-de-cristaux', name: L('Pluie de cristaux', 'Crystal Rain'), type: 'roche', cat: 'spec', power: 90, acc: 90, pp: 10,
+    desc: L('Une pluie de cristaux pointus tombe sur l’ennemi.', 'A rain of pointy crystals falls on the foe.') }),
+  // Spiragneau's line: Psychic on the physical side
+  M({ id: 'coup-de-boucle', name: L('Coup de boucle', 'Curl Bash'), type: 'psy', cat: 'phys', power: 50, acc: 100, pp: 25,
+    desc: L('Un petit coup de tête bouclé. L’ennemi voit des spirales !', 'A little curly head-butt. The foe sees spirals!') }),
+  M({ id: 'charge-hypnotique', name: L('Charge hypnotique', 'Hypno Charge'), type: 'psy', cat: 'phys', power: 75, acc: 100, pp: 15,
+    effects: [{ kind: 'confuse', chance: 20 }],
+    desc: L('Fonce tête baissée en faisant tourner des spirales. Peut rendre l’ennemi confus.', 'Charges head down, spirals spinning. May confuse the foe.') }),
+  M({ id: 'corne-spirale', name: L('Corne spirale', 'Spiral Horn'), type: 'psy', cat: 'phys', power: 90, acc: 100, pp: 10,
+    desc: L('Un grand coup de ses cornes en spirale, qui brillent de toutes leurs forces.', 'A great blow of its spiral horns, glowing with all their might.') }),
 ];
 
 export const MOVE_BY_ID: Record<string, MoveDef> = Object.fromEntries(MOVES.map((m) => [m.id, m]));

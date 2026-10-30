@@ -69,6 +69,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
         { id: '053', w: 3, min: 32, max: 34 },
         { id: '075', w: 8, min: 32, max: 34 },
         { id: '081', w: 6, min: 32, max: 34 },
+        { id: '119', w: 6, min: 32, max: 34, time: 'day' },
       ],
     },
   },

@@ -313,7 +313,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Tu as du rythme, toi !', 'You’ve got rhythm!')],
   }),
   T({
-    id: 'r4maud', name: L('Randonneuse Maud', 'Hiker Maud'), party: [{ species: '007', level: 19 }, { species: '067', level: 18 }, { species: '008', level: 20 }], money: 520,
+    id: 'r4maud', name: L('Randonneuse Maud', 'Hiker Maud'), party: [{ species: '007', level: 19 }, { species: '118', level: 18 }, { species: '008', level: 20 }], money: 520,
     before: [L('Mon Ronflon porte mon sac. Enfin, quand il ne dort pas.', 'My Snoozle carries my bag. Well, when it’s not asleep.')],
     after: [L('Il dort. Je porte le sac. Comme d’habitude.', 'It’s asleep. I carry the bag. As usual.')],
   }),
@@ -429,7 +429,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Allume la lumière en sortant…', 'Turn off the light on your way out…')],
   }),
   T({
-    id: 'mfArmand', name: L('Géologue Armand', 'Geologist Armand'), party: [{ species: '021', level: 22 }, { species: '076', level: 23 }, { species: '067', level: 23 }], money: 640,
+    id: 'mfArmand', name: L('Géologue Armand', 'Geologist Armand'), party: [{ species: '021', level: 22 }, { species: '076', level: 23 }, { species: '116', level: 23 }], money: 640,
     before: [L('Ce mont est fait de fusain pur ! Touche, ça noircit les doigts. Et les Bestioles, ça les rend coriaces !', 'This mountain is pure charcoal! Touch it, it blackens your fingers. And it makes Critters tough!')],
     after: [L('J’ai les doigts noirs et le moral aussi.', 'Black fingers, and a black mood too.')],
   }),
@@ -719,7 +719,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   // ---------------------------------------------------------------- the end of the page
   // ---------------------------------------------------------------- Act 4: the Margin Road (src/data/maps/marge.ts)
   T({
-    id: 'r9a', name: L('Peintre Victor', 'Painter Victor'), party: [{ species: '107', level: 34 }, { species: '106', level: 34 }, { species: '061', level: 34 }, { species: '077', level: 35 }], money: 1100,
+    id: 'r9a', name: L('Peintre Victor', 'Painter Victor'), party: [{ species: '107', level: 34 }, { species: '117', level: 34 }, { species: '061', level: 34 }, { species: '077', level: 35 }], money: 1100,
     before: [L('Je repeins les lignes du cahier. La rouge, là-bas, personne n’ose la franchir !', 'I repaint the lines of the sketchbook. The red one over there, nobody dares to cross it!')],
     after: [L('Toi, tu vas la franchir, hein ?', 'You’re going to cross it, aren’t you?')],
   }),
@@ -744,7 +744,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Mes Bestioles reviennent en couleurs… même ici ?', 'My Critters are getting their colours back… even here?')],
   }),
   T({
-    id: 'r9f', name: L('Croqueuse Aya', 'Sketcher Aya'), party: [{ species: '064', level: 33 }, { species: '048', level: 33 }, { species: '052', level: 34 }, { species: '028', level: 34 }], money: 1150,
+    id: 'r9f', name: L('Croqueuse Aya', 'Sketcher Aya'), party: [{ species: '064', level: 33 }, { species: '048', level: 33 }, { species: '119', level: 34 }, { species: '028', level: 34 }], money: 1150,
     before: [L('Un trait, deux traits… et hop, une Bestiole ! Pas besoin qu’elle soit parfaite.', 'One line, two lines… and there, a Critter! It doesn’t need to be perfect.')],
     after: [L('Elle était parfaite, finalement.', 'It was perfect after all.')],
   }),

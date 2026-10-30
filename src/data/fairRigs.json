@@ -401,6 +401,65 @@
       }
     ]
   },
+  "117": {
+    "slug": "sablerette",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.5,
+        "behind": true,
+        "left": 77.4,
+        "top": 44,
+        "width": 22.6,
+        "height": 36.7,
+        "ox": 13.9,
+        "oy": 76.6
+      },
+      {
+        "name": "sable",
+        "motion": "flicker",
+        "period": 1.3,
+        "left": 0,
+        "top": 0.4,
+        "width": 63.9,
+        "height": 59.5,
+        "ox": 56.5,
+        "oy": 78.7
+      }
+    ]
+  },
+  "119": {
+    "slug": "hypnobelier",
+    "parts": [
+      {
+        "name": "aura",
+        "motion": "flicker",
+        "period": 1.6,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 61.5,
+        "height": 67.5,
+        "ox": 50,
+        "oy": 50
+      },
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 12,
+        "period": 1.1,
+        "behind": true,
+        "left": 82.9,
+        "top": 36.1,
+        "width": 13.7,
+        "height": 14.4,
+        "ox": 27.1,
+        "oy": 64.1
+      }
+    ]
+  },
   "007": {
     "slug": "papivole",
     "parts": [

@@ -40,7 +40,7 @@ describe('data', () => {
 
   it('stencils teach real moves, and each one fits someone', () => {
     const stencils = Object.values(ITEM_BY_ID).filter((i) => i.kind === 'stencil');
-    expect(stencils).toHaveLength(29);
+    expect(stencils).toHaveLength(30);
     for (const st of stencils) {
       expect(MOVES.some((m) => m.id === st.move), st.id).toBe(true);
       expect(CREATURES.some((c) => c.stencils.includes(st.id)), `nobody learns ${st.id}`).toBe(true);

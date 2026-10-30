@@ -114,6 +114,8 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
 | Baleincre (legendary, the Bestiodex's reward) | Averse d’Encre: rain as it comes in; Jet d’Encre Noire (Water special 100, 30% accuracy drop) | `entryWeather` + signature move | — |
 | Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow; the special Fighting attacker |
+| Gecaillou → Sablerette | Sable Sec: Water and Grass damage halved | `halve` | Water and Grass ×4 |
+| Spiragneau → Hypnobélier | Laine Douillette: physical damage halved | `fluffy` | Bug and Dark, mostly physical |
 | Aquarelline (legendary, the Lac des Couleurs) | Voile d’Aquarelle: super-effective hits halved, its status moves never miss; Marée arc-en-ciel (Water special 100, 30% +1 Sp. Def) | `prism` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a
@@ -132,6 +134,9 @@ Moves can carry `punch: true` or `cut: true` (`MoveDef` in `src/data/schema.ts`)
 
 ## 5. Moves
 
+- Every type has at least one physical and one special fully grown Bestiole you can catch during the story
+  (not a legendary, after-story or reward one): Sablerette is the special Rock/Ground one, Hypnobélier the
+  physical Psychic one, Zigzéclair the physical Electric one, Octopeintre the special Fighting one.
 - A Bestiole hits on one side: physical when its Attack beats its Sp. Atk by more than 5, special the other
   way round, both when they are within 5. Its own-type moves are on that side (the rules test checks both
   rules below with it).

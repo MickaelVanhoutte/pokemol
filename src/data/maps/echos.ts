@@ -63,6 +63,7 @@ export const ECHOS_MAPS: Record<string, MapDef> = {
         { id: '077', w: 8, min: 29, max: 32 },
         { id: '104', w: 14, min: 29, max: 32 },
         { id: '107', w: 4, min: 30, max: 32 },
+        { id: '117', w: 5, min: 30, max: 32 },
       ],
     },
   },

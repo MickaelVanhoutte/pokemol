@@ -972,3 +972,18 @@ side it lacked, learned by the Bestioles of that side. Retuned with the sims:
 
 On Normal, Basile went from 93/94/86 to 71/84/66 (Sève Sucrée on his Grass team), the champion from
 52/34/43 to 66/47/60; the other rows stayed within 10 points, a few route trainers a little easier.
+
+**Two new lines for the missing sides.** The owner prefers animals to objects (an hourglass was turned
+down) and turned down two mime designs before the ram:
+- **Gecaillou → Sablerette** (Rock/Ground, special, 116 → 117 at L30): a sand gecko that becomes a frilled lizard.
+  Power Sable Sec (Water and Grass halved, its ×4 weaknesses). Its moves: Sable Fin, Éclats de Cristal, Sable
+  Coloré, Sable Mouvant (also stencil 30, on Route 8 next to 28), Pluie de Cristaux. Wild on Mont Fusain L19–21,
+  Sablerette in the Grotte des Échos L30–32; Géologue Armand (Mont Fusain) and Peintre Victor (Route 9) use them.
+- **Spiragneau → Hypnobélier** (Psychic, physical, 118 → 119 at L28): a lamb with spiral horn buds that becomes a
+  charging ram. Power Laine Douillette (physical damage halved, against Bug and Dark). Its moves: Coup de Boucle,
+  Charge Hypnotique, Corne Spirale. Wild on Route 4 by day L15–17, Hypnobélier on Route 9 by day L32–34;
+  Randonneuse Maud (Route 4) and Croqueuse Aya (Route 9) use them.
+
+Both finals are in `TOWER_POOL`, with fair copies (Vent de Sable, Trait Assuré). The rules test now wants a
+physical and a special catchable final form in every type. The Normal rows stayed within 10 points; on Hard
+the lake rival with Braisou went back up from 24% to 41%.

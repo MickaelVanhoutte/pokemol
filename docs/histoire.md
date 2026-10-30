@@ -53,9 +53,11 @@ dessins sont vivants : ce sont les **Bestioles**.
    Fusain, remonte en bateau la rivière de Village-Plume jusqu’à un grand lac tout gris. La Team Gomme
    a bouché ses trois sources : rouge, jaune et bleue… Et sous l’eau, il y a peut-être autre chose.
 8. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
-   cache quelque chose. Ses enseignes au néon, sa Fontaine Fluo et ses fabricants de feutres.
+   cache quelque chose. Ses enseignes au néon, sa Fontaine Fluo et ses fabricants de feutres. Sur la
+   route qui y mène, Spiragneau, un agneau aux petites cornes en spirale, broute dans l’herbe le jour.
 9. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan, sa forge, sa source chaude
-   et le souffleur de verre.
+   et le souffleur de verre. Dans les rochers du Mont Fusain se cache Gecaillou, un petit gecko de
+   sable aux grands yeux.
 10. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
    occupe la Tour Brumeuse… Tout en haut, quelqu’un que tu connais bien a besoin d’être rassuré.
    On y fait des vœux à la Fontaine aux Vœux, et la Fabrique de Paillettes prépare le Bal des Étoiles.
@@ -201,9 +203,11 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
    Featherby’s river to a big lake gone all grey. Team Gomme plugged its three springs: red, yellow and
    blue… And under the water, there may be something else.
 8. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
-   is hiding something. Its neon signs, its Fluo Fountain and its felt-tip makers.
+   is hiding something. Its neon signs, its Fluo Fountain and its felt-tip makers. On the road there,
+   Spirlamb, a lamb with little spiral horns, grazes in the grass by day.
 9. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano, its forge, its hot
-   spring and the glassblower.
+   spring and the glassblower. In the rocks of Mount Charcoal hides Pebblecko, a little sand gecko
+   with big eyes.
 10. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
    At the top, someone you know well needs cheering up. Wishes are made at the Wishing Fountain, and
    the Glitter Works is getting ready for the Star Ball.

@@ -142,6 +142,10 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   '114': { base: { hp: 80, atk: 105, def: 85, spa: 145, spd: 85, spe: 90 }, talent: 'huit-couleurs' },
   // Aquarelline: its veils twice as long, gold along its wings, taller horn fins, a halo of paint drops
   '115': { base: { hp: 100, atk: 80, def: 105, spa: 160, spd: 150, spe: 125 }, talent: 'recoloriage' },
+  // Sablerette: its frill grown into a wide fan of crystals, a sandstorm whirling round it as it comes in
+  '117': { base: { hp: 70, atk: 65, def: 105, spa: 150, spd: 95, spe: 110 }, talent: 'vent-de-sable' },
+  // Hypnobélier: its horns grown into blazing spirals, its wool thicker and wilder
+  '119': { base: { hp: 80, atk: 155, def: 100, spa: 60, spd: 90, spe: 110 }, talent: 'trait-assure' },
 };
 
 /** A Bestiole that can be made a fair copy: one with no evolution left. */

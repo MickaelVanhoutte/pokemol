@@ -551,6 +551,101 @@
       }
     ]
   },
+  "116": {
+    "slug": "gecaillou",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 10,
+        "period": 1.4,
+        "behind": true,
+        "left": 70.3,
+        "top": 3.3,
+        "width": 29.7,
+        "height": 63.8,
+        "ox": 18.8,
+        "oy": 78.5
+      }
+    ]
+  },
+  "117": {
+    "slug": "sablerette",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 9,
+        "period": 1.5,
+        "behind": true,
+        "left": 76.8,
+        "top": 40.5,
+        "width": 23.2,
+        "height": 39.1,
+        "ox": 14.3,
+        "oy": 76.5
+      },
+      {
+        "name": "sable",
+        "motion": "flicker",
+        "period": 1.3,
+        "left": 0,
+        "top": 0,
+        "width": 53.7,
+        "height": 46.9,
+        "ox": 64.8,
+        "oy": 94.1
+      }
+    ]
+  },
+  "118": {
+    "slug": "spiragneau",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 14,
+        "period": 1.1,
+        "behind": true,
+        "left": 81.8,
+        "top": 30.6,
+        "width": 18.2,
+        "height": 17.8,
+        "ox": 23.4,
+        "oy": 65
+      }
+    ]
+  },
+  "119": {
+    "slug": "hypnobelier",
+    "parts": [
+      {
+        "name": "aura",
+        "motion": "flicker",
+        "period": 1.6,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 56,
+        "height": 61.6,
+        "ox": 50,
+        "oy": 50
+      },
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 12,
+        "period": 1.1,
+        "behind": true,
+        "left": 82,
+        "top": 32.8,
+        "width": 14.8,
+        "height": 15.8,
+        "ox": 27.5,
+        "oy": 63.5
+      }
+    ]
+  },
   "001": {
     "slug": "minousse",
     "parts": [

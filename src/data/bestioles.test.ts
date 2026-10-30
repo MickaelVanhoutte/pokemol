@@ -3,6 +3,7 @@ import { CREATURES, creature } from './creatures';
 import { STENCIL_MOVES } from './items';
 import { move } from './moves';
 import { talent } from './talents';
+import { TYPES } from './types';
 import type { SpeciesDef } from './schema';
 
 /**
@@ -44,7 +45,7 @@ export function band(c: SpeciesDef): [number, number] {
 const POWER_KINDS = new Set(['regen', 'statOnKO', 'fullHpGuard', 'prism', 'galeWings', 'ignoreImmunity', 'nightBoost', 'sleepTank',
   'phaseFirst', 'allStab', 'fluffy', 'flagBoost', 'entryWeather', 'touchStatus', 'parentalBond', 'badDreams']);
 const POWER_TALENTS = new Set(['peau-de-mousse', 'gaz-piquant', 'coquille-de-fer', 'peinture-rupestre', 'chasse-cauchemar', 'atchoum', 'bouclier-punaise',
-  'poisson-d-avril', 'soie-urticante', 'vernis', 'pelage-d-hiver', 'copeaux-amortis']);
+  'poisson-d-avril', 'soie-urticante', 'vernis', 'pelage-d-hiver', 'copeaux-amortis', 'sable-sec']);
 const hasPowerTalent = (c: SpeciesDef) => c.talents.some((t) => POWER_KINDS.has(talent(t).effect.kind) || POWER_TALENTS.has(t));
 
 /** Moves only one family learns by level-up: its signature moves. */
@@ -93,6 +94,16 @@ describe('Bestiole design rules (docs/bestioles.md)', () => {
       const others = new Set([...c.learnset.map(([, id]) => id), ...taught].map(move)
         .filter((m) => m.cat !== 'status' && sides(c).includes(m.cat) && !types.includes(m.type) && m.power >= 60).map((m) => m.type));
       expect(others.size, `${c.id} ${c.slug}: hits only ${[...others].join(', ') || 'its own types'} on its ${sides(c).join('/')} side`).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('gives every type a physical and a special fully grown Bestiole to catch during the story', () => {
+    const catchable = CREATURES.filter((c) => isFinal(c) && c.rarity !== 'legendary' && !c.afterStory && !c.dexReward);
+    for (const type of Object.keys(TYPES)) {
+      for (const side of ['phys', 'spec'] as const) {
+        const one = catchable.find((c) => (c.type === type || c.type2 === type) && sides(c).includes(side));
+        expect(one, `no ${side} ${type} Bestiole: players can't build that team`).toBeDefined();
+      }
     }
   });
 

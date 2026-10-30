@@ -232,6 +232,15 @@ export const MOVE_FX: Record<string, Recipe> = {
   'poing-givre': { user: 'lunge', layers: [fist({ color: '#cfe8f7' }), at(300, impactStar({ size: 0.55, color: C.glace[0] })), at(320, sparkle({ kind: 'shard', color: C.glace[1], n: 6, size: 0.22 }))] },
   // the shout itself: big notes and rings, then the blow lands without a touch
   'cri-de-karate': { user: 'rear', shake: 0.4, layers: [rings({ colors: [C.combat[1], C.combat[0]], n: 4 }), at(80, notes({ colors: [C.combat[1], C.normal[2]], n: 4, size: 0.3 })), at(420, impactStar({ size: 0.6, color: C.combat[1] }))] },
+  'sable-fin': { layers: [breath({ kind: 'clod', colors: ['#e8c27a', '#cf9f55'], n: 18, size: 0.18, spread: 0.25 })] },
+  'sable-colore': { layers: [breath({ kind: 'clod', colors: RAINBOW, n: 22, size: 0.18, spread: 0.3 }), at(380, sparkle({ kind: 'spark', color: '#e8c27a', n: 5, size: 0.18 }))] },
+  'sable-mouvant': { shake: 0.5, layers: [swirl({ kind: 'clod', color: '#d9b06a', n: 16, dur: 800, size: 0.22 }), at(200, dust({ n: 8 })), at(260, cracks({ dur: 600 }))] },
+  'eclats-de-cristal': { layers: [projectile({ kind: 'shard', color: ['#f2c46a', '#fbe7b0'], n: 4, gap: 60, size: 0.26, spin: 1, burst: 'shard' })] },
+  'pluie-de-cristaux': { shake: 0.5, layers: [rainOn({ colors: ['#f2c46a', '#fbe7b0', '#ffffff'], kind: 'shard', n: 14, size: 0.3 }), at(420, impactStar({ size: 0.6, color: '#f2c46a' }))] },
+  'coup-de-boucle': { user: 'dash', layers: [speedLines(), at(160, impactStar({ size: 0.45, color: C.psy[1] })), at(180, rings({ colors: [C.psy[1]], n: 2, dur: 400 }))] },
+  'charge-hypnotique': { user: 'dash', shake: 0.3, layers: [rings({ colors: [C.psy[1], C.psy[0]], n: 3 }), at(140, speedLines({ n: 10 })), at(300, impactStar({ size: 0.6, color: C.psy[0] }))] },
+  // the ram rears, its horns glow in rings, then the blow
+  'corne-spirale': { user: 'rear', hit: 'knock', shake: 0.6, layers: [at(100, rings({ colors: [C.psy[1], C.fee[1], C.psy[0]], n: 5 })), at(330, impactStar({ size: 0.75, color: C.psy[1] })), at(360, sparkle({ kind: 'star', color: C.psy[1], n: 6 }))] },
   'fresque-furieuse': { user: 'shake', shake: 0.6, layers: [...RAINBOW.slice(0, 4).map((color, i) => at(i * 80, slash({ color, n: 1, width: 1.8, len: 1.1, angle: [2.2, 0.95, 1.7, 0.4][i] }))), at(420, splat({ color: RAINBOW[5], size: 0.9 })), at(460, impactStar({ size: 0.7 }))] },
 };
 
