@@ -149,12 +149,15 @@ scripts.source = async () => {
   if (c !== 0) return;
   await say(L('Tu tires de toutes tes forces…', 'You pull with all your might…'));
   await shake(600);
+  const before = g.map.def.drainMix;
   setFlag(`lac.source:${sp.id}`);
   refreshMap();
   sfx.sparkle();
-  // on the lake, its colour spreads from the spring while it gushes up
+  // its colour spreads from the spring while it gushes up: over the lake, or the cave's own colours coming back
   const onLake = g.map.def.id === 'lac';
-  const spread = onLake && springsLeft() ? springColours([sp]) : null;
+  const spread = onLake
+    ? springsLeft() ? springColours([sp]) : null
+    : g.colourReturn([{ x: sp.x, y: sp.y }], 2400, { from: before, sparkles: [PRIMARY_COLOUR[sp.colour], '#ffffff'] });
   await say(L('Plop ! La gomme saute, et l’eau {c} jaillit !', 'Pop! The eraser flies out, and {c} water gushes up!'), undefined, { c: tr(sp.name) });
   await spread;
   if (springsLeft()) {
@@ -177,19 +180,11 @@ async function colourBack(from?: DrainMix) {
   await spread;
   playJingle('item', { fallback: sfx.sparkle });
   await say(L('Les trois couleurs se mélangent… Le Lac des Couleurs brille de nouveau de toutes ses couleurs !', 'The three colours mix together… The Lake of Colours shines with all its colours again!'));
-  const rival = await comeUp('rivalSources', LOOKS.rival);
+  // {rival} calls from the camp, across the water: the race is settled there, when you are ready
   await sayAll([
-    L('Waouh ! Tu as vu ça ?! Toutes les couleurs sont revenues d’un coup !', 'Whoa! Did you see that?! All the colours came back at once!'),
-    L('… Hé, regarde là-bas. Ces taches sombres, sur l’eau. Elles, elles ne sont pas parties.', '… Hey, look over there. Those dark patches on the water. They didn’t go away.'),
+    L('{name} ! Tu as vu ça ?! Toutes les couleurs sont revenues d’un coup !', '{name}! Did you see that?! All the colours came back at once!'),
+    L('Rejoins-moi au camp, sur la rive ! On a une course à finir !', 'Meet me at the camp on the shore! We’ve got a race to finish!'),
   ], RIVAL);
-  g.face(rival, 'down');
-  await bubble('rivalSources', '?', 700);
-  await sayAll([
-    L('C’est drôlement profond, à mon avis. On pourrait peut-être plonger, là-dedans !', 'They look really deep to me. Maybe we could dive in there!'),
-    L('Mais d’abord… on n’a pas fini notre course. Voyons qui est le plus fort !', 'But first… our race isn’t over. Let’s see who’s stronger!'),
-  ], RIVAL);
-  await rivalBattle();
-  g.remove('rivalSources');
 }
 
 async function rivalBattle() {
@@ -204,10 +199,35 @@ async function rivalBattle() {
     L('Bon, d’accord, tu as gagné la course. Et le combat. Mais la prochaine fois…', 'Fine, you won the race. And the battle. But next time…'),
     L('Le Prof. a un truc pour toi, au camp. Un truc pour plonger, je parie ! Moi, je file voir si la boue est partie de la Route des Feutres.', 'The Prof has something for you at the camp. Something for diving, I bet! I’m off to see if the mud has gone from Marker Road.'),
   ], RIVAL);
+  // he walks off to the water's edge and leaves the way he came, in his paper boat, rather than vanishing
+  const g = getGame();
+  const rival = g.npcs.find((n) => n.id === 'rivalLacNpc');
+  if (!rival) return;
+  const p = g.player;
+  const bySand = !(p.y === 27 && p.x >= rival.x && p.x <= 19);
+  await g.walk(rival, bySand ? ['up', 'right', 'right', 'right'] : ['right', 'right', 'right'], 220);
+  g.face(rival, 'right');
+  await say(L('{rival} saute dans son bateau en papier et file sur la rivière.', '{rival} jumps into his paper boat and sails off down the river.'));
+  g.remove('rivalLacNpc');
 }
 
 scripts.rivalLac = async () => {
-  if (flag('lac.sources')) return rivalBattle();
+  if (flag('lac.sources')) {
+    const rival = getGame().npcs.find((n) => n.id === 'rivalLacNpc');
+    await sayAll([
+      L('Te voilà ! … Hé, regarde là-bas. Ces taches sombres, sur l’eau. Elles, elles ne sont pas parties.', 'There you are! … Hey, look over there. Those dark patches on the water. They didn’t go away.'),
+      L('C’est drôlement profond, à mon avis. On pourrait peut-être plonger, là-dedans !', 'They look really deep to me. Maybe we could dive in there!'),
+    ], RIVAL);
+    if (rival) await bubble('rivalLacNpc', '?', 700);
+    // fair play: he heals your team before the race is settled
+    await say(L('Mais d’abord, on finit notre course. Tes Bestioles ont l’air fatiguées… Tiens, je les soigne, sinon ce ne serait pas juste !', 'But first, let’s finish our race. Your Critters look tired… Here, let me heal them, or it wouldn’t be fair!'), RIVAL);
+    await getGame().fadeTo(0.6, 200, 'white');
+    update((d) => healParty(d));
+    await getGame().fadeTo(0, 300);
+    showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
+    await say(L('Voilà. Maintenant, voyons qui est le plus fort !', 'There. Now let’s see who’s stronger!'), RIVAL);
+    return rivalBattle();
+  }
   const left = SPRINGS.filter((s) => !flag(`lac.source:${s.id}`)).map((s) => tr(s.name));
   await sayAll([
     L('Je surveille le camp ! … Bon, d’accord, je me repose un peu.', 'I’m guarding the camp! … Fine, I’m having a little rest.'),

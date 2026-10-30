@@ -173,8 +173,12 @@ legend is made of the stains a painter never threw away, and the one who wanted 
   violet), whatever the order; each new colour spreads from its spring (`springColours`, `Game.colourReturn` with
   `from`: the lake's earlier shades; the blue one from the cave's mouth when you come back out, `lac.vu:<spring>`
   noting what the lake already showed, so older saves see their colours spread once). Freeing the last spring plays
-  the colours coming back: `colourReturn` spreads every colour from the three springs over the map. The rival then points at the dark patches (« On pourrait peut-être plonger,
-  là-dedans ! ») and battles (`rivalLacTeam`, his starter grown L20), and the Prof gives the **Bocal-Scaphandre**.
+  the colours coming back: `colourReturn` spreads every colour from the three springs over the map. The blue spring's
+  cave is grey too, in the shades of the springs already freed, until its own spring flows (its colours spreading
+  from it). The rival calls from the camp across the water (no ambush on the island): at the camp he points at the
+  dark patches (« On pourrait peut-être plonger, là-dedans ! »), heals your team (« sinon ce ne serait pas juste
+  ! ») and battles (`rivalLacTeam`, his starter grown L20), then walks to the water's edge and sails off in his paper
+  boat; the Prof gives the **Bocal-Scaphandre**.
 - **The depths** (dive on the dark patches, see [content.md](content.md#diving)): `lacFonds`, with Team Gomme's
   sunken barge and its items, seaweed with the new **Poulpinceau** (Water, L18–20; it becomes **Octopeintre**,
   Water/Fighting, at L30), the **sunken chapel** (`chapelle`) and its fresco of the legend (the 5th fresque: it gives

@@ -137,6 +137,10 @@ export const LAC_MAPS: Record<string, MapDef> = {
     border: 'cavewall',
     backdrop: 'cave',
     tint: 'rgba(40, 60, 130, 0.25)',
+    // grey like the lake, in the shades of the springs already freed, until its own spring flows
+    drained: true,
+    tintUnless: 'lac.source:bleue',
+    primaries: [{ flag: 'lac.source:rouge', colour: 'red' }, { flag: 'lac.source:jaune', colour: 'yellow' }],
     rows: [
       'KKKKKKKKKKKK',
       'KKKKK+KKKKKK',
