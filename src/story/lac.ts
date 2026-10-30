@@ -25,7 +25,7 @@ import { LOOKS } from '../overworld/sprites';
 import { healParty, save, update } from '../state/game';
 import { memoryUrl } from '../ui/memoryArt';
 import { PROF, RIVAL } from './cast';
-import { comeUp } from './choices';
+import { comeUp, goAway } from './choices';
 import { guideComes, guideTalk } from './guides';
 import { guide } from '../data/guides';
 
@@ -43,7 +43,8 @@ scripts.r4boue = async () => {
 /** Stuck in front of the mud: {rival} comes along and sends you to the lake. */
 scripts.lacAppel = async () => {
   setFlag('lac.appel');
-  const g = getGame();
+  // a game that already found the lake by the river (before this scene existed) needs no invitation
+  if (flag('lac.arrivee') || flag('lac.sources')) return;
   await bubble('player', '!', 600);
   const rival = await comeUp('rivalBoue', LOOKS.rival);
   await sayAll([
@@ -54,8 +55,7 @@ scripts.lacAppel = async () => {
       ? L('Ton Bateau en Papier fera l’affaire. Le premier arrivé a gagné !', 'Your Paper Boat will do. Last one there is a rotten egg!')
       : L('Tu n’as pas de bateau ? La Plieuse du port en donne à ceux qui ont le Badge Aquarelle. Le premier arrivé a gagné !', 'No boat? The Paper Folder at the port gives them to anyone with the Watercolor Badge. Last one there is a rotten egg!'),
   ], RIVAL);
-  for (let i = 0; i < 6 && !g.blocked(rival.x, rival.y + 1, rival); i++) await g.walk(rival, ['down'], 120);
-  g.remove('rivalBoue');
+  await goAway(rival, ['down']);
 };
 
 // ------------------------------------------------------------------ the camp and the three springs

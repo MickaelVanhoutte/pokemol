@@ -162,6 +162,9 @@ function patched(def: MapDef): MapDef {
   // the Inn and the shop of a town only sketched in pencil are sketched too
   const town = def.generic ? MAPS[save.value?.player.returnTo?.map ?? ''] : undefined;
   if (town?.sketchUnless && !flag(town.sketchUnless)) out = { ...out, sketch: true };
+  // …and those of a town drained of its colours are as grey as its streets
+  const outside = town?.drained ? patched(town) : undefined;
+  if (outside?.drained) out = { ...out, drained: true, drainMix: outside.drainMix };
   return out;
 }
 

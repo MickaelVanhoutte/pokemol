@@ -1,6 +1,7 @@
 import { signal } from '@preact/signals';
 import type { BattleProps } from '../ui/battle/BattleScreen';
 import type { CustomDesign } from '../data/custom';
+import type { BalloonPick } from '../ui/views/TownMapView';
 
 export type Screen =
   | { id: 'title' }
@@ -15,7 +16,8 @@ export type Screen =
   | { id: 'shop'; tower?: boolean }
   | { id: 'machine' }
   | { id: 'trainercard' }
-  | { id: 'townmap' }
+  /** The Town Map; with `pick`, the Pencil Balloon's pilot asks where to fly. */
+  | { id: 'townmap'; pick?: BalloonPick }
   /** The Pencil Balloon's trip over the Town Map, from one town to another. */
   | { id: 'flight'; from: string; to: string }
   | { id: 'hall'; fresh?: boolean }

@@ -15,7 +15,7 @@ import {
 import { LEGEND } from '../overworld/mapTypes';
 import { TILES } from '../overworld/tiles';
 import { sleepUntil } from './common';
-import { choose, COCONFUS, coconfusJoins, comeUp, RETOUCHE } from './choices';
+import { choose, COCONFUS, coconfusJoins, comeUp, goAway, RETOUCHE } from './choices';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 
 // ------------------------------------------------------------------ home
@@ -381,8 +381,7 @@ scripts.boisRestore = async () => {
     L('Je file à Village-Plume, juste au nord. Le premier arrivé à l’Atelier a gagné !', 'I’m off to Featherby, just north of here. First one to the Atelier wins!'),
   ], RIVAL);
   // off north to Featherby, up the path while it is free
-  for (let i = 0; i < 6 && !g.blocked(rival.x, rival.y - 1, rival); i++) await g.walk(rival, ['up'], 160);
-  g.remove('rivalBois');
+  await goAway(rival, ['up']);
   mapMusic();
 };
 

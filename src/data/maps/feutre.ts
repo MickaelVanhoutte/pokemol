@@ -248,6 +248,9 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     dungeon: true,
     name: L('Entrepôt Gomme', 'Eraser Warehouse'),
     indoor: true,
+    // where the city's colours were sucked away: grey until Rature is beaten
+    drained: true,
+    tintUnless: 'a2.feutre',
     border: 'void',
     backdrop: 'city',
     tint: 'rgba(60, 55, 75, 0.2)',
@@ -284,6 +287,9 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     dungeon: true,
     name: L('Entrepôt Gomme — étage', 'Eraser Warehouse — upstairs'),
     indoor: true,
+    // where the city's colours were sucked away: grey until Rature is beaten
+    drained: true,
+    tintUnless: 'a2.feutre',
     border: 'void',
     backdrop: 'city',
     tint: 'rgba(60, 55, 75, 0.28)',

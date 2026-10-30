@@ -85,7 +85,7 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 
 Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was. The rival's
 lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`); his team
-does not change. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
+does not change. Every battle he forces on you (the lake camp, Route Blanche) starts with him healing your team. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
 
 **Choices remembered later.** A few answers come back further on, shown rather than explained, and both ways
 are an act of care (nobody says which was right). Saves that skipped a choice keep the old lines.
@@ -282,7 +282,9 @@ Route 7, Grand Brasier (28) on Route 8.
 **Fast travel.** `visitTown` (each town's `onEnter`) sets `visit:<map>`. A Pencil Balloon is moored outside each
 town's Inn (by the house in Bourg-Gribouille), its pilot standing by it (`src/data/balloons.ts`, put on the maps by
 `maps/index.ts`; its basket is solid). The pilot flies to visited towns (the list and landing tiles are the `fly`
-entries of `WORLD` in `src/data/worldmap.ts`, next to each basket). `scripts.balloon`: the player climbs in
+entries of `WORLD` in `src/data/worldmap.ts`, next to each basket), picked on the Town Map (`townmap` screen with
+`pick`: a little balloon over each town it can fly to, the towns not visited yet grey; a second tap, A or DÉCOLLER
+takes off, RETOUR stays on the ground). `scripts.balloon`: the player climbs in
 (`Game.passenger`: hidden, a head peeking over the basket), the balloon rises (`Game.balloonFly('up')`), the
 `flight` screen (`FlightScreen`) shows it drifting over the Town Map from one town to the other, and it comes down
 by the other town's Inn (`balloonFly('down')`). `src/data/balloons.test.ts` checks every balloon stands on free

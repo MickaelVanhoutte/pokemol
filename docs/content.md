@@ -72,7 +72,8 @@ Maps react without code:
   (`src/data/primaries.ts`: the Lac des Couleurs and its springs).
 - `sketchUnless` on a building (only its pencil lines until the flag) and on a town (Hameau-Brouillon): the shared
   Inn and shop entered from it are drawn in pencil too, their people included, and its Inn's windows stay unlit.
-  A sign there is the pencil sign `i`.
+  A sign there is the pencil sign `i`. The same goes for a drained town: its Inn, shop and houses are as grey as its
+  streets. A place of its own inside it (a cave, a warehouse) sets its own `drained` and `tintUnless` (or `primaries`).
 
 After a script that changed flags, the map is rebuilt (`refreshMap()`).
 

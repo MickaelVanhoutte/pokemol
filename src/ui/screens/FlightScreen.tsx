@@ -5,6 +5,7 @@ import { WORLD } from '../../data/worldmap';
 import { backToWorld } from '../../overworld/controller';
 import { save } from '../../state/game';
 import { VIEW, paintTownMap } from '../views/townMapArt';
+import { BalloonIcon } from '../views/TownMapView';
 import '../views/views.css';
 
 const centre = (id: string) => {
@@ -55,15 +56,7 @@ export function FlightScreen({ from, to }: { from: string; to: string }) {
       <div class="flight__map" style={{ '--ratio': VIEW.w / VIEW.h }}>
         <img class="tmap__art" src={art} alt="" />
         {dots.map((p) => <span class="flight__dot" style={{ left: px(p.x), top: py(p.y) }} />)}
-        <svg class="flight__balloon" style={{ left: px(pos.x), top: py(pos.y), transform: `translate(-50%, -85%) rotate(${Math.sin(t * 18) * 6}deg)` }} viewBox="0 0 40 56" aria-hidden="true">
-          <path d="M20 3c9 0 16 7 16 16 0 8-6 13-10 17h-12C10 32 4 27 4 19 4 10 11 3 20 3z" fill="#f2c14e" stroke="#2a2238" stroke-width="2" />
-          <path d="M14 5c-4 5-5 14 0 31M26 5c4 5 5 14 0 31" fill="none" stroke="#2a2238" stroke-width="1.4" />
-          <path d="M14 5c-4 5-5 14 0 31L14 36C10 32 4 27 4 19 4 12 8 7 14 5z" fill="#e0453a" />
-          <path d="M26 5c4 5 5 14 0 31L26 36c4-4 10-9 10-17 0-7-4-12-10-14z" fill="#5b8ad6" />
-          <path d="M14 36 15 44M26 36 25 44" stroke="#2a2238" stroke-width="1.4" />
-          <rect x="13" y="44" width="14" height="9" rx="1.5" fill="#b07a45" stroke="#2a2238" stroke-width="2" />
-          <path d="M9 13c1-3 3-5 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" />
-        </svg>
+        <BalloonIcon class="flight__balloon" style={{ left: px(pos.x), top: py(pos.y), transform: `translate(-50%, -85%) rotate(${Math.sin(t * 18) * 6}deg)` }} />
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { sfx } from '../audio/sfx';
 import { item } from '../data/items';
 import { save, takeItem, update } from '../state/game';
 import {
-  ask, bubble, flag, flash, getGame, giveItem, openScreen, say, sayAll, scripts, setFlag, showToast, warpTo,
+  ask, bubble, flag, flash, getGame, giveItem, openScreen, refreshMap, say, sayAll, scripts, setFlag, showToast, warpTo,
 } from '../overworld/controller';
 import { GRUNT } from './cast';
 import { choose, RETOUCHE } from './choices';
@@ -107,6 +107,11 @@ scripts.feutreRestore = async () => {
   }
   await say(L('(Les Sbires s’enfuient derrière leur chef.)', '(The grunts run off after their boss.)'), GRUNT);
   await flash('white', 300);
+  // the warehouse too gets its colours back, spreading from Zélie
+  const spread = g.colourReturn([{ x: 9, y: 8 }], 2200);
+  refreshMap();
+  sfx.sparkle();
+  await spread;
   showToast(tr(L('Ville-Feutre retrouve ses couleurs !', 'Felt City gets its colours back!')));
   await sayAll([
     L('Tu m’as libérée ! Et regarde : toutes les couleurs s’envolent vers la ville !', 'You freed me! And look: all the colours are flying back to the city!'),

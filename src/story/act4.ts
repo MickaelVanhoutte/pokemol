@@ -17,7 +17,7 @@ import { joinLevel, type CustomDesign } from '../data/custom';
 import { healMon } from '../engine/pk/creature';
 import { move } from '../data/moves';
 import { RIVAL } from './cast';
-import { choose, comeUp, findCoconfus, RETOUCHE } from './choices';
+import { choose, comeUp, findCoconfus, goAway, RETOUCHE } from './choices';
 
 const DOYEN = L('Doyen des Esquisses', 'Elder of Sketches');
 const hasCoconfus = () => !!save.value && !!findCoconfus(save.value);
@@ -210,7 +210,7 @@ scripts.forteresseTop = async () => {
   await getGame().fadeTo(0, 300);
   showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
   await say(L('Les trois admins t’attendent devant la machine. Moi, je garde l’escalier. Fonce !', 'The three admins are waiting for you in front of the machine. I’ll guard the stairs. Go!'), RIVAL);
-  getGame().remove(r.id);
+  await goAway(r);
   mapMusic();
 };
 

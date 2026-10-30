@@ -12,7 +12,7 @@ import {
   openScreen, trainerBattle, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
-import { choose, cocoonRemembers, comeUp, findCoconfus, RETOUCHE } from './choices';
+import { choose, cocoonRemembers, comeUp, findCoconfus, goAway, RETOUCHE } from './choices';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const GRUNT = L('Sbire Gomme', 'Eraser Grunt');
@@ -34,9 +34,14 @@ scripts.balloon = async () => {
     await say(L('Mon Ballon-Crayon vole vers les villes que tu as déjà visitées. Reviens quand tu auras voyagé un peu !', 'My Pencil Balloon flies to towns you’ve already visited. Come back once you’ve travelled a bit!'), who);
     return;
   }
-  const c = await ask(L('Envie d’un tour en Ballon-Crayon ? On va où ?', 'Fancy a ride in the Pencil Balloon? Where to?'), [...towns.map((t) => t.name), L('Nulle part', 'Nowhere')], who);
-  if (c >= towns.length) return;
-  const t = towns[c];
+  await say(L('Envie d’un tour en Ballon-Crayon ? Montre-moi sur la carte où tu veux aller !', 'Fancy a ride in the Pencil Balloon? Show me on the map where you want to go!'), who);
+  let to = '';
+  await openScreen({ id: 'townmap', pick: { here, onPick: (town) => (to = town) } });
+  const t = towns.find((x) => x.map === to);
+  if (!t) {
+    await say(L('Une autre fois, alors. Le ballon t’attend !', 'Another time, then. The balloon will wait for you!'), who);
+    return;
+  }
   await say(L('Monte dans la nacelle… Accroche-toi, on décolle !', 'Climb into the basket… Hold on tight, lift-off!'), who);
   // into the basket, up and away, the trip over the Town Map, and down by the other town's Inn
   g.passenger = true;
@@ -102,7 +107,6 @@ scripts.towerFreed = async () => {
 
 /** The rival comes up the tower, beaten downstairs: he doubts himself (the fifth choice). */
 async function rivalDoubts() {
-  const g = getGame();
   playMusic('rival');
   const r = await comeUp('rivalTour', LOOKS.rival);
   await sayAll([
@@ -116,7 +120,7 @@ async function rivalDoubts() {
   await say(way === RETOUCHE
     ? L('… T’as raison. Je vais m’entraîner comme jamais. La prochaine fois, tu verras !', '… You’re right. I’m going to train like never before. Next time, you’ll see!')
     : L('… Merci. C’est bizarre, ça me fait du bien. On se retrouve plus loin, d’accord ?', '… Thanks. It’s weird, it actually helps. See you further on, OK?'), RIVAL);
-  g.remove(r.id);
+  await goAway(r);
   mapMusic();
 }
 
@@ -342,6 +346,12 @@ scripts.rivalFinal = async () => {
         ? L('Tu m’as dit que j’étais génial comme j’étais. Alors ce combat, je le fais juste pour le plaisir. Sans retenue !', 'You told me I was great just as I am. So this battle is just for fun. Hold nothing back!')
         : L('Avant d’affronter le Grand Effaceur, montre-moi tout ce que tu as appris. Sans retenue !', 'Before you face the Great Eraser, show me everything you’ve learned. Hold nothing back!'),
   ], RIVAL);
+  // fair play: a real battle, with both teams at their best
+  await say(L('Mais d’abord, je soigne ton équipe. Je veux un vrai combat, à armes égales !', 'But first, let me heal your team. I want a real battle, a fair one!'), RIVAL);
+  await g.fadeTo(0.6, 200, 'white');
+  update((d) => healParty(d));
+  await g.fadeTo(0, 300);
+  showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
   const party = partyOf(rivalFinalTeam(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0')), newSeed());
   const out = await fight('trainer', RIVAL, party, {
     trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, fairCopy: true, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
@@ -358,6 +368,9 @@ scripts.rivalFinal = async () => {
   ], RIVAL);
   update((d) => healParty(d));
   showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
+  // back down to Ink City, round you
+  const rival = g.npc('rivalEnd');
+  if (rival) await goAway(rival, rival.x === g.player.x ? ['left', 'down'] : ['down']);
 };
 
 // ------------------------------------------------------------------ after the ending

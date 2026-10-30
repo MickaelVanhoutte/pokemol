@@ -6,8 +6,8 @@
  */
 import { L, type LText } from '../i18n';
 import type { Mon } from '../engine/pk/creature';
-import type { SaveData } from '../save/schema';
-import type { Actor } from '../overworld/game';
+import type { Dir, SaveData } from '../save/schema';
+import { DIRS, type Actor } from '../overworld/game';
 import { LOOKS, type Look } from '../overworld/sprites';
 import { ask, bubble, getGame, giveMon, offerNickname, say, setFlag } from '../overworld/controller';
 import { allMons, save } from '../state/game';
@@ -127,17 +127,38 @@ export async function coconfusJoins(level: number, actor?: Actor) {
   await offerNickname(m.uid);
 }
 
+const OPPOSITE: Record<Dir, Dir> = { up: 'down', down: 'up', left: 'right', right: 'left' };
+/** The way each actor brought on by `comeUp` walked in, so that it leaves the same way. */
+const cameFrom = new WeakMap<Actor, Dir>();
+
+/** How many free tiles in a row from (x, y) towards `dir`, up to `max` (an actor never stops on a warp). */
+function freeRun(x: number, y: number, dir: Dir, max: number, who?: Actor): number {
+  const g = getGame();
+  const [dx, dy] = DIRS[dir];
+  let n = 0;
+  while (n < max) {
+    const tx = x + (n + 1) * dx, ty = y + (n + 1) * dy;
+    if (g.blocked(tx, ty, who) || g.map?.warps.has(ty * g.map.w + tx)) break;
+    n++;
+  }
+  return n;
+}
+
 /**
- * Someone comes up to the player for a cut-scene: spawned two free tiles away (below first) and walking one
- * step closer, or right beside the player when there is no room.
+ * Someone comes up to the player for a cut-scene: they walk in from a few tiles away (the longest free way, up to
+ * five tiles, below first), or appear right beside the player when there is no room.
  */
 export async function comeUp(id: string, look: Look, mon?: string): Promise<Actor> {
   const g = getGame();
   const { x, y } = g.player;
-  for (const [dx, dy] of [[0, 1], [0, -1], [-1, 0], [1, 0]] as const) {
-    if (g.blocked(x + dx, y + dy) || g.blocked(x + 2 * dx, y + 2 * dy)) continue;
-    const a = g.spawn(id, look, x + 2 * dx, y + 2 * dy, dy > 0 ? 'up' : dy < 0 ? 'down' : dx > 0 ? 'left' : 'right', mon);
-    await g.walk(a, [dy > 0 ? 'up' : dy < 0 ? 'down' : dx > 0 ? 'left' : 'right'], 200);
+  const ways = (['down', 'up', 'left', 'right'] as const).map((d) => ({ d, n: freeRun(x, y, d, 5) })).filter((w) => w.n >= 2);
+  const best = ways.sort((a, b) => b.n - a.n)[0];
+  if (best) {
+    const [dx, dy] = DIRS[best.d];
+    const toward = OPPOSITE[best.d];
+    const a = g.spawn(id, look, x + best.n * dx, y + best.n * dy, toward, mon);
+    cameFrom.set(a, best.d);
+    await g.walk(a, Array(best.n - 1).fill(toward), 200);
     g.faceToward(g.player, a);
     return a;
   }
@@ -146,4 +167,27 @@ export async function comeUp(id: string, look: Look, mon?: string): Promise<Acto
   g.faceToward(a, g.player);
   g.faceToward(g.player, a);
   return a;
+}
+
+/**
+ * The end of a cut-scene: someone walks off and is gone, never vanishing on the spot. They take `route` first
+ * (steps that are blocked are skipped), then keep going the same way (or the way they came, or any free way)
+ * until eight steps out.
+ */
+export async function goAway(a: Actor, route: Dir[] = []) {
+  const g = getGame();
+  let steps = 0;
+  for (const d of route) {
+    if (freeRun(a.x, a.y, d, 1, a) < 1) continue;
+    await g.walk(a, [d], 180);
+    steps++;
+  }
+  const last = route.length ? route[route.length - 1] : undefined;
+  const ways = [last, cameFrom.get(a), 'down', 'up', 'left', 'right'].filter((d): d is Dir => !!d);
+  const away = ways.find((d) => freeRun(a.x, a.y, d, 1, a) > 0);
+  if (away) {
+    const n = freeRun(a.x, a.y, away, 8 - steps, a);
+    if (n) await g.walk(a, Array(n).fill(away), 180);
+  }
+  g.remove(a.id);
 }

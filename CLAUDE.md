@@ -125,7 +125,9 @@ re-renders everything.
 **Overworld** (`src/overworld`):
 - `game.ts`: the `Game` class. It runs the canvas loop and draws the prerendered map layers, actors,
   fades and wipes, speech bubbles and the "pencilize" post-pass (`pencil.ts`). It also provides the
-  cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`, `wipeTo`.
+  cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`, `wipeTo`. Someone joining a
+  cut-scene walks in with `comeUp` and leaves with `goAway` (`src/story/choices.ts`), never appearing or vanishing on
+  the spot.
 - `tiles.ts`, `buildings.ts` and `sprites.ts` paint pixel art with the `Painter` from `pixel.ts`
   (16px tiles). `LOOKS` gives the trainer and NPC chibis; `lookOf()` turns the player's look into one.
 - Wherever a character shows big (battle intros, the player's back in battle, the prologue, the trainer

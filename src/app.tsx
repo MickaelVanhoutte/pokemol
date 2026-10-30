@@ -41,7 +41,7 @@ export function App() {
       {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
       {s.id === 'drawing' && <DrawingScreen ending={s.ending} />}
       {s.id === 'trainercard' && <TrainerCardScreen />}
-      {s.id === 'townmap' && <TownMapScreen />}
+      {s.id === 'townmap' && <TownMapScreen pick={s.pick} />}
       {s.id === 'flight' && <FlightScreen from={s.from} to={s.to} />}
       {s.id === 'hall' && <HallScreen fresh={s.fresh} />}
       {s.id === 'jukebox' && <JukeboxScreen />}
