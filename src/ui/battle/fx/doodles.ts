@@ -9,7 +9,7 @@ import { mix, PAPER, SPARK } from './core';
 export type DoodleKind =
   | 'flame' | 'drop' | 'bubble' | 'rock' | 'leaf' | 'seed' | 'shard' | 'note' | 'star' | 'heart'
   | 'spark' | 'puff' | 'fist' | 'feather' | 'zzz' | 'blob' | 'ink' | 'moon' | 'sun' | 'orb'
-  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'ball' | 'superball' | 'doll' | 'scrap' | 'bone' | 'acorn'
+  | 'magnet' | 'clod' | 'petal' | 'snow' | 'foot' | 'plus' | 'book' | 'superbook' | 'bookOpen' | 'superbookOpen' | 'pencil' | 'doll' | 'scrap' | 'bone' | 'acorn'
   | 'plane' | 'balloon';
 
 const C = 64;
@@ -241,11 +241,26 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
     const p = new Pencil(ctx, r);
     paint(p, [[C - 14, 14], [C + 14, 14], [C + 14, C - 14], [114, C - 14], [114, C + 14], [C + 14, C + 14], [C + 14, 114], [C - 14, 114], [C - 14, C + 14], [14, C + 14], [14, C - 14], [C - 14, C - 14]], color);
   },
-  ball(ctx, color, r) {
-    crayonBall(new Pencil(ctx, r), r, color);
+  book(ctx, color, r) {
+    sketchbook(new Pencil(ctx, r), r, color);
   },
-  superball(ctx, color, r) {
-    crayonBall(new Pencil(ctx, r), r, color, '#e0453a');
+  superbook(ctx, color, r) {
+    sketchbook(new Pencil(ctx, r), r, color, '#e0453a');
+  },
+  bookOpen(ctx, color, r) {
+    sketchbookOpen(new Pencil(ctx, r), r, color);
+  },
+  superbookOpen(ctx, color, r) {
+    sketchbookOpen(new Pencil(ctx, r), r, color, '#e0453a');
+  },
+  pencil(ctx, color, r) {
+    // a crayon held to draw, its point down to the left: the coloured body, the wood, the lead, a pink eraser
+    const p = new Pencil(ctx, r);
+    paint(p, [[52, 66], [100, 18], [116, 34], [68, 82]], color);
+    line(p, [[60, 74], [108, 26]], mix(color, GRAPHITE, 0.4), 3);
+    paint(p, [[100, 18], [110, 8], [126, 24], [116, 34]], '#f29ab0');
+    paint(p, [[52, 66], [68, 82], [28, 106]], '#f2d3a0');
+    paint(p, [[36, 94], [44, 102], [28, 106]], GRAPHITE, { line: GRAPHITE, lw: 2 });
   },
   doll(ctx, color, r) {
     const p = new Pencil(ctx, r);
@@ -295,17 +310,28 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
   },
 };
 
-/** A Crayon-ball: a coloured top, a graphite band with its button, a white bottom. */
-function crayonBall(p: Pencil, r: Rand, top: string, stripe?: string) {
-  const upper: Pt[] = [], lower: Pt[] = [];
-  for (let i = 0; i <= 14; i++) {
-    const a = Math.PI + (i / 14) * Math.PI;
-    upper.push([C + Math.cos(a) * 50, C + Math.sin(a) * 50]);
-    lower.push([C - Math.cos(a) * 50, C - Math.sin(a) * 50]);
+/** A Crayon-ball: a little sketchbook, closed, its spiral along the top, a star drawn on its cover (and a band). */
+function sketchbook(p: Pencil, r: Rand, cover: string, band?: string) {
+  // the pages peeking out under the cover
+  paint(p, [[C - 34, C - 28], [C + 44, C - 32], [C + 48, C + 46], [C - 30, C + 50]], '#ffffff', { line: GRAPHITE, gap: 9 });
+  paint(p, [[C - 44, C - 36], [C + 38, C - 40], [C + 42, C + 38], [C - 40, C + 42]], cover);
+  // a little star drawn on the cover
+  const star: Pt[] = [];
+  for (let i = 0; i < 10; i++) {
+    const a = -Math.PI / 2 + (i / 10) * Math.PI * 2, q = i % 2 ? 8 : 18;
+    star.push([C - 4 + Math.cos(a) * q, C + 4 + Math.sin(a) * q]);
   }
-  paint(p, upper, top);
-  if (stripe) line(p, [[C - 30, C - 40], [C - 26, C - 8]], stripe, 8), line(p, [[C + 30, C - 40], [C + 26, C - 8]], stripe, 8);
-  paint(p, lower, '#ffffff', { line: GRAPHITE });
-  line(p, [[C - 50, C], [C + 50, C]], GRAPHITE, 8);
-  paint(p, circle(C, C, 13, 13, r, 14), '#ffffff', { line: GRAPHITE, lw: 4 });
+  paint(p, star, '#ffffff', { line: mix(cover, GRAPHITE, 0.6), lw: 2.5 });
+  if (band) line(p, [[C + 22, C - 39], [C + 26, C + 40]], band, 7);
+  // the spiral binding along the top
+  for (let i = 0; i < 7; i++) line(p, circle(C - 34 + i * 12, C - 38, 4.5, 8, r, 10), GRAPHITE, 3);
+}
+
+/** The sketchbook open: two blank pages on its cover, the spiral down the middle (and its band). */
+function sketchbookOpen(p: Pencil, r: Rand, cover: string, band?: string) {
+  paint(p, [[C - 62, C - 30], [C + 62, C - 34], [C + 64, C + 34], [C - 64, C + 38]], cover);
+  if (band) line(p, [[C + 50, C - 33], [C + 52, C + 35]], band, 6);
+  paint(p, [[C - 57, C - 25], [C - 3, C - 29], [C - 3, C + 29], [C - 58, C + 33]], '#ffffff', { line: GRAPHITE, gap: 12 });
+  paint(p, [[C + 3, C - 29], [C + 57, C - 29], [C + 59, C + 31], [C + 3, C + 29]], '#ffffff', { line: GRAPHITE, gap: 12 });
+  for (let i = 0; i < 5; i++) line(p, circle(C, C - 22 + i * 11, 6, 3.5, r, 10), GRAPHITE, 3);
 }

@@ -34,26 +34,29 @@ const PAL: Record<string, string> = {
   n: '#c08a52', S: '#f4c7a0', E: '#5cae5a', e: '#3a7a3a', O: '#f08a3a', T: '#3fb6b0', M: '#e07aa6',
 };
 
-/** Draws a round "Crayon-ball": colored top, ink band, white button. */
-function ball(p: Painter, top: string, shade: string, stripe?: string) {
-  const cx = 7.5, cy = 7.5;
-  for (let y = 0; y < 16; y++) {
-    for (let x = 0; x < 16; x++) {
-      const d = Math.hypot(x - cx, y - cy);
-      if (d > 7.2) continue;
-      if (d > 6.2) { p.px(x, y, PAL.K); continue; }
-      let c: string;
-      if (y >= 7 && y <= 8) c = PAL.K;
-      else if (y < 7) c = stripe && (x === 5 || x === 10) ? stripe : x + y > 16 ? shade : top;
-      else c = x + y > 19 ? PAL.G : PAL.W;
-      p.px(x, y, c);
-    }
+/** Draws a "Crayon-ball": a little sketchbook, its spiral along the top, a star on its cover (and a red band). */
+function sketchbook(p: Painter, cover: string, shade: string, band?: string) {
+  // the pages showing under the cover
+  p.rect(3, 4, 12, 12, PAL.K);
+  p.rect(4, 5, 10, 10, PAL.W);
+  // the cover
+  p.rect(1, 2, 12, 13, PAL.K);
+  p.rect(2, 3, 10, 11, cover);
+  p.rect(2, 12, 10, 2, shade);
+  p.rect(11, 3, 1, 11, shade);
+  // a little white star drawn on it
+  p.px(6, 6, PAL.W);
+  p.rect(5, 7, 3, 1, PAL.W);
+  p.px(6, 8, PAL.W);
+  p.px(5, 9, PAL.W);
+  p.px(7, 9, PAL.W);
+  if (band) p.rect(9, 2, 1, 13, band);
+  // the spiral binding
+  for (const x of [2, 4, 6, 8, 10]) {
+    p.px(x, 0, PAL.G);
+    p.rect(x, 1, 1, 2, PAL.K);
   }
-  p.disc(7.5, 7.5, 2.4, PAL.K);
-  p.disc(7.5, 7.5, 1.4, PAL.W);
-  // highlight
-  p.px(4, 3, PAL.W);
-  p.px(5, 2, PAL.W);
+  p.px(3, 4, PAL.W);
 }
 
 /** A round berry with a leaf: light and dark tone of its colour. */
@@ -805,8 +808,8 @@ export function iconUrl(id: string): string {
   if (hit) return hit;
   const c = makeCanvas(16, 16);
   const p = new Painter(c.getContext('2d')!);
-  if (key === 'crayon-ball' || key === 'party') ball(p, PAL.Y, PAL.y);
-  else if (key === 'super-crayon-ball') ball(p, PAL.B, PAL.b, PAL.R);
+  if (key === 'crayon-ball' || key === 'party') sketchbook(p, PAL.Y, PAL.y);
+  else if (key === 'super-crayon-ball') sketchbook(p, PAL.B, PAL.b, PAL.R);
   else if (painterFor(key)) painterFor(key)!(p);
   else {
     const rows = ROWS[key];

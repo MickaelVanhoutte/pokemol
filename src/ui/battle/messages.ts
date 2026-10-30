@@ -244,7 +244,7 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
 export function eventDuration(e: BattleEvent): number {
   switch (e.t) {
     case 'damage': return e.crit || (e.eff !== undefined && e.eff !== 1) ? 1100 : 750;
-    case 'ball': return 900 + e.shakes * 650;
+    case 'ball': return 760 + e.shakes * 650 + (e.caught ? 810 : 520);
     case 'faint': return 1000;
     case 'xp': return 1100;
     case 'berry': return 1400;

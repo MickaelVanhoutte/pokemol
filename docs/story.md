@@ -280,6 +280,11 @@ entries of `WORLD` in `src/data/worldmap.ts`, next to each basket). `scripts.bal
 by the other town's Inn (`balloonFly('down')`). `src/data/balloons.test.ts` checks every balloon stands on free
 ground and blocks no door or exit.
 
+**Crayon-balls are little sketchbooks** (the owner's idea): a yellow one, and a blue one held shut by a red band
+for the Super. Thrown, it opens at the foe's feet and a crayon draws the Bestiole a bit more at each tick; caught,
+pencil lines pull the Bestiole into the page and the book snaps shut; broken free, the drawing is rubbed out and
+the book shuts empty. The items keep their names; the bag icons and the pick-ups on the maps are sketchbooks too.
+
 **Town Map.** Mom gives the Carte de Papeterre with her first lines (`bag.carte`; old saves get it on
 load). START > CARTE shows the region drawn from `WORLD` (`src/data/worldmap.ts`), the player's place
 (`playerSpot`, through `regionOf` for interiors and dungeons) and a star on the next objective.

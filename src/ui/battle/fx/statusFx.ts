@@ -360,17 +360,51 @@ export const batter = (o: { kind: 'sable' | 'grele'; who?: Who; dur?: number }):
   };
 };
 
-/** A thrown Crayon-ball: arc, opening pop, drop, shakes, then stars (caught) or a burst (broke free). */
-export const crayonBall = (o: { kind: 'ball' | 'superball'; color: string; shakes: number; caught: boolean }): Builder => (env) => {
-  const THROW = 450, OPEN = 220, DROP = 220, SHAKE = 650, END = 380;
-  const dur = THROW + OPEN + DROP + SHAKE * o.shakes + END;
+const BALL = { THROW: 450, OPEN: 260, DRAW: 650, SUCK: 450, SHUT: 360, ERASE: 520 };
+
+/** When a thrown Crayon-ball sucks the Bestiole into its page (if caught), and when it is all over (ms). */
+export function ballTimes(shakes: number, caught: boolean): { suck: number; end: number } {
+  const suck = BALL.THROW + BALL.OPEN + BALL.DRAW * shakes;
+  return { suck, end: suck + (caught ? BALL.SUCK + BALL.SHUT : BALL.ERASE) };
+}
+
+/**
+ * A thrown Crayon-ball, a little sketchbook: it flies shut and opens at the foe's feet; at each tick a crayon draws a
+ * bit more of the Bestiole on its page; caught, pencil lines pull the Bestiole into the page and the book snaps shut
+ * under stars; broke free, the drawing is rubbed out in eraser crumbs and the book shuts empty.
+ */
+export const crayonBall = (o: { kind: 'book' | 'superbook'; color: string; shakes: number; caught: boolean }): Builder => (env) => {
+  const { THROW, OPEN, DRAW, SUCK, SHUT } = BALL;
+  const { suck, end } = ballTimes(o.shakes, o.caught);
+  const open: DoodleKind = o.kind === 'superbook' ? 'superbookOpen' : 'bookOpen';
+  const R = fixed(env, 377);
+  // the drawing on the page: a wobbly outline, drawn from its top round
+  const sketch: P[] = Array.from({ length: 18 }, (_, i) => {
+    const a = (i / 17) * Math.PI * 2 - Math.PI / 2, q = 0.75 + R() * 0.3;
+    return [Math.cos(a) * q, Math.sin(a) * q * 0.8];
+  });
+  const crumbs = Array.from({ length: 6 }, () => [R() - 0.5, R() * 0.5]);
   return {
-    start: 0, sounds: [['whoosh', 0], ['pop', THROW], ...Array.from({ length: o.shakes }, (_, k) => ['tick', THROW + OPEN + DROP + k * SHAKE + 150] as [FxSound, number]), ...(o.caught ? [] : [['pop', dur - END] as [FxSound, number]])], dur, impact: THROW,
+    start: 0,
+    sounds: [
+      ['whoosh', 0], ['pop', THROW],
+      ...Array.from({ length: o.shakes }, (_, k) => ['tick', THROW + OPEN + (k + 1) * DRAW - 120] as [FxSound, number]),
+      [o.caught ? 'whoosh' : 'pop', suck] as [FxSound, number],
+    ],
+    dur: end, impact: THROW,
     draw(b, t) {
-      const T = env.target, s = T.size, ms = t * dur;
-      const size = Math.max(30, s * 0.3);
+      const T = env.target, s = T.size, ms = t * end;
+      const size = Math.max(38, s * 0.42), W = size * 1.7;
       const [fx, fy] = feet(T);
-      const rest: P = [fx, fy - size * 0.45];
+      const rest: P = [fx, fy - size * 0.35];
+      // the right-hand page, where the crayon draws
+      const page: P = [rest[0] + W * 0.22, rest[1]], pr = W * 0.16;
+      const drawing = (k: number, alpha = 1): P => {
+        const n = Math.max(2, Math.round(k * sketch.length));
+        const pts = sketch.slice(0, n).map(([x, y]): P => [page[0] + x * pr, page[1] + y * pr]);
+        if (k > 0) b.line(pts, GRAPHITE, 2, { alpha, seed: 377, passes: 1 });
+        return pts[pts.length - 1];
+      };
       if (ms < THROW) {
         const u = ms / THROW;
         const start: P = [-size, env.h * 0.85];
@@ -381,30 +415,52 @@ export const crayonBall = (o: { kind: 'ball' | 'superball'; color: string; shake
         }
         return b.doodle(o.kind, o.color, x, y, size, { rot: u * Math.PI * 4 });
       }
-      if (ms < THROW + OPEN + DROP) {
-        const v = (ms - THROW) / (OPEN + DROP);
-        if (ms < THROW + OPEN) {
-          const w = (ms - THROW) / OPEN;
-          b.flash(0.35 * (1 - w));
-          b.star(T.x, T.y, s * 0.4 * (0.6 + w * 0.6), '#fffdf4', { alpha: 1 - w, seed: 490 });
-        }
-        const y = lerp(T.y, rest[1], easeIn(seg(v, 0.45, 1)));
-        return b.doodle(o.kind, o.color, T.x, y, size, {});
+      if (ms < THROW + OPEN) {
+        // it drops to the foe's feet and opens
+        const w = (ms - THROW) / OPEN;
+        b.flash(0.25 * (1 - w));
+        const x = lerp(T.x, rest[0], easeOut(w)), y = lerp(T.y, rest[1], easeOut(w));
+        return w < 0.5 ? b.doodle(o.kind, o.color, x, y, size, {}) : b.doodle(open, o.color, x, y, W * (0.7 + 0.3 * w), {});
       }
-      const sm = ms - THROW - OPEN - DROP;
-      if (sm < SHAKE * o.shakes) {
-        const v = (sm % SHAKE) / SHAKE;
-        const rot = Math.sin(seg(v, 0.1, 0.7) * Math.PI * 2) * 0.4;
-        return b.doodle(o.kind, o.color, rest[0] + rot * size * 0.25, rest[1], size, { rot });
+      const dm = ms - THROW - OPEN, done = o.shakes / 3;
+      if (dm < DRAW * o.shakes) {
+        // the crayon draws a bit more at each try; a little jolt at each tick
+        const v = (dm % DRAW) / DRAW;
+        b.doodle(open, o.color, rest[0], rest[1], W, { rot: Math.sin(seg(v, 0.75, 1) * Math.PI * 2) * 0.06 });
+        const head = drawing((dm / (DRAW * o.shakes)) * done);
+        b.doodle('pencil', '#f2c14e', head[0] + size * 0.3, head[1] - size * 0.3, size * 0.75, { rot: Math.sin(ms / 55) * 0.12 });
+        return;
       }
-      const e = seg(sm - SHAKE * o.shakes, 0, END);
+      const em = dm - DRAW * o.shakes;
       if (o.caught) {
-        b.doodle(o.kind, mix(o.color, GRAPHITE, 0.25 * e), rest[0], rest[1], size, {});
+        if (em < SUCK) {
+          // pencil lines pull the Bestiole into the page
+          const e = em / SUCK;
+          b.doodle(open, o.color, rest[0], rest[1], W, {});
+          drawing(1);
+          for (let i = 0; i < 4; i++) {
+            const a = (i / 4) * Math.PI * 2 + e * 4;
+            const from: P = [T.x + Math.cos(a) * s * 0.35 * (1 - e), T.y + Math.sin(a) * s * 0.3 * (1 - e)];
+            const mid: P = [lerp(from[0], page[0], 0.5) + Math.cos(a + 1) * s * 0.15, lerp(from[1], page[1], 0.5)];
+            b.line([from, mid, page], GRAPHITE, 1.4, { alpha: 0.6 * (1 - seg(e, 0.8, 1)), seed: 380 + i, passes: 1 });
+          }
+          return;
+        }
+        // the book snaps shut, stars pop out
+        const e = seg(em - SUCK, 0, SHUT);
+        b.doodle(o.kind, mix(o.color, GRAPHITE, 0.2 * e), rest[0], rest[1], size, { rot: Math.sin(e * Math.PI) * 0.1 });
         for (let i = 0; i < 3; i++) b.doodle('star', SPARK, rest[0] + (i - 1) * size * 0.9, rest[1] - size * (0.6 + e * 0.7) + Math.abs(i - 1) * size * 0.3, size * 0.7, { alpha: 1 - seg(e, 0.7, 1), seed: i });
         return;
       }
-      b.star(rest[0], rest[1] - size * 0.3, size * (0.6 + e * 1.4), '#fffdf4', { alpha: 1 - e, seed: 491 });
-      b.doodle(o.kind, o.color, rest[0], rest[1], size * (1 - e), { alpha: 1 - e });
+      // broke free: the drawing is rubbed out in crumbs, the book shuts empty and falls away
+      const e = seg(em, 0, BALL.ERASE);
+      if (e < 0.6) {
+        b.doodle(open, o.color, rest[0], rest[1], W, {});
+        drawing(Math.max(done, 0.2), 1 - seg(e, 0, 0.6));
+        crumbs.forEach(([dx, dy], i) => b.doodle('scrap', '#f29ab0', page[0] + dx * pr * 2, page[1] + (dy + e) * pr * 1.6, size * 0.16, { alpha: 1 - e, seed: i }));
+        return;
+      }
+      b.doodle(o.kind, o.color, rest[0], rest[1] + size * 0.4 * seg(e, 0.6, 1), size, { alpha: 1 - seg(e, 0.7, 1), rot: seg(e, 0.6, 1) * 0.6 });
     },
   };
 };

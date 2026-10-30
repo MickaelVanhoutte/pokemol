@@ -145,7 +145,8 @@
 /* a paper doll stands in for a Bestiole behind a Pantin de papier */
 .pk-sprite.is-doll { margin-bottom: 8%; }
 .pk-sprite.is-doll .pk-art { max-height: 72cqh; }
-.pk-sprite.is-captured { animation: intoBall 0.35s ease forwards; }
+/* caught: the Bestiole is pulled down into the sketchbook's page at its feet */
+.pk-sprite.is-captured { transform-origin: 50% 100%; animation: intoBall 0.45s ease-in forwards; }
 @keyframes intoBall { to { transform: scaleX(var(--flip)) scale(0.05); opacity: 0; } }
 
 .fx-in { animation: popIn 0.5s cubic-bezier(.3, 1.6, .5, 1); }

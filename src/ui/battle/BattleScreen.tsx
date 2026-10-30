@@ -25,6 +25,7 @@ import { FxStage } from './fx/stage';
 import { fxFor, MOVE_FX } from './fx/recipes';
 import { moveOutcome } from './fx/outcome';
 import { ballFx, eventFx } from './fx/events';
+import { ballTimes } from './fx/statusFx';
 import type { Recipe } from './fx/core';
 import { panelMode } from './panelMode';
 import { weakSpotSlots } from './weakSpots';
@@ -189,13 +190,14 @@ export function BattleScreen(props: BattleProps) {
       case 'levelUp': sfx.levelUp(); break;
       case 'status': pulse(e.side, 'status', 700); break;
       case 'ball': {
-        // the ball flies, opens and swallows the Bestiole, shakes, then holds or bursts open
+        // the sketchbook flies, opens, draws the Bestiole at each tick, then sucks it in (caught) or rubs it out
         const at = (ms: number, f: () => void) => setTimeout(f, ms * speed.current);
         anim = stage.play(ballFx(e.item, e.shakes, e.caught), { side: 0, speed: speed.current, keep: e.caught });
-        at(450, () => setCaptured(true));
-        const end = 890 + e.shakes * 650;
-        if (e.caught) at(end, () => sfx.capture());
-        else at(end, () => { setCaptured(false); pulse(1, 'in', 600); });
+        const { suck, end } = ballTimes(e.shakes, e.caught);
+        if (e.caught) {
+          at(suck, () => setCaptured(true));
+          at(end, () => sfx.capture());
+        } else at(suck, () => pulse(1, 'status', 700));
         break;
       }
       case 'end':

@@ -799,18 +799,22 @@ export class Game {
 
     for (const p of this.pickups) {
       const bx = p.x * TILE - camX + 3, by = p.y * TILE - camY + 4;
-      // a little pencil ball: yellow wood on top, white below, red button
+      // a little sketchbook lying there: pages under a yellow cover, its spiral along the top
       ctx.fillStyle = '#2a2238';
-      ctx.fillRect(bx + 2, by, 6, 1); ctx.fillRect(bx, by + 2, 1, 6); ctx.fillRect(bx + 9, by + 2, 1, 6); ctx.fillRect(bx + 2, by + 9, 6, 1);
-      ctx.fillRect(bx + 1, by + 1, 1, 1); ctx.fillRect(bx + 8, by + 1, 1, 1); ctx.fillRect(bx + 1, by + 8, 1, 1); ctx.fillRect(bx + 8, by + 8, 1, 1);
-      ctx.fillStyle = '#f2c14e';
-      ctx.fillRect(bx + 1, by + 2, 8, 3); ctx.fillRect(bx + 2, by + 1, 6, 1);
+      ctx.fillRect(bx + 1, by + 2, 10, 9);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(bx + 1, by + 5, 8, 3); ctx.fillRect(bx + 2, by + 8, 6, 1);
+      ctx.fillRect(bx + 2, by + 3, 8, 7);
       ctx.fillStyle = '#2a2238';
-      ctx.fillRect(bx + 1, by + 5, 8, 1);
-      ctx.fillStyle = '#d64545';
-      ctx.fillRect(bx + 4, by + 4, 2, 2);
+      ctx.fillRect(bx, by + 1, 9, 9);
+      ctx.fillStyle = '#f2c14e';
+      ctx.fillRect(bx + 1, by + 2, 7, 7);
+      ctx.fillStyle = '#c98f1e';
+      ctx.fillRect(bx + 1, by + 8, 7, 1);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(bx + 4, by + 4, 1, 3);
+      ctx.fillRect(bx + 3, by + 5, 3, 1);
+      ctx.fillStyle = '#2a2238';
+      for (const x of [1, 3, 5, 7]) ctx.fillRect(bx + x, by, 1, 2);
     }
     for (const b of this.berries) {
       // three berries peeking out of the bush

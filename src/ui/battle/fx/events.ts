@@ -79,9 +79,9 @@ export function eventFx(e: BattleEvent, snap: BattleState, moveShown: { side: Si
   }
 }
 
-/** The Crayon-ball thrown at the foe (played from your side). */
+/** The Crayon-ball (a little sketchbook) thrown at the foe (played from your side). */
 export function ballFx(item: string, shakes: number, caught: boolean): Recipe {
   const superBall = item === 'super-crayon-ball';
-  return { hit: 'none', layers: [crayonBall({ kind: superBall ? 'superball' : 'ball', color: superBall ? '#4a7fd6' : '#f2c94c', shakes, caught })] };
+  return { hit: 'none', layers: [crayonBall({ kind: superBall ? 'superbook' : 'book', color: superBall ? '#4a7fd6' : '#f2c94c', shakes, caught })] };
 }
 
