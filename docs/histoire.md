@@ -118,7 +118,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche, et quelques-unes
   n’apparaissent qu’une fois l’histoire finie.
 - Des **énigmes** dans les grottes, les tours et les repaires, et des **fresques** à reconstituer.
-- Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va.
+- Ta première Bestiole **te suit** partout : parle-lui pour savoir comment elle va. En chemin, elle ramasse
+  des objets (un « ! » au-dessus d’elle) : plus elle t’aime, plus elle en trouve, et des plus rares.
 - Dans chaque ville, une **Auberge** : l’aubergiste remet tes Bestioles en forme, et ses lits te
   laissent dormir jusqu’à la nuit ou jusqu’au matin. Chaque Auberge a aussi son habitué : un
   Calligraphe pour les surnoms, un Coach pour les efforts, une Diseuse d’Humeurs pour les natures,
@@ -258,7 +259,8 @@ The story has **two endings**, and your answers choose which one you will see.
   There are **111** to discover: some only come out at night, others hide in the tower, deep in the water
   or at the end of a fishing line, and a few only show up once the story is over.
 - **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.
-- Your first Critter **follows you** everywhere: talk to it to see how it feels.
+- Your first Critter **follows you** everywhere: talk to it to see how it feels. On the way it picks up
+  items (a “!” over its head): the more it loves you, the more it finds, and rarer ones.
 - Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let
   you sleep until night or until morning. Each Inn also has its regular: a Calligrapher for
   nicknames, a Coach for effort, a Mood Teller for natures, a Star Polisher for born qualities, a

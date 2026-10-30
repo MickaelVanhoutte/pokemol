@@ -28,6 +28,7 @@ import { isWater, tile } from './tiles';
 import { calm, missed, wildOdds, wildStep } from './encounterRate';
 import { berryFlag, isRipe, localDay } from './berries';
 import { daycareStep } from '../state/daycare';
+import { FIND_EVERY, FOLLOWER_FINDS, rareFind, rollFind } from '../data/followerFinds';
 import { prefs } from '../state/prefs';
 import { hourNow, meetsTime, phaseAt, type DayPhase } from '../state/clock';
 import { sfx } from '../audio/sfx';
@@ -270,6 +271,8 @@ function onStep(x: number, y: number): boolean {
     save.value.steps = (save.value.steps ?? 0) + 1;
     // walking together makes friends
     if (save.value.steps % 128 === 0) for (const m of save.value.party) m.friendship = Math.min(255, (m.friendship ?? 70) + 1);
+    // and the Bestiole following you picks things up on the way
+    if (save.value.steps % FIND_EVERY === 0) followerPicks();
     // the Pension: XP for the Bestioles left there, and sometimes an egg
     if (daycareStep(save.value, save.value.steps, { rng: newSeed() })) showToast(tr(L('La Pension Crayonnée a une surprise pour toi !', 'The Pencil Day Care has a surprise for you!')));
     // eggs carried in the party hatch after enough steps
@@ -447,42 +450,79 @@ export function refreshFollower() {
   if (g.follower?.img === img) return;
   const p = g.player;
   const had = g.follower;
-  const look = { img, faces: creature(lead.species).faces, shiny: !!lead.shiny };
+  const look = { img, faces: creature(lead.species).faces, shiny: !!lead.shiny, bubble: save.value?.flags.followerHas ? '!' : undefined };
   g.follower = had ? { ...had, ...look } : { x: p.x, y: p.y, fromX: p.x, fromY: p.y, t: 0, ms: 200, moving: false, dir: p.dir, ...look };
   if (!had) g.placeFollower();
 }
 
-/** Things the follower might find on a walk (once a day). */
-const FOLLOWER_FINDS = ['baie-bleue', 'baie-cerise', 'potion', 'crayon-ball', 'baie-menthe', 'baie-doree'];
+/** The follower holds the item it found (`flags.followerHas`, see `src/data/followerFinds.ts`). */
+const followerHeld = () => FOLLOWER_FINDS[(save.value?.flags.followerHas ?? 0) - 1] as string | undefined;
+
+/** Every few steps, the follower may find something, more often and rarer the more it loves you: it shows a !. */
+function followerPicks() {
+  const g = game, lead = followerLead();
+  if (!g?.follower || !lead || !g.followerShown() || followerHeld()) return;
+  const id = rollFind(lead.friendship ?? BASE_FRIENDSHIP, Math.random(), Math.random());
+  if (!id) return;
+  save.value!.flags.followerHas = FOLLOWER_FINDS.indexOf(id) + 1;
+  g.follower.bubble = '!';
+}
+
+/** Friendship a first chat of the day brings. */
+const HUG = 3;
 
 async function talkFollower() {
   const lead = followerLead();
   if (!lead) return;
   sfx.cry(lead.species);
+  const f = getGame().follower;
   const vars = { n: monLabel(lead) };
-  // once a day, it may have found something
-  if (save.value!.flags.followerFind !== localDay() && Math.random() < 0.2) {
-    const id = FOLLOWER_FINDS[Math.floor(Math.random() * FOLLOWER_FINDS.length)];
+  const held = followerHeld();
+  if (held) {
     update((d) => {
-      addItem(d, id, 1);
-      d.flags.followerFind = localDay();
+      addItem(d, held, 1);
+      delete d.flags.followerHas;
     });
+    if (f) {
+      f.bubble = undefined;
+      f.hopAt = performance.now();
+    }
     playJingle('item', { fallback: sfx.confirm });
-    return say(L('Oh ? {n} tient quelque chose dans sa bouche… Tu trouves {i} !', 'Oh? {n} is holding something in its mouth… You found {i}!'), undefined, { ...vars, i: tr(item(id).name) });
+    return say(rareFind(held)
+      ? L('Waouh ! {n} te rapporte une trouvaille rare : {i} !', 'Wow! {n} brings you a rare find: {i}!')
+      : L('Oh ? {n} tient quelque chose dans sa bouche… Tu trouves {i} !', 'Oh? {n} is holding something in its mouth… You found {i}!'), undefined, { ...vars, i: tr(item(held).name) });
+  }
+  // a chat a day makes friends too
+  if (save.value!.flags.followerHug !== localDay()) {
+    update((d) => {
+      d.flags.followerHug = localDay();
+      const m = d.party.find((x) => x.uid === lead.uid);
+      if (m) m.friendship = Math.min(255, (m.friendship ?? BASE_FRIENDSHIP) + HUG);
+    });
   }
   const def = getGame().map.def;
   const fr = lead.friendship ?? BASE_FRIENDSHIP;
-  const lines: LText[] = lead.hp * 3 < maxHp(lead)
+  const tired = lead.hp * 3 < maxHp(lead);
+  const lines: LText[] = tired
     ? [L('{n} a besoin de repos… Un petit tour à l’Auberge ?', '{n} needs a rest… A quick stop at the Inn?')]
-    : fr >= 200
-      ? [L('{n} se blottit contre toi, débordant de bonheur.', '{n} snuggles up to you, overflowing with happiness.'), L('{n} danse autour de toi de joie !', '{n} dances around you with joy!'), L('{n} te regarde avec des cœurs plein les yeux.', '{n} looks at you with hearts in its eyes.')]
-      : fr >= 120
-        ? [L('{n} te sourit.', '{n} smiles at you.'), L('{n} sautille à côté de toi.', '{n} hops along beside you.'), L('{n} renifle l’air avec curiosité.', '{n} sniffs the air curiously.')]
-        : [L('{n} te regarde, un peu timide.', '{n} looks at you, a little shy.'), L('{n} te suit en silence.', '{n} follows you quietly.')];
+    : fr >= 230
+      ? [L('{n} frotte sa tête contre ta main.', '{n} rubs its head against your hand.'), L('{n} te fait un gros câlin !', '{n} gives you a big hug!'), L('{n} ne te quitterait pour rien au monde.', '{n} wouldn’t leave you for anything in the world.'), L('{n} te regarde avec des cœurs plein les yeux.', '{n} looks at you with hearts in its eyes.')]
+      : fr >= 200
+        ? [L('{n} se blottit contre toi, débordant de bonheur.', '{n} snuggles up to you, overflowing with happiness.'), L('{n} danse autour de toi de joie !', '{n} dances around you with joy!'), L('{n} fouille partout : il y a sûrement des trésors par ici !', '{n} rummages everywhere: there must be treasures around here!')]
+        : fr >= 120
+          ? [L('{n} te sourit.', '{n} smiles at you.'), L('{n} sautille à côté de toi.', '{n} hops along beside you.'), L('{n} renifle l’air avec curiosité.', '{n} sniffs the air curiously.')]
+          : [L('{n} te regarde, un peu timide.', '{n} looks at you, a little shy.'), L('{n} te suit en silence.', '{n} follows you quietly.')];
+  if (!tired && dayPhase() === 'night') lines.push(L('{n} bâille… Il se fait tard !', '{n} yawns… It’s getting late!'));
   if (def.backdrop === 'cave' || def.border === 'cavewall') lines.push(L('{n} se serre contre toi : il fait un peu noir ici…', '{n} huddles close to you: it’s a little dark in here…'));
   else if (def.onEnter === 'visitTown') lines.push(L('{n} regarde les maisons avec de grands yeux.', '{n} stares at the houses with big eyes.'));
   else if (!def.indoor) lines.push(L('{n} hume l’odeur de l’herbe et des crayons.', '{n} breathes in the smell of grass and crayons.'));
+  // its mood in a bubble, and two hops for joy when it loves you
+  if (f) {
+    f.bubble = tired ? '…' : fr >= 200 ? '♥' : fr >= 120 ? '♪' : '…';
+    if (!tired && fr >= 200) f.hopAt = performance.now();
+  }
   await say(lines[Math.floor(Math.random() * lines.length)], undefined, vars);
+  if (f) f.bubble = followerHeld() ? '!' : undefined;
 }
 
 // ------------------------------------------------------------------ puzzles

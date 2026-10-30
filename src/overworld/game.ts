@@ -67,6 +67,10 @@ export interface Follower {
   faces?: 'left' | 'right';
   /** A sparkly Bestiole twinkles as it follows. */
   shiny?: boolean;
+  /** A bubble over its head: ! when it found something, ♥ ♪ … when you talk to it. */
+  bubble?: string;
+  /** When it last hopped for joy (performance.now()): two little hops. */
+  hopAt?: number;
 }
 
 export interface LoadedMap {
@@ -675,11 +679,13 @@ export class Game {
     const squash = f.moving
       ? (air < 0.35 ? 0.14 * (1 - air / 0.35) : -0.08 * air)
       : 0.14 * Math.max(0, 1 - (performance.now() - (f.landed ?? 0)) / 160);
-    const lift = f.jumping ? 0 : Math.round(air * 3);
+    const joy = (performance.now() - (f.hopAt ?? -1e9)) / 240;
+    const lift = f.jumping ? 0 : Math.round(air * 3 + (joy < 2 ? Math.abs(Math.sin(joy * Math.PI)) * 5 : 0));
     const dw = Math.round(w * (1 + squash)), dh = Math.round(h * (1 - squash));
     const x = Math.round(fx - camX + (TILE - dw) / 2), y = Math.round(fy - camY + TILE - 1 - dh - lift);
     ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fillRect(Math.round(fx - camX) + 3 + lift, Math.round(fy - camY) + 13, 10 - lift * 2, 3);
+    const sh = Math.min(lift, 3);
+    ctx.fillRect(Math.round(fx - camX) + 3 + sh, Math.round(fy - camY) + 13, 10 - sh * 2, 3);
     // turn the drawing towards where it walks
     const flip = (f.dir === 'left' && f.faces === 'right') || (f.dir === 'right' && f.faces === 'left') || (f.dir === 'left' && !f.faces);
     if (flip) {
@@ -690,6 +696,7 @@ export class Game {
       ctx.restore();
     } else ctx.drawImage(f.img, x, y, dw, dh);
     if (f.shiny) this.drawTwinkle(ctx, x, y, dw, dh);
+    if (f.bubble) this.drawBubble(ctx, f.bubble, Math.round(x + dw / 2 - 8), y + 1);
   }
 
   /** Little gold stars blinking on a sparkly follower, two at a time, somewhere new each time. */

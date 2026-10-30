@@ -31,7 +31,8 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `re:<trainerId>` | `trainerBattle()` on a first win, `routeRematch()` | Local day of a route trainer's last battle: the next day they want a rematch (a ♪ bubble) |
 | `trade:<id>` | `trade()` in `src/story/world.ts` | In-game trade done (`TRADES`, one per town) |
 | `quest:<id>`, `quest:<id>.<step>` | side-quest scripts in `src/story/world.ts` | Favours for townspeople: `lulu` (`.asked`, `.found`), `feu`, `amitie`, `lettre` (`.sent`) |
-| `followerFind` | `talkFollower` | Local day the following Bestiole last found an item |
+| `followerHas` | `followerPicks`, `talkFollower` | What the following Bestiole holds (index + 1 in `FOLLOWER_FINDS`) |
+| `followerHug` | `talkFollower` | Local day of the first chat with it (+3 friendship) |
 | `visit:<map>` | `visitTown` (a town's `onEnter`) | Balloon destination unlocked |
 | `champion` | `gc5` (Grand Concours) | Grand Concours won at least once |
 | `gc:<1-4>` | Grand Concours scripts | Grand Maître beaten in the current attempt (cleared at the door) |

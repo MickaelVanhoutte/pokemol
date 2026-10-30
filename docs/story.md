@@ -288,8 +288,13 @@ checks every step's flags are set somewhere and its target is on the map.
   never above the player's own level (`rematchParty`, Oct 2026: the owner found them outgrowing the team): the
   average of the three strongest Bestioles (`teamLevel`) caps the ace, the others a level apart under it, Hard's
   extra levels included (`partyOf`'s `cap`). Prize ×1.5.
-- *The following Bestiole* has lines for each place and for its friendship, and once a day it may
-  find an item.
+- *The following Bestiole* has lines for each place, the night and its friendship, shows its mood in a bubble
+  (♥ with two hops from 200, ♪ from 120, … when shy or tired) and gains 3 friendship from the first chat of the
+  day (`followerHug`). Every 64 steps, holding nothing, it may pick something up (`src/data/followerFinds.ts`,
+  Oct 2026: the owner wanted friendship to matter outside battle, not as battle perks): 4 / 8 / 12 / 16% a roll
+  at friendship 0 / 120 / 200 / 230, from a pool that gains super potions and balls, then revives, biscuits
+  and the Prism Berry, then coloured crayons and a rare Magic Lollipop (about 2% at five hearts), the common
+  finds fading as the rare ones come. It shows a ! until you talk to it (`followerHas`).
 
 **L'Atelier des Brouillons** (Hameau-Brouillon, Act 4, and any time after): la Dessinatrice, by the house at
 (16,12), lets the player draw their own Bestiole and choose its types, stats (480 in all, 30–130 each), a common
