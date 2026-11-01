@@ -71,7 +71,8 @@
   transform-origin: 50% 100%;
 }
 /* the drawing fills its platform (a size container), the box around it shrinks to it */
-.pk-art { display: block; max-width: 100cqw; max-height: 100cqh; object-fit: contain; }
+/* a first form stands smaller than a grown one (`stageSize`) */
+.pk-art { display: block; max-width: calc(100cqw * var(--size, 1)); max-height: calc(100cqh * var(--size, 1)); object-fit: contain; }
 /* waiting: a slow breath from the feet, or flying on the spot; the two sides never in step */
 .pk-idle { transform-origin: 50% 100%; animation: idleBreathe 3.4s ease-in-out infinite; }
 .pk-idle--side0 { animation-duration: 3.1s; animation-delay: -1.3s; }

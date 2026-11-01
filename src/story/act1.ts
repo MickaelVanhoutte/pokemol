@@ -131,7 +131,7 @@ scripts.labTable = async () => {
   if (!flag('intro')) setFlag('intro');
   const i = await showMons([...STARTERS], tr(L('Choisis ta première Bestiole !', 'Choose your first Critter!')), true);
   const pick = STARTERS[i];
-  const starter = giveMon(pick, 5, 'starter');
+  const starter = giveMon(pick, 5, 'starter', 12);
   setFlag('rivalStarter', Number(RIVAL_COUNTER[pick]));
   await say(L('{starter} rejoint ton équipe !', '{starter} joined your team!'), undefined, { starter: tr(creature(pick).name) });
   await offerNickname(starter.uid);
@@ -149,7 +149,7 @@ scripts.labTable = async () => {
   ], RIVAL, { c: tr(creature(counter).name) });
   if (rival) g.faceToward(g.player, rival);
   await say(L('Oh oh, un premier combat ! Je vais te guider.', 'Oh ho, a first battle! I’ll guide you.'), PROF);
-  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 4 }], newSeed(), 'normal'), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival, music: 'rival' });
+  const out = await fight('trainer', RIVAL, partyOf([{ species: counter, level: 5 }], newSeed(), 'normal'), { friendly: true, backdrop: 'lab', tutorial: true, look: LOOKS.rival, music: 'rival' });
   if (out.result === 'win') await say(L('Quoi ?! J’ai perdu… C’était de la chance !', 'What?! I lost… That was just luck!'), RIVAL);
   else await say(L('Ha ! Trop facile ! Tu devrais t’entraîner dans les hautes herbes.', 'Ha! Too easy! You should train in the tall grass.'), RIVAL);
   await say(L('Je vais devenir le meilleur dresseur de Papeterre ! Salut !', 'I’ll become the greatest trainer in Papeterra! Bye!'), RIVAL);

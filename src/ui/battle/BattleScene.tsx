@@ -69,6 +69,13 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
  * its parts (`src/data/rigs.ts`). A fair copy shows its own rig (`dark`: scribbled black by the Great
  * Eraser). The paper doll (`mon` null) keeps still.
  */
+/** How big a drawing stands on its platform: a first form smaller, a middle form a little smaller, a grown one full size. */
+export function stageSize(species: string): number {
+  const c = creature(species);
+  if (!c.evolutions?.length) return 1;
+  return c.evolvesFrom ? 0.88 : 0.76;
+}
+
 function Sprite({ side, mon, src, cls, dark = false }: { side: Side; mon: Mon | null; src: string; cls: string; dark?: boolean }) {
   const fair = mon?.fair ? FAIR_RIG_OF[mon.species] : undefined;
   const rig = fair ?? (mon ? RIG_OF[mon.species] : undefined);
@@ -94,7 +101,7 @@ function Sprite({ side, mon, src, cls, dark = false }: { side: Side; mon: Mon | 
     );
   };
   return (
-    <div class={`pk-sprite ${cls}`}>
+    <div class={`pk-sprite ${cls}`} style={{ '--size': mon && !mon.fair ? stageSize(mon.species) : 1 }}>
       <div class={`pk-idle pk-idle--${mon ? idleOf(mon.species, mon.fair ? monTypes(mon) : undefined) : 'still'} pk-idle--side${side} ${rig?.parts.some((p) => p.clip) ? 'is-clipped' : ''}`}>
         {rig && mon ? (
           <>

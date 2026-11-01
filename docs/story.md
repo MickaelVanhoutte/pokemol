@@ -1052,3 +1052,8 @@ weaker in design and in the feeling of growing up. Types, stats and moves stay; 
 - Allumou → Allumbattant became Cornebraise → Fournacorne: the matchstick man was an object, not an animal. Now a
   stubborn bull calf with ember horn nubs, then a leaping bull with white-hot horns and fire on its hump. Its
   learnset still has the old boxer's punches.
+
+**The first battle (Nov 2026).** From a playtest on the owner's phone: the starter is given with every IV at grade C or
+better (`giveMon(…, 'starter', 12)`), and the rival's starter in the lab is level 5 like yours (it was 4, on top of
+being the type yours beats). In battle a drawing stands at its stage's size (`stageSize`): a first form at 76 % of its
+platform, a middle form at 88 %, a grown one full size.

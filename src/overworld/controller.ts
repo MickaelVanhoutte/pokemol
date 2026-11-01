@@ -9,9 +9,9 @@ import { waiting } from '../data/progress';
 import { catchBoost, glowingSpots, moneyBoost, shinyChance, xpBoost } from '../data/realLife';
 import { BORD_REMATCHES, REPENT_GIFTS, REPENT_GIFT_LINE, RETIRED, rematchesWon, repentLine, repentLook, repentant } from '../data/afterStory';
 import { move } from '../data/moves';
-import { newSeed, nextRandom, pickWeighted } from '../engine/rng';
+import { newSeed, nextRandom, pickWeighted, randomInt } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
-import { BASE_FRIENDSHIP, SHINY_CHANCE, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, SHINY_CHANCE, STAT_KEYS, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
 import { addItem, addMon, allMons, autosave, blackoutLoss, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
@@ -1268,8 +1268,11 @@ export { ask, say, sayAll };
 export const scripts: Record<string, () => Promise<void>> = {};
 
 /** Gives a new creature (party first, then PC), noting where it was received. */
-export function giveMon(species: string, level: number, how: MetHow = 'gift'): Mon {
-  const m = createMon(species, level, { rng: newSeed() });
+export function giveMon(species: string, level: number, how: MetHow = 'gift', minIv = 0): Mon {
+  const st = { rng: newSeed() };
+  // a starter gets no weak stat: each IV from `minIv` up (12 is grade C)
+  const ivs = minIv ? Object.fromEntries(STAT_KEYS.map((k) => [k, minIv + randomInt(st, 32 - minIv)])) : undefined;
+  const m = createMon(species, level, st, ivs);
   update((x) => void addMon(x, m, how, placeHere(x)));
   return m;
 }
