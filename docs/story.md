@@ -146,7 +146,7 @@ they are used.
 | 0 | `NewGameScreen` | Falling asleep (`SleepIntroView`, about 19 s, a tap skips a beat): a desk lamp, the sketchbook page, the pencil trying a wing, rubbing it out, trying again, seen through heavy eyelids, blurrier and blurrier, with the night lines; pencil and eraser sounds (`sfx.pencil`, `sfx.rub`) while the title music fades out; eyes shut, coloured fireflies of the dream while the title theme fades in (`playMusic('title', false, 6)`) and plays on under the Prof's speech; a white light opens the dream. Then the Prof's speech, girl/boy, the look picker (« Dessine-toi ! »), name and rival name | — |
 | 1 | `maison`, `maisonRival`, `bourg` (Bourg-Gribouille), `labo` | Wake up; starter at the lab (camera clue); tutorial battle against the rival (friendly, coached) | `intro`, `rivalStarter`, `rival1` |
 | 2 | `route1` (Chemin des Crayons) | A grunt chases Coconfus and erases a patch of grass (`r1Erased`); choice 1; first trainers; wild L3–4 | `a1.r1seen`, `choix:tache` |
-| 3 | `ville` (Ville-Pastel), `atelierPastel` | 🏅 **Mireille**, Insect; Lison's drawing (choice 2) | `badge:pastel`, `choix:musee` |
+| 3 | `ville` (Ville-Pastel), `atelierPastel` | The rival waits at the town's south entrance (`pastelRival`, `src/story/course.ts`): what an Atelier and a badge are for, eight of them, and the race to the eight badges. 🏅 **Mireille**, Insect; Lison's drawing (choice 2) | `rival:pastel`, `badge:pastel`, `choix:musee` |
 | 4 | `route2` (Route des Craies), `bois` (Bois Brumeux) | West gate opens with the badge. Two grunts erase the woods; beating the second runs `boisRestore`, and Coconfus joins | `a1.bois`, `gift:coconfus` |
 | 5 | `plume` (Village-Plume), `atelierPlume` | 🏅 **Gaspard**, Normal. The bridge east is erased, so the player goes through the cave | `badge:plume` |
 | 6 | `grotte1`, `grotte2` (Grotte Gribouillis) | Cave trainers and the optional strong `gardien`; exits to the port | — |
@@ -154,7 +154,7 @@ they are used.
 | 7b | `route4` (its mud), `plume` → river → `lac` (Lac des Couleurs), `sourceBleue` | Grey eraser mud blocks Route 4 (patch `boue`); the rival meets you there (`lacAppel`) and sends you to the lake, up Village-Plume's river by boat. Prof. Fusain's camp (he heals you). Three springs plugged by Team Gomme: red (a grunt guards it), yellow (a room of eraser blocks, 5 pushes), blue (a cave, Head Grunt Sponge). The colours come back (`colourBack`), the rival battles you, the Prof gives the Bocal-Scaphandre | `lac.appel`, `lac.arrivee`, `lac.source:*`, `lac.sources`, `tr:rivalLac`, `gift:bocal` |
 | 8 | `route4`, `feutre` (Ville-Feutre), `entrepot1`/`entrepot2`, `atelierFluo` | The city is drained of colour (`drained`: real greys, `tintUnless: 'a2.feutre'`). Admin Rature in the warehouse; `feutreRestore`, where Zélie gives the Feutre d'Or (fair copies in battle). 🏅 **Zélie**, Electric | `a2.feutre`, `gift:feutre-or`, `badge:fluo` |
 | 9 | `montFusain1`/`2`, `braise` (Village-Braise), `atelierBraise` | 🏅 **Ambre**, Fire | `badge:braise` |
-| 10 | `route6`, `paillette` (Bourg-Paillette), `atelierPaillette` | 🏅 **Célestine**, Fairy | `badge:paillette` |
+| 10 | `route6`, `paillette` (Bourg-Paillette), `atelierPaillette` | At the top of Route 6, the rival checks on the race halfway (`rivalCourse`, after `badge:braise`): he heals you, then battles (`rivalCourseTeam`, his starter grown L28). 🏅 **Célestine**, Fairy | `tr:rivalCourse`, `badge:paillette` |
 | 11 | `tour1`–`tour3` (Tour Brumeuse) | Team Gomme holds it. The rival heals your team; Admin Blanche at the top | `a3.tour` |
 | 12 | `route7`, `gouache` (Jardin-Gouache), `atelierGouache` | 🏅 **Basile**, Grass | `badge:gouache` |
 | 13 | `route8`, `encre` (Cité-Encre) | The Atelier is locked: Nocturne’s note (`atelierEncreDoor`) sends you back south | `a3.note` |
@@ -455,7 +455,7 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 trainers have three Bestioles | Marine L16/16/19 (Clapoflot) |
 | Lac des Couleurs | L17–19 (4 trainers and 2 grunts; wild L16–18, depths L18–20) | Head Grunt Sponge L18/18/20, rival L18/18/20 |
 | Route 4, Ville-Feutre | L18–22 (Route 4 has 5 trainers) | Rature L22/21/23, Zélie L24/24/26 |
-| Mont Fusain, Braise | L22–25 (wild L19–23) | Ambre L25/24/26 |
+| Mont Fusain, Braise | L22–25 (wild L19–23) | Ambre L25/24/26; rival on Route 6 L25/25/26/28 |
 | Route 6, Paillette, Tour | L24–28 | Célestine L27/28/28/29 (Hypnopaon added), Blanche L23/24/23/24 |
 | Routes 7–8, Gouache, Lighthouse, Encre, Factory | L27–33 (three Bestioles per trainer) | Basile L27–30 (four), Buvard L29–31, Nocturne L30–33 (five, an Ombrouille ace), Rature L31–32 and Blanche L33–34 (five each) |
 | Act 4: Route de la Marge, Forêt des Esquisses, Forteresse Gomme | L35–40, four Bestioles each (wild L34–39) | Buvard L40–42, Rature L39–40, Blanche L41–43 (five each, one after the other; the rival heals you first) |
@@ -1057,3 +1057,11 @@ weaker in design and in the feeling of growing up. Types, stats and moves stay; 
 better (`giveMon(…, 'starter', 12)`), and the rival's starter in the lab is level 5 like yours (it was 4, on top of
 being the type yours beats). In battle a drawing stands at its stage's size (`stageSize`): a first form at 76 % of its
 platform, a middle form at 88 %, a grown one full size.
+
+**The race to the eight badges (Nov 2026).** The owner noticed the game never said what the Ateliers are for. The
+rival now waits at Ville-Pastel's entrance and explains them (a Master per town, one type each, a badge for beating
+them that opens the guarded roads and comes with a stencil, eight in all), then starts the race. The lake battle is
+the first check (« une course à finir »), and a new one on Route 6, between the fifth and sixth badges, fills the long
+gap before the finale: he heals you first, as at the lake. Normal 74/56/88% (Minousse / Braisou / Clapotin), Easy
+100%, Hard 81/46/81%. In landscape the foe trainer's picture at the start of a battle is 92% of its column, its feet
+on the shadow (its head went off the top of the screen).

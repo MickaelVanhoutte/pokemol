@@ -884,5 +884,13 @@ export function rivalLacTeam(rivalStarter: string): TrainerDef['party'] {
   return [{ species: '026', level: 15 }, { species: '004', level: 18 }, { species: grownForm(rivalStarter, 20), level: 20 }];
 }
 
+/** The rival's team on Glitter Road, between the fifth and sixth badges: the race to the eight badges, halfway. */
+export function rivalCourseTeam(rivalStarter: string): TrainerDef['party'] {
+  return [
+    { species: '026', level: 25 }, { species: '008', level: 25 }, { species: '027', level: 26 },
+    { species: grownForm(rivalStarter, 28), level: 28 },
+  ];
+}
+
 /** The rival picks the starter that yours beats, so the very first battle is winnable. */
 export const RIVAL_COUNTER: Record<string, string> = { '001': '003', '002': '001', '003': '002' };

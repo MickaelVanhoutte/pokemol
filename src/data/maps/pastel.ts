@@ -53,6 +53,8 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
     ],
     triggers: [
       { x: 2, y: 9, w: 1, h: 2, script: 'pastelWestGate', unless: 'badge:pastel' },
+      // first steps into town: the rival waits, tells you what the Ateliers are for and starts the race
+      { x: 11, y: 17, w: 2, h: 1, script: 'pastelRival', unless: 'rival:pastel' },
       // coming out of the Atelier with the badge: Lison and her drawing (the second choice)
       { x: 16, y: 7, w: 5, h: 2, script: 'pastelDrawing', if: 'badge:pastel', unless: 'choix:musee' },
     ],

@@ -39,7 +39,9 @@ dessins sont vivants : ce sont les **Bestioles**.
    Premier Trait, la mare, le potager, et l’atelier de la maîtresse de dessin.
 2. **Chemin des Crayons** : un Sbire Gomme poursuit un petit cocon tout tremblant. Ton premier
    combat contre la Team Gomme !
-3. **Ville-Pastel** : l’Atelier de Mireille. Capucine a dessiné une Bestiole toute ébouriffée, et
+3. **Ville-Pastel** : ton rival t’attend à l’entrée. Il t’explique les Ateliers : dans chaque ville, un Maître
+   d’Atelier donne son badge à qui bat ses Bestioles, et il y en a huit. Il te lance la course : le premier qui
+   a les huit badges a gagné ! L’Atelier de Mireille. Capucine a dessiné une Bestiole toute ébouriffée, et
    une apprentie n’aime pas son premier dessin… Dans le **Musée des premiers croquis**, on peut voir
    les tout premiers dessins des Bestioles, encadrés. La Place des Craies et sa fontaine, le quartier
    des artistes et le Jardin des Papillons.
@@ -61,7 +63,8 @@ dessins sont vivants : ce sont les **Bestioles**.
 9. **Mont Fusain → Village-Braise** : l’Atelier d’Ambre, au pied du volcan, sa forge, sa source chaude
    et le souffleur de verre. Dans les rochers du Mont Fusain se cache Gecaillou, un petit gecko de
    sable aux grands yeux.
-10. **Bourg-Paillette** : l’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
+10. **Bourg-Paillette** : sur la route, ton rival t’attend pour faire le point sur la course, Bestiole contre
+   Bestiole. L’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
    occupe la Tour Brumeuse… Tout en haut, quelqu’un que tu connais bien a besoin d’être rassuré.
    On y fait des vœux à la Fontaine aux Vœux, et la Fabrique de Paillettes prépare le Bal des Étoiles.
 11. **Jardin-Gouache** : l’Atelier de Basile, une serre où même l’herbe est peinte à la main ; le
@@ -194,7 +197,9 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
    pond, the vegetable garden and the drawing teacher’s studio.
 2. **Crayon Road**: an Eraser Grunt is chasing a trembling little cocoon. Your first battle against
    Team Gomme!
-3. **Pastel City**: Mireille’s Atelier. Capucine has drawn a very scruffy Critter, and an apprentice
+3. **Pastel City**: your rival waits at the entrance. He explains the Ateliers: in every town an Atelier
+   Master gives their badge to whoever beats their Critters, and there are eight. He starts the race: the first
+   to collect all eight badges wins! Mireille’s Atelier. Capucine has drawn a very scruffy Critter, and an apprentice
    doesn’t like her first drawing… In the **Museum of First Sketches**, the very first drawings of the
    Critters hang in frames. Chalk Square and its fountain, the artists’ quarter and the Butterfly Garden.
 4. **Chalk Lane and the Misty Woods**: Team Gomme is erasing the forest! And the little cocoon from the
@@ -215,7 +220,8 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
 9. **Mount Charcoal → Embervale**: Amber’s Atelier, at the foot of the volcano, its forge, its hot
    spring and the glassblower. In the rocks of Mount Charcoal hides Pebblecko, a little sand gecko
    with big eyes.
-10. **Glimmerton**: Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
+10. **Glimmerton**: on the road there, your rival waits to see where the race stands, Critter against
+   Critter. Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
    At the top, someone you know well needs cheering up. Wishes are made at the Wishing Fountain, and
    the Glitter Works is getting ready for the Star Ball.
 11. **Gouache Garden**: Basil’s Atelier, a greenhouse where even the grass is hand-painted; the garden

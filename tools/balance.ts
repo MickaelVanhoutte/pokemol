@@ -20,7 +20,7 @@ import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
 import { CUSTOM_ID } from '../src/data/creatures.ts';
 import { designProblems, registerCustom, type CustomDesign } from '../src/data/custom.ts';
-import { DIFFICULTY, RIVAL_COUNTER, TRAINERS, partyOf, rivalFinalTeam, rivalLacTeam } from '../src/data/trainers.ts';
+import { DIFFICULTY, RIVAL_COUNTER, TRAINERS, partyOf, rivalCourseTeam, rivalFinalTeam, rivalLacTeam } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
 import { monTypes } from '../src/data/fairCopies.ts';
 import { effectiveness } from '../src/data/types.ts';
@@ -154,6 +154,8 @@ const STEPS: [string, Team][] = [
   ['mfErmite', teamAt('mfErmite', 5)],
   ['ambre', teamAt('ambre', 5)],
   ['ambre', teamAt('ambre', 5, ['003', '013', '010', '004'])],
+  // Glitter Road, the race halfway
+  ['rivalCourse', teamAt('rivalCourse', 5)],
   ['celestine', teamAt('celestine', 5)],
   ['blanche', teamAt('blanche', 6)],
   ['basile', teamAt('basile', 6)],
@@ -178,13 +180,14 @@ const STEPS: [string, Team][] = [
 const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer.id === id)!.trainer;
 /** The foe's team against this starter: the rival picks the starter that beats yours. */
 const foeParty = (id: string, starter: string) =>
-  id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter]) : id === 'rivalLac' ? rivalLacTeam(RIVAL_COUNTER[starter]) : trainer(id).party;
+  id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter]) : id === 'rivalLac' ? rivalLacTeam(RIVAL_COUNTER[starter])
+    : id === 'rivalCourse' ? rivalCourseTeam(RIVAL_COUNTER[starter]) : trainer(id).party;
 
 /** Zélie gives the Feutre d'Or before her own battle. */
 const feutre = STEPS.findIndex(([id]) => id === 'zelie');
 /** Who makes a fair copy in this fight. */
 const pensAt = (k: number, id: string): Pens => {
-  const t = id === 'rivalFinal' ? { fairCopy: true as const } : id === 'rivalLac' ? {} : trainer(id);
+  const t = id === 'rivalFinal' ? { fairCopy: true as const } : id === 'rivalLac' || id === 'rivalCourse' ? {} : trainer(id);
   return { me: k >= feutre ? 'light' : undefined, foe: t.fairCopy === 'dark' ? 'dark' : t.fairCopy ? 'light' : undefined };
 };
 

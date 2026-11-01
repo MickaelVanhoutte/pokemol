@@ -58,6 +58,8 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { x: 8, y: 0, to: { map: 'paillette', x: 9, y: 14, facing: 'up' } },
       { x: 9, y: 0, to: { map: 'paillette', x: 10, y: 14, facing: 'up' } },
     ],
+    // at the top of the road, before Glimmerton: the rival, halfway through the race to the eight badges
+    triggers: [{ x: 8, y: 1, w: 2, h: 1, script: 'rivalCourse', if: 'badge:braise', unless: 'tr:rivalCourse' }],
     signs: [{ x: 14, y: 8, text: L('ROUTE DES PAILLETTES\n↑ Bourg-Paillette   ↓ Village-Braise', 'GLITTER ROAD\n↑ Glimmerton   ↓ Embervale') }],
     npcs: [
       { id: 'r6a', x: 12, y: 3, look: LOOKS.girl, facing: 'left', trainer: 'r6a', sight: 3 },

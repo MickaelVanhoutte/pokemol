@@ -342,6 +342,8 @@
   .pk-plat--me .pk-sprite.is-doll { margin-bottom: 30%; }
   .pk-plat--me .pk-sprite.is-doll .pk-art { max-height: 64cqh; }
   .pk-plat--foe, .pk-plat--me { flex: 1 1 0; min-height: 0; height: auto; }
+  /* the foe trainer fits under the top of the short scene, its feet on the shadow */
+  .pk-plat--foe .pk-trainer { height: 92%; margin-bottom: 0; }
   .gba-btn { font-size: clamp(0.95rem, 2.6vw, 1.25rem); }
   .bpanel__prompt { font-size: clamp(0.95rem, 2.4vw, 1.2rem); }
   /* two rows of moves fit the low panel, even with large text */
