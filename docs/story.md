@@ -691,8 +691,8 @@ a broccoli line (replaced by the stapler crocodile) and asked for the mammoth to
   in the echo cave. Miner Bob, Geologist Armand, Painter Victor.
 - Faonvole → Cerfoudre (Electric/Flying, L26): a fawn flying like a kite (*cerf-volant*). Route 4 and Route 6 by
   day; Cerfoudre on the Piste Cyclable and Route Blanche. Kid Tim, Bastien, Cyclist Léa.
-- Allumou → Allumbattant (Fire/Fighting, L27): a matchstick stick-figure, then a boxer. Mont Fusain;
-  Allumbattant on Route 9. Juggler Paco (a fourth Bestiole), Hector, Grand Master Ambre (in place of Planacier).
+- Cornebraise → Fournacorne (Fire/Fighting, L27; first drawn as a matchstick man, Allumou → Allumbattant): a stubborn
+  bull calf, then a leaping bull with white-hot horns. Mont Fusain; Fournacorne on Route 9. Juggler Paco (a fourth Bestiole), Hector, Grand Master Ambre (in place of Planacier).
 - Lumignon → Projétoile (Electric/Psychic, L26): a bedroom night-light, then a star projector. Route 3 and
   Route 4 at night; Projétoile on Route 8 at night. Kid Lise, Medium Opale.
 - Plissou → Plisserpent → Festivouivre (Dragon/Fairy, L30/L44, rare): a fairy parade dragon of folded pearly
@@ -708,8 +708,8 @@ wild-level rule); Miner Bob got Ocrinou as a second Bestiole, so the curve keeps
 first try swapped Caver Max's Scaraprisme, a final form worth much more XP, and the Marine row fell by 15–26
 points). Lumignon learns Berceuse at L17, not L1: Kid Lise's sleeping powder dropped the Braisou row to 3%.
 On Normal, the rows that moved: Marine 96/93/84% (was 91/88/70), Grand Master Ambre 68/74/95% (was 31/97/88),
-Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Braise Atelier Bestioles for Allumou
-cost the team a level before Ambre (her Hard rows fell to 10–49%): Allumou is an extra Bestiole for Paco
+Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Braise Atelier Bestioles for Cornebraise
+cost the team a level before Ambre (her Hard rows fell to 10–49%): Cornebraise is an extra Bestiole for Paco
 instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, was 43/2/2). The finals and the two standalones joined `TOWER_POOL`.
 
 **Ten Bestioles for the Ateliers' types (iteration 18), 98 in all.** The owner noticed that the Atelier Masters
@@ -1041,3 +1041,14 @@ concept, each pose and approved each drawing):
 
 Both finals are in `TOWER_POOL`, with fair copies (Feu de Joie, Herbier). In the Bestiodex they come after
 Ratpiécé, before the semi-legendaries. Kid Tim went from 76% to 71% with Braisou on Normal; the other rows did not move.
+
+**Three lines redrawn for a real step up (Nov 2026).** Next to the new families, the owner found three older lines
+weaker in design and in the feeling of growing up. Types, stats and moves stay; the drawings and texts change:
+- Joufflux → Foudroule: the baby races up the inside of its wheel, its cheeks glowing like dynamos; the final has
+  made the wheel its own, a ring of lightning out of its cheeks that it leaps inside, curled up, lightning spikes
+  along its back.
+- Lunou → Lunambule: the scaredy baby hugs its glowing tail tip like a night-light, a few stars in the fold of its
+  flank; the final glides on that fold grown into a piece of starry sky, gazing at the little moon of its tail.
+- Allumou → Allumbattant became Cornebraise → Fournacorne: the matchstick man was an object, not an animal. Now a
+  stubborn bull calf with ember horn nubs, then a leaping bull with white-hot horns and fire on its hump. Its
+  learnset still has the old boxer's punches.

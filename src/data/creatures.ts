@@ -243,8 +243,8 @@ export const CREATURES: SpeciesDef[] = [
       [8, 'fretillement'], [11, 'zap-zap'], [14, 'pas-de-loup'], [17, 'frisson'], [20, 'bouclier-papier'],
       [21, 'queue-eclair'], [26, 'agilite-zigzag'], [32, 'grand-zigzag']],
     dex: L(
-      'Ses joues crépitent d’éclairs. Il file comme une boule de foudre et laisse une traînée d’étincelles.',
-      'Its cheeks crackle with lightning. It zooms like a ball of lightning, leaving a trail of sparks.',
+      'Il se roule en boule et bondit dans un anneau d’éclairs sorti de ses joues. Casse-cou, il fonce d’abord et réfléchit après.',
+      'It curls into a ball and leaps inside a ring of lightning that bursts from its cheeks. A daredevil, it charges first and thinks later.',
     ),
   },
   {
@@ -285,12 +285,12 @@ export const CREATURES: SpeciesDef[] = [
       [17, 'choc-mental'], [19, 'poussiere-d-etoile'], [20, 'bouclier-papier'], [22, 'bisou-magique'],
       [28, 'eclat-de-lune']],
     dex: L(
-      'Accroché à sa branche, il ouvre ses yeux immenses dès que la lune se lève. Le jour, il dort roulé en boule.',
-      'Clinging to its branch, it opens its huge eyes as soon as the moon rises. By day it sleeps curled up in a ball.',
+      'Il a peur du noir, alors il serre contre lui le bout lumineux de sa queue comme une veilleuse. Quelques étoiles brillent déjà dans le pli de son flanc.',
+      'It is scared of the dark, so it hugs the glowing tip of its tail like a night-light. A few stars already shine in the fold of its flank.',
     ),
   },
   {
-    id: '028', slug: 'lunambule', faces: 'left', name: L('Lunambule', 'Moonleaper'), kind: L('Bestiole Acrobate', 'Acrobat Critter'),
+    id: '028', slug: 'lunambule', faces: 'left', name: L('Lunambule', 'Moonleaper'), kind: L('Bestiole Ciel-de-Nuit', 'Night Sky Critter'),
     type: 'fee', base: { hp: 95, atk: 72, def: 75, spa: 92, spd: 90, spe: 61 },
     catchRate: 25, baseExp: 129, evYield: { hp: 3 }, rarity: 'uncommon', evolvesFrom: '006',
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-06', 'pochoir-09', 'pochoir-12', 'pochoir-14', 'pochoir-19', 'pochoir-27'],
@@ -299,8 +299,8 @@ export const CREATURES: SpeciesDef[] = [
       [13, 'micro-magique'], [17, 'choc-mental'], [19, 'poussiere-d-etoile'], [20, 'bouclier-papier'],
       [22, 'bisou-magique'], [34, 'reve-eveille']],
     dex: L(
-      'Il bondit d’arbre en arbre si haut qu’on dirait qu’il va décrocher la lune. Ses yeux brillent comme deux lunes dans la nuit.',
-      'It leaps from tree to tree so high it looks as if it will unhook the moon. Its eyes shine like two moons in the night.',
+      'Il plane d’arbre en arbre, la peau de ses flancs tendue comme un morceau de ciel étoilé. Il ne quitte pas des yeux la petite lune au bout de sa queue.',
+      'It glides from tree to tree, the skin of its flanks spread like a piece of starry sky. It never takes its eyes off the little moon at the tip of its tail.',
     ),
   },
   {
@@ -1013,7 +1013,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '080', slug: 'allumou', faces: 'left', name: L('Allumou', 'Matchkin'), kind: L('Bestiole Allumette', 'Match Critter'),
+    id: '080', slug: 'cornebraise', faces: 'left', name: L('Cornebraise', 'Emberhorn'), kind: L('Bestiole Taurillon', 'Calf Critter'),
     type: 'feu', type2: 'combat', base: { hp: 40, atk: 70, def: 35, spa: 50, spd: 40, spe: 75 },
     catchRate: 190, baseExp: 62, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '081', level: 27 }],
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-13', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-28'],
@@ -1022,12 +1022,12 @@ export const CREATURES: SpeciesDef[] = [
       [12, 'lueur-brulante'], [16, 'rafale-de-poings'], [20, 'poing-crayon'], [24, 'tourbillon-braises'],
       [30, 'craque-poing']],
     dex: L(
-      'On dirait un bonhomme dessiné avec des bâtons. Quand il se frotte la tête, elle prend feu… et il adore ça.',
-      'It looks like a stick figure drawn with matches. When it rubs its head, it catches fire… and it loves that.',
+      'Têtu comme pas deux, il baisse la tête et gratte le sol devant tout ce qui bouge. Ses petites cornes rougeoient comme des braises quand il se fâche.',
+      'As stubborn as they come, it lowers its head and paws the ground at anything that moves. Its little horns glow like embers when it gets cross.',
     ),
   },
   {
-    id: '081', slug: 'allumbattant', faces: 'left', name: L('Allumbattant', 'Matchboxer'), kind: L('Bestiole Boxeur', 'Boxer Critter'),
+    id: '081', slug: 'fournacorne', faces: 'left', name: L('Fournacorne', 'Kilnhorn'), kind: L('Bestiole Taureau', 'Bull Critter'),
     type: 'feu', type2: 'combat', base: { hp: 65, atk: 115, def: 60, spa: 75, spd: 60, spe: 110 },
     catchRate: 45, baseExp: 165, evYield: { atk: 2 }, rarity: 'uncommon', evolvesFrom: '080',
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-13', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-28'],
@@ -1036,8 +1036,8 @@ export const CREATURES: SpeciesDef[] = [
       [10, 'patte-brulante'], [12, 'lueur-brulante'], [16, 'rafale-de-poings'], [20, 'poing-crayon'],
       [24, 'tourbillon-braises'], [33, 'gros-poing'], [36, 'eboulis'], [42, 'grand-brasier']],
     dex: L(
-      'Ses gants sont faits du grattoir des boîtes d’allumettes : chaque coup de poing fait jaillir des étincelles. Il ne recule jamais, même sous la pluie.',
-      'Its gloves are made of the rough strip on matchboxes: every punch sends sparks flying. It never backs down, not even in the rain.',
+      'Ses cornes chauffées à blanc fendent l’air quand il bondit. Plus on le pousse dans ses retranchements, plus le feu de sa bosse monte haut.',
+      'Its white-hot horns cleave the air as it leaps. The harder it is pushed, the higher the fire on its hump climbs.',
     ),
   },
   {

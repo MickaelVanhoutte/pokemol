@@ -90,7 +90,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Agrafou → Crocagrafe | Agrafage (Steel physical 80, staples the foe in place for 4–5 turns: no escape, a little damage each turn) | signature move | Average stats |
 | Ocrinou → Mammouchaud | Peinture Rupestre: Water and Ground damage halved | `halve` (listed in `POWER_TALENTS`) | Water and Ground ×4 |
 | Faonvole → Cerfoudre | Vent Arrière: Electric moves go first at full HP | `galeWings` | Fragile |
-| Allumou → Allumbattant | Craque-Poing (Fire physical 85, punch, 20% burn) | signature move | Fragile, few strong Fire punches |
+| Cornebraise → Fournacorne | Craque-Poing (Fire physical 85, punch, 20% burn) | signature move | Fragile, few strong Fire punches |
 | Lumignon → Projétoile | Chasse-Cauchemar: Ghost and Dark damage halved | `halve` (listed in `POWER_TALENTS`) | Ghost and Dark |
 | Plissou → Plisserpent → Festivouivre | Grand Défilé (Dragon physical 95, 20% chance of +1 Attack) | signature move | Slow |
 | Globargot | Flocons Fous: hail as it comes in | `entryWeather` | Many weaknesses |

@@ -100,7 +100,7 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   '077': { base: { hp: 100, atk: 163, def: 129, spa: 60, spd: 93, spe: 55 }, talent: 'rembourrage' },
   // Cerfoudre: antlers twice as tall with eight kites, a thundercloud mane
   '079': { base: { hp: 75, atk: 75, def: 65, spa: 148, spd: 104, spe: 128 }, talent: 'premier-envol' },
-  // Allumbattant: a flame mane twice as tall, gloves twice as big in steel cuffs, a V torso
+  // Fournacorne: its card gone over neatly (tools/fair)
   '081': { base: { hp: 65, atk: 156, def: 87, spa: 75, spd: 60, spe: 137 }, talent: 'poings-d-acier' },
   // Projétoile: a cape spread like bat wings with a galaxy and a moon, a taller hat
   '083': { base: { hp: 75, atk: 45, def: 85, spa: 163, spd: 137, spe: 75 }, talent: 'bonne-etoile' },

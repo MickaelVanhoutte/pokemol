@@ -1044,33 +1044,35 @@
         "motion": "swing",
         "amp": 0,
         "period": 3,
+        "behind": true,
         "left": 0,
         "top": 0,
-        "width": 99.4,
-        "height": 96.7,
-        "ox": 50,
-        "oy": 37.1
+        "width": 100,
+        "height": 100,
+        "ox": 50.2,
+        "oy": 48.5
       },
       {
         "name": "paupieres",
         "motion": "blink",
-        "left": 11.1,
-        "top": 24.8,
-        "width": 24.3,
-        "height": 19.2,
-        "ox": 47.1,
-        "oy": 53.8
+        "left": 8.3,
+        "top": 46.3,
+        "width": 18.4,
+        "height": 12.4,
+        "ox": 50.6,
+        "oy": 44.4
       },
       {
-        "name": "etincelles",
-        "motion": "flicker",
-        "period": 1.6,
-        "left": 88.4,
-        "top": 57.7,
-        "width": 11.6,
-        "height": 28.5,
-        "ox": 31.7,
-        "oy": 62.2
+        "name": "etincelle",
+        "motion": "nod",
+        "amp": 2,
+        "period": 2,
+        "left": 49.8,
+        "top": 92.7,
+        "width": 7.8,
+        "height": 5.1,
+        "ox": -12.1,
+        "oy": 2.3
       }
     ]
   },
@@ -1123,35 +1125,35 @@
         "amp": 0,
         "period": 4,
         "behind": true,
-        "left": 67.7,
-        "top": 0,
-        "width": 32.3,
-        "height": 100,
-        "ox": 60.6,
-        "oy": 99
+        "left": 0,
+        "top": 82.8,
+        "width": 100,
+        "height": 17.2,
+        "ox": 49.4,
+        "oy": 52.7
       },
       {
-        "name": "queue",
+        "name": "oreilles",
         "motion": "swing",
-        "amp": 3,
-        "period": 2.6,
+        "amp": 2,
+        "period": 2.4,
         "behind": true,
-        "left": 26,
-        "top": 71.5,
-        "width": 63.4,
-        "height": 28.5,
-        "ox": 81.7,
-        "oy": 8.8
+        "left": 36.1,
+        "top": 0,
+        "width": 42.8,
+        "height": 27.7,
+        "ox": 33.8,
+        "oy": 72.7
       },
       {
         "name": "paupieres",
         "motion": "blink",
-        "left": 9.7,
-        "top": 22,
-        "width": 50.9,
-        "height": 16.9,
-        "ox": 47.6,
-        "oy": 55.5
+        "left": 31.2,
+        "top": 21.7,
+        "width": 32.8,
+        "height": 20.8,
+        "ox": 48.2,
+        "oy": 55
       }
     ]
   },
@@ -2047,36 +2049,39 @@
     "slug": "foudroule",
     "parts": [
       {
-        "name": "trainee",
-        "motion": "flicker",
-        "period": 1.4,
-        "left": 72.6,
-        "top": 55.1,
-        "width": 27.4,
-        "height": 44.9,
-        "ox": 55.5,
-        "oy": 32.9
+        "name": "anneau-dos",
+        "motion": "swing",
+        "amp": 1,
+        "period": 3,
+        "behind": true,
+        "left": 16.3,
+        "top": 0,
+        "width": 66.5,
+        "height": 73.7,
+        "ox": 23.7,
+        "oy": 63.5
       },
       {
         "name": "paupieres",
         "motion": "blink",
-        "left": 15.5,
-        "top": 19.3,
-        "width": 17.4,
-        "height": 11.1,
-        "ox": 49.9,
-        "oy": 47
+        "left": 19.5,
+        "top": 20,
+        "width": 14.8,
+        "height": 13.8,
+        "ox": 57.4,
+        "oy": 53.5
       },
       {
-        "name": "eclairs",
-        "motion": "flicker",
-        "period": 1.2,
-        "left": 42.8,
-        "top": 10.4,
-        "width": 13.8,
-        "height": 23,
-        "ox": 19,
-        "oy": 57.8
+        "name": "anneau",
+        "motion": "swing",
+        "amp": 1,
+        "period": 3,
+        "left": 20.1,
+        "top": 47.7,
+        "width": 79.9,
+        "height": 52.3,
+        "ox": 15,
+        "oy": -1.8
       }
     ]
   },
@@ -2087,36 +2092,62 @@
         "name": "queue",
         "motion": "swing",
         "amp": 2,
-        "period": 3,
+        "period": 3.4,
         "behind": true,
-        "left": 57.8,
-        "top": 12,
-        "width": 42.2,
-        "height": 63.3,
-        "ox": 8.3,
-        "oy": 75.8
+        "left": 0,
+        "top": 0,
+        "width": 91.1,
+        "height": 60,
+        "ox": 76.7,
+        "oy": 93.7
       },
       {
-        "name": "bras",
+        "name": "voile-loin",
+        "motion": "fold",
+        "amp": 2,
+        "period": 3.6,
+        "behind": true,
+        "left": 39.8,
+        "top": 30.5,
+        "width": 43.6,
+        "height": 24,
+        "ox": 37.5,
+        "oy": 68.1
+      },
+      {
+        "name": "voile",
+        "motion": "fold",
+        "amp": 2,
+        "period": 3.6,
+        "left": 3.6,
+        "top": 55.9,
+        "width": 91.6,
+        "height": 39.5,
+        "ox": 52.7,
+        "oy": 12.8
+      },
+      {
+        "name": "oreilles",
         "motion": "swing",
         "amp": 2,
-        "period": 2.4,
-        "left": 0,
-        "top": 26.8,
-        "width": 41.4,
-        "height": 23.6,
-        "ox": 94.4,
-        "oy": 75.4
+        "period": 3.2,
+        "behind": true,
+        "left": 22.8,
+        "top": 16.6,
+        "width": 31.2,
+        "height": 29.4,
+        "ox": 31.2,
+        "oy": 77.4
       },
       {
         "name": "paupieres",
         "motion": "blink",
         "left": 13.8,
-        "top": 14.8,
-        "width": 22.9,
-        "height": 20.6,
-        "ox": 49.1,
-        "oy": 54.2
+        "top": 32.9,
+        "width": 22.6,
+        "height": 20,
+        "ox": 48.7,
+        "oy": 48.5
       }
     ]
   },
@@ -4289,65 +4320,95 @@
     ]
   },
   "080": {
-    "slug": "allumou",
+    "slug": "cornebraise",
     "parts": [
       {
-        "name": "garde",
+        "name": "queue",
         "motion": "swing",
-        "amp": 10,
-        "period": 0.9,
-        "left": 50.8,
-        "top": 38.2,
-        "width": 49.2,
-        "height": 20.8,
-        "ox": 12.1,
-        "oy": 75.4
+        "amp": 5,
+        "period": 2.4,
+        "behind": true,
+        "left": 81.5,
+        "top": 0,
+        "width": 18.5,
+        "height": 38.4,
+        "ox": 15.5,
+        "oy": 89.6
       },
       {
-        "name": "flamme",
-        "motion": "swing",
-        "amp": 8,
-        "period": 0.6,
-        "behind": true,
-        "left": 25.2,
-        "top": 0,
-        "width": 38.5,
-        "height": 15.8,
-        "ox": 50.8,
-        "oy": 97.4
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 12.2,
+        "top": 44.6,
+        "width": 20.5,
+        "height": 24.5,
+        "ox": 52,
+        "oy": 50.2
       }
     ]
   },
   "081": {
-    "slug": "allumbattant",
+    "slug": "fournacorne",
     "parts": [
       {
-        "name": "crete",
-        "motion": "swing",
-        "amp": 4,
-        "period": 0.5,
+        "name": "ombre",
+        "motion": "nod",
+        "amp": 1,
+        "period": 2.6,
         "behind": true,
-        "left": 28.4,
-        "top": 0,
-        "width": 71.6,
-        "height": 26.8,
-        "ox": 33.8,
-        "oy": 84
+        "left": 20.9,
+        "top": 92.1,
+        "width": 60.4,
+        "height": 7.9,
+        "ox": 48.5,
+        "oy": 50
       },
       {
-        "name": "poing",
-        "motion": "peek",
-        "to": [
-          12,
-          0
-        ],
-        "period": 1.5,
+        "name": "queue",
+        "motion": "swing",
+        "amp": 3,
+        "period": 2.6,
+        "behind": true,
+        "left": 77.8,
+        "top": 4.9,
+        "width": 22.2,
+        "height": 23,
+        "ox": 13.5,
+        "oy": 85
+      },
+      {
+        "name": "flammes-bosse",
+        "motion": "swing",
+        "amp": 2,
+        "period": 3,
+        "left": 41.6,
+        "top": 0,
+        "width": 24.1,
+        "height": 29,
+        "ox": 36.9,
+        "oy": 87.6
+      },
+      {
+        "name": "pointes",
+        "motion": "swing",
+        "amp": 2,
+        "period": 2.6,
         "left": 0,
-        "top": 44.8,
-        "width": 69.6,
-        "height": 22.3,
-        "ox": 94.2,
-        "oy": 14.6
+        "top": 21,
+        "width": 16.6,
+        "height": 23.5,
+        "ox": 98.8,
+        "oy": 28.6
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 25.2,
+        "top": 40.6,
+        "width": 8.6,
+        "height": 12.5,
+        "ox": 50.1,
+        "oy": 49.7
       }
     ]
   },
