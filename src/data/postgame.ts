@@ -50,7 +50,7 @@ export const CONCOURS: ConcoursStage[] = [
     id: 'gcCelestine', name: L('Grande Maîtresse Célestine', 'Grand Master Celestine'),
     party: [
       { species: '005', level: 54, item: 'baie-reveil' }, { species: '086', level: 54 }, { species: '053', level: 52 },
-      { species: '006', level: 55 }, { species: '014', level: 56, item: 'baie-doree' },
+      { species: '006', level: 55 }, { species: '014', level: 54, item: 'baie-doree' },
     ],
     before: [L('Les paillettes brillent même au fond d’une trousse. Montre-moi les tiennes !', 'Glitter shines even at the bottom of a pencil case. Show me yours!')],
     after: [L('Éblouissant ! Il ne reste plus que Nocturne… et lui.', 'Dazzling! Only Nocturne is left… and him.')],
@@ -67,8 +67,8 @@ export const CONCOURS: ConcoursStage[] = [
   stage(5, 'prof', {
     id: 'gcFusain', name: L('Prof. Fusain', 'Prof. Charcoal'), money: 20000,
     party: [
-      { species: '008', level: 51 }, { species: '014', level: 51 }, { species: '007', level: 51 },
-      { species: '024', level: 51 }, { species: '023', level: 51 }, { species: '025', level: 50 },
+      { species: '008', level: 53 }, { species: '014', level: 53 }, { species: '007', level: 53 },
+      { species: '024', level: 53 }, { species: '023', level: 53 }, { species: '025', level: 52 },
     ],
     before: [
       L('Te voilà, {name}. Clic-clac : je voulais une photo de toi ici, au sommet du Concours.', 'Here you are, {name}. Click-clack: I wanted a picture of you here, at the top of the Contest.'),

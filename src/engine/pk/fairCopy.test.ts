@@ -51,7 +51,7 @@ describe('fair copies (« mise au propre »)', () => {
   it('counts its new Speed on the turn it transforms', () => {
     const me = mon('023', 50);
     const slow = statsOf(me).spe, fast = statsOf({ ...me, fair: true }).spe;
-    // a foe faster than the pencil Tortorrent, slower than its fair copy
+    // a foe faster than the pencil Tortorock, slower than its fair copy
     const foe = CREATURES.map((c) => mon(c.id, 50)).find((f) => statsOf(f).spe > slow && statsOf(f).spe < fast)!;
     const firstMover = (fair: boolean) => {
       const e = act(start([mon('023', 50)], [foe]), move(0, fair), move()).events.find((x) => x.t === 'move');

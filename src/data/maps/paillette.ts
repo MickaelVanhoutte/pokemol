@@ -79,7 +79,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
         { id: '008', w: 6, min: 21, max: 23 },
         { id: '014', w: 8, min: 21, max: 23 },
         { id: '016', w: 3, min: 22, max: 23 },
-        { id: '026', w: 10, min: 21, max: 23, time: 'day' },
+        { id: '026', w: 10, min: 18, max: 19, time: 'day' },
         { id: '049', w: 5, min: 21, max: 23 },
         { id: '054', w: 14, min: 22, max: 23, time: 'night' },
         { id: '055', w: 4, min: 21, max: 23, time: 'night' },
@@ -142,12 +142,12 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'paillGirl', x: 16, y: 13, look: LOOKS.girl, facing: 'left', wander: true, script: 'paillGirl' },
       { id: 'paillVoeu', x: 20, y: 12, look: { hair: '#f2d05a', shirt: '#f29ac8', pants: '#7b60c3', longHair: true, bow: '#ffffff' }, facing: 'right', text: [
         L('Chut… je fais un vœu. On jette une paillette dans la fontaine et on ferme les yeux très fort.', 'Shh… I’m making a wish. You throw a speck of glitter into the fountain and shut your eyes really tight.'),
-        L('Mon vœu ? Si je le dis, il ne se réalise pas ! … Bon, d’accord : un Lamacorne.', 'My wish? If I tell you, it won’t come true! … Oh, all right: a Llamacorn.'),
+        L('Mon vœu ? Si je le dis, il ne se réalise pas ! … Bon, d’accord : un Hypnopaon.', 'My wish? If I tell you, it won’t come true! … Oh, all right: a Mesmeplume.'),
       ] },
-      { id: 'paillLunelle', x: 23, y: 8, mon: '006', look: LOOKS.kid, facing: 'down', wander: true, text: [L('La Lunelle regarde son reflet dans la fontaine. Elle a l’air de se trouver très jolie.', 'The Moonbun gazes at its reflection in the fountain. It seems to think it’s very pretty.')] },
+      { id: 'paillLunelle', x: 23, y: 8, mon: '006', look: LOOKS.kid, facing: 'down', wander: true, text: [L('La Lunou regarde son reflet dans la fontaine. Elle a l’air de se trouver très jolie.', 'The Moonpeep gazes at its reflection in the fountain. It seems to think it’s very pretty.')] },
       { id: 'paillBalai', x: 13, y: 13, look: { hair: '#6a6a7a', shirt: '#4a9a8a', pants: '#3a3a5a', hat: '#f2c14e' }, facing: 'left', wander: true, text: [L('Je balaie les paillettes tous les matins. Le soir, il y en a deux fois plus. Je crois qu’elles poussent !', 'I sweep up the glitter every morning. By evening there’s twice as much. I think it grows!')] },
       { id: 'paillDanse', x: 30, y: 8, look: { hair: '#2a2238', shirt: '#f29ac8', pants: '#ffffff', longHair: true, skirt: true }, facing: 'left', wander: true, text: [L('Un, deux, trois… pirouette ! Je répète pour le Bal des Étoiles. Célestine y danse avec ses Bestioles Fée chaque été.', 'One, two, three… twirl! I’m rehearsing for the Star Ball. Celestine dances there with her Fairy Critters every summer.')] },
-      { id: 'paillChant', x: 31, y: 7, mon: '005', look: LOOKS.kid, facing: 'left', text: [L('La Chantouille fredonne une petite musique pour la danseuse. Tu bâilles un peu…', 'The Croonball hums a little tune for the dancer. You yawn a bit…')] },
+      { id: 'paillChant', x: 31, y: 7, mon: '005', look: LOOKS.kid, facing: 'left', text: [L('La Sifflou fredonne une petite musique pour la danseuse. Tu bâilles un peu…', 'The Whistlet hums a little tune for the dancer. You yawn a bit…')] },
       { id: 'paillFacteur', x: 25, y: 5, look: { hair: '#3a2a1a', shirt: '#3a6ab0', pants: '#2a3a5a', hat: '#3a6ab0' }, facing: 'down', text: [L('Les lettres de Bourg-Paillette arrivent toutes pailletées. Impossible d’en ouvrir une sans en mettre partout !', 'Letters from Glimmerton always arrive covered in glitter. You can’t open one without getting it everywhere!')] },
       { id: 'paillMamie', x: 7, y: 3, look: LOOKS.grandma, facing: 'left', text: [L('Ici, on dit que chaque étoile filante retombe en paillettes sur le bourg. C’est pour ça que tout brille !', 'Round here they say every shooting star falls back on the town as glitter. That’s why everything sparkles!')] },
     ],
@@ -174,11 +174,11 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'astronome', x: 2, y: 1, look: { hair: '#e8e8f0', shirt: '#3a4a8a', pants: '#2a2238', hat: '#3a4a8a' }, facing: 'up', fromDoor: [['paillette', 28, 13]], text: [
         L('Chaque nuit, je compte les étoiles filantes. Chacune emporte un vœu. Hier, j’en ai compté quarante-deux !', 'Every night I count shooting stars. Each one carries a wish. Last night I counted forty-two!'),
         L('Célestine venait regarder le ciel ici quand elle était petite. Elle voulait attraper une étoile… Maintenant, elle en sème partout dans son Atelier.', 'Celestine used to come and watch the sky here when she was little. She wanted to catch a star… Now she scatters them all over her Atelier.'),
-        L('La nuit, sur la Route des Paillettes, les Lunelle sortent danser dans l’herbe haute.', 'At night, on Glitter Road, the Moonbuns come out to dance in the tall grass.'),
+        L('La nuit, sur la Route des Paillettes, les Lunou sortent danser dans l’herbe haute.', 'At night, on Glitter Road, the Moonpeeps come out to dance in the tall grass.'),
       ], afterStory: {
         text: [L('Il y a quelques nuits, une étoile filante est tombée tout près d’ici. Elle a laissé une traînée de paillettes jusqu’au Bord de la Page.', 'A few nights ago a shooting star fell close by. It left a trail of glitter all the way to the Edge of the Page.')],
       } },
-      { id: 'astroMon', x: 5, y: 3, mon: '028', look: LOOKS.kid, facing: 'left', fromDoor: [['paillette', 28, 13]], text: [L('Le Lunéclat somnole sur le tapis. Sa fourrure brille doucement, comme un clair de lune.', 'The Moonglow dozes on the rug. Its fur glows softly, like moonlight.')] },
+      { id: 'astroMon', x: 5, y: 3, mon: '028', look: LOOKS.kid, facing: 'left', fromDoor: [['paillette', 28, 13]], text: [L('Le Lunambule somnole sur le tapis. Sa fourrure brille doucement, comme un clair de lune.', 'The Moonleaper dozes on the rug. Its fur glows softly, like moonlight.')] },
     ],
   },
 

@@ -198,7 +198,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
         text: [L('Mes fleurs n’ont jamais été aussi roses. Et en les rempotant, j’ai trouvé quelque chose au fond du pot…', 'My flowers have never been so pink. And while repotting them, I found something at the bottom of the pot…')],
         gift: { item: 'sucette-magique', text: L('Une Sucette Magique ! Elle est pour toi, ma petite fleur.', 'A Magic Lollipop! It’s for you, my little flower.') },
       } },
-      { id: 'feutreZig', x: 16, y: 17, mon: '004', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Zigzou file entre tes jambes en laissant une traînée d’étincelles. Bzzt !', 'The Ziggle zips between your legs, leaving a trail of sparks. Bzzt!')] },
+      { id: 'feutreZig', x: 16, y: 17, mon: '004', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Joufflux file entre tes jambes en laissant une traînée d’étincelles. Bzzt !', 'The Zappouch zips between your legs, leaving a trail of sparks. Bzzt!')] },
       { id: 'feutreCycliste', x: 21, y: 12, look: LOOKS.cyclistF, facing: 'left', text: [
         L('À l’est, la Piste Cyclable grimpe jusqu’au Jardin-Gouache. Interdit aux piétons : on n’y passe qu’à vélo !', 'East, the Cycling Track climbs all the way to Gouache Garden. No walkers allowed: bikes only!'),
         L('Tu entends ces « bong » qui viennent du Mont Fusain ? C’est Lavande, la guide violette. Elle casse les rochers pour trouver des améthystes.', 'Hear those “bonks” coming from Mount Charcoal? That’s Lavender, the violet guide. She breaks rocks to find amethysts.'),
@@ -228,7 +228,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
         L('Notre entrepôt est libre ! Le secret d’un bon feutre ? Une goutte d’encre, une pincée de couleur…', 'Our warehouse is free! The secret of a good felt-tip? A drop of ink, a pinch of colour…'),
         L('… et un bouchon qu’on n’oublie jamais de remettre. Un feutre sans bouchon, c’est un feutre qui pleure.', '… and a cap you never forget to put back. A felt-tip without its cap is a felt-tip that cries.'),
       ] },
-      { id: 'feutreBoulon', x: 5, y: 2, mon: '035', look: LOOKS.kid, facing: 'left', fromDoor: [['feutre', 2, 5]], text: [L('Le Boulonnet s’est encore collé à la porte du frigo. Il dit qu’il garde les gâteaux.', 'The Boltbit has stuck itself to the fridge door again. It says it’s guarding the cakes.')] },
+      { id: 'feutreBoulon', x: 5, y: 2, mon: '035', look: LOOKS.kid, facing: 'left', fromDoor: [['feutre', 2, 5]], text: [L('Mon Antennou capte la radio avec sa queue. Il ne veut écouter que les chansons d’orage !', 'My Antennut picks up the radio with its tail. It only wants to listen to storm songs!')] },
       // the blue house: a family, whose daughter is Zelie's biggest fan
       { id: 'feutreMaman', x: 3, y: 2, look: LOOKS.mom, facing: 'down', fromDoor: [['feutre', 21, 18]], hideIf: 'a2.feutre', text: [
         L('Zélie a disparu… Ma fille a dessiné des affiches « Avez-vous vu Zélie ? ». Mais en gris, personne ne les remarque.', 'Zelie has vanished… My daughter drew “Have you seen Zelie?” posters. But in grey, nobody notices them.'),

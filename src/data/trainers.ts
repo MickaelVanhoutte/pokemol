@@ -96,7 +96,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   T({
     id: 'leo', name: L('Gamin Léo', 'Kid Leo'), party: [{ species: '012', level: 3 }, { species: '006', level: 4 }], money: 100,
     before: [L('Hé ! Tu as une Bestiole ? Moi aussi ! On se bat ?', 'Hey! You’ve got a Critter? Me too! Let’s battle!')],
-    after: [L('Oh non… Ma Lunelle a dansé pour rien !', 'Oh no… My Moonbun danced for nothing!')],
+    after: [L('Oh non… Ma Lunou a dansé pour rien !', 'Oh no… My Moonpeep danced for nothing!')],
   }),
   T({
     id: 'r1a', name: L('Écolière Margot', 'Schoolgirl Margot'), party: [{ species: '012', level: 3 }], money: 90,
@@ -216,7 +216,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'gaspard', name: L('Maître d’Atelier Gaspard', 'Atelier Master Gaspard'), money: 1600, badge: 'plume',
-    party: [{ species: '013', level: 11 }, { species: '008', level: 8 }, { species: '026', level: 12 }],
+    party: [{ species: '013', level: 11 }, { species: '008', level: 8 }, { species: '026', level: 10 }],
     before: [
       L('Zzz… Mmh ? Quelqu’un a dit « combat » ? Bâââille…', 'Zzz… Mmh? Did someone say “battle”? Yaaawn…'),
       L('Bon. Quand je suis réveillé, je ne rigole plus. Montre-moi ce que tu vaux !', 'Right. When I’m awake, I don’t mess around. Show me what you’ve got!'),
@@ -248,7 +248,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Le prof avait raison : tu es doué.', 'The prof was right: you’re good.')],
   }),
   T({
-    id: 'gardien', name: L('Gardien Ronflon', 'Guardian Snoozle'), money: 1600,
+    id: 'gardien', name: L('Gardien Grognours', 'Guardian Grumbear'), money: 1600,
     party: [{ species: '007', level: 14 }, { species: '004', level: 14 }, { species: '008', level: 15 }],
     before: [
       L('Ronnn… pshhh… Je garde le fond de la grotte depuis cent siestes.', 'Zzzz… pshhh… I’ve guarded the back of this cave for a hundred naps.'),
@@ -303,18 +303,18 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route des Feutres
   T({
-    id: 'r4a', name: L('Livreur Nino', 'Courier Nino'), party: [{ species: '026', level: 18 }, { species: '004', level: 18 }, { species: '056', level: 19 }], money: 500,
+    id: 'r4a', name: L('Livreur Nino', 'Courier Nino'), party: [{ species: '026', level: 15 }, { species: '004', level: 18 }, { species: '056', level: 19 }], money: 500,
     before: [L('Je livre des feutres neufs à Ville-Feutre. Mais d’abord, une petite livraison de coups !', 'I’m delivering new markers to Felt City. But first, a little delivery of hits!')],
     after: [L('Livraison annulée…', 'Delivery cancelled…')],
   }),
   T({
-    id: 'r4b', name: L('Musicienne Clara', 'Musician Clara'), party: [{ species: '026', level: 18 }, { species: '005', level: 19 }, { species: '067', level: 19 }], money: 520,
+    id: 'r4b', name: L('Musicienne Clara', 'Musician Clara'), party: [{ species: '026', level: 15 }, { species: '005', level: 19 }, { species: '067', level: 19 }], money: 520,
     before: [L('Ville-Feutre a perdu ses couleurs… et sa musique. Je joue pour la réveiller. Tu danses ?', 'Felt City lost its colours… and its music. I play to wake it up. Will you dance?')],
     after: [L('Tu as du rythme, toi !', 'You’ve got rhythm!')],
   }),
   T({
     id: 'r4maud', name: L('Randonneuse Maud', 'Hiker Maud'), party: [{ species: '007', level: 19 }, { species: '118', level: 18 }, { species: '008', level: 20 }], money: 520,
-    before: [L('Mon Ronflon porte mon sac. Enfin, quand il ne dort pas.', 'My Snoozle carries my bag. Well, when it’s not asleep.')],
+    before: [L('Mon Grognours porte mon sac. Enfin, quand il ne dort pas.', 'My Grumbear carries my bag. Well, when it’s not asleep.')],
     after: [L('Il dort. Je porte le sac. Comme d’habitude.', 'It’s asleep. I carry the bag. As usual.')],
   }),
   T({
@@ -366,7 +366,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Entrepôt Gomme
   T({
-    id: 'e1g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '052', level: 20 }, { species: '026', level: 21 }, { species: '004', level: 21 }], money: 520, grey: true,
+    id: 'e1g1', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '052', level: 20 }, { species: '026', level: 18 }, { species: '004', level: 21 }], money: 520, grey: true,
     before: [L('Intrus ! Ici on stocke les couleurs aspirées. Tu n’en auras pas une goutte !', 'Intruder! This is where we store the sucked-up colours. You won’t get a drop!')],
     after: [L('Une goutte de rouge vient de s’échapper…', 'A drop of red just escaped…')],
   }),
@@ -387,7 +387,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'rature', name: L('Admin Rature', 'Admin Smudge'), money: 2600, grey: true, afterScript: 'feutreRestore', storyFlag: 'a2.feutre',
-    party: [{ species: '026', level: 22 }, { species: '010', level: 21 }, { species: '010', level: 23 }],
+    party: [{ species: '026', level: 19 }, { species: '010', level: 21 }, { species: '010', level: 23 }],
     before: [
       L('Tiens, tiens. C’est toi qui recolories tout derrière nous ?', 'Well, well. So you’re the one colouring everything back in behind us?'),
       L('Et c’est toi qui caches ce cocon raté, tout embrouillé… Le patron le veut. Surtout celui-là.', 'And you’re hiding that muddled, failed little cocoon… The boss wants it. That one above all.'),
@@ -403,7 +403,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'fluoT2', name: L('Rockeur Jimmy', 'Rocker Jimmy'), party: [{ species: '067', level: 21 }, { species: '092', level: 22 }, { species: '082', level: 22 }], money: 560,
-    before: [L('Ma Lampyrette et mon Lumignon font les lumières, mon Fâchinge tape sur la batterie. On est un groupe !', 'My Lampfly and my Glimmerkin do the lights, my Grumpape bangs the drums. We’re a band!')],
+    before: [L('Ma Lampyrette et mon Lumignon font les lumières, mon Bougombat tape sur la batterie. On est un groupe !', 'My Lampfly and my Glimmerkin do the lights, my Grumbat bangs the drums. We’re a band!')],
     after: [L('Le concert est annulé…', 'The concert is cancelled…')],
   }),
   T({
@@ -419,7 +419,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Mont Fusain
   T({
-    id: 'mfOlga', name: L('Montagnarde Olga', 'Mountaineer Olga'), party: [{ species: '026', level: 22 }, { species: '029', level: 23 }, { species: '067', level: 23 }], money: 600,
+    id: 'mfOlga', name: L('Montagnarde Olga', 'Mountaineer Olga'), party: [{ species: '026', level: 19 }, { species: '029', level: 23 }, { species: '067', level: 23 }], money: 600,
     before: [L('Le fusain, ça salit les mains ! Et les Bestioles aussi !', 'Charcoal makes your hands dirty! And your Critters too!')],
     after: [L('Je vais me laver les mains…', 'I’m going to wash my hands…')],
   }),
@@ -440,7 +440,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Braise
   T({
-    id: 'braiseT1', name: L('Jongleur Paco', 'Juggler Paco'), party: [{ species: '076', level: 23 }, { species: '080', level: 23 }, { species: '021', level: 24 }, { species: '026', level: 24 }], money: 600,
+    id: 'braiseT1', name: L('Jongleur Paco', 'Juggler Paco'), party: [{ species: '076', level: 23 }, { species: '080', level: 23 }, { species: '021', level: 24 }, { species: '026', level: 21 }], money: 600,
     before: [L('Je jongle avec des braises ! Enfin, mon Braisaure jongle.', 'I juggle embers! Well, my Emberoo does.')],
     after: [L('Aïe, ça brûle…', 'Ouch, that burns…')],
   }),
@@ -451,7 +451,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise',
-    party: [{ species: '021', level: 25 }, { species: '018', level: 24 }, { species: '021', level: 26, item: 'baie-bleue' }],
+    party: [{ species: '021', level: 27 }, { species: '018', level: 26 }, { species: '021', level: 28, item: 'baie-doree' }],
     before: [
       L('Tu as monté le Mont Fusain jusqu’ici ? Courageux. Mais ici, ça chauffe !', 'You climbed all of Mount Charcoal? Brave. But here, things heat up!'),
     ],
@@ -538,7 +538,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Le fantôme a retrouvé ses couleurs… et il me tire la langue.', 'The ghost got its colours back… and it’s sticking its tongue out at me.')],
   }),
   T({
-    id: 'tgomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '010', level: 25 }, { species: '056', level: 25 }, { species: '026', level: 26 }], money: 760, grey: true,
+    id: 'tgomme2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '010', level: 25 }, { species: '056', level: 25 }, { species: '026', level: 23 }], money: 760, grey: true,
     before: [L('L’Admin Blanche est au sommet. Tu ne passeras pas !', 'Admin Whiteout is at the top. You shall not pass!')],
     after: [L('Bon, passe…', 'Fine, pass…')],
   }),
@@ -570,7 +570,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'r7b', name: L('Randonneur Jules', 'Hiker Jules'), party: [{ species: '008', level: 26 }, { species: '068', level: 26 }, { species: '039', level: 27 }], money: 800,
-    before: [L('Mon Ronflon a mangé tout le pique-nique. On se bat pour me consoler ?', 'My Snoozle ate the whole picnic. Battle to cheer me up?')],
+    before: [L('Mon Grognours a mangé tout le pique-nique. On se bat pour me consoler ?', 'My Grumbear ate the whole picnic. Battle to cheer me up?')],
     after: [L('Je ne suis pas consolé…', 'I’m not cheered up…')],
   }),
   // ---------------------------------------------------------------- Atelier Gouache
@@ -586,7 +586,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache', fairCopy: true,
-    party: [{ species: '094', level: 29, item: 'baie-menthe' }, { species: '098', level: 30 }, { species: '063', level: 29 }, { species: '024', level: 33 }],
+    party: [{ species: '094', level: 31, item: 'baie-menthe' }, { species: '098', level: 32 }, { species: '063', level: 33 }, { species: '024', level: 36, item: 'baie-bleue' }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),
@@ -595,7 +595,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route de l’Encre
   T({
-    id: 'r8c', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '026', level: 28 }, { species: '057', level: 29 }, { species: '055', level: 29 }], money: 700, grey: true,
+    id: 'r8c', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '026', level: 25 }, { species: '057', level: 29 }, { species: '055', level: 29 }], money: 700, grey: true,
     before: [L('La Cité-Encre sera la prochaine à blanchir. Ne te mets pas en travers !', 'Ink City will be the next to go blank. Don’t get in the way!')],
     after: [L('Grr… Le Grand Effaceur ne va pas aimer ça.', 'Grr… The Great Eraser won’t like this.')],
   }),
@@ -656,8 +656,8 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('J’ai raté le virage…', 'I missed the bend…')],
   }),
   T({
-    id: 'pc4', name: L('Cycliste Noé', 'Cyclist Noah'), party: [{ species: '026', level: 30 }, { species: '106', level: 31 }], money: 900,
-    before: [L('Mon Toufoudre et moi, on est les plus rapides de la Piste !', 'My Fluffbolt and I are the fastest on the Track!')],
+    id: 'pc4', name: L('Cycliste Noé', 'Cyclist Noah'), party: [{ species: '026', level: 27 }, { species: '106', level: 31 }], money: 900,
+    before: [L('Mon Pandorage et moi, on est les plus rapides de la Piste !', 'My Zappanda and I are the fastest on the Track!')],
     after: [L('Plus rapide que nous… c’est possible, alors.', 'Faster than us… so it is possible.')],
   }),
   // ---------------------------------------------------------------- Atelier Encre
@@ -691,7 +691,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'u1g2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '008', level: 31 }, { species: '057', level: 31 }, { species: '043', level: 32 }], money: 920, grey: true,
-    before: [L('Mon Ronflon tout gris dort sur le tapis roulant. Réveille-le, si tu l’oses !', 'My all-grey Snoozle sleeps on the conveyor belt. Wake it, if you dare!')],
+    before: [L('Mon Grognours tout gris dort sur le tapis roulant. Réveille-le, si tu l’oses !', 'My all-grey Grumbear sleeps on the conveyor belt. Wake it, if you dare!')],
     after: [L('Il s’est réveillé… en couleurs.', 'It woke up… in colour.')],
   }),
   T({
@@ -866,20 +866,22 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
  * `npm run balance`.
  */
 const RIVAL_ACE: Record<string, { level: number; item?: string }> = {
-  '001': { level: 43 }, '002': { level: 41 }, '003': { level: 42, item: 'baie-doree' },
+  '001': { level: 48, item: 'lunettes-tetues' }, '002': { level: 41 }, '003': { level: 37 },
 };
 
 export function rivalFinalTeam(rivalStarter: string): TrainerDef['party'] {
   const ace = RIVAL_ACE[rivalStarter] ?? RIVAL_ACE['001'];
+  // with Bouquétigre (weak to the fire and wings of the starter that beats it) he brings a stone falcon to cover it
+  const third = rivalStarter === '001' ? { species: '050', level: 41 } : { species: '053', level: 41, item: 'lunettes-tetues' };
   return [
-    { species: '036', level: 41, item: 'plume-vive' }, { species: '008', level: 41 }, { species: '053', level: 41, item: 'lunettes-tetues' },
+    { species: '036', level: 41, item: 'plume-vive' }, { species: '008', level: 41 }, third,
     { species: '007', level: 41 }, { species: '027', level: 41 }, { species: grownForm(rivalStarter, ace.level), ...ace },
   ];
 }
 
 /** The rival's team at the Lac des Couleurs: his starter, grown, is the ace. */
 export function rivalLacTeam(rivalStarter: string): TrainerDef['party'] {
-  return [{ species: '026', level: 18 }, { species: '004', level: 18 }, { species: grownForm(rivalStarter, 20), level: 20 }];
+  return [{ species: '026', level: 15 }, { species: '004', level: 18 }, { species: grownForm(rivalStarter, 20), level: 20 }];
 }
 
 /** The rival picks the starter that yours beats, so the very first battle is winnable. */

@@ -14,6 +14,8 @@
     "fair": "tsx tools/fair/make.ts",
     "fair:preview": "tsx tools/fair/preview.ts",
     "redraws": "tsx tools/redraws/make.ts",
+    "redraws:review": "tsx tools/redraws/review.ts",
+    "redraws:refs": "tsx tools/redraws/refs.ts",
     "minis": "tsx tools/minis.ts",
     "icons": "tsx tools/make-icons.ts",
     "balance": "tsx tools/balance.ts",

@@ -14,7 +14,7 @@ export const REPENT_LINES: LText[] = [
   L('On a rangé nos gommes. Maintenant, on apprend à dessiner… C’est bien plus dur que d’effacer !', 'We’ve put our erasers away. Now we’re learning to draw… It’s much harder than rubbing out!'),
   L('Regarde mon uniforme : je l’ai colorié moi-même. Ça dépasse un peu… mais j’aime bien comme ça.', 'Look at my uniform: I coloured it in myself. It goes over the lines a bit… but I like it that way.'),
   L('Avant, je gommais tout ce qui dépassait. Maintenant, je laisse dépasser. C’est drôlement reposant.', 'I used to rub out everything that went over the lines. Now I let it. It’s awfully relaxing.'),
-  L('J’ai fait mon premier dessin hier : un Chenillou avec trois pattes de trop. Je l’ai gardé.', 'I made my first drawing yesterday: a Chenillou with three legs too many. I kept it.'),
+  L('J’ai fait mon premier dessin hier : un Gloutillon avec trois pattes de trop. Je l’ai gardé.', 'I made my first drawing yesterday: a Gloutillon with three legs too many. I kept it.'),
   L('Effacer, c’était mon métier. Maintenant, je taille les crayons des autres. Ils n’ont jamais été aussi pointus !', 'Rubbing out was my job. Now I sharpen other people’s pencils. They’ve never been so pointy!'),
   L('On disait qu’une page blanche, c’était parfait. Mais avec un dessin dessus, c’est tellement plus joli !', 'They said a blank page was perfect. But with a drawing on it, it’s so much prettier!'),
   L('Pardon pour avant… Tu veux voir mon dessin ? C’est un soleil. Ou une pomme. Je ne sais plus très bien.', 'Sorry about before… Want to see my drawing? It’s a sun. Or an apple. I’m not quite sure any more.'),

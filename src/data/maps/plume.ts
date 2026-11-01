@@ -69,7 +69,7 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       { id: 'plumeFacteur', x: 15, y: 10, look: LOOKS.cyclist, facing: 'left', text: [
         L('Ici, on pose un caillou sur chaque lettre. Sinon, le vent les livre tout seul… n’importe où !', 'Here we put a pebble on every letter. Otherwise the wind delivers them by itself… anywhere at all!'),
       ] },
-      { id: 'plumeRonflon', x: 15, y: 3, mon: '008', look: LOOKS.kid, facing: 'down', text: [L('Le Ronflon dort dans l’herbe. À chaque ronflement, des plumes s’envolent autour de lui.', 'The Snoozle is asleep in the grass. Every snore sends feathers flying around it.')] },
+      { id: 'plumeRonflon', x: 15, y: 3, mon: '008', look: LOOKS.kid, facing: 'down', text: [L('Le Grognours dort dans l’herbe. À chaque ronflement, des plumes s’envolent autour de lui.', 'The Grumbear is asleep in the grass. Every snore sends feathers flying around it.')] },
       { id: 'plumePeintre', x: 2, y: 3, look: { hair: '#3a2a1a', shirt: '#f2ead8', pants: '#6a8a4a', hat: '#c8b48a' }, facing: 'down', text: [
         L('Je dessine les plumes que le vent m’apporte. Il n’y en a pas deux pareilles !', 'I draw the feathers the wind brings me. No two are alike!'),
         L('Avec une plume taillée, on dessine plus fin qu’avec n’importe quel crayon.', 'With a cut quill you can draw finer than with any pencil.'),
@@ -86,12 +86,12 @@ export const PLUME_MAPS: Record<string, MapDef> = {
         gift: { item: 'plume-vive', text: L('Prends-la : je crois bien qu’elle venait de chez toi.', 'Take it: I think it came from your way.') },
       } },
       { id: 'plumassiereMon', x: 8, y: 4, mon: '013', look: LOOKS.kid, facing: 'left', fromDoor: [['plume', 13, 10]], text: [L('Le Piafou te tend une plume du bout du bec. C’est un cadeau… ou il veut que tu la tailles ?', 'The Chirpie holds out a feather in its beak. A present… or does it want you to sharpen it?')] },
-      // Village-Plume: Gaspard's neighbour and her lullaby-singing Chantouille
+      // Village-Plume: Gaspard's neighbour and her lullaby-singing Sifflou
       { id: 'voisineGaspard', x: 2, y: 2, look: LOOKS.grandma, facing: 'down', fromDoor: [['plume', 2, 11]], text: [
         L('Je suis la voisine de Gaspard. Il ronfle si fort que les Piafou lui répondent en chantant !', 'I’m Gaspard’s neighbour. He snores so loudly the Chirpies sing back to him!'),
         L('Pour faire la sieste au frais, il a ouvert toutes les fenêtres de son Atelier. Ça fait de ces courants d’air ! On y glisse sur le papier glacé jusqu’à se cogner quelque part.', 'To nap somewhere cool, he opened every window of his Atelier. What a draught! You slide over the glossy paper until you bump into something.'),
       ] },
-      { id: 'voisineMon', x: 5, y: 4, mon: '005', look: LOOKS.kid, facing: 'left', fromDoor: [['plume', 2, 11]], text: [L('Le Chantouille fredonne une berceuse… Tu bâilles déjà.', 'The Croonball hums a lullaby… You’re yawning already.')] },
+      { id: 'voisineMon', x: 5, y: 4, mon: '005', look: LOOKS.kid, facing: 'left', fromDoor: [['plume', 2, 11]], text: [L('Le Sifflou fredonne une berceuse… Tu bâilles déjà.', 'The Whistlet hums a lullaby… You’re yawning already.')] },
     ],
   },
 

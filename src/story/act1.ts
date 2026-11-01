@@ -224,7 +224,7 @@ scripts.touffouGift = async () => {
     // with four badges, she has finished three new drawings… and a magic pencil to spare
     if (save.value!.badges.length >= 4 && !flag('gift:crayonMagique')) {
       await sayAll([
-        L('Regarde ! J’ai dessiné Touffou en Bestiole Eau, en Bestiole Feu et en Bestiole Électrique !', 'Look! I drew Fuzzkit as a Water Critter, a Fire Critter and a Lightning Critter!'),
+        L('Regarde ! J’ai dessiné Pandoudou en Bestiole Eau, en Bestiole Feu et en Bestiole Électrique !', 'Look! I drew Pandoodle as a Water Critter, a Fire Critter and a Lightning Critter!'),
         L('Il suffit de le redessiner avec un Crayon Magique pour qu’il change. Tiens, je t’en donne un !', 'You just redraw it with a Magic Pencil and it changes. Here, I’ll give you one!'),
       ], who);
       const kinds = ['crayon-magique-eau', 'crayon-magique-feu', 'crayon-magique-electrique'];
@@ -233,10 +233,10 @@ scripts.touffouGift = async () => {
       setFlag('gift:crayonMagique');
       sfx.confirm();
       await say(L('{name} reçoit {i} !', '{name} received the {i}!'), undefined, { i: tr(item(kinds[c]).name) });
-      await say(L('Utilise-le depuis ton Sac sur Touffou. Les autres Crayons Magiques se vendent dans les boutiques !', 'Use it on Fuzzkit from your Bag. The other Magic Pencils are sold in shops!'), who);
+      await say(L('Utilise-le depuis ton Sac sur Pandoudou. Les autres Crayons Magiques se vendent dans les boutiques !', 'Use it on Pandoodle from your Bag. The other Magic Pencils are sold in shops!'), who);
       return;
     }
-    await say(L('Mon Touffou va bien ? On dit qu’en grandissant, il pourra devenir plein de choses différentes !', 'Is my Fuzzkit doing well? They say that as it grows, it could become lots of different things!'), who);
+    await say(L('Mon Pandoudou va bien ? On dit qu’en grandissant, il pourra devenir plein de choses différentes !', 'Is my Pandoodle doing well? They say that as it grows, it could become lots of different things!'), who);
     return;
   }
   if (!hasTeam()) {
@@ -247,7 +247,7 @@ scripts.touffouGift = async () => {
     L('J’ai dessiné une Bestiole toute ébouriffée… et elle s’est mise à bouger !', 'I drew a scruffy little Critter… and it started moving!'),
     L('Elle a envie de voir du pays, mais moi, je dois faire mes devoirs.', 'It wants to see the world, but I have to do my homework.'),
   ], who);
-  const c = await ask(L('Tu veux bien t’occuper de mon Touffou ?', 'Will you look after my Fuzzkit?'), [L('Oui', 'Yes'), L('Non', 'No')], who);
+  const c = await ask(L('Tu veux bien t’occuper de mon Pandoudou ?', 'Will you look after my Pandoodle?'), [L('Oui', 'Yes'), L('Non', 'No')], who);
   if (c !== 0) {
     await say(L('Oh… Si tu changes d’avis, je suis là.', 'Oh… If you change your mind, I’ll be here.'), who);
     return;
@@ -255,7 +255,7 @@ scripts.touffouGift = async () => {
   const full = (save.value?.party.length ?? 0) >= 6;
   const touffou = giveMon('016', 8);
   setFlag('gift:touffou');
-  await say(full ? L('{name} reçoit Touffou ! Il est envoyé dans le PC.', '{name} received Fuzzkit! It was sent to the PC.') : L('{name} reçoit Touffou !', '{name} received Fuzzkit!'));
+  await say(full ? L('{name} reçoit Pandoudou ! Il est envoyé dans le PC.', '{name} received Pandoodle! It was sent to the PC.') : L('{name} reçoit Pandoudou !', '{name} received Pandoodle!'));
   await offerNickname(touffou.uid);
   await say(L('Prends-en bien soin ! On dit qu’un jour, il pourra changer de forme…', 'Take good care of it! They say that one day it could change its shape…'), who);
 };

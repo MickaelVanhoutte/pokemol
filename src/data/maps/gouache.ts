@@ -88,7 +88,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
         { id: '005', w: 14, min: 25, max: 27 },
         { id: '004', w: 14, min: 25, max: 27 },
         { id: '008', w: 10, min: 25, max: 27 },
-        { id: '026', w: 12, min: 25, max: 27 },
+        { id: '026', w: 12, min: 22, max: 23 },
         { id: '048', w: 6, min: 25, max: 27 },
         { id: '052', w: 4, min: 25, max: 27 },
         { id: '068', w: 8, min: 25, max: 27 },
@@ -164,7 +164,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
         L('La gouache, c’est épais : quand Basile peint une fleur, elle pousse vraiment !', 'Gouache is thick: when Basil paints a flower, it really grows!'),
         L('Ma parcelle, c’est celle des radis. Je les peins en rouge bien épais : comme ça, ils poussent plus vite.', 'My plot is the radish one. I paint them a nice thick red: that way they grow faster.'),
       ] },
-      { id: 'gouaBell', x: 27, y: 14, mon: '062', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Clochiflor tinte comme une clochette quand on l’arrose. Ding !', 'The Bellbud tinkles like a little bell when it gets watered. Ding!')] },
+      { id: 'gouaBell', x: 27, y: 14, mon: '062', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Brouticot a grignoté la moitié du potager. Il a l’air très fier de lui.', 'The Nibblekid has nibbled half the vegetable patch. It looks very proud of itself.')] },
       { id: 'gouaPainter', x: 20, y: 9, look: { hair: '#2a2238', shirt: '#f2d06a', pants: '#4a6ad0', hat: '#e04848' }, facing: 'right', text: [
         L('Je peins le bassin à la gouache. Bien épais, bien couvrant… Le hic, c’est que mes nénuphars se mettent à flotter sur la toile.', 'I’m painting the pond in gouache. Nice and thick, nice and opaque… The trouble is, my water lilies start floating on the canvas.'),
       ] },
@@ -184,9 +184,9 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
         L('Basile passe chaque matin m’acheter des graines. Il les sème dans sa serre, et le soir, elles sont déjà en fleurs.', 'Basil comes by every morning to buy seeds. He sows them in his greenhouse, and by evening they’re already in bloom.'),
       ] },
       { id: 'gouaFils', x: 3, y: 2, look: LOOKS.kid, facing: 'right', fromDoor: [['gouache', 23, 5]], text: [
-        L('J’ai fait pousser un radis gros comme un Ronflon ! Enfin… gros comme sa tête.', 'I grew a radish as big as a Snoozle! Well… as big as its head.'),
+        L('J’ai fait pousser un radis gros comme un Grognours ! Enfin… gros comme sa tête.', 'I grew a radish as big as a Grumbear! Well… as big as its head.'),
       ], afterStory: {
-        text: [L('Mon radis a encore grossi ! Maintenant, il est gros comme un Ronflon tout entier. Je ne sais plus où le ranger.', 'My radish grew again! Now it’s as big as a whole Snoozle. I don’t know where to keep it any more.')],
+        text: [L('Mon radis a encore grossi ! Maintenant, il est gros comme un Grognours tout entier. Je ne sais plus où le ranger.', 'My radish grew again! Now it’s as big as a whole Grumbear. I don’t know where to keep it any more.')],
       } },
       { id: 'gouaErabou', x: 7, y: 5, mon: '093', look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['gouache', 23, 5]], text: [
         L('L’Érabou sème ses feuilles sur le tapis. La fleuriste les ramasse pour ses bouquets.', 'The Maplet sheds its leaves on the rug. The florist picks them up for her bouquets.'),

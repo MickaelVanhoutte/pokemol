@@ -193,7 +193,7 @@ export function kid(seed0: number, opts: { layered?: boolean } = {}) {
   function svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, dx = 0, dy = 0, view: View = 'card'): string {
     cut();
     const extra = new Set(parts.filter((p) => p.extra).map((p) => p.name));
-    const shown = (list: typeof chunks) => list.filter((k) => (view === 'card' ? !k.part || !extra.has(k.part) : view === 'base' ? !k.part : k.part === view.part))
+    const shown = (list: typeof chunks) => list.filter((k) => (view === 'card' || view === 'mini' ? !k.part || !extra.has(k.part) : view === 'base' ? !k.part : k.part === view.part))
       .map((k) => k.svg).join('');
     const body = shown(papers) + shown(colours) + shown(lines) + shown(chunks);
     return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' viewBox='0 0 ${W} ${H}'><defs>${defs}`

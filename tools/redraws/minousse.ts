@@ -1,46 +1,65 @@
-import type { Redraw } from './crayon.ts';
+import type { P, Redraw } from './crayon.ts';
 
-/** A lime-green kitten on four stubby legs, a spiky bud growing on its back with two curly tendrils. */
+/**
+ * A little lime-green kitten sitting up, turned to the left, drawn after her drawing: a big rounded-square head, wider
+ * than tall, a « w » smile, and on its back a tall jagged leaf with a curly tendril, which grows a little each time it
+ * purrs. Big shiny eyes, a pale chest, a pink nose.
+ */
 export default {
-  id: '001', slug: 'minousse', seed: 103, felt: true, size: [1000, 820], tilt: -2,
+  id: '001', slug: 'minousse', seed: 1077, size: [1000, 1000], tilt: -2,
   draw(c) {
-    const { shape, stroke, dot, potato } = c;
-    const LIME = '#a6dd3f', LEAF = '#5cb52e';
-    // legs behind the body
-    shape([[690, 600], [760, 600], [770, 760], [700, 768]], LIME, { angle: 90 });
-    shape([[400, 600], [470, 600], [462, 765], [395, 760]], LIME, { angle: 90 });
-    // the body, low and long
-    shape([[330, 480], [560, 455], [790, 470], [850, 560], [820, 660], [560, 680], [360, 660], [300, 570]], LIME, { angle: 85, over: 0.55 });
-    // a little tail
-    c.part('queue', { pivot: [845, 545], motion: 'swing', amp: 14, period: 1.8 }, () => {
-      stroke([[845, 545], [905, 520], [930, 470]], { w: 7 });
+    const { shape, stroke, dot, band, potato, spikes } = c;
+    const LIME = '#a6dd3f', DEEP = '#86c02e', LEAF = '#4fa83a', PALE = '#f0f7d6', PINK = '#f29ab0';
+    // the tail curling up behind (it swishes in battle)
+    c.part('queue', { pivot: [620, 800], motion: 'swing', amp: 9, period: 1.8, behind: true }, () => {
+      shape(band([[600, 800], [720, 790], [800, 710], [810, 610], [770, 560]], 70, 50), LIME, { angle: 40, over: 0.3 });
     });
-    // front legs
-    shape([[460, 620], [530, 615], [535, 780], [465, 785]], LIME, { angle: 90 });
-    shape([[740, 620], [810, 615], [815, 775], [748, 780]], LIME, { angle: 90 });
-    // the bud on its back: round at the bottom, pointed on top, little spikes down one side
-    shape([[548, 495], [540, 405], [570, 325], [620, 262], [655, 212], [692, 268], [740, 340], [758, 425], [735, 498]], LEAF, { angle: 100, press: 1.1, over: 0.6 });
-    stroke([[690, 280], [705, 300], [712, 290], [728, 330], [738, 322], [748, 365], [756, 360]], { w: 4.5 }, false);
-    for (const [x, y] of [[600, 400], [660, 440], [612, 465], [670, 350]]) shape(potato(x, y, 14, 13, 7, 0.1), LIME, { over: 0 }, { w: 4.5 });
-    c.part('vrilles', { pivot: [656, 222], motion: 'swing', amp: 9, period: 2.6 }, () => {
-      stroke([[652, 220], [620, 140], [650, 85], [700, 95], [700, 140]]);
-      stroke([[660, 222], [730, 165], [800, 180], [810, 235], [770, 250]]);
+    // the leaf on its back, tall and jagged, a curly tendril beside it (it sways in battle, from the top of its stem)
+    c.part('feuille', { pivot: [684, 500], motion: 'swing', amp: 7, period: 2.4, behind: true }, () => {
+      stroke([[686, 520], [740, 470], [800, 440], [830, 470], [810, 500], [784, 480]], { w: 7, col: LEAF });
+      // a wide leaf with jagged edges and a middle vein
+      const left = spikes([[684, 500], [620, 430], [610, 330], [650, 250], [720, 200]], 2, 18);
+      const right = spikes([[684, 500], [760, 440], [790, 340], [770, 260], [720, 200]], 2, -18);
+      shape([...left, ...right.reverse()], LEAF, { angle: 80, over: 0.3 }, {}, false);
+      stroke([[684, 500], [700, 360], [716, 220]], { w: 4, col: '#3a8a2c' });
+      for (const [a, b] of [[[694, 420], [650, 370]], [[698, 380], [750, 330]], [[704, 320], [670, 270]]] as [P, P][]) stroke([a, b], { w: 3, col: '#3a8a2c' });
     });
-    // ears behind the head
-    shape([[150, 250], [190, 60], [300, 215]], LIME, { angle: 70 }, {}, false);
-    shape([[190, 220], [205, 125], [262, 215]], LEAF, { angle: 70, press: 1.1, over: 0 }, { w: 4 }, false);
-    shape([[360, 210], [440, 50], [480, 260]], LIME, { angle: 70 }, {}, false);
-    shape([[392, 215], [435, 120], [455, 235]], LEAF, { angle: 70, press: 1.1, over: 0 }, { w: 4 }, false);
-    // a big, slightly square head
-    shape([[140, 260], [300, 210], [455, 215], [500, 310], [490, 450], [425, 525], [285, 545], [175, 520], [125, 420]], LIME, { angle: 80, over: 0.55 });
-    // face: round eyes, a little nose, a cat mouth, whiskers
-    dot(240, 345, 22, 27);
-    dot(392, 338, 22, 27);
-    dot(318, 405, 10, 8);
-    stroke([[258, 440], [288, 465], [318, 418], [348, 465], [380, 438]]);
-    stroke([[135, 410], [200, 425]], { w: 4.5 });
-    stroke([[145, 460], [205, 450]], { w: 4.5 });
-    stroke([[428, 425], [498, 410]], { w: 4.5 });
-    stroke([[428, 455], [493, 462]], { w: 4.5 });
+    // the far front leg
+    shape(band([[480, 640], [490, 780], [482, 880]], 54, 48), DEEP, { angle: 90 });
+    shape(potato(476, 890, 44, 26, 8, 0.06), DEEP, { angle: 10 });
+    // the body sitting up, a pale chest, the near haunch
+    shape([[400, 880], [370, 740], [390, 610], [460, 530], [580, 530], [660, 610], [690, 740], [680, 880]], LIME, { angle: 80, over: 0.5 });
+    c.tint(potato(470, 650, 80, 110, 10, 0.08), PALE, { angle: 80, wash: 0.65 });
+    shape(potato(630, 780, 100, 112, 11, 0.05), LIME, { angle: 70, over: 0.3 });
+    shape(potato(560, 900, 70, 30, 8, 0.06), LIME, { angle: 10 });
+    // the leaf's stem grows out of its back: rooted in the fur, thick at the root, a little tuft round it
+    shape(band([[600, 616], [622, 580], [654, 540], [686, 504]], 26, 10), LEAF, { angle: 60 });
+    shape([[566, 630], [590, 606], [604, 590], [618, 604], [642, 628], [604, 620]], LEAF, { angle: 20 });
+    for (const [a, b] of [[[580, 606], [566, 584]], [[624, 620], [646, 606]]] as [P, P][]) stroke([a, b], { w: 4 });
+    // the near front leg
+    shape(band([[410, 640], [400, 790], [392, 880]], 58, 52), LIME, { angle: 90 });
+    shape(potato(384, 892, 48, 28, 8, 0.06), LIME, { angle: 10 });
+    stroke([[366, 896], [368, 914]], { w: 3.5 });
+    stroke([[392, 898], [394, 916]], { w: 3.5 });
+    // rounded ears, like her drawing
+    shape([[250, 290], [250, 170], [300, 140], [340, 170], [350, 270]], DEEP, { angle: 70 });
+    shape([[450, 270], [470, 150], [530, 130], [570, 170], [570, 290]], LIME, { angle: 70 });
+    c.tint([[480, 260], [492, 180], [530, 168], [548, 196], [548, 270]], PINK, { wash: 0.55 });
+    // the big rounded-square head, wider than tall
+    const head: P[] = [[200, 330], [230, 260], [320, 236], [460, 236], [570, 256], [610, 320], [612, 430], [580, 500], [480, 530], [330, 530], [230, 500], [196, 430]];
+    shape(head, LIME, { angle: 78, over: 0.45 });
+    c.tint(potato(330, 460, 96, 52, 9, 0.08), PALE, { angle: 60, wash: 0.7 });
+    // big shiny eyes, a pink nose, her « w » smile, whiskers, cheeks
+    c.eye(300, 380, 34, 44);
+    c.eye(430, 374, 44, 56);
+    c.cheek(520, 460, 32, 18);
+    dot(330, 440, 13, 10, '#e07a96');
+    stroke([[270, 470], [300, 500], [330, 458], [360, 500], [390, 470]], { w: 5 }, false);
+    stroke([[230, 450], [150, 438]], { w: 3 });
+    stroke([[230, 470], [152, 478]], { w: 3 });
+    c.part('paupieres', { pivot: [366, 376], motion: 'blink', extra: true }, () => {
+      c.lid(300, 380, 34, 44, LIME);
+      c.lid(430, 374, 44, 56, LIME);
+    });
   },
 } satisfies Redraw;

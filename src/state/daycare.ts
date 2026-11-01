@@ -10,7 +10,7 @@ export const DAYCARE_MAX = 2;
 /** An egg can appear every this many steps. */
 export const EGG_CHECK_STEPS = 256;
 
-/** First form of a species' evolution family (Papivole → Chenillou). */
+/** First form of a species' evolution family (Scaraprisme → Gloutillon). */
 export function familyRoot(id: string): string {
   const from = creature(id).evolvesFrom;
   return from ? familyRoot(from) : id;

@@ -73,7 +73,7 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
         { id: '006', w: 25, min: 28, max: 30, time: 'night' },
         { id: '055', w: 10, min: 28, max: 30, time: 'night' },
         { id: '047', w: 12, min: 27, max: 29 },
-        { id: '026', w: 15, min: 27, max: 30, time: 'day' },
+        { id: '026', w: 15, min: 24, max: 26, time: 'day' },
         { id: '094', w: 5, min: 27, max: 30 },
         { id: '098', w: 6, min: 28, max: 30, time: 'night' },
       ],

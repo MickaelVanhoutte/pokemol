@@ -104,7 +104,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Avec le **Bocal-Scaphandre**, plonge là où l’eau est toute sombre : une épave, une chapelle
   engloutie, des algues pleines de Bestioles… et sept perles qui se souviennent d’une très vieille
   légende. Une vieille carte t’aidera à trouver où plonger.
-- Prends soin de **Touffou** : avec un Crayon Magique, il peut changer de forme…
+- Prends soin de **Pandoudou** : avec un Crayon Magique, il peut changer de forme…
 - À Ville-Feutre, on te confie le **Feutre d’Or**, qu’aucune gomme ne peut effacer. Une fois par
   combat, il **met au propre** une Bestiole qui a fini de grandir : repassée au feutre, elle devient
   plus forte et gagne un nouveau talent (parfois même un nouveau type), le temps du combat. Les Maîtres d’Atelier ont le leur…
@@ -120,7 +120,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   saut, étangs et rivières dont l’autre rive attend ton bateau, buissons et rochers qui ouvrent des
   raccourcis quand tu reviens avec le bon outil.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
-  crédits. Quelques-unes sont des **brouillons**, griffonnés vite fait. On en croise dans les grottes,
+  crédits. On en croise dans les grottes,
   sur la montagne, au bord de l’eau… Il y en a **111** à découvrir : certaines ne sortent que la nuit,
   d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche, et quelques-unes
   n’apparaissent qu’une fois l’histoire finie.
@@ -254,7 +254,7 @@ The story has **two endings**, and your answers choose which one you will see.
 - With the **Jar Helmet**, dive wherever the water is very dark: a wreck, a sunken chapel, seaweed full
   of Critters… and seven pearls that remember a very old legend. An old map will help you find where to
   dive.
-- Look after **Fuzzkit** (Touffou): with a Magic Pencil, it can change shape…
+- Look after **Pandoodle** (Pandoudou): with a Magic Pencil, it can change shape…
 - In Felt City you are given the **Golden Felt-tip**, which no eraser can rub out. Once per battle, it
   makes a **fair copy** of a fully grown Critter: gone over in felt-tip, it gets stronger and takes a new
   talent (sometimes even a new type) for the rest of the battle. The Atelier Masters have their own…
@@ -268,8 +268,8 @@ The story has **two endings**, and your answers choose which one you will see.
   comes to find you. With the rod, what bites depends on the water… and on
   how strong your team is. Every road has its corners: meadows off the way, hidden items, ledges to jump back down, ponds and rivers whose far bank
   waits for your boat, bushes and rocks that open shortcuts when you come back with the right tool.
-- The Critters were born from the little artist's drawings: her originals are in the credits. A few
-  are **drafts** (brouillons), scribbled quickly. You meet them in caves, up the mountain, by the water…
+- The Critters were born from the little artist's drawings: her originals are in the credits. You meet
+  them in caves, up the mountain, by the water…
   There are **111** to discover: some only come out at night, others hide in the tower, deep in the water
   or at the end of a fishing line, and a few only show up once the story is over.
 - **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.

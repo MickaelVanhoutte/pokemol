@@ -14,7 +14,9 @@ https://mickaelvanhoutte.github.io/pokemol/ (deployed by GitHub Pages on every p
 - [docs/testing.md](docs/testing.md): unit tests, balance sims, headless playtests on phone sizes, deploy check.
 - [docs/bestioles.md](docs/bestioles.md): design rules for a Bestiole (stat bands, catch rate, base XP, the
   family's power, moves), checked by `src/data/bestioles.test.ts`. The project skill `new-bestiole`
-  (`.claude/skills/new-bestiole/SKILL.md`) walks through adding a Bestiole drawn in her style.
+  (`.claude/skills/new-bestiole/SKILL.md`) walks through adding a Bestiole drawn in her style; the skill
+  `bestiole-design` (`.claude/skills/bestiole-design/SKILL.md`) designs it first: the concept card the owner picks,
+  silhouette, shapes, colours, face and family ladder.
 
 ## Standing rules from the project owner
 
@@ -66,7 +68,7 @@ npm run build                                 # typecheck + vite build to dist/ 
 npm run balance -- [easy|normal|hard] [n] [rows] # simulated trainer fights along the story (rows: ids, comma-separated)
 npm run curve -- [easy|normal|hard]          # the team's levels at each trainer without grinding (src/data/curve.ts)
 npm run redraws -- 013                        # draw a Bestiole in her style (card, mini, tools/out/redraws-sheet.png)
-npm run fair -- toufeu                        # draw a fair copy (its rig; `--try` only draws, into tools/out/fair-try)
+npm run fair -- toufeu                        # its fair copy, from its card (its rig; `--try` only draws, into tools/out/fair-try)
 npm run fair:preview                          # tools/out/fair-preview.html: the fair copies moving, for the owner
 npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png
@@ -248,12 +250,13 @@ conventions are in [docs/content.md](docs/content.md#flags).
   technique: dense coloured-pencil strokes that run over the line, a second pass across in places,
   paper specks, one wobbly graphite (or felt-tip) outline, lopsided shapes. It writes
   `tools/out/redraws-sheet.png`: her drawing, the redraw, battle size and miniature side by side;
-- the *brouillons* by `tools/drafts` (`npm run drafts`, rougher kid kit, `draft: true`, see
-  [docs/content.md](docs/content.md#brouillons-drafts)).
+- Poupochette alone by the rougher kid kit of `tools/drafts` (`npm run drafts`), a look the owner wants kept
+  ([docs/content.md](docs/content.md#the-kid-kit-poupochette)).
 
-Each fully grown Bestiole also has a fair copy for battle, by `tools/fair/<slug>.ts` (`npm run fair`): its own
-drawing grown up, bigger and fiercer, in pencil under a felt-tip outline; a rig only, no card or miniature
-([docs/content.md](docs/content.md#fair-copies--mise-au-propre-)).
+Each fully grown Bestiole also has a fair copy for battle (`npm run fair`): a rig only, no card or miniature.
+It is its card's own drawing gone over neatly, in the `crayon` kit's `clean` style: a black felt-tip outline, flat
+colour a little more vivid, and a gold star set by itself on the body. Poupochette keeps a hand-drawn
+`tools/fair/poupochette.ts` ([docs/content.md](docs/content.md#fair-copies--mise-au-propre-)).
 A part that moves in battle is drawn inside `c.part(name, { pivot, motion… }, () => …)` (both kits);
 `npm run redraws` / `npm run drafts` then also write its battle rig (`tools/redraws/rig.ts`, checked on
 `tools/out/rigs-sheet.png`) without changing the card ([docs/content.md](docs/content.md#moving-parts-in-battle)).

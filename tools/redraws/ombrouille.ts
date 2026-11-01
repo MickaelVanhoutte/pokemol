@@ -1,40 +1,87 @@
-import type { Redraw } from './crayon.ts';
+import type { P, Redraw } from './crayon.ts';
 
-/** A purple ghost leaning to the left: a huge toothy grin, red eyes, spiky head, a clawed arm thrown forward. */
+/**
+ * A tall purple ghost rising out of a puddle of shadow, leaning to the left. From her drawing it keeps the purple,
+ * the points on its head, the red eyes, the huge toothy grin and the clawed arm thrown forward. It has no legs now:
+ * it lives in your shadow and comes up out of it. Grimouille's curls have grown into four smoky spikes with ghostly
+ * blue flames at their tips, its floating hands are joined to long wispy arms, and pale swirls mark its chest.
+ */
 export default {
-  id: '011', slug: 'ombrouille', seed: 112, size: [1000, 1000], tilt: -4,
+  id: '011', slug: 'ombrouille', seed: 11209, size: [1000, 1000], tilt: -3,
   draw(c) {
-    const { shape, paper, stroke, band, potato } = c;
-    const PURPLE = '#8a4ed6', RED = '#f04a40';
-    // the far leg and far arm, behind on the right
-    shape(band([[600, 640], [650, 790], [690, 910]], 64, 56), PURPLE, { angle: 100 });
-    c.part('bras-loin', { pivot: [720, 470], motion: 'swing', amp: 8, period: 1.9, behind: true }, () => {
-      shape(band([[720, 470], [820, 380], [880, 260]], 50, 44), PURPLE, { angle: 120 });
-      shape([[850, 275], [860, 165], [900, 252], [955, 180], [935, 275], [1000, 290], [905, 302]], PURPLE, { angle: 120, press: 1.1 }, {}, false);
+    const { shape, stroke, band, potato } = c;
+    const PURPLE = '#7a48c8', DEEP = '#4e2c86', NIGHT = '#2e2350', LAV = '#c3a2f0', RED = '#e0453a', PINK = '#f07aa8';
+    const BLUE = '#4f8fe8', CYAN = '#9fe0ff';
+    const swirl = (x: number, y: number, r: number, col: string, w = 5) =>
+      stroke(Array.from({ length: 9 }, (_, i): P => {
+        const a = i * 0.8, rr = r * (1 - i / 11);
+        return [x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.8];
+      }), { w, col });
+    /** A ghostly blue flame at (x, y), leaning `lean` px. */
+    const flame = (x: number, y: number, s: number, lean: number) => {
+      shape([[x - 22 * s, y + 10 * s], [x - 14 * s, y - 30 * s], [x + lean * 0.5, y - 50 * s], [x + lean, y - 76 * s], [x + 18 * s, y - 30 * s], [x + 22 * s, y + 10 * s], [x, y + 22 * s]], BLUE, { angle: 90, over: 0 }, { w: 3.5 });
+      c.tint(potato(x + lean * 0.2, y - 6 * s, 9 * s, 16 * s, 7, 0.1), CYAN, { wash: 0.9 });
+    };
+    /** A clawed hand of mist: a round palm, three curved claws towards `dir` (degrees). */
+    const hand = (x: number, y: number, s: number, dir: number, col: string) => {
+      const a = (dir * Math.PI) / 180;
+      for (const k of [-0.6, 0, 0.6]) {
+        const b = a + k;
+        shape(band([[x + Math.cos(b) * 30 * s, y + Math.sin(b) * 30 * s], [x + Math.cos(b) * 80 * s, y + Math.sin(b) * 80 * s], [x + Math.cos(b + 0.4) * 104 * s, y + Math.sin(b + 0.4) * 104 * s]], 30 * s, 8 * s), col, { over: 0 }, { w: 4 });
+      }
+      shape(potato(x, y, 48 * s, 44 * s, 9, 0.06), col, { angle: 60, over: 0.3 });
+    };
+    // the puddle of shadow it comes out of
+    c.part('ombre', { pivot: [560, 900], motion: 'swing', amp: 2, period: 3, behind: true }, () => {
+      shape(potato(560, 905, 330, 62, 14, 0.05), NIGHT, { angle: 5, over: 0.4, press: 1.1 });
     });
-    // the head-body: big pointed ears, three spikes on top, face on the left
-    shape([[230, 420], [200, 150], [330, 300], [390, 210], [430, 290], [470, 180], [515, 290], [570, 205], [610, 300], [760, 120], [770, 420],
-      [730, 580], [610, 660], [420, 670], [290, 600]], PURPLE, { angle: 80, over: 0.7, press: 1.1 }, {}, false);
-    // the near leg kicking forward
-    shape(band([[400, 640], [310, 770], [230, 890]], 70, 60), PURPLE, { angle: 60 });
-    // angry red eyes, the far one narrower
-    shape([[270, 390], [350, 400], [345, 450], [310, 465], [280, 440]], RED, { angle: 90, over: 0 }, {}, false);
-    shape([[460, 400], [580, 385], [575, 440], [525, 470], [475, 455]], RED, { angle: 90, over: 0 }, {}, false);
-    stroke([[255, 375], [360, 392]], { w: 5 });
-    stroke([[450, 393], [600, 372]], { w: 5 });
-    // the grin, shifted left
-    paper(potato(420, 545, 170, 68, 12, 0.04));
-    for (const x of [310, 360, 415, 470, 525]) stroke([[x, 490 + Math.abs(x - 420) * 0.15], [x + 5, 605 - Math.abs(x - 420) * 0.2]], { w: 3.4 });
-    stroke([[260, 540], [580, 545]], { w: 3.4 });
-    // the near arm thrown forward, three claws
-    c.part('bras', { pivot: [300, 500], motion: 'swing', amp: 8, period: 1.5 }, () => {
-      shape(band([[300, 500], [190, 470], [90, 450]], 54, 46), PURPLE, { angle: 20 });
-      shape([[100, 415], [15, 360], [70, 440], [5, 465], [75, 478], [30, 540], [115, 490]], PURPLE, { angle: 20, press: 1.1 }, {}, false);
+    // the far arm, raised behind on the right
+    c.part('brasLoin', { pivot: [690, 440], motion: 'swing', amp: 8, period: 1.9, behind: true }, () => {
+      shape(band([[680, 450], [790, 400], [860, 300]], 70, 46), DEEP, { angle: 120 });
+      hand(870, 270, 0.9, -80, DEEP);
     });
-    // only in battle: a big tongue poking out of its grin, now and then (drawn last, the card stays the same)
-    c.part('langue', { pivot: [420, 590], motion: 'peek', to: [0, -55], shrink: 0.3, fade: true, period: 3.4, extra: true }, () => {
-      shape([[372, 588], [470, 588], [478, 680], [448, 742], [404, 738], [370, 680]], '#f07f9a', { angle: 90, over: 0, press: 1.1 });
-      stroke([[422, 600], [424, 700]], { w: 4, col: '#c4506b' });
+    // the four smoky spikes, ghostly flames at their tips (they flicker in battle)
+    c.part('pointes', { pivot: [460, 230], motion: 'nod', amp: 4, period: 1.6 }, () => {
+      shape(band([[300, 270], [220, 190], [150, 160]], 110, 18), DEEP, { angle: 60 });
+      shape(band([[640, 270], [730, 200], [800, 180]], 110, 18), DEEP, { angle: 60 });
+      shape(band([[380, 220], [340, 120], [300, 50]], 120, 18), PURPLE, { angle: 60 });
+      shape(band([[540, 220], [570, 110], [620, 40]], 120, 18), PURPLE, { angle: 60 });
+      flame(146, 152, 0.8, -20);
+      flame(806, 172, 0.8, 20);
+      flame(298, 44, 0.9, -14);
+      flame(624, 34, 0.9, 16);
+    });
+    // the body, rising out of the shadow and leaning forward
+    const body: P[] = [[500, 900], [470, 780], [400, 660], [310, 570], [245, 450], [240, 330], [290, 240], [380, 196], [500, 190], [610, 226], [690, 320], [720, 450], [700, 590], [650, 720], [640, 830], [670, 900]];
+    shape(body, PURPLE, { angle: 75, over: 0.5, press: 1.05 });
+    // darker towards the shadow it comes out of
+    c.tint([[500, 900], [478, 800], [560, 770], [660, 760], [648, 840], [670, 900]], NIGHT, { angle: 80, wash: 0.3, press: 0.8 });
+    swirl(560, 560, 50, LAV);
+    swirl(620, 360, 36, LAV, 4.5);
+    // wisps of shadow climbing up from the puddle
+    stroke([[420, 890], [440, 840], [420, 800]], { w: 4, col: LAV });
+    stroke([[720, 890], [700, 840], [720, 790]], { w: 4, col: LAV });
+    // sly red eyes, heavy brows
+    c.eye(305, 352, 44, 56, RED, { lid: 0.32, skin: PURPLE, tilt: 14 });
+    c.eye(458, 340, 58, 70, RED, { lid: 0.32, skin: PURPLE, tilt: -10 });
+    stroke([[252, 274], [340, 300]], { w: 7 });
+    stroke([[404, 262], [518, 252]], { w: 7 });
+    // the huge toothy grin, laughing
+    const grin: P[] = [[236, 448], [380, 466], [540, 452], [612, 420], [600, 494], [520, 556], [400, 572], [290, 540]];
+    c.paper(grin);
+    c.tint([[330, 540], [420, 524], [510, 534], [480, 562], [400, 568]], PINK, { wash: 0.7, angle: 90 });
+    stroke([[250, 462], [276, 490], [302, 466], [330, 494], [356, 470], [384, 498], [412, 472], [440, 500], [468, 470], [496, 496], [524, 464], [552, 486], [580, 446], [600, 460]], { w: 3.5 }, false);
+    c.cheek(232, 432, 26, 16, PINK);
+    c.cheek(640, 412, 36, 20, PINK);
+    // the near arm thrown forward, claws out
+    c.part('bras', { pivot: [330, 560], motion: 'swing', amp: 10, period: 1.4 }, () => {
+      shape(band([[340, 580], [230, 620], [140, 590]], 84, 60), PURPLE, { angle: 20, over: 0.3 });
+      hand(100, 570, 1.35, 200, PURPLE);
+    });
+    // only in battle: its eyes blink
+    c.part('paupieres', { pivot: [380, 345], motion: 'blink', extra: true }, () => {
+      c.lid(305, 352, 44, 56, PURPLE);
+      c.lid(458, 340, 58, 70, PURPLE);
     });
   },
 } satisfies Redraw;

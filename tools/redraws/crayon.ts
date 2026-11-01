@@ -38,10 +38,13 @@ export interface PartDef extends PartMove {
   pivot: P;
   behind?: boolean;
   extra?: boolean;
+  /** Scenery, not the creature (a wave it surfs, a splash): drawn on the card and in battle, left off its miniature. */
+  decor?: boolean;
 }
 
-/** What `svg()` draws: the card, the rig's body without its moving parts, or one part alone. */
-export type View = 'card' | 'base' | { part: string };
+/** What `svg()` draws: the card, the card without its scenery (for the miniature), the rig's body without its moving
+ * parts, or one part alone. */
+export type View = 'card' | 'base' | 'mini' | { part: string };
 
 export interface Colour {
   /** Main stroke direction in degrees (90 = up and down). */
@@ -69,8 +72,30 @@ export interface Line {
   col?: string;
 }
 
-export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean } = {}) {
-  const marker = !!style.marker;
+/**
+ * A colour a little more vivid, for a clean copy: more saturated, the same lightness (greys and whites stay as they are).
+ */
+export function vivid(hex: string, k = 1.3): string {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return hex;
+  const n = parseInt(m[1], 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min;
+  if (d < 0.04) return hex;
+  let h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  h *= 60;
+  const s = Math.min(1, (d / (1 - Math.abs(2 * l - 1))) * k);
+  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m0 = l - c / 2;
+  const [r1, g1, b1] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return '#' + [r1, g1, b1].map((v) => Math.round(Math.min(255, Math.max(0, (v + m0) * 255))).toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * `clean`: the fair copy (« mise au propre »), the same drawing gone over neatly: a crisp black felt-tip outline, flat
+ * even colour, everything a little more vivid.
+ */
+export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean; clean?: boolean } = {}) {
+  const clean = !!style.clean;
+  const marker = !!style.marker || clean;
   let seed = seed0;
   const rnd = () => {
     seed = (seed + 0x6d2b79f5) >>> 0;
@@ -188,6 +213,10 @@ export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean 
 
   /** Coloured-pencil colouring of a shape (no outline). */
   function colour(shape: P[], col: string, o: Colour = {}, round = true): string {
+    if (clean) {
+      const d = round ? smooth(shape, true) : sharp(shape, true);
+      return `<path d='${d}' fill='${PAPER}'/><path d='${d}' fill='${vivid(col)}' opacity='${Math.min(1, o.wash ?? 1)}'/>`;
+    }
     const id = `c${ids++}`;
     const clip = grow(shape, o.spill ?? (marker ? 1 + rnd() * 1.5 : 4 + rnd() * 4));
     defs += `<clipPath id='${id}'><path d='${round ? smooth(clip, true) : sharp(clip, true)}'/></clipPath>`;
@@ -244,17 +273,48 @@ export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean 
       p.push(marker ? [a[0] + (b[0] - a[0]) * 0.5, a[1] + (b[1] - a[1]) * 0.5]
         : rnd() < 0.6 ? [a[0] + (b[0] - a[0]) * 0.35 + j(5), a[1] + (b[1] - a[1]) * 0.35 + j(5)] : [a[0] + j(7), a[1] + j(7)]);
     }
-    const w = r1((o.w ?? (marker ? 8 : felt ? 6.5 : 5)) * (marker ? 0.97 + rnd() * 0.06 : 0.9 + rnd() * 0.2));
+    const w = r1((o.w ? o.w * (clean ? 1.25 : 1) : clean ? 9 : marker ? 8 : felt ? 6.5 : 5) * (marker ? 0.97 + rnd() * 0.06 : 0.9 + rnd() * 0.2));
     const col = o.col ?? (felt ? FELT : GRAPHITE);
     const path = `<path d='${sharp(p, false)}' fill='none' stroke='${col}' stroke-width='${w}' stroke-opacity='${felt ? 0.95 : 0.9}' stroke-linecap='round' stroke-linejoin='round'/>`;
     return felt ? path : `<g filter='url(#lead)'>${path}</g>`;
   }
 
+  function shape(pts: P[], col: string, o: Colour = {}, l: Line = {}, round = true) {
+    seq += colour(pts, col, o, round) + line(pts, true, l, round);
+  }
+  function dot(x: number, y: number, rx: number, ry = rx, col = style.felt || marker ? FELT : GRAPHITE) {
+    seq += `<g${style.felt || marker ? '' : ` filter='url(#lead)'`}><ellipse cx='${r1(x + j(3))}' cy='${r1(y + j(3))}' rx='${rx}' ry='${ry}' fill='${col}' transform='rotate(${r1(j(20))} ${x} ${y})'/></g>`;
+  }
+
   return {
     rnd, j, potato, shake, wobble, densify, band, spikes, grow, smooth,
     /** A coloured part with its outline. `round: false` keeps sharp corners (spikes). */
-    shape(pts: P[], col: string, o: Colour = {}, l: Line = {}, round = true) {
-      seq += colour(pts, col, o, round) + line(pts, true, l, round);
+    shape,
+    /**
+     * A big shiny eye, the house style (docs/bestioles.md): a coloured oval, a big white shine up and to the left and a
+     * small one down and to the right. Draw the far eye smaller. `lid` (0–1) closes it from the top in `skin` colour, for
+     * a sly or fierce look that keeps its shine.
+     */
+    eye(x: number, y: number, rx: number, ry: number, col = '#3a3050', o: { lid?: number; skin?: string; tilt?: number } = {}) {
+      shape(potato(x, y, rx, ry, 10, 0.03), col, { angle: 90, over: 0, press: 1.25 }, { w: 3.5 });
+      dot(x - rx * 0.3, y - ry * 0.35, rx * 0.34, ry * 0.28, '#ffffff');
+      dot(x + rx * 0.25, y + ry * 0.3, rx * 0.14, ry * 0.12, '#ffffff');
+      if (o.lid && o.skin) {
+        const t = ((o.tilt ?? 0) * Math.PI) / 180, top = y - ry * 1.15, cut = y - ry + 2 * ry * o.lid;
+        const at = (dx: number, yy: number): P => [x + dx, yy + dx * Math.tan(t)];
+        const lid: P[] = [at(-rx * 1.15, top), at(rx * 1.15, top), at(rx * 1.15, cut), at(0, cut + ry * 0.08), at(-rx * 1.15, cut)];
+        seq += colour(lid, o.skin, { over: 0, spill: 0, wash: 1 });
+        seq += line([at(-rx * 1.1, cut), at(0, cut + ry * 0.08), at(rx * 1.1, cut)], false, { w: 5 });
+      }
+    },
+    /** A soft cheek of colour, its line so faint it doesn't show. */
+    cheek(x: number, y: number, rx: number, ry: number, col = '#f29ab0') {
+      shape(potato(x, y, rx, ry, 7, 0.1), col, { over: 0 }, { w: 0.1 });
+    },
+    /** A closed eyelid over an eye drawn with `eye` (the battle rig's `blink` part, drawn last as an `extra`). */
+    lid(x: number, y: number, rx: number, ry: number, skin: string) {
+      shape(potato(x, y, rx + 2, ry + 2, 10, 0.02), skin, { over: 0, wash: 1 }, { w: 0.1 });
+      seq += line([[x - rx, y + 4], [x - rx * 0.4, y + ry * 0.35], [x + rx * 0.4, y + ry * 0.35], [x + rx, y + 4]], false, { w: 5 });
     },
     /** A part left white (paper), with its outline: wings, a collar of fur… */
     paper(pts: P[], l: Line = {}, round = true) {
@@ -262,16 +322,14 @@ export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean 
     },
     /** Colour with no outline (a glow, cheeks, a bit of shading). */
     tint(pts: P[], col: string, o: Colour = {}) {
-      seq += colour(pts, col, { over: 0, spill: 0, ...o }).replace(/<path d='[^']*' fill='#f7f3ea'\/>/, '');
+      seq += colour(pts, col, { over: 0, spill: 0, ...(clean && o.wash === undefined ? { wash: 0.5 } : {}), ...o }).replace(/<path d='[^']*' fill='#f7f3ea'\/>/, '');
     },
     /** An open line (a mouth, a whisker, an antenna, fur marks). */
     stroke(pts: P[], l: Line = {}, round = true) {
       seq += line(pts, false, l, round);
     },
     /** A filled pencil blob (pupils, nose). */
-    dot(x: number, y: number, rx: number, ry = rx, col = style.felt || marker ? FELT : GRAPHITE) {
-      seq += `<g${style.felt || marker ? '' : ` filter='url(#lead)'`}><ellipse cx='${r1(x + j(3))}' cy='${r1(y + j(3))}' rx='${rx}' ry='${ry}' fill='${col}' transform='rotate(${r1(j(20))} ${x} ${y})'/></g>`;
-    },
+    dot,
     /** Raw SVG on top. */
     raw(svg: string) {
       seq += svg;
@@ -309,7 +367,10 @@ export function crayon(seed0: number, style: { felt?: boolean; marker?: boolean 
     svg(W: number, H: number, tilt = 0, cx = W / 2, cy = H / 2, view: View = 'card'): string {
       cut();
       const extra = new Set(parts.filter((p) => p.extra).map((p) => p.name));
-      const body = chunks.filter((k) => (view === 'card' ? !k.part || !extra.has(k.part) : view === 'base' ? !k.part : k.part === view.part))
+      const decor = new Set(parts.filter((p) => p.decor).map((p) => p.name));
+      const body = chunks.filter((k) => (view === 'card' ? !k.part || !extra.has(k.part)
+        : view === 'mini' ? !k.part || (!extra.has(k.part) && !decor.has(k.part))
+        : view === 'base' ? !k.part : k.part === view.part))
         .map((k) => k.svg).join('');
       return `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' viewBox='0 0 ${W} ${H}'><defs>${defs}`
         // paper tooth: white specks where the pencil skipped over the grain
@@ -334,12 +395,17 @@ export interface Redraw {
   draw(c: Crayon): void;
 }
 
-/** A final form's fair copy (« mise au propre »), drawn in felt-tip with `crayon(seed, { marker: true })` (tools/fair). */
+/**
+ * A final form's fair copy (« mise au propre », tools/fair): its card's own drawing gone over neatly (`clean`), or a
+ * hand-drawn module for a brouillon not redrawn yet.
+ */
 export interface Fair {
   id: string;
   slug: string;
   seed: number;
   size: [number, number];
   tilt?: number;
+  /** Drawn with `crayon(seed, { clean: true })`, the gold star placed by itself (`npm run fair`). */
+  clean?: boolean;
   draw(c: Crayon): void;
 }

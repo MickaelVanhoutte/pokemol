@@ -86,17 +86,17 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         text: [L('Depuis ton retour, ma marelle tient mieux. Quand il pleut, elle s’efface quand même un peu… Tant mieux : on en redessine une !', 'Since you came back, my hopscotch holds better. When it rains it still fades a little… Good: we draw a new one!')],
       } },
       { id: 'pastelPapivole', x: 26, y: 9, mon: '007', look: LOOKS.kid, facing: 'left', wander: true, text: [
-        L('Le Papivole volette de fleur en fleur. Il laisse derrière lui une traînée de poudre rose.', 'The Flutterbug flits from flower to flower, leaving a trail of pink powder behind it.'),
+        L('Le Scaraprisme volette de fleur en fleur. Il laisse derrière lui une traînée de poudre rose.', 'The Prismhorn flits from flower to flower, leaving a trail of pink powder behind it.'),
       ] },
     ],
     residents: [
-      // the pastel painter, who taught Mireille to draw, and her Lunelle
+      // the pastel painter, who taught Mireille to draw, and her Lunou
       { id: 'pastelliste', x: 7, y: 3, look: { hair: '#d8d0c8', shirt: '#f29ac8', pants: '#5a8a9a', hat: '#9ed36a', longHair: true }, facing: 'right', fromDoor: [['ville', 25, 6]], text: [
         L('Les pastels, c’est de la craie de toutes les couleurs. On dessine, on estompe avec le doigt… et on se lave les mains trois fois !', 'Pastels are chalk in every colour. You draw, you smudge it with a finger… and you wash your hands three times!'),
         L('Mireille venait dessiner ici quand elle avait ton âge. Elle ne dessinait que des chenilles ! Et regarde ses papillons, aujourd’hui…', 'Mireille used to come and draw here when she was your age. She only ever drew caterpillars! And look at her butterflies today…'),
       ] },
       { id: 'pastellisteMon', x: 4, y: 4, mon: '006', look: LOOKS.kid, facing: 'down', fromDoor: [['ville', 25, 6]], text: [
-        L('La Lunelle s’est endormie sur une boîte de pastels. Elle a du rose plein les oreilles.', 'The Moonbun fell asleep on a box of pastels. Its ears are all pink.'),
+        L('La Lunou s’est endormie sur une boîte de pastels. Elle a du rose plein les oreilles.', 'The Moonpeep fell asleep on a box of pastels. Its ears are all pink.'),
       ] },
       // the museum guard and his daughter
       { id: 'gardienMusee', x: 6, y: 2, look: { hair: '#3a2a1a', shirt: '#5a6aa8', pants: '#2a3a5a', hat: '#2a3a5a' }, facing: 'down', fromDoor: [['ville', 29, 6]], text: [
@@ -118,7 +118,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         L('Moi, j’ai poussé le mien dans un coin… Coincé ! J’ai dû sortir et revenir pour qu’il retourne à sa place.', 'I pushed mine into a corner… Stuck! I had to go out and come back in for it to go back to its place.'),
       ] },
       { id: 'pastelGaminMon', x: 5, y: 4, mon: '012', look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['ville', 30, 14]], text: [
-        L('Le Chenillou grignote le bord du tapis. Miam, du tapis.', 'The Wigglet nibbles the edge of the rug. Yum, rug.'),
+        L('Le Gloutillon grignote le bord du tapis. Miam, du tapis.', 'The Munchlet nibbles the edge of the rug. Yum, rug.'),
       ] },
     ],
   },

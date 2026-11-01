@@ -56,7 +56,7 @@
     },
     {
       "id": "004",
-      "slug": "zigzou",
+      "slug": "joufflux",
       "photo": "3be34a89-9ea5-473a-a9dc-d3b4d44e28ca.jpeg",
       "box": [
         374,
@@ -87,7 +87,7 @@
     },
     {
       "id": "005",
-      "slug": "chantouille",
+      "slug": "sifflou",
       "photo": "3be34a89-9ea5-473a-a9dc-d3b4d44e28ca.jpeg",
       "box": [
         346,
@@ -154,7 +154,7 @@
     },
     {
       "id": "006",
-      "slug": "lunelle",
+      "slug": "lunou",
       "photo": "d7032e0e-6d2b-4ea2-98a5-c4410b74d760.jpeg",
       "box": [
         543,
@@ -165,7 +165,7 @@
     },
     {
       "id": "007",
-      "slug": "papivole",
+      "slug": "scaraprisme",
       "photo": "d7032e0e-6d2b-4ea2-98a5-c4410b74d760.jpeg",
       "box": [
         814,
@@ -176,7 +176,7 @@
     },
     {
       "id": "008",
-      "slug": "ronflon",
+      "slug": "grognours",
       "photo": "d7032e0e-6d2b-4ea2-98a5-c4410b74d760.jpeg",
       "box": [
         410,
@@ -284,7 +284,7 @@
     },
     {
       "id": "012",
-      "slug": "chenillou",
+      "slug": "gloutillon",
       "photo": "chenillou.jpeg",
       "box": [
         0,
@@ -339,7 +339,7 @@
     },
     {
       "id": "014",
-      "slug": "lamacorne",
+      "slug": "hypnopaon",
       "photo": "lamacorne.jpeg",
       "box": [
         0,
@@ -457,7 +457,7 @@
     },
     {
       "id": "015",
-      "slug": "chrysalou",
+      "slug": "coquattend",
       "photo": "chrysalou.jpeg",
       "box": [
         330,
@@ -472,7 +472,7 @@
     },
     {
       "id": "016",
-      "slug": "touffou",
+      "slug": "pandoudou",
       "photo": "touffou.jpeg",
       "box": [
         280,
@@ -489,7 +489,7 @@
     },
     {
       "id": "017",
-      "slug": "touflot",
+      "slug": "panderive",
       "photo": "touflot.jpeg",
       "box": [
         60,
@@ -538,7 +538,7 @@
     },
     {
       "id": "018",
-      "slug": "toufeu",
+      "slug": "pandabraise",
       "photo": "toufeu.jpeg",
       "box": [
         60,
@@ -576,7 +576,7 @@
     },
     {
       "id": "019",
-      "slug": "toufoudre",
+      "slug": "pandorage",
       "photo": "toufoudre.jpeg",
       "box": [
         160,

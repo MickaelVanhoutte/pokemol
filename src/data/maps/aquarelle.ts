@@ -208,7 +208,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
         L('Ici, on peint avec l’eau de mer. Le sel fait de petites étoiles dans l’aquarelle, regarde !', 'Here we paint with sea water. The salt makes little stars in the watercolour, look!'),
         L('Marine venait peindre ici quand elle était petite. Elle mettait déjà du bleu partout… même sur le chat.', 'Marine used to come and paint here when she was little. She already put blue everywhere… even on the cat.'),
       ] },
-      { id: 'peintreHippo', x: 5, y: 3, mon: '069', look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['port', 26, 5]], text: [L('L’Hippomine trempe son museau dans le pot d’eau et dessine des vagues sur le parquet.', 'The Seapencil dips its snout in the water jar and draws waves on the floor.')] },
+      { id: 'peintreHippo', x: 5, y: 3, mon: '069', look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['port', 26, 5]], text: [L('La Fronduline trempe son museau dans le pot d’eau et dessine des vagues sur le parquet.', 'The Frondling dips its snout in the water jar and draws waves on the floor.')] },
       // Port-Aquarelle: the net mender's cottage
       { id: 'ravaudeur', x: 2, y: 3, look: { hair: '#e8e8f0', shirt: '#3a5aa8', pants: '#4a3a2a', hat: '#2a3a5a' }, facing: 'left', fromDoor: [['port', 30, 10]], text: [
         L('Je ravaude les filets du port. Un filet troué, c’est comme un dessin pas fini : il manque juste quelques traits.', 'I mend the harbour’s nets. A net with a hole is like an unfinished drawing: it only needs a few more lines.'),

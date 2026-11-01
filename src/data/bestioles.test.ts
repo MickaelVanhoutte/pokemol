@@ -81,7 +81,7 @@ describe('Bestiole design rules (docs/bestioles.md)', () => {
   });
 
   it('gives every line an attack of its own type, on its side, by level 15', () => {
-    // like their models, Chenillou only spins silk before its cocoon and Avrilou only flops about until it evolves
+    // like their models, Gloutillon only nibbles before its pupa and Avrilou only flops about until it evolves
     for (const c of CREATURES.filter((x) => !x.evolvesFrom && x.id !== '012' && x.id !== '099')) {
       expect(ownAttack(c, 15), `${c.id} ${c.slug}: no same-type ${sides(c).join('/')} attack by level 15`).toBe(true);
     }

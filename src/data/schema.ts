@@ -103,11 +103,6 @@ export interface SpeciesDef {
   talents: [string] | [string, string];
   /** Rarer talent (1 chance in 4). */
   hiddenTalent: string;
-  /**
-   * A « brouillon »: drawn in code (tools/drafts) until the little artist draws it. The Bestiodex and
-   * the credits say so; her drawing replaces it with the same id and slug.
-   */
-  draft?: true;
   /** Only met once the story is over: never out of the Tombola before (src/data/afterStory.ts). */
   afterStory?: true;
   /** The Bestiodex's reward, met once it is complete: it doesn't count towards completing it (`DEX_GOAL`). */

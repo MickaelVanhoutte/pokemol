@@ -93,7 +93,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
         { id: '004', w: 12, min: 28, max: 29 },
         { id: '007', w: 12, min: 28, max: 29 },
         { id: '011', w: 2, min: 28, max: 29 },
-        { id: '026', w: 14, min: 28, max: 29 },
+        { id: '026', w: 14, min: 24, max: 25 },
         { id: '036', w: 4, min: 28, max: 29, time: 'day' },
         { id: '043', w: 8, min: 28, max: 29 },
         { id: '057', w: 8, min: 27, max: 29 },
@@ -177,7 +177,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'encreOld', x: 9, y: 12, look: LOOKS.granny, facing: 'down', script: 'encreOld' },
       { id: 'encreGuard', x: 5, y: 11, look: LOOKS.gomme, facing: 'up', hideIf: 'badge:encre', text: [L('L’Usine à Gommes ? Interdit d’entrer ! … À moins d’avoir battu Nocturne, hé hé.', 'The Eraser Factory? No entry! … Unless you’ve beaten Nocturne, hee hee.')] },
-      { id: 'encreSmog', x: 8, y: 8, mon: '056', look: LOOKS.kid, facing: 'left', text: [L('Un Fumeron tousse devant l’Usine à Gommes. Même lui trouve que ça sent mauvais.', 'A Smoglet coughs outside the Eraser Factory. Even it thinks it smells bad.')] },
+      { id: 'encreSmog', x: 8, y: 8, mon: '056', look: LOOKS.kid, facing: 'left', text: [L('Un Crapougne tousse devant l’Usine à Gommes. Même lui trouve que ça sent mauvais.', 'A Sulkroak coughs outside the Eraser Factory. Even it thinks it smells bad.')] },
       { id: 'encreWish', x: 2, y: 13, look: LOOKS.girl, facing: 'left', wander: true, text: [L('Si tu jettes une pièce dans la Fontaine-Encrier, ton vœu s’écrit tout seul sur l’eau ! Moi, j’ai souhaité un Brumouille.', 'Toss a coin in the Inkwell Fountain and your wish writes itself on the water! I wished for a Mistchief.')] },
       // a fan of Nocturne's, waiting by the Atelier: while she is away, then once she is back
       { id: 'encreFan', x: 13, y: 11, look: { hair: '#1a1424', shirt: '#7b60c3', pants: '#2a2238', longHair: true }, facing: 'up', hideIf: 'a3.phare', text: [L('L’Atelier est fermé depuis des jours… Nocturne est partie en courant, la cape au vent et un encrier vide à la main.', 'The Atelier’s been shut for days… Nocturne ran off, cape flying, an empty inkwell in her hand.')] },

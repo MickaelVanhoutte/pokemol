@@ -224,13 +224,13 @@ down to Port-Aquarelle and its island), two optional places break the straight l
 town's exit), Mom runs out of the house with the Zip Sneakers (key item `baskets`, flag `shoes`).
 Holding B runs only once you own them. Older saves already past Bourg get them in `repair()`.
 
-**Touffou** (EN Fuzzkit, a fox that changes shape). Capucine in Ville-Pastel gives one at L8 (`touffouGift`, flag
+**Pandoudou** (EN Pandoodle, a fox that changes shape). Capucine in Ville-Pastel gives one at L8 (`touffouGift`, flag
 `gift:touffou`); it is also a rare wild find on Route 6. It evolves with a magic pencil used from the
-bag: Water → **Touflot** (Fluffin), Fire → **Toufeu** (Flufflame), Lightning → **Toufoudre**
-(Fluffbolt). The three pencils are sold in shops from 4 badges, and Capucine gives one of the
+bag: Water → **Panderive** (Pandrift), Fire → **Pandabraise** (Pandember), Lightning → **Pandorage**
+(Zappanda). The three pencils are sold in shops from 4 badges, and Capucine gives one of the
 player's choice once they have 4 badges (`gift:crayonMagique`). The new form learns a move of its
-type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Touflot and
-Toufeu, and all three are in the battle tower pool.
+type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Panderive and
+Pandabraise, and all three are in the battle tower pool.
 
 **The Colour Guides and the field tools** (Nov 2026: the owner found the tools too easy to miss, handed out by
 people standing in towns; `src/data/guides.ts`, `src/story/guides.ts`). An old tradition of Papeterre: when travellers
@@ -308,16 +308,16 @@ checks every step's flags are set somewhere and its target is on the map.
   warm or blue tint (`TIME_TINT` in the controller, multiplied). Sleeping heals the party and turns
   the clock to 22 h (from day or evening) or to 8 h (at night): the bed at home, the Inn's beds and
   the innkeeper's « Dormir » (`sleepUntil` in `src/story/common.ts`). Healing Centers are Inns
-  (Auberges): the innkeeper's « Se reposer » heals without changing the time. At night: Lunelle on Routes 1, 2 and 6, Brumouille on
+  (Auberges): the innkeeper's « Se reposer » heals without changing the time. At night: Lunou on Routes 1, 2 and 6, Brumouille on
   Route 1 and more often in the Misty Woods, Grimouille on Route 6; Piafou only comes out by day.
   The trainer card shows the time.
-- *Trades*, one per town (`TRADES`): Hugo in Ville-Pastel (Chenillou → Piafou « Plumette »), Yves in
-  Port-Aquarelle (Zigzou → Clapotin « Bouée »), Nina in Ville-Feutre (Lunelle → Touffou « Frisette »),
+- *Trades*, one per town (`TRADES`): Hugo in Ville-Pastel (Gloutillon → Piafou « Plumette »), Yves in
+  Port-Aquarelle (Joufflux → Clapotin « Bouée »), Nina in Ville-Feutre (Lunou → Pandoudou « Frisette »),
   Paul in Village-Braise (Brumouille → Braisou « Étincelle »), Maëlle in Bourg-Paillette
-  (Chantouille → Minousse « Brindille »). Between them, every starter. Traded Bestioles keep their
+  (Sifflou → Minousse « Brindille »). Between them, every starter. Traded Bestioles keep their
   first trainer (`ot`), show « Échangé » in their summary, and the Calligrapher won't rename them.
 - *Favours*:
-  - Margaux (Port-Aquarelle) lost her Lunelle Lulu on Route 3: Lulu hides behind the rocks
+  - Margaux (Port-Aquarelle) lost her Lunou Lulu on Route 3: Lulu hides behind the rocks
     (an NPC drawn as her mini); bring the news back for a Greedy Bell and 2 Golden Berries, and Lulu
     is then home next to Margaux.
   - Théo (Ville-Feutre) has never seen a Fire Bestiole: show him one for a Fierce Marble.
@@ -449,14 +449,14 @@ Trainer levels in `src/data/trainers.ts` are the **Normal** difficulty. Approxim
 | Stage | Trainers | Leader |
 |---|---|---|
 | Route 1 | Margot L3, Iris L4 (1 Bestiole each), Léo L3/L4, Arthur L4/L4; wild L3–4 | — |
-| Atelier Pastel | L5–6 | Mireille L7/L9 (Chrysalou, Papivole) |
+| Atelier Pastel | L5–6 | Mireille L7/L9 (Coquattend, Scaraprisme) |
 | Route 2, Bois Brumeux | L7–10 (4 + 6 trainers) | — |
 | Atelier Plume | L11 | Gaspard L10/L8 |
 | Cave, Route 3, Atelier Aquarelle | L10–16 (optional Gardien L14–15); Route 3 trainers have three Bestioles | Marine L16/16/19 (Clapoflot) |
 | Lac des Couleurs | L17–19 (4 trainers and 2 grunts; wild L16–18, depths L18–20) | Head Grunt Sponge L18/18/20, rival L18/18/20 |
 | Route 4, Ville-Feutre | L18–22 (Route 4 has 5 trainers) | Rature L22/21/23, Zélie L24/24/26 |
 | Mont Fusain, Braise | L22–25 (wild L19–23) | Ambre L25/24/26 |
-| Route 6, Paillette, Tour | L24–28 | Célestine L27/28/28/29 (Lamacorne added), Blanche L23/24/23/24 |
+| Route 6, Paillette, Tour | L24–28 | Célestine L27/28/28/29 (Hypnopaon added), Blanche L23/24/23/24 |
 | Routes 7–8, Gouache, Lighthouse, Encre, Factory | L27–33 (three Bestioles per trainer) | Basile L27–30 (four), Buvard L29–31, Nocturne L30–33 (five, an Ombrouille ace), Rature L31–32 and Blanche L33–34 (five each) |
 | Act 4: Route de la Marge, Forêt des Esquisses, Forteresse Gomme | L35–40, four Bestioles each (wild L34–39) | Buvard L40–42, Rature L39–40, Blanche L41–43 (five each, one after the other; the rival heals you first) |
 | Finale | Route Blanche: Gaston and Mila L40–41 (four each), sketch grass | Rival L40–41 and his starter L45 (6), Great Eraser L40–41 and Ombrouille L45 (5) |
@@ -481,8 +481,8 @@ Changes:
 - The curve assumes a team of five that shares the XP evenly.
 - Act 1's routes doubled in size. Bands of tall grass across them force about 3 wild battles per crossing (Route 2 and the
   woods have a slightly higher encounter rate). New trainers: Margot and Arthur on Route 1, Anouk and Colette on
-  Route 2, Timothée and Maëlle in the woods. Paul, the second grunt, Pierrot's Zigzou and Gaspard's
-  Ronflon went down a level.
+  Route 2, Timothée and Maëlle in the woods. Paul, the second grunt, Pierrot's Joufflux and Gaspard's
+  Grognours went down a level.
 
 On Normal the curve now brings the team to Mireille at L8/7 and to Gaspard at L13/13/11 (Gaspard's sims
 went from about 30% to 66–75%).
@@ -523,8 +523,8 @@ Marine, Célestine, Basile, Admin Blanche (second fight) and the Great Eraser ca
 **A longer game (iteration 16, Oct 2026).** The owner wants the story to end around L45–50, like the
 GBA games. Act 1 is unchanged. From Route 3 on, every trainer with fewer than three Bestioles got one more,
 picked from the wild Bestioles around (in its grown form at that level, `grownForm`), and the leaders and
-admins got bigger teams (Célestine Lamacorne, Basile Clochegueule, Nocturne Ossagarde and Pantharuse with an
-Ombrouille ace, Rature Fumerax, Blanche Triboulon). Levels follow the curve: route trainers at the team's lead,
+admins got bigger teams (Célestine Hypnopaon, Basile Têtebique, Nocturne Chacrypte and Pantharuse with an
+Ombrouille ace, Rature Brumapaud, Blanche Lémurage). Levels follow the curve: route trainers at the team's lead,
 then each boss tuned with the sims to about 70–90% on Normal (some sit at the team's level: five Bestioles at
 equal level are a fight). Wild levels rose by 1 (Act 2) to 4 (Act 3), the optional places with them (Piste,
 echo cave L38 Ombrouille, Bois Perdu, Grotte des Ratures, the island, fishing's high lists).
@@ -541,10 +541,10 @@ Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Ha
 - The first trainers have one or two low-level Bestioles; the starter alone should win Act 1 route
   battles.
 - Leaders should be beatable once the player has one teammate.
-- Insect moves come late on purpose: Chenillou only knows Bump and Silk Thread, and Papivole gets
-  its powders from L12. The bug line is Chenillou → Chrysalou (L7) → Papivole (L10, learns
+- Insect moves come late on purpose: Gloutillon only knows Bump and Silk Thread, and Scaraprisme gets
+  its powders from L12. The bug line is Gloutillon → Coquattend (L7) → Scaraprisme (L10, learns
   Wing Gust as it evolves). Gaspard is
-  the only Act 1 trainer with a Ronflon (it is still a rare wild find on Route 1).
+  the only Act 1 trainer with a Grognours (it is still a rare wild find on Route 1).
 - Fairy Bestioles on Route 1 resist Mireille's insects; the Atelier guide NPC says so.
 
 **Difficulty** is a per-device pref (`prefs.difficulty`, Options row DIFFICULTÉ). `DIFFICULTY` in
@@ -590,61 +590,60 @@ ace (L24, berry), Jardinière Rosa, both of Basile's, Cycliste Bastien and Prof.
 Concours. Grande Maîtresse Ambre keeps her Braisou: an evolved ace there dropped the Grass and Water
 teams from about 75% to 40%.
 
-**Starter finals and brouillons (Oct 2026).** Clapotin → Clapoflot (L16) → Tortorrent (L32), Minoufleur →
-Bouquétigre (Grass/Poison, L32), Braisaure → Dragobraise (Fire/Flying, L32): about 410 then 500 base stats.
-These four are *brouillons* (`draft: true`), drawn in code by `tools/drafts` until the little artist draws
-them; the Bestiodex stamps them BROUILLON and the credits list them apart. Teams from L32 use the finals
+**Starter finals and brouillons (Oct 2026).** Clapotin → Clapoflot (L16) → Tortorock (Water/Rock, L32), Minoufleur →
+Bouquétigre (Grass/Fighting, L32), Braisaure → Dragobraise (Fire/Flying, L32): about 410 then 500 base stats.
+Teams from L32 use the finals
 (Rosa, Basile's ace, Bastien, the final rival through `grownForm`, Prof. Fusain at L45 so the Concours
 finale stays around 50–75% on Normal). The finals made Nocturne and the Great Eraser a bit easier
 (Normal: about 94% and 60–75%).
 
 **Ten more brouillons (Oct 2026)**, after the gen-1 ideas, to fill the missing types and evolutions:
-- Piaflèche (Normal/Flying, Piafou at L18);
-- Zigzéclair (Electric, Zigzou with the Electric Magic Pencil);
-- Lunéclat (Fairy, Lunelle at 220 friendship);
-- Boxouille (Fighting: Grotte Gribouillis depths, Mont Fusain, Grotte des Échos);
+- Postrompe (Normal/Flying, a flying baby elephant that carries the mail, never evolves);
+- Foudroule (Electric, Joufflux with the Electric Magic Pencil);
+- Lunambule (Fairy, Lunou at 220 friendship);
+- Squillou (Fighting: Grotte Gribouillis depths, Mont Fusain, Grotte des Échos);
 - Cailloutou (Rock/Ground: both cave floors, Mont Fusain, Grotte des Échos);
-- Taupinou (Ground: Route 3, the cave entrance);
-- Givrinou (Ice/Water: surfing at Port-Aquarelle and Inkwell Isle);
-- Sifflasse (Poison: Route 4);
-- Dragounet (Dragon: fishing at Port-Aquarelle and Inkwell Isle, team N.35+);
-- Boulonnet (Electric/Steel: Route 4).
+- Guettou (Ground: Route 3, the cave entrance);
+- Roupillon (Ice/Water: surfing at Port-Aquarelle and Inkwell Isle);
+- Pschitou (Poison: Route 4);
+- Gouttelotl (Dragon: fishing at Port-Aquarelle and Inkwell Isle, team N.35+);
+- Antennou (Electric/Steel: Route 4).
 
 New moves: Balayette, Gros poing, Tête de fer, Tremblement, Crochet venin, Crocs givrés.
 
 Trainers using them:
-- Mineur Bob (Cailloutou), Gamin Tim and Électricienne Volta (Boulonnet);
-- Mont Fusain's Olga (Boxouille) and Rémi (Cailloutou);
-- Team Gomme's Sifflasse (Route 4 grunt, Admin Blanche) and Buvard's Givrinou;
-- Célestine's ace (Lunéclat) and Cycliste Léa (Zigzéclair);
-- Piaflèche for trainers from L27.
+- Mineur Bob (Cailloutou), Gamin Tim and Électricienne Volta (Antennou);
+- Mont Fusain's Olga (Squillou) and Rémi (Cailloutou);
+- Team Gomme's Pschitou (Route 4 grunt, Admin Blanche) and Buvard's Roupillon;
+- Célestine's ace (Lunambule) and Cycliste Léa (Foudroule);
+- Postrompe for trainers from L12.
 
-Zélie keeps her old team: with Boulonnet or Zigzéclair, Water and Grass teams fell to 1–10%. Spéléo Max keeps his too: any rock or ground there dropped Fire teams to 40%.
+Zélie keeps her old team: with Antennou or Foudroule, Water and Grass teams fell to 1–10%. Spéléo Max keeps his too: any rock or ground there dropped Fire teams to 40%.
 
 **Fifteen more brouillons (Oct 2026), 50 Bestioles in all.** They finish the gen-1 style lines:
-- Piaflèche → Piafurie (L36);
-- Boxouille → Musclouille (L28) → Quadripoing (L40);
+- Piafou → Piafurie (L24; Piafou and Piafurie are swallows);
+- Squillou → Cognecrevette (L28) → Marteaumante (L40);
 - Cailloutou → Rocailloux (L25) → Montagnoc (L38);
-- Taupinou → Taupitrio (L26);
-- Givrinou → Banquisette (L34);
-- Sifflasse → Cobrasse (L30);
-- Dragounet → Dragondine (L30) → Dragopataud (Dragon/Flying, L45);
-- Boulonnet → Triboulon (L30);
-- Chantouille → Chantouffe (friendship 220).
+- Guettou → Vigicrocs (L26);
+- Roupillon → Morsommeil (L34);
+- Pschitou → Mouffetor (L30);
+- Gouttelotl → Flaquelotl (L30) → Orajolotl (Dragon/Flying, L45);
+- Antennou → Lémurage (L30);
+- Sifflou → Ténoroc (friendship 220).
 
-Three never evolve: Ciseaumante (Bug/Flying, Route 7, new move Coup de ciseaux), Poupochette
-(Normal, Route 6) and Ptérocaille (Rock/Flying, Grotte des Échos).
+Three never evolve: Frelonchon (Bug/Flying, Route 7, new move Coup de ciseaux), Poupochette
+(Normal, Route 6) and Faucardoise (Rock/Flying, Grotte des Échos).
 
 Where to meet the middle forms:
-- the Grotte des Échos: Musclouille, Rocailloux, Taupitrio;
-- Route 8: Cobrasse, and Piafurie by day;
-- the Piste Cyclable: Triboulon;
-- around Inkwell Isle: Banquisette surfing, Dragondine fishing (team N.35+).
+- the Grotte des Échos: Cognecrevette, Rocailloux, Vigicrocs;
+- Route 8: Mouffetor, and Piafurie by day;
+- the Piste Cyclable: Lémurage;
+- around Inkwell Isle: Morsommeil surfing, Flaquelotl fishing (team N.35+).
 
 Trainers using them:
-- Admin Blanche (Cobrasse, both fights) and the Factory grunts (Cobrasse, Triboulon);
-- Captain Buvard (Banquisette) and Admin Rature's second fight (Piafurie);
-- Randonneur Jules (Rocailloux) and Cycliste Inès (Chantouffe).
+- Admin Blanche (Mouffetor, both fights) and the Factory grunts (Mouffetor, Lémurage);
+- Captain Buvard (Morsommeil) and Admin Rature's second fight (Piafurie);
+- Randonneur Jules (Rocailloux) and Cycliste Inès (Ténoroc).
 
 These Team Gomme fights went from about 55–97% to 53–92% on Normal.
 
@@ -654,32 +653,32 @@ These Team Gomme fights went from about 55–97% to 53–92% on Normal.
 - standalones: 470–515;
 - Ombrouille: 580.
 
-The new brouillons' baby forms went down from 395–460 to 285–325; Papivole went up from 330 to 470, Ronflon to 470, Lamacorne to 480, Touffou's evolutions to 500.
+The new brouillons' baby forms went down from 395–460 to 285–325; Scaraprisme went up from 330 to 470, Grognours to 470, Hypnopaon to 480, Pandoudou's evolutions to 500.
 
 Teams retuned with the sims:
-- Mireille's Papivole L7;
-- Gaspard's Ronflon L9, Max's Papivole L9;
-- the Hermit's and Ambre's Ronflon L21;
+- Mireille's Scaraprisme L7;
+- Gaspard's Grognours L9, Max's Scaraprisme L9;
+- the Hermit's and Ambre's Grognours L21;
 - Nocturne 36/37/39;
-- the Great Eraser's Ronflon L39 and Papivole L38;
+- the Great Eraser's Grognours L39 and Scaraprisme L38;
 - Prof. Fusain's team L44 except his last one.
 
 **Twenty more Bestioles (iteration 11), 70 in all.** Drawn in her style with the `crayon` kit
 (`tools/redraws`), chosen for the types the game lacked (Dark, Psychic, Ice, Steel, then Grass, Poison,
 Ghost, Fighting, Dragon), each line inspired by a gen-1 one with all its gen-1 forms:
-- Dormipsy → Cuillipsy → Psymagus (Psychic, L16/L36, rare): Route 3 and Route 4 (rare), Cuillipsy on Route 7.
+- Curiolor → Malicolor → Pensacasque (Psychic, L16/L36, rare): Route 3 and Route 4 (rare), Malicolor on Route 7.
 - Chapardou → Pantharuse (Dark, L28): Route 3 and Route 6 at night, Piste Cyclable.
-- Fumeron → Fumerax (Poison/Dark, L35): Route 4, Route 8. Team Gomme grunts use them.
-- Coquilou → Coquifort (Ice/Steel, L30): surfing at Port-Aquarelle, fishing (team N.35+) and surf at the lighthouse island.
-- Glissonde (Water/Ice, rare): surfing around the lighthouse island.
-- Canarmure (Steel/Flying): Route 6 by day, Piste Cyclable.
-- Clochiflor → Clochegueule → Gloutoflor (Grass, L21/L36): Route 2, Misty Woods, Route 6, Route 7.
-- Osselot → Ossagarde (Ground/Ghost, L28): Mont Fusain, the Misty Tower, the echo cave.
-- Fâchinge → Furisinge (Fighting, L28): Route 4, Mont Fusain, Route 7, the echo cave.
-- Hippomine → Hippoplume (Water/Dragon, L32): fishing at Port-Aquarelle (team N.20+), and at the lighthouse (N.35+).
+- Crapougne → Brumapaud (Poison/Dark, L35): Route 4, Route 8. Team Gomme grunts use them.
+- Ermitou → Géocrabe (Ice/Steel, L30): surfing at Port-Aquarelle, fishing (team N.35+) and surf at the lighthouse island.
+- Berceluga (Water/Ice, rare): surfing around the lighthouse island.
+- Planacier (Steel/Flying): Route 6 by day, Piste Cyclable.
+- Brouticot → Têtebique → Ramabouc (Grass, L21/L36): Route 2, Misty Woods, Route 6, Route 7.
+- Chacalune → Chacrypte (Ground/Ghost, L28): Mont Fusain, the Misty Tower, the echo cave.
+- Bougombat → Fonçombat (Fighting, L28): Route 4, Mont Fusain, Route 7, the echo cave.
+- Fronduline → Calligrafronde (Water/Dragon, L32): fishing at Port-Aquarelle (team N.20+), and at the lighthouse (N.35+).
 
 26 trainers without a balance row use them (route trainers, Atelier apprentices, Team Gomme grunts),
-and the Grand Concours got Glissonde (Marine), Canarmure L44 (Ambre), Psymagus L44 (Célestine) and
+and the Grand Concours got Berceluga (Marine), Planacier L44 (Ambre), Pensacasque L44 (Célestine) and
 Pantharuse (Nocturne). Those stages, which the sims won 98–100% of the time, now sit at 50–93% on Normal.
 The ten final forms joined `TOWER_POOL`.
 
@@ -693,7 +692,7 @@ a broccoli line (replaced by the stapler crocodile) and asked for the mammoth to
 - Faonvole → Cerfoudre (Electric/Flying, L26): a fawn flying like a kite (*cerf-volant*). Route 4 and Route 6 by
   day; Cerfoudre on the Piste Cyclable and Route Blanche. Kid Tim, Bastien, Cyclist Léa.
 - Allumou → Allumbattant (Fire/Fighting, L27): a matchstick stick-figure, then a boxer. Mont Fusain;
-  Allumbattant on Route 9. Juggler Paco (a fourth Bestiole), Hector, Grand Master Ambre (in place of Canarmure).
+  Allumbattant on Route 9. Juggler Paco (a fourth Bestiole), Hector, Grand Master Ambre (in place of Planacier).
 - Lumignon → Projétoile (Electric/Psychic, L26): a bedroom night-light, then a star projector. Route 3 and
   Route 4 at night; Projétoile on Route 8 at night. Kid Lise, Medium Opale.
 - Plissou → Plisserpent → Festivouivre (Dragon/Fairy, L30/L44, rare): a fairy parade dragon of folded pearly
@@ -706,7 +705,7 @@ a broccoli line (replaced by the stapler crocodile) and asked for the mammoth to
 
 Each took the place of one Bestiole in an existing team, at the same level (the ace's level kept, for the
 wild-level rule); Miner Bob got Ocrinou as a second Bestiole, so the curve keeps its XP before Marine (a
-first try swapped Caver Max's Papivole, a final form worth much more XP, and the Marine row fell by 15–26
+first try swapped Caver Max's Scaraprisme, a final form worth much more XP, and the Marine row fell by 15–26
 points). Lumignon learns Berceuse at L17, not L1: Kid Lise's sleeping powder dropped the Braisou row to 3%.
 On Normal, the rows that moved: Marine 96/93/84% (was 91/88/70), Grand Master Ambre 68/74/95% (was 31/97/88),
 Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Braise Atelier Bestioles for Allumou
@@ -735,10 +734,10 @@ and asked for Érabreuil to throw its acorn rather than eat it (the `throw` moti
   Calligrapher Saki, Basile, Nocturne. Power: Herbier (`regen`).
 
 Every Master's team is now all of the Atelier's type (Mireille, Gaspard and Célestine already were): Marine
-Hippomine, Givrinou, Clapoflot; Zélie Boulonnet, Lumignon, Zigzou; Ambre Braisou, Toufeu, Braisaure; Basile
-Érabreuil, Fanétome, Clochegueule, Bouquétigre; Nocturne Tachombre, Grimouille, Ossagarde, Fanétome, Ombrouille.
+Fronduline, Roupillon, Clapoflot; Zélie Antennou, Lumignon, Joufflux; Ambre Braisou, Pandabraise, Braisaure; Basile
+Érabreuil, Fanétome, Têtebique, Bouquétigre; Nocturne Tachombre, Grimouille, Chacrypte, Fanétome, Ombrouille.
 Each apprentice has at least two of three. A first Marine with Nénurette (rain) behind Clapoflot fell to 82/9/8% on
-Normal, and a Zélie with Lampyrette to 43/82/13%: Marine has Givrinou, Zélie Lumignon. On Normal: Marine 87/77/81%
+Normal, and a Zélie with Lampyrette to 43/82/13%: Marine has Roupillon, Zélie Lumignon. On Normal: Marine 87/77/81%
 (was 97/95/87), Zélie 90/99/90% (was 100/94/87), Ambre 77/74/100% (was 72/67/98), Basile 61/80/67% (was 11/81/36),
 Nocturne 82/85/84% (was 75/85/78). The new teams give a little more XP, so one teammate is a level up at the
 finale: Effaceur 69/64/65% (was 56/47/49), inside the finale's 50–75% band. On Hard, Marine is 31/3/9% (was 45/17/2).
@@ -767,7 +766,7 @@ a paper snowflake, an origami penguin, a cotton-wool fox and a hermit crab in an
 
 Who got them: Swimmer Loïc Médusoie, the grunts at the Misty Woods and on Route 4 Chiroplie, the tower grunt
 Vampapier, a lighthouse grunt Voilamère, Caver Rémi Ponçou, Cyclist Noé and Painter Victor Râpépic, Victor Galibou,
-Captain Buvard's rematch Léviafarce (L39, in place of Glissonde; L41 dropped the row to 44/45/43%), Route 9's grunt
+Captain Buvard's rematch Léviafarce (L39, in place of Berceluga; L41 dropped the row to 44/45/43%), Route 9's grunt
 Vampapier. Swaps keep the XP close: a Pêcheur Gus with an Avrilou, a Captain Buvard with Voilamère (Braisou 88% →
 50%) and 26-weight Chiroplie in the Scribble Cave (less XP from the cave, Hard Marine's starter a level down) were
 undone or toned down, and Chiroplie's base XP is the model's 54. On Normal only Buvard's rematch moves: 55/55/53%
@@ -804,7 +803,7 @@ That makes a wild battle every 10 steps or so on a route (was 6–7), 13 in a wo
 (was 10). The curve now divides the forced steps by `meanSteps`, and the forced wild battles of the whole story on Normal
 went from 38.6 to 24.3. To make up for it, a wild Bestiole gives ×1.5 XP like a trainer's, which brings the curve back
 (only one teammate a level down at Ambre). On Normal the sims are the same except Ambre 70/69/100% (was 77/74/100) and Kid
-Tim 77/49/57% (was 92/87/87). Tim's drop is the sim's: its Zigzou reaches L17 and forgets Petite Étincelle for Frisson,
+Tim 77/49/57% (was 92/87/87). Tim's drop is the sim's: its Joufflux reaches L17 and forgets Petite Étincelle for Frisson,
 which a player chooses not to. On Hard: Gaspard 51/18/36% (was 63/27/46), Zélie 89/100/94% (was 46/96/58).
 
 **Small fixes the owner asked for (iteration 20).** Coach Effort rubs out one stat's effort or all of them (it used to be
@@ -829,31 +828,31 @@ Bestiole (no evolution left: 55 of them, legendaries included) is redrawn in fel
   where its new look says, and a new talent that suits the drawing (most reuse a talent of the game: Rembourrage
   for the round ones, Poings d'Acier for the boxers, Premier Envol for the new wings…; Ombrouille's Troisième Œil
   and Lampyrette's Plein Phare are their own). It keeps its types: the owner found that changing
-  them spoiled Bestioles with a strong identity. Only six take a new type, where the drawing plainly shows it, with
-  a move of it their family learns by level 45 (the owner: otherwise the type is useless): Tortorrent Water/Steel
-  (its cannon), Dragobraise Fire/Dragon (blue flames), Montagnoc Rock/Fire (its volcano), Taupitrio Ground/Steel
-  (steel claws), Ciseaumante Bug/Steel (steel shears), Furisinge Fighting/Fire (its fur on fire). A drawing keeps
-  no accent of a type it doesn't get (Ombrouille's flames are ghost blue, Ossagarde's violet).
+  them spoiled Bestioles with a strong identity. Only two take a new type, where the drawing plainly shows it, with
+  a move of it their family learns by level 45 (the owner: otherwise the type is useless): Dragobraise Fire/Dragon (blue flames), Montagnoc Rock/Fire (its volcano). A drawing keeps
+  no accent of a type it doesn't get (Ombrouille's flames are ghost blue, Chacrypte's violet).
 - **Who else**: trainers with `fairCopy` make their ace (highest-level Bestiole that can) a fair copy on its first
   turn (`aiChoose`, `fairAce`): Célestine, Basile and Nocturne (Ambre's ace, Braisaure, isn't fully grown), the final
   rival, the Grand Concours, Masters' rematches, the Challenge Tower from round 3. The Great Eraser's is `'dark'`:
   scribbled over in black felt-tip (`rigLayerUrl(…, dark)`). Grunts never.
-- **The drawings**: `tools/fair/<slug>.ts`, her coloured pencil under a felt-tip outline, each one her own drawing
-  grown up, bigger and fiercer (docs/bestioles.md, "Its fair copy"; docs/content.md, "Fair copies"). The owner
-  turned down two rounds (new poses, flat marker colours, costumes) and approved every form and the animation on
-  preview pages before they shipped.
+- **The drawings**: since October 2026 a fair copy is its card's own drawing gone over neatly. It has a black felt-tip
+  outline, flat colour a little more vivid and the gold star, and is drawn by `npm run fair` from the card's module
+  (docs/content.md, "Fair copies").
+  - Before that, each one was redesigned, grown up, bigger and fiercer. Those took many review rounds, and the owner
+    found the extra design too hard to get right.
+  - Brouillons keep their hand-drawn fair copy until they are redrawn.
 - **Balance** (Normal, win rates by starter Minousse / Braisou / Clapotin, before → after). Using the Feutre is the
   player's reward: trainers without a fair copy get easier with it and stay as before without it. A trainer's fair
   copy weighs a lot (+20 % on its ace and a talent), so the trainers who use one were retuned. Célestine and Basile
   come before most players have a fully grown Bestiole, so they keep their old numbers for a player without one:
-  Célestine's Lamacorne and Lunéclat L26 with no berry (67/60/72 → 66/59/70 without, 90/85/94 with), Basile's
+  Célestine's Hypnopaon and Lunambule L26 with no berry (67/60/72 → 66/59/70 without, 90/85/94 with), Basile's
   Bouquétigre with no berry (61/80/67 → 64/77/59 without, 86/90/82 with). From Nocturne on they keep them with both
-  sides using one: Nocturne's team L30/30/31/31/31 (82/85/84 → 90/93/93); the Great Eraser's Papivole and
-  Zigzéclair L38, Ombrouille L42 with no berry (69/64/65 → 66/61/60), Ombrouille's fair copy put into Defence
-  rather than Speed (Speed 115: faster, it swept every team); the final rival's Psymagus and Zigzéclair L40 and its
-  starter by the one it took (`RIVAL_ACE`: Bouquétigre L43, Dragobraise L40, Tortorrent L42 with its berry; a
-  Dragon Dragobraise shrugs off a water team): 75/40/73 → 63/43/62. Grand Concours: Ambre's Ronflon and Toufeu
-  L51 (68/74/95 → 95/71/97), Marine's Touflot L53 with no item (its rain made it 23–41 % on Hard), Prof. Fusain's
+  sides using one: Nocturne's team L30/30/31/31/31 (82/85/84 → 90/93/93); the Great Eraser's Scaraprisme and
+  Foudroule L38, Ombrouille L42 with no berry (69/64/65 → 66/61/60), Ombrouille's fair copy put into Defence
+  rather than Speed (Speed 115: faster, it swept every team); the final rival's Pensacasque and Foudroule L40 and its
+  starter by the one it took (`RIVAL_ACE`: Bouquétigre L43, Dragobraise L40, Tortorock L42 with its berry; a
+  Dragon Dragobraise shrugs off a water team): 75/40/73 → 63/43/62. Grand Concours: Ambre's Grognours and Pandabraise
+  L51 (68/74/95 → 95/71/97), Marine's Panderive L53 with no item (its rain made it 23–41 % on Hard), Prof. Fusain's
   Dragobraise L50 (60/48/44 → 52/34/43). Bouquétigre's fair copy takes Herbier rather than Trait Assuré, which
   doubled its Boue Toxique.
 - **Bestiodex**: once a fair copy has been seen in battle (`fair:<id>`), its entry gets an AU PROPRE button.
@@ -881,7 +880,7 @@ towns and Ateliers "all the same, lifeless".
 - **Balance**: the new trainers' XP puts the player a level or two higher from the third Atelier on, so (Normal,
   before → after, win rates by starter) Zélie +1 level (90/99/90 → 98/100/98); Célestine L26/27/27/28 and Basile
   L29/30/29/33, tuned for a player without a fully grown Bestiole (69/70/65 and 65/76/54 then); Nocturne +2
-  (82/85/84 → 80/83/85); the Great Eraser's Papivole and Zigzéclair L39 (76/73/75); the final rival's teammates L41
+  (82/85/84 → 80/83/85); the Great Eraser's Scaraprisme and Foudroule L39 (76/73/75); the final rival's teammates L41
   and its Dragobraise L41 (69/56/71); Team Gomme's Buvard +2, Rature's and Blanche's second and third teams +1 (back
   near their old numbers). Gaspard, Marine and Ambre stay: one level made them far harder.
 
@@ -907,22 +906,22 @@ Mont Fusain to Route Blanche (most of them hidden), and shops sell them for 10 0
 level curve assumes a player who picks none up.
 
 **Bestioles alive in battle (Oct 2026).** The owner asked for little animations: wings beating, Ocrinou's
-trunk, Taupinou in and out of its hole, Clapotin hiding in its shell, Zigzou's sparks. Every Bestiole now
+trunk, Guettou in and out of its hole, Clapotin hiding in its shell, Joufflux's sparks. Every Bestiole now
 breathes (or hovers) while it waits, and the first fifteen have moving parts drawn apart (battle rigs):
-Clapotin (the whole turtle into its shell: hiding only the head looked like it lost it), Zigzou (tail,
-lightning), Papivole and Noctaile (folding wings), Piafou, Libellune, Canarmure (wing, pencil-sword),
-Ocrinou (trunk), Taupinou (its hole), Dragobraise, Piaflèche, Piafurie, Dragopataud, Ciseaumante,
-Ptérocaille (wings). Then every other Bestiole, by batches shown on an animated preview page: tails, arms,
-vines, fins, sparks, notes, Zzz, snow, tongues, jaws. The owner's own requests: Lunelle's belly moon twinkles,
-Ronflon brings its apple to its mouth (`reach`), Ombrouille sticks out its tongue, Ciseaumante snips,
+Clapotin (the whole turtle into its shell: hiding only the head looked like it lost it), Joufflux (tail,
+lightning), Scaraprisme and Noctaile (folding wings), Piafou, Libellune, Planacier (wing, pencil-sword),
+Ocrinou (trunk), Guettou (its hole), Dragobraise, Postrompe, Piafurie, Orajolotl, Frelonchon,
+Faucardoise (wings). Then every other Bestiole, by batches shown on an animated preview page: tails, arms,
+vines, fins, sparks, notes, Zzz, snow, tongues, jaws. The owner's own requests: Lunou's belly moon twinkles,
+Grognours brings its apple to its mouth (`reach`), Ombrouille sticks out its tongue, Frelonchon snips,
 Minoufleur's near vine moved behind its body (it looked like it came out of its mouth). After a win or a
 capture, your Bestiole dances (a hop while turning round, twice) during the tune. The rigs add about
 5.5 MB to the offline download.
 
 **Stronger first Atelier Masters, and smaller things (Oct 2026).** The owner rolled over the first two
 Ateliers, nearly one hit each: Mireille's ace (L7) and Gaspard's (L10) were below their own apprentices
-and the no-grind team, Basile's (L28) too. Now Mireille has Chenillou L7, Chrysalou L8, Papivole L8;
-Gaspard Piafou L11, Ronflon L8, Piaflèche L12 (Ronflon at L9 or more, with Ronflement, won 0–35%);
+and the no-grind team, Basile's (L28) too. Now Mireille has Gloutillon L7, Coquattend L8, Scaraprisme L8;
+Gaspard Piafou L11, Grognours L8, Postrompe L12 (Grognours at L9 or more, with Ronflement, won 0–35%);
 Basile L27/27/28/30. Sims on Normal (Minousse / Braisou / Clapotin): Mireille 89/100/99% (was 100), Gaspard
 78/81/89% (was 95/95/98), Basile 56/95/76% (was 37/96/80); Easy 93–100%; Hard Mireille 59/91/85%, Gaspard
 60/28/45%. Also: the title screen and the credits show only her own drawings (no all-Bestiodex from the
@@ -946,22 +945,33 @@ minor keys; the rival, Team Gomme, Atelier Masters, Great Eraser and champion th
 loud as before (within 10 %).
 
 **Evolutions redrawn (Oct 2026).** The owner found some evolved forms too close to their earlier form (a
-recolour, a bigger copy). Redrawn with a new silhouette: Clochegueule slimmer, Gloutoflor with vines and a
-flytrap jaw, Ossagarde tall with a raised club, Furisinge punching in iron cuffs, Hippoplume with quills and a
-pen-nib snout. Zigzéclair, Banquisette and Dragondine were brouillons: they moved to the `crayon` kit and lost
-`draft: true` (26 brouillons left).
+recolour, a bigger copy). Redrawn with a new silhouette: Têtebique slimmer, Ramabouc with vines and a
+flytrap jaw, Chacrypte tall with a raised club, Fonçombat punching in iron cuffs, Calligrafronde with quills and a
+pen-nib snout. Foudroule, Morsommeil and Flaquelotl were brouillons and moved to the `crayon` kit.
+
+**The style pass (Oct–Nov 2026).** The 67 early Bestioles were redrawn in the house style (the `bestiole-design`
+skill); most were redone from zero with new animals, names and Bestiodex, keeping their types and stats. The
+brouillon status is gone: Poupochette, the last one, keeps her rough look, drawn by the kid kit of `tools/drafts`.
+
+**Balance after the style pass (Nov 2026).** Postrompe (026) became a single-stage Bestiole (465 base stats instead of a
+365 middle form): its trainer and wild levels dropped by about a fifth (Gaspard's L10, the lake rival's L15, the latest
+L27). Piafou got a little sturdier (324) and evolves at L24. Bouquétigre (Grass/Fighting) made Basile and the final rival
+easier for some starters: Basile's team is two levels higher with a Blue Berry on its ace, Ambre's two levels higher with a
+Golden Berry; the final rival's Bouquétigre holds the Stubborn Specs at L48 and he brings Faucardoise instead of
+Pensacasque to cover it; his Tortorock is L37. Grand Master Celestine's Hypnopaon is L54 and Prof. Fusain's team L53.
+On Normal the leaders stay within 40–100%, the final rival at 48/61/81% and the Concours finale around 50–75%.
 
 **Family powers (iteration 8).** Every family got a power, a talent or a signature move
 ([docs/bestioles.md](bestioles.md) lists them). Trainers use talent slot 0, so their Bestioles always have
 it. Retuned with the sims:
 - Passe-Muraille first let the whole first attack through, which gave Team Gomme's ghosts a free turn and
   dropped Nocturne, the late admins and the Great Eraser by 20–40 points. It now halves that attack.
-- Apprenti Malo leads with Chenillou and his Touffou is L4: Fourrure Douce halves the physical moves a
+- Apprenti Malo leads with Gloutillon and his Pandoudou is L4: Fourrure Douce halves the physical moves a
   young Minousse has, and the row fell from 88% to 37%.
-- Captain Buvard's Banquisette L34 and Grimouille L35 (Patinoire's hail chips the whole team).
-- Admin Blanche's second fight: Grimouille L36, Ronflon L37.
-- The Great Eraser: Zigzou L38, Grimouille L39.
-- Prof. Fusain at the Grand Concours keeps L44 but his Lamacorne and last Bestiole hold no berry.
+- Captain Buvard's Morsommeil L34 and Grimouille L35 (Patinoire's hail chips the whole team).
+- Admin Blanche's second fight: Grimouille L36, Grognours L37.
+- The Great Eraser: Joufflux L38, Grimouille L39.
+- Prof. Fusain at the Grand Concours keeps L44 but his Hypnopaon and last Bestiole hold no berry.
 
 On Normal, most rows stayed within 10 points; Zélie with Clapotin went from 24% to 41%, Basile with
 Minousse from 86% to 70%. Hard got harder late in the game. Piafurie on the Prof's team (Premier Envol)
@@ -974,19 +984,19 @@ without items (Nocturne's and the second Admin Rature's were removed for that re
 berries, the Tracing Paper and battle items of their own, which the simulation doesn't use.
 
 **Physical or special (Oct 2026).** The owner wants a player to build the team they like, a physical or a
-special attacker in any type ([docs/bestioles.md](bestioles.md) §5). Zigzéclair turned physical (Attack 102,
-Sp. Atk 76; Zigzou 58/49), Octopeintre special (Attack 85, Sp. Atk 115, Coup de Pinceau on evolving and
+special attacker in any type ([docs/bestioles.md](bestioles.md) §5). Foudroule turned physical (Attack 102,
+Sp. Atk 76; Joufflux 58/49), Octopeintre special (Attack 85, Sp. Atk 115, Coup de Pinceau on evolving and
 Fresque Furieuse at 41 in place of its punches; its fair copy has Bonne Étoile: its many added effects twice as often). 21 moves give each type the
 side it lacked, learned by the Bestioles of that side. Retuned with the sims:
-- Chenillou keeps no attack: a Dard at 5 doubled against Minousse and the Pastel apprentices fell from
+- Gloutillon keeps no attack: a Dard at 5 doubled against Minousse and the Pastel apprentices fell from
   95–100% to 20%. Piqué comes at 15, after Gaspard's birds; Sève Sucrée at 24 for Minoufleur (the lake
   rival's Minoufleur L20 dropped Braisou from 50% to 24% on Hard). Coup de Nageoire stays off the Clapotin
   line, which hits special.
-- Nocturne's Papivole at the Grand Concours lost its Écharpe Têtue: with Tempête de Plumes it took the row
+- Nocturne's Scaraprisme at the Grand Concours lost its Écharpe Têtue: with Tempête de Plumes it took the row
   from 58/77/70 to 36/60/49 (now 57/66/66).
-- The Great Eraser reads 100%: the simulated team's Lunéclat used to keep no Fairy move among its last four
+- The Great Eraser reads 100%: the simulated team's Lunambule used to keep no Fairy move among its last four
   (Éclat de Lune is learned on evolving and was pushed out), and Poussière d'Étoile now hits his Dark ace.
-  A real Lunéclat keeps Éclat de Lune, so nothing changed for players; a team with no Fairy attack stays at
+  A real Lunambule keeps Éclat de Lune, so nothing changed for players; a team with no Fairy attack stays at
   74% (+2 levels took it to 13–27%, so his team kept its levels). Nocturne and Admin Rature's last fight on
   Hard rose for the same reason.
 

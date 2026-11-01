@@ -100,7 +100,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
       { x: 3, y: 8, text: L('BOURG-GRIBOUILLE\nLà où tout commence au crayon.', 'SCRIBBLETON\nWhere everything starts with a pencil.') },
       { x: 18, y: 10, text: L('PLACE DU PREMIER TRAIT\nOn raconte que Papeterre a commencé ici, par un tout petit trait de crayon.', 'FIRST LINE SQUARE\nThey say Papeterra began right here, with one tiny pencil line.') },
       { x: 20, y: 5, text: L('COURS DE DESSIN\nPour les petits et les grands.\nGommes interdites !', 'DRAWING LESSONS\nFor young and old.\nNo erasers allowed!') },
-      { x: 18, y: 15, text: L('POTAGER\nNe pas marcher sur les choux. Ça vaut aussi pour les Chenillou.', 'VEGETABLE GARDEN\nDon’t step on the cabbages. That goes for Wigglets too.') },
+      { x: 18, y: 15, text: L('POTAGER\nNe pas marcher sur les choux. Ça vaut aussi pour les Gloutillon.', 'VEGETABLE GARDEN\nDon’t step on the cabbages. That goes for Munchlets too.') },
     ],
     npcs: [
       // kid1 wanders between home and the north road, off the street Mom runs along (momShoes)
@@ -121,17 +121,17 @@ export const HOME_MAPS: Record<string, MapDef> = {
         L('J’attends qu’elles mordent depuis ce matin. Patience, patience…', 'I’ve been waiting for a bite since this morning. Patience, patience…'),
       ] },
       { id: 'bourgJardinier', x: 13, y: 17, look: { hair: '#e8e8f0', shirt: '#6a9a4a', pants: '#6a4a2a', hat: '#e8d070' }, facing: 'down', text: [
-        L('Mes choux ! Ce Chenillou les grignote depuis le printemps.', 'My cabbages! That Wigglet has been nibbling them since spring.'),
+        L('Mes choux ! Ce Gloutillon les grignote depuis le printemps.', 'My cabbages! That Munchlet has been nibbling them since spring.'),
         L('Bah, je le laisse faire. Un dessin qui a faim, c’est un dessin qui grandit.', 'Oh well, I let it be. A hungry drawing is a growing drawing.'),
       ] },
-      { id: 'bourgChenillou', x: 15, y: 19, mon: '012', look: LOOKS.kid, facing: 'down', wander: true, text: [L('Le Chenillou mâchouille une feuille de chou, l’air très content de lui.', 'The Wigglet is munching a cabbage leaf, looking very pleased with itself.')] },
+      { id: 'bourgChenillou', x: 15, y: 19, mon: '012', look: LOOKS.kid, facing: 'down', wander: true, text: [L('Le Gloutillon mâchouille une feuille de chou, l’air très content de lui.', 'The Munchlet is munching a cabbage leaf, looking very pleased with itself.')] },
       { id: 'bourgGamin', x: 22, y: 19, look: { hair: '#2a2238', shirt: '#5bd6a0', pants: '#6a4a8a' }, facing: 'right', wander: true, text: [
         L('Je fais la course avec le Piafou. Il triche : il a des ailes !', 'I’m racing the Chirpie. It cheats: it has wings!'),
       ] },
       { id: 'bourgPiafou', x: 24, y: 17, mon: '013', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Piou ! Piouuu !', 'Cheep! Cheeep!')] },
     ],
     residents: [
-      // the drawing teacher's studio: she, a pupil, and the Ronflon that sits for them
+      // the drawing teacher's studio: she, a pupil, and the Grognours that sits for them
       { id: 'bourgDessin', x: 9, y: 4, look: { hair: '#3a2a1a', shirt: '#e8a838', pants: '#5a4a6a', longHair: true, hat: '#d64545' }, facing: 'left', fromDoor: [['bourg', 22, 6]], text: [
         L('Bienvenue dans mon atelier ! J’apprends à dessiner à tous les enfants du bourg.', 'Welcome to my studio! I teach all the village children to draw.'),
         L('{rival} se dessine toujours plus grand que tout le monde. Et toi, tu dessinais des Bestioles partout, même sur mes murs !', '{rival} always draws himself taller than everyone else. And you drew Critters everywhere, even on my walls!'),
@@ -141,17 +141,17 @@ export const HOME_MAPS: Record<string, MapDef> = {
         gift: { item: 'sucette-magique', n: 2, text: L('Tiens, pour la peine. Un dessin n’a jamais fini de grandir… tes Bestioles non plus !', 'Here, for your trouble. A drawing never stops growing… and neither do your Critters!') },
       } },
       { id: 'bourgEleve', x: 1, y: 4, look: { hair: '#f2d05a', shirt: '#f29ac8', pants: '#3a5aa8', longHair: true }, facing: 'right', fromDoor: [['bourg', 22, 6]], text: [
-        L('Je dessine le Ronflon. C’est mon troisième dessin aujourd’hui… et il n’a toujours pas ouvert un œil.', 'I’m drawing the Snoozle. It’s my third drawing today… and it still hasn’t opened an eye.'),
+        L('Je dessine le Grognours. C’est mon troisième dessin aujourd’hui… et il n’a toujours pas ouvert un œil.', 'I’m drawing the Grumbear. It’s my third drawing today… and it still hasn’t opened an eye.'),
       ] },
-      { id: 'bourgRonflon', x: 5, y: 4, mon: '008', look: LOOKS.kid, facing: 'left', fromDoor: [['bourg', 22, 6]], text: [L('Le Ronflon pose pour les élèves. Le modèle parfait : il ne bouge jamais.', 'The Snoozle poses for the pupils. The perfect model: it never moves.')] },
-      // a family by the square: the dad's snack, the little one's scribble that moved, their Lunelle
+      { id: 'bourgRonflon', x: 5, y: 4, mon: '008', look: LOOKS.kid, facing: 'left', fromDoor: [['bourg', 22, 6]], text: [L('Le Grognours pose pour les élèves. Le modèle parfait : il ne bouge jamais.', 'The Grumbear poses for the pupils. The perfect model: it never moves.')] },
+      // a family by the square: the dad's snack, the little one's scribble that moved, their Lunou
       { id: 'bourgPapa', x: 6, y: 2, look: { hair: '#2a2238', shirt: '#e07a5a', pants: '#3a4a6a' }, facing: 'up', fromDoor: [['bourg', 24, 14]], text: [
         L('Chez nous, on goûte avec des tartines de confiture de baies. La recette vient de Mamie Cerise, la grand-mère de {rival}.', 'At our house, snack time is berry-jam toast. The recipe comes from Granny Cherry, {rival}’s grandma.'),
       ] },
       { id: 'bourgPetit', x: 2, y: 5, look: { hair: '#8a4a2a', shirt: '#f2d05a', pants: '#e07aa6' }, facing: 'right', fromDoor: [['bourg', 24, 14]], text: [
         L('J’ai fait un gribouillis… et il s’est mis à bouger ! Maman dit que c’est normal, ici.', 'I made a scribble… and it started to move! Mom says that’s normal around here.'),
       ] },
-      { id: 'bourgLunelle', x: 2, y: 1, mon: '006', look: LOOKS.kid, facing: 'down', fromDoor: [['bourg', 24, 14]], text: [L('La Lunelle dort sous la fenêtre. Les soirs de pleine lune, elle danse : ça porte bonheur à toute la maison.', 'The Moonbun sleeps under the window. On full-moon nights it dances: it brings luck to the whole house.')] },
+      { id: 'bourgLunelle', x: 2, y: 1, mon: '006', look: LOOKS.kid, facing: 'down', fromDoor: [['bourg', 24, 14]], text: [L('La Lunou dort sous la fenêtre. Les soirs de pleine lune, elle danse : ça porte bonheur à toute la maison.', 'The Moonpeep sleeps under the window. On full-moon nights it dances: it brings luck to the whole house.')] },
     ],
   },
 

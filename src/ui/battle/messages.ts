@@ -13,7 +13,7 @@ const f = (text: LText, vars: Record<string, string | number> = {}) => tr(text, 
 const ACC: Record<'acc' | 'eva', LText> = { acc: L('Précision', 'accuracy'), eva: L('Esquive', 'evasiveness') };
 const statName = (k: StageKey) => tr(k === 'acc' || k === 'eva' ? ACC[k] : STAT_NAMES[k]);
 
-/** Display name of a side's creature at a party index ("Zigzou sauvage", "Clapotin ennemi"). */
+/** Display name of a side's creature at a party index ("Joufflux sauvage", "Clapotin ennemi"). */
 export function monName(st: BattleState, side: Side, idx = st.sides[side].active): string {
   const m = st.sides[side].party[idx];
   if (!m) return '';

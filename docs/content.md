@@ -22,7 +22,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `gift:<tool>` (ciseaux, canne-bois, bateau, bocal, velo, maillet, gants) | `guideTalk` (`src/story/guides.ts`) | A Colour Guide gave its tool |
 | `guides` | `guideTalk` | The first Colour Guide told about the seven of them |
 | `gift:calque` | Prof. Fusain's aide (Inn) | Tracing Paper given |
-| `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Touffou) |
+| `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Pandoudou) |
 | `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
 | `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
 | `static:<species>` | a one-time battle (`echoShadow`, `src/story/legends.ts`) | A Bestiole met once was caught (the legendaries, after the ending) or caught or beaten (Ombrouille) |
@@ -151,7 +151,7 @@ their doors) resolves to a place.
 - `surf: { rate, table }` and `fishing: { low, mid, high }` (tables like `encounters`): water
   encounters while sailing (Paper Boat) or fishing. The one rod uses the list of the team's level (`low`, then
   `mid` from N.20, `high` from N.35, `src/data/fishing.ts`) and hooks a Bestiole close under the team, within the
-  list's range. Water tables hold Clapotin, Givrinou (surfing) and Dragounet (high lists): add new water drawings there.
+  list's range. Water tables hold Clapotin, Roupillon (surfing) and Gouttelotl (high lists): add new water drawings there.
 
 A **new tile** needs:
 - a `TileDef` in `src/overworld/tiles.ts` (`paint` with the `Painter`; flags `solid`, `encounter`,
@@ -320,7 +320,7 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
   - a Bestiole stores a slot (`talent`: 0, 1 or 2), so an evolution keeps its slot;
   - new Bestioles get the hidden one 1 time in 4 (`HIDDEN_TALENT_CHANCE`), and older saves get a
     fixed slot from their uid;
-  - trainers always use slot 0, so put the friendlier talent first: early Ronflon and ghosts would
+  - trainers always use slot 0, so put the friendlier talent first: early Grognours and ghosts would
     otherwise halve Fire or dodge a lot;
   - battle messages come from the `talent` event.
 
@@ -340,9 +340,9 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
   `img-source/`, manifest entry, `npm run cards -- <id>`, `ORIGINALS`), drawing it in her style with
   `npm run redraws -- <id>`, then adding the creature to `src/data/creatures.ts`. For a creature that evolves, list its ways to evolve in
   `evolutions: [{ to, level? | item? | friendship? }]` on the base form, and set `evolvesFrom` on each
-  evolved form. Several rules make a branching evolution (Touffou's future forms):
+  evolved form. Several rules make a branching evolution (Pandoudou's future forms):
   - `item` is a Crayon Magique used from the bag (`crayon-magique-<type>`). Water, Fire and Lightning
-    are in the shops' `STOCK` (Touffou); put another one there, or as a pickup, when a drawing needs it;
+    are in the shops' `STOCK` (Pandoudou); put another one there, or as a pickup, when a drawing needs it;
   - `friendship: 220` evolves on levelling up with a great friendship;
   - `level` is the usual one.
 
@@ -420,8 +420,8 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
 ### Moving parts in battle
 
 In battle every Bestiole breathes (or hovers, when it flies; `idleOf` in `src/data/rigs.ts`), and its own
-parts can move: wrap the code that draws a part in `c.part(name, def, () => { … })` (`k.part` in a layered
-brouillon). `npm run redraws` (or `drafts`) cuts the body and each part out on their own into
+parts can move: wrap the code that draws a part in `c.part(name, def, () => { … })` (`k.part` in the kid kit).
+`npm run redraws` (or `drafts`) cuts the body and each part out on their own into
 `public/rigs/<id>-<slug>/` and records them in `src/data/rigs.json`; `tools/out/rigs-sheet.png` shows them put
 back together, each part framed with its pivot as a red dot. The card doesn't change.
 
@@ -432,9 +432,9 @@ back together, each part framed with its pivot as a red dot. The card doesn't ch
   the arm throwing it gets a `nod` with the same `period` and `phase`), `flicker` (sparks), `blink` (closed eyelids). `period` in seconds,
   `phase` (0–1) so parts move together.
 - `behind`: under the body (a far wing, a part drawn first). `inside`: in front at rest, behind the rest
-  once small (Clapotin's body into its shell). `clip`: cut off at the drawing's edge (Taupinou going down
+  once small (Clapotin's body into its shell). `clip`: cut off at the drawing's edge (Guettou going down
   its hole).
-- `extra`: only in battle, not on the card (Zigzou's lightning): draw it last, so the card's random strokes
+- `extra`: only in battle, not on the card (Joufflux's lightning): draw it last, so the card's random strokes
   stay the same. A part drawn in two goes (some before something else, some after) is called twice with the
   same name.
 - `src/data/rigs.test.ts` checks each rig's pictures, boxes, pivots and motions.
@@ -443,13 +443,16 @@ back together, each part framed with its pivot as a red dot. The card doesn't ch
 
 Each fully grown Bestiole has a fair copy for battle ([story.md](story.md), "Mise au propre"): its data in
 `FAIR_COPY` (`src/data/fairCopies.ts`: the base stats and its new `talent`; `type2` for the few that take a new
-type, with `type` when the kept one isn't its first) and its drawing in `tools/fair/<slug>.ts`, a module like a redraw's
-(`{ id, slug, seed, size, tilt, draw(c) } satisfies Fair`) drawn with the `crayon` kit in felt-tip
-(`crayon(seed, { felt: true })`: her coloured pencil under a felt-tip outline, `c.shine()` for white glints,
-`c.star()` for the gold star every fair copy carries; `FAIR_STYLE=marker` tries flat felt-tip colouring instead). It
-starts from the pencil module's own shapes, faces the same way, and grows what defines it, bigger and fiercer
-(docs/bestioles.md, "Its fair copy"). It needs at least one moving part (`c.part`, as above). `make.ts` picks up
-every module of the folder.
+type, with `type` when the kept one isn't its first).
+
+Its drawing has no design of its own: `tools/fair/make.ts` draws the card's own module (`tools/redraws/<slug>.ts`)
+again in the `crayon` kit's `clean` style. That is a real « mise au propre »: a crisp black felt-tip outline, flat even
+colour a little more vivid (`vivid()`), and the same moving parts. Then it sets the Feutre d'Or's gold star
+(`c.star`) by itself on the body: on its main colour, away from the face, not under a part drawn in front. The owner
+chose this over redesigned fair copies (October 2026).
+
+Poupochette, drawn by the kid kit, keeps its hand-drawn module `tools/fair/poupochette.ts` (felt-tip outline over
+her coloured pencil).
 
 - `npm run fair [-- <slug>…]` writes its rig to `public/fair/<id>-<slug>/` and `src/data/fairRigs.json`, and
   `tools/out/fair-sheet.png` (the pencil card, the fair copy, battle size).
@@ -459,15 +462,12 @@ every module of the folder.
 - `src/data/fairCopies.test.ts` checks one per fully grown Bestiole, +20 % but HP, a new talent (or a new type with a
   move of it learned by level 45), and the rig's pictures.
 
-### Brouillons (drafts)
+### The kid kit (Poupochette)
 
-The *brouillons* are Bestioles drawn in code more roughly than the redraws: a module in
-`tools/drafts/` (`<slug>.ts`, listed in `DRAFTS` in `tools/drafts/make.ts`) that draws with the kid kit
-(`tools/drafts/kid.ts`: potato shapes, pencil lines gone over twice, zig-zag colouring; `layered: true`
-makes front parts hide back ones, which reads better for busy designs). `npm run drafts [-- <id>]` cuts it
-out like a photo and writes its card and miniature. Its creature entry gets `draft: true` (the Bestiodex
-shows no stamp: the owner asked to drop it). New Bestioles use the `crayon` kit of `tools/redraws` instead; to redo a
-brouillon in her style, move it there and drop `draft: true`.
+Every Bestiole is drawn with the `crayon` kit of `tools/redraws`, except Poupochette: the owner likes her rougher
+look, drawn by the kid kit (`tools/drafts/kid.ts`: potato shapes, pencil lines gone over twice, zig-zag colouring;
+`layered: true` makes front parts hide back ones). `npm run drafts` redraws her card, miniature and rig. Don't add
+new Bestioles there; the old « brouillon » status (`draft: true`) is gone.
 
 ### The player's own Bestiole (Atelier des Brouillons)
 

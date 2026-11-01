@@ -96,7 +96,7 @@ describe('creatures', () => {
   it('gains capped effort points and keeps missing HP', () => {
     const m = mon('001', 50);
     m.hp -= 10;
-    gainEvs(m, '005'); // Chantouille gives 2 HP points
+    gainEvs(m, '005'); // Sifflou gives 2 HP points
     expect(m.evs.hp).toBe(2);
     m.evs.hp = 254;
     gainEvs(m, '005');
@@ -274,7 +274,7 @@ describe('battle', () => {
     expect(left).toMatchObject({ side: 0, amount: Math.floor(maxHp(me) / 16) });
   });
 
-  /** XP a level `earner` Bestiole gets for beating a wild Lunelle (013) at L3. */
+  /** XP a level `earner` Bestiole gets for beating a wild Lunou (013) at L3. */
   /** A wild Bestiole gives ×1.5, as much as a trainer's (met as rarely as in FireRed). */
   const wildXp = (base: number) => Math.floor(base * 1.5);
   const lunelleXp = (earner: number) => Math.floor(wildXp(Math.floor((creature('013').baseExp * 3) / 5)) * levelFactor(3, earner));
@@ -460,7 +460,7 @@ describe('battle', () => {
   it('the Swift Quill sometimes lets the slower one move first', () => {
     let first = 0;
     for (let seed = 1; seed <= 400; seed++) {
-      const slow = mon('008', 20, 1, { item: 'plume-vive' }); // Ronflon is very slow
+      const slow = mon('008', 20, 1, { item: 'plume-vive' }); // Grognours is very slow
       const st = battle([slow], [mon('004', 20)], 'trainer', seed);
       const r = act(st, { type: 'move', slot: 0 }, { type: 'move', slot: 0 });
       const moves = r.events.filter((e) => e.t === 'move');

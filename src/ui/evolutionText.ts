@@ -3,7 +3,7 @@ import { creature } from '../data/creatures';
 import { item } from '../data/items';
 import type { SpeciesDef } from '../data/schema';
 
-/** One line per way to evolve: « Papivole au N.10 », « X avec Crayon Magique Feu », « Y avec beaucoup d’amitié ». */
+/** One line per way to evolve: « Scaraprisme au N.10 », « X avec Crayon Magique Feu », « Y avec beaucoup d’amitié ». */
 export function evolutionHints(sp: SpeciesDef): string[] {
   return (sp.evolutions ?? []).map((r) => {
     const n = tr(creature(r.to).name);

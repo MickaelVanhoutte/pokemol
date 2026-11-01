@@ -12,40 +12,10 @@ import { cutRender } from '../../src/art/cutout.ts';
 import { makeMini } from '../minis.ts';
 import { kid, type Draft, type Kid } from './kid.ts';
 import { makeRig, saveRig, SHEET, turned } from '../redraws/rig.ts';
-import clapoflot from './clapoflot.ts';
-import tortorrent from './tortorrent.ts';
-import bouquetigre from './bouquetigre.ts';
-import dragobraise from './dragobraise.ts';
-import piafleche from './piafleche.ts';
-import luneclat from './luneclat.ts';
-import boxouille from './boxouille.ts';
-import cailloutou from './cailloutou.ts';
-import taupinou from './taupinou.ts';
-import givrinou from './givrinou.ts';
-import sifflasse from './sifflasse.ts';
-import dragounet from './dragounet.ts';
-import boulonnet from './boulonnet.ts';
-import piafurie from './piafurie.ts';
-import musclouille from './musclouille.ts';
-import quadripoing from './quadripoing.ts';
-import rocailloux from './rocailloux.ts';
-import montagnoc from './montagnoc.ts';
-import taupitrio from './taupitrio.ts';
-import cobrasse from './cobrasse.ts';
-import dragopataud from './dragopataud.ts';
-import triboulon from './triboulon.ts';
-import chantouffe from './chantouffe.ts';
-import ciseaumante from './ciseaumante.ts';
 import poupochette from './poupochette.ts';
-import pterocaille from './pterocaille.ts';
 
 export const DRAFTS: Draft[] = [
-  clapoflot, tortorrent, bouquetigre, dragobraise,
-  piafleche, luneclat, boxouille, cailloutou,
-  taupinou, givrinou, sifflasse, dragounet, boulonnet,
-  piafurie, musclouille, quadripoing, rocailloux, montagnoc,
-  taupitrio, cobrasse, dragopataud,
-  triboulon, chantouffe, ciseaumante, poupochette, pterocaille,
+  poupochette,
 ];
 
 const root = new URL('../..', import.meta.url).pathname;

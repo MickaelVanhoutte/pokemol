@@ -11,6 +11,10 @@ drawing photos never leave the machine, phones first, balance with sims, docs up
 
 ## 1. The picture
 
+Design it first with the `bestiole-design` skill: the concept card the owner picks (animal, one twist, tiny story,
+name), its silhouette, shapes, colours, face and family ladder. Only then draw it.
+
+
 Every Bestiole is drawn in code in the little artist's style; she no longer has to draw them.
 - **If she drew it**: her drawing is the original. The photo goes in `img-source/` (gitignored, never
   committed). Add an entry to `tools/cards-manifest.json` (crop box, erase polygons; newer phone photos need
@@ -29,7 +33,7 @@ Every Bestiole is drawn in code in the little artist's style; she no longer has 
 - An evolution is never a recolour of its earlier form. First forms are cute and simple; evolved forms are
   bigger, more complex and more impressive: a new silhouette, new features (vines, horns, quills, cuffs…), a
   fiercer pose. Put the whole line side by side on the sheet before showing it.
-- The 26 *brouillons* of `tools/drafts` (`draft: true`) are the rough kit; don't add new ones there.
+- `tools/drafts` (the rough kid kit) only draws Poupochette; never add new Bestioles there.
 - Give it its own little gesture in battle: draw the part that moves (wings, a tail, a trunk, sparks…) inside
   `c.part()` (see docs/content.md, « Moving parts in battle ») and check `tools/out/rigs-sheet.png`.
 
@@ -72,10 +76,9 @@ An evolution joins its family's power: same talents (same number of them), or th
 A fully grown Bestiole (final or single-stage) also needs its fair copy, the « mise au propre » of battles
 (docs/bestioles.md "Its fair copy", docs/content.md "Fair copies"): a `FAIR_COPY` entry in
 `src/data/fairCopies.ts` (HP unchanged, +20 % placed by its new look, its own types and a new talent; a new type
-only if the drawing plainly shows one, then with a move of it learned by level 45), and its felt-tip drawing
-`tools/fair/<slug>.ts`: its own drawing grown up, bigger and fiercer, with a change you see at battle size. Draw it with `npm run fair -- --try <slug>`,
-show the owner `npm run fair:preview` (an Artifact page) before `npm run fair -- <slug>`. When a Bestiole gains
-an evolution, its fair copy moves to the new final form.
+only if the drawing plainly shows one, then with a move of it learned by level 45). Its drawing comes from its card:
+`npm run fair -- <slug>` draws the card's module again, neatly, in felt-tip (the `clean` style, gold star placed by
+itself). There is nothing to design. When a Bestiole gains an evolution, its fair copy moves to the new final form.
 
 ## 6. Where to meet it
 

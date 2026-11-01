@@ -23,7 +23,7 @@ interface Trade {
   nick: string;
 }
 
-/** One trade per town: between them, every starter, a second Touffou and a Piafou. */
+/** One trade per town: between them, every starter, a second Pandoudou and a Piafou. */
 export const TRADES: Trade[] = [
   { id: 'ville', who: L('Gamin Hugo', 'Kid Hugo'), ot: 'Hugo', want: '012', give: '013', nick: 'Plumette' },
   { id: 'port', who: L('Marin Yves', 'Sailor Yves'), ot: 'Yves', want: '004', give: '003', nick: 'Bouée' },
@@ -87,7 +87,7 @@ const reward = async (id: string, n = 1) => {
 
 const MARGAUX = L('Fillette Margaux', 'Girl Margaux');
 
-/** Port-Aquarelle: Margaux’s Lunelle ran off along Route 3. */
+/** Port-Aquarelle: Margaux’s Lunou ran off along Route 3. */
 scripts.margaux = async () => {
   if (flag('quest:lulu')) {
     await say(L('Lulu et moi, on te dit encore merci !', 'Lulu and I say thank you again!'), MARGAUX);
@@ -104,7 +104,7 @@ scripts.margaux = async () => {
     return;
   }
   await sayAll([
-    L('Ma Lunelle, Lulu, a couru après une luciole sur la Route 3… et elle n’est pas revenue !', 'My Moonbun, Lulu, chased a firefly onto Route 3… and she hasn’t come back!'),
+    L('Ma Lunou, Lulu, a couru après une luciole sur la Route 3… et elle n’est pas revenue !', 'My Moonpeep, Lulu, chased a firefly onto Route 3… and she hasn’t come back!'),
     L('Tu veux bien la chercher ? Elle aime se cacher derrière les rochers.', 'Could you look for her? She likes to hide behind rocks.'),
   ], MARGAUX);
   setFlag('quest:lulu.asked');
@@ -113,7 +113,7 @@ scripts.margaux = async () => {
 /** Route 3: Lulu, hiding behind the rocks. */
 scripts.lulu = async () => {
   sfx.cry('006');
-  await say(L('C’est Lulu, la Lunelle de Margaux ! Elle a l’air perdue… Elle se met à te suivre.', 'It’s Lulu, Margaux’s Moonbun! She looks lost… She starts following you.'));
+  await say(L('C’est Lulu, la Lunou de Margaux ! Elle a l’air perdue… Elle se met à te suivre.', 'It’s Lulu, Margaux’s Moonpeep! She looks lost… She starts following you.'));
   setFlag('quest:lulu.found');
 };
 

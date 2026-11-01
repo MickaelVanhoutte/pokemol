@@ -65,7 +65,7 @@ export async function makeRig(d: Rigged, root: string, folder = 'public/rigs'): 
     const r = layers[i];
     await webp(raw(r).resize(size(r.width), size(r.height)), `${p.name}.webp`);
     const [px, py] = d.place(p.pivot);
-    const { pivot: _pivot, extra: _extra, ...move } = p;
+    const { pivot: _pivot, extra: _extra, decor: _decor, ...move } = p;
     rigParts.push({
       ...move,
       left: r1(((r.offset[0] - x0) / U) * 100), top: r1(((r.offset[1] - y0) / V) * 100),

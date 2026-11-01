@@ -132,7 +132,7 @@ export const MOVE_FX: Record<string, Recipe> = {
   'aile-d-acier': { user: 'dash', layers: [sparkle({ who: 'user', color: '#ffffff', n: 4 }), at(120, slash({ color: C.acier[1], n: 1, width: 2, len: 1.1 }))] },
   'griffe-metal': { user: 'lunge', layers: [slash({ color: C.acier[1], width: 1.2 }), at(200, sparkle({ color: '#ffffff', n: 4, size: 0.15 }))] },
   'tete-de-fer': { user: 'rear', hit: 'knock', shake: 0.4, layers: [sparkle({ who: 'user', color: '#ffffff', n: 5 }), at(330, impactStar({ size: 0.66, color: C.acier[0] }))] },
-  'canon-aimant': { layers: [pop({ kind: 'magnet', color: '#e0453a', who: 'user', size: 0.45, dy: -0.55, dur: 520 }), at(240, projectile({ kind: 'orb', color: C.acier[1], size: 0.36, fly: 320, burst: false })), at(560, sparks({ color: '#7ad0ff' }))] },
+  'canon-aimant': { layers: [pop({ kind: 'star', color: '#dfe4ec', who: 'user', size: 0.4, dy: -0.6, dur: 520 }), at(240, projectile({ kind: 'orb', color: C.acier[1], size: 0.36, fly: 320, burst: false })), at(560, sparks({ color: '#7ad0ff' }))] },
 
   // ------------------------------------------------ Bug
   'fil-enroule': { layers: [whip({ color: '#f4efe4', kind: 'plain', width: 0.4 }), at(330, wrap())] },
