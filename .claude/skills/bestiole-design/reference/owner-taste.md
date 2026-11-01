@@ -56,6 +56,8 @@ brief.
 | « La moitié avant style chacal, la moitié arrière fantomatique » | Chacrypte, the owner's own idea | a type can be shown by splitting the body: solid front, ghostly back with trails |
 | « Ses armes ne sont pas claires » / « la langue lui donne un air bête » | the chameleon line | make the weapon read and grow (spiral eyes, a precise tongue strike), and never remove a feature the owner asked to rework |
 | « Ce n'est pas une géode… une géode est ouverte » | the hermit crab's shell | draw the real thing the name promises, and integrate it (the crab comes out of it) |
+| « On peut faire mieux des évolutions : plus de vitesse et de flammes pour le lapin, plus de contrastes et de personnalité pour le dragon » | Brûlièvre and Sylvasaure, first finished versions | a final shows its role at full strength (a speedster's whole body says speed, a fire type has real fire); a calm giant still needs a gesture and strong value contrast, never a plain green statue |
+| « Pas sur les oreilles, sur les flancs ;) » | Brûlièvre's fire drawn as flame-ears | put the type's big effect where the body makes it (a runner's fire streams off its flanks); ears stay ears |
 | « Le zig zag rouge apporte rien » | the drum lacing on the turtles | a family thread must be a strong shape, not a decoration |
 | « Sa carapace est moche et n'a pas d'amélioration par rapport à ses pré-évolutions » | Tortorrent's plain hull | the final's signature part (shell, wings, mane) must visibly grow: new structure, bigger, more impressive |
 

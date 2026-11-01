@@ -1024,3 +1024,20 @@ of its sides: Pas-de-loup, Botte Secrète (its own, Steel 40, +1) and Coup-en-do
 crit). Power Rapiéçage (Fighting halved: its ×4). Wild on the lighthouse isle (`phareIle`, L27–30); a Team Gomme
 grunt there (`ph1b`) uses one (100% → about 90% on Normal). In `TOWER_POOL`, with a fair copy (a patched cape, a
 feather in its thimble, Coup de Chance).
+
+**More Fire and Grass (Nov 2026), 124 in all.** The type chart page of the local Bestiodex (`npm run dex`)
+showed Fire and Grass as the thinnest types once counted by family, Fire most of all: no pure Fire line to catch
+before Mont Fusain (L19). Two new families, designed with the `bestiole-design` method (the owner picked the
+concept, each pose and approved each drawing):
+- Pétillapin → Brûlièvre (Fire, L27): an impatient baby rabbit stamping one foot, its charcoal ear tips spitting
+  sparks; then a show-off hare in a flat-out sprint, fire streaming off its flanks, who can't brake. Routes 3–4
+  (L13–16). Kid Tim (Route 4) and Cyclist Léa. Power: Faux Départ (`galeWings` for Fire). The critic found the
+  first draft close to a later-generation fire-rabbit starter line: no glowing soles, the fire comes from the ears
+  (baby) and the flanks (final), as the owner asked.
+- Brontopousse → Sylvasaure (Grass/Dragon, L34, rare): a dreamy baby long-neck dinosaur with its chin on its paws
+  and a sprout on its head; then a calm giant with a little wood rooted on its back, one foot raised in a warning
+  step. The dale by the lake (L21–23) and the Lost Wood (L27–29). Gardener Octave (Route 7) and Doodler Titouan
+  (Route 9). Power: Écorce Ancienne (Ice and Flying halved: its Ice ×4).
+
+Both finals are in `TOWER_POOL`, with fair copies (Feu de Joie, Herbier). In the Bestiodex they come after
+Ratpiécé, before the semi-legendaries. Kid Tim went from 76% to 71% with Braisou on Normal; the other rows did not move.

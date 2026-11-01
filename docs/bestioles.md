@@ -117,6 +117,8 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Gecaillou → Sablerette | Sable Sec: Water and Grass damage halved | `halve` | Water and Grass ×4 |
 | Spiragneau → Hypnobélier | Laine Douillette: physical damage halved | `fluffy` | Bug and Dark, mostly physical |
 | Ratpiécé | Rapiéçage: Fighting damage halved | `halve` | Fighting ×4 |
+| Pétillapin → Brûlièvre | Faux Départ: Fire moves go first at full HP | `galeWings` | Fragile, few strong Fire physical moves |
+| Brontopousse → Sylvasaure | Écorce Ancienne: Ice and Flying damage halved | `halve` | Ice ×4, slow |
 | Aquarelline (legendary, the Lac des Couleurs) | Voile d’Aquarelle: super-effective hits halved, its status moves never miss; Marée arc-en-ciel (Water special 100, 30% +1 Sp. Def) | `prism` + signature move | — |
 
 A new family can reuse a kind with new numbers (another `flagBoost`, `entryWeather` with sand or sun, a

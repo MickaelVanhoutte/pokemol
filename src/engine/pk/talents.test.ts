@@ -36,6 +36,12 @@ describe('Bestiodex order', () => {
     expect(dexNo('012')).toBe('010');
     expect(dexNo('007')).toBe('012');
   });
+
+  it('ends with the semi-legendaries, then the legendaries, the Bestiodex\'s reward last', () => {
+    const last = CREATURES.slice(-11).map((c) => c.id);
+    expect(last).toEqual(['034', '044', '045', '084', '085', '086', '073', '071', '072', '115', '112']);
+    expect(CREATURES.slice(0, -5).some((c) => c.rarity === 'legendary')).toBe(false);
+  });
 });
 
 describe('talents data', () => {

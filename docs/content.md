@@ -351,7 +351,8 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
   `evolutionFor()` in `src/engine/pk/creature.ts` applies the rules. Set `faces` for sideways drawings, and
   `rarity`, which weights the Tombola. Put it in an `encounters` table or a trainer party.
   The order of `CREATURES` is the Bestiodex order (`dexNo`), and a test keeps evolution lines side by
-  side. Ids are keys used by saves, maps and card files, so never renumber them.
+  side. It ends with the semi-legendaries (the rare three-form lines of Orajolotl and Festivouivre), then the
+  legendaries, the Bestiodex's reward last. Ids are keys used by saves, maps and card files, so never renumber them.
 - **Moves** (`src/data/moves.ts`): `type`, `cat` (`phys` / `spec` / `status`), `power`, `acc`
   (`null` never misses), `pp`, `priority`, `effects`, and the flags `punch` / `cut` that Poings d’Acier
   and Ciseaux Affûtés boost. Every move also needs an animation in

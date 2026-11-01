@@ -150,6 +150,9 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   '119': { base: { hp: 80, atk: 155, def: 100, spa: 60, spd: 90, spe: 110 }, talent: 'trait-assure' },
   // Ratpiécé: a patched cape flying behind, a feather in its thimble, a longer needle
   '120': { base: { hp: 60, atk: 130, def: 115, spa: 45, spd: 75, spe: 145 }, talent: 'coup-de-chance' },
+  // Brûlièvre and Sylvasaure: their cards gone over neatly
+  '122': { base: { hp: 70, atk: 140, def: 75, spa: 65, spd: 75, spe: 165 }, talent: 'feu-de-joie' },
+  '124': { base: { hp: 108, atk: 120, def: 125, spa: 82, spd: 110, spe: 65 }, talent: 'herbier' },
 };
 
 /** A Bestiole that can be made a fair copy: one with no evolution left. */

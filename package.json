@@ -13,6 +13,7 @@
     "drafts": "tsx tools/drafts/make.ts",
     "fair": "tsx tools/fair/make.ts",
     "fair:preview": "tsx tools/fair/preview.ts",
+    "dex": "tsx tools/bestiodex.ts",
     "redraws": "tsx tools/redraws/make.ts",
     "redraws:review": "tsx tools/redraws/review.ts",
     "redraws:refs": "tsx tools/redraws/refs.ts",

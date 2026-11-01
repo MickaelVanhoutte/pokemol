@@ -48,11 +48,13 @@ dessins sont vivants : ce sont les **Bestioles**.
 5. **Village-Plume** : l’Atelier de Gaspard, plein de courants d’air. Le pont a disparu pendant la
    nuit : il faut passer par la Grotte Gribouillis. Un pigeonnier, et l’atelier de la faiseuse de plumes.
 6. **Port-Aquarelle** : l’Atelier de Marine, la fête foraine et sa Tombola, le quai des pêcheurs, la
-   Place des Peintres et la Pointe des Mouettes.
+   Place des Peintres et la Pointe des Mouettes. Sur la route, Pétillapin, un petit lapin orange qui ne
+   sait pas attendre, tape du pied si fort que le bout de ses oreilles crache des étincelles.
 7. **Le Lac des Couleurs** : une boue grise bloque la route du nord ! Avec ton rival et le Prof.
    Fusain, remonte en bateau la rivière de Village-Plume jusqu’à un grand lac tout gris. La Team Gomme
    a bouché ses trois sources : rouge, jaune et bleue. Chaque source débouchée rend au lac sa couleur, et
-   elles se mélangent comme des peintures… Et sous l’eau, il y a peut-être autre chose.
+   elles se mélangent comme des peintures… Et sous l’eau, il y a peut-être autre chose. Dans le vallon
+   près du lac, un bébé dinosaure au long cou, Brontopousse, rêvasse le menton sur les pattes.
 8. **Ville-Feutre** : la ville a perdu toutes ses couleurs, et Zélie a disparu… L’Entrepôt Gomme
    cache quelque chose. Ses enseignes au néon, sa Fontaine Fluo et ses fabricants de feutres. Sur la
    route qui y mène, Spiragneau, un agneau aux petites cornes en spirale, broute dans l’herbe le jour.
@@ -200,11 +202,13 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
 5. **Featherby**: Gaspard’s draughty Atelier. The bridge vanished overnight: go through Scribble Cave
    instead. A dovecote, and the quill-maker’s studio.
 6. **Port Aquarelle**: Marine’s Atelier, the fair and its Tombola, the fishermen’s quay, Painters’
-   Square and Gull Point.
+   Square and Gull Point. On the road, Sparkbun, a little orange rabbit who can’t wait for anything,
+   stamps so hard that the tips of its ears spit sparks.
 7. **The Lake of Colours**: grey mud blocks the road north! With your rival and Prof. Charcoal, sail up
    Featherby’s river to a big lake gone all grey. Team Gomme plugged its three springs: red, yellow and
    blue. Each spring you free gives the lake back its colour, and they mix like paints… And under the
-   water, there may be something else.
+   water, there may be something else. In the dale by the lake, a baby long-necked dinosaur, Sproutosaur,
+   daydreams with its chin on its paws.
 8. **Felt City**: the city has lost all its colours, and Zelie has disappeared… The Eraser Warehouse
    is hiding something. Its neon signs, its Fluo Fountain and its felt-tip makers. On the road there,
    Spirlamb, a lamb with little spiral horns, grazes in the grass by day.

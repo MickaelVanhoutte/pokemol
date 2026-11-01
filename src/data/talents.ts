@@ -344,6 +344,13 @@ export const TALENTS: TalentDef[] = [
   T('copeaux-amortis', L('Copeaux Amortis', 'Shaving Cushion'),
     L('Sa collerette de copeaux amortit les coups : les capacités Combat et Sol ne lui font que la moitié des dégâts.', 'Its collar of shavings cushions the blows: Fighting and Ground moves do only half the damage to it.'),
     { kind: 'halve', types: ['combat', 'sol'] }),
+  // the fire hares and the grove dinosaurs
+  T('faux-depart', L('Faux Départ', 'False Start'),
+    L('Quand il a tous ses PV, ses capacités Feu passent en premier : il part toujours avant le signal.', 'At full HP, its Fire moves go first: it always starts before the signal.'),
+    { kind: 'galeWings', type: 'feu' }),
+  T('ecorce-ancienne', L('Écorce Ancienne', 'Old Bark'),
+    L('Son écorce épaisse le protège : les capacités Glace et Vol ne lui font que la moitié des dégâts.', 'Its thick bark shields it: Ice and Flying moves do only half the damage to it.'),
+    { kind: 'halve', types: ['glace', 'vol'] }),
 ];
 
 const BY_ID: Record<string, TalentDef> = Object.fromEntries(TALENTS.map((t) => [t.id, t]));

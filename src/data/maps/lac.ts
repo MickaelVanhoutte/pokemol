@@ -305,6 +305,7 @@ export const LAC_MAPS: Record<string, MapDef> = {
       rate: 21,
       table: [
         { id: '093', w: 25, min: 20, max: 23 },
+        { id: '123', w: 5, min: 21, max: 23 },
         { id: '005', w: 20, min: 20, max: 23 },
         { id: '091', w: 15, min: 20, max: 23 },
         { id: '095', w: 15, min: 21, max: 23 },

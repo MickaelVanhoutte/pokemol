@@ -70,6 +70,7 @@ npm run curve -- [easy|normal|hard]          # the team's levels at each trainer
 npm run redraws -- 013                        # draw a Bestiole in her style (card, mini, tools/out/redraws-sheet.png)
 npm run fair -- toufeu                        # its fair copy, from its card (its rig; `--try` only draws, into tools/out/fair-try)
 npm run fair:preview                          # tools/out/fair-preview.html: the fair copies moving, for the owner
+npm run dex                                   # tools/out/bestiodex.html: every Bestiole's stats, talents, moves, and a Types page
 npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png
 npm run music -- title                        # record tunes into src/audio/recordings (Chrome + macOS afconvert)

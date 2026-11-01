@@ -318,7 +318,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Il dort. Je porte le sac. Comme d’habitude.', 'It’s asleep. I carry the bag. As usual.')],
   }),
   T({
-    id: 'r4tim', name: L('Gamin Tim', 'Kid Tim'), party: [{ species: '007', level: 18 }, { species: '078', level: 18 }, { species: '035', level: 19 }], money: 400,
+    id: 'r4tim', name: L('Gamin Tim', 'Kid Tim'), party: [{ species: '007', level: 18 }, { species: '121', level: 18 }, { species: '035', level: 19 }], money: 400,
     before: [L('Mon cerf-volant fait des étincelles, regarde !', 'My kite throws sparks, look!')],
     after: [L('Zéro étincelle…', 'Zero sparks…')],
   }),
@@ -554,7 +554,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Route des Gouaches
   T({
-    id: 'r7c', name: L('Jardinier Octave', 'Gardener Octave'), party: [{ species: '005', level: 26 }, { species: '063', level: 26 }, { species: '064', level: 27 }], money: 920,
+    id: 'r7c', name: L('Jardinier Octave', 'Gardener Octave'), party: [{ species: '123', level: 26 }, { species: '063', level: 26 }, { species: '064', level: 27 }], money: 920,
     before: [L('Mes plantes ont faim. Et elles adorent les dresseurs qui passent par là !', 'My plants are hungry. And they love passing trainers!')],
     after: [L('Bon. Elles mangeront de l’engrais.', 'Fine. They’ll have fertiliser instead.')],
   }),
@@ -641,7 +641,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Piste Cyclable
   T({
-    id: 'pc1', name: L('Cycliste Léa', 'Cyclist Lea'), party: [{ species: '061', level: 29 }, { species: '079', level: 30 }], money: 820,
+    id: 'pc1', name: L('Cycliste Léa', 'Cyclist Lea'), party: [{ species: '122', level: 29 }, { species: '079', level: 30 }], money: 820,
     before: [L('Tu roules à quelle vitesse ? Moi, plus vite que le vent !', 'How fast do you ride? Me, faster than the wind!')],
     after: [L('Crevaison !', 'Flat tyre!')],
   }),
@@ -734,7 +734,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Zéro pointé… pour moi.', 'A big zero… for me.')],
   }),
   T({
-    id: 'r9d', name: L('Gribouilleur Titouan', 'Doodler Titouan'), party: [{ species: '043', level: 34 }, { species: '049', level: 34 }, { species: '010', level: 34 }, { species: '064', level: 35 }], money: 1150,
+    id: 'r9d', name: L('Gribouilleur Titouan', 'Doodler Titouan'), party: [{ species: '043', level: 34 }, { species: '124', level: 34 }, { species: '010', level: 34 }, { species: '064', level: 35 }], money: 1150,
     before: [L('Ici, on dessine sans gomme. Si on rate, on continue !', 'Here, we draw without an eraser. If we get it wrong, we keep going!')],
     after: [L('J’ai raté… mais je continue !', 'I got it wrong… but I keep going!')],
   }),

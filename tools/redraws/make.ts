@@ -19,6 +19,10 @@ import { CREATURES } from '../../src/data/creatures.ts';
 import { crayon, type Crayon, type Redraw } from './crayon.ts';
 import minousse from './minousse.ts';
 import braisou from './braisou.ts';
+import petillapin from './petillapin.ts';
+import brulievre from './brulievre.ts';
+import brontopousse from './brontopousse.ts';
+import sylvasaure from './sylvasaure.ts';
 import clapotin from './clapotin.ts';
 import joufflux from './joufflux.ts';
 import sifflou from './sifflou.ts';
@@ -138,7 +142,7 @@ import tenoroc from './tenoroc.ts';
 import lunambule from './lunambule.ts';
 
 /** Sorted by id when drawn. */
-export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, joufflux, sifflou, lunou, scaraprisme, grognours, brumouille, grimouille, ombrouille, gloutillon, piafou, hypnopaon, coquattend, pandoudou, panderive, pandabraise, pandorage, minoufleur, braisaure, curiolor, malicolor, pensacasque, chapardou, pantharuse, crapougne, brumapaud, ermitou, geocrabe, berceluga, planacier, brouticot, tetebique, ramabouc, chacalune, chacrypte, bougombat, foncombat, fronduline, calligrafronde, libellune, noctaile, foudroule, morsommeil, flaquelotl, coconfus, agrafou, crocagrafe, ocrinou, mammouchaud, faonvole, cerfoudre, allumou, allumbattant, lumignon, projetoile, plissou, plisserpent, festivouivre, globargot, moutoussiere, punaisette, punaisaure, lumiver, lampyrette, erabou, erabreuil, nenurette, tachou, tachombre, fanetome, avrilou, leviafarce, medusoie, voilamere, chiroplie, vampapier, poncou, rapepic, galibou, floconnet, givrelynx, gommichon, taillou, baleincre, poulpinceau, octopeintre, aquarelline, gecaillou, sablerette, spiragneau, hypnobelier, ratpiece, guettou, vigicrocs, squillou, cognecrevette, marteaumante, cailloutou, rocailloux, montagnoc, pschitou, mouffetor, antennou, lemurage, roupillon, gouttelotl, orajolotl, frelonchon, faucardoise, bouquetigre, dragobraise, clapoflot, tortorock, postrompe, piafurie, tenoroc, lunambule].sort((a, b) => a.id.localeCompare(b.id));
+export const REDRAWS: Redraw[] = [minousse, braisou, clapotin, joufflux, sifflou, lunou, scaraprisme, grognours, brumouille, grimouille, ombrouille, gloutillon, piafou, hypnopaon, coquattend, pandoudou, panderive, pandabraise, pandorage, minoufleur, braisaure, curiolor, malicolor, pensacasque, chapardou, pantharuse, crapougne, brumapaud, ermitou, geocrabe, berceluga, planacier, brouticot, tetebique, ramabouc, chacalune, chacrypte, bougombat, foncombat, fronduline, calligrafronde, libellune, noctaile, foudroule, morsommeil, flaquelotl, coconfus, agrafou, crocagrafe, ocrinou, mammouchaud, faonvole, cerfoudre, allumou, allumbattant, lumignon, projetoile, plissou, plisserpent, festivouivre, globargot, moutoussiere, punaisette, punaisaure, lumiver, lampyrette, erabou, erabreuil, nenurette, tachou, tachombre, fanetome, avrilou, leviafarce, medusoie, voilamere, chiroplie, vampapier, poncou, rapepic, galibou, floconnet, givrelynx, gommichon, taillou, baleincre, poulpinceau, octopeintre, aquarelline, gecaillou, sablerette, spiragneau, hypnobelier, ratpiece, guettou, vigicrocs, squillou, cognecrevette, marteaumante, cailloutou, rocailloux, montagnoc, pschitou, mouffetor, antennou, lemurage, roupillon, gouttelotl, orajolotl, frelonchon, faucardoise, bouquetigre, dragobraise, clapoflot, tortorock, postrompe, piafurie, tenoroc, lunambule, petillapin, brulievre, brontopousse, sylvasaure].sort((a, b) => a.id.localeCompare(b.id));
 
 const root = new URL('../..', import.meta.url).pathname;
 
