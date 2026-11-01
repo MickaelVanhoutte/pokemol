@@ -7,7 +7,7 @@ import type { NpcDef } from '../overworld/mapTypes';
  * The seven Colour Guides of Papeterre, one per colour of the rainbow. Each brings the player a field tool the
  * moment it becomes useful: arriving on its map once `need` is set, the guide walks up and hands it over
  * (`src/story/guides.ts`). Afterwards the guide stays on that map, at `home`, with tips. Indigo is the exception:
- * the Prof calls her at the lake camp in his own scene (`manual`).
+ * the Prof calls her at the lake camp in his own scene (`manual`), and Pistache waits at Ville-Pastel's west way out.
  */
 export interface Guide {
   id: 'rouge' | 'orange' | 'jaune' | 'vert' | 'bleu' | 'indigo' | 'violet';
@@ -44,7 +44,8 @@ export const GUIDES: Guide[] = [
   {
     id: 'vert', name: L('Pistache', 'Pistachio'), title: L('le guide vert', 'the green guide'), tool: 'ciseaux',
     look: { hair: '#5a3a20', shirt: '#4f9a3c', pants: '#7a5230', hat: '#3f7f30' },
-    map: 'ville', home: { x: 14, y: 16, facing: 'down' }, need: 'badge:pastel',
+    // at the west way out of town (`guideVert`), not on the Atelier's doorstep where Lison already waits
+    map: 'ville', home: { x: 5, y: 8, facing: 'down' }, need: 'badge:pastel', manual: true,
   },
   {
     id: 'bleu', name: L('Azur', 'Azure'), title: L('le guide bleu', 'the blue guide'), tool: 'bateau',

@@ -95,10 +95,7 @@ scripts.towerFreed = async () => {
   await bubble('blanche', '…', 700);
   await say(L('Le patron t’attend à l’Usine à Gommes, à la Cité-Encre. Là-bas, il préparera la page blanche…', 'The boss awaits you at the Eraser Factory, in Ink City. There, he’ll prepare the blank page…'), L('Admin Blanche', 'Admin Whiteout'));
   const b = g.npc('blanche');
-  if (b) {
-    await g.walk(b, ['down'], 120);
-    g.remove('blanche');
-  }
+  if (b) await goAway(b, ['down']);
   await flash('white', 260);
   showToast(tr(L('Les fantômes de la tour retrouvent leurs couleurs !', 'The tower ghosts get their colours back!')));
   await say(L('Hi hi hi ! Merci ! On peut de nouveau faire des grimaces à tout le monde !', 'Hee hee hee! Thank you! We can pull faces at everyone again!'), L('Fantômes', 'Ghosts'));

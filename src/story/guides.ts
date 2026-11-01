@@ -4,9 +4,7 @@ import { fxSound, sfx } from '../audio/sfx';
 import { item } from '../data/items';
 import { GUIDES, type Guide } from '../data/guides';
 import { arrivals, bubble, flag, getGame, giveItem, say, sayAll, scripts, setFlag, shake, wait } from '../overworld/controller';
-import { DIRS, type Actor } from '../overworld/game';
-import { isWater } from '../overworld/tiles';
-import type { Dir } from '../save/schema';
+import { comeUp, goAway, walkTo } from './choices';
 
 /**
  * The Colour Guides (`src/data/guides.ts`): an old tradition of Papeterre that every child knows from a nursery
@@ -149,39 +147,19 @@ export async function guideTalk(gd: Guide) {
   await say(m.tip, gd.name);
 }
 
-const BACK: Record<Dir, Dir> = { up: 'down', down: 'up', left: 'right', right: 'left' };
-
-/** A straight line of free tiles from the player (5 at most): where the guide comes from. */
-function approachFrom(): { dir: Dir; n: number } | null {
-  const g = getGame(), p = g.player, f = g.followerShown() ? g.follower : null;
-  const free = (x: number, y: number) =>
-    !g.blocked(x, y) && !isWater(g.tileAt(x, y)) && !(f && f.x === x && f.y === y) && !g.map.warps.has(y * g.map.w + x);
-  for (const n of [5, 4, 3, 2]) {
-    for (const dir of ['down', 'left', 'right', 'up'] as Dir[]) {
-      const [dx, dy] = DIRS[dir];
-      if (Array.from({ length: n }, (_, k) => free(p.x + dx * (k + 1), p.y + dy * (k + 1))).every(Boolean)) return { dir, n };
-    }
-  }
-  return null;
-}
-
 /**
  * The guide's call is heard, it comes up to the player (`who` says the call when it is someone else, the Prof
- * calling Myrtille), has its moment, gives its tool and goes off. False when there is no room for it to come.
+ * calling Myrtille): it walks in from out of sight, has its moment, gives its tool, then goes to its spot and stays.
  */
 export async function guideComes(gd: Guide, who?: LText): Promise<boolean> {
-  const from = approachFrom();
-  if (!from) return false;
-  const g = getGame(), p = g.player, m = MEETINGS[gd.id];
+  const g = getGame(), m = MEETINGS[gd.id];
   await bubble('player', '!', 500);
   await beats(m.call, who ?? gd.name);
-  const [dx, dy] = DIRS[from.dir];
-  const walker: Actor = g.spawn(`guide-walk-${gd.id}`, gd.look, p.x + dx * from.n, p.y + dy * from.n, BACK[from.dir]);
-  await g.walk(walker, Array(from.n - 1).fill(BACK[from.dir]), m.walkMs ?? 170);
-  g.face(p, from.dir);
+  const walker = await comeUp(`guide-walk-${gd.id}`, gd.look);
   await guideTalk(gd);
-  await g.walk(walker, Array(from.n - 1).fill(from.dir), 170);
-  g.remove(walker.id);
+  // it goes to its spot on this map and stays there (the map's guide takes over when the map is rebuilt), or walks off
+  if (g.map.def.id === gd.map && (await walkTo(walker, gd.home.x, gd.home.y, 170))) g.face(walker, gd.home.facing);
+  else await goAway(walker);
   return true;
 }
 
@@ -196,6 +174,12 @@ arrivals.push(() => {
     await guideComes(gd);
   };
 });
+
+// Ville-Pastel: Pistache meets you at the west way out of town (the Atelier's doorstep already has Lison)
+scripts.guideVert = async () => {
+  const gd = GUIDES.find((x) => x.id === 'vert')!;
+  if (!flag(`gift:${gd.tool}`)) await guideComes(gd);
+};
 
 // afterwards each guide waits on its map (`guideNpc`) with its tip
 for (const gd of GUIDES) {

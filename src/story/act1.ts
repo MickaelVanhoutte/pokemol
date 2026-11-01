@@ -12,8 +12,6 @@ import {
   dayPhase, mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast,
   trainerBattle, wait,
 } from '../overworld/controller';
-import { LEGEND } from '../overworld/mapTypes';
-import { TILES } from '../overworld/tiles';
 import { sleepUntil } from './common';
 import { choose, COCONFUS, coconfusJoins, comeUp, goAway, RETOUCHE } from './choices';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
@@ -266,26 +264,17 @@ scripts.touffouGift = async () => {
  */
 scripts.route1Gomme = async () => {
   const g = getGame();
-  const px = g.player.x, py = g.player.y;
   await bubble('player', '!', 700);
   await say(L('Quelque chose dévale les hautes herbes en tremblant… Un petit cocon tout embrouillé !', 'Something comes tumbling down through the tall grass, trembling… A muddled little cocoon!'));
-  // they come down the free tiles above you (a tree stops a walk)
-  const free = (x: number, y: number) => !TILES[LEGEND[g.map.def.rows[y]?.[x]]]?.solid;
-  let room = 0;
-  while (room < 5 && free(px, py - room - 1)) room++;
-  const cocon = g.spawn('coconR1', LOOKS.kid, px, py - room, 'down', COCONFUS);
-  await g.walk(cocon, Array(Math.max(0, room - 1)).fill('down'), 150);
-  // it hides behind you, on whichever side is free
-  await g.walk(cocon, [free(px + 1, py - 1) && free(px + 1, py) ? 'right' : 'left', 'down'], 150);
-  cocon.dir = 'up';
-  const grunt = g.spawn('gommeR1', LOOKS.gomme, px, py - room, 'down');
-  await g.walk(grunt, Array(Math.max(0, room - 1)).fill('down'), 140);
+  // it runs in from out of sight and huddles beside you, then the grunt chasing it comes the same way
+  const cocon = await comeUp('coconR1', LOOKS.kid, COCONFUS);
+  const grunt = await comeUp('gommeR1', LOOKS.gomme);
+  g.faceToward(cocon, grunt);
   await say(L('Reviens ici, toi ! Un dessin raté comme toi, ça se gomme !', 'Come back here, you! A failed drawing like you gets rubbed out!'), GRUNT);
   await trainerBattle('r1gomme', grunt, LOOKS.gomme);
   if (!flag('tr:r1gomme')) return;
   await say(L('Pfff ! Le Grand Effaceur a des gommes géantes, lui. Ce dessin raté, on finira bien par l’avoir !', 'Pfff! The Great Eraser has giant erasers. We’ll get that failed drawing in the end!'), GRUNT);
-  await g.walk(grunt, Array(Math.max(0, room - 1)).fill('up'), 120);
-  g.remove('gommeR1');
+  await goAway(grunt, ['up']);
   setFlag('a1.r1seen');
   await say(L('Le Sbire file vers le nord, une énorme gomme sous le bras. Plus loin, un morceau des hautes herbes a disparu, comme effacé !', 'The grunt dashes north, a huge eraser under his arm. Further up, a patch of tall grass has vanished, as if rubbed out!'));
   g.faceToward(cocon, g.player);
@@ -298,7 +287,7 @@ scripts.route1Gomme = async () => {
     ? L('Tu essuies la trace. Le petit cocon ferme les yeux… et une lueur rose traverse son cocon.', 'You wipe the mark off. The little cocoon closes its eyes… and a pink glow runs through its cocoon.')
     : L('Tu lui souris. Le petit cocon touche sa trace… et une jolie spirale se dessine autour, comme un motif.', 'You smile at it. The little cocoon touches its mark… and a pretty spiral draws itself around it, like a pattern.'));
   await say(L('Il te fait un petit signe… puis il file vers le nord et disparaît dans les hautes herbes.', 'It gives you a little wave… then dashes north and disappears into the tall grass.'));
-  g.remove('coconR1');
+  await goAway(cocon, ['up']);
 };
 
 /** Coming out of the Atelier with the Pastel Badge: an apprentice doesn't like her first drawing (choice 2). */
@@ -324,10 +313,8 @@ scripts.pastelDrawing = async () => {
   await say(way === RETOUCHE
     ? L('Tu as raison ! Je vais le refaire, et cette fois je prendrai mon temps. Viens le voir au musée !', 'You’re right! I’ll do it again, and this time I’ll take my time. Come and see it at the museum!')
     : L('Tu as raison ! Je vais l’accrocher au musée tel qu’il est. Mon tout premier ! Viens le voir !', 'You’re right! I’ll hang it in the museum just as it is. My very first! Come and see it!'), who);
-  if (lison) {
-    await g.walk(lison, ['left', 'left'], 140);
-    g.remove('lison');
-  }
+  // off to the museum, down the street and out of sight
+  if (lison) await goAway(lison, ['left']);
 };
 
 scripts.lisonMusee = async () => {
@@ -356,10 +343,7 @@ scripts.boisRestore = async () => {
   await bubble('gomme2', '…', 700);
   await say(L('Je file prévenir l’Admin Rature… Tu vas voir !', 'I’m off to warn Admin Smudge… You’ll see!'), GRUNT);
   const grunt = g.npc('gomme2');
-  if (grunt) {
-    await g.walk(grunt, ['up'], 140);
-    g.remove('gomme2');
-  }
+  if (grunt) await goAway(grunt, ['up']);
   // the little cocoon from Route 1 was the grunt's prisoner: it picks you
   const cocon = g.npc('coconBois');
   if (cocon && !flag('gift:coconfus')) {

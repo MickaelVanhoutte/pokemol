@@ -1065,3 +1065,10 @@ the first check (« une course à finir »), and a new one on Route 6, between t
 gap before the finale: he heals you first, as at the lake. Normal 74/56/88% (Minousse / Braisou / Clapotin), Easy
 100%, Hard 81/46/81%. In landscape the foe trainer's picture at the start of a battle is 92% of its column, its feet
 on the shadow (its head went off the top of the screen).
+
+**Nobody pops in or out (Nov 2026).** The owner: « Je ne veux plus voir de PNJ qui apparaissent ou disparaissent ». `comeUp`
+now spawns someone on the nearest tile off screen and walks them in around trees and walls to the player; `goAway` walks
+them out of sight (the way `route` suggests, when not much further) before removing them; in a room that fits the screen
+they use the door. The Colour Guides come the same way and then walk to their spot and stay (`walkTo`). Lison, the grunts
+of Route 1 and the woods, Rature and Blanche leave this way too. Ville-Pastel had two scenes on the Atelier's doorstep;
+Pistache (scissors) now meets you at the west way out (`guideVert`) and stays by the gate.

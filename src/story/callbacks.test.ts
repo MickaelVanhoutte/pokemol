@@ -12,6 +12,13 @@ const game = vi.hoisted(() => ({
   npcs: [] as FakeActor[],
   followerShown() { return !!this.follower; },
   blocked: () => false,
+  // a plain 20×20 meadow, bigger than the screen, so comeUp and goAway find their way off screen
+  map: { w: 20, h: 20, warps: new Map(), def: { id: 'test' } },
+  viewW: 64,
+  viewH: 64,
+  inside: (x: number, y: number) => x >= 0 && y >= 0 && x < 20 && y < 20,
+  tileAt: () => 'grass',
+  face: () => undefined,
   spawn(id: string, _look: unknown, x: number, y: number, dir: string): FakeActor {
     const a = { id, x, y, dir };
     this.npcs.push(a);

@@ -7,7 +7,8 @@
 import { L, type LText } from '../i18n';
 import type { Mon } from '../engine/pk/creature';
 import type { Dir, SaveData } from '../save/schema';
-import { DIRS, type Actor } from '../overworld/game';
+import { DIRS, TILE, type Actor } from '../overworld/game';
+import { isWater, tile } from '../overworld/tiles';
 import { LOOKS, type Look } from '../overworld/sprites';
 import { ask, bubble, getGame, giveMon, offerNickname, say, setFlag } from '../overworld/controller';
 import { allMons, save } from '../state/game';
@@ -127,67 +128,114 @@ export async function coconfusJoins(level: number, actor?: Actor) {
   await offerNickname(m.uid);
 }
 
-const OPPOSITE: Record<Dir, Dir> = { up: 'down', down: 'up', left: 'right', right: 'left' };
-/** The way each actor brought on by `comeUp` walked in, so that it leaves the same way. */
-const cameFrom = new WeakMap<Actor, Dir>();
+/** The tiles on screen around the player now, as the camera frames them (`Game.render`). */
+function onScreen(): (x: number, y: number) => boolean {
+  const g = getGame(), p = g.player;
+  const mapW = g.map.w * TILE, mapH = g.map.h * TILE;
+  const camX = mapW <= g.viewW ? (mapW - g.viewW) / 2 : Math.min(Math.max(p.x * TILE + 8 - g.viewW / 2, 0), mapW - g.viewW);
+  const camY = mapH <= g.viewH ? (mapH - g.viewH) / 2 : Math.min(Math.max(p.y * TILE + 8 - g.viewH / 2, 0), mapH - g.viewH);
+  const x0 = Math.floor(camX / TILE), x1 = Math.floor((camX + g.viewW - 1) / TILE);
+  const y0 = Math.floor(camY / TILE), y1 = Math.floor((camY + g.viewH - 1) / TILE);
+  return (x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1;
+}
 
-/** How many free tiles in a row from (x, y) towards `dir`, up to `max` (an actor never stops on a warp). */
-function freeRun(x: number, y: number, dir: Dir, max: number, who?: Actor): number {
+/** A tile someone can walk along in a cut-scene: no tree, wall, water, ledge, obstacle, item or other actor. */
+function walkable(x: number, y: number, who?: Actor): boolean {
   const g = getGame();
-  const [dx, dy] = DIRS[dir];
-  let n = 0;
-  while (n < max) {
-    const tx = x + (n + 1) * dx, ty = y + (n + 1) * dy;
-    if (g.blocked(tx, ty, who) || g.map?.warps.has(ty * g.map.w + tx)) break;
-    n++;
-  }
-  return n;
+  if (g.blocked(x, y, who)) return false;
+  const t = g.tileAt(x, y);
+  return !isWater(t) && !tile(t).ledge;
 }
 
 /**
- * Someone comes up to the player for a cut-scene: they walk in from a few tiles away (the longest free way, up to
- * five tiles, below first), or appear right beside the player when there is no room.
+ * The shortest walk (as steps) between `from` and the nearest tile `goal` accepts, around trees and walls, or null.
+ * A warp tile is never crossed, only reached when it is the goal (a door someone leaves by).
+ */
+function pathTo(from: { x: number; y: number }, goal: (x: number, y: number) => boolean, who?: Actor, max = 60): Dir[] | null {
+  const g = getGame(), w = g.map.w;
+  const prev = new Map<number, [number, Dir]>([[from.y * w + from.x, [-1, 'up']]]);
+  let ring = [[from.x, from.y]];
+  for (let d = 0; d < max && ring.length; d++) {
+    const next: number[][] = [];
+    for (const [x, y] of ring) {
+      for (const dir of ['up', 'down', 'left', 'right'] as Dir[]) {
+        const [dx, dy] = DIRS[dir];
+        const nx = x + dx, ny = y + dy, k = ny * w + nx;
+        if (!g.inside(nx, ny) || prev.has(k)) continue;
+        const warp = g.map.warps.has(k);
+        if (warp ? !goal(nx, ny) || g.blocked(nx, ny, who) : !walkable(nx, ny, who)) continue;
+        prev.set(k, [y * w + x, dir]);
+        if (goal(nx, ny)) {
+          const steps: Dir[] = [];
+          for (let c = k; prev.get(c)![0] >= 0; c = prev.get(c)![0]) steps.unshift(prev.get(c)![1]);
+          return steps;
+        }
+        if (!warp) next.push([nx, ny]);
+      }
+    }
+    ring = next;
+  }
+  return null;
+}
+
+const BACK: Record<Dir, Dir> = { up: 'down', down: 'up', left: 'right', right: 'left' };
+const isDoor = (x: number, y: number) => { const g = getGame(); return g.map.warps.has(y * g.map.w + x); };
+
+/**
+ * Someone comes up to the player for a cut-scene: they start off screen (or at the door, in a room that fits the
+ * screen) and walk in around the trees to the tile beside the player. Never popping up in view.
  */
 export async function comeUp(id: string, look: Look, mon?: string): Promise<Actor> {
-  const g = getGame();
-  const { x, y } = g.player;
-  const ways = (['down', 'up', 'left', 'right'] as const).map((d) => ({ d, n: freeRun(x, y, d, 5) })).filter((w) => w.n >= 2);
-  const best = ways.sort((a, b) => b.n - a.n)[0];
-  if (best) {
-    const [dx, dy] = DIRS[best.d];
-    const toward = OPPOSITE[best.d];
-    const a = g.spawn(id, look, x + best.n * dx, y + best.n * dy, toward, mon);
-    cameFrom.set(a, best.d);
-    await g.walk(a, Array(best.n - 1).fill(toward), 200);
-    g.faceToward(g.player, a);
+  const g = getGame(), p = g.player;
+  const seen = onScreen();
+  // the walk from the player out to the nearest unseen tile, played backwards
+  const out = pathTo(p, (x, y) => !seen(x, y), p) ?? pathTo(p, isDoor, p);
+  if (out && out.length >= 2) {
+    let x = p.x, y = p.y;
+    for (const d of out) { x += DIRS[d][0]; y += DIRS[d][1]; }
+    const back = out.slice(1).reverse().map((d) => BACK[d]);
+    const a = g.spawn(id, look, x, y, back[0] ?? BACK[out[0]], mon);
+    await g.walk(a, back, 190);
+    g.faceToward(a, p);
+    g.faceToward(p, a);
     return a;
   }
-  const [dx, dy] = ([[0, 1], [0, -1], [-1, 0], [1, 0]] as const).find(([a, b]) => !g.blocked(x + a, y + b)) ?? [0, 1];
-  const a = g.spawn(id, look, x + dx, y + dy, 'up', mon);
-  g.faceToward(a, g.player);
-  g.faceToward(g.player, a);
+  // nowhere to come from (a tiny room): beside the player
+  const [dx, dy] = ([[0, 1], [0, -1], [-1, 0], [1, 0]] as const).find(([a, b]) => !g.blocked(p.x + a, p.y + b)) ?? [0, 1];
+  const a = g.spawn(id, look, p.x + dx, p.y + dy, 'up', mon);
+  g.faceToward(a, p);
+  g.faceToward(p, a);
   return a;
 }
 
 /**
- * The end of a cut-scene: someone walks off and is gone, never vanishing on the spot. They take `route` first
- * (steps that are blocked are skipped), then keep going the same way (or the way they came, or any free way)
- * until eight steps out.
+ * The end of a cut-scene: someone walks off around the trees until they are off screen (or out by the door, in a
+ * room that fits the screen), and only then is gone. `route` says which way they would rather go (towards the
+ * Atelier, up the road): the nearest unseen tile that way, unless it is much further.
  */
 export async function goAway(a: Actor, route: Dir[] = []) {
   const g = getGame();
-  let steps = 0;
-  for (const d of route) {
-    if (freeRun(a.x, a.y, d, 1, a) < 1) continue;
-    await g.walk(a, [d], 180);
-    steps++;
-  }
-  const last = route.length ? route[route.length - 1] : undefined;
-  const ways = [last, cameFrom.get(a), 'down', 'up', 'left', 'right'].filter((d): d is Dir => !!d);
-  const away = ways.find((d) => freeRun(a.x, a.y, d, 1, a) > 0);
-  if (away) {
-    const n = freeRun(a.x, a.y, away, 8 - steps, a);
-    if (n) await g.walk(a, Array(n).fill(away), 180);
-  }
+  const seen = onScreen();
+  const pref = route[0];
+  const toward = pref
+    ? pathTo(a, (x, y) => !seen(x, y) && (pref === 'up' ? y < a.y : pref === 'down' ? y > a.y : pref === 'left' ? x < a.x : x > a.x), a)
+    : null;
+  const any = pathTo(a, (x, y) => !seen(x, y), a);
+  const steps = (toward && (!any || toward.length <= any.length + 10) ? toward : any) ?? pathTo(a, isDoor, a);
+  if (steps) await g.walk(a, steps, 180);
   g.remove(a.id);
 }
+
+/** Walks `a` around the trees to (x, y). False when there is no way there. */
+export async function walkTo(a: Actor, x: number, y: number, ms = 180): Promise<boolean> {
+  if (a.x === x && a.y === y) return true;
+  const steps = pathTo(a, (tx, ty) => tx === x && ty === y, a);
+  if (steps) await getGame().walk(a, steps, ms);
+  return !!steps;
+}
+
+/** An actor already on the map leaves the scene the same way: off screen, then gone. */
+export const walkOff = (id: string, route: Dir[] = []) => {
+  const a = getGame().npc(id);
+  return a ? goAway(a, route) : Promise.resolve();
+};

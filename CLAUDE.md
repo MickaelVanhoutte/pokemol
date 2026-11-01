@@ -129,8 +129,9 @@ re-renders everything.
 - `game.ts`: the `Game` class. It runs the canvas loop and draws the prerendered map layers, actors,
   fades and wipes, speech bubbles and the "pencilize" post-pass (`pencil.ts`). It also provides the
   cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`, `wipeTo`. Someone joining a
-  cut-scene walks in with `comeUp` and leaves with `goAway` (`src/story/choices.ts`), never appearing or vanishing on
-  the spot.
+  cut-scene walks in with `comeUp` and leaves with `goAway` (`src/story/choices.ts`): they start and end off screen (or at
+  the door of a room that fits the screen) and find their way around trees and walls (`pathTo`), never appearing or
+  vanishing in view; `walkTo` takes someone to the spot where they stay.
 - `tiles.ts`, `buildings.ts` and `sprites.ts` paint pixel art with the `Painter` from `pixel.ts`
   (16px tiles). `LOOKS` gives the trainer and NPC chibis; `lookOf()` turns the player's look into one.
 - Wherever a character shows big (battle intros, the player's back in battle, the prologue, the trainer

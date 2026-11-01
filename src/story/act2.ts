@@ -6,7 +6,7 @@ import {
   ask, bubble, flag, flash, getGame, giveItem, openScreen, refreshMap, say, sayAll, scripts, setFlag, showToast, warpTo,
 } from '../overworld/controller';
 import { GRUNT } from './cast';
-import { choose, RETOUCHE } from './choices';
+import { choose, goAway, RETOUCHE } from './choices';
 
 const KEEPER = L('Monsieur Tombola', 'Mr. Raffle');
 const ZELIE = L('Zélie', 'Zelie');
@@ -101,10 +101,7 @@ scripts.feutreRestore = async () => {
   await bubble('rature', '…', 700);
   await say(L('Le Grand Effaceur entendra parler de toi… On se reverra !', 'The Great Eraser will hear about you… We’ll meet again!'), L('Admin Rature', 'Admin Smudge'));
   const r = g.npc('rature');
-  if (r) {
-    await g.walk(r, ['left', 'left', 'up'], 120);
-    g.remove('rature');
-  }
+  if (r) await goAway(r, ['left']);
   await say(L('(Les Sbires s’enfuient derrière leur chef.)', '(The grunts run off after their boss.)'), GRUNT);
   await flash('white', 300);
   // the warehouse too gets its colours back, spreading from Zélie
