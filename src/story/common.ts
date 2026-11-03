@@ -98,7 +98,7 @@ scripts.calqueAide = async () => {
   const AIDE = L('Assistant du Prof.', 'Prof’s Aide');
   const n = dexCount(save.value!.dex.caught);
   if (n < 3) {
-    await say(L('Je travaille avec le Prof. Fusain. Attrape au moins 3 sortes de Bestioles, et j’aurai un cadeau pour toi ! (Tu en as {n}.)', 'I work with Prof. Fusain. Catch at least 3 kinds of Critters and I’ll have a present for you! (You have {n}.)'), AIDE, { n });
+    await say(L('Je travaille avec le Prof. Fusain. Attrape au moins 3 sortes de Bestioles, et j’aurai un cadeau pour toi ! (Tu en as {n}.)', 'I work with Prof. Charcoal. Catch at least 3 kinds of Critters and I’ll have a present for you! (You have {n}.)'), AIDE, { n });
     return;
   }
   await say(L('Déjà {n} sortes de Bestioles ! Le Prof. m’a confié ceci pour toi.', '{n} kinds of Critters already! The Prof. asked me to give you this.'), AIDE, { n });

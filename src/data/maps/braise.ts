@@ -185,13 +185,16 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
       { id: 'braiseRunner', x: 11, y: 7, look: LOOKS.cyclist, facing: 'left', wander: true, text: [
         L('Je fais le tour de l’Atelier en courant chaque matin. Ambre dit que ça réchauffe les idées !', 'I run round the Atelier every morning. Amber says it warms up your ideas!'),
         L('Clémentine, la guide orange, forge des gants si costauds qu’on pousse des rochers avec. Elle les garde pour qui battra Ambre !', 'Clementine, the orange guide, forges gloves so strong you can push boulders with them. She keeps them for whoever beats Amber!'),
-      ] },
+      ], later: { if: 'gift:gants', text: [
+        L('Je fais le tour de l’Atelier en courant chaque matin. Ambre dit que ça réchauffe les idées !', 'I run round the Atelier every morning. Amber says it warms up your ideas!'),
+        L('Tu as les gants de Clémentine ? Pousse les rochers, mais pas sur mes pieds !', 'You’ve got Clementine’s gloves? Push the boulders, just not onto my feet!'),
+      ] } },
     ],
     residents: [
       // Village-Braise: the glassblower, who blows glass in the heat of the volcano
       { id: 'verrier', x: 6, y: 2, look: { hair: '#8a5a2a', shirt: '#e8d8b8', pants: '#5a4a6a', hat: '#c0703a' }, facing: 'up', fromDoor: [['braise', 19, 5]], text: [
         L('Je souffle le verre à la chaleur du volcan. Regarde ces billes : on dirait des gouttes de soleil !', 'I blow glass in the volcano’s heat. Look at these marbles: like drops of sunshine!'),
-        L('Une Bestiole Feu qui tient une Bille Ardente frappe bien plus fort. Ambre en a toujours une sur elle…', 'A Fire Critter holding a Fiery Marble hits much harder. Amber always keeps one on her…'),
+        L('Une Bestiole Feu qui tient une Bille Ardente frappe bien plus fort. Ambre en a toujours une sur elle…', 'A Fire Critter holding a Fierce Marble hits much harder. Amber always keeps one on her…'),
       ], afterStory: {
         text: [L('Le volcan crache des étincelles de toutes les couleurs depuis quelques jours. Mes billes n’ont jamais été aussi belles !', 'The volcano has been spitting sparks of every colour for a few days. My marbles have never been so beautiful!')],
         gift: { item: 'bille-ardente', text: L('Prends celle-ci : c’est la plus chaude de la fournée.', 'Take this one: it’s the hottest of the batch.') },

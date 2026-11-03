@@ -149,7 +149,8 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       'TTTTTTTTTTT::TTTTTTTTTTT',
     ],
     buildings: [
-      { kind: 'cave', x: 9, y: 1, w: 5, h: 3, door: 2, to: { map: 'montFusain1', x: 9, y: 12, facing: 'up' } },
+      // the way up Mont Fusain opens once Zélie is back at her Atelier and gave her badge
+      { kind: 'cave', x: 9, y: 1, w: 5, h: 3, door: 2, to: { map: 'montFusain1', x: 9, y: 12, facing: 'up' }, script: 'montFusainDoor' },
       { kind: 'center', x: 4, y: 5, w: 5, h: 4, door: 2, to: { map: 'centre', x: 5, y: 6, facing: 'up' } },
       { kind: 'shop', x: 15, y: 5, w: 4, h: 4, door: 1, to: { map: 'boutique', x: 4, y: 6, facing: 'up' } },
       { kind: 'gym', x: 14, y: 10, w: 6, h: 4, door: 3, roof: '#f2d23e', to: { map: 'atelierFluo', x: 5, y: 10, facing: 'up' }, script: 'fluoDoor' },
@@ -276,9 +277,9 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
       { x: 1, y: 1, to: { map: 'entrepot2', x: 2, y: 1, facing: 'right' } },
     ],
     npcs: [
-      { id: 'e1g1', x: 6, y: 3, look: LOOKS.gomme, facing: 'down', trainer: 'e1g1', sight: 3 },
-      { id: 'e1g2', x: 11, y: 9, look: LOOKS.gommeF, facing: 'left', trainer: 'e1g2', sight: 4 },
-      { id: 'e1g3', x: 3, y: 8, look: LOOKS.gomme, facing: 'right', trainer: 'e1g3', sight: 4 },
+      { id: 'e1g1', x: 6, y: 3, look: LOOKS.gomme, facing: 'down', trainer: 'e1g1', sight: 3, hideIf: 'a2.feutre' },
+      { id: 'e1g2', x: 11, y: 9, look: LOOKS.gommeF, facing: 'left', trainer: 'e1g2', sight: 4, hideIf: 'a2.feutre' },
+      { id: 'e1g3', x: 3, y: 8, look: LOOKS.gomme, facing: 'right', trainer: 'e1g3', sight: 4, hideIf: 'a2.feutre' },
     ],
     items: [{ x: 12, y: 10, item: 'rappel' }, { x: 12, y: 1, item: 'super-potion' }],
   },
@@ -308,7 +309,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     ],
     warps: [{ x: 1, y: 1, to: { map: 'entrepot1', x: 2, y: 1, facing: 'down' } }],
     npcs: [
-      { id: 'e2g1', x: 3, y: 4, look: LOOKS.gommeF, facing: 'down', trainer: 'e2g1', sight: 2 },
+      { id: 'e2g1', x: 3, y: 4, look: LOOKS.gommeF, facing: 'down', trainer: 'e2g1', sight: 2, hideIf: 'a2.feutre' },
       { id: 'rature', x: 6, y: 5, look: LOOKS.rature, facing: 'up', trainer: 'rature', sight: 1, hideIf: 'a2.feutre' },
       { id: 'zelieCaptive', x: 9, y: 8, look: LOOKS.leaderFluo, facing: 'up', hideIf: 'a2.feutre',
         text: [L('Ils m’ont enfermée ici et ont aspiré les couleurs de ma ville avec une gomme géante…', 'They locked me in here and sucked the colours out of my city with a giant eraser…'), L('Bats leur chef, je t’en prie !', 'Beat their boss, please!')] },

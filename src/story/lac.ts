@@ -53,7 +53,7 @@ scripts.lacAppel = async () => {
     L('Il nous attend là-bas. On y va en remontant la rivière de Village-Plume, en bateau.', 'He’s waiting for us there. You get there by sailing up Featherby’s river.'),
     has('bateau')
       ? L('Ton Bateau en Papier fera l’affaire. Le premier arrivé a gagné !', 'Your Paper Boat will do. Last one there is a rotten egg!')
-      : L('Tu n’as pas de bateau ? La Plieuse du port en donne à ceux qui ont le Badge Aquarelle. Le premier arrivé a gagné !', 'No boat? The Paper Folder at the port gives them to anyone with the Watercolor Badge. Last one there is a rotten egg!'),
+      : L('Tu n’as pas de bateau ? Azur, le guide bleu, en plie un pour qui a le Badge Aquarelle. Le premier arrivé a gagné !', 'No boat? Azure, the blue guide, folds one for anyone with the Watercolor Badge. Last one there is a rotten egg!'),
   ], RIVAL);
   await goAway(rival, ['down']);
 };
@@ -197,7 +197,7 @@ async function rivalBattle() {
   setFlag('tr:rivalLac');
   await sayAll([
     L('Bon, d’accord, tu as gagné la course. Et le combat. Mais la prochaine fois…', 'Fine, you won the race. And the battle. But next time…'),
-    L('Le Prof. a un truc pour toi, au camp. Un truc pour plonger, je parie ! Moi, je file voir si la boue est partie de la Route des Feutres.', 'The Prof has something for you at the camp. Something for diving, I bet! I’m off to see if the mud has gone from Marker Road.'),
+    L('Le Prof. a un truc pour toi, va le voir. Un truc pour plonger, je parie ! Moi, je file voir si la boue est partie de la Route des Feutres.', 'The Prof has something for you, go and see him. Something for diving, I bet! I’m off to see if the mud has gone from Marker Road.'),
   ], RIVAL);
   // he walks off to the water's edge and leaves the way he came, in his paper boat, rather than vanishing
   const g = getGame();
@@ -339,14 +339,14 @@ scripts.autel = async () => {
 scripts.aquarelline = async () => {
   if (!flag('legende') || aquaAway()) return;
   await sayAll([
-    L('Aquarelline flotte devant toi, immense et calme. Ses voiles laissent des traînées de toutes les couleurs.', 'Aquarelline floats before you, huge and calm. Its veils leave trails of every colour.'),
-    L('Elle te regarde longtemps… comme si elle reconnaissait quelqu’un qui aime les taches.', 'It looks at you for a long time… as if it recognised someone who likes stains.'),
+    L('Aquarelline flotte devant toi, immense et calme. Ses voiles laissent des traînées de toutes les couleurs.', 'Aquarelline floats before you, huge and calm. Her veils leave trails of every colour.'),
+    L('Elle te regarde longtemps… comme si elle reconnaissait quelqu’un qui aime les taches.', 'She looks at you for a long time… as if she recognised someone who likes stains.'),
   ]);
   await shake(500);
   const out = await wildBattle('115', 40, { music: 'final' });
   if (out === 'capture') {
     setFlag('static:aquarelline');
-    await say(L('Aquarelline est dans ton Croque-Carnet… Elle laisse une petite traînée de couleur derrière elle.', 'Aquarelline is in your Snapbook… It leaves a little trail of colour behind.'));
+    await say(L('Aquarelline est dans ton Croque-Carnet… Elle laisse une petite traînée de couleur derrière elle.', 'Aquarelline is in your Snapbook… She leaves a little trail of colour behind.'));
   } else if (out === 'win') {
     setFlag('ko:aquarelline', num('nuits') + 1);
     setFlag('koDay:aquarelline', localDay() + 1);

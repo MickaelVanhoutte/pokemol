@@ -23,7 +23,7 @@ scripts.intro = async () => {
   await getGame().fadeTo(1, 1, 'black');
   await getGame().fadeTo(0, 900);
   await bubble('player', '?', 900);
-  await say(L('Tu ouvres les yeux… Ta chambre a l’air dessinée au crayon de couleur. Bizarre !', 'You open your eyes… Your room looks like it was drawn with coloured pencils. Strange!'));
+  await say(L('Tu ouvres les yeux… Ta maison a l’air dessinée au crayon de couleur. Bizarre !', 'You open your eyes… Your house looks like it was drawn with coloured pencils. Strange!'));
   await say(L('Maman a l’air de vouloir te parler.', 'Mom seems to want to talk to you.'));
 };
 
@@ -168,7 +168,7 @@ scripts.labTable = async () => {
   await flash('white', 160);
   await sayAll([
     L('Clic-clac ! Une photo de vous deux, pour l’album.', 'Click-clack! A picture of you two, for the album.'),
-    L('Oh, elle est un peu floue… Tant pis, je la garde ! Le mieux est l’ennemi du bien, comme on dit.', 'Oh, it’s a bit blurry… Never mind, I’m keeping it! Perfect is the enemy of good, as they say.'),
+    L('Oh, elle est un peu floue… Tant pis, je la garde ! Le mieux est parfois l’ennemi du bien, comme on dit.', 'Oh, it’s a bit blurry… Never mind, I’m keeping it! Sometimes perfect is the enemy of good, as they say.'),
     L('Tiens, voici 5 Croque-Carnets et 2 Potions.', 'Here are 5 Snapbooks and 2 Potions.'),
     L('Lance un Croque-Carnet sur une Bestiole sauvage affaiblie : il la dessine, l’aspire dans sa page, et elle rejoint ton équipe !', 'Throw a Snapbook at a weakened wild Critter: it draws it, pulls it into its page, and it joins your team!'),
     L('Ton Bestiodex note toutes les Bestioles que tu croises. Essaie de le remplir !', 'Your Critterdex records every Critter you meet. Try to fill it up!'),
@@ -374,5 +374,7 @@ scripts.plumeBridge = async () => {
     await say(L('Le pont a été effacé cette nuit ! Des gens en gris sont partis vers l’est en ricanant.', 'The bridge was rubbed out last night! People in grey went off east, snickering.'), L('Marin', 'Sailor'));
     return;
   }
-  await say(L('Gaspard t’a donné son badge ? Alors passe par la Grotte Gribouillis, à l’est de Ville-Pastel. Le pont, on va le redessiner !', 'Gaspard gave you his badge? Then go through Scribble Cave, east of Pastel City. We’ll redraw the bridge!'), L('Marin', 'Sailor'));
+  await say(flag('a2.bridge')
+    ? L('Le pont est redessiné, tout beau tout neuf ! Merci de nous avoir envoyé Marine.', 'The bridge is drawn back, good as new! Thanks for sending Marine our way.')
+    : L('Gaspard t’a donné son badge ? Alors passe par la Grotte Gribouillis, à l’est de Ville-Pastel. Le pont, on va le redessiner !', 'Gaspard gave you his badge? Then go through Scribble Cave, east of Pastel City. We’ll redraw the bridge!'), L('Marin', 'Sailor'));
 };

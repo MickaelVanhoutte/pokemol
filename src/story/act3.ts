@@ -133,6 +133,14 @@ scripts.usineDoor = async () => {
   await warpTo({ map: 'usine1', x: 6, y: 10, facing: 'up' });
 };
 
+/** The road north out of Jardin-Gouache waits for Basile's badge. */
+scripts.gouacheNorth = async () => {
+  await say(L('Une pancarte barre le chemin : « PEINTURE FRAÎCHE ! Passage interdit jusqu’à nouvel ordre. — Basile, Maître d’Atelier »', 'A sign blocks the path: “WET PAINT! No entry until further notice. — Basil, Atelier Master”'));
+  await say(L('(Basile te laissera sûrement passer une fois son badge gagné.)', '(Basil will surely let you through once you win his badge.)'));
+  const g = getGame();
+  await g.walk(g.player, ['down'], 160);
+};
+
 /** Nocturne’s Atelier is closed until her Midnight Ink is back from the lighthouse. */
 scripts.atelierEncreDoor = async () => {
   if (flag('a3.phare') || flag('badge:encre')) {
@@ -161,7 +169,9 @@ scripts.passeur = async () => {
     const c = await ask(L('Où va-t-on ?', 'Where to?'), [L('Île de l’Encrier', 'Inkwell Isle'), L('Île de la Première Page', 'First Page Isle'), L('Nulle part', 'Nowhere')], who);
     to = c === 0 ? 'phareIle' : c === 1 ? 'ilePage' : null;
   } else {
-    to = (await ask(L('L’Île de l’Encrier ? Son phare est tombé aux mains de la Team Gomme… Je t’y emmène quand même ?', 'Inkwell Isle? Its lighthouse fell into Team Gomme’s hands… Shall I take you there anyway?'),
+    to = (await ask(flag('a3.phare')
+      ? L('L’Île de l’Encrier ? Son phare brille de nouveau, grâce à toi. Je t’y emmène ?', 'Inkwell Isle? Its lighthouse shines again, thanks to you. Shall I take you there?')
+      : L('L’Île de l’Encrier ? Son phare est tombé aux mains de la Team Gomme… Je t’y emmène quand même ?', 'Inkwell Isle? Its lighthouse fell into Team Gomme’s hands… Shall I take you there anyway?'),
       [L('Oui', 'Yes'), L('Non', 'No')], who)) === 0 ? 'phareIle' : null;
   }
   if (!to) return;
@@ -188,6 +198,12 @@ scripts.buvardStop = async () => {
 scripts.phareEnd = async () => {
   const who = L('Nocturne', 'Nocturne');
   const g = getGame();
+  // the captain squelches off down the stairs, soggy, rather than vanishing in Nocturne's swirl
+  const bv = g.npc('buvard');
+  if (bv) {
+    await say(L('Splotch… Je rentre me sécher. Le Grand Effaceur ne va pas être content…', 'Splotch… I’m off to dry out. The Great Eraser won’t be pleased…'), L('Capitaine Buvard', 'Captain Blotter'));
+    await goAway(bv, ['down']);
+  }
   const n = g.npc('nocturnePhare');
   if (n) g.faceToward(n, g.player);
   await sayAll([
@@ -196,8 +212,6 @@ scripts.phareEnd = async () => {
   ], who);
   await flash('white', 250);
   if (n) g.remove(n.id);
-  const bv = g.npc('buvard');
-  if (bv) g.remove(bv.id);
   await say(L('(Nocturne s’envole dans un tourbillon d’encre.)', '(Nocturne flies away in a swirl of ink.)'));
 };
 
@@ -257,7 +271,7 @@ scripts.echoShadow = async () => {
   if (out === 'capture' || out === 'win') {
     setFlag('static:ombrouille');
     await say(out === 'capture'
-      ? L('L’ombre s’est laissé dessiner… Ombrouille est à toi !', 'The shadow let itself be drawn… Ombrouille is yours!')
+      ? L('L’ombre s’est laissé dessiner… Ombrouille est à toi !', 'The shadow let itself be drawn… Gloomgrin is yours!')
       : L('L’ombre se dissipe dans un éclat de rire… Elle ne reviendra pas.', 'The shadow fades away with a laugh… It won’t come back.'));
   } else if (out) {
     await say(L('L’ombre recule au fond de la grotte… Elle t’attend toujours.', 'The shadow draws back into the cave… It is still waiting for you.'));
@@ -360,6 +374,8 @@ scripts.rivalFinal = async () => {
     flag('choix:rival:a')
       ? L('Perdu… mais de pas grand-chose ! La prochaine fois, je m’entraînerai encore plus.', 'Beaten… but only just! Next time I’ll train even harder.')
       : L('Perdu ! Et pourtant, je me sens bien. C’est bizarre, hein ?', 'Beaten! And yet I feel fine. Weird, huh?'),
+    // the race to the eight badges he started in Ville-Pastel
+    L('Et la course aux huit badges… c’est toi qui l’as gagnée. Je l’avoue : tu étais toujours une page devant moi.', 'And the race to the eight badges… you won it. I admit it: you were always a page ahead of me.'),
     L('Tu sais quoi ? Moi, je crois en tes dessins. Depuis toujours.', 'You know what? I believe in your drawings. I always have.'),
     L('Laisse-moi soigner ton équipe. Et va lui montrer de quoi sont faits tes gribouillis !', 'Let me heal your team. And go show him what your scribbles are made of!'),
   ], RIVAL);

@@ -51,7 +51,7 @@ async function trade(t: Trade) {
   }
   let pick = options[0];
   if (options.length > 1) {
-    const k = await ask(L('Lequel veux-tu échanger ?', 'Which one will you trade?'), [...options.map((o) => `${monLabel(o.m)} N.${o.m.level}`), L('Aucun', 'None')], t.who);
+    const k = await ask(L('Lequel veux-tu échanger ?', 'Which one will you trade?'), [...options.map((o) => `${monLabel(o.m)} ${tr(L('N.{l}', 'Lv{l}'), { l: o.m.level })}`), L('Aucun', 'None')], t.who);
     if (k >= options.length) return;
     pick = options[k];
   }

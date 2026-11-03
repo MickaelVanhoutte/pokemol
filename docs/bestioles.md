@@ -2,7 +2,7 @@
 
 Every Bestiole should have its place in a team, from the first route to the Grand Concours. In the
 originals, many creatures are never worth using: weak types, no good moves, poor abilities, low stats
-(Butterfree is the usual example). These rules avoid that here. `src/data/bestioles.test.ts` checks them,
+(a bug that evolves into a feeble flier is the usual example). These rules avoid that here. `src/data/bestioles.test.ts` checks them,
 so a new creature that breaks one fails `npm test` with the rule it breaks.
 
 The project skill `.claude/skills/new-bestiole/SKILL.md` walks through adding one, step by step.

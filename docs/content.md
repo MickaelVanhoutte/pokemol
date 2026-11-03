@@ -19,6 +19,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `badge:<badgeId>` | `trainerBattle()` for leaders | Badge owned (also pushed to `save.badges`) |
 | `item:<map>:<x>,<y>` | pick-ups | Item on the ground already taken |
 | `berry:<map>:<x>,<y>` | berry bushes | Local day number the bush was last picked (it regrows the next day) |
+| `rival:pastel`, `tr:rivalCourse` | `pastelRival`, `rivalCourse` (`src/story/course.ts`) | The rival's race to the eight badges: told in Ville-Pastel, halfway on Route 6 (`repair()` sets them for games already past) |
 | `gift:<tool>` (ciseaux, canne-bois, bateau, bocal, velo, maillet, gants) | `guideTalk` (`src/story/guides.ts`) | A Colour Guide gave its tool |
 | `guides` | `guideTalk` | The first Colour Guide told about the seven of them |
 | `gift:calque` | Prof. Fusain's aide (Inn) | Tracing Paper given |

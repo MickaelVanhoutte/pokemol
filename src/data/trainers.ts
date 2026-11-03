@@ -245,7 +245,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   T({
     id: 'tom', name: L('Campeur Tom', 'Camper Tom'), party: [{ species: '003', level: 10 }, { species: '002', level: 12 }, { species: '001', level: 12 }], money: 620,
     before: [L('Moi aussi j’ai eu une Bestiole du Prof. Fusain ! Enfin… trois.', 'I got a Critter from Prof. Charcoal too! Well… three.')],
-    after: [L('Le prof avait raison : tu es doué.', 'The prof was right: you’re good.')],
+    after: [L('Le prof avait raison : tu es {g:douée|doué}.', 'The prof was right: you’re good.')],
   }),
   T({
     id: 'gardien', name: L('Gardien Grognours', 'Guardian Grumbear'), money: 1600,
@@ -260,7 +260,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   T({
     id: 'r3b', name: L('Dessinatrice Romane', 'Sketcher Romane'), party: [{ species: '013', level: 14 }, { species: '005', level: 14 }, { species: '051', level: 15 }], money: 420,
     before: [L('Ne bouge plus, je dessine le paysage ! … Bon, tu as bougé. Combat !', 'Hold still, I’m drawing the view! … Right, you moved. Battle!')],
-    after: [L('Mon dessin est raté, mais toi tu es réussi.', 'My drawing is ruined, but you did great.')],
+    after: [L('Mon dessin est raté, mais toi, tu as tout réussi.', 'My drawing is ruined, but you did great.')],
   }),
   T({
     id: 'r3a', name: L('Nageur Loïc', 'Swimmer Loic'), party: [{ species: '051', level: 14 }, { species: '069', level: 14 }, { species: '101', level: 15 }], money: 420,
@@ -296,7 +296,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
       L('Voyons si tes Bestioles savent nager dans mes couleurs !', 'Let’s see if your Critters can swim in my colours!'),
     ],
     after: [
-      L('Splendide ! Tu dessines tes victoires comme moi mes vagues. Voici le Badge Aquarelle.', 'Splendid! You draw your victories the way I draw my waves. Here is the Watercolour Badge.'),
+      L('Splendide ! Tu dessines tes victoires comme moi mes vagues. Voici le Badge Aquarelle.', 'Splendid! You draw your victories the way I draw my waves. Here is the Watercolor Badge.'),
       L('Le pont de Village-Plume ? Je l’ai repeint ce matin ! La route des Aquarelles te ramène là-bas en un rien de temps.', 'The Featherby bridge? I repainted it this morning! Watercolour Way takes you back there in no time.'),
       L('Mais au nord, Ville-Feutre a perdu toutes ses couleurs. Les Gomme y ont un entrepôt…', 'But up north, Felt City has lost all its colours. Team Gomme has a warehouse there…'),
     ],
@@ -319,7 +319,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'r4tim', name: L('Gamin Tim', 'Kid Tim'), party: [{ species: '007', level: 18 }, { species: '121', level: 18 }, { species: '035', level: 19 }], money: 400,
-    before: [L('Mon cerf-volant fait des étincelles, regarde !', 'My kite throws sparks, look!')],
+    before: [L('Mon Pétillapin fait des étincelles, regarde !', 'My Sparkbun throws sparks, look!')],
     after: [L('Zéro étincelle…', 'Zero sparks…')],
   }),
   T({
@@ -457,7 +457,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     ],
     after: [
       L('Ton feu intérieur est plus fort que le mien. Voici le Badge Braise !', 'Your inner fire burns brighter than mine. Here is the Ember Badge!'),
-      L('On dit que le Grand Effaceur prépare quelque chose de terrible, loin au nord… La route des Paillettes rouvrira bientôt.', 'They say the Great Eraser is plotting something terrible, far to the north… The Glitter Road will reopen soon.'),
+      L('On dit que le Grand Effaceur prépare quelque chose de terrible, loin au nord… Avec ce badge, la route des Paillettes t’est ouverte.', 'They say the Great Eraser is plotting something terrible, far to the north… With this badge, the Glitter Road is open to you.'),
     ],
   }),
   // ---------------------------------------------------------------- Tour Brumeuse
@@ -590,7 +590,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
       L('Quelle couche de talent ! Voici le Badge Gouache.', 'What a thick coat of talent! Here is the Gouache Badge.'),
-      L('Au nord, la Cité-Encre. Le chef de la Team Gomme se cache dans l’usine… Bats d’abord Nocturne, sinon les gardes ne te laisseront pas entrer.', 'Up north is Ink City. The Team Gomme boss hides in the factory… Beat Nocturne first, or the guards won’t let you in.'),
+      L('Au nord, la Cité-Encre : la peinture du chemin a séché, tu peux passer. Le chef de la Team Gomme se cache dans l’usine… Bats d’abord Nocturne, sinon les gardes ne te laisseront pas entrer.', 'Up north is Ink City: the paint on the path has dried, you can go through. The Team Gomme boss hides in the factory… Beat Nocturne first, or the guards won’t let you in.'),
     ],
   }),
   // ---------------------------------------------------------------- Route de l’Encre
@@ -657,7 +657,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'pc4', name: L('Cycliste Noé', 'Cyclist Noah'), party: [{ species: '026', level: 27 }, { species: '106', level: 31 }], money: 900,
-    before: [L('Mon Pandorage et moi, on est les plus rapides de la Piste !', 'My Zappanda and I are the fastest on the Track!')],
+    before: [L('Mon Râpépic et moi, on est les plus rapides de la Piste !', 'My Raspine and I are the fastest on the Track!')],
     after: [L('Plus rapide que nous… c’est possible, alors.', 'Faster than us… so it is possible.')],
   }),
   // ---------------------------------------------------------------- Atelier Encre
@@ -803,7 +803,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   T({
     id: 'f2b', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '064', level: 39 }, { species: '059', level: 39 }, { species: '057', level: 40 }, { species: '010', level: 40 }], money: 1350, grey: true,
     before: [L('Une page blanche ne se trompe jamais. Toi, si !', 'A blank page is never wrong. You are!')],
-    after: [L('Tu t’es trompé… et tu as gagné quand même ?', 'You got it wrong… and you still won?')],
+    after: [L('Tu t’es {g:trompée|trompé}… et tu as gagné quand même ?', 'You got it wrong… and you still won?')],
   }),
   T({
     id: 'f2c', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '053', level: 39 }, { species: '066', level: 39 }, { species: '043', level: 40 }, { species: '046', level: 40 }], money: 1350, grey: true,

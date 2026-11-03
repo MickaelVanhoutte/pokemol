@@ -45,6 +45,8 @@ export interface NpcDef {
   service?: LText;
   /** A Bestiole standing there, drawn as its miniature instead of a person (`look` is then unused). */
   mon?: string;
+  /** Once the flag `if` is set (what the character talked about has happened): lines said instead of `text`. */
+  later?: { if: string; text: LText[] };
   /** Once the story is over: lines said instead of `text`, and a present given the first time (`cadeau:<id>`). */
   afterStory?: { text: LText[]; gift?: { item: string; n?: number; text: LText } };
 }

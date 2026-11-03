@@ -3,7 +3,7 @@ import { L, locale, tr } from '../../i18n';
 import { creature } from '../../data/creatures';
 import type { HallEntry } from '../../data/postgame';
 import { monArtUrl } from '../monArt';
-import { Frame, Window } from '../paper';
+import { Frame, lv, Window } from '../paper';
 import './views.css';
 
 /** The Hall of Fame: one photo of each team that won the Grand Concours (◀ ▶ between them). */
@@ -37,7 +37,7 @@ export function HallView({ entries, fresh, onClose }: { entries: HallEntry[]; fr
               <img class="mon-art" src={monArtUrl(m)} alt="" />
               <figcaption>
                 {m.shiny ? '✦ ' : ''}{m.nickname || tr(creature(m.species).name)}
-                <span>N.{m.level}</span>
+                <span>{lv(m.level)}</span>
               </figcaption>
             </figure>
           ))}

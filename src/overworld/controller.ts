@@ -404,6 +404,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     if (def.trainer) return void locked(() => sayAll(TRAINERS[def.trainer!].after, TRAINERS[def.trainer!].name));
     if (def.afterStory && flag('ending')) return void locked(() => afterStoryTalk(def));
     if (def.script && scripts[def.script]) return void runScript(def.script);
+    if (def.later && flag(def.later.if)) return void locked(() => sayAll(def.later!.text));
     if (def.text) return void locked(() => sayAll(def.text!));
     return;
   }
@@ -684,7 +685,7 @@ async function clearObstacle(o: ObstacleDef) {
     if ((await ask(L('Ce petit buisson gêne. Le couper avec les Ciseaux ?', 'This thin bush is in the way. Cut it with the Scissors?'), [L('Oui', 'Yes'), L('Non', 'No')])) !== 0) return;
     sfx.blip();
     g.removeObstacle(o);
-    return say(L('Clic-clac ! Le buisson est coupé.', 'Snip-snip! The bush is cut.'));
+    return say(L('Cric-crac ! Le buisson est coupé.', 'Snip-snip! The bush is cut.'));
   }
   if (o.kind === 'rock') {
     if (!has('maillet')) return say(L('Un rocher tout fissuré. Un bon coup de maillet le casserait… Lavande, la guide violette, en a un.', 'A rock full of cracks. A good whack with a mallet would break it… Lavender, the violet guide, has one.'));

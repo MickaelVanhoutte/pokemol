@@ -44,14 +44,14 @@ English: [docs/histoire.md](docs/histoire.md).
 - Every family has a power of its own, a talent or a signature move, so each Bestiole has its place
   in a team up to level 100 ([docs/bestioles.md](docs/bestioles.md)).
 - The fair copy (« mise au propre »), our own battle gimmick: once per battle, the Golden Felt-tip
-  redraws a fully grown Bestiole in felt-tip, with a new look, a new type and stronger stats until the
+  redraws a fully grown Bestiole in felt-tip, with a new look, a new talent (sometimes a new type) and stronger stats until the
   battle ends. The Atelier Masters have theirs too.
 - Deeper battles, GBA style: talents (one or two per species plus a hidden one, 1 chance in 4),
   25 natures (+10% / −10%), IVs graded E to S next to each stat in the summary, effort points;
   held items (a Snack that heals each turn, the Stubborn Band/Specs/Scarf, the Fierce Marble, the
   Painter’s Apron, the Spiky Helmet, the Steadfast Ribbon and more, and a coloured pencil for every
   type), eight berries (bushes on routes regrow every day), the Tracing Paper (shares XP),
-  battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 29 Pochoirs: stencils that
+  battle items (syrups, the Pencil Sharpener, the Protective Varnish) and 30 Pochoirs: stencils that
   teach a move as often as you like, one from each Atelier Master and the others found along the way.
 - Dungeon puzzles: crayon-barrier switches, glossy paper to slide on, eraser blocks and boulders
   to push onto plates or down holes to the floor below, and fresques (sliding picture puzzles of the

@@ -144,6 +144,8 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { x: 19, y: 2, to: { map: 'piste', x: 1, y: 2, facing: 'right' } },
       { x: 19, y: 3, to: { map: 'piste', x: 1, y: 3, facing: 'right' } },
     ],
+    // the road north to Ink City opens with Basile's badge
+    triggers: [{ x: 9, y: 1, w: 2, h: 1, script: 'gouacheNorth', unless: 'badge:gouache' }],
     signs: [
       { x: 2, y: 12, text: L('JARDIN-GOUACHE\nIci, même l’herbe est peinte à la main.\nAtelier de Basile', 'GOUACHE GARDEN\nHere, even the grass is hand-painted.\nBasil’s Atelier') },
       { x: 17, y: 4, text: L('PISTE CYCLABLE →\nDescente jusqu’à Ville-Feutre.\nVélo-Crayon obligatoire !', 'CYCLING TRACK →\nDownhill all the way to Felt City.\nPencil Bike only!') },
@@ -254,7 +256,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       { id: 'gouaT1', x: 3, y: 15, look: LOOKS.girl, facing: 'right', trainer: 'gouaT1', sight: 4 },
       { id: 'gouaGuide', x: 5, y: 16, look: { hair: '#3a2a1a', shirt: '#ffffff', pants: '#5a8ad6' }, facing: 'right',
         text: [
-          L('Basile peint des Bestioles Plante et Insecte. Le Feu, c’est leur cauchemar !', 'Basil paints Grass and Bug Critters. Fire is their nightmare!'),
+          L('Basile peint des Bestioles Plante. Le Feu, c’est leur cauchemar !', 'Basil paints Grass Critters. Fire is their nightmare!'),
           L('Son jardin est fermé par une haie. Pousse les deux blocs de gomme dans les niches de la haie : la grille s’ouvrira !', 'His garden is closed off by a hedge. Push the two eraser blocks into the hedge’s niches: the gate will open!'),
         ] },
     ],

@@ -22,7 +22,7 @@ dessins sont vivants : ce sont les **Bestioles**.
   Clic-clac !
 - **Ton voisin**, ton rival : c’est toi qui choisis son nom (Feutre, Crayon, Pinceau…). Un peu
   vantard, il veut devenir le meilleur dresseur de Papeterre… mais il lui arrive aussi de douter.
-- **Coconfus**, un petit cocon tout embrouillé, avec un trou au milieu, comme un dessin pas fini.
+- **Coconfus**, un petit cocon tout embrouillé, avec un trou au milieu.
   La Team Gomme le poursuit dès le premier jour, et il finit par faire route avec toi. Pourquoi
   lui en veulent-ils autant ?
 - **La Team Gomme**, des gens en uniforme gris, avec une casquette en forme de gomme rose et bleue
@@ -65,7 +65,7 @@ dessins sont vivants : ce sont les **Bestioles**.
    sable aux grands yeux.
 10. **Bourg-Paillette** : sur la route, ton rival t’attend pour faire le point sur la course, Bestiole contre
    Bestiole. L’Atelier de Célestine. La route du nord est bloquée, car la Team Gomme
-   occupe la Tour Brumeuse… Tout en haut, quelqu’un que tu connais bien a besoin d’être rassuré.
+   occupe la Tour Brumeuse… Tout en haut, une rencontre t’attend.
    On y fait des vœux à la Fontaine aux Vœux, et la Fabrique de Paillettes prépare le Bal des Étoiles.
 11. **Jardin-Gouache** : l’Atelier de Basile, une serre où même l’herbe est peinte à la main ; le
     quartier des jardins, ses potagers partagés et son étang aux nénuphars.
@@ -126,7 +126,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   raccourcis quand tu reviens avec le bon outil.
 - Les Bestioles sont nées des dessins de la petite artiste : ses dessins originaux sont dans les
   crédits. On en croise dans les grottes,
-  sur la montagne, au bord de l’eau… Il y en a **111** à découvrir : certaines ne sortent que la nuit,
+  sur la montagne, au bord de l’eau… Il y en a **124** à découvrir : certaines ne sortent que la nuit,
   d’autres se cachent dans la tour, au fond de l’eau ou au bout d’une canne à pêche, et quelques-unes
   n’apparaissent qu’une fois l’histoire finie.
 - Des **énigmes** dans les grottes, les tours et les repaires, et des **fresques** à reconstituer.
@@ -136,7 +136,8 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   laissent dormir jusqu’à la nuit ou jusqu’au matin. Chaque Auberge a aussi son habitué : un
   Calligraphe pour les surnoms, un Coach pour les efforts, une Diseuse d’Humeurs pour les natures,
   une Polisseuse d’Étoiles pour les qualités de naissance, un Jardinier pour les talents… La carte
-  rappelle qui se trouve où, dans les villes déjà visitées.
+  rappelle qui se trouve où, dans les villes déjà visitées. Près de chaque Auberge, un **Ballon-Crayon**
+  t’emmène dans les villes que tu connais déjà.
 - Des **Biscuits** et des **Gommes** pour régler les efforts de tes Bestioles, et quelques **Sucettes
   Magiques** (un niveau de plus !) cachées loin des chemins.
 - Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une nuit à l’Auberge ou
@@ -180,8 +181,7 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
 - **Prof. Charcoal** (Fusain) takes a picture of every Critter “so none ever gets lost”. Click-clack!
 - **Your neighbour**, your rival: you pick his name (Marker, Crayon, Brush…). A bit of a show-off, he
   wants to be the best trainer in Papeterra… but sometimes he has doubts too.
-- **Muddlecoon** (Coconfus), a muddled little cocoon with a hole in the middle, like an unfinished
-  drawing. Team Gomme chases it from the very first day, and it ends up travelling with you. Why are
+- **Muddlecoon** (Coconfus), a muddled little cocoon with a hole in the middle. Team Gomme chases it from the very first day, and it ends up travelling with you. Why are
   they so set on it?
 - **Team Gomme**, people in grey uniforms, with caps shaped like pink and blue erasers and black
   masks. They rub out the scenery and turn Critters grey. Their bosses are Admin Smudge (Rature),
@@ -222,7 +222,7 @@ drawing they just can’t finish, and in the end they fall asleep on the page. T
    with big eyes.
 10. **Glimmerton**: on the road there, your rival waits to see where the race stands, Critter against
    Critter. Celestine’s Atelier. The north road is blocked: Team Gomme holds the Misty Tower…
-   At the top, someone you know well needs cheering up. Wishes are made at the Wishing Fountain, and
+   At the top, someone is waiting for you. Wishes are made at the Wishing Fountain, and
    the Glitter Works is getting ready for the Star Ball.
 11. **Gouache Garden**: Basil’s Atelier, a greenhouse where even the grass is hand-painted; the garden
     quarter, its shared allotments and its lily pond.
@@ -280,7 +280,7 @@ The story has **two endings**, and your answers choose which one you will see.
   waits for your boat, bushes and rocks that open shortcuts when you come back with the right tool.
 - The Critters were born from the little artist's drawings: her originals are in the credits. You meet
   them in caves, up the mountain, by the water…
-  There are **111** to discover: some only come out at night, others hide in the tower, deep in the water
+  There are **124** to discover: some only come out at night, others hide in the tower, deep in the water
   or at the end of a fishing line, and a few only show up once the story is over.
 - **Puzzles** in caves, towers and hideouts, and **fresques** to piece back together.
 - Your first Critter **follows you** everywhere: talk to it to see how it feels. On the way it picks up
@@ -288,7 +288,8 @@ The story has **two endings**, and your answers choose which one you will see.
 - Every town has an **Inn**: the innkeeper gets your Critters back on their feet, and its beds let
   you sleep until night or until morning. Each Inn also has its regular: a Calligrapher for
   nicknames, a Coach for effort, a Mood Teller for natures, a Star Polisher for born qualities, a
-  Gardener for talents… The map reminds you who is where, in the towns you've visited.
+  Gardener for talents… The map reminds you who is where, in the towns you've visited. By every Inn,
+  a **Pencil Balloon** flies you to the towns you've already been to.
 - **Biscuits** and **Erasers** to tune your Critters' effort, and a few **Magic Lollipops** (one more
   level!) hidden off the beaten track.
 - Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed).

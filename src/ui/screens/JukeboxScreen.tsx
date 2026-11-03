@@ -8,7 +8,7 @@ import './title.css';
 /** Names of the tunes and where they play in the game. */
 const TRACKS: Record<TrackId, { name: LText; where: LText }> = {
   title: { name: L('Le Rêve de Papeterre', 'The Dream of Papeterra'), where: L('Écran titre', 'Title screen') },
-  bourg: { name: L('Chez moi', 'Home Sweet Home'), where: L('Bourg-Gribouille', 'Bourg-Gribouille') },
+  bourg: { name: L('Chez moi', 'Home Sweet Home'), where: L('Bourg-Gribouille', 'Scribbleton') },
   pastel: { name: L('Pastel en fête', 'Pastel Party'), where: L('Ville-Pastel', 'Pastel City') },
   plume: { name: L('Le vent dans les plumes', 'Wind in the Feathers'), where: L('Village-Plume', 'Featherby') },
   port: { name: L('Chanson de marin', 'Sailor’s Song'), where: L('Port-Aquarelle', 'Port Aquarelle') },

@@ -129,7 +129,7 @@ export function TownMapView({ save, avatar, onClose, pick }: { save: SaveData; a
       <Window seyes class="tmap__goal-text">
         {pick
           ? tr(L('Où veux-tu aller ? Touche une ville au petit ballon.', 'Where to? Tap a town with a little balloon.'))
-          : <><b>{tr(L('Objectif', 'Next'))} :</b> {goal ? tr(goal.text, goal.vars?.(save)) : tr(L('Tout est fini ! Tu es un vrai artiste de Papeterre.', 'All done! You’re a true artist of Papeterra.'))}</>}
+          : <><b>{tr(L('Objectif :', 'Next:'))}</b> {goal ? tr(goal.text, goal.vars?.(save)) : tr(L('Tout est fini ! Tu es {g:une vraie artiste|un vrai artiste} de Papeterre.', 'All done! You’re a true artist of Papeterra.'))}</>}
       </Window>
       <div class="tmap__sheet">
         <div class="tmap__map" style={{ '--ratio': VIEW.w / VIEW.h }} onClick={tap}>

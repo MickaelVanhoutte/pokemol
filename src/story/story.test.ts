@@ -60,7 +60,7 @@ describe('story wiring', () => {
     });
     it(`${map.id}: every flag it waits for is set somewhere`, () => {
       const flags = [
-        ...(map.npcs ?? []).flatMap((n) => [n.showIf, n.hideIf]),
+        ...(map.npcs ?? []).flatMap((n) => [n.showIf, n.hideIf, n.later?.if]),
         ...(map.triggers ?? []).flatMap((t) => [t.if, t.unless]),
         ...(map.patches ?? []).flatMap((p) => [p.if, p.unless]),
         ...(map.obstacles ?? []).flatMap((o) => [o.showIf, o.hideIf]),

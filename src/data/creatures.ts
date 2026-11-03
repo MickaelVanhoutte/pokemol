@@ -1685,7 +1685,7 @@ export const CREATURES: SpeciesDef[] = [
     ),
   },
   {
-    id: '115', slug: 'aquarelline', faces: 'left', name: L('Aquarelline', 'Aquarelle'), kind: L('Bestiole Légende du Lac', 'Lake Legend Critter'),
+    id: '115', slug: 'aquarelline', faces: 'left', name: L('Aquarelline', 'Aquarelline'), kind: L('Bestiole Légende du Lac', 'Lake Legend Critter'),
     type: 'eau', type2: 'fee', base: { hp: 100, atk: 70, def: 90, spa: 125, spd: 125, spe: 90 },
     catchRate: 25, baseExp: 280, evYield: { spa: 2, spd: 1 }, rarity: 'legendary',
     stencils: ['pochoir-03', 'pochoir-06', 'pochoir-07', 'pochoir-11', 'pochoir-12', 'pochoir-19', 'pochoir-27'],

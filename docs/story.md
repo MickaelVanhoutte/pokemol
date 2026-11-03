@@ -19,7 +19,7 @@ where every drawing is alive.
   - Boss: **le Grand Effaceur** (*the Great Eraser*), the little voice that says "your drawings
     aren't good enough".
 - The **rival** is named by the player (presets Feutre / Crayon / Pinceau, EN Marker / Crayon / Brush;
-  `{rival}` in texts). He picks the starter strong against yours (`RIVAL_COUNTER`). He is cocky in
+  `{rival}` in texts). He picks the starter yours is strong against (`RIVAL_COUNTER`), so the first battle is gentle. He is cocky in
   Act 1 and becomes an ally in Act 3.
 - **Clues along the way**: the Prof's camera and catch-phrase, a slip where he says "ma puce", a
   notebook-line sky and map margins, and NPCs mentioning crayons. There are also 12 torn sketchbook
@@ -85,7 +85,7 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 
 Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was. The rival's
 lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`); his team
-does not change. Every battle he forces on you (the lake camp, Route Blanche) starts with him healing your team. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
+does not change. Every battle he forces on you (the lake camp, Route 6, Route Blanche) starts with him healing your team. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
 
 **Choices remembered later.** A few answers come back further on, shown rather than explained, and both ways
 are an act of care (nobody says which was right). Saves that skipped a choice keep the old lines.
@@ -203,10 +203,10 @@ down to Port-Aquarelle and its island), two optional places break the straight l
   at the Gouache end only opens from the Gouache side (`pisteGate`, flag `piste.open`), so it is a
   shortcut back south, never a way to skip ahead.
 - **Grotte des Échos** (`grotteEchos`, door on Route 8): two boulders (Strong Gloves) fill the two
-  pits of the passage; at the back, a red-eyed shadow is **Ombrouille** L36, met once
+  pits of the passage; at the back, a red-eyed shadow is **Ombrouille** L38, met once
   (`echoShadow`, flag `static:ombrouille` when caught or beaten). It no longer appears in the
   Misty Tower. Ombrouille is no longer a legendary (iteration 12): a rare final form, total 520; the
-  Great Eraser's one is L31 (after iteration 15) and Nocturne's at the Grand Concours L49.
+  Great Eraser's one is L42 and Nocturne's at the Grand Concours L57.
 - **The two legendaries** (iteration 12, `src/story/legends.ts`, maps in `src/data/maps/legendes.ts`),
   the good dream and the bad dream, total 600 each. Each is met once; caught, it is gone
   (`static:<slug>`); knocked out, it comes back after a night of sleep (`sleepUntil` counts
@@ -241,7 +241,7 @@ line of the rhyme. The owner wanted them heard of before they are met, so townsf
 lost its red; Ville-Feutre after: Lavande's « bong » on the mountain; Village-Braise and its forge: Clémentine), Marine
 sends the player to Azur (`marineAfter`) and the Prof's brief at the lake names Myrtille. Each guide then brings one
 tool the moment it becomes useful: arriving on their map once `need` is set, its call is heard, it comes up
-(`guideComes`, from a free straight line of up to 5 tiles) and has a little moment of its own (`MEETINGS`: Pistache
+(`guideComes`: `comeUp` walks it in from out of sight, around trees and walls; Coquelicot faster, `walkMs`) and has a little moment of its own (`MEETINGS`: Pistache
 trims the hedge, Mimosa needs a hand with a bite that splashes everyone, Azur folds a boat, Myrtille climbs out of the
 lake, Coquelicot rides in with no brakes, Lavande is heard breaking rocks, Clémentine came to see who beat Ambre),
 quotes its line and gives the tool (`gift:<tool>`). The first one met tells the tradition (`guides`). Afterwards each waits on that map (`guideNpc`,
@@ -710,7 +710,7 @@ points). Lumignon learns Berceuse at L17, not L1: Kid Lise's sleeping powder dro
 On Normal, the rows that moved: Marine 96/93/84% (was 91/88/70), Grand Master Ambre 68/74/95% (was 31/97/88),
 Grand Master Célestine 58/51/58% (was 53/79/50). Swapping Mont Fusain and Braise Atelier Bestioles for Cornebraise
 cost the team a level before Ambre (her Hard rows fell to 10–49%): Cornebraise is an extra Bestiole for Paco
-instead, and Ambre keeps her Braisou. Kid Tim's Faonvole is L16 (Hard: 31/4/2%, was 43/2/2). The finals and the two standalones joined `TOWER_POOL`.
+instead, and Ambre keeps her Braisou. Kid Tim's Faonvole was L16 (Hard: 31/4/2%, was 43/2/2); his team has changed since. The finals and the two standalones joined `TOWER_POOL`.
 
 **Ten Bestioles for the Ateliers' types (iteration 18), 98 in all.** The owner noticed that the Atelier Masters
 and apprentices had only one or two Bestioles of the Atelier's type: the teams dated from before the dex grew.
@@ -756,7 +756,7 @@ a paper snowflake, an origami penguin, a cotton-wool fox and a hermit crab in an
   with a ruffled sail. Sailing off every coast; Voilamère off the Inkwell Isle. Swimmer Loïc, a lighthouse grunt.
   Power: Soie Urticante (`contactStatus`, poison 30%).
 - Chiroplie → Vampapier (Poison/Flying, L22): a bat of folded black paper with googly eyes, then a vampire with a
-  cape. Scribble Cave and Mount Charcoal; Vampapier in the Echo Cave. Team Gomme grunts (Rocket's bats). Power:
+  cape. Scribble Cave and Mount Charcoal; Vampapier in the Echo Cave. Team Gomme grunts use them too. Power:
   Croc-buvard (Poison physical 75, drains 50%).
 - Ponçou → Râpépic (Ground, L24): a hedgehog with a sandpaper back, then a porcupine whose quills are strips of
   sandpaper and nail files, orange gnawing teeth. Route 4 and Mount Charcoal; Râpépic on the cycling track (rare).
@@ -792,7 +792,7 @@ Givrelynx, Gommichon and Taillou have fair copies (Patinoire, Poings d’Acier, 
 
 **Wild encounters as in FireRed (iteration 20).** The owner felt interrupted all the time. Each step in the grass had a
 flat 13–16% chance (8–11% in caves, 10% on water), and nothing kept a battle from starting one step after another: 1 in 4
-came within 2 steps. `src/overworld/encounterRate.ts` now follows FireRed's code (pret/pokefirered, `wild_encounter.c`):
+came within 2 steps. `src/overworld/encounterRate.ts` now follows FireRed's code (the community decompilation, `wild_encounter.c`):
 - FireRed's rates: 21 on routes; 14 in the woods (Bois Brumeux, Forêt des Esquisses, Bois Perdu); 7 in caves; 10 for
   Mont Fusain and the Tour Brumeuse, which already had a little more; 2 on water;
 - 6 to 8 calm steps after any battle, during which only 1 step in 20 gets a roll; odds that grow with each failed roll;

@@ -42,13 +42,13 @@ const MEETINGS: Record<Guide['id'], Meeting> = {
   vert: {
     call: [L('Hé ! C’est toi qui viens de battre Mireille ?', 'Hey! Are you the one who just beat Mireille?')],
     meet: [
-      L('Elle n’arrête pas de parler de toi, là-dedans ! Moi, c’est Pistache. Je taille toutes les haies de Ville-Pastel.', 'She can’t stop talking about you in there! I’m Pistachio. I trim every hedge in Pastel City.'),
+      L('Elle n’arrête pas de parler de toi, à l’Atelier ! Moi, c’est Pistache. Je taille toutes les haies de Ville-Pastel.', 'She can’t stop talking about you at the Atelier! I’m Pistachio. I trim every hedge in Pastel City.'),
       L('« Vert taille les buissons fleuris »… Tu connais la comptine ? Le vert, c’est moi !', '“Green trims bushes down the lane”… You know the rhyme? Green, that’s me!'),
       { fx: () => fxSound('slash') },
-      { n: L('Clic-clac ! En deux coups de ciseaux, Pistache égalise la haie juste à côté.', 'Snip-snip! Two snips, and Pistachio has evened out the hedge next to you.') },
+      { n: L('Cric-crac ! En deux coups de ciseaux, Pistache égalise la haie juste à côté.', 'Snip-snip! Two snips, and Pistachio has evened out the hedge next to you.') },
     ],
     give: L('Un Badge d’Atelier, ça mérite un coup de main. Tiens, mes Ciseaux à Bouts Ronds !', 'An Atelier Badge deserves a helping hand. Here, my Safety Scissors!'),
-    tip: L('Un petit buisson te barre la route ? Appuie sur A devant, et clic-clac ! Il y en a un sur la Route des Craies qui cache un joli coin…', 'A thin bush in your way? Press A in front of it, and snip-snip! There’s one on Chalk Road hiding a pretty nook…'),
+    tip: L('Un petit buisson te barre la route ? Appuie sur A devant, et cric-crac ! Il y en a un sur la Route des Craies qui cache un joli coin…', 'A thin bush in your way? Press A in front of it, and snip-snip! There’s one on Chalk Lane hiding a pretty nook…'),
   },
   jaune: {
     call: [L('Toi, là ! Viens vite, ça tire !', 'You there! Quick, it’s pulling!')],
@@ -93,7 +93,7 @@ const MEETINGS: Record<Guide['id'], Meeting> = {
       L('C’est grâce à toi, hein ? Moi, c’est Coquelicot. « Rouge roule à toute allure » !', 'It’s thanks to you, right? I’m Poppy. “Red rides fast as it can go”!'),
     ],
     give: L('Prends le Vélo-Crayon : ses roues sont des taille-crayons, ça file ! J’en ai un autre au garage.', 'Take the Pencil Bike: its wheels are pencil sharpeners, it zooms! I’ve got another in the garage.'),
-    tip: L('Monte dessus avec VÉLO dans le menu. Pas à l’intérieur, hein ! Et essaie la Piste Cyclable, vers le Jardin-Gouache.', 'Get on it with BIKE in the menu. Not indoors, mind! And try the Cycling Track, towards Gouache Garden.'),
+    tip: L('Monte dessus avec VÉLO dans le menu. Pas à l’intérieur, hein ! Et un jour, essaie la Piste Cyclable, près du Jardin-Gouache : elle est pour les plus costauds.', 'Get on it with BIKE in the menu. Not indoors, mind! And one day, try the Cycling Track near Gouache Garden: it’s for the toughest riders.'),
   },
   violet: {
     call: [bonk, { n: L('Bong ! … Bong ! Ça résonne dans toute la montagne.', 'Bonk! … Bonk! It echoes all over the mountain.') }, L('Oh ! Il y a quelqu’un ?', 'Oh! Is someone there?')],
@@ -155,7 +155,8 @@ export async function guideComes(gd: Guide, who?: LText): Promise<boolean> {
   const g = getGame(), m = MEETINGS[gd.id];
   await bubble('player', '!', 500);
   await beats(m.call, who ?? gd.name);
-  const walker = await comeUp(`guide-walk-${gd.id}`, gd.look);
+  // Coquelicot rides in on his bike, faster than a walk
+  const walker = await comeUp(`guide-walk-${gd.id}`, gd.look, undefined, m.walkMs);
   await guideTalk(gd);
   // it goes to its spot on this map and stays there (the map's guide takes over when the map is rebuilt), or walks off
   if (g.map.def.id === gd.map && (await walkTo(walker, gd.home.x, gd.home.y, 170))) g.face(walker, gd.home.facing);

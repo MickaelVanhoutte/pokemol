@@ -202,7 +202,10 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
       { id: 'encreWatchman', x: 1, y: 2, look: { hair: '#6a6a7a', shirt: '#2a2238', pants: '#3a3448', hat: '#2a2238' }, facing: 'down', fromDoor: [['encre', 25, 5]], text: [
         L('Chut… Je suis veilleur de nuit : le jour je dors, la nuit je compte les lucioles pour vérifier qu’il n’en manque aucune.', 'Shh… I’m the night watchman: by day I sleep, by night I count the fireflies to make sure none are missing.'),
         L('Depuis que l’Usine à Gommes tourne, elles ont peur : elles brillent moins fort. Ça ne me plaît pas du tout.', 'Since the Eraser Factory started up, they’re scared: they glow less brightly. I don’t like it one bit.'),
-      ], afterStory: {
+      ], later: { if: 'a3.usine', text: [
+        L('Chut… Je suis veilleur de nuit : le jour je dors, la nuit je compte les lucioles pour vérifier qu’il n’en manque aucune.', 'Shh… I’m the night watchman: by day I sleep, by night I count the fireflies to make sure none are missing.'),
+        L('L’Usine à Gommes s’est arrêtée ! Les lucioles reprennent courage, elles brillent un peu plus chaque nuit.', 'The Eraser Factory has stopped! The fireflies are getting their courage back: they glow a little brighter every night.'),
+      ] }, afterStory: {
         text: [L('Depuis que l’Usine à Gommes est arrêtée, les lucioles brillent comme jamais. Cette nuit, j’en ai même compté une de plus !', 'Since the Eraser Factory stopped, the fireflies glow like never before. Last night I even counted one more!')],
       } },
       { id: 'encreWatchMon', x: 4, y: 3, mon: '009', look: LOOKS.kid, facing: 'left', fromDoor: [['encre', 25, 5]], text: [L('Le Brumouille flotte au-dessus du lit en bâillant. Lui aussi travaille de nuit.', 'The Mistchief floats above the bed, yawning. It works nights too.')] },

@@ -5,6 +5,7 @@ import { save, takeItem, update } from '../state/game';
 import {
   ask, bubble, flag, flash, getGame, giveItem, openScreen, refreshMap, say, sayAll, scripts, setFlag, showToast, warpTo,
 } from '../overworld/controller';
+import { LOOKS } from '../overworld/sprites';
 import { GRUNT } from './cast';
 import { choose, goAway, RETOUCHE } from './choices';
 
@@ -77,6 +78,17 @@ scripts.fluoDoor = async () => {
   await warpTo({ map: 'atelierFluo', x: 5, y: 10, facing: 'up' });
 };
 
+scripts.montFusainDoor = async () => {
+  if (!flag('badge:fluo')) {
+    await say(L('Une grosse tache de gomme collante bouche l’entrée du Mont Fusain. Des traces de pas grises partent vers l’entrepôt…', 'A big blob of sticky eraser gum plugs the way into Mount Charcoal. Grey footprints lead off to the warehouse…'));
+    await say(L('(Zélie, la Maître d’Atelier, saurait sûrement l’effacer… si on la retrouvait.)', '(Zelie, the Atelier Master, could surely rub it out… if someone found her.)'));
+    const g = getGame();
+    await g.walk(g.player, ['down'], 160);
+    return;
+  }
+  await warpTo({ map: 'montFusain1', x: 9, y: 12, facing: 'up' });
+};
+
 scripts.feutreMan = async () => {
   if (flag('a2.feutre')) {
     await say(flag('choix:feutre:b')
@@ -103,10 +115,14 @@ scripts.feutreRestore = async () => {
   const r = g.npc('rature');
   if (r) await goAway(r, ['left']);
   await say(L('(Les Sbires s’enfuient derrière leur chef.)', '(The grunts run off after their boss.)'), GRUNT);
+  const grunt = g.npc('e2g1');
+  if (grunt) await goAway(grunt, ['left']);
   await flash('white', 300);
   // the warehouse too gets its colours back, spreading from Zélie
   const spread = g.colourReturn([{ x: 9, y: 8 }], 2200);
   refreshMap();
+  // the refresh puts away who the map now hides: Zélie stays right where she is until she walks off
+  if (!g.npc('zelieCaptive')) g.faceToward(g.spawn('zelieCaptive', LOOKS.leaderFluo, 9, 8, 'up'), g.player);
   sfx.sparkle();
   await spread;
   showToast(tr(L('Ville-Feutre retrouve ses couleurs !', 'Felt City gets its colours back!')));
@@ -135,6 +151,8 @@ scripts.feutreRestore = async () => {
     ], ZELIE);
   }
   await say(L('Je file rouvrir mon Atelier. Viens m’y défier quand tu veux, je te dois bien ça !', 'I’m off to reopen my Atelier. Come and challenge me whenever you like, I owe you that!'), ZELIE);
+  const z = g.npc('zelieCaptive');
+  if (z) await goAway(z, ['down']);
 };
 
 // ------------------------------------------------------------------ Village-Braise (end of act 2)

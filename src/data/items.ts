@@ -304,7 +304,7 @@ export const ITEMS: ItemDef[] = [
   },
   {
     id: 'feutre-or', name: L('Feutre d’Or', 'Golden Felt-tip'), price: 0, kind: 'key', amount: 0,
-    desc: L('Le feutre de Zélie : aucune gomme ne l’efface. Une fois par combat, il met au propre une Bestiole qui a fini de grandir.', 'Zélie’s felt-tip: no eraser can rub it out. Once per battle, it makes a fair copy of a fully grown Critter.'),
+    desc: L('Le feutre de Zélie : aucune gomme ne l’efface. Une fois par combat, il met au propre une Bestiole qui a fini de grandir.', 'Zelie’s felt-tip: no eraser can rub it out. Once per battle, it makes a fair copy of a fully grown Critter.'),
   },
   {
     id: 'lettre-mamie', name: L('Lettre de Mamie Encre', 'Granny Ink’s Letter'), price: 0, kind: 'key', amount: 0,

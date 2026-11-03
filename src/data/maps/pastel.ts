@@ -76,7 +76,10 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
       { id: 'granny', x: 8, y: 9, look: LOOKS.granny, facing: 'down', wander: true, text: [
         L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!'),
         L('Et nos haies sont toujours bien taillées : c’est Pistache, notre guide vert. Il garde ses ciseaux pour qui gagnera un badge à l’Atelier.', 'And our hedges are always neatly trimmed: that’s Pistachio, our green guide. He keeps his scissors for whoever wins a badge at the Atelier.'),
-      ] },
+      ], later: { if: 'gift:ciseaux', text: [
+        L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!'),
+        L('Pistache t’a donné ses ciseaux ? Alors nos haies sont entre de bonnes mains !', 'Pistachio gave you his scissors? Then our hedges are in good hands!'),
+      ] } },
       { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire!')] },
       guideNpc('vert'),
       // the Chalk Square: a painter at her easel, a kid drawing a hopscotch

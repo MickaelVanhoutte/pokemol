@@ -29,7 +29,7 @@ export const leaderOf = (badge: string) => Object.values(TRAINERS).find((t) => t
 
 /** The main story, in order. */
 export const MAIN: Objective[] = [
-  step('mom', 'bourg', L('Parle à Maman, en bas de la maison.', 'Talk to Mom, downstairs.'), ['intro']),
+  step('mom', 'bourg', L('Parle à Maman, dans la maison.', 'Talk to Mom, in the house.'), ['intro']),
   // the app may close during the lab battle: the starter is given before rival1 is set
   step('starter', 'bourg', L('Choisis ta Bestiole au labo du Prof. Fusain.', 'Pick a Critter at Prof. Charcoal’s lab.'), ['rival1'], (s) => s.party.length > 0),
   step('pastel', 'ville', L('Bats Mireille à l’Atelier de Ville-Pastel.', 'Beat Mireille at the Pastel City Atelier.'), ['badge:pastel']),
@@ -37,7 +37,7 @@ export const MAIN: Objective[] = [
   step('ciseaux', 'ville', L('Pistache, le guide vert, t’attend à Ville-Pastel.', 'Pistachio, the green guide, waits in Pastel City.'), ['gift:ciseaux'], (s) => on(s, 'badge:plume')),
   step('bois', 'bois', L('Chasse la Team Gomme du Bois Brumeux.', 'Chase Team Gomme out of the Misty Woods.'), ['a1.bois']),
   step('plume', 'plume', L('Bats Gaspard à l’Atelier de Village-Plume.', 'Beat Gaspard at the Featherby Atelier.'), ['badge:plume']),
-  step('grotte', 'grotte1', L('Traverse la Grotte Gribouillis, à l’est.', 'Cross Scribble Cave, east of Pastel City.'), ['visit:port'], (s) => on(s, 'badge:aquarelle')),
+  step('grotte', 'grotte1', L('Traverse la Grotte Gribouillis, à l’est de Ville-Pastel.', 'Cross Scribble Cave, east of Pastel City.'), ['visit:port'], (s) => on(s, 'badge:aquarelle')),
   step('aquarelle', 'port', L('Bats Marine à l’Atelier de Port-Aquarelle.', 'Beat Marine at the Port Aquarelle Atelier.'), ['badge:aquarelle']),
   // the Lac des Couleurs, between the third and fourth badges (src/story/lac.ts)
   step('bateau', 'port', L('Azur, le guide bleu, t’attend au Port.', 'Azure, the blue guide, waits for you at the Port.'), ['gift:bateau'], (s) => on(s, 'lac.arrivee')),

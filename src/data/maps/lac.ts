@@ -334,7 +334,7 @@ export const LAC_MAPS: Record<string, MapDef> = {
     warps: [{ x: 4, y: 7, to: { map: 'vallon', x: 10, y: 5, facing: 'down' } }],
     npcs: [
       { id: 'gardienne', x: 5, y: 3, look: { hair: '#e8e8f0', shirt: '#7ac6e8', pants: '#5a8ad6', longHair: true, hat: '#f29ac8' }, facing: 'down', script: 'gardienne' },
-      { id: 'gardienneMon', x: 2, y: 5, mon: '095', look: LOOKS.kid, facing: 'right', text: [L('La Nénurette flotte dans une bassine d’eau colorée. Elle a l’air de se plaire ici.', 'The Lilypip floats in a basin of coloured water. It seems happy here.')] },
+      { id: 'gardienneMon', x: 2, y: 5, mon: '095', look: LOOKS.kid, facing: 'right', text: [L('La Nénurette flotte dans une bassine d’eau colorée. Elle a l’air de se plaire ici.', 'The Lilyhop floats in a basin of coloured water. It seems happy here.')] },
     ],
   },
 

@@ -229,7 +229,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'paillT3', x: 10, y: 22, look: { hair: '#8a5ad6', shirt: '#f2d05a', pants: '#f29ac8', longHair: true, bow: '#f2d05a' }, facing: 'left', trainer: 'paillT3', sight: 3 },
       { id: 'paillGuide', x: 5, y: 23, look: { hair: '#3a2a1a', shirt: '#ffffff', pants: '#5a8ad6' }, facing: 'right',
         text: [
-          L('Célestine sème des paillettes partout : Bestioles Fée ! Elles n’aiment pas trop le Feu.', 'Celestine scatters glitter everywhere: Fairy Critters! They don’t like Fire much.'),
+          L('Célestine sème des paillettes partout : Bestioles Fée ! Elles n’aiment pas trop le Poison ni l’Acier.', 'Celestine scatters glitter everywhere: Fairy Critters! They don’t like Poison or Metal much.'),
           L('Son sol est en papier glacé pailleté. On glisse jusqu’à ce que quelque chose t’arrête : un chevalet, un comptoir, un mur…', 'Her floor is sparkly glossy paper. You slide until something stops you: an easel, a counter, a wall…'),
           L('Tu t’es {g:trompée|trompé} de chemin ? Reglisse jusqu’en bas et recommence.', 'Took a wrong turn? Slide back down and try again.'),
         ] },

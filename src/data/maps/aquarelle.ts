@@ -174,9 +174,14 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       { id: 'portSailor', x: 21, y: 15, look: LOOKS.sailor, facing: 'down', wander: true, text: [
         L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!'),
         L('Tous nos bateaux en papier, c’est Azur, le guide bleu, qui les plie. Il en garde un tout spécial pour qui battra Marine.', 'All our paper boats are folded by Azure, the blue guide. He keeps a very special one for whoever beats Marine.'),
-      ] },
-      { id: 'portKid', x: 14, y: 12, look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le monsieur de la tombola a perdu son Ticket d’or sur la route du nord. Il est tout triste.', 'The fair man lost his Golden Ticket on the north road. He’s so sad.')] },
-      { id: 'portGranny', x: 4, y: 14, look: LOOKS.granny, facing: 'right', text: [L('Tu viens de la grotte ? Les gens en gris aussi… Ils sont partis vers Ville-Feutre, au nord-est.', 'You came out of the cave? So did the people in grey… They went to Felt City, up north-east.')] },
+      ], later: { if: 'gift:bateau', text: [
+        L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!'),
+        L('Azur t’a plié son bateau spécial ? Prends-en soin : un bateau en papier, ça n’aime pas les coups de vent !', 'Azure folded you his special boat? Take care of it: paper boats don’t like gusts of wind!'),
+      ] } },
+      { id: 'portKid', x: 14, y: 12, look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le monsieur de la tombola a perdu son Ticket d’or sur la route du nord. Il est tout triste.', 'The fair man lost his Golden Ticket on the north road. He’s so sad.')],
+        later: { if: 'a2.tombola', text: [L('La tombola a rouvert ! Le monsieur sourit de nouveau. J’économise pour un ticket !', 'The fair is open again! The man is smiling again. I’m saving up for a ticket!')] } },
+      { id: 'portGranny', x: 4, y: 14, look: LOOKS.granny, facing: 'right', text: [L('Tu viens de la grotte ? Les gens en gris aussi… Ils sont partis vers Ville-Feutre, au nord-est.', 'You came out of the cave? So did the people in grey… They went to Felt City, up north-east.')],
+        later: { if: 'a2.feutre', text: [L('Les gens en gris ne sont jamais revenus de Ville-Feutre. Il paraît que c’est grâce à toi !', 'The people in grey never came back from Felt City. They say it’s thanks to you!')] } },
       guideNpc('bleu'),
       // fishing off the end of the ferry pier (the ferry lands you on the beach beside it)
       {
@@ -278,7 +283,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       { id: 'aquaT3', x: 10, y: 14, look: { hair: '#6a4a2a', shirt: '#f2c14e', pants: '#3a5aa8', hat: '#f2c14e' }, facing: 'left', trainer: 'aquaT3', sight: 3 },
       { id: 'aquaGuide', x: 5, y: 17, look: { hair: '#3a2a1a', shirt: '#ffffff', pants: '#5a8ad6' }, facing: 'right',
         text: [
-          L('Marine peint à l’eau : Bestioles Eau et Fée. La Plante et l’Électrique coulent bien ses couleurs !', 'Marine paints with water: Water and Fairy Critters. Grass and Electric wash out her colours!'),
+          L('Marine peint à l’eau : Bestioles Eau. La Plante et l’Électrique coulent bien ses couleurs !', 'Marine paints with water: Water Critters. Grass and Electric wash out her colours!'),
           L('Les pierres du bassin ont coulé ! Pousse les blocs de gomme dans les trous pour refaire un chemin.', 'The pool’s stepping stones have sunk! Push the eraser blocks into the holes to make a path again.'),
           L('Un bloc coincé contre un mur ? Ressors et reviens : les blocs reprennent leur place.', 'A block stuck against a wall? Go out and come back in: the blocks go back to their places.'),
         ] },

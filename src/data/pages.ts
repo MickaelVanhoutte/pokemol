@@ -7,7 +7,7 @@ import { L, type LText } from '../i18n';
 export const PAGES: LText[] = [
   L('Un dessin de chat vert, avec écrit en grosses lettres : MINOUSSE. En bas, une petite signature au crayon.', 'A drawing of a green cat, with big letters: SPROUTKIT. At the bottom, a little pencil signature.'),
   L('« Papa a pris mon dessin en photo avec son téléphone. Il dit que comme ça, il ne se perdra jamais. »', '“Daddy took a picture of my drawing with his phone. He says that way it will never get lost.”'),
-  L('« Maman dit : au lit ! Mais je veux d’abord finir les ailes de mon papillon. »', '“Mommy says: bedtime! But first I want to finish my butterfly’s wings.”'),
+  L('« Maman dit : au lit ! Mais je veux d’abord finir les ailes de mon papillon. »', '“Mummy says: bedtime! But first I want to finish my butterfly’s wings.”'),
   L('« À l’école, la maîtresse a demandé ce que je voulais faire plus tard. J’ai dit : {g:dessinatrice|dessinateur} de Bestioles ! »', '“At school, the teacher asked what I want to be when I grow up. I said: a Critter drawer!”'),
   L('« Une fois, j’ai raté un dessin. J’ai voulu le gommer très fort… et ça a fait un trou dans la feuille. J’ai pleuré. »', '“Once, I messed up a drawing. I rubbed it out really hard… and it made a hole in the paper. I cried.”'),
   L('« Papa a dit que les dessins ratés, ça n’existe pas. Il y a juste des dessins pas encore finis. »', '“Daddy said there’s no such thing as a bad drawing. Only drawings that aren’t finished yet.”'),

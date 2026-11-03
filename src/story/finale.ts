@@ -226,7 +226,7 @@ scripts.teleReelle = async () => {
 };
 
 scripts.fenetre = async () => {
-  await say(L('Dehors, le soleil se lève sur la rue. Pas une Bestiole en vue… Mais ce chat, sur le muret, ressemble drôlement à Minousse.', 'Outside, the sun is rising over the street. Not a Critter in sight… But that cat on the wall looks an awful lot like Minousse.'));
+  await say(L('Dehors, le soleil se lève sur la rue. Pas une Bestiole en vue… Mais ce chat, sur le muret, ressemble drôlement à Minousse.', 'Outside, the sun is rising over the street. Not a Critter in sight… But that cat on the wall looks an awful lot like Sproutkit.'));
 };
 
 scripts.trousse = async () => {
@@ -278,7 +278,7 @@ async function dreamEvolves() {
       if (!save.value!.party[i].moves.some((mv) => mv.id === id)) await teachMove(i, id);
     }
   } else {
-    await say(L('Quelque part dans ton PC, Coconfus s’est transformé en {n} !', 'Somewhere in your PC, Muddlecoon has turned into {n}!'), undefined, { n: tr(creature(into).name) });
+    await say(L('Là où il se repose, Coconfus s’est transformé en {n} !', 'Wherever it is resting, Muddlecoon has turned into {n}!'), undefined, { n: tr(creature(into).name) });
   }
   setFlag('coconPale', 0);
 }

@@ -103,8 +103,14 @@ export async function cocoonRemembers() {
   else if (d.flags['choix:tache:b']) await say(L('Il touche sa trace de gomme, toute pâle elle aussi, et il te regarde. Tu lui souris : elle lui va toujours aussi bien.', 'It touches its eraser mark, all pale too, and looks at you. You smile at it: it still suits it just as well.'));
   else await say(L('Tu le serres contre toi, jusqu’à ce qu’il arrête de trembler.', 'You hold it close until it stops trembling.'));
   await bubble(a.id, '♥', 900);
-  g.remove(a.id);
-  if (f) g.follower = f;
+  if (f) {
+    // back to its place behind you, where it becomes the follower again
+    if (side) await g.walk(a, ['down', side < 0 ? 'right' : 'left'], 200);
+    g.remove(a.id);
+    g.follower = f;
+  } else {
+    await goAway(a);
+  }
 }
 
 /** Coconfus comes up to you (when it is on the map) and joins the team. */
@@ -185,7 +191,7 @@ const isDoor = (x: number, y: number) => { const g = getGame(); return g.map.war
  * Someone comes up to the player for a cut-scene: they start off screen (or at the door, in a room that fits the
  * screen) and walk in around the trees to the tile beside the player. Never popping up in view.
  */
-export async function comeUp(id: string, look: Look, mon?: string): Promise<Actor> {
+export async function comeUp(id: string, look: Look, mon?: string, ms = 190): Promise<Actor> {
   const g = getGame(), p = g.player;
   const seen = onScreen();
   // the walk from the player out to the nearest unseen tile, played backwards
@@ -195,7 +201,7 @@ export async function comeUp(id: string, look: Look, mon?: string): Promise<Acto
     for (const d of out) { x += DIRS[d][0]; y += DIRS[d][1]; }
     const back = out.slice(1).reverse().map((d) => BACK[d]);
     const a = g.spawn(id, look, x, y, back[0] ?? BACK[out[0]], mon);
-    await g.walk(a, back, 190);
+    await g.walk(a, back, ms);
     g.faceToward(a, p);
     g.faceToward(p, a);
     return a;
