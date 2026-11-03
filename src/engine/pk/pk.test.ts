@@ -193,6 +193,8 @@ describe('battle', () => {
     const r = act(st, { type: 'run' }, { type: 'move', slot: 0 });
     expect(r.events.some((e) => e.t === 'cantRun')).toBe(true);
     expect(r.state.result).toBeNull();
+    // the turn isn't spent: the trainer doesn't get a free hit
+    expect(r.events.some((e) => e.t === 'move')).toBe(false);
     const r2 = act(st, { type: 'ball', item: 'crayon-ball' }, { type: 'move', slot: 0 });
     expect(r2.events.some((e) => e.t === 'blocked')).toBe(true);
   });

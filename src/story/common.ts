@@ -112,13 +112,9 @@ scripts.calqueAide = async () => {
 scripts.calligraphe = async () => {
   const who = L('Calligraphe', 'Calligrapher');
   const party = save.value?.party ?? [];
-  if (!party.length) {
-    await say(L('Je calligraphie les surnoms des Bestioles. Reviens avec une Bestiole !', 'I write Critters’ nicknames in my best handwriting. Come back with a Critter!'), who);
-    return;
-  }
-  const c = await ask(L('Je calligraphie les surnoms des Bestioles. Laquelle veux-tu renommer ?', 'I write Critters’ nicknames in my best handwriting. Which one should I rename?'),
-    [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
-  if (c >= party.length) return;
+  // an egg has no name to write yet (asking would also give away what's inside)
+  const c = await pickMon(L('Je calligraphie les surnoms des Bestioles. Laquelle veux-tu renommer ?', 'I write Critters’ nicknames in my best handwriting. Which one should I rename?'), who);
+  if (c < 0) return;
   // a traded Bestiole keeps the name its first trainer gave it
   if (party[c].ot) {
     await say(L('{n} vient de {o}. Son surnom est un cadeau de son premier dresseur : je ne peux pas le changer.', '{n} comes from {o}. Its nickname is a gift from its first trainer: I can’t change it.'), who, { n: monLabel(party[c]), o: party[c].ot! });
@@ -132,13 +128,8 @@ scripts.calligraphe = async () => {
 scripts.souvenirs = async () => {
   const who = L('Mémoire des Pochoirs', 'Move Rememberer');
   const party = save.value?.party ?? [];
-  if (!party.length) {
-    await say(L('Je me souviens de toutes les capacités oubliées… mais il te faut une Bestiole !', 'I remember every forgotten move… but you need a Critter!'), who);
-    return;
-  }
-  const c = await ask(L('Je me souviens de toutes les capacités oubliées. Pour quelle Bestiole ?', 'I remember every forgotten move. For which Critter?'),
-    [...party.map((m) => monLabel(m)), L('Aucune', 'None')], who);
-  if (c >= party.length) return;
+  const c = await pickMon(L('Je me souviens de toutes les capacités oubliées. Pour quelle Bestiole ?', 'I remember every forgotten move. For which Critter?'), who);
+  if (c < 0) return;
   const m = party[c];
   // newest first, at most six so the list fits on a phone
   const moves = rememberableMoves(m).slice(0, 6);

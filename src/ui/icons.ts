@@ -709,6 +709,62 @@ const ROWS: Record<string, string[]> = {
     '..KWWKWWKWWKWK..',
     '..KKK.KK.KK.KK..',
   ],
+  // a sealed letter (Granny Ink's: a night-ink seal; Grandpa Feather's: a red one)
+  'lettre-mamie': [
+    '................',
+    '................',
+    '.KKKKKKKKKKKKKK.',
+    '.KCKCCCCCCCCKCK.',
+    '.KCCKCCCCCCKCCK.',
+    '.KCCCKCCCCKCCCK.',
+    '.KCCCCKCCKCCCCK.',
+    '.KCCCCCPPCCCCCK.',
+    '.KCCCCPPPPCCCCK.',
+    '.KCCCCCPPCCCCCK.',
+    '.KCCCCCCCCCCCCK.',
+    '.KCCCCCCCCCCCCK.',
+    '.KKKKKKKKKKKKKK.',
+    '................',
+    '................',
+    '................',
+  ],
+  'lettre-papi': [
+    '................',
+    '................',
+    '.KKKKKKKKKKKKKK.',
+    '.KCKCCCCCCCCKCK.',
+    '.KCCKCCCCCCKCCK.',
+    '.KCCCKCCCCKCCCK.',
+    '.KCCCCKCCKCCCCK.',
+    '.KCCCCCRRCCCCCK.',
+    '.KCCCCRRRRCCCCK.',
+    '.KCCCCCRRCCCCCK.',
+    '.KCCCCCCCCCCCCK.',
+    '.KCCCCCCCCCCCCK.',
+    '.KKKKKKKKKKKKKK.',
+    '................',
+    '................',
+    '................',
+  ],
+  // the Everstone: a round grey pebble with a pale ring that never changes
+  'pierre-immuable': [
+    '................',
+    '................',
+    '.....KKKKKK.....',
+    '...KKGGGGGGKK...',
+    '..KGGggggggGGK..',
+    '..KGgGGGGGGgGK..',
+    '.KGgGGGGGGGGgGK.',
+    '.KGgGGGWWGGGgGK.',
+    '.KGgGGGWWGGGgGK.',
+    '.KGgGGGGGGGGgGK.',
+    '..KGgGGGGGGgGK..',
+    '..KGGggggggGGK..',
+    '...KKGGGGGGKK...',
+    '.....KKKKKK.....',
+    '................',
+    '................',
+  ],
   ticket: [
     '.KKKKKKKKKKKKKK.',
     '.KYYYYYYYYYYYYK.',
@@ -800,6 +856,9 @@ const ROWS: Record<string, string[]> = {
 };
 
 const cache = new Map<string, string>();
+
+// the Golden Ticket is the drawn ticket
+ROWS['ticket-or'] = ROWS.ticket;
 
 /** Icon of an item or a menu entry (unknown ids get the torn page). */
 export function iconUrl(id: string): string {

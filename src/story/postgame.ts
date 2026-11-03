@@ -37,6 +37,11 @@ scripts.concoursDoor = async () => {
 async function concoursBattle(n: number): Promise<boolean> {
   const st = CONCOURS[n - 1];
   if (flag(`gc:${n}`) || (n > 1 && !flag(`gc:${n - 1}`))) return false;
+  // a win where your last Bestiole fell too: nobody is left to fight the next Grand Master
+  if (!partyAlive(save.value!)) {
+    await say(L('Tes Bestioles sont épuisées… Ressors du Concours et reviens tenter ta chance depuis le début.', 'Your Critters are worn out… Leave the Contest and come back to try again from the start.'));
+    return false;
+  }
   const g = getGame();
   const actor = g.npc(`gc${n}`);
   if (actor) {

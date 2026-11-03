@@ -123,7 +123,25 @@ describe('paper shield, two-turn moves, ties, seeds and dolls', () => {
     expect(() => act(st!, { type: 'switch', to: 1 }, { type: 'move', slot: 0 })).toThrow(IllegalAction);
     const run = act(st!, { type: 'run' }, { type: 'move', slot: 0 });
     expect(run.events.some((e) => e.t === 'cantEscape')).toBe(true);
-    expect(run.events.some((e) => e.t === 'trapHurt')).toBe(true);
+    // as on the GBA, trying to run while tied up doesn't spend the turn
+    expect(run.events.some((e) => e.t === 'move' || e.t === 'trapHurt')).toBe(false);
+    expect(run.state.turn).toBe(st!.turn);
+  });
+
+  it('plain poison after a cure doesn’t carry on a bad poison’s count', () => {
+    let hit: ReturnType<typeof turn> | null = null;
+    for (let seed = 1; seed < 40 && !hit; seed++) {
+      const st = start([mon('002', 30, ['bousculade'])], [mon('013', 30, ['poudre-toxique'])], 'trainer', seed);
+      // a count left over from a bad poison that was cured
+      st.sides[0].vol.toxic = 6;
+      const r = turn(st);
+      if (r.state.sides[0].party[0].status === 'poison') hit = r;
+    }
+    expect(hit).not.toBeNull();
+    expect(hit!.state.sides[0].vol.toxic).toBe(0);
+    const me = hit!.state.sides[0].party[0];
+    const residual = hit!.events.find((e) => e.t === 'residual' && e.side === 0);
+    expect(residual && 'amount' in residual ? residual.amount : -1).toBe(Math.floor(maxHp(me) / 8));
   });
 
   it('Greedy Seed drains the foe and heals the user’s side', () => {

@@ -176,6 +176,6 @@ export const TOWER_STOCK: Record<string, number> = {
   'super-spray': 2, 'baie-doree': 4, 'baie-prisme': 4, 'pierre-immuable': 8, 'papier-calque': 12,
   'plume-vive': 12, 'loupe': 12, 'couronne-carton': 12, 'clochette': 12, 'ruban-tenace': 16, 'casque-pointes': 16,
   'bille-ardente': 16, 'tablier-peintre': 16, 'bandeau-tetu': 24, 'lunettes-tetues': 24, 'echarpe-tetue': 24,
-  'crayon-magique-feu': 16, 'crayon-magique-eau': 16, 'crayon-magique-electrique': 16, 'crayon-magique-plante': 16,
-  'crayon-magique-glace': 16, 'crayon-magique-fee': 16, 'crayon-magique-psy': 16, 'crayon-magique-tenebres': 16,
+  // only the Magic Pencils some Bestiole evolves with
+  'crayon-magique-feu': 16, 'crayon-magique-eau': 16, 'crayon-magique-electrique': 16, 'crayon-magique-glace': 16,
 };

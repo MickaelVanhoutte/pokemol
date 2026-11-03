@@ -335,7 +335,7 @@ export function BattleScreen(props: BattleProps) {
     : msg;
 
   return (
-    <div class="battle pk" onDblClick={() => (speed.current = 0.35)}>
+    <div class="battle pk">
       <BattleScene
         view={view} fx={fx} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
         foeTrainer={props.trainer && (cast.foe || beaten) ? props.trainer.look : undefined}

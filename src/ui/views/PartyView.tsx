@@ -104,6 +104,8 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
           if (i === active) setNote(tr(L('{n} est déjà au combat !', '{n} is already in battle!'), { n: monLabel(party[i]) }));
           else if (party[i].hp <= 0) setNote(tr(L('{n} n’a plus la force de se battre !', '{n} has no energy left to battle!'), { n: monLabel(party[i]) }));
           else if (canPick(i)) onPick?.(i);
+          // tied up: say why nothing happens
+          else if (refuse) setNote(refuse(i));
         },
       },
       { label: tr(L('RÉSUMÉ', 'SUMMARY')), onSelect: () => { setSummary(menuFor); setMenuFor(null); } },

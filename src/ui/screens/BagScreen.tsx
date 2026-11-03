@@ -161,6 +161,8 @@ export function BagScreen() {
           party={d.party}
           mode="target"
           message={tr(L('Donner {i} à quelle Bestiole ?', 'Give the {i} to which Critter?'), { i: tr(item(giving).name) })}
+          canPick={(i) => !d.party[i].egg}
+          refuse={() => tr(L('Un œuf ne peut rien tenir.', 'An egg can’t hold anything.'))}
           onPick={(i) => (d.party[i].item ? setAsk(i) : give(i))}
           onClose={() => setGiving(null)}
         />

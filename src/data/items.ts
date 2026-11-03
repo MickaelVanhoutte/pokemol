@@ -162,13 +162,13 @@ export const ITEMS: ItemDef[] = [
   },
   {
     id: 'baie-prisme', name: L('Baie Prisme', 'Prism Berry'), price: 0, kind: 'berry', amount: 0,
-    cures: ['sleep', 'paralyze', 'poison', 'burn', 'confusion'],
+    cures: ['sleep', 'paralyze', 'poison', 'burn', 'freeze', 'confusion'],
     desc: L('Tenue, elle guérit n’importe quel problème de statut, et la confusion.', 'When held, it cures any status problem, and confusion.'),
   },
   // ---------------------------------------------------------------- held items
   {
     id: 'pierre-immuable', name: L('Pierre Immuable', 'Everstone'), price: 0, kind: 'hold', amount: 0, hold: 'everstone',
-    desc: L('À faire tenir. La Bestiole n’évolue pas, et à la Pension, son œuf garde sa nature.', 'An item to hold. Its holder doesn’t evolve, and at the Day Care its egg keeps its nature.'),
+    desc: L('À faire tenir. La Bestiole n’évolue pas en grandissant (un Crayon Magique marche quand même), et à la Pension, son œuf garde sa nature.', 'An item to hold. Its holder doesn’t evolve as it grows (a Magic Pencil still works), and at the Day Care its egg keeps its nature.'),
   },
   {
     id: 'gouter', name: L('Goûter', 'Snack'), price: 0, kind: 'hold', amount: 0, hold: 'regen',

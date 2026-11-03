@@ -1,5 +1,6 @@
-import { L } from '../i18n';
+import { L, tr } from '../i18n';
 import { monLabel } from '../data/creatures';
+import { healMon } from '../engine/pk/creature';
 import { newSeed } from '../engine/rng';
 import { ask, say, scripts } from '../overworld/controller';
 import { save, update } from '../state/game';
@@ -65,7 +66,7 @@ async function withdraw() {
   const d = save.value!;
   const slots = d.daycare?.slots ?? [];
   const c = await ask(L('Quelle Bestiole reprends-tu ?', 'Which Critter will you take back?'),
-    [...slots.map((s) => `${monLabel(s.mon)} N.${s.mon.level} (+${s.mon.level - s.level})`), L('Aucune', 'None')], KEEPER);
+    [...slots.map((s) => `${monLabel(s.mon)} ${tr(L('N.{l}', 'Lv{l}'), { l: s.mon.level })} (+${s.mon.level - s.level})`), L('Aucune', 'None')], KEEPER);
   if (c >= slots.length) return;
   if (d.party.length >= PARTY_MAX) {
     await say(L('Ton équipe est complète !', 'Your party is full!'), KEEPER);
@@ -80,7 +81,10 @@ async function withdraw() {
   const name = monLabel(slots[c].mon);
   update((x) => {
     x.money -= price;
-    x.party.push(x.daycare!.slots.splice(c, 1)[0].mon);
+    // rested and fed at the Pension: it comes back in top shape, as the keeper says
+    const back = x.daycare!.slots.splice(c, 1)[0].mon;
+    healMon(back);
+    x.party.push(back);
   });
   sfx.coin();
   await say(L('Voilà {n}, en pleine forme ! Merci de ta confiance.', 'Here’s {n}, in top shape! Thank you.'), KEEPER, { n: name });

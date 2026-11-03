@@ -410,7 +410,8 @@ function setStatus(st: BattleState, side: Side, status: Major, out: Out, fromMov
     return false;
   }
   m.status = status;
-  if (status === 'poison' && bad) st.sides[side].vol.toxic = 1;
+  // badly poisoned starts its count again; plain poison after a cure doesn't inherit the old count
+  if (status === 'poison') st.sides[side].vol.toxic = bad ? 1 : 0;
   if (status === 'sleep') m.sleepTurns = 1 + randomInt(st, 3);
   out.push({ t: 'status', side, status, bad: bad || undefined });
   checkBerry(st, side, out);
@@ -902,15 +903,20 @@ function throwBall(st: BattleState, ballId: string, out: Out) {
   finish(st, 'capture', out);
 }
 
-function tryRun(st: BattleState, out: Out): boolean {
+/** No running from a trainer, nor while tied up: it is said at once and the turn isn't spent (as on the GBA). */
+function runRefused(st: BattleState, out: Out): boolean {
   if (st.kind !== 'wild') {
     out.push({ t: 'cantRun' });
-    return false;
+    return true;
   }
   if (st.sides[0].vol.trap > 0 && !talentEffect(activeMon(st.sides[0]), 'runAway')) {
     out.push({ t: 'cantEscape', side: 0 });
-    return false;
+    return true;
   }
+  return false;
+}
+
+function tryRun(st: BattleState, out: Out): boolean {
   st.escapes++;
   const mine = effectiveStat(st.sides[0], 'spe');
   const theirs = effectiveStat(st.sides[1], 'spe');
@@ -1104,6 +1110,7 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
   }
   if (blocked(st)) throw new IllegalAction('blocked');
   validate(st, action);
+  if (action.type === 'run' && runRefused(st, out)) return { state: st, events: out.events, snaps: out.snaps };
 
   st.turn++;
   me.vol.flinch = false;
