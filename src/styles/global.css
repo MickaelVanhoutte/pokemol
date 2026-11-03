@@ -28,7 +28,8 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; }
-img { -webkit-user-drag: none; }
+/* a long press on a drawing must not open the phone's image menu (save, share…) */
+img { -webkit-user-drag: none; -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
 body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
 #app, .app { min-height: 100%; }
 button { font: inherit; color: inherit; }

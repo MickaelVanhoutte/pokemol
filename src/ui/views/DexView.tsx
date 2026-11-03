@@ -28,12 +28,14 @@ export function DexView({ seen, caught, visited = () => true, fairSeen = () => f
   onClose: () => void;
 }) {
   const [open, setOpen] = useState<number | null>(null);
+  // back from an entry, the list opens where you were (not at N°001)
+  const [last, setLast] = useState(0);
   const isSeen = (id: string) => seen.includes(id);
   const isCaught = (id: string) => caught.includes(id);
   // the player's own Bestiole, drawn at the workshop, comes first: « N°000, hors série »
   const list: SpeciesDef[] = isCaught(CUSTOM_ID) && CREATURE_BY_ID[CUSTOM_ID] ? [CREATURE_BY_ID[CUSTOM_ID], ...CREATURES] : CREATURES;
 
-  if (open !== null) return <DexEntry key={open} list={list} index={open} isSeen={isSeen} isCaught={isCaught} fairSeen={fairSeen} visited={visited} onMove={setOpen} onClose={() => setOpen(null)} />;
+  if (open !== null) return <DexEntry key={open} list={list} index={open} isSeen={isSeen} isCaught={isCaught} fairSeen={fairSeen} visited={visited} onMove={setOpen} onClose={() => { setLast(open); setOpen(null); }} />;
   return (
     <Frame
       title={tr(L('Bestiodex', 'Critterdex'))}
@@ -43,6 +45,7 @@ export function DexView({ seen, caught, visited = () => true, fairSeen = () => f
       <Window class="dex__list">
         <MenuList
           onCancel={onClose}
+          initial={last}
           items={list.map((c, i) => ({
             label: (
               <span class="dexrow">

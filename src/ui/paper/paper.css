@@ -88,7 +88,8 @@
 .frame {
   position: fixed; inset: 0; z-index: 60;
   display: flex; flex-direction: column;
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  /* the side insets: a phone turned sideways keeps titles and back buttons clear of its notch */
+  padding: 8px max(8px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
   gap: 8px;
   overflow: hidden;
   font-family: var(--pixel); font-synthesis: none;

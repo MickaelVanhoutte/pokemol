@@ -231,11 +231,13 @@ function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
     return () => window.removeEventListener('keydown', key);
   }, [onMove]);
   useMenuNav(0, { onSelect: () => undefined, onCancel: back });
-  // swipe between pages
-  let x0 = 0;
-  const down = (e: PointerEvent) => (x0 = e.clientX);
+  // swipe between pages (kept in a ref: a render between finger down and up must not reset it)
+  const x0 = useRef<number | null>(null);
+  const down = (e: PointerEvent) => (x0.current = e.clientX);
   const up = (e: PointerEvent) => {
-    const dx = e.clientX - x0;
+    if (x0.current === null) return;
+    const dx = e.clientX - x0.current;
+    x0.current = null;
     if (Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1);
   };
   const moves = mon.moves.map((m) => m.id);
@@ -250,7 +252,7 @@ function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
   const xpPct = mon.level >= MAX_LEVEL ? 100 : ((mon.xp - xpAt(mon.level)) / (xpAt(mon.level + 1) - xpAt(mon.level))) * 100;
 
   return (
-    <div class="frame graph summary" style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
+    <div class={`frame graph summary ${onMove ? 'summary--others' : ''}`} style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
       <div class="summary__tabs">
         <button class="pbtn" onClick={() => arrow(-1)} aria-label="◀">◀</button>
         <div class="summary__tabnames">

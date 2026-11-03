@@ -45,7 +45,7 @@
  * the picture), so its feet are always on the ground.
  */
 .pk-side { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
-.pk-side--foe { right: 4px; top: 6px; bottom: 47%; width: min(52%, 250px); align-items: stretch; }
+.pk-side--foe { right: max(4px, env(safe-area-inset-right)); top: 6px; bottom: 47%; width: min(52%, 250px); align-items: stretch; }
 /* yours is big and close to you, standing just over your HP box, while the foe stands further away */
 .pk-side--me { left: 4px; top: 50%; bottom: calc(var(--hp-box) + 2px); width: min(66%, 300px); align-items: stretch; }
 /* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
@@ -215,7 +215,7 @@
 /* the foe's grows to the left when its column is too narrow for a long name (large text, small phones) */
 .pk-hp.pk-hp--foe { align-self: flex-end; width: max(100%, calc(7em + 90px)); }
 /* yours along the bottom of the scene, just over the panel, its bar longer with your HP written in it */
-.pk-hp.pk-hp--me { position: absolute; left: 4px; right: 4px; bottom: 0; }
+.pk-hp.pk-hp--me { position: absolute; left: max(4px, env(safe-area-inset-left)); right: max(4px, env(safe-area-inset-right)); bottom: 0; }
 .pk-hp--me .hpbar { min-width: 96px; }
 /* your HP written inside the bar */
 .hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
@@ -238,7 +238,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+  padding: 4px max(4px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
   /* kraft paper under a wobbly pencil line */
   background: var(--rule) repeat-x 0 0 / 240px 8px, var(--hatch-paper) 0 0 / 72px 72px, #e3d4b2;
   padding-top: 9px;

@@ -147,7 +147,7 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
         <Window seyes class="party__msg">{prompt}</Window>
         {cancellable && (
           <button class={`pbtn pbtn--b party__cancel ${cur === n ? 'is-on' : ''}`} onClick={() => (swapFrom !== null ? setSwapFrom(null) : onClose?.())}>
-            {tr(L('ANNULER', 'CANCEL'))}
+            {tr(L('Annuler', 'Cancel'))}
           </button>
         )}
       </div>

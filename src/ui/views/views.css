@@ -3,7 +3,7 @@
 .view-modal {
   position: fixed; inset: 0; z-index: 80;
   display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;
-  gap: 6px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+  gap: 6px; padding: 10px max(10px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
   background: rgba(30, 24, 40, 0.25);
   animation: fade-in 0.12s ease;
 }
@@ -66,8 +66,14 @@
   color: var(--ink); font-size: min(1.25rem, 4.6vw); transform: translateY(-2px) rotate(-1deg);
   background: var(--th) 0 0 / 72px 72px padding-box, color-mix(in srgb, var(--type) 30%, #fffaf0) padding-box;
 }
-/* on narrow phones the tabs (and swiping) turn the pages: no room for the arrows */
-@media (max-width: 420px) and (orientation: portrait) { .summary__tabs .pbtn { display: none; } }
+/* on narrow phones the tabs (and swiping) turn the pages: the arrows stay only to switch Bestiole (from the party
+   or the PC), slimmer */
+@media (max-width: 420px) and (orientation: portrait) {
+  .summary:not(.summary--others) .summary__tabs .pbtn { display: none; }
+  .summary__tabs .pbtn { padding: 0 3px; border-width: 6px; border-image-width: 6px; }
+  .summary--others .summary__tab { font-size: min(1.05rem, 3.7vw); padding: 2px 2px; }
+  .summary--others .summary__tab.is-on { font-size: min(1.12rem, 3.9vw); }
+}
 .summary__head { flex: none; display: flex; gap: 10px; align-items: center; }
 .summary__art {
   width: min(34vw, 150px); aspect-ratio: 1.1; flex: none; position: relative; overflow: hidden;
@@ -162,6 +168,11 @@
 .bag__close { flex: none; }
 .bag__desc { flex: 1; min-width: 0; display: flex; gap: 10px; align-items: center; min-height: 4.4em; font-size: 1.05rem; }
 .bag__desc p { margin: 0; }
+/* narrow phones: the description gets the whole width (long ones squeezed beside the button ran to ten lines) */
+@media (orientation: portrait) and (max-width: 480px) {
+  .bag__foot { flex-wrap: wrap; justify-content: flex-end; }
+  .bag__desc { flex-basis: 100%; }
+}
 .bag__actions { min-width: 10em; }
 
 /* ---------- dex */

@@ -118,7 +118,8 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
                 <span class="opt__label">{tr(r.label)}</span>
                 <span class="opt__ctl">
                   <button class="opt__arrow" onClick={() => cycle(r, -1)} aria-label="◀">◀</button>
-                  <span class="opt__val">{tr(val.label)}</span>
+                  {/* a tap on the value changes it too: the arrows alone are small targets */}
+                  <span class="opt__val" onClick={() => cycle(r, 1)}>{tr(val.label)}</span>
                   <button class="opt__arrow" onClick={() => cycle(r, 1)} aria-label="▶">▶</button>
                 </span>
               </div>

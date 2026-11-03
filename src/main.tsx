@@ -25,3 +25,8 @@ setInterval(() => {
   const at = screen.value.id;
   if (d && at !== 'title' && at !== 'newgame' && document.visibilityState === 'visible') d.playMs += 1000;
 }, 1000);
+
+// a long press on a drawing opens no image menu on Android (save, share…)
+document.addEventListener('contextmenu', (e) => {
+  if ((e.target as Element | null)?.closest?.('img, canvas')) e.preventDefault();
+});

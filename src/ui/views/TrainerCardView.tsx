@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useState, useRef } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { dexCount } from '../../data/creatures';
 import { item } from '../../data/items';
@@ -60,11 +60,13 @@ export function TrainerCardView({ save, avatar, onLook, onClose, progress = [], 
     onSide: (d) => turn(d),
   });
   const waiting = progress.some((p) => p.ready);
-  // swipe between pages
-  let x0 = 0;
-  const down = (e: PointerEvent) => (x0 = e.clientX);
+  // swipe between pages (kept in a ref: a render between finger down and up must not reset it)
+  const x0 = useRef<number | null>(null);
+  const down = (e: PointerEvent) => (x0.current = e.clientX);
   const up = (e: PointerEvent) => {
-    const dx = e.clientX - x0;
+    if (x0.current === null) return;
+    const dx = e.clientX - x0.current;
+    x0.current = null;
     if (Math.abs(dx) > 50) turn(dx < 0 ? 1 : -1);
   };
   return (
