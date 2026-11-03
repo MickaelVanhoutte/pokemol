@@ -64,7 +64,7 @@ const DRAW: Record<string, (seed: number) => string> = {
     for (const y of [12, 20, 28, 36]) d.line([[8, y], [14, y]], 2);
     return d.svg();
   },
-  // a Croque-Carnet: a little yellow sketchbook, its spiral along the top, a star on the cover
+  // a Croque-Carnet: a little yellow sketchbook, its spiral down the left side, a star on the cover
   party: (s) => {
     const d = doodle(s);
     d.shape([[12, 13], [41, 12], [42, 42], [13, 43]], '#fffaf0', '#d9c9a6');
@@ -74,7 +74,7 @@ const DRAW: Record<string, (seed: number) => string> = {
       return [23 + Math.cos(a) * q, 25 + Math.sin(a) * q];
     });
     d.shape(star, '#fffaf0', '#ecc85a');
-    for (const x of [12, 18, 24, 30, 35]) d.line([[x, 6], [x, 13]], 2);
+    for (const y of [14, 20, 26, 32, 37]) d.line([[4, y], [12, y]], 2);
     return d.svg();
   },
   // a blue pencil case with its zip

@@ -310,7 +310,7 @@ export const DOODLES: Record<DoodleKind, (ctx: CanvasRenderingContext2D, color: 
   },
 };
 
-/** A Croque-Carnet: a little sketchbook, closed, its spiral along the top, a star drawn on its cover (and a band). */
+/** A Croque-Carnet: a little sketchbook, closed, its spiral down the left side (it opens like a book), a star drawn on its cover (and a band). */
 function sketchbook(p: Pencil, r: Rand, cover: string, band?: string) {
   // the pages peeking out under the cover
   paint(p, [[C - 34, C - 28], [C + 44, C - 32], [C + 48, C + 46], [C - 30, C + 50]], '#ffffff', { line: GRAPHITE, gap: 9 });
@@ -323,8 +323,8 @@ function sketchbook(p: Pencil, r: Rand, cover: string, band?: string) {
   }
   paint(p, star, '#ffffff', { line: mix(cover, GRAPHITE, 0.6), lw: 2.5 });
   if (band) line(p, [[C + 22, C - 39], [C + 26, C + 40]], band, 7);
-  // the spiral binding along the top
-  for (let i = 0; i < 7; i++) line(p, circle(C - 34 + i * 12, C - 38, 4.5, 8, r, 10), GRAPHITE, 3);
+  // the spiral binding down the left side, where it opens
+  for (let i = 0; i < 7; i++) line(p, circle(C - 44, C - 28 + i * 11.5, 8, 4.5, r, 10), GRAPHITE, 3);
 }
 
 /** The sketchbook open: two blank pages on its cover, the spiral down the middle (and its band). */

@@ -34,7 +34,7 @@ const PAL: Record<string, string> = {
   n: '#c08a52', S: '#f4c7a0', E: '#5cae5a', e: '#3a7a3a', O: '#f08a3a', T: '#3fb6b0', M: '#e07aa6',
 };
 
-/** Draws a "Croque-Carnet": a little sketchbook, its spiral along the top, a star on its cover (and a red band). */
+/** Draws a "Croque-Carnet": a little sketchbook, its spiral down the left side, a star on its cover (and a red band). */
 function sketchbook(p: Painter, cover: string, shade: string, band?: string) {
   // the pages showing under the cover
   p.rect(3, 4, 12, 12, PAL.K);
@@ -51,10 +51,10 @@ function sketchbook(p: Painter, cover: string, shade: string, band?: string) {
   p.px(5, 9, PAL.W);
   p.px(7, 9, PAL.W);
   if (band) p.rect(9, 2, 1, 13, band);
-  // the spiral binding
-  for (const x of [2, 4, 6, 8, 10]) {
-    p.px(x, 0, PAL.G);
-    p.rect(x, 1, 1, 2, PAL.K);
+  // the spiral binding down the left side, where it opens
+  for (const y of [4, 6, 8, 10, 12]) {
+    p.px(0, y, PAL.G);
+    p.rect(1, y, 2, 1, PAL.K);
   }
   p.px(3, 4, PAL.W);
 }

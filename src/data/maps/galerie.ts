@@ -6,6 +6,9 @@ import { LOOKS } from '../../overworld/sprites';
  * After the ending: past the Edge of the Page, the next page is already coloured in. The Grand
  * Concours (four Grands Maîtres and the champion) and the Tour des Défis (battle tower) are here.
  */
+/** A beaten Grand Maître of the Concours, standing aside by her doorway. */
+const GC_NEXT = L('Continue ! La salle suivante t’attend.', 'Keep going! The next room awaits you.');
+
 export const GALERIE_MAPS: Record<string, MapDef> = {
   galerie: {
     id: 'galerie',
@@ -89,12 +92,16 @@ export const GALERIE_MAPS: Record<string, MapDef> = {
       'WWWWXWWWW',
     ],
     warps: [{ x: 4, y: 21, to: { map: 'galerie', x: 11, y: 6, facing: 'down' } }],
-    // each Grand Maître stands in a doorway and steps aside once beaten
+    // each Grand Maître stands in a doorway; once beaten she steps through it and aside, and stays there
     npcs: [
       { id: 'gc1', x: 4, y: 17, look: LOOKS.leaderAqua, facing: 'down', script: 'gc1', hideIf: 'gc:1' },
       { id: 'gc2', x: 4, y: 13, look: LOOKS.leaderBraise, facing: 'down', script: 'gc2', hideIf: 'gc:2' },
       { id: 'gc3', x: 4, y: 9, look: LOOKS.leaderPaillette, facing: 'down', script: 'gc3', hideIf: 'gc:3' },
       { id: 'gc4', x: 4, y: 5, look: LOOKS.leaderEncre, facing: 'down', script: 'gc4', hideIf: 'gc:4' },
+      { id: 'gc1b', x: 3, y: 16, look: LOOKS.leaderAqua, facing: 'down', showIf: 'gc:1', text: [GC_NEXT] },
+      { id: 'gc2b', x: 3, y: 12, look: LOOKS.leaderBraise, facing: 'down', showIf: 'gc:2', text: [GC_NEXT] },
+      { id: 'gc3b', x: 3, y: 8, look: LOOKS.leaderPaillette, facing: 'down', showIf: 'gc:3', text: [GC_NEXT] },
+      { id: 'gc4b', x: 3, y: 4, look: LOOKS.leaderEncre, facing: 'down', showIf: 'gc:4', text: [L('Le dernier artiste t’attend tout au fond. Montre-lui ce que tu vaux !', 'The last artist waits at the very end. Show them what you’re worth!')] },
       { id: 'gc5', x: 4, y: 1, look: LOOKS.prof, facing: 'down', script: 'gc5' },
     ],
     triggers: [

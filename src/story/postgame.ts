@@ -63,7 +63,13 @@ for (const st of CONCOURS.slice(0, -1)) {
     if (!(await concoursBattle(st.n))) return;
     await sayAll(st.trainer.after.slice(1), st.trainer.name);
     await say(L('(La Grande Maîtresse s’écarte pour te laisser passer.)', '(The Grand Master steps aside to let you through.)'));
-    getGame().remove(`gc${st.n}`);
+    // through her doorway and to one side, where she stays (the map then shows her there, `gc<n>b`)
+    const g = getGame();
+    const gm = g.npc(`gc${st.n}`);
+    if (gm) {
+      await g.walk(gm, ['up', 'left'], 200);
+      g.face(gm, 'down');
+    }
   };
 }
 
