@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { L, locale, setLocale, tr, type LText } from '../../i18n';
 import { prefs, setPref, type Difficulty } from '../../state/prefs';
-import { deleteSave, exportSave, importSave, loadSave, peekSlot, persist, save, slot, SLOTS, update } from '../../state/game';
+import { deleteSave, exportSave, importSave, peekSlot, persist, save, slot, SLOTS, update } from '../../state/game';
 import { sfx } from '../../audio/sfx';
 import { stopMusic } from '../../audio/music';
 import { checkForUpdate, install, installWay, offlineReady, pwaActive, updateReady } from '../../state/pwa';
@@ -78,6 +78,9 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
   const [, force] = useState(0);
   const [msg, setMsg] = useState('');
   const [confirmDel, setConfirmDel] = useState(false);
+  const [confirmQuit, setConfirmQuit] = useState(false);
+  // a file picked to replace a game already in this slot: imported only once the player says so
+  const [pending, setPending] = useState<File | null>(null);
   const [checking, setChecking] = useState(false);
   const cycle = (r: Row<unknown>, d: 1 | -1) => {
     const i = r.values.findIndex((x) => x.v === r.get());
@@ -89,11 +92,20 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
     onCancel: onClose,
     onSide: (d, i) => cycle(ROWS[i], d),
   });
-  const onImport = async (e: Event) => {
-    const f = (e.target as HTMLInputElement).files?.[0];
-    if (!f) return;
-    const ok = await importSave(f);
+  const doImport = async (f: File) => {
+    setPending(null);
+    const ok = await importSave(f, slot.value);
     setMsg(ok ? tr(L('Sauvegarde importée !', 'Save imported!')) : tr(L('Fichier invalide.', 'Invalid file.')));
+  };
+  const onImport = (e: Event) => {
+    const input = e.target as HTMLInputElement;
+    const f = input.files?.[0];
+    // the same file can be picked again later
+    input.value = '';
+    if (!f) return;
+    setMsg('');
+    if (peekSlot(slot.value)) setPending(f);
+    else void doImport(f);
   };
   return (
     <Frame title={tr(L('Options', 'Options'))} onBack={onClose}>
@@ -119,19 +131,22 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
         {/* from the title screen, the tools work on the game picked here; in a game, on that game */}
         <div class="opts__row">
           {!inGame && (
-            <button class="opt__arrow" onClick={() => { slot.value = (slot.value + SLOTS - 2) % SLOTS + 1; setConfirmDel(false); setMsg(''); }} aria-label="◀">◀</button>
+            <button class="opt__arrow" onClick={() => { slot.value = (slot.value + SLOTS - 2) % SLOTS + 1; setConfirmDel(false); setPending(null); setMsg(''); }} aria-label="◀">◀</button>
           )}
           <span class="opts__slot">{tr(L('Partie {n}', 'Game {n}'), { n: slot.value })} · {(inGame ? save.value : peekSlot(slot.value))?.player.name ?? tr(L('vide', 'empty'))}</span>
           {!inGame && (
-            <button class="opt__arrow" onClick={() => { slot.value = (slot.value % SLOTS) + 1; setConfirmDel(false); setMsg(''); }} aria-label="▶">▶</button>
+            <button class="opt__arrow" onClick={() => { slot.value = (slot.value % SLOTS) + 1; setConfirmDel(false); setPending(null); setMsg(''); }} aria-label="▶">▶</button>
           )}
         </div>
         <div class="opts__row">
-          <button class="pbtn" disabled={!save.value && !peekSlot(slot.value)} onClick={() => { if (!inGame) loadSave(slot.value); exportSave(); }}>{tr(L('Exporter', 'Export'))}</button>
-          <label class="pbtn">
-            {tr(L('Importer', 'Import'))}
-            <input type="file" accept="application/json,.json" hidden onChange={onImport} />
-          </label>
+          <button class="pbtn" disabled={!(inGame ? save.value : peekSlot(slot.value))} onClick={() => exportSave(inGame ? save.value : peekSlot(slot.value))}>{tr(L('Exporter', 'Export'))}</button>
+          {/* importing replaces a whole game: from the title screen only, where none is being played */}
+          {!inGame && (
+            <label class="pbtn">
+              {tr(L('Importer', 'Import'))}
+              <input type="file" accept="application/json,.json" hidden onChange={onImport} />
+            </label>
+          )}
           {!inGame && (
             <button class="pbtn" disabled={!peekSlot(slot.value)} onClick={() => {
               if (!confirmDel) return setConfirmDel(true);
@@ -143,11 +158,24 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
             </button>
           )}
           {inGame && onTitle && (
-            <button class="pbtn" onClick={onTitle}>
-              {prefs.value.autosave ? tr(L('Écran titre', 'Title screen')) : tr(L('Quitter sans sauver', 'Quit without saving'))}
+            <button class="pbtn" onClick={() => {
+              // without auto-save, everything since the last SAUVER is lost: ask first
+              if (!prefs.value.autosave && !confirmQuit) return setConfirmQuit(true);
+              onTitle();
+            }}>
+              {prefs.value.autosave ? tr(L('Écran titre', 'Title screen'))
+                : confirmQuit ? tr(L('Quitter quand même ?', 'Quit anyway?'))
+                : tr(L('Quitter sans sauver', 'Quit without saving'))}
             </button>
           )}
         </div>
+        {pending && (
+          <div class="opts__row">
+            <p class="opts__ask">{tr(L('La partie {n} ({p}) sera remplacée. Continuer ?', 'Game {n} ({p}) will be replaced. Continue?'), { n: slot.value, p: peekSlot(slot.value)?.player.name ?? '' })}</p>
+            <button class="pbtn" onClick={() => void doImport(pending)}>{tr(L('Oui', 'Yes'))}</button>
+            <button class="pbtn" onClick={() => setPending(null)}>{tr(L('Non', 'No'))}</button>
+          </div>
+        )}
         {msg && <p class="opts__msg">{msg}</p>}
       </Window>
       <Window class="opts__app">

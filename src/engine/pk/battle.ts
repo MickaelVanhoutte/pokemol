@@ -986,6 +986,8 @@ function useItem(st: BattleState, itemId: string, target: number, out: Out) {
 function finish(st: BattleState, result: BattleResult, out: Out) {
   if (st.result) return;
   st.result = result;
+  // our Bestiole fainted earlier in the turn, then the foe's last one went down: nobody is sent out any more
+  st.needSwitch = false;
   // Self-Care: the status goes away after the battle too
   const mine = activeMon(st.sides[0]);
   if (mine && alive(mine) && talentEffect(mine, 'naturalCure')) {

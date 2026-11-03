@@ -124,6 +124,10 @@ export function repair(s: SaveData): SaveData {
     s.bag['canne-bois'] = 1;
     s.flags['gift:canne-bois'] = 1;
   }
+  // the rival's race to the eight badges came in Nov 2026: games already past its scenes don't replay them out of
+  // time (« Mireille, j'arrive ! » with badges won, « pile à la moitié » after the sixth)
+  if (s.badges.length) s.flags['rival:pastel'] ??= 1;
+  if (s.flags['badge:paillette']) s.flags['tr:rivalCourse'] ??= 1;
   // the colours come back to the Edge of the Page after rematches (Nov 2026): games already past them see it
   if (s.flags.ending && rematchesWon(s.flags) >= BORD_REMATCHES) s.flags['couleurs:bord'] = 1;
   return s;
@@ -263,9 +267,14 @@ export function newGame(name: string, look: Appearance, gender: 'f' | 'm', rival
   return s;
 }
 
-export function exportSave() {
-  if (!save.value) return;
-  const blob = new Blob([JSON.stringify(save.value, null, 1)], { type: 'application/json' });
+/** Back to the title: the game is put away, so nothing done there (options, another slot) can write it anywhere. */
+export function unloadSave() {
+  save.value = null;
+}
+
+export function exportSave(data: SaveData | null = save.value) {
+  if (!data) return;
+  const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `atelier-bestioles-${new Date().toISOString().slice(0, 10)}.json`;
@@ -273,12 +282,12 @@ export function exportSave() {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
-export async function importSave(file: File): Promise<boolean> {
+/** Writes a game from a file into slot `n` (from the title screen: no game is being played). */
+export async function importSave(file: File, n = slot.value): Promise<boolean> {
   try {
     const s = migrate(JSON.parse(await file.text()));
     if (!s) return false;
-    save.value = s;
-    persist();
+    localStorage.setItem(keyOf(n), JSON.stringify(s));
     return true;
   } catch {
     return false;

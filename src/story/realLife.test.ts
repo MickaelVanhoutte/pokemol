@@ -15,7 +15,7 @@ vi.mock('../overworld/controller', async (orig) => ({
 }));
 
 const { effect } = await import('@preact/signals');
-const { dialog } = await import('../overworld/dialog');
+const { closeDialog, dialog } = await import('../overworld/dialog');
 const { pictureOverlay, scripts } = await import('../overworld/controller');
 const { localDay } = await import('../overworld/berries');
 const { newGame, save } = await import('../state/game');
@@ -27,7 +27,7 @@ effect(() => {
   if (!d) return;
   // the space before ! ? : ; is non-breaking in French
   said.push(d.text.replace(/[\u00a0\u202f]/g, ' '));
-  queueMicrotask(() => d.resolve(d.choices ? fake.answers.shift() ?? 0 : 0));
+  queueMicrotask(() => closeDialog(d.choices ? fake.answers.shift() ?? 0 : 0));
 });
 effect(() => {
   const p = pictureOverlay.value;

@@ -146,7 +146,7 @@ re-renders everything.
     every script): the seven Colour Guides bringing the field tools (`src/data/guides.ts`, `src/story/guides.ts`);
   - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, rematches, evolutions (`checkEvolutions(grown)`:
     as on the GBA, only a Bestiole that just grew a level evolves, never one caught or received past its level);
-  - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask`.
+  - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask` (a box asked for while another is open waits its turn; tests close boxes with `closeDialog`, as the UI does).
 
 **Story** (`src/story`): async functions registered as `scripts.<id>`. `world.ts` holds the town trades
 (`TRADES`) and the side quests (`quest:*` flags). `choices.ts` holds the story's choices (`choose`,

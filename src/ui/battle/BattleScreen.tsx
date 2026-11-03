@@ -225,14 +225,19 @@ export function BattleScreen(props: BattleProps) {
 
   const play = async (step: Step) => {
     for (let i = 0; i < step.events.length; i++) {
-      const e = step.events[i];
-      // each further hit of an animated move plays it again before the HP drops
-      const h = hitting.current;
-      if ((e.t === 'damage' || e.t === 'subHit') && h && e.side !== h.user && ++h.hits > 1) {
-        await stage.play(h.recipe, { side: h.user, speed: speed.current, crit: e.crit, eff: e.eff, quick: true });
+      // an animation that throws must not freeze the battle: the next events and their text still play
+      try {
+        const e = step.events[i];
+        // each further hit of an animated move plays it again before the HP drops
+        const h = hitting.current;
+        if ((e.t === 'damage' || e.t === 'subHit') && h && e.side !== h.user && ++h.hits > 1) {
+          await stage.play(h.recipe, { side: h.user, speed: speed.current, crit: e.crit, eff: e.eff, quick: true });
+        }
+        setView(step.snaps[i]);
+        await animate(e, step.snaps[i], step.events, i);
+      } catch (err) {
+        console.error(err);
       }
-      setView(step.snaps[i]);
-      await animate(e, step.snaps[i], step.events, i);
     }
     setView(step.state);
   };
@@ -311,7 +316,7 @@ export function BattleScreen(props: BattleProps) {
   const active = activeMon(me);
   const learn = !busy && st.learnQueue.length ? st.learnQueue[0] : null;
   const learner = learn ? me.party.find((m) => m.uid === learn.uid) ?? null : null;
-  const forced = !busy && !!st.needSwitch;
+  const forced = !busy && !!st.needSwitch && !st.result;
   const charging = !!me.vol.charging;
   const idle = !busy && !st.result && !blocked(st) && !charging;
   const coaching = coach === 0 || coach === 2;

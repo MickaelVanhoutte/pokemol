@@ -170,6 +170,15 @@ describe('battle', () => {
     expect(r2.state.sides[0].active).toBe(1);
   });
 
+  it('no replacement is asked once the foe’s last one falls later in the same turn', () => {
+    // the foe knocks ours out, then poison finishes it at the end of the turn
+    const st = battle([mon('001', 3, 1, { hp: 1 }), mon('003', 10)], [mon('003', 25, 1, { status: 'poison', hp: 1, item: null })]);
+    const r = act(st, { type: 'move', slot: 0 }, { type: 'move', slot: 0 });
+    expect(r.events.some((e) => e.t === 'faint' && e.side === 0)).toBe(true);
+    expect(r.state.result).toBe('win');
+    expect(r.state.needSwitch).toBe(false);
+  });
+
   it('wild creatures are easier to catch when weak or asleep', () => {
     const full = mon('004', 5);
     const weak = { ...mon('004', 5), hp: 1 };

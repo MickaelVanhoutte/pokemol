@@ -137,6 +137,8 @@ describe('pc', () => {
     expect(canDeposit([mon()], 0)).toBe(false);
     expect(canDeposit([mon(), mon(0)], 0)).toBe(false);
     expect(canDeposit([mon(), mon()], 0)).toBe(true);
+    // an egg can't fight: it doesn't count
+    expect(canDeposit([mon(), { ...mon(), egg: { steps: 100 } }], 0)).toBe(false);
   });
 });
 

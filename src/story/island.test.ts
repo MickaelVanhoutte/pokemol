@@ -21,7 +21,7 @@ vi.mock('../overworld/controller', async (orig) => ({
 }));
 
 const { effect } = await import('@preact/signals');
-const { dialog } = await import('../overworld/dialog');
+const { closeDialog, dialog } = await import('../overworld/dialog');
 const { scripts } = await import('../overworld/controller');
 const { CREATURES, DEX_GOAL } = await import('../data/creatures');
 const { newGame, save } = await import('../state/game');
@@ -34,7 +34,7 @@ effect(() => {
   if (!d) return;
   said.push(d.text);
   if (d.choices) asked.push(d.choices);
-  queueMicrotask(() => d.resolve(d.choices ? fake.answers.shift() ?? 0 : 0));
+  queueMicrotask(() => closeDialog(d.choices ? fake.answers.shift() ?? 0 : 0));
 });
 
 function start(flags: Record<string, number> = {}, complete = true) {

@@ -69,6 +69,19 @@ describe('save migration', () => {
     expect(s.bag['pochoir-03']).toBeUndefined();
   });
 
+  it('skips the badge race’s scenes for games already past them', () => {
+    const early = migrate(v3Save({ intro: 1 }))!;
+    expect(early.flags['rival:pastel']).toBeUndefined();
+    const raw = v3Save({ intro: 1, 'badge:pastel': 1 });
+    raw.badges = ['pastel'] as never[];
+    const s = migrate(raw)!;
+    expect(s.flags['rival:pastel']).toBe(1);
+    expect(s.flags['tr:rivalCourse']).toBeUndefined();
+    const late = v3Save({ intro: 1, 'badge:pastel': 1, 'badge:braise': 1, 'badge:paillette': 1 });
+    late.badges = ['pastel', 'braise', 'paillette'] as never[];
+    expect(migrate(late)!.flags['tr:rivalCourse']).toBe(1);
+  });
+
   it('unsticks a story cut short during an after-battle scene', () => {
     const raw = v3Save({ intro: 1, rival1: 1, 'tr:gomme2': 1, 'tr:mireille': 1, 'tr:gaspard': 1, 'badge:gaspard': 0 });
     raw.badges = ['plume'] as never[];

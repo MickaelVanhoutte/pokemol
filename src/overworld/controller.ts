@@ -295,6 +295,9 @@ function maybeArrival() {
 
 // ------------------------------------------------------------------ world hooks
 
+/** The Shoo Spray ran out: told on the next step where nothing else happens. */
+let repelWoreOff = false;
+
 function onStep(x: number, y: number): boolean {
   const g = getGame();
   if (++stepsSinceSave >= 12) {
@@ -313,20 +316,9 @@ function onStep(x: number, y: number): boolean {
     if (save.value.steps % FIND_EVERY === 0) followerPicks();
     // the Pension: XP for the Bestioles left there, and sometimes an egg
     if (daycareStep(save.value, save.value.steps, { rng: newSeed() })) showToast(tr(L('La Pension Crayonnée a une surprise pour toi !', 'The Pencil Day Care has a surprise for you!')));
-    // eggs carried in the party hatch after enough steps
+    // eggs carried in the party hatch after enough steps (below, on a free step)
     for (const m of save.value.party) if (m.egg) m.egg.steps--;
-    const ready = save.value.party.find((m) => m.egg && m.egg.steps <= 0);
-    if (ready) {
-      void locked(() => hatch(ready.uid));
-      return true;
-    }
-    if (save.value.repel) {
-      save.value.repel--;
-      if (!save.value.repel) {
-        void locked(() => say(L('L’effet du Spray Anti-Gribouille s’est dissipé.', 'The Shoo Spray wore off.')));
-        return true;
-      }
-    }
+    if (save.value.repel && !--save.value.repel) repelWoreOff = true;
   }
   // stepped into a pit: down to the floor below
   const pit = g.tileAt(x, y) === 'hole' && g.map.def.holes?.find((h) => h.x === x && h.y === y && h.to && h.fall);
@@ -345,6 +337,19 @@ function onStep(x: number, y: number): boolean {
   if (trig && scripts[trig.script]) {
     void runScript(trig.script);
     return true;
+  }
+  // nothing else happened on this step (no door, warp or scene running): an egg hatches, the spray's end is told
+  if (g.lock === 0 && save.value) {
+    const ready = save.value.party.find((m) => m.egg && m.egg.steps <= 0);
+    if (ready) {
+      void locked(() => hatch(ready.uid));
+      return true;
+    }
+    if (repelWoreOff) {
+      repelWoreOff = false;
+      void locked(() => say(L('L’effet du Spray Anti-Gribouille s’est dissipé.', 'The Shoo Spray wore off.')));
+      return true;
+    }
   }
   // sliding on glossy paper: nothing jumps out until the slide ends
   if (g.tileAt(x, y) === 'glossy') return false;
@@ -1132,7 +1137,11 @@ async function blackout() {
 
 /** A wild battle (random encounters, fishing, or a Bestiole waiting somewhere); returns how it ended. */
 export async function wildBattle(species: string, level: number, opts: { music?: TrackId; noCatch?: boolean } = {}): Promise<BattleResult | null> {
-  if (!s().party.length) return null;
+  // fishing or a Bestiole waiting somewhere, with nobody able to fight (eggs don't)
+  if (!partyAlive(s())) {
+    await say(L('Tes Bestioles sont épuisées… Va vite les reposer à l’Auberge !', 'Your Critters are worn out… Go rest them at the Inn!'));
+    return null;
+  }
   sfx.encounter();
   const g = getGame();
   // two white flashes, then the pencil scribbles over the screen

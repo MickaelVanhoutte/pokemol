@@ -36,7 +36,7 @@ vi.mock('../overworld/controller', async (orig) => ({
 }));
 
 const { effect } = await import('@preact/signals');
-const { dialog } = await import('../overworld/dialog');
+const { closeDialog, dialog } = await import('../overworld/dialog');
 const { pictureOverlay, scripts } = await import('../overworld/controller');
 const { TRAINERS } = await import('../data/trainers');
 const { createMon } = await import('../engine/pk/creature');
@@ -50,7 +50,7 @@ effect(() => {
   const d = dialog.value;
   if (!d) return;
   said.push(d.text);
-  queueMicrotask(() => d.resolve(0));
+  queueMicrotask(() => closeDialog(0));
 });
 effect(() => {
   const p = pictureOverlay.value;
