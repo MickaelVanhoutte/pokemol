@@ -10,6 +10,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const PISTE_MAPS: Record<string, MapDef> = {
   piste: {
     id: 'piste',
+    ambient: 'leaves',
     name: L('Piste Cyclable', 'Cycling Track'),
     border: 'tree',
     rows: [

@@ -139,3 +139,10 @@ html, body { background: var(--paper); color: var(--ink); }
   .demo-sheet { width: min(calc(100vw - 24px), 520px); display: grid; grid-template-columns: 1fr 1fr; }
   .demo-sheet__title { grid-column: 1 / -1; }
 }
+.demo-sheet__sub { margin: 4px 0 0; font-size: 1.15rem; color: var(--graphite); }
+.demo-grid--small { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+.demo-grid--small .demo-scene { padding: 6px 8px; }
+.demo-grid--small .demo-scene__label { font-size: 1.1rem; }
+@media (orientation: landscape) and (max-height: 540px) {
+  .demo-sheet__sub, .demo-sheet .demo-grid--small, .demo-sheet .demo-opt { grid-column: 1 / -1; }
+}

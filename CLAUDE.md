@@ -141,6 +141,11 @@ re-renders everything.
   camera and the colour returns three times faster (`sceneNow`, `sceneWait`); text never hurries. Bubbles pop in
   with their sound (`bubble`), and a trainer who spots you gets a camera knock and zoom and the `spotted` (or
   `spottedGomme`) jingle.
+- The living world: `particles.ts` (grass blades from tall grass, dust landing from a ledge, rings behind the boat,
+  a pool stepped and drawn by `Game`), a soft shadow under everyone, `doors.ts` (doorways open, `stepOut` from a
+  building), `ambient.ts` (each map's `ambient`, fireflies outdoors at night), and the time of day's tint from
+  `tintAt(hour)` (`src/state/clock.ts`, blended over an hour round 7 h, 19 h and 21 h; `Game` slides to a new tint
+  over two seconds, `updateTime(true)` snaps it when the game starts).
 - `tiles.ts`, `buildings.ts` and `sprites.ts` paint pixel art with the `Painter` from `pixel.ts`
   (16px tiles). `LOOKS` gives the trainer and NPC chibis; `lookOf()` turns the player's look into one.
 - Wherever a character shows big (battle intros, the player's back in battle, the prologue, the trainer

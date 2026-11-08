@@ -21,7 +21,10 @@ const SPECIES: Record<string, string[]> = {
   m1c: ['021', '008', '012'],
   // the follower, Kid Leo's team and what lives on the Crayon Road
   m2a: ['021', '012', '006', '009', '004', '013', '005', '008', '089', '091'],
+  m2b: ['021'],
 };
+/** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
+const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
 const DEV: Record<string, boolean> = { m1b: true, m1c: true };
 
@@ -65,7 +68,7 @@ for (const f of readdirSync(assets).filter((n) => n.endsWith('.js'))) {
 // the drawings the page loads by URL (public/ is not copied whole: it is big)
 for (const dir of ['cards', 'rigs', 'minis']) {
   for (const name of readdirSync(resolve('public', dir))) {
-    if (!(SPECIES[which] ?? []).some((id) => name.startsWith(`${id}-`))) continue;
+    if (!(dir === 'minis' && ALL_MINIS[which]) && !(SPECIES[which] ?? []).some((id) => name.startsWith(`${id}-`))) continue;
     mkdirSync(join(out, dir), { recursive: true });
     cpSync(resolve('public', dir, name), join(out, dir, name), { recursive: true });
   }

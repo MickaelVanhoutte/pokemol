@@ -28,6 +28,7 @@ import { introOf, vsCardOf } from '../ui/battle/intro';
 import { playIntro, playOutro } from '../ui/curtain/transitions';
 import { sceneWait, setSceneGate } from '../anim/sceneClock';
 import type { ShakeKind } from './camera';
+import { DOOR_OPEN_MS, stepOut } from './doors';
 import { monArtUrl } from '../ui/monArt';
 import { isWater, tile } from './tiles';
 import { calm, missed, wildOdds, wildStep } from './encounterRate';
@@ -37,7 +38,7 @@ import { FIND_EVERY, FOLLOWER_FINDS, rareFind, rollFind } from '../data/follower
 import { fishLevel, fishingTable } from '../data/fishing';
 import { prefs } from '../state/prefs';
 import { mixPrimaries } from '../data/primaries';
-import { hourNow, meetsTime, phaseAt, type DayPhase } from '../state/clock';
+import { hourNow, meetsTime, phaseAt, tintAt, type DayPhase } from '../state/clock';
 import { playSound, sfx } from '../audio/sfx';
 import { playJingle, playMusic, type TrackId } from '../audio/music';
 import { trackForMap } from '../audio/mapMusic';
@@ -105,11 +106,14 @@ function tellRewards() {
 
 const s = (): SaveData => save.value!;
 
-const TIME_TINT: Record<DayPhase, string | null> = { day: null, evening: 'rgb(255, 200, 165)', night: 'rgb(105, 120, 200)' };
 /** Morning, evening or night in Papeterre (the device's clock, shifted by naps at home). */
 export const dayPhase = (): DayPhase => phaseAt(hourNow(save.value?.clockShift ?? 0));
-export function updateTime() {
-  if (game) game.timeTint = TIME_TINT[dayPhase()];
+/** The world's colour follows the hour, changing softly (`snap`: at once, when the game starts). */
+export function updateTime(snap = false) {
+  if (!game) return;
+  game.timeTint = tintAt(hourNow(save.value?.clockShift ?? 0));
+  game.night = dayPhase() === 'night';
+  if (snap) game.snapTint();
 }
 export const flag = (name: string) => !!save.value?.flags[name];
 /** Set when a flag changes, so the map (patches, NPCs) is rebuilt once the script ends. */
@@ -214,6 +218,8 @@ export function enterWorld() {
   const d = s();
   g.setPlayer(lookOf(playerLook()), d.player.x, d.player.y, d.player.facing);
   loadMap(d.player.map);
+  // the game starts at the right time of day at once (later changes slide)
+  updateTime(true);
   g.unstick();
   refreshFollower();
   g.placeFollower();
@@ -257,9 +263,20 @@ export async function warpTo(dest: WarpTarget | 'back', opts: { keepFade?: boole
   g.player.moving = false;
   if (to.facing) g.player.dir = to.facing;
   if (sailing && isWater(g.tileAt(to.x, to.y))) g.surfing = true;
+  // out of a building: in its doorway first, then a step out (the door open meanwhile)
+  const out = opts.keepFade ? null : stepOut(to, (x, y) => g.map.doors.has(y * g.map.w + x));
+  if (out) {
+    Object.assign(g.player, { x: out.x, y: out.y, fromX: out.x, fromY: out.y, dir: 'down' as const });
+    g.doorOpen = out;
+  }
   g.placeFollower();
   savePosition();
   if (!opts.keepFade) await g.fadeTo(0, 180);
+  if (out) {
+    await g.walk(g.player, ['down'], 200);
+    g.doorOpen = null;
+    savePosition();
+  }
   g.lock--;
   const onEnter = g.map.def.onEnter;
   if (onEnter) await runScript(onEnter);
@@ -789,7 +806,12 @@ function onDoor(b: MapBuilding) {
       const g = getGame();
       save.value.player.returnTo = { map: g.map.def.id, x: b.x + b.door, y: b.y + b.h, facing: 'down' };
     }
-    return void warpTo(b.to);
+    // the doorway opens, then the screen fades
+    const g = getGame(), to = b.to;
+    g.lock++;
+    g.doorOpen = { x: g.player.x, y: g.player.y };
+    void wait(DOOR_OPEN_MS).then(() => warpTo(to)).finally(() => g.lock--);
+    return;
   }
   void locked(async () => {
     if (b.script && scripts[b.script]) await scripts[b.script]();

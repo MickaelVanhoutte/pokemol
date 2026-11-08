@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const ENCRE_MAPS: Record<string, MapDef> = {
   route8: {
     id: 'route8',
+    ambient: 'ink',
     name: L('Route de l’Encre', 'Ink Path'),
     border: 'tree',
     backdrop: 'forest',
@@ -110,6 +111,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   encre: {
     id: 'encre',
+    ambient: 'ink',
     name: L('Cité-Encre', 'Ink City'),
     border: 'tree',
     backdrop: 'city',
@@ -284,6 +286,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   usine1: {
     id: 'usine1',
+    ambient: 'crumbs',
     dungeon: true,
     name: L('Usine à Gommes', 'Eraser Factory'),
     indoor: true,
@@ -322,6 +325,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   usine2: {
     id: 'usine2',
+    ambient: 'crumbs',
     dungeon: true,
     name: L('Usine à Gommes — atelier', 'Eraser Factory — workshop'),
     indoor: true,
@@ -360,6 +364,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
 
   usine3: {
     id: 'usine3',
+    ambient: 'crumbs',
     dungeon: true,
     name: L('Usine à Gommes — sommet', 'Eraser Factory — top'),
     indoor: true,

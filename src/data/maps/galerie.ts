@@ -12,6 +12,7 @@ const GC_NEXT = L('Continue ! La salle suivante t’attend.', 'Keep going! The n
 export const GALERIE_MAPS: Record<string, MapDef> = {
   galerie: {
     id: 'galerie',
+    ambient: 'glitter',
     name: L('Place des Chefs-d’Œuvre', 'Masterpiece Square'),
     border: 'tree',
     backdrop: 'city',

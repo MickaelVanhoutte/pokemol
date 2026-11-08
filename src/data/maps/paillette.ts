@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const PAILLETTE_MAPS: Record<string, MapDef> = {
   route6: {
     id: 'route6',
+    ambient: 'glitter',
     name: L('Route des Paillettes', 'Glitter Road'),
     border: 'tree',
     rows: [
@@ -94,6 +95,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
 
   paillette: {
     id: 'paillette',
+    ambient: 'glitter',
     name: L('Bourg-Paillette', 'Glimmerton'),
     border: 'tree',
     onEnter: 'visitTown',

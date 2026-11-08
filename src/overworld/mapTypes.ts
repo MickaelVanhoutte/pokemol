@@ -5,6 +5,7 @@ import type { Dir } from '../save/schema';
 import type { BuildingDef } from './buildings';
 import type { Look } from './sprites';
 import type { PatchDef } from './patches';
+import type { AmbientKind } from './ambient';
 
 export interface WarpTarget {
   map: string;
@@ -189,6 +190,9 @@ export interface MapDef {
   sketch?: boolean;
   /** Drifting fog wisps. */
   fog?: boolean;
+  /** What drifts in the air (ambient.ts): petals, leaves, dust, fireflies, ink, eraser crumbs, glitter. Outdoors
+   *  without one, fireflies come out at night. */
+  ambient?: AmbientKind;
   /** The real world, awake: no Bestiole follows you there. */
   awake?: boolean;
   /** Its dark patches of water (`deep`) lead down to this map, at the same coordinates (diving with the Bocal-Scaphandre). */

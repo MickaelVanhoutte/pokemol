@@ -131,6 +131,7 @@ export const LAC_MAPS: Record<string, MapDef> = {
   // the blue spring, in a cave on the east island, guarded by Team Gomme's colour-soaker
   sourceBleue: {
     id: 'sourceBleue',
+    ambient: 'motes',
     name: L('Grotte de la Source Bleue', 'Blue Spring Cave'),
     indoor: true,
     dungeon: true,
@@ -272,6 +273,7 @@ export const LAC_MAPS: Record<string, MapDef> = {
 
   vallon: {
     id: 'vallon',
+    ambient: 'petals',
     name: L('Vallon Caché', 'Hidden Vale'),
     border: 'tree',
     backdrop: 'forest',

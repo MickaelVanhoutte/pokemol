@@ -51,6 +51,7 @@ export const HOME_MAPS: Record<string, MapDef> = {
   // Line, the pond and its angler, a vegetable garden and an orchard (it grew to the east and the south)
   bourg: {
     id: 'bourg',
+    ambient: 'petals',
     onEnter: 'visitTown',
     name: L('Bourg-Gribouille', 'Scribbleton'),
     border: 'tree',

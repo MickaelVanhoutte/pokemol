@@ -128,6 +128,12 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
 - `backdrop`: the battle background (`grass | forest | cave | tower | lab | beach | city | volcano |
   sketch`).
 - `indoor`, `tint`, `fog`, `onEnter` (towns use `'visitTown'`), `awake` (the real world: no follower).
+- `ambient`: what drifts in the air (`src/overworld/ambient.ts`): `'petals'` (gardens), `'leaves'` (woods), `'motes'`
+  (caves, the museum), `'ink'` (the Ink City side), `'crumbs'` (Team Gomme's places), `'glitter'` (Glitter), `'fireflies'`.
+  Outdoors without one, fireflies come out at night. Keep specks as little shapes with a darker edge: single pixels
+  vanish in the paper grain.
+- Building doors open dark when the player steps in, and coming out the player appears in the doorway and steps out
+  (`src/overworld/doors.ts`): a warp target just below a door, facing down, does it by itself.
 - `generic: true` marks a shared interior. Town houses share three rooms (`maisonVille`, `maisonPetite`,
   `maisonAtelier` in `maps/interiors.ts`): the town lists who lives in each house in its `residents`, with
   `fromDoor: [[town, x, y]]` (the tile in front of the door); they are put in the room that door leads to, and a

@@ -7,6 +7,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const AQUARELLE_MAPS: Record<string, MapDef> = {
   route3: {
     id: 'route3',
+    ambient: 'leaves',
     name: L('Route des Aquarelles', 'Watercolour Way'),
     border: 'tree',
     rows: [

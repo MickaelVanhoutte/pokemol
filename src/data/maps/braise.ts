@@ -29,6 +29,7 @@ const FUSAIN_ENCOUNTERS = {
 export const BRAISE_MAPS: Record<string, MapDef> = {
   montFusain1: {
     id: 'montFusain1',
+    ambient: 'motes',
     dungeon: true,
     name: L('Mont Fusain', 'Mount Charcoal'),
     indoor: true,
@@ -81,6 +82,7 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
 
   montFusain2: {
     id: 'montFusain2',
+    ambient: 'motes',
     dungeon: true,
     name: L('Mont Fusain — cratère', 'Mount Charcoal — crater'),
     indoor: true,

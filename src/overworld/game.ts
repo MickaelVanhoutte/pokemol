@@ -12,6 +12,8 @@ import { CUSTOM_ID, creature, customMiniUrl, customRevision } from '../data/crea
 import { shinyRecolour } from '../art/shiny';
 import { Camera, frame, tilesInView } from './camera';
 import { sceneNow, sceneSpeed } from '../anim/sceneClock';
+import { drawParticles, dustPuff, grassBurst, ripple, stepParticles, type Particle } from './particles';
+import { drawAmbient } from './ambient';
 
 export const TILE = 16;
 
@@ -281,8 +283,16 @@ export class Game {
   biking = false;
   /** Strong Gloves on: walking into a boulder pushes it (until the next map). */
   strength = false;
-  /** Colour wash for the time of day (evening, night), outdoors only. */
-  timeTint: string | null = null;
+  /** Colour wash for the time of day, outdoors only (multiplied: white is plain daylight); it changes softly. */
+  timeTint: [number, number, number] = [255, 255, 255];
+  private tintShown: [number, number, number] = [255, 255, 255];
+  /** Night in Papeterre: fireflies come out where nothing else is in the air. */
+  night = false;
+
+  /** The time of day's colour at once (no slide): the game starts. */
+  snapTint() {
+    this.tintShown = [...this.timeTint];
+  }
   /** The Bestiole walking behind the player (null: none, or switched off). */
   follower: Follower | null = null;
   /** Obstacles still standing on this map (cut bushes and broken rocks are gone until it is entered again). */
@@ -313,7 +323,11 @@ export class Game {
   private last = 0;
   private raf = 0;
   private turnDelay = 0;
-  private rustle: { x: number; y: number; t: number }[] = [];
+  /** A doorway shown open (someone going in, or coming out of it). */
+  doorOpen: { x: number; y: number } | null = null;
+  /** Grass blades, dust, ripples (particles.ts). */
+  particles: Particle[] = [];
+  private rippleIn = 0;
 
   constructor(hooks: GameHooks) {
     this.hooks = hooks;
@@ -341,6 +355,8 @@ export class Game {
     this.surfing = false;
     this.strength = false;
     this.camera.reset();
+    this.doorOpen = null;
+    this.particles = [];
     this.balloonFlight = null;
     this.balloonAway = false;
     if (def.indoor || def.dungeon) this.biking = false;
@@ -594,6 +610,8 @@ export class Game {
       a.carry = (a.t - 1) * a.ms;
       a.t = 0;
       a.moving = false;
+      // a jump down a ledge lands in a puff of dust
+      if (a.jumping) this.particles.push(...dustPuff(a.x * TILE, a.y * TILE, Math.random));
       a.jumping = false;
       const r = a.resolveMove;
       a.resolveMove = undefined;
@@ -611,7 +629,12 @@ export class Game {
       this.animClock = 0;
       this.frame ^= 1;
     }
-    this.rustle = this.rustle.filter((r) => (r.t += dt) < 260);
+    this.particles = stepParticles(this.particles, dt);
+    // the time of day's colour slides to its new shade (after a nap: over two seconds)
+    this.tintShown = this.tintShown.map((c, i) => {
+      const to = this.timeTint[i], step = (dt / 2000) * 255;
+      return Math.abs(to - c) <= step ? to : c + Math.sign(to - c) * step;
+    }) as [number, number, number];
     const p = this.player;
     // leftover time only carries into a step that starts in this same frame
     p.carry = 0;
@@ -621,10 +644,19 @@ export class Game {
       fw.t += dt / fw.ms;
       if (fw.t >= 1) Object.assign(fw, { t: 0, moving: false, jumping: false, fromX: fw.x, fromY: fw.y, landed: performance.now() });
     }
+    // rings spread behind the paper boat while it sails
+    if (this.surfing && p.moving) {
+      this.rippleIn -= dt;
+      if (this.rippleIn <= 0) {
+        this.rippleIn = 220;
+        this.particles.push(ripple(p.fromX * TILE, p.fromY * TILE));
+      }
+    }
     // landing on the shore puts the boat away
     if (finished && this.surfing && !isWater(this.tileAt(p.x, p.y))) this.surfing = false;
     if (finished) {
-      if (tile(this.tileAt(p.x, p.y)).encounter) this.rustle.push({ x: p.x, y: p.y, t: 0 });
+      // blades of grass fly up from tall grass
+      if (tile(this.tileAt(p.x, p.y)).encounter && !isWater(this.tileAt(p.x, p.y))) this.particles.push(...grassBurst(p.x * TILE, p.y * TILE, Math.random));
       const stop = this.hooks.onStep(p.x, p.y);
       if (stop) this.input.clear();
       // glossy paper: keep sliding the same way until something is in the way
@@ -834,6 +866,14 @@ export class Game {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, this.viewW, this.viewH);
     ctx.drawImage(this.map.layers[this.frame], -camX - MARGIN * TILE, -camY - MARGIN * TILE);
+    if (this.doorOpen) {
+      // the door swung open: the dark inside, a little warm light at the top
+      const dx = this.doorOpen.x * TILE - camX, dy = this.doorOpen.y * TILE - camY;
+      ctx.fillStyle = '#1e1626';
+      ctx.fillRect(dx + 3, dy + 2, 10, 14);
+      ctx.fillStyle = 'rgba(255, 214, 140, 0.28)';
+      ctx.fillRect(dx + 4, dy + 3, 8, 3);
+    }
 
     for (const p of this.pickups) {
       const bx = p.x * TILE - camX + 3, by = p.y * TILE - camY + 4;
@@ -907,6 +947,12 @@ export class Game {
       if (a.jumping) {
         ctx.fillStyle = 'rgba(0,0,0,0.25)';
         ctx.fillRect(sx + 3, Math.round((a.fromY + (a.y - a.fromY) * a.t) * TILE - camY) + 13, 10, 3);
+      } else if (!(a === this.player && this.surfing) && !this.map.def.underwater && !a.mini) {
+        // a soft shadow under everyone's feet
+        ctx.fillStyle = 'rgba(40, 28, 50, 0.16)';
+        ctx.beginPath();
+        ctx.ellipse(sx + 8, sy + 14.5, 5, 1.6, 0, 0, Math.PI * 2);
+        ctx.fill();
       }
       if (a === this.player && this.biking) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
       // in a room only sketched in pencil, the people living there are sketched too (not the player)
@@ -942,13 +988,7 @@ export class Game {
     }
     if (!fwDrawn) this.drawFollower(ctx, fw!, camX, camY);
     if (!blDrawn) this.drawBalloon(ctx, camX, camY);
-    for (const r of this.rustle) {
-      const k = r.t / 260;
-      ctx.fillStyle = '#2c6f2a';
-      const bx = r.x * TILE - camX, by = r.y * TILE - camY;
-      ctx.fillRect(bx + 2 - k * 4, by + 6 - k * 6, 2, 2);
-      ctx.fillRect(bx + 12 + k * 4, by + 6 - k * 6, 2, 2);
-    }
+    drawParticles(ctx, this.particles, camX, camY);
     const def = this.map.def;
     // colours sucked out: every pixel keeps its lightness and loses its hue
     // (or, as its springs flow again one by one, replaced by the shades of their mix)
@@ -968,9 +1008,10 @@ export class Game {
     }
     if (def.underwater) this.drawBubbles(ctx, camX, camY);
     // evening and night outdoors: multiplied, so colours darken without going grey
-    if (this.timeTint && !def.indoor) {
+    const [tr, tg, tb] = this.tintShown.map(Math.round);
+    if ((tr < 255 || tg < 255 || tb < 255) && !def.indoor) {
       ctx.globalCompositeOperation = 'multiply';
-      ctx.fillStyle = this.timeTint;
+      ctx.fillStyle = `rgb(${tr}, ${tg}, ${tb})`;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
       ctx.globalCompositeOperation = 'source-over';
       // the Inns keep their windows lit
@@ -978,6 +1019,17 @@ export class Game {
       for (const b of def.buildings ?? []) {
         for (const [x, y, w, h] of lights(b)) ctx.fillRect(b.x * TILE + x - camX, b.y * TILE + y - camY, w, h);
       }
+    }
+    // the air of the place: its own (petals, leaves, dust…), or fireflies outdoors at night
+    const air = def.ambient ?? (this.night && !def.indoor && !def.underwater && !def.awake ? 'fireflies' : undefined);
+    if (air) {
+      // only over the map (a small room is drawn in the middle of black)
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(-camX, -camY, this.map.w * TILE, this.map.h * TILE);
+      ctx.clip();
+      drawAmbient(ctx, air, this.viewW, this.viewH, camX, camY, performance.now() / 1000);
+      ctx.restore();
     }
     if (def.fog) {
       const t = performance.now() / 1000;

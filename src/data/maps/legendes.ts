@@ -33,6 +33,7 @@ const RATURES_ENCOUNTERS = {
 export const LEGEND_MAPS: Record<string, MapDef> = {
   boisPerdu: {
     id: 'boisPerdu',
+    ambient: 'leaves',
     name: L('Bois Perdu', 'Lost Woods'),
     indoor: true,
     border: 'tree',
@@ -83,6 +84,7 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
 
   ratures1: {
     id: 'ratures1',
+    ambient: 'motes',
     dungeon: true,
     name: L('Grotte des Ratures', 'Scribble-Out Cave'),
     indoor: true,
@@ -116,6 +118,7 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
 
   ratures2: {
     id: 'ratures2',
+    ambient: 'motes',
     dungeon: true,
     name: L('Grotte des Ratures — en dessous', 'Scribble-Out Cave — below'),
     indoor: true,
@@ -152,6 +155,7 @@ export const LEGEND_MAPS: Record<string, MapDef> = {
 
   ratures3: {
     id: 'ratures3',
+    ambient: 'motes',
     dungeon: true,
     name: L('Grotte des Ratures — tout au fond', 'Scribble-Out Cave — the very bottom'),
     indoor: true,

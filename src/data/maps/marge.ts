@@ -155,6 +155,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
 
   esquisses: {
     id: 'esquisses',
+    ambient: 'leaves',
     name: L('Forêt des Esquisses', 'Sketch Forest'),
     border: 'sketchtree',
     backdrop: 'sketch',
@@ -224,6 +225,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
 
   forteresse1: {
     id: 'forteresse1',
+    ambient: 'crumbs',
     dungeon: true,
     name: L('Forteresse Gomme', 'Eraser Fortress'),
     indoor: true,
@@ -259,6 +261,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
 
   forteresse2: {
     id: 'forteresse2',
+    ambient: 'crumbs',
     dungeon: true,
     name: L('Forteresse Gomme — salle glacée', 'Eraser Fortress — glossy hall'),
     indoor: true,
@@ -296,6 +299,7 @@ export const MARGE_MAPS: Record<string, MapDef> = {
 
   forteresse3: {
     id: 'forteresse3',
+    ambient: 'crumbs',
     dungeon: true,
     name: L('Forteresse Gomme — la Gomme Géante', 'Eraser Fortress — the Giant Eraser'),
     indoor: true,

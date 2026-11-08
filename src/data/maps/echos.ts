@@ -9,6 +9,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const ECHOS_MAPS: Record<string, MapDef> = {
   grotteEchos: {
     id: 'grotteEchos',
+    ambient: 'motes',
     dungeon: true,
     name: L('Grotte des Échos', 'Echo Cave'),
     indoor: true,

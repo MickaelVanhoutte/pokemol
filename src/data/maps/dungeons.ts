@@ -22,6 +22,7 @@ const TOWER_ENCOUNTERS = {
 export const DUNGEON_MAPS: Record<string, MapDef> = {
   grotte1: {
     id: 'grotte1',
+    ambient: 'motes',
     dungeon: true,
     name: L('Grotte Gribouillis', 'Scribble Cave'),
     indoor: true,
@@ -77,6 +78,7 @@ export const DUNGEON_MAPS: Record<string, MapDef> = {
 
   grotte2: {
     id: 'grotte2',
+    ambient: 'motes',
     dungeon: true,
     name: L('Grotte Gribouillis — fond', 'Scribble Cave — depths'),
     indoor: true,

@@ -6,6 +6,7 @@ import { LOOKS } from '../../overworld/sprites';
 export const GOUACHE_MAPS: Record<string, MapDef> = {
   route7: {
     id: 'route7',
+    ambient: 'petals',
     name: L('Route des Gouaches', 'Gouache Lane'),
     border: 'tree',
     rows: [
@@ -102,6 +103,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
 
   gouache: {
     id: 'gouache',
+    ambient: 'petals',
     name: L('Jardin-Gouache', 'Gouache Garden'),
     border: 'tree',
     onEnter: 'visitTown',

@@ -178,6 +178,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
 
   route2: {
     id: 'route2',
+    ambient: 'petals',
     name: L('Route des Craies', 'Chalk Lane'),
     border: 'tree',
     rows: [
@@ -242,6 +243,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
   // the first sketches of the Bestioles, framed: her original drawings (src/data/originals.ts)
   musee: {
     id: 'musee',
+    ambient: 'motes',
     name: L('Musée des premiers croquis', 'Museum of First Sketches'),
     indoor: true,
     border: 'void',
@@ -299,6 +301,7 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
 
   bois: {
     id: 'bois',
+    ambient: 'leaves',
     name: L('Bois Brumeux', 'Misty Woods'),
     border: 'tree',
     backdrop: 'forest',
