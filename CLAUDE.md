@@ -280,6 +280,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
   `stopImmediatePropagation`), `Frame`, `YesNo`, `HpBar`…
 - `src/ui/views/*` are pure views (props in, callbacks out). `src/ui/screens/*` are thin wrappers
   bound to the save. Item, menu and badge icons are pixel art from `src/ui/icons.ts`.
+- The small moments (`MomentViews.tsx`, over the world): a badge spinning in (`showBadge`), an item's icon shown big
+  while its line is said (`gotItem`, used wherever the item jingle plays), the Bestiodex page of a first catch
+  stamped « Enregistré ! » (`showDexPage`, `firstCatch`).
 
 **Audio.**
 - The original tunes are notes in `src/audio/tunes.ts`. `npm run music` plays them on a music box

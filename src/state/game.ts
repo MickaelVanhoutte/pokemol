@@ -296,6 +296,14 @@ export async function importSave(file: File, n = slot.value): Promise<boolean> {
 
 // ---------------------------------------------------------------- helpers (mutate the draft)
 
+/**
+ * A capture shows the Bestiodex page (FireRed's « registered » entry) when the player has the Bestiodex and
+ * had never caught that species before. Call it before `addMon`, which writes the species down.
+ */
+export function firstCatch(s: Pick<SaveData, 'dex' | 'flags'>, species: string): boolean {
+  return !!s.flags.dex && !s.dex.caught.includes(species);
+}
+
 export function see(s: SaveData, species: string) {
   if (!s.dex.seen.includes(species)) s.dex.seen.push(species);
 }

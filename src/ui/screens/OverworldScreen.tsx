@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { waiting } from '../../data/progress';
 import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
-import { evoOverlay, getGame, hatchOverlay, learnOverlay, menuOpen, monOverlay, nameOverlay, openScreen, pictureOverlay, showToast, toast, toggleBike } from '../../overworld/controller';
+import { badgeOverlay, dexPageOverlay, evoOverlay, getGame, hatchOverlay, itemShown, learnOverlay, menuOpen, monOverlay, nameOverlay, openScreen, pictureOverlay, showToast, toast, toggleBike } from '../../overworld/controller';
+import { BadgeGetView, DexPageView, ItemGet } from '../views/MomentViews';
 import { PictureView } from '../views/PictureView';
 import { NicknameView } from '../views/NicknameView';
 import { HatchView } from '../views/HatchView';
@@ -49,7 +50,7 @@ export function OverworldScreen() {
     g.start();
     g.input.clear();
     const down = (e: KeyboardEvent) => {
-      if (menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value || plancheOverlay.value) return;
+      if (menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value || plancheOverlay.value || badgeOverlay.value || dexPageOverlay.value) return;
       const d = KEY_DIR[e.key];
       if (d) { e.preventDefault(); g.input.press(d); return; }
       if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!e.repeat) g.input.pressA(); }
@@ -97,6 +98,7 @@ export function OverworldScreen() {
         <button class="ow__menu-btn" onClick={() => getGame().input.pressMenu()} aria-label="Menu"><img class="sicon" src={sketchIconUrl('bag')!} width={34} height={34} alt="" /></button>
         {toast.value && <Window class="ow__toast">{toast.value}</Window>}
         {plancheOverlay.value && <PlancheView key={plancheOverlay.value.planche.id} />}
+        {itemShown.value && <ItemGet key={itemShown.value} id={itemShown.value} />}
         <DialogBox />
       </div>
       {monOverlay.value && <MonOverlay />}
@@ -110,6 +112,8 @@ export function OverworldScreen() {
         />
       )}
       {pictureOverlay.value && <PictureView key={pictureOverlay.value.src} src={pictureOverlay.value.src} caption={pictureOverlay.value.caption} before={pictureOverlay.value.before} onClose={() => { const o = pictureOverlay.value!; pictureOverlay.value = null; o.resolve(); }} />}
+      {badgeOverlay.value && <BadgeGetView key={badgeOverlay.value.id} id={badgeOverlay.value.id} name={save.value?.player.name ?? ''} onClose={() => { const o = badgeOverlay.value!; badgeOverlay.value = null; o.resolve(); }} />}
+      {dexPageOverlay.value && <DexPageView key={dexPageOverlay.value.species} species={dexPageOverlay.value.species} onClose={() => { const o = dexPageOverlay.value!; dexPageOverlay.value = null; o.resolve(); }} />}
       {nameOverlay.value && <NicknameView key={nameOverlay.value.mon.uid} mon={nameOverlay.value.mon} onDone={nameOverlay.value.resolve} />}
       {menuOpen.value && <StartMenu />}
       <TouchControls />
@@ -227,7 +231,7 @@ function useJoystick() {
   };
   const handlers = {
     onPointerDown: (e: PointerEvent) => {
-      if (cur.current || menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value || plancheOverlay.value) return;
+      if (cur.current || menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value || plancheOverlay.value || badgeOverlay.value || dexPageOverlay.value) return;
       if ((e.target as HTMLElement).closest('button, .dialog, .dialog-choices, .startmenu')) return;
       cur.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, dir: null };
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);

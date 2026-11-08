@@ -279,6 +279,9 @@ for shared ones), then reference `myId` from a map. Tools (import from `../overw
   through `choose(id, question, a, b)` (`src/story/choices.ts`, ids in `CHOICES`).
 - Flags: `flag`, `setFlag`.
 - Save: `update((d) => …)` from `src/state/game.ts`, `giveMon(species, level)`, `giveItem(id, n)`.
+  An item the player receives is announced with `gotItem(id, line, vars?, speaker?)`: the item jingle, and its
+  icon big over the world while the line is said (`ItemGet`). A badge is handed over by `trainerBattle` through
+  `showBadge(id)` (`BadgeGetView`: it spins in, then « {name} reçoit le … de … ! »).
 - Movement and screens: `warpTo(dest, { keepFade? })`, `openScreen(screen)` (resolves when the player
   is back in the world), `wait(ms)`.
 - Effects: `flash(color?, ms?)`, `shake(ms?, 'rumble' | 'jolt' | 'quake')`, `bubble(actorId, '!' | '?' | '…' | '♪' | '♥' | 'zz')`
@@ -583,6 +586,9 @@ In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens
 - **A particular Bestiole** is shown with `monLabel(m)` (its nickname, or the species name) and
   `monArtUrl(m)` (`src/ui/monArt.ts`: the sparkly recoloured drawing when `m.shiny`). Plain
   `tr(creature(id).name)` and `artUrl` are only for species: the Bestiodex, pickers, credits.
+- **A first catch** (a species never caught, once `flags.dex` is set: `firstCatch` in `src/state/game.ts`, checked
+  before `addMon` writes it down) shows its Bestiodex page stamped « Enregistré ! » (`showDexPage`, `DexPageView`)
+  before the nickname question. The small moments' views are in `src/ui/views/MomentViews.tsx`.
 - **Nicknames** are offered with `offerNickname(uid)` from a script, after a capture, a gift or the
   starter. The `NicknameView` entry is drawn over the map through `nameOverlay`. New Bestioles get
   `met` through `addMon(s, m, how, place)` / `giveMon(species, level, how)`.

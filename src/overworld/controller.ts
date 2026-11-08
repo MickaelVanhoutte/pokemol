@@ -12,7 +12,7 @@ import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted, randomInt } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
 import { BASE_FRIENDSHIP, SHINY_CHANCE, STAT_KEYS, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
-import { addItem, addMon, allMons, autosave, blackoutLoss, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
+import { addItem, addMon, allMons, autosave, blackoutLoss, firstCatch, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
@@ -63,7 +63,7 @@ export const menuOpen = signal(false);
 export function menuAllowed(): boolean {
   const g = game;
   return !!g?.player && g.lock === 0 && !g.player.moving && !dialog.value && !monOverlay.value && !nameOverlay.value
-    && !evoOverlay.value && !learnOverlay.value && !hatchOverlay.value && !pictureOverlay.value && !plancheOverlay.value && screen.value.id === 'overworld';
+    && !evoOverlay.value && !learnOverlay.value && !hatchOverlay.value && !pictureOverlay.value && !plancheOverlay.value && !badgeOverlay.value && !dexPageOverlay.value && screen.value.id === 'overworld';
 }
 export const toast = signal<string | null>(null);
 
@@ -442,8 +442,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
         d.flags[pickupFlag(g.map.def.id, p)] = 1;
       });
       g.removePickup(p);
-      playJingle('item', { fallback: sfx.confirm });
-      await say(L('Tu trouves {i}{n} !', 'You found {i}{n}!'), undefined, { i: tr(item(p.item).name), n: n > 1 ? ` ×${n}` : '' });
+      await gotItem(p.item, L('Tu trouves {i}{n} !', 'You found {i}{n}!'), { i: tr(item(p.item).name), n: n > 1 ? ` ×${n}` : '' });
     });
   }
   if (target.sign) return void locked(() => say(target.sign!.text));
@@ -476,8 +475,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
         addItem(d, hidden.item, n);
         d.flags[pickupFlag(g.map.def.id, hidden)] = 1;
       });
-      playJingle('item', { fallback: sfx.sparkle });
-      await say(L('Tiens ? Il y a quelque chose ici… Tu trouves {i} !', 'Huh? There’s something here… You found {i}!'), undefined, { i: tr(item(hidden.item).name) });
+      await gotItem(hidden.item, L('Tiens ? Il y a quelque chose ici… Tu trouves {i} !', 'Huh? There’s something here… You found {i}!'), { i: tr(item(hidden.item).name) });
       if (hidden.item.startsWith('page-')) await runScript('pageFound');
     });
   }
@@ -556,10 +554,9 @@ async function talkFollower() {
       f.bubble = undefined;
       f.hopAt = performance.now();
     }
-    playJingle('item', { fallback: sfx.confirm });
-    return say(rareFind(held)
+    return gotItem(held, rareFind(held)
       ? L('Waouh ! {n} te rapporte une trouvaille rare : {i} !', 'Wow! {n} brings you a rare find: {i}!')
-      : L('Oh ? {n} tient quelque chose dans sa bouche… Tu trouves {i} !', 'Oh? {n} is holding something in its mouth… You found {i}!'), undefined, { ...vars, i: tr(item(held).name) });
+      : L('Oh ? {n} tient quelque chose dans sa bouche… Tu trouves {i} !', 'Oh? {n} is holding something in its mouth… You found {i}!'), { ...vars, i: tr(item(held).name) });
   }
   // a chat a day makes friends too
   if (save.value!.flags.followerHug !== localDay()) {
@@ -893,15 +890,14 @@ export async function trainerBattle(id: string, actor?: Actor, look?: Look) {
     // the first defeat line is said in battle, like the GBA games
     await sayAll(tdef.after.slice(1, tdef.badge ? 1 : undefined), tdef.name);
     if (newBadge && tdef.badge) {
-      playJingle('badge', { fallback: sfx.victory });
-      await say(L('{name} reçoit le {b} de {l} !', '{name} received the {b} from {l}!'), undefined, { b: tr(badgeDef(tdef.badge)?.name ?? L('Badge', 'Badge')), l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name) });
+      // the badge spins in, FireRed style (BadgeGetView): « {name} reçoit le … de … ! »
+      await showBadge(tdef.badge);
       // like FireRed, the leader adds a move to teach: a stencil
       const stencil = badgeDef(tdef.badge)?.stencil;
       if (stencil && !s().bag[stencil]) {
         const first = !Object.keys(s().bag).some((k) => ITEM_BY_ID[k]?.kind === 'stencil');
         giveItem(stencil);
-        sfx.confirm();
-        await say(L('{l} te donne {i} !', '{l} gave you {i}!'), undefined, { l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name), i: tr(item(stencil).name) });
+        await gotItem(stencil, L('{l} te donne {i} !', '{l} gave you {i}!'), { l: tr(badgeDef(tdef.badge)?.leader ?? tdef.name), i: tr(item(stencil).name) });
         if (first) await say(L('Un pochoir apprend sa capacité à une Bestiole compatible, autant de fois que tu veux ! Regarde dans ton Sac, poche POCHOIRS.', 'A stencil teaches its move to a compatible Critter, as many times as you like! Look in your Bag, STENCILS pocket.'), tdef.name);
       }
       // leaders explain what comes next after giving the badge
@@ -976,8 +972,7 @@ async function giftOnce(flagName: string, gift: { item: string; n?: number }, li
   setFlag(flagName);
   giveItem(gift.item, n);
   await say(line, speaker);
-  playJingle('item', { fallback: sfx.confirm });
-  await say(L('{name} reçoit {i}{n} !', '{name} received {i}{n}!'), undefined, { i: tr(item(gift.item).name), n: n > 1 ? ` ×${n}` : '' });
+  await gotItem(gift.item, L('{name} reçoit {i}{n} !', '{name} received {i}{n}!'), { i: tr(item(gift.item).name), n: n > 1 ? ` ×${n}` : '' });
 }
 
 /** After the story: an old grunt of Team Gomme talks, and a few give back an eraser. */
@@ -1043,6 +1038,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   // the battle's music starts as the world gets covered (then a boss gets its VS splash)
   playMusic(music);
   let caught: string | null = null;
+  // a species never caught before: its Bestiodex page is shown first (FireRed)
+  let registered: string | null = null;
   // Bestioles that grew a level in this battle: only they may evolve after it
   let grown: string[] = [];
   const res = await new Promise<{ result: BattleResult; state: BattleState }>((resolve) => void playIntro(intro, card, () => go({
@@ -1088,6 +1085,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       const wild = res.state.sides[1].party[res.state.sides[1].active];
       wild.sleepTurns = wild.status === 'sleep' ? wild.sleepTurns : 0;
       caught = wild.uid;
+      if (firstCatch(x, wild.species)) registered = wild.species;
       const where = addMon(x, { ...wild }, 'caught', g.map.def.id);
       x.stats.captures++;
       if (where === 'box') showToast(tr(L('{n} est envoyé dans le PC.', '{n} was sent to the PC.'), { n: monLabel(wild) }));
@@ -1099,6 +1097,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
     g.fade = 0;
   });
   await wait(250);
+  if (registered) await showDexPage(registered);
   if (caught) await offerNickname(caught);
   await checkEvolutions(grown);
   if (res.result === 'lose' && !opts.friendly && !opts.borrowed) await blackout();
@@ -1115,6 +1114,35 @@ export const pictureOverlay = signal<{ src: string; caption: string; before?: Pi
 /** Shows a picture; `before`: pictures fading one into the next before it, the caption coming last. */
 export function showPicture(src: string, caption: string, before?: PictureStep[]): Promise<void> {
   return new Promise((resolve) => (pictureOverlay.value = { src, caption, before, resolve }));
+}
+
+/** A badge handed over (BadgeGetView), and the Bestiodex page of a first catch (DexPageView). */
+export const badgeOverlay = signal<{ id: string; resolve: () => void } | null>(null);
+export const dexPageOverlay = signal<{ species: string; resolve: () => void } | null>(null);
+
+/** The badge spinning in, with its jingle; it waits for a press. */
+export function showBadge(id: string): Promise<void> {
+  playJingle('badge', { fallback: sfx.victory });
+  return new Promise((resolve) => (badgeOverlay.value = { id, resolve }));
+}
+
+/** The Bestiodex page of a species caught for the first time, stamped « Enregistré ! ». */
+export function showDexPage(species: string): Promise<void> {
+  return new Promise((resolve) => (dexPageOverlay.value = { species, resolve }));
+}
+
+/** The item just received, its icon shown big over the world while its line is said (`gotItem`). */
+export const itemShown = signal<string | null>(null);
+
+/** « Tu trouves … ! »: the item jingle, and the item's icon over the world while the line is said. */
+export async function gotItem(id: string, line: LText, vars?: Record<string, string | number>, speaker?: LText) {
+  itemShown.value = id;
+  playJingle('item', { fallback: sfx.confirm });
+  try {
+    await say(line, speaker, vars);
+  } finally {
+    if (itemShown.peek() === id) itemShown.value = null;
+  }
 }
 
 /** Evolution scene shown over the world (or null). */
@@ -1395,5 +1423,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, learnOverlay, hatchOverlay, nameOverlay, pictureOverlay, plancheOverlay, showPlanche, offerNickname, teachMove, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, learnOverlay, hatchOverlay, nameOverlay, pictureOverlay, plancheOverlay, showPlanche, badgeOverlay, dexPageOverlay, itemShown, showBadge, showDexPage, gotItem, offerNickname, teachMove, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }

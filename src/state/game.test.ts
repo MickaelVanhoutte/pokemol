@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createMon } from '../engine/pk/creature';
 import { SAVE_VERSION } from '../save/schema';
-import { migrate } from './game';
+import { firstCatch, migrate } from './game';
 import { OLD_AVATARS } from '../data/appearance';
 
 /** A creature as saved by version 3 (no effort points, no held item, no nature). */
@@ -204,5 +204,14 @@ describe('several games on one device', async () => {
     expect(() => creature(CUSTOM_ID)).toThrow();
     loadSave(2);
     expect(creature(CUSTOM_ID).learnset).toEqual([[1, 'flammeche']]);
+  });
+});
+
+describe('the Bestiodex page of a first catch', () => {
+  const dex = (caught: string[], hasDex = true) => ({ dex: { seen: caught, caught }, flags: (hasDex ? { dex: 1 } : {}) as Record<string, number> });
+  it('shows for a species never caught, once the player has the Bestiodex', () => {
+    expect(firstCatch(dex(['001']), '012')).toBe(true);
+    expect(firstCatch(dex(['001', '012']), '012')).toBe(false);
+    expect(firstCatch(dex([], false), '012')).toBe(false);
   });
 });

@@ -4,7 +4,7 @@ import { item } from '../data/items';
 import { createMon } from '../engine/pk/creature';
 import { newSeed } from '../engine/rng';
 import { addItem, save, see, takeItem, update } from '../state/game';
-import { ask, flag, getGame, say, sayAll, scripts, setFlag, showPicture } from '../overworld/controller';
+import { ask, flag, getGame, gotItem, say, sayAll, scripts, setFlag, showPicture } from '../overworld/controller';
 import { ORIGINALS, originalUrl } from '../data/originals';
 import { playJingle } from '../audio/music';
 import { sfx } from '../audio/sfx';
@@ -81,8 +81,7 @@ for (const t of TRADES) scripts[`trade_${t.id}`] = () => trade(t);
 
 const reward = async (id: string, n = 1) => {
   update((d) => addItem(d, id, n));
-  playJingle('item', { fallback: sfx.confirm });
-  await say(L('{name} reçoit {i}{n} !', '{name} received {i}{n}!'), undefined, { i: tr(item(id).name), n: n > 1 ? ` ×${n}` : '' });
+  await gotItem(id, L('{name} reçoit {i}{n} !', '{name} received {i}{n}!'), { i: tr(item(id).name), n: n > 1 ? ` ×${n}` : '' });
 };
 
 const MARGAUX = L('Fillette Margaux', 'Girl Margaux');

@@ -78,6 +78,9 @@ its own state (an empty `save`). Saves live in `localStorage` under `atelier-bes
 Don't `await` a script promise from a page-evaluate call: scripts wait for dialog input, so the call
 deadlocks. Start the script, then close dialogs in a loop
 (`__ab.dialog.value && __ab.closeDialog()`).
+The small moments: `__ab.showBadge('pastel')`, `__ab.gotItem('potion', L('…', '…'))`, `__ab.showDexPage('012')`
+(`__ab.badgeOverlay`, `__ab.itemShown`, `__ab.dexPageOverlay`). A press closes the badge and the page once they have
+landed (about a second).
 A planche playing is `__ab.plancheOverlay.value`; `__ab.showPlanche(p)` plays one over the world (build it from
 `PLANCHES(look)` in `src/story/planches.ts`). A press (`z`) jumps to its next beat. Take frames with
 `page.screenshot({ captureBeyondViewport: false })`: the default resizes the page for the capture, and headless

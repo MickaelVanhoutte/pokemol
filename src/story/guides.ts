@@ -1,9 +1,8 @@
 import { L, tr, type LText } from '../i18n';
-import { playJingle } from '../audio/music';
 import { fxSound, sfx } from '../audio/sfx';
 import { item } from '../data/items';
 import { GUIDES, type Guide } from '../data/guides';
-import { arrivals, bubble, flag, getGame, giveItem, say, sayAll, scripts, setFlag, shake, wait } from '../overworld/controller';
+import { arrivals, bubble, flag, getGame, giveItem, gotItem, say, sayAll, scripts, setFlag, shake, wait } from '../overworld/controller';
 import { comeUp, goAway, walkTo } from './choices';
 
 /**
@@ -142,8 +141,7 @@ export async function guideTalk(gd: Guide) {
   await say(m.give, gd.name);
   giveItem(gd.tool);
   setFlag(`gift:${gd.tool}`);
-  playJingle('item', { fallback: sfx.capture });
-  await say(L('{name} reçoit : {i} !', '{name} received the {i}!'), undefined, { i: tr(item(gd.tool).name) });
+  await gotItem(gd.tool, L('{name} reçoit : {i} !', '{name} received the {i}!'), { i: tr(item(gd.tool).name) });
   await say(m.tip, gd.name);
 }
 

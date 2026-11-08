@@ -18,7 +18,7 @@ import { partyOf, rivalLacTeam } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { localDay } from '../overworld/berries';
 import {
-  ask, bubble, fight, flag, getGame, giveItem, refreshMap, say, sayAll, scripts, setFlag, shake, showPicture,
+  ask, bubble, fight, flag, getGame, giveItem, gotItem, refreshMap, say, sayAll, scripts, setFlag, shake, showPicture,
   showToast, wait, warpTo, wildBattle,
 } from '../overworld/controller';
 import { LOOKS } from '../overworld/sprites';
@@ -260,8 +260,7 @@ async function pearl(id: string) {
   const i = PEARLS.findIndex(([p]) => p === id);
   setFlag(`perle:${id}`);
   giveItem(`perle-${id}`);
-  playJingle('item', { fallback: sfx.capture });
-  await say(L('Tu trouves la {i} !', 'You found the {i}!'), undefined, { i: tr(item(`perle-${id}`).name) });
+  await gotItem(`perle-${id}`, L('Tu trouves la {i} !', 'You found the {i}!'), { i: tr(item(`perle-${id}`).name) });
   await say(L('La perle s’illumine… Un souvenir remonte à la surface.', 'The pearl lights up… A memory rises to the surface.'));
   const pic = await memoryUrl(id).catch(() => '');
   if (pic) await showPicture(pic, tr(L('Souvenir {n}/7', 'Memory {n}/7'), { n: i + 1 }));
@@ -284,8 +283,7 @@ scripts.perle = async () => {
 scripts.chapelleFresque = async () => {
   await say(L('C’est une grande raie de toutes les couleurs, qui nage au-dessus d’une peintre…', 'It’s a great ray of every colour, swimming above a painter…'));
   giveItem('carte-fonds');
-  playJingle('item', { fallback: sfx.capture });
-  await say(L('Derrière la toile, il y a une vieille carte roulée : {i} !', 'Behind the canvas there’s an old rolled-up map: the {i}!'), undefined, { i: tr(item('carte-fonds').name) });
+  await gotItem('carte-fonds', L('Derrière la toile, il y a une vieille carte roulée : {i} !', 'Behind the canvas there’s an old rolled-up map: the {i}!'), { i: tr(item('carte-fonds').name) });
   await say(L('Elle montre toutes les eaux profondes de la région. (Sur la carte du monde, les endroits où plonger sont marqués.)', 'It shows every deep water in the region. (On the Town Map, the places to dive are now marked.)'));
   await shake(600);
   await say(L('Au fond de la chapelle, les dalles s’écartent : un escalier descend encore plus bas !', 'At the back of the chapel, the flagstones slide apart: a staircase leads even further down!'));
