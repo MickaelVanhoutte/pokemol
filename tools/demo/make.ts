@@ -18,9 +18,10 @@ const shots = resolve('tools/out/demo-shots');
 const SPECIES: Record<string, string[]> = {
   m1: ['013', '030', '060', '012', '006', '056', '015', '007', '025', '010', '071', '021', '009'],
   m1b: ['021', '008', '001', '012', '006', '007'],
+  m1c: ['021', '008', '012'],
 };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
-const DEV: Record<string, boolean> = { m1b: true };
+const DEV: Record<string, boolean> = { m1b: true, m1c: true };
 
 // `import.meta.env.DEV` follows NODE_ENV, not the mode
 if (DEV[which]) process.env.NODE_ENV = 'development';

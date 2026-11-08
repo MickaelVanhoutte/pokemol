@@ -85,7 +85,8 @@ html, body { background: var(--paper); color: var(--ink); }
 
 .demo-quit {
   position: fixed; z-index: 150;
-  top: calc(8px + env(safe-area-inset-top, 0px));
+  /* under the prize money's place (top left of the battle scene) */
+  top: calc(60px + env(safe-area-inset-top, 0px));
   left: calc(8px + env(safe-area-inset-left, 0px));
   font-family: var(--hand); font-size: 1rem;
   padding: 2px 10px;
