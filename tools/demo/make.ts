@@ -22,9 +22,10 @@ const SPECIES: Record<string, string[]> = {
   // the follower, Kid Leo's team and what lives on the Crayon Road
   m2a: ['021', '012', '006', '009', '004', '013', '005', '008', '089', '091'],
   m2b: ['021'],
+  m3a: ['021', '073', '011'],
 };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
-const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true };
+const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true, m3a: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
 const DEV: Record<string, boolean> = { m1b: true, m1c: true };
 

@@ -14,6 +14,8 @@ import { Camera, frame, tilesInView } from './camera';
 import { sceneNow, sceneSpeed } from '../anim/sceneClock';
 import { drawParticles, dustPuff, grassBurst, ripple, stepParticles, type Particle } from './particles';
 import { drawAmbient } from './ambient';
+import { eraseBands, restoreRadius, riseHeight, sketchStrokes, type Rect, type RedrawKind } from './redraw';
+import { clamp01, easeIn, easeOut } from '../anim/ease';
 
 export const TILE = 16;
 
@@ -51,6 +53,8 @@ export interface Actor {
   /** The bubble last drawn and when it appeared (scene time): it pops in. */
   shownBubble?: string;
   bubbleAt?: number;
+  /** Being sketched in (pencil lines, then colours) or rubbed out (from the top, in crumbs): scene time. */
+  appear?: { kind: 'in' | 'out'; start: number; ms: number };
   npc?: NpcDef;
   homeX: number;
   homeY: number;
@@ -323,6 +327,10 @@ export class Game {
   private last = 0;
   private raf = 0;
   private turnDelay = 0;
+  /** The view as it was, taken away the story's way while the rebuilt map shows under it (redraw.ts). */
+  private redrawFx: { snap: HTMLCanvasElement; x: number; y: number; kind: RedrawKind; start: number; ms: number; area: Rect; centre: [number, number]; done: () => void } | null = null;
+  private scratch?: HTMLCanvasElement;
+  private actorScratch?: HTMLCanvasElement;
   /** A doorway shown open (someone going in, or coming out of it). */
   doorOpen: { x: number; y: number } | null = null;
   /** Grass blades, dust, ripples (particles.ts). */
@@ -346,17 +354,21 @@ export class Game {
   }
 
   setMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean, visiblePickup: (p: PickupDef) => boolean = () => true, ripe: (b: BerryBushDef) => boolean = () => true) {
+    const fresh = this.map?.def.id !== def.id;
     const { map, npcs } = loadMap(def, visibleNpc);
     this.map = map;
     this.npcs = npcs;
     this.pickups = (def.items ?? []).filter(visiblePickup);
     this.berries = (def.berries ?? []).filter(ripe);
     this.obstacles = (def.obstacles ?? []).map((o) => ({ ...o }));
+    // a new map (not the same one rebuilt by a scene): the camera, the doors and the specks start afresh
+    if (fresh) {
+      this.camera.reset();
+      this.doorOpen = null;
+      this.particles = [];
+    }
     this.surfing = false;
     this.strength = false;
-    this.camera.reset();
-    this.doorOpen = null;
-    this.particles = [];
     this.balloonFlight = null;
     this.balloonAway = false;
     if (def.indoor || def.dungeon) this.biking = false;
@@ -825,6 +837,41 @@ export class Game {
     }
   }
 
+  /** Top-left corner (map pixels) of the usual, unzoomed view where the camera looks now. */
+  private viewOrigin(): [number, number] {
+    const [px, py] = this.player ? this.pos(this.player) : [0, 0];
+    const [fx, fy] = this.camera.focus([px + 8, py + 8]);
+    return frame(fx, fy, this.map.w * TILE, this.map.h * TILE, this.viewW, this.viewH);
+  }
+
+  /** A picture of the map as the view shows it now, `margin` pixels wider all round (before a redraw). */
+  snapshotView(margin = 32): { canvas: HTMLCanvasElement; x: number; y: number } {
+    const [x0, y0] = this.viewOrigin().map(Math.round);
+    const x = x0 - margin, y = y0 - margin;
+    const c = makeCanvas(Math.ceil(this.viewW) + margin * 2, Math.ceil(this.viewH) + margin * 2);
+    const g = c.getContext('2d')!;
+    g.drawImage(this.map.layers[this.frame], x + MARGIN * TILE, y + MARGIN * TILE, c.width, c.height, 0, 0, c.width, c.height);
+    return { canvas: c, x, y };
+  }
+
+  /** Takes the old picture away over the rebuilt map; resolves when it is gone. */
+  playRedraw(o: { kind: RedrawKind; snap: HTMLCanvasElement; x: number; y: number; area: Rect; centre: [number, number]; ms: number }): Promise<void> {
+    return new Promise((done) => {
+      let over = false;
+      const end = () => {
+        if (over) return;
+        over = true;
+        if (this.redrawFx?.snap === o.snap) this.redrawFx = null;
+        // the picture is let go of (a big canvas kept for nothing)
+        o.snap.width = 0;
+        done();
+      };
+      this.redrawFx = { ...o, start: sceneNow(), done: end };
+      // no frames in a hidden page: it still ends
+      setTimeout(end, o.ms + 2000);
+    });
+  }
+
   /** The tiles the usual (unzoomed) view shows around where the camera looks now: scenes bring people in from outside it. */
   visibleTiles() {
     const [px, py] = this.player ? this.pos(this.player) : [0, 0];
@@ -874,6 +921,7 @@ export class Game {
       ctx.fillStyle = 'rgba(255, 214, 140, 0.28)';
       ctx.fillRect(dx + 4, dy + 3, 8, 3);
     }
+    if (this.redrawFx) this.drawRedraw(ctx, camX, camY);
 
     for (const p of this.pickups) {
       const bx = p.x * TILE - camX + 3, by = p.y * TILE - camY + 4;
@@ -959,7 +1007,8 @@ export class Game {
       if (this.map.def.sketch && a !== this.player) ctx.filter = SKETCH;
       if (a.mini) {
         if (a.mini.complete && a.mini.naturalWidth) ctx.drawImage(a.mini, Math.round(sx + (TILE - a.mini.naturalWidth) / 2), sy + TILE - a.mini.naturalHeight - 1);
-      } else a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
+      } else if (a.appear) this.drawAppearing(ctx, a, sx, sy - 2);
+      else a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
       ctx.filter = 'none';
       // under water: the Bocal-Scaphandre, a glass jar over the head
       if (a === this.player && this.map.def.underwater) {
@@ -1117,6 +1166,148 @@ export class Game {
       ctx.arc(Math.round(bx), Math.round(by), r, 0, Math.PI * 2);
       ctx.stroke();
     }
+  }
+
+  /** The old picture over the rebuilt map, with the part already redrawn cut out of it, and the hand at work. */
+  private drawRedraw(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
+    const fx = this.redrawFx!;
+    const t = clamp01((sceneNow() - fx.start) / fx.ms);
+    const W = Math.ceil(this.viewW), H = Math.ceil(this.viewH);
+    const sc = (this.scratch ??= makeCanvas(W, H));
+    if (sc.width !== W || sc.height !== H) {
+      sc.width = W;
+      sc.height = H;
+    }
+    const s = sc.getContext('2d')!;
+    s.globalCompositeOperation = 'source-over';
+    s.clearRect(0, 0, W, H);
+    s.drawImage(fx.snap, Math.round(fx.x - camX), Math.round(fx.y - camY));
+    s.globalCompositeOperation = 'destination-out';
+    s.fillStyle = '#000';
+    s.strokeStyle = '#000';
+    const A = { x: fx.area.x - camX, y: fx.area.y - camY, w: fx.area.w, h: fx.area.h };
+    const [cx, cy] = [fx.centre[0] - camX, fx.centre[1] - camY];
+    const decor: (() => void)[] = [];
+    if (fx.kind === 'restore') {
+      const far = Math.max(...[[A.x, A.y], [A.x + A.w, A.y], [A.x, A.y + A.h], [A.x + A.w, A.y + A.h]].map(([x, y]) => Math.hypot(x - cx, y - cy)));
+      const r = restoreRadius(t) * far;
+      s.beginPath();
+      for (let i = 0; i <= 32; i++) {
+        const a = (i / 32) * Math.PI * 2, q = r * (1 + 0.06 * Math.sin(a * 5 + t * 12));
+        if (i) s.lineTo(cx + Math.cos(a) * q, cy + Math.sin(a) * q);
+        else s.moveTo(cx + Math.cos(a) * q, cy + Math.sin(a) * q);
+      }
+      s.fill();
+      decor.push(() => {
+        if (t >= 1 || r < 2) return;
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2 + t * 3;
+          const x = Math.round(cx + Math.cos(a) * r), y = Math.round(cy + Math.sin(a) * r);
+          ctx.fillStyle = i % 3 ? '#fff6b8' : '#ffd3ea';
+          ctx.fillRect(x - 1, y, 3, 1);
+          ctx.fillRect(x, y - 1, 1, 3);
+        }
+      });
+    } else if (fx.kind === 'erase') {
+      const bands = Math.max(1, Math.ceil(A.h / 16));
+      eraseBands(t, bands).forEach((k, i) => {
+        const y = A.y + i * 16, right = i % 2 === 1;
+        const x0 = right ? A.x + A.w * (1 - k) : A.x;
+        s.fillRect(x0, y, A.w * k, 17);
+        if (k > 0 && k < 1) {
+          const ex = right ? x0 : x0 + A.w * k;
+          decor.push(() => {
+            // a pink eraser in its paper sleeve, crumbs behind it
+            ctx.fillStyle = '#2a2238';
+            ctx.fillRect(ex - 5, y + 2, 10, 12);
+            ctx.fillStyle = '#f4a3ba';
+            ctx.fillRect(ex - 4, y + 3, 8, 10);
+            ctx.fillStyle = '#fffdf4';
+            ctx.fillRect(ex - 4, y + 3, 8, 4);
+            ctx.fillStyle = '#e9b4c3';
+            for (let c = 0; c < 4; c++) ctx.fillRect(Math.round(ex + (right ? 6 : -8) + ((c * 7) % 5) * (right ? 1 : -1)), y + 4 + ((c * 5) % 9), 2, 2);
+          });
+        }
+      });
+    } else if (fx.kind === 'sketch') {
+      const step = 9, n = Math.ceil((A.w + A.h) / step) + 2;
+      const ks = sketchStrokes(t, n);
+      s.lineCap = 'round';
+      s.lineWidth = 12;
+      let head: [number, number] | null = null;
+      ks.forEach((k, j) => {
+        if (k <= 0) return;
+        const o = A.x - A.h + j * step;
+        const x0 = o, y0 = A.y + A.h + 8, x1 = o + A.h + 16, y1 = A.y - 8;
+        const xe = x0 + (x1 - x0) * k, ye = y0 + (y1 - y0) * k;
+        s.beginPath();
+        s.moveTo(x0, y0);
+        s.lineTo(xe, ye);
+        s.stroke();
+        if (k < 1) head = [xe, ye];
+      });
+      decor.push(() => {
+        if (!head) return;
+        const [hx, hy] = head;
+        // the pencil drawing it in
+        ctx.fillStyle = '#2a2238';
+        ctx.fillRect(Math.round(hx) - 1, Math.round(hy) - 9, 4, 10);
+        ctx.fillStyle = '#f2c14e';
+        ctx.fillRect(Math.round(hx), Math.round(hy) - 8, 2, 6);
+        ctx.fillStyle = '#3a3346';
+        ctx.fillRect(Math.round(hx), Math.round(hy) - 2, 2, 2);
+      });
+    } else {
+      const h = riseHeight(t) * A.h;
+      s.fillRect(A.x, A.y + A.h - h, A.w, h);
+      decor.push(() => {
+        if (t >= 1) return;
+        ctx.fillStyle = 'rgba(232, 214, 176, 0.85)';
+        for (let i = 0; i < A.w; i += 5) ctx.fillRect(Math.round(A.x + i + ((i * 7) % 3)), Math.round(A.y + A.h - h - 1 - ((i * 3) % 3)), 2, 2);
+      });
+    }
+    s.globalCompositeOperation = 'source-over';
+    ctx.drawImage(sc, 0, 0);
+    for (const d of decor) d();
+    if (t >= 1) fx.done();
+  }
+
+  /** Someone sketched in (pencil lines from the top, then their colours) or rubbed out (from the top, in crumbs). */
+  private drawAppearing(ctx: CanvasRenderingContext2D, a: Actor, sx: number, sy: number) {
+    const ap = a.appear!;
+    const k = clamp01((sceneNow() - ap.start) / ap.ms);
+    const sc = (this.actorScratch ??= makeCanvas(16, 16));
+    const s = sc.getContext('2d')!;
+    s.clearRect(0, 0, 16, 16);
+    a.sheet.draw(s, a.dir, false, a.step, 0, 0);
+    if (ap.kind === 'in') {
+      if (k < 0.55) {
+        // the pencil outline, drawn from the top down
+        const h = Math.ceil(easeOut(k / 0.55) * 16);
+        ctx.filter = SKETCH;
+        ctx.drawImage(sc, 0, 0, 16, h, sx, sy, 16, h);
+        ctx.filter = 'none';
+        ctx.fillStyle = '#3a3346';
+        if (h < 16) ctx.fillRect(sx + 2, sy + h, 12, 1);
+      } else {
+        // then its colours come
+        const u = (k - 0.55) / 0.45;
+        ctx.globalAlpha = 1 - u;
+        ctx.filter = SKETCH;
+        ctx.drawImage(sc, sx, sy);
+        ctx.filter = 'none';
+        ctx.globalAlpha = u;
+        ctx.drawImage(sc, sx, sy);
+        ctx.globalAlpha = 1;
+      }
+      if (k >= 1) a.appear = undefined;
+      return;
+    }
+    // rubbed out from the top: what is left, crumbs at the edge
+    const cut = Math.floor(easeIn(k) * 16);
+    if (cut < 16) ctx.drawImage(sc, 0, cut, 16, 16 - cut, sx, sy + cut, 16, 16 - cut);
+    ctx.fillStyle = '#f4a3ba';
+    for (let i = 0; i < 4 && cut < 16; i++) ctx.fillRect(sx + 2 + ((i * 5 + a.step) % 12), sy + cut + ((i * 3) % 3), 1, 1);
   }
 
   /** Speech bubble over a character: ! ? … ♪ ♥ zz. It pops in (`age`, ms since it appeared) and bobs a little. */

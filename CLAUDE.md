@@ -132,7 +132,9 @@ re-renders everything.
   cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`. Someone joining a
   cut-scene walks in with `comeUp` and leaves with `goAway` (`src/story/choices.ts`): they start and end off screen (or at
   the door of a room that fits the screen) and find their way around trees and walls (`pathTo`), never appearing or
-  vanishing in view; `walkTo` takes someone to the spot where they stay.
+  vanishing in view; `walkTo` takes someone to the spot where they stay. The one exception is magic: someone drawn into
+  the page or rubbed out of it (`sketchIn` / `eraseOut`, `src/overworld/scene.ts`: pencil lines then colours, or
+  rubbed out from the top in crumbs), like the Great Eraser.
 - Staging (see [docs/content.md](docs/content.md#staging-a-scene)): `Game.camera` (`camera.ts`) follows the player
   exactly as before (`frame`), or pans, follows someone (`look`), zooms (drawn into a smaller view, scaled up) and
   shakes (`rumble`, `jolt`, `quake`); `Game.visibleTiles()` is what it shows, used by `comeUp`/`goAway`. `scene.ts`
@@ -141,6 +143,10 @@ re-renders everything.
   camera and the colour returns three times faster (`sceneNow`, `sceneWait`); text never hurries. Bubbles pop in
   with their sound (`bubble`), and a trainer who spots you gets a camera knock and zoom and the `spotted` (or
   `spottedGomme`) jingle.
+- The world redrawn in front of you (`redraw.ts`, `redraw(kind, { at })` in `scene.ts`): right after setting the flags
+  that change a map, it keeps a picture of the view, rebuilds the map (`refreshMap`, which keeps the camera) and takes
+  the old picture away: `erase` (an eraser sweeping bands), `restore` (colour flooding out in a circle), `sketch` (pencil
+  strokes hatching the new drawing in), `rise` (a wall coming up). Used for the woods and the hamlet.
 - The living world: `particles.ts` (grass blades from tall grass, dust landing from a ledge, rings behind the boat,
   a pool stepped and drawn by `Game`), a soft shadow under everyone, `doors.ts` (doorways open, `stepOut` from a
   building), `ambient.ts` (each map's `ambient`, fireflies outdoors at night), and the time of day's tint from

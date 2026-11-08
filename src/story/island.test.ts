@@ -13,7 +13,8 @@ const fake = vi.hoisted(() => ({
 }));
 vi.mock('../overworld/controller', async (orig) => ({
   ...(await orig<typeof import('../overworld/controller')>()),
-  getGame: () => ({ map: { def: { id: fake.map } }, fadeTo: async () => undefined, player: { x: 0, y: 0 } }),
+  // the camera of a staged scene does nothing here
+  getGame: () => ({ map: { def: { id: fake.map } }, fadeTo: async () => undefined, player: { x: 0, y: 0 }, camera: new Proxy({}, { get: () => () => undefined }) }),
   warpTo: async (to: { map: string }) => void fake.warps.push(to.map),
   wait: async () => undefined,
   shake: async () => undefined,

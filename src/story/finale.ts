@@ -15,11 +15,12 @@ import { LOOKS, lookOf, type Look } from '../overworld/sprites';
 import { healParty, save, see, update } from '../state/game';
 import { personUrl } from '../ui/personArt';
 import {
-  ask, bubble, evoOverlay, flag, flash, getGame, openScreen, playerLook, say, sayAll, scripts, setFlag, shake, showPicture,
+  ask, bubble, evoOverlay, flag, getGame, openScreen, playerLook, say, sayAll, scripts, setFlag, shake, showPicture,
   teachMove, trainerBattle, wait, warpTo,
 } from '../overworld/controller';
 import { MOM } from './cast';
 import { choose, coconfusJoins, COCONFUS, endingOf, findCoconfus, RETOUCHE, type Way } from './choices';
+import { eraseOut, sketchIn } from '../overworld/scene';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const PAPA = L('Papa', 'Daddy');
@@ -89,8 +90,7 @@ scripts.finalBoss = async () => {
   const fin = endingOf(save.value!.flags);
   setFlag('fin', fin);
   await doubtListens(fin);
-  await flash('white', 300);
-  if (boss) g.remove(boss.id);
+  if (boss) await eraseOut(boss);
   await wakeUp();
 };
 
@@ -308,16 +308,15 @@ scripts.coconBord = async () => {
     g.remove('coconBord');
   }
   setFlag('coconPale');
-  await shake(400);
-  const boss = g.spawn('effaceurReve', LOOKS.effaceur, g.player.x, Math.max(1, g.player.y - 2), 'down');
+  await shake(400, 'jolt');
+  const boss = await sketchIn('effaceurReve', LOOKS.effaceur, g.player.x, Math.max(1, g.player.y - 2), 'down');
   await say(L('Le Grand Effaceur ! Ce n’était donc pas fini…', 'The Great Eraser! So it wasn’t over…'));
   await reveal(boss);
   await lastAnswer();
   const fin = endingOf(save.value!.flags);
   setFlag('fin', fin);
   await doubtListens(fin);
-  await flash('white', 300);
-  g.remove(boss.id);
+  await eraseOut(boss);
   await getGame().fadeTo(1, 900, 'white');
   await say(L('Le temps d’un clin d’œil, tu te réveilles dans ta chambre. Papa est penché sur ton cahier…', 'For the blink of an eye, you wake up in your bedroom. Daddy is leaning over your sketchbook…'));
   await lastPage(fin);

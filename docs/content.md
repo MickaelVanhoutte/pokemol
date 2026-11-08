@@ -318,6 +318,11 @@ await staged(async () => {
 - MOUVEMENTS : DOUX turns pans into cuts and drops zooms and shakes: never rely on them to show something the text
   doesn't say.
 - Bring people in with `comeUp` and send them off with `goAway` (they use the camera's real view, panned or not).
+  Someone appearing or vanishing by magic is drawn in or rubbed out instead: `await sketchIn(id, look, x, y, dir)`,
+  `await eraseOut(actor)`.
+- A map that changes in the scene (a flag lifting a patch, `sketchUnless`, `tintUnless`): set the flag, then
+  `await redraw('erase' | 'restore' | 'sketch' | 'rise', { at: { x, y } })` so it changes in front of the player instead
+  of when the script ends. `at` is where the camera looks (and where a `restore` spreads from).
 
 Scripts run one at a time and lock player input. To change an existing script after a story point
 (post-game lines…), wrap it in a later act instead of editing it in place:

@@ -13,6 +13,7 @@ import {
 } from '../overworld/controller';
 import { MOM, PROF, RIVAL } from './cast';
 import { choose, cocoonRemembers, comeUp, findCoconfus, goAway, RETOUCHE } from './choices';
+import { eraseOut, lookAt, sketchIn, staged } from '../overworld/scene';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const GRUNT = L('Sbire Gomme', 'Eraser Grunt');
@@ -264,9 +265,12 @@ scripts.pisteBike = async () => {
 /** The Grotte des Échos: Ombrouille waits at the back, once. */
 scripts.echoShadow = async () => {
   if (flag('static:ombrouille')) return;
-  await say(L('Une ombre gigantesque te fixe de ses yeux rouges…', 'A huge shadow stares at you with red eyes…'));
-  await shake(500);
-  await say(L('… Elle se jette sur toi !', '… It leaps at you!'));
+  await staged(async () => {
+    getGame().camera.zoomTo(2, 600);
+    await say(L('Une ombre gigantesque te fixe de ses yeux rouges…', 'A huge shadow stares at you with red eyes…'));
+    await shake(500, 'quake');
+    await say(L('… Elle se jette sur toi !', '… It leaps at you!'));
+  });
   const out = await wildBattle('011', 38, { music: 'final' });
   if (out === 'capture' || out === 'win') {
     setFlag('static:ombrouille');
@@ -309,7 +313,7 @@ async function paleCocoon() {
     L('Et voilà donc le fameux cocon. Le dessin raté d’hier soir… Je le reconnaîtrais entre mille.', 'And here is the famous cocoon. Last night’s failed drawing… I’d know it anywhere.'),
     L('Un dessin pas fini, ça ne se garde pas. Ça se gomme.', 'An unfinished drawing isn’t kept. It’s rubbed out.'),
   ], EFFACEUR);
-  await shake(400);
+  await shake(400, 'jolt');
   await flash('white', 400);
   setFlag('coconPale');
   await sayAll([
@@ -319,10 +323,14 @@ async function paleCocoon() {
 }
 
 /** The Great Eraser shows himself for the first time, then runs to the edge of the page. */
-scripts.usineEnd = async () => {
+scripts.usineEnd = async () => staged(async () => {
   const g = getGame();
-  await shake(500);
-  const boss = g.spawn('effaceurUsine', LOOKS.effaceur, 6, 1, 'down');
+  await shake(500, 'quake');
+  // he is drawn into the room, pencil lines first: the camera goes close on him
+  g.camera.panTo(6 * 16 + 8, 1 * 16 + 8, 500);
+  const boss = await sketchIn('effaceurUsine', LOOKS.effaceur, 6, 1, 'down');
+  lookAt(boss, 300);
+  g.camera.zoomTo(2, 500);
   await wait(300);
   await sayAll([
     L('Assez.', 'Enough.'),
@@ -332,12 +340,14 @@ scripts.usineEnd = async () => {
   ], EFFACEUR);
   if (save.value && findCoconfus(save.value)) await paleCocoon();
   await say(L('Viens donc me trouver au Bord de la Page, là où tout finit. Nous verrons bien ce qu’il restera de tes gribouillis.', 'Come and find me at the Edge of the Page, where everything ends. We’ll see what’s left of your scribbles.'), EFFACEUR);
-  await flash('white', 300);
-  g.remove(boss.id);
-  await shake(700);
+  // he rubs himself out of the page
+  await eraseOut(boss);
+  g.camera.zoomTo(1, 500);
+  g.camera.follow(500);
+  await shake(700, 'quake');
   await say(L('Au loin, un grondement… Un grand mur blanc vient de se dresser au nord de la Cité-Encre !', 'In the distance, a rumble… A great white wall has just risen north of Ink City!'));
   if (flag('coconPale')) await cocoonRemembers();
-};
+});
 
 // ------------------------------------------------------------------ the last rival battle
 

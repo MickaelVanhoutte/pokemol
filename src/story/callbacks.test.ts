@@ -11,6 +11,7 @@ const game = vi.hoisted(() => ({
   follower: null as null | { x: number; y: number; dir: string; img: unknown },
   npcs: [] as FakeActor[],
   followerShown() { return !!this.follower; },
+  camera: new Proxy({}, { get: () => () => undefined }),
   blocked: () => false,
   // a plain 20×20 meadow, bigger than the screen, so comeUp and goAway find their way off screen
   map: { w: 20, h: 20, warps: new Map(), def: { id: 'test' } },

@@ -18,6 +18,7 @@ import { healMon } from '../engine/pk/creature';
 import { move } from '../data/moves';
 import { RIVAL } from './cast';
 import { choose, comeUp, findCoconfus, goAway, RETOUCHE } from './choices';
+import { redraw, staged } from '../overworld/scene';
 
 const DOYEN = L('Doyen des Esquisses', 'Elder of Sketches');
 const hasCoconfus = () => !!save.value && !!findCoconfus(save.value);
@@ -84,7 +85,8 @@ scripts.hameauChoice = async () => {
     L('Je vais tout colorier !', 'I’ll colour everything in!'),
     L('Vous êtes beaux comme ça, pas finis.', 'You’re lovely as you are, unfinished.'), DOYEN);
   if (way === RETOUCHE) {
-    await flash('white', 400);
+    // the hamlet is coloured in, stroke by stroke, before the Elder looks at his hands
+    await redraw('sketch');
     showToast(tr(L('Le Hameau-Brouillon se colorie !', 'Draft Hamlet gets coloured in!')));
     await say(L('Regarde ! Des toits rouges, de l’herbe verte… Et moi, j’ai des mains ! Merci, merci !', 'Look! Red roofs, green grass… And I have hands! Thank you, thank you!'), DOYEN);
   } else {
@@ -245,9 +247,14 @@ scripts.grandeGomme = async () => {
   if (c !== 0) return;
   // saved before the scene: closing the app now can't block the way north
   setFlag('a4.machine');
-  await shake(700);
-  await flash('white', 300);
-  await say(L('Les engrenages grincent… ralentissent… et s’arrêtent ! Au loin, on entend le mur blanc s’effondrer.', 'The gears creak… slow down… and stop! Far away, you hear the white wall crumble.'));
+  await staged(async () => {
+    const g = getGame();
+    g.camera.zoomTo(2, 400);
+    await shake(900, 'quake');
+    await flash('white', 300);
+    g.camera.zoomTo(1, 600);
+    await say(L('Les engrenages grincent… ralentissent… et s’arrêtent ! Au loin, on entend le mur blanc s’effondrer.', 'The gears creak… slow down… and stop! Far away, you hear the white wall crumble.'));
+  });
   if (hasCoconfus()) await say(L('Coconfus frémit. Pendant un instant, une couleur passe sur sa joue… puis il redevient pâle.', 'Muddlecoon trembles. For a moment, a colour crosses its cheek… then it turns pale again.'));
   await sayAll([
     L('Le patron t’attend au Bord de la Page. Il n’a pas de visage… mais tu vas le reconnaître.', 'The boss is waiting for you at the Edge of the Page. He has no face… but you’ll recognise him.'),

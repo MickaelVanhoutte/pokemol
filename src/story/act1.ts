@@ -15,6 +15,7 @@ import {
 import { sleepUntil } from './common';
 import { choose, COCONFUS, coconfusJoins, comeUp, goAway, RETOUCHE } from './choices';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
+import { redraw } from '../overworld/scene';
 
 // ------------------------------------------------------------------ home
 
@@ -358,7 +359,8 @@ scripts.boisRestore = async () => {
     L('Mais regarde… quand on bat leurs Bestioles grises, les couleurs reviennent !', 'But look… when you beat their grey Critters, the colours come back!'),
   ], RIVAL);
   if (flag('gift:coconfus')) await say(L('Et c’est quoi, ce truc tout embrouillé avec un trou ? … Bizarre. Mais il a l’air de bien t’aimer.', 'And what’s that muddled thing with a hole in it? … Weird. But it really seems to like you.'), RIVAL);
-  await flash('white', 220);
+  // the trees rubbed out by Team Gomme are drawn back, the colour spreading from the clearing
+  await redraw('restore', { at: { x: 12, y: 1 } });
   showToast(tr(L('Le bois retrouve ses couleurs !', 'The woods get their colours back!')));
   await sayAll([
     L('Wouah… Les arbres sont revenus ! On dirait un dessin qu’on vient de finir.', 'Whoa… The trees are back! It looks like a drawing that was just finished.'),

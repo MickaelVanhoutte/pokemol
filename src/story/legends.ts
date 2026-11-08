@@ -10,6 +10,7 @@ import { localDay } from '../overworld/berries';
 import { dayPhase, flag, getGame, say, sayAll, scripts, setFlag, shake, warpTo, wildBattle } from '../overworld/controller';
 import { save } from '../state/game';
 import { findCoconfus } from './choices';
+import { staged } from '../overworld/scene';
 
 const num = (name: string) => save.value?.flags[name] ?? 0;
 
@@ -33,8 +34,11 @@ function away(slug: string, nightOnly = false) {
 /** Before the ending: a vision of what Coconfus could become. */
 async function vision(o: { id: string; slug: string; level: number; intro: LText[]; clue: LText; fades: LText }) {
   if (flag(`vision:${o.slug}`)) return;
-  await sayAll(o.intro);
-  await shake(500);
+  await staged(async () => {
+    getGame().camera.zoomTo(2, 600);
+    await sayAll(o.intro);
+    await shake(500, 'quake');
+  });
   const out = await wildBattle(o.id, o.level, { music: 'final', noCatch: true });
   if (out !== 'win' && out !== 'flee') return;
   setFlag(`vision:${o.slug}`);
@@ -44,8 +48,11 @@ async function vision(o: { id: string; slug: string; level: number; intro: LText
 
 async function meet(o: { id: string; slug: string; level: number; intro: LText[]; caught: LText; gone: LText; waits: LText }) {
   if (flag(`static:${o.slug}`)) return;
-  await sayAll(o.intro);
-  await shake(500);
+  await staged(async () => {
+    getGame().camera.zoomTo(2, 600);
+    await sayAll(o.intro);
+    await shake(500, 'quake');
+  });
   const out = await wildBattle(o.id, o.level, { music: 'final' });
   if (out === 'capture') {
     setFlag(`static:${o.slug}`);
