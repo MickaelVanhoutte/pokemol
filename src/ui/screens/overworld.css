@@ -25,6 +25,20 @@
     repeating-linear-gradient(135deg, rgba(70, 60, 90, 0.1) 0 1px, transparent 1px 5px),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+/* cinema bars: a scene is playing (the interface steps aside meanwhile) */
+.ow__bar {
+  position: absolute; left: 0; right: 0; z-index: 4; height: 9%;
+  pointer-events: none;
+  background: repeating-linear-gradient(-30deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 7px), #1b1430;
+  transition: transform 0.45s cubic-bezier(.3, .7, .3, 1);
+}
+.ow__bar--top { top: 0; transform: translateY(-101%); }
+.ow__bar--bottom { bottom: 0; transform: translateY(101%); }
+.ow.is-scene .ow__bar { transform: none; }
+.ow__menu-btn, .ow__mapname { transition: opacity 0.3s; }
+.ow.is-scene .ow__menu-btn, .ow.is-scene .ow__mapname { opacity: 0; pointer-events: none; }
+.ow.is-scene .touch__hint { visibility: hidden; }
+.is-calm .ow__bar { transition: none; }
 .ow__mapname {
   position: absolute;
   top: 8px;
@@ -126,6 +140,15 @@
 .ab button { width: 68px; height: 68px; border: 0; background: none center / 100% 100% no-repeat; font-family: var(--pixel); font-synthesis: none; font-size: 1.6rem; }
 .ab__a { right: 0; top: 0; background-image: var(--blob-coral) !important; }
 .ab__b { left: 0; bottom: 0; background-image: var(--blob-peach) !important; }
+/* B held during a scene: it runs three times faster */
+.ab__b.is-fast { filter: drop-shadow(0 0 6px #f4b81c); }
+.ab__b.is-fast::after {
+  content: '×3';
+  position: absolute; left: 50%; top: -0.9em; translate: -50% 0;
+  font-size: 1rem; color: var(--ink);
+  padding: 0 4px; line-height: 1.1;
+  border: 4px solid transparent; border-image: var(--frame-thin-butter) 16 / 4px stretch; background: var(--butter) padding-box;
+}
 
 /* landscape phones: the map gets the whole screen, A/B float over it, the start menu goes side by side */
 @media (orientation: landscape) and (max-height: 540px) {
@@ -135,6 +158,7 @@
     pointer-events: none;
   }
   .touch__hint { display: none; }
+  .ow__bar { height: 7%; }
   .ab { pointer-events: auto; width: 128px; height: 86px; }
   .ab button { width: 54px; height: 54px; opacity: 0.85; font-size: 1.3rem; }
   .startmenu { flex-direction: row-reverse; align-items: stretch; gap: 8px; }

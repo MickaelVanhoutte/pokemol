@@ -115,6 +115,9 @@ timings are the game's) and `tools/demo/make.ts` builds it into `tools/out/demo-
   `-l.webp` in landscape), taken with headless Chrome after `newGame()` + `enterWorld()`.
 
 `files.json` lists the files to publish next to `page.html` (Artifact `root`: `tools/out/demo-<m>`).
+A demo can also run the whole game (`m2a`: `App` after `newGame()` + `enterWorld()`, a panel over it starting
+scenes): `make.ts` replaces the service worker's `virtual:pwa-register` with a stub, and copies the miniatures of
+the Bestioles listed in `SPECIES` (the follower) with their cards and rigs.
 A demo listed in `DEV` (`make.ts`) is built with `NODE_ENV=development`, so `window.__battle` exists: `m1b`
 uses it to fire the first move, in battles whose seed was searched (`seedFor`) so that move does what
 the scene shows (a critical hit, a super-effective one, a final blow).

@@ -13,7 +13,7 @@ export type TrackId =
   | 'wild' | 'trainer' | 'gommeBattle' | 'leader' | 'final' | 'champion' | 'ending';
 
 /** Short tunes played once over the music, which comes back after them. */
-export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal';
+export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal' | 'spotted' | 'spottedGomme';
 
 /**
  * What plays a voice: the music box, the felt piano and the chimes everywhere; the battles add a string
@@ -667,6 +667,24 @@ export const JINGLES: Record<JingleId, Track> = {
       { notes: bars('E5 G#5 B5 E6 D#6 B5 G#5 B5', 'E6:6 .:2') },
       { notes: bars('E3:4 B3:4', 'E3:6 .:2') },
     ],
+  },
+  // a trainer's eyes meet yours: a quick bright rise and a hit
+  spotted: {
+    bpm: 150,
+    voices: [
+      { notes: 'B4:.5 E5:.5 G#5:.5 B5:.5 E6:2 .:4', with: [{ inst: 'strings', oct: -1, vol: 0.5 }] },
+      { notes: 'E3:2 B3:2 .:4', inst: 'brass', vol: 0.6 },
+    ],
+    drums: 'k.C.....',
+  },
+  // Team Gomme spots you: the same rise, sour and out of tune
+  spottedGomme: {
+    bpm: 140,
+    voices: [
+      { notes: 'C5:.5 F#5:.5 C6:.5 F#5:.5 C6:2 .:4', detune: 35, with: [{ inst: 'strings', oct: -1, vol: 0.5 }] },
+      { notes: 'C3:2 F#2:2 .:4', inst: 'brass', vol: 0.6 },
+    ],
+    drums: 'K.n.....',
   },
   // the Inn: everyone feels better
   heal: {

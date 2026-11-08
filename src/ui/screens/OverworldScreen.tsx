@@ -18,6 +18,8 @@ import { sketchIconUrl } from '../sketchIcons';
 import { go } from '../../state/router';
 import { MonPick } from '../MonPick';
 import { DialogBox } from '../DialogBox';
+import { cinemaOn } from '../../overworld/scene';
+import { sceneFast } from '../../anim/sceneClock';
 import './overworld.css';
 
 const DIR_KEY: Record<Dir, string> = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
@@ -83,9 +85,12 @@ export function OverworldScreen() {
   }, [currentMap]);
 
   return (
-    <div class="ow" {...joystick.handlers}>
+    <div class={`ow ${cinemaOn.value ? 'is-scene' : ''}`} {...joystick.handlers}>
       <div class="ow__stage">
         <div class="ow__view" ref={host} />
+        {/* cinema bars during a staged scene (src/overworld/scene.ts) */}
+        <div class="ow__bar ow__bar--top" aria-hidden="true" />
+        <div class="ow__bar ow__bar--bottom" aria-hidden="true" />
         {mapName && <Window class="ow__mapname">{mapName}</Window>}
         <button class="ow__menu-btn" onClick={() => getGame().input.pressMenu()} aria-label="Menu"><img class="sicon" src={sketchIconUrl('bag')!} width={34} height={34} alt="" /></button>
         {toast.value && <Window class="ow__toast">{toast.value}</Window>}
@@ -258,7 +263,8 @@ function TouchControls() {
     <div class="touch">
       <p class="touch__hint">{tr(L('Touche l’écran et glisse pour marcher', 'Touch the screen and slide to walk'))}</p>
       <div class="ab">
-        <button class="ab__b" {...hold('x')}>B</button>
+        {/* held during a scene: it runs three times faster (src/anim/sceneClock.ts) */}
+        <button class={`ab__b ${sceneFast.value ? 'is-fast' : ''}`} {...hold('x')}>B</button>
         <button class="ab__a" onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); key(inDialog ? 'Enter' : 'z', true); }}>A</button>
       </div>
     </div>

@@ -18,7 +18,7 @@ import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
 import type { Backdrop } from '../data/schema';
 import { ask, closeDialog, dialog, say, sayAll } from './dialog';
-import { DIRS, Game, miniFor, sheetFor, type Actor } from './game';
+import { DIRS, Game, TILE, miniFor, sheetFor, type Actor } from './game';
 import type { FresqueDef, MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, WarpTarget } from './mapTypes';
 import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
@@ -26,6 +26,8 @@ import { LOOKS, lookOf, type Look } from './sprites';
 import { OLD_AVATARS, fromLook } from '../data/appearance';
 import { introOf, vsCardOf } from '../ui/battle/intro';
 import { playIntro, playOutro } from '../ui/curtain/transitions';
+import { sceneWait, setSceneGate } from '../anim/sceneClock';
+import type { ShakeKind } from './camera';
 import { monArtUrl } from '../ui/monArt';
 import { isWater, tile } from './tiles';
 import { calm, missed, wildOdds, wildStep } from './encounterRate';
@@ -36,7 +38,7 @@ import { fishLevel, fishingTable } from '../data/fishing';
 import { prefs } from '../state/prefs';
 import { mixPrimaries } from '../data/primaries';
 import { hourNow, meetsTime, phaseAt, type DayPhase } from '../state/clock';
-import { sfx } from '../audio/sfx';
+import { playSound, sfx } from '../audio/sfx';
 import { playJingle, playMusic, type TrackId } from '../audio/music';
 import { trackForMap } from '../audio/mapMusic';
 
@@ -74,6 +76,8 @@ export function getGame(): Game {
   if (!game) {
     game = new Game({ onStep, onInteract, onDoor, onMenu: () => void (menuAllowed() && (menuOpen.value = true)), onPush, onDrop, canFall, onFollower: () => void locked(talkFollower) });
     game.canRun = () => !!save.value?.bag.baskets;
+    // holding B hurries a scene in the world: a script runs and no question waits for an answer
+    setSceneGate(() => !!game && game.lock > 0 && screen.value.id === 'overworld' && !dialog.value?.choices);
     // the sky follows the clock
     setInterval(updateTime, 30000);
     // the follower changes with the party's first Bestiole (and the option)
@@ -812,12 +816,23 @@ function trainerSpotting(): Actor | null {
   return null;
 }
 
+/** How long the camera stays close on a trainer who just spotted you (ms). */
+const SPOTTED_MS = 650;
+
 async function trainerApproach(n: Actor) {
   const g = getGame();
+  const gomme = !!TRAINERS[n.npc!.trainer!]?.grey;
+  // eyes meet: the « ! » pops, a knock, the camera jumps close on the trainer, and their sting plays
   n.bubble = '!';
-  sfx.encounter();
-  await wait(700);
+  playJingle(gomme ? 'spottedGomme' : 'spotted', { fallback: sfx.encounter });
+  g.camera.shake('jolt', 260);
+  g.camera.panTo(n.x * TILE + 8, n.y * TILE + 4, 160);
+  g.camera.zoomTo(2, 160);
+  await wait(SPOTTED_MS);
   n.bubble = undefined;
+  // back to the usual view while they walk up
+  g.camera.follow(380);
+  g.camera.zoomTo(1, 380);
   const dir = n.dir;
   const [dx, dy] = DIRS[dir];
   while (!(n.x + dx === g.player.x && n.y + dy === g.player.y)) {
@@ -1193,22 +1208,28 @@ export function mapMusic() {
   if (g.map) playMusic(trackForMap(g.map.def, save.value?.player.returnTo));
 }
 
-export async function shake(ms = 500) {
-  getGame().shakeUntil = performance.now() + ms;
+/** Shakes the view (`rumble`, a low tremble; `jolt`, one hard knock; `quake`, the ground moving) and waits for it. */
+export async function shake(ms = 500, kind: ShakeKind = 'rumble') {
+  getGame().camera.shake(kind, ms);
   await wait(ms);
 }
 
-/** Shows a bubble over someone ('!', '?', '…', '♪', '♥', 'zz') for a moment. */
+/** The little sound of each bubble as it pops in. */
+const BUBBLE_SOUND: Partial<Record<string, () => void>> = { '!': sfx.alert, '?': sfx.question, '♥': () => playSound('twinkle'), '♪': () => playSound('song') };
+
+/** Shows a bubble over someone ('!', '?', '…', '♪', '♥', 'zz') for a moment: it pops in with its little sound. */
 export async function bubble(id: string, kind: string, ms = 900) {
   const g = getGame();
   const a = id === 'player' ? g.player : g.npc(id);
   if (!a) return;
   a.bubble = kind;
+  BUBBLE_SOUND[kind]?.();
   await wait(ms);
   a.bubble = undefined;
 }
 
-export const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/** Waits `ms` of scene time: shorter while the player holds B to hurry the scene (src/anim/sceneClock.ts). */
+export const wait = (ms: number) => sceneWait(ms);
 
 /** Shows creatures big; with `pick`, the player chooses one and its index is returned. */
 export function showMons(ids: string[], title?: string, pick = false): Promise<number> {

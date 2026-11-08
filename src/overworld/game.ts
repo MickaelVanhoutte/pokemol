@@ -10,8 +10,17 @@ import { SpriteSheet, type Look } from './sprites';
 import { isWater, tile } from './tiles';
 import { CUSTOM_ID, creature, customMiniUrl, customRevision } from '../data/creatures';
 import { shinyRecolour } from '../art/shiny';
+import { Camera, frame, tilesInView } from './camera';
+import { sceneNow, sceneSpeed } from '../anim/sceneClock';
 
 export const TILE = 16;
+
+/** A bubble popping in over someone's head: small, a little too big, then its size (`age` in ms). */
+export function bubbleScale(age: number): number {
+  if (age >= 140) return 1;
+  const t = Math.max(0, age) / 140;
+  return t < 0.6 ? 0.5 + (1.25 - 0.5) * (t / 0.6) : 1.25 - 0.25 * ((t - 0.6) / 0.4);
+}
 const MARGIN = 9;
 /** Only pencil lines on the paper: a building (or a room) not coloured in yet. */
 const SKETCH = 'grayscale(1) contrast(0.55) brightness(1.45)';
@@ -37,6 +46,9 @@ export interface Actor {
   step: number;
   jumping?: boolean;
   bubble?: string;
+  /** The bubble last drawn and when it appeared (scene time): it pops in. */
+  shownBubble?: string;
+  bubbleAt?: number;
   npc?: NpcDef;
   homeX: number;
   homeY: number;
@@ -291,8 +303,8 @@ export class Game {
   fade = 0;
   /** Colour of the fade (black, or white for flashes and dreams). */
   fadeColor = '0,0,0';
-  /** The camera shakes until this time (performance.now()). */
-  shakeUntil = 0;
+  /** The camera: follows the player, or pans, zooms and shakes for a scene (camera.ts). */
+  camera = new Camera();
   hooks: GameHooks;
   viewW = 240;
   viewH = 160;
@@ -328,6 +340,7 @@ export class Game {
     this.obstacles = (def.obstacles ?? []).map((o) => ({ ...o }));
     this.surfing = false;
     this.strength = false;
+    this.camera.reset();
     this.balloonFlight = null;
     this.balloonAway = false;
     if (def.indoor || def.dungeon) this.biking = false;
@@ -345,7 +358,7 @@ export class Game {
         resolve();
       };
       this.balloonAway = false;
-      this.balloonFlight = { dir, start: performance.now(), ms, done };
+      this.balloonFlight = { dir, start: sceneNow(), ms, done };
       // if no frame is drawn (the page hidden), the flight still ends
       setTimeout(done, ms + 400);
     });
@@ -591,6 +604,8 @@ export class Game {
   }
 
   update(dt: number) {
+    // holding B during a scene hurries it: everyone walks faster (sceneClock.ts)
+    if (this.lock > 0) dt *= sceneSpeed();
     this.animClock += dt;
     if (this.animClock > 420) {
       this.animClock = 0;
@@ -734,7 +749,7 @@ export class Game {
   /** Little gold stars blinking on a sparkly follower, two at a time, somewhere new each time. */
   /** The Pencil Balloon on its moorings, taking off or landing (its shadow shrinking on the ground), a passenger's head over the basket. */
   private drawBalloon(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
-    const b = this.map.def.balloon!, f = this.balloonFlight, now = performance.now();
+    const b = this.map.def.balloon!, f = this.balloonFlight, now = sceneNow();
     let lift = this.balloonAway ? BALLOON_SKY : 0;
     if (f) {
       const t = Math.min(1, (now - f.start) / f.ms);
@@ -778,19 +793,44 @@ export class Game {
     }
   }
 
+  /** The tiles the usual (unzoomed) view shows around where the camera looks now: scenes bring people in from outside it. */
+  visibleTiles() {
+    const [px, py] = this.player ? this.pos(this.player) : [0, 0];
+    const [fx, fy] = this.camera.focus([px + 8, py + 8]);
+    const [x, y] = frame(fx, fy, this.map.w * TILE, this.map.h * TILE, this.viewW, this.viewH);
+    return tilesInView(x, y, this.viewW, this.viewH, TILE);
+  }
+
   render() {
-    const ctx = this.ctx;
     if (!this.map || !this.player) return;
+    // zoomed in: the world is drawn into a smaller view, scaled up (nearest pixel)
+    const z = this.camera.zoomNow();
+    const realW = this.viewW, realH = this.viewH;
+    if (z !== 1) {
+      this.viewW = realW / z;
+      this.viewH = realH / z;
+      this.ctx.setTransform(z, 0, 0, z, 0, 0);
+    }
+    try {
+      this.renderView();
+    } finally {
+      this.viewW = realW;
+      this.viewH = realH;
+      if (z !== 1) this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+  }
+
+  private renderView() {
+    const ctx = this.ctx;
     const [px, py] = this.pos(this.player);
     const mapW = this.map.w * TILE, mapH = this.map.h * TILE;
-    let camX = mapW <= this.viewW ? (mapW - this.viewW) / 2 : Math.min(Math.max(px + 8 - this.viewW / 2, 0), mapW - this.viewW);
-    let camY = mapH <= this.viewH ? (mapH - this.viewH) / 2 : Math.min(Math.max(py + 8 - this.viewH / 2, 0), mapH - this.viewH);
+    const [fx, fy] = this.camera.focus([px + 8, py + 8]);
+    let [camX, camY] = frame(fx, fy, mapW, mapH, this.viewW, this.viewH);
     camX = Math.round(camX);
     camY = Math.round(camY);
-    if (performance.now() < this.shakeUntil) {
-      camX += Math.round((Math.random() - 0.5) * 6);
-      camY += Math.round((Math.random() - 0.5) * 4);
-    }
+    const [sx0, sy0] = this.camera.shakeOffset();
+    camX += sx0;
+    camY += sy0;
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, this.viewW, this.viewH);
     ctx.drawImage(this.map.layers[this.frame], -camX - MARGIN * TILE, -camY - MARGIN * TILE);
@@ -894,7 +934,11 @@ export class Game {
       if (onGrass) {
         ctx.drawImage(this.map.layers[this.frame], (a.x + MARGIN) * TILE, (a.y + MARGIN) * TILE + 9, TILE, 7, sx, a.y * TILE - camY + 9, TILE, 7);
       }
-      if (a.bubble) this.drawBubble(ctx, a.bubble, sx, sy);
+      if (a.bubble !== a.shownBubble) {
+        a.shownBubble = a.bubble;
+        a.bubbleAt = sceneNow();
+      }
+      if (a.bubble) this.drawBubble(ctx, a.bubble, sx, sy, sceneNow() - (a.bubbleAt ?? 0));
     }
     if (!fwDrawn) this.drawFollower(ctx, fw!, camX, camY);
     if (!blDrawn) this.drawBalloon(ctx, camX, camY);
@@ -958,12 +1002,12 @@ export class Game {
    * default). The map must already be drawn the new way (its flag set).
    */
   colourReturn(at: { x: number; y: number }[], ms = 2800, o: { from?: DrainMix; sparkles?: string[] } = {}): Promise<void> {
-    return new Promise((done) => (this.colourBack = { at, start: performance.now(), ms, done, from: o.from ?? GREY, sparkles: o.sparkles }));
+    return new Promise((done) => (this.colourBack = { at, start: sceneNow(), ms, done, from: o.from ?? GREY, sparkles: o.sparkles }));
   }
 
   private drawColourBack(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
     const fx = this.colourBack!;
-    const t = Math.min(1, (performance.now() - fx.start) / fx.ms);
+    const t = Math.min(1, (sceneNow() - fx.start) / fx.ms);
     // slow at first, so the colour is seen spreading round the spring before it races over the whole map
     const ease = t ** 2.2;
     const reach = Math.hypot(this.map.w, this.map.h) * TILE * ease;
@@ -1023,8 +1067,25 @@ export class Game {
     }
   }
 
-  /** Speech bubble over a character: ! ? … ♪ ♥ zz */
-  private drawBubble(ctx: CanvasRenderingContext2D, kind: string, sx: number, sy: number) {
+  /** Speech bubble over a character: ! ? … ♪ ♥ zz. It pops in (`age`, ms since it appeared) and bobs a little. */
+  private drawBubble(ctx: CanvasRenderingContext2D, kind: string, sx0: number, sy0: number, age = 1000) {
+    const s = bubbleScale(age);
+    const bob = Math.round(Math.sin(age / 260) * 0.6);
+    if (s !== 1) {
+      // scaled from the bubble's foot, just over the head
+      ctx.save();
+      ctx.translate(sx0 + 8, sy0 - 3);
+      ctx.scale(s, s);
+      ctx.translate(-(sx0 + 8), -(sy0 - 3));
+    }
+    try {
+      this.paintBubble(ctx, kind, sx0, sy0 + bob);
+    } finally {
+      if (s !== 1) ctx.restore();
+    }
+  }
+
+  private paintBubble(ctx: CanvasRenderingContext2D, kind: string, sx: number, sy: number) {
     ctx.fillStyle = '#fff';
     ctx.fillRect(sx + 3, sy - 14, 11, 11);
     ctx.fillStyle = '#2a2238';
@@ -1059,9 +1120,9 @@ export class Game {
         setTimeout(fin, 60);
       });
     const start = this.fade;
-    const t0 = performance.now();
+    const t0 = sceneNow();
     for (;;) {
-      const k = Math.min(1, (performance.now() - t0) / ms);
+      const k = Math.min(1, (sceneNow() - t0) / ms);
       this.fade = start + (target - start) * k;
       if (k >= 1) return;
       await frame();

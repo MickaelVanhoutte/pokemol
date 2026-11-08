@@ -16,6 +16,12 @@ const game = vi.hoisted(() => ({
   map: { w: 20, h: 20, warps: new Map(), def: { id: 'test' } },
   viewW: 64,
   viewH: 64,
+  // what the camera shows: centred on the player, inside the meadow (Game.visibleTiles)
+  visibleTiles() {
+    const cam = (p: number) => Math.min(Math.max(p * 16 + 8 - 32, 0), 20 * 16 - 64);
+    const x = cam(this.player.x), y = cam(this.player.y);
+    return { x0: Math.floor(x / 16), x1: Math.floor((x + 63) / 16), y0: Math.floor(y / 16), y1: Math.floor((y + 63) / 16) };
+  },
   inside: (x: number, y: number) => x >= 0 && y >= 0 && x < 20 && y < 20,
   tileAt: () => 'grass',
   face: () => undefined,

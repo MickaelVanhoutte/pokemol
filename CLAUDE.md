@@ -133,6 +133,14 @@ re-renders everything.
   cut-scene walks in with `comeUp` and leaves with `goAway` (`src/story/choices.ts`): they start and end off screen (or at
   the door of a room that fits the screen) and find their way around trees and walls (`pathTo`), never appearing or
   vanishing in view; `walkTo` takes someone to the spot where they stay.
+- Staging (see [docs/content.md](docs/content.md#staging-a-scene)): `Game.camera` (`camera.ts`) follows the player
+  exactly as before (`frame`), or pans, follows someone (`look`), zooms (drawn into a smaller view, scaled up) and
+  shakes (`rumble`, `jolt`, `quake`); `Game.visibleTiles()` is what it shows, used by `comeUp`/`goAway`. `scene.ts`
+  has the cinema bars (`staged(fn)`, which always gives the camera back) and `lookAt` / `lookBetween`. Scene time
+  (`src/anim/sceneClock.ts`): holding B while a script runs (no question open) makes walking, `wait`, fades, the
+  camera and the colour returns three times faster (`sceneNow`, `sceneWait`); text never hurries. Bubbles pop in
+  with their sound (`bubble`), and a trainer who spots you gets a camera knock and zoom and the `spotted` (or
+  `spottedGomme`) jingle.
 - `tiles.ts`, `buildings.ts` and `sprites.ts` paint pixel art with the `Painter` from `pixel.ts`
   (16px tiles). `LOOKS` gives the trainer and NPC chibis; `lookOf()` turns the player's look into one.
 - Wherever a character shows big (battle intros, the player's back in battle, the prologue, the trainer

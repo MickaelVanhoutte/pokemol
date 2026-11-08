@@ -275,7 +275,8 @@ for shared ones), then reference `myId` from a map. Tools (import from `../overw
 - Save: `update((d) => …)` from `src/state/game.ts`, `giveMon(species, level)`, `giveItem(id, n)`.
 - Movement and screens: `warpTo(dest, { keepFade? })`, `openScreen(screen)` (resolves when the player
   is back in the world), `wait(ms)`.
-- Effects: `flash(color?, ms?)`, `shake(ms?)`, `bubble(actorId, '!' | '?' | '…' | '♪' | '♥' | 'zz')`.
+- Effects: `flash(color?, ms?)`, `shake(ms?, 'rumble' | 'jolt' | 'quake')`, `bubble(actorId, '!' | '?' | '…' | '♪' | '♥' | 'zz')`
+  (it pops in with its sound). Staging a bigger moment: see [Staging a scene](#staging-a-scene).
 - Battles: `trainerBattle(id, actor?)` for normal trainers (before lines, battle, flag, badge,
   `afterScript`), or `fight(kind, name, party, opts)` for scripted ones (`friendly`, `tutorial`,
   `backdrop`, `look`, `grey`). Both return or set the result, and a loss blacks out unless `friendly`.
@@ -285,6 +286,32 @@ for shared ones), then reference `myId` from a map. Tools (import from `../overw
   - `g.face(actor, dir)`, `g.faceToward(a, b)`;
   - `await g.fadeTo(1, ms, 'white' | 'black')`;
   - `g.player` is the player actor.
+
+### Staging a scene
+
+A big moment gets the cinema treatment (`src/overworld/scene.ts`, `getGame().camera`):
+
+```ts
+await staged(async () => {
+  const g = getGame();
+  g.camera.panTo(x * 16 + 8, y * 16 + 8, 900);   // look at something (map pixels, the middle of the view)
+  await wait(1000);
+  const friend = await comeUp('amie', LOOKS.girl);
+  lookBetween(g.player, friend, 500);            // frame two people (lookAt(a) follows one as they walk)
+  g.camera.zoomTo(2, 500);                        // 2 stays pixel-sharp; in-between zooms only while moving
+  await bubble('amie', '!');
+  g.camera.shake('jolt', 300);
+  await say(L('…', '…'), FRIEND);
+});                                               // the bars go, the camera comes back to the player
+```
+
+- Always `wait()` (never `setTimeout`): it runs on the scene clock, so a player holding B hurries the scene ×3.
+  Text and questions are never hurried.
+- `staged` gives the camera back even if the scene stops halfway; outside it, call `camera.follow(ms)` and
+  `camera.zoomTo(1, ms)` yourself.
+- MOUVEMENTS : DOUX turns pans into cuts and drops zooms and shakes: never rely on them to show something the text
+  doesn't say.
+- Bring people in with `comeUp` and send them off with `goAway` (they use the camera's real view, panned or not).
 
 Scripts run one at a time and lock player input. To change an existing script after a story point
 (post-game lines…), wrap it in a later act instead of editing it in place:

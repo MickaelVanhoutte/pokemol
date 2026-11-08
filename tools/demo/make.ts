@@ -19,6 +19,8 @@ const SPECIES: Record<string, string[]> = {
   m1: ['013', '030', '060', '012', '006', '056', '015', '007', '025', '010', '071', '021', '009'],
   m1b: ['021', '008', '001', '012', '006', '007'],
   m1c: ['021', '008', '012'],
+  // the follower, Kid Leo's team and what lives on the Crayon Road
+  m2a: ['021', '012', '006', '009', '004', '013', '005', '008', '089', '091'],
 };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
 const DEV: Record<string, boolean> = { m1b: true, m1c: true };
@@ -32,7 +34,15 @@ await build({
   base: './',
   publicDir: false,
   logLevel: 'warn',
-  plugins: [preact()],
+  plugins: [
+    preact(),
+    // the game's app registers its service worker: a demo page has none
+    {
+      name: 'demo-no-pwa',
+      resolveId: (id: string) => (id === 'virtual:pwa-register' ? '\0demo-pwa' : null),
+      load: (id: string) => (id === '\0demo-pwa' ? 'export function registerSW() { return () => Promise.resolve(); }' : null),
+    },
+  ],
   define: { __APP_BUILD__: JSON.stringify('demo') },
   build: {
     outDir: out,
@@ -53,7 +63,7 @@ for (const f of readdirSync(assets).filter((n) => n.endsWith('.js'))) {
 }
 
 // the drawings the page loads by URL (public/ is not copied whole: it is big)
-for (const dir of ['cards', 'rigs']) {
+for (const dir of ['cards', 'rigs', 'minis']) {
   for (const name of readdirSync(resolve('public', dir))) {
     if (!(SPECIES[which] ?? []).some((id) => name.startsWith(`${id}-`))) continue;
     mkdirSync(join(out, dir), { recursive: true });

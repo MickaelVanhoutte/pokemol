@@ -39,6 +39,7 @@ const TRACKS: Record<TrackId, { name: LText; where: LText }> = {
 const JINGLES: Record<JingleId, LText> = {
   badge: L('Badge !', 'Badge!'), item: L('Objet trouvé', 'Item found'), caught: L('Attrapée !', 'Caught!'),
   victory: L('Victoire', 'Victory'), evolved: L('Évolution', 'Evolution'), heal: L('Soins', 'Healing'),
+  spotted: L('Repéré !', 'Spotted!'), spottedGomme: L('Repéré par la Team Gomme', 'Spotted by Team Gomme'),
 };
 
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;

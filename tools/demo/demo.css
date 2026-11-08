@@ -109,3 +109,33 @@ html, body { background: var(--paper); color: var(--ink); }
 .demo-row__name { font-size: 1.15rem; }
 .demo-row__frames { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 .demo-frame { width: 100%; aspect-ratio: 9 / 18; max-width: 100%; background: #000 center / cover no-repeat; border: 1px solid #c9bfb2; }
+
+/* M2a: a panel over the real game */
+.demo-fab {
+  position: fixed; z-index: 300;
+  top: calc(8px + env(safe-area-inset-top, 0px)); left: 50%; translate: -50% 0;
+  font-family: var(--hand); font-size: 1.05rem;
+  padding: 2px 14px;
+  background: #fffdf4; color: var(--ink);
+  border: 5px solid transparent;
+  border-image: var(--pencil-frame) 24 / 5px stretch;
+  opacity: 0.9;
+}
+.demo-sheet {
+  position: fixed; z-index: 300;
+  top: calc(8px + env(safe-area-inset-top, 0px)); left: 50%; translate: -50% 0;
+  width: min(calc(100vw - 24px), 380px); max-height: calc(100dvh - 24px); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 12px 12px;
+  font-family: var(--hand); color: var(--ink);
+  background: #fffdf4;
+  border: 7px solid transparent;
+  border-image: var(--pencil-frame) 24 / 7px stretch;
+  box-shadow: 2px 3px 0 rgba(43, 37, 54, 0.2);
+}
+.demo-sheet__title { margin: 0; font-size: 1.4rem; }
+.demo-sheet .demo-scene { width: 100%; }
+@media (orientation: landscape) and (max-height: 540px) {
+  .demo-sheet { width: min(calc(100vw - 24px), 520px); display: grid; grid-template-columns: 1fr 1fr; }
+  .demo-sheet__title { grid-column: 1 / -1; }
+}

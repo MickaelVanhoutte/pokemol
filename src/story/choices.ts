@@ -7,7 +7,7 @@
 import { L, type LText } from '../i18n';
 import type { Mon } from '../engine/pk/creature';
 import type { Dir, SaveData } from '../save/schema';
-import { DIRS, TILE, type Actor } from '../overworld/game';
+import { DIRS, type Actor } from '../overworld/game';
 import { isWater, tile } from '../overworld/tiles';
 import { LOOKS, type Look } from '../overworld/sprites';
 import { ask, bubble, getGame, giveMon, offerNickname, say, setFlag } from '../overworld/controller';
@@ -134,14 +134,9 @@ export async function coconfusJoins(level: number, actor?: Actor) {
   await offerNickname(m.uid);
 }
 
-/** The tiles on screen around the player now, as the camera frames them (`Game.render`). */
+/** The tiles on screen now, as the camera frames them (even when a scene moved it): people come and go out of sight. */
 function onScreen(): (x: number, y: number) => boolean {
-  const g = getGame(), p = g.player;
-  const mapW = g.map.w * TILE, mapH = g.map.h * TILE;
-  const camX = mapW <= g.viewW ? (mapW - g.viewW) / 2 : Math.min(Math.max(p.x * TILE + 8 - g.viewW / 2, 0), mapW - g.viewW);
-  const camY = mapH <= g.viewH ? (mapH - g.viewH) / 2 : Math.min(Math.max(p.y * TILE + 8 - g.viewH / 2, 0), mapH - g.viewH);
-  const x0 = Math.floor(camX / TILE), x1 = Math.floor((camX + g.viewW - 1) / TILE);
-  const y0 = Math.floor(camY / TILE), y1 = Math.floor((camY + g.viewH - 1) / TILE);
+  const { x0, x1, y0, y1 } = getGame().visibleTiles();
   return (x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1;
 }
 
