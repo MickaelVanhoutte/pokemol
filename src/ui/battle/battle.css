@@ -242,6 +242,11 @@
 .pk-hp.pk-hp--foe { align-self: flex-end; width: max(100%, calc(7em + 90px)); }
 /* yours along the bottom of the scene, just over the panel, its bar longer with your HP written in it */
 .pk-hp.pk-hp--me { position: absolute; left: max(4px, env(safe-area-inset-left)); right: max(4px, env(safe-area-inset-right)); bottom: 0; }
+/* a wide screen in landscape that isn't a phone (computer, tablet): no need for a bar across the whole
+   scene, your box stays the size of the foe's, under your Bestiole */
+@media (orientation: landscape) and (min-height: 541px) {
+  .pk-hp.pk-hp--me { right: auto; width: max(min(46%, 340px), calc(11em + 100px)); }
+}
 .pk-hp--me .hpbar { min-width: 96px; }
 /* low HP: the bar blinks (BattleHp) */
 .pk-hp .hpbar.is-low span { animation: hpLow 0.9s ease-in-out infinite; }
