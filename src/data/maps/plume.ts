@@ -60,17 +60,15 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       { id: 'papiPlume', x: 14, y: 15, look: { hair: '#e8e8f0', shirt: '#8a5a32', pants: '#5a4a3a', hat: '#e0a030' }, facing: 'left', script: 'papiPlume' },
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },
       { id: 'birdKid', x: 5, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')], afterStory: { text: [L('Les Piafou chantent de nouveau tous les matins. Et depuis quelques jours, ils chantent deux fois plus fort !', 'The Chirpies sing every morning again. And for a few days now, they’ve been singing twice as loud!')] } },
-      { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!')] },
+      { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [
+        L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!'),
+        L('Ses Bestioles Normal ne craignent qu’une chose : les coups des Bestioles Combat. Et les attaques Spectre leur passent au travers, sans rien leur faire.', 'His Normal Critters fear only one thing: Fighting Critters’ blows. And Ghost attacks go right through them without doing a thing.'),
+      ] },
       guideNpc('jaune'),
-      { id: 'plumePiaf', x: 15, y: 12, mon: '013', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Piafou s’ébroue dans la vasque. Des gouttes partout ! Piou !', 'The Chirpie splashes about in the birdbath. Drops everywhere! Cheep!')] },
-      { id: 'plumeKite', x: 9, y: 13, look: { hair: '#e0a030', shirt: '#5ab0e0', pants: '#4a4a6a' }, facing: 'up', wander: true, text: [
+      { id: 'plumeKite', gift: { item: 'crayon-ball', n: 3, text: L('Oh ! Mon cerf-volant a accroché ces Croque-Carnets en plein ciel. Prends-les, toi qui attrapes des Bestioles !', 'Oh! My kite snagged these Snapbooks right out of the sky. Take them, you’re the one catching Critters!') }, x: 9, y: 13, look: { hair: '#e0a030', shirt: '#5ab0e0', pants: '#4a4a6a' }, facing: 'up', wander: true, text: [
         L('Ici, le vent ne s’arrête jamais. Mon cerf-volant vole depuis mardi : je n’arrive plus à le faire redescendre !', 'The wind here never stops. My kite has been flying since Tuesday: I can’t get it back down!'),
       ] },
-      { id: 'plumeFacteur', x: 15, y: 10, look: LOOKS.cyclist, facing: 'left', text: [
-        L('Ici, on pose un caillou sur chaque lettre. Sinon, le vent les livre tout seul… n’importe où !', 'Here we put a pebble on every letter. Otherwise the wind delivers them by itself… anywhere at all!'),
-      ] },
-      { id: 'plumeRonflon', x: 15, y: 3, mon: '008', look: LOOKS.kid, facing: 'down', text: [L('Le Grognours dort dans l’herbe. À chaque ronflement, des plumes s’envolent autour de lui.', 'The Grumbear is asleep in the grass. Every snore sends feathers flying around it.')] },
-      { id: 'plumePeintre', x: 2, y: 3, look: { hair: '#3a2a1a', shirt: '#f2ead8', pants: '#6a8a4a', hat: '#c8b48a' }, facing: 'down', text: [
+      { id: 'plumePeintre', x: 20, y: 4, look: { hair: '#3a2a1a', shirt: '#f2ead8', pants: '#6a8a4a', hat: '#c8b48a' }, facing: 'down', text: [
         L('Je dessine les plumes que le vent m’apporte. Il n’y en a pas deux pareilles !', 'I draw the feathers the wind brings me. No two are alike!'),
         L('Avec une plume taillée, on dessine plus fin qu’avec n’importe quel crayon.', 'With a cut quill you can draw finer than with any pencil.'),
       ] },

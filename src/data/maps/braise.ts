@@ -175,15 +175,15 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'tradeBraise', x: 11, y: 12, look: LOOKS.hiker, facing: 'down', script: 'trade_braise' },
       { id: 'braiseOld', x: 21, y: 5, look: LOOKS.granny, facing: 'down', text: [L('Le volcan ? Il crache des étincelles de crayon orange quand il est content.', 'The volcano? It spits orange crayon sparks when it’s happy.')] },
-      { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embersal. So cool!')] },
+      { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [
+        L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embersal. So cool!'),
+        L('Mais ses Bestioles Feu ont peur de l’Eau, de la Roche et du Sol. Et les Plante, Insecte et Glace, elles, fondent comme neige !', 'But her Fire Critters are scared of Water, Rock and Ground. And Grass, Bug and Ice ones just melt away!'),
+      ] },
       guideNpc('orange'),
-      { id: 'braiseBain', x: 29, y: 9, look: LOOKS.grandma, facing: 'left', text: [
+      { id: 'braiseBain', gift: { item: 'baie-givree', n: 2, text: L('Ambre et ses Bestioles brûlent tout ce qu’elles touchent. Prends ces Baies Givrées : tenue, une baie soigne la brûlure.', 'Amber and her Critters burn everything they touch. Take these Frost Berries: when held, one heals a burn.') }, x: 29, y: 9, look: LOOKS.grandma, facing: 'left', text: [
         L('Rien de tel qu’un bain de pieds dans la source chaude après une journée à dessiner.', 'Nothing beats a foot bath in the hot spring after a day of drawing.'),
         L('Les Bestioles Feu adorent y faire des bulles. Les Bestioles Eau, un peu moins.', 'Fire Critters love blowing bubbles in it. Water Critters, not so much.'),
       ] },
-      { id: 'braisePen', x: 27, y: 13, look: LOOKS.girl, facing: 'left', text: [L('C’est mon Braisou ! Il se roule dans la cendre tiède pour garder sa flamme bien orange.', 'That’s my Embersal! It rolls in warm ashes to keep its flame nice and orange.')] },
-      { id: 'braisePenMon', x: 23, y: 13, mon: '002', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Brai ! Braiii !', 'Ember! Emberrr!')] },
-      { id: 'braiseFox', x: 25, y: 5, mon: '018', look: LOOKS.kid, facing: 'down', wander: true, text: [L('Le Pandabraise se blottit contre tes chaussures. Elles sont toutes chaudes, maintenant.', 'The Pandember curls up against your shoes. They’re all warm now.')] },
       { id: 'braiseRunner', x: 11, y: 7, look: LOOKS.cyclist, facing: 'left', wander: true, text: [
         L('Je fais le tour de l’Atelier en courant chaque matin. Ambre dit que ça réchauffe les idées !', 'I run round the Atelier every morning. Amber says it warms up your ideas!'),
         L('Clémentine, la guide orange, forge des gants si costauds qu’on pousse des rochers avec. Elle les garde pour qui battra Ambre !', 'Clementine, the orange guide, forges gloves so strong you can push boulders with them. She keeps them for whoever beats Amber!'),

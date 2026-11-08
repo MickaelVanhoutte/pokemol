@@ -44,6 +44,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `fair:<id>` | `fight()` | That Bestiole's fair copy was seen in a battle (Bestiodex button) |
 | `gift:coconfus` | `coconfusJoins()` (Misty Woods, or the next town for older saves) | Coconfus joined the team |
 | `prof:coconfus` | the Prof's wrapper in `src/story/coconfus.ts` | The Prof said he never photographed Coconfus |
+| `don:<npc>` | `onInteract` in `controller.ts` | That townsperson (`gift` on the NPC) gave its present |
 | `cadeau:<npc or trainer>` | `afterStoryTalk` / `repentTalk` in `controller.ts` | That resident (`afterStory.gift`) or old Team Gomme grunt (`REPENT_GIFTS`) gave its present |
 | `couleurs:bord` | `rematch()` after the 4th Atelier Master rematch, or `repair()` | The Edge of the Page is coloured in again (patch `bordColour`) |
 | `ilePage` | the Prof's post-game wrapper (`act3.ts`), once the Bestiodex is complete (`DEX_GOAL`) | The Prof told about the hidden island: the ferryman goes there |
@@ -145,6 +146,13 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   backdrop change too (a sketched map coloured in by its patches, `src/data/afterStory.ts`).
 - On an NPC, `afterStory: { text, gift? }`: once the story is over, a `text` NPC says these lines instead,
   and gives `gift` (`{ item, n?, text }`) the first time (`cadeau:<npc id>`).
+- On an NPC, `gift: { item, n?, text, if? }`: the first time they are talked to, after their lines, they give it
+  (`don:<npc id>`, announced with `gotItem`). Players talk to townsfolk hoping for help, so a town has one giver
+  (`src/data/balloons.test.ts` checks it): a few berries, balls or a cure, ideally with a tip for the next Atelier.
+  Keep a town's other folk few, each with a line that says something (lore, a tip, a quest), not only scenery.
+- The Pencil Balloon (`src/data/balloons.ts`) stands at least 2 tiles from the town's exits (and the 5 tiles leading
+  in) and from every door, with nobody standing within 2 tiles (a wanderer within 4): test-enforced. Move the
+  town's `fly` tile in `WORLD` with it.
 
 A **new outdoor map** also needs a place on the Town Map: an entry in `WORLD`
 (`src/data/worldmap.ts`, a rect on the 24×20 grid). `worldmap.test.ts` checks every outdoor map has one,

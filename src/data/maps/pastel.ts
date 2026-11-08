@@ -80,20 +80,15 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!'),
         L('Pistache t’a donné ses ciseaux ? Alors nos haies sont entre de bonnes mains !', 'Pistachio gave you his scissors? Then our hedges are in good hands!'),
       ] } },
-      { id: 'kid2', x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire!')] },
+      { id: 'kid2', afterStory: { text: [L('Depuis ton retour, Mireille a planté plein de nouvelles fleurs dans son jardin. Ses Bestioles Insecte n’ont jamais été aussi contentes !', 'Since you came back, Mireille has planted lots of new flowers in her garden. Her Bug Critters have never been so happy!')] }, x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [
+        L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, le Vol et la Roche, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire, Flying and Rock!'),
+        L('Et regarde souvent ta Carte de Dresseur, page PROGRÈS : à force de combattre et d’attraper, on y gagne des cadeaux !', 'And keep an eye on your Trainer Card, PROGRESS page: battle and catch enough and you win presents there!'),
+      ] },
       guideNpc('vert'),
       // the Chalk Square: a painter at her easel, a kid drawing a hopscotch
       { id: 'pastelPeintre', x: 14, y: 11, look: { hair: '#5a3a2a', shirt: '#f6c8a0', pants: '#7a6aa8', hat: '#e88aa8', longHair: true }, facing: 'left', text: [
         L('Je peins la fontaine aux pastels. Le problème, c’est qu’elle change de couleur chaque fois que le soleil bouge !', 'I’m painting the fountain in pastels. The trouble is, it changes colour every time the sun moves!'),
         L('Tu vas vers Village-Plume ? Ma cousine Mimosa pêche sur la rivière, là-bas. « Jaune pêche sous la pluie » : son ciré jaune, tu ne peux pas le rater !', 'Heading to Featherby? My cousin Mimosa fishes on the river there. “Yellow fishes in the rain”: you can’t miss her yellow raincoat!'),
-      ] },
-      { id: 'pastelCraie', x: 10, y: 13, look: { hair: '#2a2238', shirt: '#9ad0f0', pants: '#f2a0c0' }, facing: 'down', wander: true, text: [
-        L('Je dessine une marelle à la craie sur la place ! Quand il pleut, elle s’efface… alors on en dessine une nouvelle.', 'I’m drawing a hopscotch in chalk on the square! When it rains it washes away… so we draw a new one.'),
-      ], afterStory: {
-        text: [L('Depuis ton retour, ma marelle tient mieux. Quand il pleut, elle s’efface quand même un peu… Tant mieux : on en redessine une !', 'Since you came back, my hopscotch holds better. When it rains it still fades a little… Good: we draw a new one!')],
-      } },
-      { id: 'pastelPapivole', x: 26, y: 9, mon: '007', look: LOOKS.kid, facing: 'left', wander: true, text: [
-        L('Le Scaraprisme volette de fleur en fleur. Il laisse derrière lui une traînée de poudre rose.', 'The Prismhorn flits from flower to flower, leaving a trail of pink powder behind it.'),
       ] },
     ],
     residents: [

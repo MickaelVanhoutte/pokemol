@@ -200,8 +200,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
         text: [L('Mes fleurs n’ont jamais été aussi roses. Et en les rempotant, j’ai trouvé quelque chose au fond du pot…', 'My flowers have never been so pink. And while repotting them, I found something at the bottom of the pot…')],
         gift: { item: 'sucette-magique', text: L('Une Sucette Magique ! Elle est pour toi, ma petite fleur.', 'A Magic Lollipop! It’s for you, my little flower.') },
       } },
-      { id: 'feutreZig', x: 16, y: 17, mon: '004', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Joufflux file entre tes jambes en laissant une traînée d’étincelles. Bzzt !', 'The Zappouch zips between your legs, leaving a trail of sparks. Bzzt!')] },
-      { id: 'feutreCycliste', x: 21, y: 12, look: LOOKS.cyclistF, facing: 'left', text: [
+      { id: 'feutreCycliste', gift: { item: 'baie-cerise', n: 2, text: L('Tu vas défier Zélie ? Ses Bestioles Électrique paralysent tout le monde. Prends ces Baies Cerise : tenue, une baie guérit la paralysie tout de suite !', 'Off to challenge Zelie? Her Electric Critters paralyse everyone. Take these Cherry Berries: when held, one cures paralysis right away!') }, x: 21, y: 12, look: LOOKS.cyclistF, facing: 'left', text: [
         L('À l’est, la Piste Cyclable grimpe jusqu’au Jardin-Gouache. Interdit aux piétons : on n’y passe qu’à vélo !', 'East, the Cycling Track climbs all the way to Gouache Garden. No walkers allowed: bikes only!'),
         L('Tu entends ces « bong » qui viennent du Mont Fusain ? C’est Lavande, la guide violette. Elle casse les rochers pour trouver des améthystes.', 'Hear those “bonks” coming from Mount Charcoal? That’s Lavender, the violet guide. She breaks rocks to find amethysts.'),
       ] },

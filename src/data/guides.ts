@@ -29,7 +29,7 @@ export const GUIDES: Guide[] = [
   {
     id: 'rouge', name: L('Coquelicot', 'Poppy'), title: L('le guide rouge', 'the red guide'), tool: 'velo',
     look: { hair: '#3a2a1a', shirt: '#d64545', pants: '#2a2238', hat: '#d64545' },
-    map: 'feutre', home: { x: 5, y: 16, facing: 'right' }, need: 'a2.feutre',
+    map: 'feutre', home: { x: 5, y: 17, facing: 'right' }, need: 'a2.feutre',
   },
   {
     id: 'orange', name: L('Clémentine', 'Clementine'), title: L('la guide orange', 'the orange guide'), tool: 'gants',

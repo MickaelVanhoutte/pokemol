@@ -164,15 +164,10 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
         id: 'pecheuseGouache', x: 26, y: 8, look: LOOKS.girl, facing: 'left',
         text: [L('Je pêche dans toute Papeterre. Chaque eau a ses Bestioles : la rivière, la mer, le lac…', 'I fish all over Papeterra. Every water has its own Critters: the river, the sea, the lake…'), L('Quand ton équipe grandit, des Bestioles plus fortes viennent mordre, même là où tu as déjà pêché !', 'As your team grows, stronger Critters come to bite, even where you’ve fished before!')],
       },
-      { id: 'gouaGardener', x: 24, y: 13, look: { hair: '#e8e8f0', shirt: '#6cae5a', pants: '#7a5a3a', hat: '#e0a030', longHair: true }, facing: 'down', wander: true, text: [
+      { id: 'gouaGardener', gift: { item: 'baie-doree', n: 2, text: L('Tiens, deux Baies Dorées de ma parcelle, peintes bien épais. Tenue, une Baie Dorée rend beaucoup de PV d’un coup !', 'Here, two Golden Berries from my plot, painted nice and thick. When held, a Golden Berry gives back lots of HP at once!') }, x: 24, y: 13, look: { hair: '#e8e8f0', shirt: '#6cae5a', pants: '#7a5a3a', hat: '#e0a030', longHair: true }, facing: 'down', wander: true, text: [
         L('La gouache, c’est épais : quand Basile peint une fleur, elle pousse vraiment !', 'Gouache is thick: when Basil paints a flower, it really grows!'),
         L('Ma parcelle, c’est celle des radis. Je les peins en rouge bien épais : comme ça, ils poussent plus vite.', 'My plot is the radish one. I paint them a nice thick red: that way they grow faster.'),
       ] },
-      { id: 'gouaBell', x: 27, y: 14, mon: '062', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Le Brouticot a grignoté la moitié du potager. Il a l’air très fier de lui.', 'The Nibblekid has nibbled half the vegetable patch. It looks very proud of itself.')] },
-      { id: 'gouaPainter', x: 20, y: 9, look: { hair: '#2a2238', shirt: '#f2d06a', pants: '#4a6ad0', hat: '#e04848' }, facing: 'right', text: [
-        L('Je peins le bassin à la gouache. Bien épais, bien couvrant… Le hic, c’est que mes nénuphars se mettent à flotter sur la toile.', 'I’m painting the pond in gouache. Nice and thick, nice and opaque… The trouble is, my water lilies start floating on the canvas.'),
-      ] },
-      { id: 'gouaLily', x: 23, y: 10, mon: '095', look: LOOKS.kid, facing: 'up', wander: true, text: [L('La Nénurette saute de nénuphar en nénuphar… et retombe à côté. Plouf !', 'The Lilyhop hops from lily pad to lily pad… and lands beside them. Splash!')] },
       { id: 'gouaCyclist', x: 17, y: 1, look: LOOKS.cyclistF, facing: 'down', text: [
         L('La Piste Cyclable part juste là, entre les arbres. Elle descend jusqu’à Ville-Feutre sans un coup de pédale !', 'The Cycling Track starts right there, between the trees. It runs downhill to Felt City without a single pedal stroke!'),
         L('Sa grille ne s’ouvre que de ce côté-ci. Pour remonter, je pousse mon vélo à pied…', 'Its gate only opens from this side. To come back up, I push my bike on foot…'),

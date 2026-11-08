@@ -114,22 +114,11 @@ export const HOME_MAPS: Record<string, MapDef> = {
         L('Quand j’étais petit, le bourg n’avait qu’une maison et un crayon. Le reste, on l’a dessiné petit à petit.', 'When I was little, the village had one house and one pencil. We drew the rest bit by bit.'),
         L('Ces fleurs-là, c’est ta maman qui les a plantées. Enfin… elle les a dessinées, et elles ont poussé.', 'Your mom planted those flowers. Well… she drew them, and they grew.'),
       ] },
-      { id: 'bourgFacteur', x: 26, y: 7, look: { hair: '#5a3a20', shirt: '#4a7ad6', pants: '#2a3a5a', hat: '#f2c14e' }, facing: 'left', wander: true, text: [
-        L('Ici, personne n’écrit de lettres : on s’envoie des dessins ! Ma sacoche est pleine de chats, de soleils et de maisons.', 'Nobody writes letters here: people send each other drawings! My bag is full of cats, suns and houses.'),
-      ] },
-      { id: 'bourgPecheur', x: 5, y: 18, look: { hair: '#6a4a2a', shirt: '#3a8ac0', pants: '#4a4a5a', hat: '#5a8a3a' }, facing: 'up', text: [
-        L('La mare du bourg a l’air toute petite, mais il paraît que des Bestioles vivent tout au fond.', 'The village pond looks tiny, but they say Critters live right at the bottom.'),
-        L('J’attends qu’elles mordent depuis ce matin. Patience, patience…', 'I’ve been waiting for a bite since this morning. Patience, patience…'),
-      ] },
-      { id: 'bourgJardinier', x: 13, y: 17, look: { hair: '#e8e8f0', shirt: '#6a9a4a', pants: '#6a4a2a', hat: '#e8d070' }, facing: 'down', text: [
+      { id: 'bourgJardinier', gift: { item: 'baie-bleue', n: 2, text: L('Tiens, des baies de mon potager ! Donne-en une à tenir à ta Bestiole : quand ses PV tombent à la moitié, elle la croque toute seule.', 'Here, berries from my vegetable patch! Give one to your Critter to hold: when its HP drops to half, it munches it all by itself.') }, x: 13, y: 17, look: { hair: '#e8e8f0', shirt: '#6a9a4a', pants: '#6a4a2a', hat: '#e8d070' }, facing: 'down', text: [
         L('Mes choux ! Ce Gloutillon les grignote depuis le printemps.', 'My cabbages! That Munchlet has been nibbling them since spring.'),
         L('Bah, je le laisse faire. Un dessin qui a faim, c’est un dessin qui grandit.', 'Oh well, I let it be. A hungry drawing is a growing drawing.'),
       ] },
       { id: 'bourgChenillou', x: 15, y: 19, mon: '012', look: LOOKS.kid, facing: 'down', wander: true, text: [L('Le Gloutillon mâchouille une feuille de chou, l’air très content de lui.', 'The Munchlet is munching a cabbage leaf, looking very pleased with itself.')] },
-      { id: 'bourgGamin', x: 22, y: 19, look: { hair: '#2a2238', shirt: '#5bd6a0', pants: '#6a4a8a' }, facing: 'right', wander: true, text: [
-        L('Je fais la course avec le Piafou. Il triche : il a des ailes !', 'I’m racing the Chirpie. It cheats: it has wings!'),
-      ] },
-      { id: 'bourgPiafou', x: 24, y: 17, mon: '013', look: LOOKS.kid, facing: 'left', wander: true, text: [L('Piou ! Piouuu !', 'Cheep! Cheeep!')] },
     ],
     residents: [
       // the drawing teacher's studio: she, a pupil, and the Grognours that sits for them

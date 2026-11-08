@@ -48,6 +48,11 @@ export interface NpcDef {
   mon?: string;
   /** Once the flag `if` is set (what the character talked about has happened): lines said instead of `text`. */
   later?: { if: string; text: LText[] };
+  /**
+   * A present given the first time they are talked to, after their lines (flag `don:<id>`): a small thing that helps
+   * (a few berries, balls, a cure), often with a tip. `if`: only once that flag is set.
+   */
+  gift?: { item: string; n?: number; text: LText; if?: string };
   /** Once the story is over: lines said instead of `text`, and a present given the first time (`cadeau:<id>`). */
   afterStory?: { text: LText[]; gift?: { item: string; n?: number; text: LText } };
 }

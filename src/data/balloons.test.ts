@@ -5,6 +5,7 @@ import { WORLD } from './worldmap';
 import { LEGEND } from '../overworld/mapTypes';
 import { tile } from '../overworld/tiles';
 import { footprint } from '../overworld/buildings';
+import { ITEM_BY_ID } from './items';
 
 /** The Pencil Balloon moored in each town (src/data/balloons.ts): where it stands must not get in anyone's way. */
 describe('Pencil Balloons', () => {
@@ -63,9 +64,38 @@ describe('Pencil Balloons', () => {
         }
         return [...doors.map(([x, y]) => `${x},${y}`), ...(map.warps ?? []).map((w) => `${w.x},${w.y}`)].filter((k) => seen.has(k));
       };
+      // the owner's rules: at least 2 tiles from a way out of town (an exit and the tiles leading in) or a door,
+      // and nobody standing around it (a wanderer walks up to 2 tiles from home)
+      const near = (a: [number, number], b: [number, number]) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]));
+      const balloonTiles: [number, number][] = [...basket as [number, number][], ...basket.flatMap(([x]) => [[x, b.basket.y - 1], [x, b.basket.y - 2]] as [number, number][]), [b.pilot.x, b.pilot.y]];
+      const ways: [number, number][] = [...doors];
+      for (const w of map.warps ?? []) {
+        const [dx, dy] = w.y === 0 ? [0, 1] : w.y === H - 1 ? [0, -1] : w.x === 0 ? [1, 0] : w.x === W - 1 ? [-1, 0] : [0, 0];
+        for (let k = 0; k <= 5; k++) ways.push([w.x + dx * k, w.y + dy * k]);
+      }
+      for (const t of balloonTiles) for (const w of ways) expect(near(t, w), `${t} by the way ${w}`).toBeGreaterThanOrEqual(2);
+      for (const n of (map.npcs ?? []).filter((x) => x.id !== 'pilot')) {
+        for (const t of balloonTiles) expect(near(t, [n.x, n.y]), `${n.id} by the balloon`).toBeGreaterThanOrEqual(n.wander ? 5 : 3);
+      }
       const without = reach(new Set());
       const withIt = reach(new Set([...basket.map(([x, y]) => `${x},${y}`), `${b.pilot.x},${b.pilot.y}`]));
       expect(withIt.sort()).toEqual(without.sort());
     });
   }
+});
+
+/** Townsfolk who give something (`gift`): a little help, never a shower of presents. */
+describe('presents from townsfolk', () => {
+  const givers = Object.entries(MAPS).flatMap(([map, m]) => (m.npcs ?? []).filter((n) => n.gift).map((n) => ({ map, n })));
+  it('are real items, at most one giver per map, each with its own flag', () => {
+    for (const { n } of givers) {
+      expect(ITEM_BY_ID[n.gift!.item], n.id).toBeDefined();
+      expect(n.gift!.n ?? 1).toBeLessThanOrEqual(3);
+      expect(n.gift!.text.fr && n.gift!.text.en, n.id).toBeTruthy();
+    }
+    const perMap = new Map<string, number>();
+    for (const { map } of givers) perMap.set(map, (perMap.get(map) ?? 0) + 1);
+    for (const [map, k] of perMap) expect(k, map).toBe(1);
+    expect(new Set(givers.map(({ n }) => n.id)).size).toBe(givers.length);
+  });
 });

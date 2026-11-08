@@ -175,6 +175,7 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
       { id: 'portSailor', x: 21, y: 15, look: LOOKS.sailor, facing: 'down', wander: true, text: [
         L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!'),
         L('Tous nos bateaux en papier, c’est Azur, le guide bleu, qui les plie. Il en garde un tout spécial pour qui battra Marine.', 'All our paper boats are folded by Azure, the blue guide. He keeps a very special one for whoever beats Marine.'),
+        L('Marine et ses Bestioles Eau ? Les Bestioles Plante et Électrique leur mènent la vie dure. Le Feu, par contre, fait pschitt…', 'Marine and her Water Critters? Grass and Electric Critters give them a hard time. Fire, on the other hand, just goes fizzle…'),
       ], later: { if: 'gift:bateau', text: [
         L('Les vagues ici sont peintes à l’aquarelle. Quand il pleut, la mer déborde un peu sur le sable !', 'The waves here are painted in watercolour. When it rains, the sea runs a little onto the sand!'),
         L('Azur t’a plié son bateau spécial ? Prends-en soin : un bateau en papier, ça n’aime pas les coups de vent !', 'Azure folded you his special boat? Take care of it: paper boats don’t like gusts of wind!'),
@@ -189,15 +190,10 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
         id: 'pecheurPort', x: 21, y: 18, look: LOOKS.sailor, facing: 'down',
         text: [L('Ici, au Port, ce qui mord dépend de toi : plus ton équipe est forte, plus les Bestioles qui mordent sont fortes.', 'Here at the Port, what bites depends on you: the stronger your team, the stronger the Critters that bite.'), L('Et les plus rares ne mordent que pour les équipes vraiment costaudes !', 'And the rarest ones only bite for really strong teams!')],
       },
-      { id: 'portPeintre', x: 9, y: 12, look: { hair: '#c8a060', shirt: '#f2d06a', pants: '#5a8ad6', hat: '#e07aa6' }, facing: 'up', text: [
-        L('Sur la Place des Peintres, chacun a son chevalet. Moi, je peins le port… mais les bateaux bougent tout le temps !', 'On Painters’ Square everyone has an easel. I paint the harbour… but the boats keep moving!'),
-        L('Marine dit qu’une aquarelle, il faut la laisser couler. Alors je la laisse couler. Jusque par terre.', 'Marine says you have to let a watercolour run. So I let it run. All the way to the ground.'),
-      ] },
-      { id: 'portPecheuse', x: 26, y: 19, look: { hair: '#8a4a2a', shirt: '#f2c14e', pants: '#3a5aa8', hat: '#f2c14e', longHair: true }, facing: 'down', text: [
+      { id: 'portPecheuse', gift: { item: 'retouche', n: 2, text: L('Tiens, de la Retouche, c’est moi qui la mélange. Un coup de pinceau, et plus de brûlure, de poison ni de sommeil !', 'Here, some Retouch, I mix it myself. One brush stroke, and no more burns, poison or sleep!') }, x: 26, y: 19, look: { hair: '#8a4a2a', shirt: '#f2c14e', pants: '#3a5aa8', hat: '#f2c14e', longHair: true }, facing: 'down', text: [
         L('Chut… ça mord ! … Ah non. C’est encore un Avrilou. Il s’est collé dans mon dos en rigolant.', 'Shh… something’s biting! … Oh no. Another Foolfin. It stuck itself on my back, giggling.'),
         L('À l’aube, tous les bateaux sortent. Le soir, ils rentrent avec des filets pleins de papier mouillé.', 'At dawn all the boats go out. In the evening they come back with nets full of wet paper.'),
       ] },
-      { id: 'portPiaf', x: 31, y: 16, mon: '013', look: LOOKS.kid, facing: 'down', wander: true, text: [L('Le Piafou guette les mouettes au bout de la pointe. Il crie plus fort qu’elles !', 'The Chirpie watches the gulls from the end of the point. It squawks louder than they do!')] },
     ],
     residents: [
       // Port-Aquarelle: a fisherman's family

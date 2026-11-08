@@ -430,6 +430,13 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     if (def.afterStory && flag('ending')) return void locked(() => afterStoryTalk(def));
     if (def.script && scripts[def.script]) return void runScript(def.script);
     if (def.later && flag(def.later.if)) return void locked(() => sayAll(def.later!.text));
+    const gift = def.gift;
+    if (gift && !flag(`don:${def.id}`) && (!gift.if || flag(gift.if))) {
+      return void locked(async () => {
+        if (def.text) await sayAll(def.text);
+        await giftOnce(`don:${def.id}`, gift, gift.text);
+      });
+    }
     if (def.text) return void locked(() => sayAll(def.text!));
     return;
   }
