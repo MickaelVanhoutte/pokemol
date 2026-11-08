@@ -139,6 +139,19 @@ a little under their lead's level. The legendaries and Coconfus never come out o
 Speaker names live in `src/story/cast.ts`; Papa, the Great Eraser and the leaders are defined where
 they are used.
 
+## Planches (the moments drawn full screen)
+
+Three moments are drawn full screen, stroke by stroke (`src/story/planches.ts`), besides the prologue and the
+drawing of the ending:
+- **The Prof's photo** (`profPhoto`, `act1.ts`, after the first rival battle): a flash, a Polaroid of the player and
+  the first Bestiole develops on the lab's cork board, a little blurry; the Prof's « un peu floue… Le mieux est
+  parfois l'ennemi du bien » is said over it. Papa's camera at the ending echoes it.
+- **The Great Eraser's face** (`reveal`, `finale.ts`, both at the Edge of the Page and for saves replaying the
+  ending): eraser crumbs fall from the rubbed-out face, a face is pencilled in under the Team Gomme cap, the cap is
+  rubbed away: « Le Grand Effaceur… a ton visage ! ».
+- **Waking up** (`eyesOpen`, `scripts.ending`): Papa's « Ma puce ? » in the dream's white, warm eyelids in the
+  morning light, the eyes opening, closing, blinking, and the real bedroom coming into focus.
+
 ## Region path
 
 | # | Maps (ids) | What happens | Flags set |

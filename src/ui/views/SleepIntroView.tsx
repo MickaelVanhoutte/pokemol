@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr, type LText } from '../../i18n';
 import { fadeOutMusic, playMusic } from '../../audio/music';
 import { sfx } from '../../audio/sfx';
+import { lids as drawLids } from '../planche/draw';
 
 /**
  * Before the Prof's speech: falling asleep at the desk, seen through heavy eyelids. A lamp, a sketchbook
@@ -166,19 +167,7 @@ export function SleepIntroView({ onDone }: { onDone: () => void }) {
       // the eyelids, and the first colours of the dream behind them
       e.clearRect(0, 0, W, H);
       const l = lids(t);
-      if (l > 0) {
-        e.fillStyle = '#07050b';
-        // an almond-shaped opening: the lids meet at the corners first
-        const edge = (H / 2) * l, corner = Math.min(H / 2 + 2, edge * 1.6 + l * 40), mid = edge * (0.3 + 0.7 * l);
-        e.beginPath();
-        e.moveTo(0, 0); e.lineTo(W, 0); e.lineTo(W, corner);
-        e.quadraticCurveTo(W / 2, 2 * mid - corner, 0, corner);
-        e.fill();
-        e.beginPath();
-        e.moveTo(0, H); e.lineTo(W, H); e.lineTo(W, H - corner);
-        e.quadraticCurveTo(W / 2, H - (2 * mid - corner), 0, H - corner);
-        e.fill();
-      }
+      drawLids(e, W, H, l);
       // the fireflies of the dream, behind the shut eyes, one after the other
       const dream = t < LIGHT ? 1 : 1 - clamp((t - LIGHT) / 700);
       if (t > SHUT) {

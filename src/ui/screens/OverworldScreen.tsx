@@ -20,6 +20,8 @@ import { MonPick } from '../MonPick';
 import { DialogBox } from '../DialogBox';
 import { cinemaOn } from '../../overworld/scene';
 import { sceneFast } from '../../anim/sceneClock';
+import { plancheOverlay } from '../planche/planche';
+import { PlancheView } from '../planche/PlancheView';
 import './overworld.css';
 
 const DIR_KEY: Record<Dir, string> = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
@@ -47,7 +49,7 @@ export function OverworldScreen() {
     g.start();
     g.input.clear();
     const down = (e: KeyboardEvent) => {
-      if (menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value) return;
+      if (menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value || plancheOverlay.value) return;
       const d = KEY_DIR[e.key];
       if (d) { e.preventDefault(); g.input.press(d); return; }
       if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!e.repeat) g.input.pressA(); }
@@ -94,6 +96,7 @@ export function OverworldScreen() {
         {mapName && <Window class="ow__mapname">{mapName}</Window>}
         <button class="ow__menu-btn" onClick={() => getGame().input.pressMenu()} aria-label="Menu"><img class="sicon" src={sketchIconUrl('bag')!} width={34} height={34} alt="" /></button>
         {toast.value && <Window class="ow__toast">{toast.value}</Window>}
+        {plancheOverlay.value && <PlancheView key={plancheOverlay.value.planche.id} />}
         <DialogBox />
       </div>
       {monOverlay.value && <MonOverlay />}
@@ -224,7 +227,7 @@ function useJoystick() {
   };
   const handlers = {
     onPointerDown: (e: PointerEvent) => {
-      if (cur.current || menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value) return;
+      if (cur.current || menuOpen.value || monOverlay.value || evoOverlay.value || learnOverlay.value || hatchOverlay.value || nameOverlay.value || pictureOverlay.value || plancheOverlay.value) return;
       if ((e.target as HTMLElement).closest('button, .dialog, .dialog-choices, .startmenu')) return;
       cur.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, dir: null };
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);

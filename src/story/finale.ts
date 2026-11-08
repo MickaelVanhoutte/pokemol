@@ -6,14 +6,13 @@
  * Coconfus has become that drawing. Saves that saw the old ending replay it here, without the battle.
  */
 import { L, tr } from '../i18n';
-import { doubtLook, hoodedLook } from '../data/appearance';
+import { doubtLook } from '../data/appearance';
 import { creature } from '../data/creatures';
 import { ORIGINALS, originalUrl } from '../data/originals';
 import { evolutionMoves, evolve } from '../engine/pk/creature';
 import { sheetFor, type Actor } from '../overworld/game';
 import { LOOKS, lookOf, type Look } from '../overworld/sprites';
 import { healParty, save, see, update } from '../state/game';
-import { personUrl } from '../ui/personArt';
 import {
   ask, bubble, evoOverlay, flag, getGame, openScreen, playerLook, say, sayAll, scripts, setFlag, shake, showPicture,
   teachMove, trainerBattle, wait, warpTo,
@@ -21,6 +20,8 @@ import {
 import { MOM } from './cast';
 import { choose, coconfusJoins, COCONFUS, endingOf, findCoconfus, RETOUCHE, type Way } from './choices';
 import { eraseOut, sketchIn } from '../overworld/scene';
+import { showPlanche } from '../ui/planche/planche';
+import { effaceurVisage, reveil } from './planches';
 
 const EFFACEUR = L('Le Grand Effaceur', 'The Great Eraser');
 const PAPA = L('Papa', 'Daddy');
@@ -35,14 +36,11 @@ const unmasked = (): Look => {
  * His face comes back, and it is the player's own: the rubbed-out face fills in with the player's eyes and smile,
  * then Team Gomme's cap slowly fades away. On the map too, he now looks like the player.
  */
-async function reveal(boss?: Actor) {
+export async function reveal(boss?: Actor) {
   await say(L('Le Grand Effaceur porte la main à son visage effacé… Les miettes de gomme tombent une à une.', 'The Great Eraser raises a hand to his rubbed-out face… The eraser crumbs fall away one by one.'));
   await shake(500);
-  const me = playerLook();
-  await showPicture(personUrl(doubtLook(me)), tr(L('Le Grand Effaceur… a ton visage !', 'The Great Eraser… has your face!')), [
-    { src: personUrl(hoodedLook(me, 'blank')), hold: 900, fade: 1600 },
-    { src: personUrl(hoodedLook(me)), hold: 900, fade: 3200 },
-  ]);
+  // drawn full screen: the crumbs fall, a face is pencilled in, the cap is rubbed away (src/story/planches.ts)
+  await showPlanche(effaceurVisage(playerLook()));
   if (boss) boss.sheet = sheetFor(unmasked());
   await sayAll([
     L('Tu ne m’avais pas reconnu ? Je suis toi. La petite voix qui veut que tout soit parfait.', 'You didn’t recognise me? I am you. The little voice that wants everything to be perfect.'),
@@ -138,11 +136,8 @@ scripts.ending = async () => {
     if (flag('reveil:dodo') && !flag('reel:visite')) await backHome();
     return;
   }
-  const g = getGame();
   await wait(500);
-  await say(L('… {name} ? Ma puce ?', '… {name}? Sweetie?'), PAPA);
-  await g.fadeTo(0, 1600, 'white');
-  await bubble('player', '?', 800);
+  await eyesOpen();
   await sayAll([
     L('Tu t’es {g:endormie|endormi} sur ton cahier de dessin. Tu as encore les crayons dans la main !', 'You fell asleep on your sketchbook. You’ve still got the pencils in your hand!'),
     L('Je viens de prendre tes nouveaux dessins en photo, comme toujours. Comme ça, ils ne se perdront jamais.', 'I just took pictures of your new drawings, like always. That way, they’ll never get lost.'),
@@ -155,6 +150,17 @@ scripts.ending = async () => {
   await openScreen({ id: 'credits', fromWorld: true });
   await papaGoesDown();
 };
+
+/** Papa's voice in the dream's white, then the eyes open on the morning (src/story/planches.ts). */
+export async function eyesOpen() {
+  await say(L('… {name} ? Ma puce ?', '… {name}? Sweetie?'), PAPA);
+  // the planche covers the white, which goes underneath
+  const eyes = showPlanche(reveil());
+  await wait(150);
+  await getGame().fadeTo(0, 1);
+  await eyes;
+  await bubble('player', '?', 800);
+}
 
 /** After the credits: Papa goes downstairs, and the real house is the player's to look around until bedtime. */
 async function papaGoesDown() {

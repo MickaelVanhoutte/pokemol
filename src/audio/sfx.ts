@@ -133,6 +133,13 @@ export const sfx = {
   tear: () => { for (let i = 0; i < 7; i++) noise(i * 0.028, 0.035 + Math.random() * 0.02, 2200 + Math.random() * 1800, 0.05); },
   /** A page turning. */
   page: () => { noise(0, 0.3, 1100, 0.045, 3200); noise(0.14, 0.12, 2600, 0.025); },
+  /** A camera: « clic-clac », the shutter opening and closing over a little whirr. */
+  shutter: () => {
+    noise(0, 0.025, 3200, 0.13);
+    play([{ f: 1900, dur: 0.015, type: 'square', vol: 0.03 }, { f: 1500, at: 0.11, dur: 0.015, type: 'square', vol: 0.03 }]);
+    noise(0.11, 0.03, 2400, 0.11);
+    noise(0.16, 0.22, 650, 0.025, 900);
+  },
   /** A « ! » popping over someone's head. */
   alert: () => play([{ f: 1047, dur: 0.05, type: 'triangle', vol: 0.05 }, { f: 1568, at: 0.05, dur: 0.09, type: 'triangle', vol: 0.05 }]),
   /** A « ? » popping over someone's head. */

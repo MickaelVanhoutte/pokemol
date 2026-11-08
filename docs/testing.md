@@ -78,6 +78,10 @@ its own state (an empty `save`). Saves live in `localStorage` under `atelier-bes
 Don't `await` a script promise from a page-evaluate call: scripts wait for dialog input, so the call
 deadlocks. Start the script, then close dialogs in a loop
 (`__ab.dialog.value && __ab.closeDialog()`).
+A planche playing is `__ab.plancheOverlay.value`; `__ab.showPlanche(p)` plays one over the world (build it from
+`PLANCHES(look)` in `src/story/planches.ts`). A press (`z`) jumps to its next beat. Take frames with
+`page.screenshot({ captureBeyondViewport: false })`: the default resizes the page for the capture, and headless
+Chrome then sometimes captures the canvas twice, stacked.
 
 **Phone checks.** Screenshot these sizes:
 - 360×740 and 412×870, at 100% and 130% root font (`document.documentElement.style.fontSize = '130%'`);
@@ -123,6 +127,9 @@ uses it to fire the first move, in battles whose seed was searched (`seedFor`) s
 the scene shows (a critical hit, a super-effective one, a final blow).
 The owner follows from their phone: the page starts with a « Lancer » button (sound needs a tap) and has
 the battle speed, MOUVEMENTS and sound settings.
+The story demos (`m3a`, `m3b`) are private Artifacts: they show the twists. `m3b` plays the planches through the
+story's own functions (`profPhoto`, `reveal`, `eyesOpen`). Their miniatures can be copied server side from an
+earlier demo (`files` entries `{ artifact, path }`) instead of uploading them again.
 
 ## Shipping
 

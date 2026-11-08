@@ -147,6 +147,14 @@ re-renders everything.
   that change a map, it keeps a picture of the view, rebuilds the map (`refreshMap`, which keeps the camera) and takes
   the old picture away: `erase` (an eraser sweeping bands), `restore` (colour flooding out in a circle), `sketch` (pencil
   strokes hatching the new drawing in), `rise` (a wall coming up). Used for the woods and the hamlet.
+- Planches (`src/ui/planche/`; the story's own in `src/story/planches.ts`, see
+  [docs/content.md](docs/content.md#writing-a-planche)): a few big moments drawn full screen over the world, under the
+  dialog box and the touch buttons (`PlancheView`, z-index 18). A `Planche` is a `draw(ctx, t, w, h, kit)` redrawn from
+  scene time (holding B hurries it, a press jumps to its next beat), beats with captions, sound cues and pictures made
+  when it starts; `draw.ts` pencils a picture in or rubs it out through hatching (`hatched`), and has crumbs, the
+  pencil, the eraser, eyelids (`lids`, shared with the prologue) and a camera (`camAt`, `look`). `showPlanche(p)` waits
+  for it (`end: 'tap'`: until a press), `withPlanche(p, fn)` keeps its last picture while someone talks. Used for the
+  Prof's photo (`profPhoto`, `act1.ts`), the Great Eraser's face (`reveal`, `finale.ts`) and waking up (`eyesOpen`).
 - The living world: `particles.ts` (grass blades from tall grass, dust landing from a ledge, rings behind the boat,
   a pool stepped and drawn by `Game`), a soft shadow under everyone, `doors.ts` (doorways open, `stepOut` from a
   building), `ambient.ts` (each map's `ambient`, fireflies outdoors at night), and the time of day's tint from

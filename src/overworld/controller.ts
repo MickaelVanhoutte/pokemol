@@ -30,6 +30,7 @@ import { sceneWait, setSceneGate } from '../anim/sceneClock';
 import type { ShakeKind } from './camera';
 import { DOOR_OPEN_MS, stepOut } from './doors';
 import { monArtUrl } from '../ui/monArt';
+import { plancheOverlay, showPlanche } from '../ui/planche/planche';
 import { isWater, tile } from './tiles';
 import { calm, missed, wildOdds, wildStep } from './encounterRate';
 import { berryFlag, isRipe, localDay } from './berries';
@@ -62,7 +63,7 @@ export const menuOpen = signal(false);
 export function menuAllowed(): boolean {
   const g = game;
   return !!g?.player && g.lock === 0 && !g.player.moving && !dialog.value && !monOverlay.value && !nameOverlay.value
-    && !evoOverlay.value && !learnOverlay.value && !hatchOverlay.value && !pictureOverlay.value && screen.value.id === 'overworld';
+    && !evoOverlay.value && !learnOverlay.value && !hatchOverlay.value && !pictureOverlay.value && !plancheOverlay.value && screen.value.id === 'overworld';
 }
 export const toast = signal<string | null>(null);
 
@@ -1394,5 +1395,5 @@ export function giveItem(id: string, n = 1) {
 
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // debugging handle for playtesting from the console
-  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, learnOverlay, hatchOverlay, nameOverlay, pictureOverlay, offerNickname, teachMove, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
+  (window as unknown as Record<string, unknown>).__ab = { getGame, save, update, warpTo, runScript, scripts, flag, setFlag, dialog, closeDialog, monOverlay, evoOverlay, learnOverlay, hatchOverlay, nameOverlay, pictureOverlay, plancheOverlay, showPlanche, offerNickname, teachMove, useFieldItem, toggleBike, screen, fight, createMon, checkEvolutions, refreshMap, trainerBattle };
 }

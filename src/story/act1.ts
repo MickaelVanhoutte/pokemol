@@ -1,6 +1,6 @@
 import { L, tr } from '../i18n';
 import { playMusic } from '../audio/music';
-import { creature, STARTERS } from '../data/creatures';
+import { creature, monLabel, STARTERS } from '../data/creatures';
 import { item } from '../data/items';
 import { partyOf, RIVAL_COUNTER } from '../data/trainers';
 import { newSeed } from '../engine/rng';
@@ -9,13 +9,15 @@ import type { Dir } from '../save/schema';
 import { addItem, healParty, save, update } from '../state/game';
 import { sfx } from '../audio/sfx';
 import {
-  dayPhase, mapMusic, ask, bubble, fight, flag, flash, getGame, giveItem, giveMon, offerNickname, say, sayAll, scripts, setFlag, showMons, showToast,
+  dayPhase, mapMusic, ask, bubble, fight, flag, getGame, giveItem, giveMon, offerNickname, playerLook, say, sayAll, scripts, setFlag, showMons, showToast,
   trainerBattle, wait,
 } from '../overworld/controller';
 import { sleepUntil } from './common';
 import { choose, COCONFUS, coconfusJoins, comeUp, goAway, RETOUCHE } from './choices';
 import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 import { redraw } from '../overworld/scene';
+import { withPlanche } from '../ui/planche/planche';
+import { photo } from './planches';
 
 // ------------------------------------------------------------------ home
 
@@ -122,6 +124,19 @@ scripts.prof = async () => {
   await say(tips[Math.floor(Math.random() * tips.length)], PROF);
 };
 
+/** The Prof's « Clic-clac ! »: the photo develops on the cork board while the Prof talks (src/story/planches.ts). */
+export async function profPhoto() {
+  const prof = getGame().npc('prof');
+  if (prof) getGame().faceToward(prof, getGame().player);
+  const first = save.value!.party.find((m) => !m.egg);
+  const lines = [
+    L('Clic-clac ! Une photo de vous deux, pour l’album.', 'Click-clack! A picture of you two, for the album.'),
+    L('Oh, elle est un peu floue… Tant pis, je la garde ! Le mieux est parfois l’ennemi du bien, comme on dit.', 'Oh, it’s a bit blurry… Never mind, I’m keeping it! Sometimes perfect is the enemy of good, as they say.'),
+  ];
+  if (!first) return sayAll(lines, PROF);
+  await withPlanche(photo({ look: playerLook(), mon: first, name: save.value!.player.name, label: monLabel(first) }), () => sayAll(lines, PROF));
+}
+
 scripts.labTable = async () => {
   if (hasTeam()) {
     await say(L('Il n’y a plus de Bestiole sur la table.', 'There are no more Critters on the table.'));
@@ -164,12 +179,8 @@ scripts.labTable = async () => {
     g.remove('rival');
   }
   setFlag('rival1');
-  const prof = g.npc('prof');
-  if (prof) g.faceToward(prof, g.player);
-  await flash('white', 160);
+  await profPhoto();
   await sayAll([
-    L('Clic-clac ! Une photo de vous deux, pour l’album.', 'Click-clack! A picture of you two, for the album.'),
-    L('Oh, elle est un peu floue… Tant pis, je la garde ! Le mieux est parfois l’ennemi du bien, comme on dit.', 'Oh, it’s a bit blurry… Never mind, I’m keeping it! Sometimes perfect is the enemy of good, as they say.'),
     L('Tiens, voici 5 Croque-Carnets et 2 Potions.', 'Here are 5 Snapbooks and 2 Potions.'),
     L('Lance un Croque-Carnet sur une Bestiole sauvage affaiblie : il la dessine, l’aspire dans sa page, et elle rejoint ton équipe !', 'Throw a Snapbook at a weakened wild Critter: it draws it, pulls it into its page, and it joins your team!'),
     L('Ton Bestiodex note toutes les Bestioles que tu croises. Essaie de le remplir !', 'Your Critterdex records every Critter you meet. Try to fill it up!'),

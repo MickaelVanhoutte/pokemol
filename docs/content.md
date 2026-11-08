@@ -328,6 +328,35 @@ Scripts run one at a time and lock player input. To change an existing script af
 (post-game lines…), wrap it in a later act instead of editing it in place:
 `const prev = scripts.x; scripts.x = async () => { if (!flag('ending')) return prev(); … }`.
 
+### Writing a planche
+
+Only the few biggest moments are drawn full screen; everything else stays on the map. A planche lives in
+`src/story/planches.ts` and is built by a function, so its pictures can depend on the save:
+
+```ts
+export function photo(o: { look: Appearance; mon: { species: string; shiny?: boolean }; name: string; label: string }): Planche {
+  return {
+    id: 'photo',                     // unique: the view is keyed on it
+    ms: 5200,                        // its length in scene ms (holding B runs it ×3)
+    end: 'auto',                     // 'tap': it holds its last picture until a press
+    beats: [{ at: 0 }, { at: 2600, caption: L('…', '…') }],  // a press jumps to the next beat
+    images: () => ({ me: personUrl(o.look) }),               // loaded before it starts (browser only)
+    cues: [{ at: 1, sound: 'shutter' }, { from: 3800, to: 4900, sound: 'pencil' }],
+    draw(ctx, t, w, h, kit) { /* everything from t, in CSS pixels */ },
+  };
+}
+```
+
+- Draw everything from `t`: Android can empty a canvas, and the next frame paints it again. Work canvases come from
+  `kit.scratch(i, w, h)` (cleared, kept while it plays); pictures from `kit.img(name)` (`undefined` until loaded).
+- Helpers in `src/ui/planche/draw.ts`: `hatched` (a part of a picture pencilled in, `mode: 'in'`, or rubbed out,
+  `'out'`, row by row; `filter: LINES` with `blend: 'multiply'` draws only its graphite lines first), `pencil` and
+  `eraser` at the stroke's tip, `crumbs`, `grain`, `lids`, `fit`, and a camera: `camAt(keys, t, kit.calm)` + `look`.
+  `kit.calm` (MOUVEMENTS : DOUX) means no zooms, knocks or flashes.
+- `veil(t)`: a see-through planche (the world shows through this CSS `backdrop-filter`), like waking up.
+- In a script: `await showPlanche(p)`, or `await withPlanche(p, () => sayAll([...], WHO))` to keep its last picture
+  while someone talks. Captions are `L()` texts; `src/story/planches.test.ts` checks beats, captions and cues.
+
 ## Trainers
 
 `src/data/trainers.ts`, one `T({...})` per trainer, then an NPC with `trainer: '<id>'` and `sight`. An Atelier's
