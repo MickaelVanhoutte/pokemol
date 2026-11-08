@@ -3,10 +3,12 @@
  * `.pk-fx-back` under them), the drawings' motions and the hit reactions.
  */
 import type { Side } from '../../../engine/pk/battle';
-import { fxSound } from '../../../audio/sfx';
+import { fxSound, sfx } from '../../../audio/sfx';
+import { calmMotion } from '../../../anim/calm';
 import { Brush } from './brush';
 import type { Anchor, Env, Layer, Recipe } from './core';
 import { BLINK, motionFrames, reactionFrames, run, shakeFrames } from './motions';
+import { cameraFrames, focusFrames, hitStopMs, stopClock } from './camera';
 
 export interface PlayOpts {
   /** The side using the move. */
@@ -22,6 +24,10 @@ export interface PlayOpts {
   /** Leaves the last frame on screen (a caught Croque-Carnet) until the next animation. */
   keep?: boolean;
   seed?: number;
+  /** The camera follows the move: leans on the attacker then zooms on the target ('hit'), or only leans ('self'). */
+  camera?: 'hit' | 'self';
+  /** The hit knocks the target out: a longer freeze-frame. */
+  finalBlow?: boolean;
 }
 
 /** Flipbook frames a second for the pencil wobble. */
@@ -52,8 +58,28 @@ export class FxStage {
   private held: Partial<Record<Side, Animation>> = {};
   private blinks: Partial<Record<Side, Animation>> = {};
   private frozen: Animation[] = [];
+  /** The camera's current move (cancelled before measuring the scene again). */
+  private camAnim: Animation | null = null;
 
   constructor(private root: () => HTMLElement | null) {}
+
+  private cam(scene: HTMLElement) {
+    return scene.querySelector<HTMLElement>('.pk-cam');
+  }
+
+  /** Back to the plain view, so the drawings are measured where they stand. */
+  private settleCamera() {
+    this.camAnim?.cancel();
+    this.camAnim = null;
+  }
+
+  private runCamera(scene: HTMLElement, frames: Keyframe[] | null, dur: number, delay = 0): Animation | null {
+    const el = this.cam(scene);
+    if (!frames || !el || typeof el.animate !== 'function' || calmMotion()) return null;
+    this.settleCamera();
+    this.camAnim = el.animate(frames, { duration: dur, delay, easing: 'linear', fill: 'none' });
+    return this.camAnim;
+  }
 
   private env(scene: HTMLElement, o: PlayOpts): Env {
     const rect = scene.getBoundingClientRect();
@@ -86,7 +112,7 @@ export class FxStage {
     });
   }
 
-  private render(panes: Pane[], env: Env, layers: Layer[], ms: number, boil: number) {
+  private render(panes: Pane[], env: Env, layers: Layer[], ms: number, boil: number, flash = 0) {
     for (const { ctx, back } of panes) {
       ctx.clearRect(0, 0, env.w, env.h);
       const b = new Brush(ctx, env, boil);
@@ -95,12 +121,15 @@ export class FxStage {
         const t = (ms - l.start) / l.dur;
         if (t >= 0 && t <= 1) l.draw(b, t);
       }
+      // a critical hit: the page flashes white for the length of the freeze-frame
+      if (!back && flash > 0) b.flash(flash);
     }
   }
 
   private setup(recipe: Recipe, o: PlayOpts) {
     const scene = this.root();
     if (!scene) return null;
+    this.settleCamera();
     const part = o.charge && recipe.charge ? recipe.charge : recipe;
     const env = this.env(scene, o);
     const layers = part.layers.map((f) => f(env));
@@ -108,7 +137,9 @@ export class FxStage {
     const hit = layers.find((l) => l.impact !== undefined);
     const impact = hit ? hit.start + hit.impact! : total * 0.5;
     const speed = o.speed * (o.quick ? 0.7 : 1);
-    return { scene, part, env, layers, total, impact, speed };
+    // the freeze-frame at the hit (none on a charge turn, or with MOUVEMENTS : DOUX)
+    const stop = o.charge || calmMotion() ? 0 : hitStopMs({ crit: o.crit, eff: o.eff, finalBlow: o.finalBlow });
+    return { scene, part, env, layers, total, impact, speed, stop };
   }
 
   /** Starts the motions; returns them so a frozen frame can pause them. */
@@ -133,6 +164,14 @@ export class FxStage {
         if (sh) out.push(sh);
       }
     }
+    if (o.camera) {
+      const frames = cameraFrames({
+        user: env.user, target: env.target, userAt: recipe.userAt ?? 0, impact, total: s.total,
+        crit: env.crit, eff: env.eff, kind: o.charge ? 'self' : o.camera,
+      });
+      const c = this.runCamera(scene, frames, s.total * speed);
+      if (c) out.push(c);
+    }
     return out;
   }
 
@@ -141,8 +180,23 @@ export class FxStage {
     this.stop();
     const s = this.setup(recipe, o);
     if (!s) return Promise.resolve();
-    this.moveAll(s, recipe, o);
-    const sounds = s.layers.flatMap((l) => (l.sounds ?? []).map(([kind, at]) => setTimeout(() => fxSound(kind), (l.start + at) * s.speed)));
+    const motions = this.moveAll(s, recipe, o);
+    // sounds after the hit wait for the freeze-frame
+    const later = (ms: number) => (s.stop && ms > s.impact ? ms + s.stop : ms);
+    const sounds = s.layers.flatMap((l) => (l.sounds ?? []).map(([kind, at]) => setTimeout(() => fxSound(kind), later(l.start + at) * s.speed)));
+    if (s.stop) {
+      // everything holds still for a moment when the hit lands
+      sounds.push(setTimeout(() => {
+        if (o.crit) sfx.crit();
+        s.scene.classList.add('is-stop');
+        for (const a of motions) a.pause();
+      }, s.impact * s.speed));
+      sounds.push(setTimeout(() => {
+        s.scene.classList.remove('is-stop');
+        for (const a of motions) if (a.playState === 'paused') a.play();
+      }, (s.impact + s.stop) * s.speed));
+    }
+    const length = s.total + s.stop;
     const panes = this.canvases(s.scene, s.env);
     return new Promise((resolve) => {
       const t0 = performance.now();
@@ -154,20 +208,25 @@ export class FxStage {
         cancelAnimationFrame(raf);
         clearTimeout(guard);
         sounds.forEach(clearTimeout);
+        s.scene.classList.remove('is-stop');
+        for (const a of motions) if (a.playState === 'paused') a.play();
         if (o.keep) this.render(panes, s.env, s.layers, s.total, 0);
         else for (const { ctx } of panes) ctx.clearRect(0, 0, s.env.w, s.env.h);
         this.stopCurrent = null;
         resolve();
       };
       const frame = (now: number) => {
-        const real = now - t0, ms = real / s.speed;
-        if (ms >= s.total) return finish();
-        this.render(panes, s.env, s.layers, ms, Math.floor((real / 1000) * BOIL_FPS));
+        const real = now - t0, clock = real / s.speed;
+        if (clock >= length) return finish();
+        const ms = stopClock(clock, s.impact, s.stop);
+        const stopped = s.stop > 0 && clock > s.impact && clock < s.impact + s.stop;
+        // the pencil keeps wobbling during the freeze-frame: only the drawing's time stands still
+        this.render(panes, s.env, s.layers, ms, Math.floor((real / 1000) * BOIL_FPS), stopped && o.crit ? 0.5 : 0);
         raf = requestAnimationFrame(frame);
       };
       raf = requestAnimationFrame(frame);
       // no frames while the page is hidden: end on time anyway
-      const guard = setTimeout(finish, s.total * s.speed + 400);
+      const guard = setTimeout(finish, length * s.speed + 400);
       this.stopCurrent = finish;
     });
   }
@@ -184,6 +243,15 @@ export class FxStage {
       this.frozen.push(a);
     }
     this.render(this.canvases(s.scene, s.env), s.env, s.layers, ms, Math.floor(frac * 9));
+  }
+
+  /** The camera pushes onto a drawing for a moment (a Bestiole fainting); `ms` at normal speed. */
+  focus(side: Side, speed: number, ms = 1000) {
+    const scene = this.root();
+    if (!scene) return;
+    this.settleCamera();
+    const rect = scene.getBoundingClientRect();
+    this.runCamera(scene, focusFrames(anchorOf(spriteOf(scene, side), rect, side)), ms * speed);
   }
 
   /** The blink of a drawing taking damage (restarts when hits follow each other). */
@@ -210,6 +278,7 @@ export class FxStage {
 
   stop() {
     this.stopCurrent?.();
+    this.settleCamera();
   }
 
   clear() {

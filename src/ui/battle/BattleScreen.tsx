@@ -10,7 +10,7 @@ import {
   type Action, type BattleEvent, type BattleResult, type BattleSetup, type BattleState, type Step,
 } from '../../engine/pk/battle';
 import { sfx } from '../../audio/sfx';
-import { playJingle, playMusic, stopMusic, trackSeconds, type TrackId } from '../../audio/music';
+import { fadeOutMusic, playJingle, playMusic, stopMusic, trackSeconds, type TrackId } from '../../audio/music';
 import type { Backdrop } from '../../data/schema';
 import type { Look } from '../../overworld/sprites';
 import type { Appearance } from '../../data/appearance';
@@ -24,8 +24,8 @@ import { BattlePanel } from './BattlePanel';
 import { FxStage } from './fx/stage';
 import { fxFor, MOVE_FX } from './fx/recipes';
 import { moveOutcome } from './fx/outcome';
-import { ballFx, eventFx } from './fx/events';
-import { ballTimes } from './fx/statusFx';
+import { ballFx, eventFx, thrownOut } from './fx/events';
+import { ballTimes, THROW_MS } from './fx/statusFx';
 import type { Recipe } from './fx/core';
 import { panelMode } from './panelMode';
 import { weakSpotSlots } from './weakSpots';
@@ -66,8 +66,27 @@ type Overlay = null | { kind: 'bag' } | { kind: 'party' } | { kind: 'target'; it
 
 const sleep = (ms: number) => (ms <= 0 ? Promise.resolve() : new Promise((r) => setTimeout(r, ms)));
 
+/** Two frames: the last state change is on screen (or a timer, when frames stop in a hidden page). */
+const painted = () =>
+  new Promise<void>((resolve) => {
+    let done = false;
+    const fin = () => {
+      if (!done) {
+        done = true;
+        resolve();
+      }
+    };
+    requestAnimationFrame(() => requestAnimationFrame(fin));
+    setTimeout(fin, 80);
+  });
+
 /** The platforms sliding in at the start (ms at normal battle speed; battle.css reads `--intro-ms`). */
 export const INTRO_MS = 750;
+/** A trainer stepping out of the scene before throwing its first Croque-Carnet (battle.css: `.is-leaving`). */
+export const LEAVE_MS = 420;
+/** A Bestiole fainting: back to pencil, then sliding down (battle.css: `.fx-faint`); slower for a trainer's last one. */
+export const FAINT_MS = 1100;
+export const LAST_FAINT = 1.4;
 
 const COACH = [
   L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
@@ -102,6 +121,9 @@ export function BattleScreen(props: BattleProps) {
   const speed = useRef(prefs.value.battleAnim);
   // intro: the trainer and the player stand on the platforms until they send their Bestioles out
   const [cast, setCast] = useState<{ foe: boolean; me: boolean }>({ foe: !!props.trainer, me: !!props.playerLook });
+  const castRef = useRef(cast);
+  castRef.current = cast;
+  const [exiting, setExiting] = useState<Partial<Record<0 | 1, boolean>>>({});
   const [intro, setIntro] = useState(true);
   const [recolored, setRecolored] = useState<string[]>([]);
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -128,17 +150,37 @@ export function BattleScreen(props: BattleProps) {
     // back from the air or from under the ground (or knocked out of it)
     for (const side of [0, 1] as const) if (!snap.sides[side].vol.invuln && !(e.t === 'move' && e.side === side)) stage.reset(side);
     let anim: Promise<void> | null = null;
+    // a Bestiole sent out comes out of a thrown Croque-Carnet (with the animations on)
+    const thrown = e.t === 'sendOut' && prefs.value.moveFx && thrownOut(snap.kind, e.side);
     if (e.t === 'sendOut') {
-      // the trainer (or the player) steps aside and throws the ball
-      if (e.side === 1) setCast((c) => ({ ...c, foe: false }));
-      if (e.side === 0) setCast((c) => ({ ...c, me: false }));
-      const sent = snap.sides[e.side].party[e.idx];
+      // the trainer (or the player) steps out of the scene, then throws the Croque-Carnet
+      const side = e.side;
+      if (side === 1 ? castRef.current.foe : castRef.current.me) {
+        setExiting((l) => ({ ...l, [side]: true }));
+        await sleep(LEAVE_MS * speed.current);
+      }
+      if (side === 1) setCast((c) => ({ ...c, foe: false }));
+      if (side === 0) setCast((c) => ({ ...c, me: false }));
+      setExiting((l) => ({ ...l, [side]: false }));
+      const late = thrown ? THROW_MS : 0;
+      if (thrown) {
+        // hidden until its Croque-Carnet lands and opens; drawn (still hidden) first, so the
+        // Croque-Carnet is aimed at its feet and not at the trainer who stood there
+        pulse(side, 'hidden', late * speed.current + 500);
+        await painted();
+        setTimeout(() => pulse(side, 'in', 600), late * speed.current);
+      }
+      const sent = snap.sides[side].party[e.idx];
       if (sent) {
-        setTimeout(() => sfx.cry(sent.species), 250 * speed.current);
+        setTimeout(() => sfx.cry(sent.species), (late + 250) * speed.current);
         // a sparkly Bestiole twinkles as it comes out (the stars and their sound are its animation)
-        if (sent.shiny) setTimeout(() => { if (!prefs.value.moveFx) sfx.sparkle(); pulse(e.side, 'shiny', 1700); }, 650 * speed.current);
+        if (sent.shiny) setTimeout(() => { if (!prefs.value.moveFx) sfx.sparkle(); pulse(side, 'shiny', 1700); }, (late + 650) * speed.current);
       }
     }
+    // a Bestiole fainting: the camera pushes onto it, its cry, then it goes back to pencil and slides down;
+    // a trainer's last one falls slower while the music fades
+    const lastFoe = e.t === 'faint' && e.side === 1 && snap.kind === 'trainer' && snap.sides[1].party.every((m) => m.hp <= 0 || !!m.egg);
+    const faintSlow = lastFoe ? LAST_FAINT : 1;
     if (e.t === 'faint' && e.side === 1 && props.trainer?.grey) {
       const uid = activeMon(snap.sides[1]).uid;
       setRecolored((r) => [...r, uid]);
@@ -165,14 +207,17 @@ export function BattleScreen(props: BattleProps) {
       if (fxe) anim = stage.play(fxe.recipe, { side: fxe.side, speed: speed.current });
     }
     switch (e.t) {
-      case 'sendOut': pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
+      case 'sendOut': if (!thrown) pulse(e.side, 'in', 600); if (e.side === 1) setCaptured(false); break;
       case 'withdraw': pulse(e.side, 'out', 600); break;
       case 'fairCopy': pulse(e.side, 'fair', 1300 * speed.current); break;
       case 'move': {
         hitting.current = null;
         const recipe = prefs.value.moveFx ? fxFor(e.move) : undefined;
         const out = recipe ? moveOutcome(events, i) : null;
-        const opts = { side: e.side, speed: speed.current, crit: out?.crit, eff: out?.eff };
+        const opts = {
+          side: e.side, speed: speed.current, crit: out?.crit, eff: out?.eff, finalBlow: out?.ko,
+          camera: move(e.move).cat === 'status' ? 'self' as const : 'hit' as const,
+        };
         if (recipe && out?.charge && recipe.charge) anim = stage.play(recipe, { ...opts, charge: true });
         else if (recipe && out?.lands) {
           anim = stage.play(recipe, opts);
@@ -187,7 +232,15 @@ export function BattleScreen(props: BattleProps) {
       case 'subHit': sfx.hit(); break;
       case 'protect': case 'sub': sfx.confirm(); break;
       case 'frozen': pulse(e.side, 'status', 700); break;
-      case 'faint': pulse(e.side, 'faint', 2000); sfx.ko(); break;
+      case 'faint': {
+        const fainted = activeMon(snap.sides[e.side]);
+        sfx.cry(fainted.species);
+        setTimeout(() => sfx.ko(), 260 * speed.current);
+        if (prefs.value.moveFx) stage.focus(e.side, speed.current * faintSlow, FAINT_MS + 200);
+        pulse(e.side, lastFoe ? 'faint-last' : 'faint', (FAINT_MS * faintSlow + 300) * speed.current);
+        if (lastFoe) fadeOutMusic(0.9);
+        break;
+      }
       case 'heal': case 'useItem': case 'berry': case 'regen': case 'itemHeal': sfx.heal(); break;
       case 'itemHurt': hurt(e.side); break;
       case 'levelUp': sfx.levelUp(); break;
@@ -217,7 +270,8 @@ export function BattleScreen(props: BattleProps) {
     }
     // an animation, and enough time to read the message
     const shinyOut = e.t === 'sendOut' && !!snap.sides[e.side].party[e.idx]?.shiny;
-    const wait = sleep((e.t === 'move' && anim ? 600 : eventDuration(e) + (shinyOut ? 900 : 0)) * speed.current);
+    const extra = (shinyOut ? 900 : 0) + (thrown ? THROW_MS : 0) + (e.t === 'faint' ? FAINT_MS * faintSlow - 700 : 0);
+    const wait = sleep((e.t === 'move' && anim ? 600 : eventDuration(e) + extra) * speed.current);
     await (anim ? Promise.all([anim, wait]) : wait);
     if (e.t === 'ball') {
       setMsg(lines.join('\n'));
@@ -338,11 +392,11 @@ export function BattleScreen(props: BattleProps) {
     : msg;
 
   return (
-    <div class="battle pk" style={{ '--intro-ms': `${Math.round(INTRO_MS * speed.current)}ms` }}>
+    <div class="battle pk" style={{ '--intro-ms': `${Math.round(INTRO_MS * speed.current)}ms`, '--speed': speed.current }}>
       <BattleScene
         view={view} fx={fx} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
         foeTrainer={props.trainer && (cast.foe || beaten) ? props.trainer.look : undefined}
-        playerBack={cast.me ? props.playerLook : undefined}
+        playerBack={cast.me ? props.playerLook : undefined} leaving={exiting}
         grey={!!props.trainer?.grey} recolored={recolored} sceneRef={sceneRef}
       />
       <BattlePanel

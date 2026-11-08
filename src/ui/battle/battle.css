@@ -18,7 +18,12 @@
 }
 /* ---------- scene */
 /* clipped: your Bestiole is drawn close to you, its feet below the edge */
-.pk-scene { position: relative; z-index: 0; min-height: 0; overflow: hidden; background: #fbf6ea center 42% / cover no-repeat; }
+.pk-scene { position: relative; z-index: 0; min-height: 0; overflow: hidden; background: #fbf6ea; }
+/* the camera (backdrop, drawings, effects) and, over it, the HUD that never moves with it */
+.pk-cam { position: absolute; inset: 0; z-index: 0; background: #fbf6ea center 42% / cover no-repeat; transform-origin: 0 0; }
+.pk-hud { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+/* the room of the foe's HP box in its drawing's column */
+.pk-hp-space { flex: none; height: var(--hp-box); }
 /* weather, drawn like pencil strokes over the scene */
 .pk-weather { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .pk-weather--pluie {
@@ -116,6 +121,8 @@
 .pk-part--blink { animation-name: partBlink; animation-timing-function: steps(1, end); }
 @keyframes partBlink { 0%, 100% { opacity: 0; } 93% { opacity: 1; } 97% { opacity: 0; } }
 .pk-idle--still, .no-idle .pk-idle, .no-idle .pk-part { animation: none; }
+/* the freeze-frame of a big hit: the drawings' breathing and moving parts hold still too */
+.is-stop .pk-idle, .is-stop .pk-part { animation-play-state: paused; }
 /* standing still: closed eyelids stay away */
 .no-idle .pk-part--blink { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .pk-idle, .pk-part { animation: none; } .pk-part--blink { opacity: 0; } }
@@ -128,6 +135,13 @@
   animation: trainerIn 0.9s ease-out;
 }
 .pk-trainer--me { height: 108%; margin-bottom: 0; }
+/* stepping out of the scene before throwing the Croque-Carnet (LEAVE_MS): the foe to the right, you down to the left */
+.pk-trainer.is-leaving { animation: trainerOut calc(0.42s * var(--speed, 1)) ease-in forwards; }
+.pk-trainer--me.is-leaving { animation-name: trainerOutMe; }
+@keyframes trainerOut { to { transform: translateX(70%); opacity: 0; } }
+@keyframes trainerOutMe { to { transform: translate(-70%, 25%); opacity: 0; } }
+/* waiting for its Croque-Carnet to land */
+.fx-hidden { opacity: 0; }
 /* sketched in: pencil lines first, then the colours */
 @keyframes trainerIn {
   from { opacity: 0; transform: translateY(12%); filter: grayscale(1) contrast(1.6) brightness(1.15); }
@@ -184,8 +198,16 @@
 .fx-out { animation: popOut 0.5s ease forwards; }
 @keyframes popOut { to { transform: scaleX(var(--flip)) scale(0.1); opacity: 0; } }
 /* .fx-hit only keeps a knocked-out drawing shown until it faints; the blink is played by fx/stage.ts */
-.fx-faint { animation: faint 0.8s ease forwards; }
-@keyframes faint { to { transform: translateY(60%) scaleX(var(--flip)); opacity: 0; } }
+/* fainting (FAINT_MS): the colours go, back to a pencil sketch, then it slides down out of sight */
+.fx-faint { animation: faint calc(1.1s * var(--speed, 1)) ease-in forwards; }
+.fx-faint-last { animation: faint calc(1.54s * var(--speed, 1)) ease-in forwards; }
+@keyframes faint {
+  0% { transform: scaleX(var(--flip)); filter: none; }
+  40% { transform: scaleX(var(--flip)); opacity: 1; filter: grayscale(1) contrast(1.5) brightness(1.15); }
+  100% { transform: translateY(60%) scaleX(var(--flip)); opacity: 0; filter: grayscale(1) contrast(1.5) brightness(1.3); }
+}
+.is-calm .fx-faint, .is-calm .fx-faint-last { animation-name: faintCalm; }
+@keyframes faintCalm { to { opacity: 0; } }
 .fx-lunge-me { animation: lungeMe 0.4s ease; }
 @keyframes lungeMe { 40% { transform: translate(18%, -10%) scaleX(var(--flip)); } }
 .fx-lunge-foe { animation: lungeFoe 0.4s ease; }

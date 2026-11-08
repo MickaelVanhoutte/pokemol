@@ -362,6 +362,43 @@ export const batter = (o: { kind: 'sable' | 'grele'; who?: Who; dur?: number }):
 
 const BALL = { THROW: 450, OPEN: 260, DRAW: 650, SUCK: 450, SHUT: 360, ERASE: 520 };
 
+/** How long a Croque-Carnet flies when a Bestiole is sent out (ms at normal speed); it comes out then. */
+export const THROW_MS = 420;
+/** Opening at its feet, after the flight. */
+const LAND_MS = 140;
+
+/**
+ * Sending a Bestiole out: its Croque-Carnet flies in from its trainer's side of the screen (bottom left
+ * for yours, top right for the foe's), spinning shut, and pops open at its feet.
+ */
+export const throwBook = (o: { color?: string } = {}): Builder => (env) => {
+  const color = o.color ?? '#f2c94c';
+  return {
+    start: 0, sounds: [['whoosh', 0], ['pop', THROW_MS]], dur: THROW_MS + LAND_MS,
+    draw(b, t) {
+      const A = who(env, 'user'), ms = t * (THROW_MS + LAND_MS);
+      const size = Math.max(30, A.size * 0.3);
+      const mine = env.userSide === 0;
+      const from: P = mine ? [-size, env.h * 0.98] : [env.w + size, env.h * 0.04];
+      const [fx, fy] = feet(A);
+      const to: P = [fx, fy - size * 0.15];
+      if (ms < THROW_MS) {
+        const u = easeOut(ms / THROW_MS);
+        const lift = env.h * (mine ? 0.35 : 0.12);
+        const [x, y] = arc(from, to, u, lift);
+        for (let k = 1; k <= 3; k++) {
+          const [gx, gy] = arc(from, to, Math.max(0, u - k * 0.07), lift);
+          b.line([[gx, gy], [x, y]], GRAPHITE, 1.2, { alpha: 0.25, seed: 520 + k, passes: 1 });
+        }
+        return b.doodle('book', color, x, y, size, { rot: u * Math.PI * 4 * (mine ? 1 : -1) });
+      }
+      const w = (ms - THROW_MS) / LAND_MS;
+      b.flash(0.3 * (1 - w));
+      b.doodle('bookOpen', color, to[0], to[1], size * 1.6 * (0.8 + 0.2 * w), { alpha: 1 - seg(w, 0.4, 1) });
+    },
+  };
+};
+
 /** When a thrown Croque-Carnet sucks the Bestiole into its page (if caught), and when it is all over (ms). */
 export function ballTimes(shakes: number, caught: boolean): { suck: number; end: number } {
   const suck = BALL.THROW + BALL.OPEN + BALL.DRAW * shakes;

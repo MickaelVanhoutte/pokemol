@@ -29,6 +29,13 @@ describe('move outcome (when the animation plays)', () => {
     expect(o.hits).toBeGreaterThanOrEqual(2);
   });
 
+  it('knows when the hit is the final blow', () => {
+    const ko = mine(turn(mon('002', 60, ['flammeche']), mon('013', 3, ['grondement'])).events);
+    expect(ko).toMatchObject({ lands: true, ko: true });
+    const plain = mine(turn(mon('002', 20, ['flammeche']), mon('008', 40, ['grondement'])).events);
+    expect(plain.ko).toBe(false);
+  });
+
   it('shows nothing against a protected target', () => {
     const o = mine(turn(mon('002', 20, ['flammeche']), mon('013', 20, ['bouclier-papier'])).events);
     expect(o.lands).toBe(false);

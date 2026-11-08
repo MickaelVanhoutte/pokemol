@@ -13,6 +13,8 @@ export interface Outcome {
   crit: boolean;
   /** Effectiveness of the first hit (1 when unknown). */
   eff: number;
+  /** The target faints from it (the final blow gets a longer freeze-frame). */
+  ko: boolean;
 }
 
 /** Events showing that a status move worked. */
@@ -22,7 +24,8 @@ const STOPS = new Set<BattleEvent['t']>(['miss', 'fail', 'noEffect', 'protected'
 
 /** `i` is the index of a `move` event in `events`. */
 export function moveOutcome(events: BattleEvent[], i: number): Outcome {
-  const out: Outcome = { lands: false, charge: false, hits: 0, crit: false, eff: 1 };
+  const out: Outcome = { lands: false, charge: false, hits: 0, crit: false, eff: 1, ko: false };
+  const user = events[i]?.t === 'move' ? (events[i] as { side: number }).side : -1;
   let effect = false;
   for (let j = i + 1; j < events.length; j++) {
     const e = events[j];
@@ -38,6 +41,7 @@ export function moveOutcome(events: BattleEvent[], i: number): Outcome {
       if (out.hits === 1 && e.eff !== undefined) out.eff = e.eff;
     }
     if (EFFECTS.has(e.t)) effect = true;
+    if (e.t === 'faint' && e.side !== user && out.hits > 0) out.ko = true;
   }
   out.lands = !out.charge && (out.hits > 0 || effect);
   return out;

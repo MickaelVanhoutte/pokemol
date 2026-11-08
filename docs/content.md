@@ -539,7 +539,8 @@ In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens
 - Pure views go in `src/ui/views`. A screen wrapper in `src/ui/screens` connects a view to the save.
   A new screen also needs a `Screen` variant in `src/state/router.ts` and a case in `src/app.tsx`.
 - Battle scene: each side is a column (`.pk-side`), the HP box above the drawing: the foe top right,
-  you bottom left. The foe's column ends low enough that its feet are always
+  you bottom left. The drawings live in the camera layer (`.pk-cam`), the HP boxes in the HUD over it
+  (`.pk-hud`, with the same columns), so the battle camera zooms the scene and never the boxes. The foe's column ends low enough that its feet are always
   below the backdrop's horizon (46% of the picture). Boxes are two short rows (name and level; the
   bar, with your HP written inside it); experience is a thin blue line over your box, shown only
   while it fills. Trainer battles show the foe's team as little Croque-Carnets under its box (black: knocked out,

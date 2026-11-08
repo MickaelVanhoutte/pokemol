@@ -115,6 +115,9 @@ timings are the game's) and `tools/demo/make.ts` builds it into `tools/out/demo-
   `-l.webp` in landscape), taken with headless Chrome after `newGame()` + `enterWorld()`.
 
 `files.json` lists the files to publish next to `page.html` (Artifact `root`: `tools/out/demo-<m>`).
+A demo listed in `DEV` (`make.ts`) is built with `NODE_ENV=development`, so `window.__battle` exists: `m1b`
+uses it to fire the first move, in battles whose seed was searched (`seedFor`) so that move does what
+the scene shows (a critical hit, a super-effective one, a final blow).
 The owner follows from their phone: the page starts with a « Lancer » button (sound needs a tap) and has
 the battle speed, MOUVEMENTS and sound settings.
 

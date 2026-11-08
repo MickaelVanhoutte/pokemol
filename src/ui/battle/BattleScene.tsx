@@ -116,9 +116,11 @@ function Sprite({ side, mon, src, cls, dark = false }: { side: Side; mon: Mon | 
 }
 
 /** Upper part of the battle: backdrop, platforms, both drawings facing each other, HP boxes. */
-export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, playerBack, grey, recolored, sceneRef }: {
+export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, playerBack, leaving, grey, recolored, sceneRef }: {
   view: BattleState; fx: Fx; captured: boolean; backdrop: Backdrop; intro: boolean;
   foeTrainer?: Look; playerBack?: Appearance; grey: boolean; recolored: string[];
+  /** Trainers stepping out of the scene before their first Bestiole comes out. */
+  leaving?: Partial<Record<Side, boolean>>;
   /** The scene element, where the move animations draw. */
   sceneRef?: Ref<HTMLDivElement>;
 }) {
@@ -131,44 +133,54 @@ export function BattleScene({ view, fx, captured, backdrop, intro, foeTrainer, p
   const away = (side: 0 | 1) => (view.sides[side].vol.invuln ? 'is-away' : '');
   // behind a paper doll, the doll stands in its place
   const doll = (side: 0 | 1) => view.sides[side].vol.sub > 0;
+  // the foe's box keeps its room once the trainer is gone; the boxes show once the Bestiole is out of its Croque-Carnet
+  const foeRoom = !foeTrainer && !intro;
+  const shown = (side: 0 | 1) => fx[side] !== 'hidden';
   return (
-    <div ref={sceneRef} class={`pk-scene ${intro ? 'is-intro' : ''} ${prefs.value.moveFx ? '' : 'no-idle'}`} style={{ backgroundImage: `url(${backdropUrl(backdrop)})`, '--plat': `url(${platformUrl(backdrop)})` }}>
-      <canvas class="pk-fx-back" aria-hidden="true" />
-      {view.weather && <div class={`pk-weather pk-weather--${view.weather.kind}`} aria-hidden="true" />}
-      {/* the foe stands under its HP box, you stand over yours */}
-      <div class="pk-side pk-side--foe">
-      {!foeTrainer && !intro && <HpBox st={view} side={1} />}
-      <div class="pk-plat pk-plat--foe">
-        {foeTrainer ? (
-          <img class="pk-trainer" src={personUrl(fromLook(foeTrainer))} alt="" />
-        ) : (
-          <Sprite
-            side={1}
-            mon={doll(1) ? null : foe}
-            src={doll(1) ? dollUrl() : monArtUrl(foe)}
-            dark={!!foe.fair && !!view.sides[1].fairCopy?.dark}
-            cls={`${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
-          />
-        )}
+    <div ref={sceneRef} class={`pk-scene ${intro ? 'is-intro' : ''} ${prefs.value.moveFx ? '' : 'no-idle'}`} style={{ '--plat': `url(${platformUrl(backdrop)})` }}>
+      {/* the camera: backdrop, drawings and effects (fx/camera.ts moves and zooms it) */}
+      <div class="pk-cam" style={{ backgroundImage: `url(${backdropUrl(backdrop)})` }}>
+        <canvas class="pk-fx-back" aria-hidden="true" />
+        {view.weather && <div class={`pk-weather pk-weather--${view.weather.kind}`} aria-hidden="true" />}
+        {/* the foe stands under its HP box (kept in the HUD, a spacer holds its room), you stand over yours */}
+        <div class="pk-side pk-side--foe">
+          {foeRoom && <div class="pk-hp-space" aria-hidden="true" />}
+          <div class="pk-plat pk-plat--foe">
+            {foeTrainer ? (
+              <img class={`pk-trainer ${leaving?.[1] ? 'is-leaving' : ''}`} src={personUrl(fromLook(foeTrainer))} alt="" />
+            ) : (
+              <Sprite
+                side={1}
+                mon={doll(1) ? null : foe}
+                src={doll(1) ? dollUrl() : monArtUrl(foe)}
+                dark={!!foe.fair && !!view.sides[1].fairCopy?.dark}
+                cls={`${mirrored(foeSp, true) ? 'is-mirrored' : ''} ${isGrey ? 'is-grey' : ''} ${fx[1] ? `fx-${fx[1]}` : ''} ${captured ? 'is-captured' : ''} ${foe.hp <= 0 && !fx[1] ? 'is-gone' : ''} ${away(1)} ${doll(1) ? 'is-doll' : ''}`}
+              />
+            )}
+          </div>
+        </div>
+        <div class="pk-side pk-side--me">
+          <div class="pk-plat pk-plat--me">
+            {playerBack ? (
+              <img class={`pk-trainer pk-trainer--me ${leaving?.[0] ? 'is-leaving' : ''}`} src={personUrl(playerBack, 'back')} alt="" />
+            ) : (
+              <Sprite
+                side={0}
+                mon={doll(0) ? null : mine}
+                src={doll(0) ? dollUrl() : monArtUrl(mine)}
+                cls={`${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
+              />
+            )}
+          </div>
+        </div>
+        <canvas class="pk-fx" aria-hidden="true" />
       </div>
+      {/* the HUD stays still when the camera moves: the foe's box in a column like its drawing's, yours
+          just over the panel (top left in landscape, battle.css) */}
+      <div class="pk-hud">
+        <div class="pk-side pk-side--foe">{foeRoom && shown(1) && <HpBox st={view} side={1} />}</div>
+        {!playerBack && !intro && shown(0) && <HpBox st={view} side={0} />}
       </div>
-      {/* your box: just over the panel in portrait, top left in landscape (battle.css) */}
-      {!playerBack && !intro && <HpBox st={view} side={0} />}
-      <div class="pk-side pk-side--me">
-      <div class="pk-plat pk-plat--me">
-        {playerBack ? (
-          <img class="pk-trainer pk-trainer--me" src={personUrl(playerBack, 'back')} alt="" />
-        ) : (
-          <Sprite
-            side={0}
-            mon={doll(0) ? null : mine}
-            src={doll(0) ? dollUrl() : monArtUrl(mine)}
-            cls={`${mirrored(mySp, false) ? 'is-mirrored' : ''} ${fx[0] ? `fx-${fx[0]}` : ''} ${mine.hp <= 0 && !fx[0] ? 'is-gone' : ''} ${away(0)} ${doll(0) ? 'is-doll' : ''}`}
-          />
-        )}
-      </div>
-      </div>
-      <canvas class="pk-fx" aria-hidden="true" />
     </div>
   );
 }

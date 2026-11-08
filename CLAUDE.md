@@ -176,6 +176,15 @@ conventions are in [docs/content.md](docs/content.md#flags).
   with the move animations' `Brush`; the VS splash (`VsSplash.tsx`) puts the foe and the player face to
   face on a torn page. Durations follow the battle speed; MOUVEMENTS : DOUX (`prefs.motion`,
   `calmMotion()` in `src/anim/calm.ts`) turns them into fades. Shared easing maths: `src/anim/ease.ts`.
+- The battle camera (`fx/camera.ts`): the scene is two layers, `.pk-cam` (backdrop, drawings, effect canvases)
+  and `.pk-hud` (HP boxes; the foe's column keeps a `.pk-hp-space` for its box). `FxStage.play` with
+  `camera: 'hit' | 'self'` leans `.pk-cam` towards the attacker then zooms on the target at the hit
+  (`translate` + `scale` from its top-left corner, only ever zooming in), and freezes everything for
+  `hitStopMs` (critical hit: plus a white flash and `sfx.crit`; final blow, from `moveOutcome().ko`: the
+  longest). A faint pushes the camera onto the Bestiole (`stage.focus`), it goes back to pencil and slides
+  down (`.fx-faint`, slower for a trainer's last one while the music fades). A Bestiole sent out comes out of
+  a thrown Croque-Carnet (`throwBook`, `thrownOut`) after its trainer steps out (`.is-leaving`); a wild foe
+  is already there. Off with ANIMATIONS : NON and MOUVEMENTS : DOUX.
 - `src/engine/pk` is pure and deterministic:
   - `createBattle(setup)` and `act(state, playerAction, enemyAction)` return a `Step`
     `{ state, events, snaps }` built on a `structuredClone`;
