@@ -8,7 +8,7 @@ import type { Major, StageKey } from '../../../data/schema';
 import { activeMon, type BattleEvent, type BattleState, type Side } from '../../../engine/pk/battle';
 import { at, PAL, SPARK, type Builder, type Recipe } from './core';
 import { drain, impactStar, sparkle, sparks, speedLines, wrap } from './effects';
-import { aura, batter, crayonBall, crumbs, doll, fairTrace, orbit, popOut, pulse, rise, shield, shinyBurst, sweat, THROW_MS, throwBook, vines, weatherIn, whirl } from './statusFx';
+import { aura, batter, crayonBall, crumbs, doll, fairTrace, levelGlow, orbit, popOut, pulse, rise, shield, shinyBurst, sweat, THROW_MS, throwBook, vines, weatherIn, whirl } from './statusFx';
 
 /** A Bestiole sent out comes out of a thrown Croque-Carnet, except a wild one, already there (and without the animations). */
 export const thrownOut = (kind: BattleState['kind'], side: Side) => !(kind === 'wild' && side === 1);
@@ -48,6 +48,8 @@ export function eventFx(e: BattleEvent, snap: BattleState, moveShown: { side: Si
       return on(e.side, t ? [throwBook(), ...out] : out);
     }
     case 'withdraw': return on(e.side, [whirl()]);
+    // the Bestiole in battle grew a level (a teammate sharing the experience glows nowhere)
+    case 'levelUp': return e.idx === snap.sides[0].active ? on(0, [levelGlow()]) : null;
     case 'fairCopy': return on(e.side, e.dark ? [fairTrace({ dark: true })] : [fairTrace(), at(650, shinyBurst({ dur: 1000 }))]);
     case 'status': return on(e.side, statusLayers(e.status, e.bad));
     case 'residual': return on(e.side, statusLayers(e.status));

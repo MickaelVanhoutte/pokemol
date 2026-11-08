@@ -4,7 +4,7 @@ import { activeMon, type BattleState, type Side } from '../../engine/pk/battle';
 import { maxHp, xpAt, MAX_LEVEL, type Mon } from '../../engine/pk/creature';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Ref } from 'preact';
-import { HpBar, StatusTag, XpBar, lv } from '../paper';
+import { StatusTag, XpBar, lv } from '../paper';
 import { sketchIconUrl } from '../sketchIcons';
 import { backdropUrl, platformUrl } from './backdrops';
 import type { Backdrop } from '../../data/schema';
@@ -16,6 +16,8 @@ import { FAIR_RIG_OF, MOTION_DEFAULTS, RIG_OF, fairFile, idleOf, rigFile, type R
 import { monTypes } from '../../data/fairCopies';
 import { FairStar } from './FairStar';
 import { prefs } from '../../state/prefs';
+import { sfx } from '../../audio/sfx';
+import { drainMs, isLow } from './tally';
 
 export type Fx = Partial<Record<Side, string>>;
 
@@ -31,11 +33,51 @@ function HpBox({ st, side }: { st: BattleState; side: Side }) {
         {/* just the name: "wild" / "foe" stay in the battle messages */}
         <b>{monLabel(m)}{m.shiny && <i class="shiny-mark" aria-label="✦">✦</i>}{m.fair && <FairStar class="pk-hp__fair" />}</b>
         {m.status && <StatusTag s={m.status} />}
-        <HpBar hp={m.hp} max={max} numbers={side === 0} />
+        <BattleHp key={m.uid} hp={m.hp} max={max} numbers={side === 0} mine={side === 0} />
       </div>
       {side === 1 && st.kind === 'trainer' && <TeamBalls st={st} />}
       {side === 0 && <XpLine key={m.uid} xp={m.xp} pct={xpPct} level={m.level} />}
     </div>
+  );
+}
+
+/**
+ * The HP bar of a battle: the number runs down (or up) while the bar drains, like the GBA games, and
+ * the bar blinks when it is low (yours beeps once as it gets there). Same look as `HpBar`.
+ */
+function BattleHp({ hp, max, numbers, mine }: { hp: number; max: number; numbers: boolean; mine: boolean }) {
+  const [shown, setShown] = useState(hp);
+  const now = useRef(hp);
+  useEffect(() => {
+    const from = now.current, to = hp;
+    if (from === to) return;
+    const ms = drainMs(to - from, max) * prefs.value.battleAnim;
+    const t0 = performance.now();
+    let raf = 0;
+    const set = (v: number) => {
+      if (mine && !isLow(now.current, max) && isLow(v, max)) sfx.lowHp();
+      now.current = v;
+      setShown(v);
+    };
+    const step = (t: number) => {
+      const k = Math.min(1, (t - t0) / ms);
+      set(Math.round(from + (to - from) * k));
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    // frames stop in a hidden page: the bar still ends where it should
+    const guard = setTimeout(() => set(to), ms + 120);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(guard);
+    };
+  }, [hp]);
+  const pct = Math.max(0, (shown / max) * 100);
+  return (
+    <span class={`hpbar hpbar--${pct > 50 ? 'ok' : pct > 20 ? 'mid' : 'low'} ${numbers ? 'hpbar--num' : ''} ${isLow(shown, max) ? 'is-low' : ''}`}>
+      <span style={{ width: `${pct}%`, transition: 'none' }} />
+      {numbers && <i class="hpbar__num">{shown}/{max}</i>}
+    </span>
   );
 }
 
@@ -49,6 +91,9 @@ function TeamBalls({ st }: { st: BattleState }) {
   );
 }
 
+/** How long the experience bar takes to fill (ms at normal speed). */
+const XP_MS = 700;
+
 /** Experience: a thin blue line over the box, shown only while it fills after a win. */
 function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) {
   const [shown, setShown] = useState(false);
@@ -57,10 +102,12 @@ function XpLine({ xp, pct, level }: { xp: number; pct: number; level: number }) 
     if (xp <= last.current) { last.current = xp; return; }
     last.current = xp;
     setShown(true);
+    // a rising glide while it fills
+    sfx.xpFill((XP_MS * prefs.value.battleAnim) / 1000);
     const t = setTimeout(() => setShown(false), 2600);
     return () => clearTimeout(t);
   }, [xp]);
-  return <div class={`pk-hp__xp ${shown ? 'is-on' : ''}`}><XpBar pct={pct} level={level} /></div>;
+  return <div class={`pk-hp__xp ${shown ? 'is-on' : ''}`}><XpBar pct={pct} level={level} ms={XP_MS * prefs.value.battleAnim} /></div>;
 }
 
 /**

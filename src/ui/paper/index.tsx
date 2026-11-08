@@ -39,7 +39,7 @@ const XP_FILL_MS = 700;
  * Experience bar. Given the `level`, a level-up fills the bar to the end, empties it at once and
  * fills it again to the new amount, instead of sliding backwards.
  */
-export function XpBar({ pct, level }: { pct: number; level?: number }) {
+export function XpBar({ pct, level, ms = XP_FILL_MS }: { pct: number; level?: number; ms?: number }) {
   const target = Math.max(0, Math.min(100, pct));
   const [bar, setBar] = useState({ pct: target, level, instant: true });
   useEffect(() => {
@@ -48,13 +48,13 @@ export function XpBar({ pct, level }: { pct: number; level?: number }) {
       return;
     }
     setBar({ pct: 100, level: bar.level, instant: false });
-    const t1 = setTimeout(() => setBar({ pct: 0, level, instant: true }), XP_FILL_MS);
-    const t2 = setTimeout(() => setBar({ pct: target, level, instant: false }), XP_FILL_MS + 50);
+    const t1 = setTimeout(() => setBar({ pct: 0, level, instant: true }), ms);
+    const t2 = setTimeout(() => setBar({ pct: target, level, instant: false }), ms + 50);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [target, level]);
   return (
     <span class="xpbar">
-      <span style={{ width: `${bar.pct}%`, transition: bar.instant ? 'none' : `width ${XP_FILL_MS}ms ease` }} />
+      <span style={{ width: `${bar.pct}%`, transition: bar.instant ? 'none' : `width ${ms}ms ease` }} />
     </span>
   );
 }

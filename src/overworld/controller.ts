@@ -1031,6 +1031,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
           grey: opts.grey,
         } : undefined,
         rewardLines: (result) => (result === 'win' && money ? [tr(L('Tu gagnes {n} ₽.', 'You got ₽{n} for winning!'), { n: money })] : []),
+        reward: money ? { money } : undefined,
         onEnd: (result, state) => resolve({ result, state }),
       },
     })));

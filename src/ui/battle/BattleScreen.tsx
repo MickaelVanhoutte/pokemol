@@ -29,6 +29,10 @@ import { ballTimes, THROW_MS } from './fx/statusFx';
 import type { Recipe } from './fx/core';
 import { panelMode } from './panelMode';
 import { weakSpotSlots } from './weakSpots';
+import { LevelUpWindow, MoneyTicker } from './Tallies';
+import { drainMs, levelGains } from './tally';
+import { maxHp } from '../../engine/pk/creature';
+import type { Stats } from '../../data/schema';
 import './battle.css';
 
 export interface BattleProps {
@@ -40,6 +44,8 @@ export interface BattleProps {
   onEnd: (result: BattleResult, state: BattleState) => void;
   /** Extra lines shown when the battle is won (money…). */
   rewardLines?: (result: BattleResult, state: BattleState) => string[];
+  /** Prize money for a win: it counts up over the scene. */
+  reward?: { money: number };
   backdrop?: Backdrop;
   /** First battle: the professor explains the menu. */
   tutorial?: boolean;
@@ -87,6 +93,8 @@ export const LEAVE_MS = 420;
 /** A Bestiole fainting: back to pencil, then sliding down (battle.css: `.fx-faint`); slower for a trainer's last one. */
 export const FAINT_MS = 1100;
 export const LAST_FAINT = 1.4;
+/** Each page of the level-up window stays this long (ms at normal speed), unless tapped. */
+export const LEVEL_PAGE_MS = 1500;
 
 const COACH = [
   L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
@@ -124,6 +132,13 @@ export function BattleScreen(props: BattleProps) {
   const castRef = useRef(cast);
   castRef.current = cast;
   const [exiting, setExiting] = useState<Partial<Record<0 | 1, boolean>>>({});
+  const [lvWin, setLvWin] = useState<{ level: number; gain: Stats; after: Stats; page: 0 | 1 } | null>(null);
+  /** Turns the level-up window's page now (a tap), instead of waiting. */
+  const lvNext = useRef<(() => void) | null>(null);
+  const lvPage = (ms: number) => new Promise<void>((resolve) => {
+    const t = setTimeout(() => { lvNext.current = null; resolve(); }, ms);
+    lvNext.current = () => { clearTimeout(t); lvNext.current = null; resolve(); };
+  });
   const [intro, setIntro] = useState(true);
   const [recolored, setRecolored] = useState<string[]>([]);
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -270,8 +285,26 @@ export function BattleScreen(props: BattleProps) {
     }
     // an animation, and enough time to read the message
     const shinyOut = e.t === 'sendOut' && !!snap.sides[e.side].party[e.idx]?.shiny;
+    // a level grown: the GBA window, what each stat gained, then the new stats (it takes the event's time)
+    let paged = false;
+    if (e.t === 'levelUp') {
+      const grown = snap.sides[0].party[e.idx];
+      if (grown) {
+        paged = true;
+        const { gain, after } = levelGains(grown, e.level);
+        await sleep(400 * speed.current);
+        setLvWin({ level: e.level, gain, after, page: 0 });
+        await lvPage(LEVEL_PAGE_MS * speed.current);
+        setLvWin({ level: e.level, gain, after, page: 1 });
+        await lvPage(LEVEL_PAGE_MS * speed.current);
+        setLvWin(null);
+      }
+    }
+    // damage holds its message while the HP runs down
+    const drain = e.t === 'damage' ? drainMs(e.amount, maxHp(activeMon(snap.sides[e.side]))) : 0;
     const extra = (shinyOut ? 900 : 0) + (thrown ? THROW_MS : 0) + (e.t === 'faint' ? FAINT_MS * faintSlow - 700 : 0);
-    const wait = sleep((e.t === 'move' && anim ? 600 : eventDuration(e) + extra) * speed.current);
+    const base = paged ? 200 : Math.max(eventDuration(e) + extra, drain + 150);
+    const wait = sleep((e.t === 'move' && anim ? 600 : base) * speed.current);
     await (anim ? Promise.all([anim, wait]) : wait);
     if (e.t === 'ball') {
       setMsg(lines.join('\n'));
@@ -399,6 +432,8 @@ export function BattleScreen(props: BattleProps) {
         playerBack={cast.me ? props.playerLook : undefined} leaving={exiting}
         grey={!!props.trainer?.grey} recolored={recolored} sceneRef={sceneRef}
       />
+      {lvWin && <LevelUpWindow {...lvWin} onNext={() => lvNext.current?.()} />}
+      {ended && st.result === 'win' && !!props.reward?.money && <MoneyTicker money={props.reward.money} speed={speed.current} />}
       <BattlePanel
         mode={mode}
         text={text}

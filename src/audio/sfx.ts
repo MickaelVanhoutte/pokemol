@@ -133,6 +133,10 @@ export const sfx = {
   tear: () => { for (let i = 0; i < 7; i++) noise(i * 0.028, 0.035 + Math.random() * 0.02, 2200 + Math.random() * 1800, 0.05); },
   /** A page turning. */
   page: () => { noise(0, 0.3, 1100, 0.045, 3200); noise(0.14, 0.12, 2600, 0.025); },
+  /** Your Bestiole's HP gets low: a soft two-note warning. */
+  lowHp: () => play([{ f: 988, dur: 0.09, type: 'triangle', vol: 0.05 }, { f: 784, at: 0.13, dur: 0.12, type: 'triangle', vol: 0.05 }]),
+  /** Experience filling the bar: a rising glide as long as the fill (seconds). */
+  xpFill: (s = 0.7) => play([{ f: 330, to: 990, dur: s, type: 'triangle', vol: 0.025 }]),
   /** A critical hit: a sharp crack of the pencil lead over a deep thump. */
   crit: () => { noise(0, 0.05, 5200, 0.12); noise(0.02, 0.09, 1800, 0.08, 600); play([{ f: 140, to: 50, dur: 0.22, type: 'sine', vol: 0.12 }]); },
   /** A felt-tip stamp pressed on the page (« VS »). */

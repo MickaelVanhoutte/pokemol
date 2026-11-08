@@ -185,6 +185,11 @@ conventions are in [docs/content.md](docs/content.md#flags).
   down (`.fx-faint`, slower for a trainer's last one while the music fades). A Bestiole sent out comes out of
   a thrown Croque-Carnet (`throwBook`, `thrownOut`) after its trainer steps out (`.is-leaving`); a wild foe
   is already there. Off with ANIMATIONS : NON and MOUVEMENTS : DOUX.
+- Counting (`tally.ts`, pure; `Tallies.tsx`): in battle the HP number runs down with its bar (`BattleHp`,
+  `drainMs`; the damage message waits for it) and a low bar blinks (yours beeps once, `sfx.lowHp`); the
+  experience bar fills at the battle speed with a rising glide; a level grown shows gold rings
+  (`levelGlow`) and the GBA window, each stat's gain then the new stats (`levelGains`, `LevelUpWindow`, a
+  tap turns the page); the prize money counts up over the scene (`BattleProps.reward`, `MoneyTicker`).
 - `src/engine/pk` is pure and deterministic:
   - `createBattle(setup)` and `act(state, playerAction, enemyAction)` return a `Step`
     `{ state, events, snaps }` built on a `structuredClone`;

@@ -243,6 +243,10 @@
 /* yours along the bottom of the scene, just over the panel, its bar longer with your HP written in it */
 .pk-hp.pk-hp--me { position: absolute; left: max(4px, env(safe-area-inset-left)); right: max(4px, env(safe-area-inset-right)); bottom: 0; }
 .pk-hp--me .hpbar { min-width: 96px; }
+/* low HP: the bar blinks (BattleHp) */
+.pk-hp .hpbar.is-low span { animation: hpLow 0.9s ease-in-out infinite; }
+@keyframes hpLow { 50% { filter: brightness(1.3) saturate(1.5); opacity: 0.7; } }
+.is-calm .pk-hp .hpbar.is-low span { animation: none; }
 /* your HP written inside the bar */
 .hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
 .hpbar__num { position: absolute; inset: 0 6px 0 0; display: flex; align-items: center; justify-content: flex-end; font-style: normal; font-size: 0.8rem; line-height: 1; color: var(--ink); text-shadow: 0 0 2px #fffaf0, 0 0 2px #fffaf0; }
@@ -256,6 +260,43 @@
 .pk-team img { width: 16px; height: 16px; }
 .pk-team img.is-status { filter: grayscale(1) opacity(0.75); }
 .pk-team img.is-ko { filter: brightness(0) opacity(0.8); }
+
+/* ---------- tallies over the scene: the level-up window, the prize money (Tallies.tsx) */
+.pk-lvup {
+  position: absolute; z-index: 30;
+  right: max(6px, env(safe-area-inset-right)); top: calc(var(--hp-box) + 34px);
+  width: min(50%, 230px);
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 4px 10px 6px;
+  font-size: clamp(1rem, 4vw, 1.2rem); line-height: 1.2;
+  color: var(--ink);
+  background: var(--sk-hatch) 0 0 / 72px 72px padding-box, var(--sk-fill) padding-box;
+  border: 7px solid transparent;
+  border-image: var(--pencil-frame) 24 / 7px stretch;
+  box-shadow: 2px 3px 0 rgba(43, 37, 54, 0.18);
+  animation: lvIn 0.22s ease-out;
+  cursor: pointer;
+}
+@keyframes lvIn { from { opacity: 0; transform: translateY(-6px) scale(0.96); } }
+.pk-lvup__head { font-weight: 400; color: var(--ink-soft); }
+.pk-lvup__rows { margin: 0; display: grid; gap: 1px 12px; }
+.pk-lvup__row { display: flex; justify-content: space-between; gap: 10px; }
+.pk-lvup__row dt { margin: 0; }
+.pk-lvup__row dd { margin: 0; font-variant-numeric: tabular-nums; }
+.pk-lvup__row dd.is-gain { color: #2f8a3a; }
+.pk-money {
+  position: absolute; z-index: 30;
+  left: max(8px, env(safe-area-inset-left)); top: 8px;
+  padding: 2px 12px;
+  font-size: clamp(1.15rem, 5vw, 1.45rem); font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--hatch-butter) 0 0 / 72px 72px padding-box, var(--butter) padding-box;
+  border: 6px solid transparent;
+  border-image: var(--frame-butter) 24 / 6px stretch;
+  animation: lvIn 0.25s ease-out;
+  pointer-events: none;
+}
+.is-calm .pk-lvup, .is-calm .pk-money { animation: none; }
 
 /* ---------- bottom panel: fixed height, one mode at a time */
 .battle__panel {
@@ -376,6 +417,10 @@
   .bpanel__grid .pk-move { border: 6px solid transparent; border-image: var(--pencil-frame) 24 / 6px stretch; padding: 0 6px 0 12px; }
   .bpanel__grid .pk-move b { --fs: min(1.25rem, 6dvh); line-height: 1.1; }
   .bpanel__grid .pk-move small { --fs: min(0.85rem, 4.2dvh); line-height: 1.1; }
+  /* the level-up window beside the foe, its stats in two columns; the prize at the bottom of the scene */
+  .pk-lvup { top: calc(var(--hp-box) + 12px); width: min(46%, 330px); padding: 2px 10px 4px; font-size: clamp(0.95rem, 2.6vw, 1.15rem); line-height: 1.15; }
+  .pk-lvup__rows { grid-template-columns: 1fr 1fr; }
+  .pk-money { top: auto; bottom: calc(var(--bp-h) + 8px); left: 50%; translate: -50% 0; }
   /* the speaker label goes in the corner so the text keeps its lines */
   .bpanel__text .textbox__speaker { position: absolute; top: 2px; bottom: auto; left: auto; right: 8px; margin: 0; z-index: 1; }
 }

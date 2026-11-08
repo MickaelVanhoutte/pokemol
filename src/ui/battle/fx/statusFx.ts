@@ -362,6 +362,31 @@ export const batter = (o: { kind: 'sable' | 'grele'; who?: Who; dur?: number }):
 
 const BALL = { THROW: 450, OPEN: 260, DRAW: 650, SUCK: 450, SHUT: 360, ERASE: 520 };
 
+/** Growing a level: gold rings rising up the drawing from its feet, sparkles popping round it. */
+export const levelGlow = (o: { dur?: number } = {}): Builder => (env) => {
+  const dur = o.dur ?? 1000;
+  return {
+    start: 0, dur,
+    draw(b, t) {
+      const A = who(env, 'user'), s = A.size;
+      const [fx, fy] = feet(A);
+      for (let i = 0; i < 3; i++) {
+        const u = seg(t, i * 0.18, i * 0.18 + 0.6);
+        if (u <= 0 || u >= 1) continue;
+        const y = lerp(fy, A.top - s * 0.05, easeOut(u));
+        const r = s * (0.5 - 0.15 * u);
+        b.ring(fx, y, r, r * 0.28, i % 2 ? '#f4b81c' : '#ffd84a', 3, { alpha: bell(u), seed: 530 + i });
+      }
+      for (let i = 0; i < 6; i++) {
+        const u = seg(t, 0.25 + i * 0.07, 0.6 + i * 0.07);
+        if (u <= 0 || u >= 1) continue;
+        const a = i * 1.05 + 0.3;
+        b.doodle('star', SPARK, A.x + Math.cos(a) * s * 0.55, A.y + Math.sin(a) * s * 0.45 - u * s * 0.15, s * 0.16 * bell(u), { seed: i });
+      }
+    },
+  };
+};
+
 /** How long a Croque-Carnet flies when a Bestiole is sent out (ms at normal speed); it comes out then. */
 export const THROW_MS = 420;
 /** Opening at its feet, after the flight. */
