@@ -122,6 +122,19 @@ export const sfx = {
   capture: () => play([784, 988, 1175, 1568].map((f, i) => ({ f, at: i * 0.09, dur: 0.12, type: 'triangle' as const, vol: 0.08 }))),
   levelUp: () => play([659, 784, 988, 1319].map((f, i) => ({ f, at: i * 0.08, dur: 0.1, vol: 0.05 }))),
   sparkle: () => play([1568, 2093, 2637].map((f, i) => ({ f, at: i * 0.05, dur: 0.08, type: 'triangle' as const, vol: 0.04 }))),
+  // ---- transitions (src/ui/curtain) and battle drama
+  /** A wide crayon stroke sweeping across the paper. */
+  swoosh: () => noise(0, 0.24, 600, 0.06, 2600),
+  /** A blot of ink landing. */
+  splat: () => { play([{ f: 190, to: 60, dur: 0.12, type: 'sine', vol: 0.08 }]); noise(0, 0.13, 900, 0.07, 280); },
+  /** Something heavy landing: the page goes dark. */
+  thud: () => { play([{ f: 95, to: 38, dur: 0.32, type: 'sine', vol: 0.11 }]); noise(0, 0.2, 220, 0.06, 80); },
+  /** Paper torn in two. */
+  tear: () => { for (let i = 0; i < 7; i++) noise(i * 0.028, 0.035 + Math.random() * 0.02, 2200 + Math.random() * 1800, 0.05); },
+  /** A page turning. */
+  page: () => { noise(0, 0.3, 1100, 0.045, 3200); noise(0.14, 0.12, 2600, 0.025); },
+  /** A felt-tip stamp pressed on the page (« VS »). */
+  stamp: () => { play([{ f: 130, to: 55, dur: 0.16, type: 'sine', vol: 0.12 }]); noise(0, 0.07, 1500, 0.07, 600); },
 };
 
 /** Sounds of the move animations, one per kind of effect (`src/ui/battle/fx`). */
@@ -168,6 +181,14 @@ const FX = {
 } satisfies Record<string, () => void>;
 
 export type FxSound = keyof typeof FX;
+
+/** Any sound by its name: the interface ones (`sfx`) and the move animations' ones (`FX`). */
+export type SoundId = Exclude<keyof typeof sfx, 'cry'> | FxSound;
+
+export function playSound(id: SoundId) {
+  if (id in sfx) (sfx[id as Exclude<keyof typeof sfx, 'cry'>] as () => void)();
+  else FX[id as FxSound]();
+}
 
 export function fxSound(kind: FxSound) {
   FX[kind]();

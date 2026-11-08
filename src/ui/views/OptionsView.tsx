@@ -41,6 +41,13 @@ const ROWS: Row<unknown>[] = [
     set: (v) => setPref('moveFx', v as boolean),
   },
   {
+    // DOUX: simple fades, no camera moves or shakes (for players who feel unwell with motion)
+    label: L('MOUVEMENTS', 'MOTION'),
+    values: [{ v: 'full', label: L('NORMAUX', 'FULL') }, { v: 'calm', label: L('DOUX', 'GENTLE') }],
+    get: () => prefs.value.motion,
+    set: (v) => setPref('motion', v as 'full'),
+  },
+  {
     label: L('SONS', 'SOUND'),
     values: [{ v: true, label: L('OUI', 'ON') }, { v: false, label: L('NON', 'OFF') }],
     get: () => prefs.value.sound,

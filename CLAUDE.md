@@ -74,6 +74,7 @@ npm run dex                                   # tools/out/bestiodex.html: every 
 npm run cards -- 013                          # cut one of her drawings out of its photo into public/originals
 npm run icons                                 # regenerate public/icon-*.png
 npm run music -- title                        # record tunes into src/audio/recordings (Chrome + macOS afconvert)
+npm run demo -- m1                            # tools/out/demo-m1/: a playable demo page for the owner (Artifact)
 ```
 
 There is no linter. TypeScript is strict with `noUnusedLocals`/`noUnusedParameters`.
@@ -127,8 +128,8 @@ re-renders everything.
 
 **Overworld** (`src/overworld`):
 - `game.ts`: the `Game` class. It runs the canvas loop and draws the prerendered map layers, actors,
-  fades and wipes, speech bubbles and the "pencilize" post-pass (`pencil.ts`). It also provides the
-  cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`, `wipeTo`. Someone joining a
+  fades, speech bubbles and the "pencilize" post-pass (`pencil.ts`). It also provides the
+  cut-scene helpers `walk`, `face`, `faceToward`, `spawn`, `remove`, `fadeTo`. Someone joining a
   cut-scene walks in with `comeUp` and leaves with `goAway` (`src/story/choices.ts`): they start and end off screen (or at
   the door of a room that fits the screen) and find their way around trees and walls (`pathTo`), never appearing or
   vanishing in view; `walkTo` takes someone to the spot where they stay.
@@ -144,7 +145,7 @@ re-renders everything.
     water; calm steps after each battle, odds growing step by step);
   - `arrivals`: scenes that start by themselves once the player is free on a map (checked after every warp and
     every script): the seven Colour Guides bringing the field tools (`src/data/guides.ts`, `src/story/guides.ts`);
-  - flags, `fight()` (wipe, music, intro, outcome, blackout), `trainerBattle()`, rematches, evolutions (`checkEvolutions(grown)`:
+  - flags, `fight()` (transition and VS splash, music, outcome, blackout), `trainerBattle()`, rematches, evolutions (`checkEvolutions(grown)`:
     as on the GBA, only a Bestiole that just grew a level evolves, never one caught or received past its level);
   - the `scripts` registry. `dialog.ts` provides `say` / `sayAll` / `ask` (a box asked for while another is open waits its turn; tests close boxes with `closeDialog`, as the UI does).
 
@@ -168,6 +169,13 @@ Progress lives in `save.flags`. Maps react to flags declaratively:
 conventions are in [docs/content.md](docs/content.md#flags).
 
 **Battles.**
+- Getting in and out (`src/ui/curtain`): `fight()` asks `introOf()` (`src/ui/battle/intro.ts`, pure) for a
+  cover, a reveal and maybe a VS splash, then `playIntro` / `playOutro` (`transitions.ts`) run them on the
+  curtain, a canvas `App` mounts above every screen (`Curtain.tsx`), so a transition started over the world
+  ends over the battle. Each transition (`wipes.ts`) is drawn in coloured pencil from its progress alone,
+  with the move animations' `Brush`; the VS splash (`VsSplash.tsx`) puts the foe and the player face to
+  face on a torn page. Durations follow the battle speed; MOUVEMENTS : DOUX (`prefs.motion`,
+  `calmMotion()` in `src/anim/calm.ts`) turns them into fades. Shared easing maths: `src/anim/ease.ts`.
 - `src/engine/pk` is pure and deterministic:
   - `createBattle(setup)` and `act(state, playerAction, enemyAction)` return a `Step`
     `{ state, events, snaps }` built on a `structuredClone`;

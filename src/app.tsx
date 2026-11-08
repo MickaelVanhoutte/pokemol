@@ -1,5 +1,7 @@
 import { locale } from './i18n';
 import { screen } from './state/router';
+import { prefs } from './state/prefs';
+import { Curtain } from './ui/curtain/Curtain';
 import { TitleScreen } from './ui/screens/TitleScreen';
 import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { BattleScreen } from './ui/battle/BattleScreen';
@@ -26,7 +28,7 @@ export function App() {
   // reading locale.value re-renders everything when the language changes
   const s = screen.value;
   return (
-    <div class="app" key={locale.value}>
+    <div class={`app ${prefs.value.motion === 'calm' ? 'is-calm' : ''}`} key={locale.value}>
       {s.id === 'title' && <TitleScreen />}
       {s.id === 'newgame' && <NewGameScreen />}
       {s.id === 'overworld' && <OverworldScreen />}
@@ -48,6 +50,8 @@ export function App() {
       {s.id === 'fresque' && <FresqueScreen key={s.species} species={s.species} size={s.size} onEnd={s.onEnd} />}
       {s.id === 'memo' && <MemoScreen onEnd={s.onEnd} />}
       {s.id === 'atelier' && <AtelierScreen fresh={s.fresh} onEnd={s.onEnd} />}
+      {/* transitions between screens (battle intros), above everything */}
+      <Curtain />
     </div>
   );
 }

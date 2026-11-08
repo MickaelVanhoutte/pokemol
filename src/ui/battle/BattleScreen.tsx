@@ -66,6 +66,9 @@ type Overlay = null | { kind: 'bag' } | { kind: 'party' } | { kind: 'target'; it
 
 const sleep = (ms: number) => (ms <= 0 ? Promise.resolve() : new Promise((r) => setTimeout(r, ms)));
 
+/** The platforms sliding in at the start (ms at normal battle speed; battle.css reads `--intro-ms`). */
+export const INTRO_MS = 750;
+
 const COACH = [
   L('Touche ATTAQUE puis choisis une capacité. Une capacité efficace contre le type ennemi fait plus de dégâts !', 'Tap FIGHT then pick a move. Moves that are strong against the foe’s type do more damage!'),
   L('Dans le SAC : tes Potions et tes Croque-Carnets. BESTIOLES sert à changer de Bestiole, et FUITE marche contre les Bestioles sauvages.', 'The BAG holds your Potions and Snapbooks. CRITTERS lets you switch, and RUN works against wild Critters.'),
@@ -289,8 +292,8 @@ export function BattleScreen(props: BattleProps) {
     commit(step.state);
     setView(step.snaps[0] ?? step.state);
     (async () => {
-      // platforms slide in, then the trainer challenges you
-      await sleep(750);
+      // platforms slide in (while the curtain opens), then the trainer challenges you
+      await sleep(INTRO_MS * speed.current);
       setIntro(false);
       if (props.trainer) {
         setMsg(tr(L('{t} veut se battre !', '{t} would like to battle!'), { t: props.trainer.title }));
@@ -335,7 +338,7 @@ export function BattleScreen(props: BattleProps) {
     : msg;
 
   return (
-    <div class="battle pk">
+    <div class="battle pk" style={{ '--intro-ms': `${Math.round(INTRO_MS * speed.current)}ms` }}>
       <BattleScene
         view={view} fx={fx} captured={captured} backdrop={props.backdrop ?? 'grass'} intro={intro}
         foeTrainer={props.trainer && (cast.foe || beaten) ? props.trainer.look : undefined}

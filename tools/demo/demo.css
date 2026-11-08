@@ -1,0 +1,110 @@
+/* Demo page: the game's own paper look (single theme, like the game). */
+:root {
+  /* layout: one sketchbook page, scene buttons in a grid, settings under them */
+  --paper: #fbf6ea;
+  --paper-2: #f1e8d4;
+  --ink: #2b2536;
+  --graphite: #6a6078;
+  --accent: #e2453c;
+  --hand: var(--pixel);
+  color-scheme: light;
+}
+html, body { background: var(--paper); color: var(--ink); }
+#app { height: 100%; }
+
+.demo-start, .demo-menu {
+  min-height: 100%;
+  font-family: var(--hand);
+  background: var(--paper);
+  color: var(--ink);
+  padding-block: 20px 28px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.demo-start { display: grid; place-items: center; }
+.demo-card {
+  max-width: 34rem;
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 18px 20px 20px;
+  background: #fffdf4;
+  border: 7px solid transparent;
+  border-image: var(--pencil-frame) 24 / 7px stretch;
+}
+.demo-eyebrow { margin: 0; color: var(--graphite); letter-spacing: 0.04em; }
+.demo-card h1, .demo-menu h1 { margin: 0; font-weight: 400; font-size: clamp(1.8rem, 7vw, 2.6rem); line-height: 1.05; text-wrap: balance; }
+.demo-card p { margin: 0; font-size: 1.15rem; line-height: 1.35; }
+.demo-small { color: var(--graphite); font-size: 1rem !important; }
+.demo-go {
+  align-self: flex-start;
+  font-family: var(--hand); font-size: 1.6rem;
+  padding: 8px 28px;
+  background: #ffd3d0; color: var(--ink);
+  border: 7px solid transparent;
+  border-image: var(--pencil-frame) 24 / 7px stretch;
+  cursor: pointer;
+}
+.demo-go:focus-visible, .demo-scene:focus-visible, .demo-seg button:focus-visible, .demo-quit:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.demo-menu { display: flex; flex-direction: column; gap: 16px; }
+.demo-menu header { display: flex; flex-direction: column; gap: 4px; }
+.demo-menu header p { margin: 0; color: var(--graphite); font-size: 1.1rem; }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.demo-scene {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  min-width: 0;
+  padding: 10px 12px;
+  font-family: var(--hand); text-align: left;
+  background: #fffdf4; color: var(--ink);
+  border: 6px solid transparent;
+  border-image: var(--pencil-frame) 24 / 6px stretch;
+  cursor: pointer;
+}
+.demo-scene:active { background: var(--paper-2); }
+.demo-scene__label { font-size: 1.35rem; line-height: 1.1; }
+.demo-scene__hint { font-size: 1rem; color: var(--graphite); }
+
+.demo-opts { display: flex; flex-direction: column; gap: 10px; }
+.demo-opt { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; font-size: 1.15rem; }
+.demo-seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.demo-seg button {
+  font-family: var(--hand); font-size: 1.05rem;
+  padding: 4px 12px;
+  background: #fffdf4; color: var(--ink);
+  border: 5px solid transparent;
+  border-image: var(--pencil-frame) 24 / 5px stretch;
+  cursor: pointer;
+}
+.demo-seg button.is-on { background: #ffe9a8; }
+
+/* the world before the battle: a screenshot of the game */
+.demo-world {
+  position: fixed; inset: 0;
+  background: #000 center / cover no-repeat;
+}
+.demo-flash { position: absolute; inset: 0; background: #fbf6ea; opacity: 0.85; }
+
+.demo-quit {
+  position: fixed; z-index: 150;
+  top: calc(8px + env(safe-area-inset-top, 0px));
+  left: calc(8px + env(safe-area-inset-left, 0px));
+  font-family: var(--hand); font-size: 1rem;
+  padding: 2px 10px;
+  background: #fffdf4; color: var(--ink);
+  border: 5px solid transparent;
+  border-image: var(--pencil-frame) 24 / 5px stretch;
+  opacity: 0.85;
+}
+@media (prefers-reduced-motion: reduce) { .demo-flash { opacity: 0.5; } }
+
+.demo-scene--wide { width: 100%; }
+.demo-menu h2 { margin: 6px 0 0; font-weight: 400; font-size: 1.5rem; }
+.demo-seg-back {
+  align-self: flex-start;
+  font-family: var(--hand); font-size: 1.1rem; padding: 4px 14px;
+  background: #fffdf4; color: var(--ink);
+  border: 5px solid transparent; border-image: var(--pencil-frame) 24 / 5px stretch;
+}
+.demo-row { display: flex; flex-direction: column; gap: 4px; }
+.demo-row__name { font-size: 1.15rem; }
+.demo-row__frames { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.demo-frame { width: 100%; aspect-ratio: 9 / 18; max-width: 100%; background: #000 center / cover no-repeat; border: 1px solid #c9bfb2; }

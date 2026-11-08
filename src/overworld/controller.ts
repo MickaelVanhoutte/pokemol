@@ -23,7 +23,10 @@ import type { FresqueDef, MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, W
 import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
 import { LOOKS, lookOf, type Look } from './sprites';
-import { OLD_AVATARS } from '../data/appearance';
+import { OLD_AVATARS, fromLook } from '../data/appearance';
+import { introOf, vsCardOf } from '../ui/battle/intro';
+import { playIntro, playOutro } from '../ui/curtain/transitions';
+import { monArtUrl } from '../ui/monArt';
 import { isWater, tile } from './tiles';
 import { calm, missed, wildOdds, wildStep } from './encounterRate';
 import { berryFlag, isRipe, localDay } from './berries';
@@ -380,7 +383,7 @@ function onStep(x: number, y: number): boolean {
       missed(odds, enc.rate, true);
       return false;
     }
-    void locked(async () => void (await wildBattle(e.id, level)));
+    void locked(async () => void (await wildBattle(e.id, level, { ground })));
     return true;
   }
   return false;
@@ -761,7 +764,7 @@ async function fish() {
   await say(L('Oh ! Ça mord !', 'Oh! A bite!'));
   const st = { rng: newSeed() };
   const e = pickWeighted(st, table, (r) => r.w);
-  await wildBattle(e.id, fishLevel(team, e, nextRandom(st)));
+  await wildBattle(e.id, fishLevel(team, e, nextRandom(st)), { ground: 'water' });
 }
 
 /** Gets on or off the Pencil Bike (outdoors only). Returns a reason when it can't. */
@@ -973,6 +976,8 @@ export interface FightOptions {
   borrowed?: Mon[];
   /** A vision: Croque-Carnets go right through it. */
   noCatch?: boolean;
+  /** Where a wild Bestiole jumped out ('water', 'cave' or a tile id): picks the transition. */
+  ground?: string;
 }
 
 /** Runs a battle from the world and applies its outcome to the save. */
@@ -985,12 +990,24 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
   update((x) => enemy.forEach((m) => see(x, m.species)));
   calm(odds);
   const g = getGame();
-  await g.wipeTo(1, kind === 'wild' ? 480 : 620, opts.grey ? 'eraser' : 'pencil');
+  const music: TrackId = opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gommeBattle' : kind === 'trainer' ? 'trainer' : 'wild');
+  // a leader's rematch keeps the badge of the first battle
+  const badge = opts.trainer?.badge ?? TRAINERS[opts.trainer?.id.split(':')[0] ?? '']?.badge;
+  const intro = introOf({
+    kind, ground: opts.ground, music, trainerId: opts.trainer?.id, badge, grey: opts.grey, borrowed: !!opts.borrowed,
+    legendary: kind === 'wild' && creature(enemy[0].species).rarity === 'legendary',
+  });
+  const card = intro.vs ? vsCardOf(intro.vs, {
+    name: enemyName, badge,
+    person: kind === 'trainer' ? fromLook(opts.look ?? LOOKS.kid) : undefined,
+    art: kind === 'wild' ? monArtUrl(enemy[0]) : undefined,
+  }, { person: playerLook(), name: d.player.name }) : undefined;
+  // the battle's music starts as the world gets covered (then a boss gets its VS splash)
+  playMusic(music);
   let caught: string | null = null;
   // Bestioles that grew a level in this battle: only they may evolve after it
   let grown: string[] = [];
-  const res = await new Promise<{ result: BattleResult; state: BattleState }>((resolve) => {
-    go({
+  const res = await new Promise<{ result: BattleResult; state: BattleState }>((resolve) => void playIntro(intro, card, () => go({
       id: 'battle',
       props: {
         setup: {
@@ -1006,7 +1023,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         tutorial: opts.tutorial,
         playerLook: playerLook(),
         fought: met,
-        music: opts.music ?? (opts.trainer?.id === 'effaceur' ? 'final' : opts.trainer?.badge || opts.trainer?.id.endsWith(':rematch') ? 'leader' : opts.grey ? 'gommeBattle' : kind === 'trainer' ? 'trainer' : 'wild'),
+        music,
         trainer: kind === 'trainer' ? {
           title: tr(enemyName),
           look: opts.look ?? LOOKS.kid,
@@ -1016,8 +1033,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
         rewardLines: (result) => (result === 'win' && money ? [tr(L('Tu gagnes {n} ₽.', 'You got ₽{n} for winning!'), { n: money })] : []),
         onEnd: (result, state) => resolve({ result, state }),
       },
-    });
-  });
+    })));
   update((x) => {
     // the battle worked on copies: bring back HP, XP, levels, moves and statuses
     x.stats.battles++;
@@ -1038,10 +1054,11 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       if (where === 'box') showToast(tr(L('{n} est envoyé dans le PC.', '{n} was sent to the PC.'), { n: monLabel(wild) }));
     }
   });
-  go({ id: 'overworld' });
-  g.wipe = 0;
-  g.fade = 1;
-  void g.fadeTo(0, 320, 'black');
+  // a page turns over the battle, then lifts off the world
+  await playOutro(() => {
+    go({ id: 'overworld' });
+    g.fade = 0;
+  });
   await wait(250);
   if (caught) await offerNickname(caught);
   await checkEvolutions(grown);
@@ -1137,7 +1154,7 @@ async function blackout() {
 }
 
 /** A wild battle (random encounters, fishing, or a Bestiole waiting somewhere); returns how it ended. */
-export async function wildBattle(species: string, level: number, opts: { music?: TrackId; noCatch?: boolean } = {}): Promise<BattleResult | null> {
+export async function wildBattle(species: string, level: number, opts: { music?: TrackId; noCatch?: boolean; ground?: string } = {}): Promise<BattleResult | null> {
   // fishing or a Bestiole waiting somewhere, with nobody able to fight (eggs don't)
   if (!partyAlive(s())) {
     await say(L('Tes Bestioles sont épuisées… Va vite les reposer à l’Auberge !', 'Your Critters are worn out… Go rest them at the Inn!'));
@@ -1157,7 +1174,7 @@ export async function wildBattle(species: string, level: number, opts: { music?:
   // like the GBA games, some wild creatures carry an item (kept when caught)
   const held = creature(species).wildItem;
   if (held && Math.random() * 100 < held.pct) wild.item = held.id;
-  return (await fight('wild', creature(species).name, [wild], { music: opts.music, noCatch: opts.noCatch })).result;
+  return (await fight('wild', creature(species).name, [wild], { music: opts.music, noCatch: opts.noCatch, ground: opts.ground })).result;
 }
 
 // ------------------------------------------------------------------ helpers for scripts

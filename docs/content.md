@@ -283,7 +283,7 @@ for shared ones), then reference `myId` from a map. Tools (import from `../overw
   - `g.npc(id)`, `g.spawn(id, look, x, y, dir, mon?)` (`mon` draws a Bestiole's miniature), `g.remove(id)`;
   - `await g.walk(actor, ['up', 'up', 'left'])`;
   - `g.face(actor, dir)`, `g.faceToward(a, b)`;
-  - `await g.fadeTo(1, ms, 'white' | 'black')`, `await g.wipeTo(…)`;
+  - `await g.fadeTo(1, ms, 'white' | 'black')`;
   - `g.player` is the player actor.
 
 Scripts run one at a time and lock player input. To change an existing script after a story point
@@ -310,6 +310,27 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
 - `item` on a party entry: a held item (berries are eaten in battle).
 - Run `npm run balance` before and after changing levels or teams (see [testing.md](testing.md)).
   Keep the early game gentle ([story.md](story.md#level-curve-and-difficulty)).
+
+### Battle intros: transitions and VS splashes
+
+`fight()` picks how a battle begins with `introOf()` (`src/ui/battle/intro.ts`, pure, tested in
+`intro.test.ts`): a **cover** that runs over the world, a **reveal** that opens the battle, and a VS
+splash for bosses. Covers are `grass` / `cave` / `water` for wild Bestioles (from where they jumped
+out: `wildBattle(…, { ground })`), `trainer`, `gomme` (Team Gomme), `boss` (Masters, the Great Eraser, the
+Concours) and `legend` (legendaries, and wild battles that play the `final` music); `page` turns over the
+battle on the way back. Reveals are `tear`, `erase`, `lift` (and `fade` for MOUVEMENTS : DOUX).
+
+- **VS splash** (`src/ui/curtain/VsSplash.tsx`): Atelier Masters (and their rematches, through the base
+  trainer's `badge`), `music: 'rival'`, the Great Eraser, legendaries and the Grand Concours. Its title
+  line comes from `VS_TITLES`, its colour from the badge (or `VS_COLOURS`). A new kind of boss: add a
+  `VsKind`, a title, a colour, a case in `introOf` and a test.
+- **A new transition**: add its kind, duration (`COVER_MS` / `REVEAL_MS`), covered colour (`SHEET`),
+  sounds and a `Draw` function in `src/ui/curtain/wipes.ts`. A `Draw` paints the whole frame from its
+  progress `t` (0 to 1) with the move animations' `Brush`, and must end fully covered (or fully open):
+  a canvas whose pixels are dropped repaints itself on the next frame. Check it at rest with
+  `npm run demo -- m1` (« Toutes les transitions, image par image »).
+- Scripts never call the curtain themselves: `fight()` and `playIntro` / `playOutro`
+  (`src/ui/curtain/transitions.ts`) do.
 
 ## Creatures, moves, items
 
@@ -541,3 +562,7 @@ In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens
   because their only B button is on the map.
 - Per-device options go in `src/state/prefs.ts` and get a row in `ROWS` in
   `src/ui/views/OptionsView.tsx`.
+- **MOUVEMENTS : DOUX** (`prefs.motion === 'calm'`, `calmMotion()` in `src/anim/calm.ts`, class `.app.is-calm`)
+  starts from the device's "reduce motion" setting. Any new transition, camera move or shake must
+  check it and fall back to a plain fade (or nothing). Easing maths for animations live in
+  `src/anim/ease.ts` (`src/ui/battle/fx/core.ts` re-exports them for the move recipes).

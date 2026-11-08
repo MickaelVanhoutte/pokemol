@@ -160,7 +160,7 @@ export class Brush {
     ctx.globalAlpha = o.alpha ?? 1;
     ctx.translate(x, y);
     if (o.rot) ctx.rotate(o.rot);
-    ctx.font = `${Math.round(size)}px 'Patrick Hand', cursive`;
+    ctx.font = `${Math.round(size)}px 'Bestioles Main', cursive`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.lineJoin = 'round';

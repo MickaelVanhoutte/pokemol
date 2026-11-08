@@ -17,19 +17,34 @@ export interface Prefs {
   autosave: boolean;
   /** The first Bestiole of the party walks behind the player. */
   follower: boolean;
+  /**
+   * MOUVEMENTS: 'calm' keeps transitions and scenes simple (no camera moves, shakes or freeze-frames).
+   * Starts from the device's "reduce motion" setting.
+   */
+  motion: 'full' | 'calm';
 }
 
 const KEY = 'atelier-bestioles.prefs';
-const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, moveFx: true, sound: true, music: true, autosave: false, follower: true };
+const DEFAULTS: Prefs = { textSpeed: 'mid', difficulty: 'normal', battleAnim: 1, moveFx: true, sound: true, music: true, autosave: false, follower: true, motion: 'full' };
+
+/** The device asks for less motion (accessibility setting). */
+function deviceCalm(): boolean {
+  try {
+    return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch {
+    return false;
+  }
+}
 
 function read(): Prefs {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...DEFAULTS, ...JSON.parse(raw) };
+    const base = { ...DEFAULTS, motion: deviceCalm() ? 'calm' : 'full' } as Prefs;
+    if (raw) return { ...base, ...JSON.parse(raw) };
     // settings from older versions
     const speed = Number(localStorage.getItem('atelier-bestioles.speed'));
     const sfx = localStorage.getItem('atelier-bestioles.sfx');
-    return { ...DEFAULTS, battleAnim: speed || 1, sound: sfx !== 'off' };
+    return { ...base, battleAnim: speed || 1, sound: sfx !== 'off' };
   } catch {
     return DEFAULTS;
   }

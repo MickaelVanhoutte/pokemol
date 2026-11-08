@@ -55,6 +55,9 @@ what-ifs, copy it to `tools/out/` (gitignored) and edit freely.
   - `fight(...)`, `trainerBattle(id)`, `createMon(species, level, { rng })`, `checkEvolutions(uids)` (only those Bestioles, as after a battle).
 - `window.__battle` (while a battle is open): `dispatch(action)`, `state()`, `speed`.
   `dispatch` resolves when the whole turn has played: call it without awaiting to watch the turn.
+- The curtain (transitions) and VS splash are plain modules: drive them through a battle
+  (`__ab.fight('wild', name, [mon], { ground: 'cave' })`, `__ab.trainerBattle('mireille')`) rather than
+  importing `src/ui/curtain/transitions.ts` from the page.
 - `window.__fx` (while a battle is open): `ids()`, `play(moveId, side)`, `freeze(moveId, 0…1, side,
   charge)` to leave one moment of an animation on screen, `clear()`, `ball(item, shakes, caught)`. Freezing every move at a few
   moments and screenshotting `.pk-scene` gives a contact sheet of all the animations.
@@ -99,6 +102,21 @@ await page.goto('http://localhost:5173/pokemol/', { waitUntil: 'networkidle0' })
 // click through the title, play the prologue, then drive the game with page.evaluate(() => window.__ab…)
 await page.screenshot({ path: 'shot.png' });
 ```
+
+## Demo pages for the owner (`npm run demo`)
+
+Big visual changes (battle transitions, VS splashes, later the cut-scenes) are shown to the owner on a
+demo page before they go into the game. `tools/demo/<m>.tsx` imports the game's own modules (so the
+timings are the game's) and `tools/demo/make.ts` builds it into `tools/out/demo-<m>/`:
+- `page.html` (the head's tags and the body only: an Artifact wraps the page in its own document);
+- its scripts, styles, font and recordings, renamed `.mp4` (Artifacts don't serve `.m4a`);
+- the cards and rigs of the Bestioles it shows (`SPECIES` in `make.ts`);
+- screenshots of the world from `tools/out/demo-shots/` (`world-<place>-p.webp` in portrait,
+  `-l.webp` in landscape), taken with headless Chrome after `newGame()` + `enterWorld()`.
+
+`files.json` lists the files to publish next to `page.html` (Artifact `root`: `tools/out/demo-<m>`).
+The owner follows from their phone: the page starts with a « Lancer » button (sound needs a tap) and has
+the battle speed, MOUVEMENTS and sound settings.
 
 ## Shipping
 
