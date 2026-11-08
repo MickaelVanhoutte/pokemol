@@ -4,7 +4,7 @@ import type { Anchor } from './core';
 
 const anchor = (x: number, y: number): Anchor => ({ x, y, top: y - 40, bottom: y + 40, left: x - 40, right: x + 40, size: 80 });
 const me = anchor(100, 300), foe = anchor(300, 120);
-const plan = { user: me, target: foe, userAt: 0, impact: 500, total: 1000, crit: false, eff: 1, kind: 'hit' as const };
+const plan = { user: me, target: foe, userAt: 0, impact: 500, total: 1000, crit: false, eff: 2, kind: 'hit' as const };
 
 /** Where a point of the scene lands once the camera's keyframe is applied (origin top left). */
 function apply(f: Keyframe, x: number, y: number): [number, number] {
@@ -35,7 +35,7 @@ describe('battle camera', () => {
   });
 
   it('starts and ends on the plain view, keyframes in order', () => {
-    for (const frames of [cameraFrames(plan)!, cameraFrames({ ...plan, kind: 'self' })!, focusFrames(foe), cameraFrames({ ...plan, impact: 990 })!]) {
+    for (const frames of [cameraFrames(plan)!, cameraFrames({ ...plan, crit: true })!, focusFrames(foe), cameraFrames({ ...plan, impact: 990 })!, cameraFrames({ ...plan, impact: 10 })!]) {
       expect(frames[0].scale).toBe('1');
       expect(frames[frames.length - 1].scale).toBe('1');
       const offsets = frames.map((f) => f.offset as number);
@@ -44,21 +44,19 @@ describe('battle camera', () => {
     }
   });
 
-  it('zooms on the target at the hit, more on a critical or super-effective one', () => {
+  it('stays still on a plain hit or a status move, pushes in a little on a big hit', () => {
+    expect(cameraFrames({ ...plan, eff: 1 })).toBeNull();
+    expect(cameraFrames({ ...plan, eff: 0.5 })).toBeNull();
+    expect(cameraFrames({ ...plan, kind: 'self' })).toBeNull();
     const peak = (p: typeof plan) => Math.max(...cameraFrames(p)!.map((f) => parseFloat(String(f.scale))));
-    expect(peak(plan)).toBeCloseTo(ZOOM.hit);
-    expect(peak({ ...plan, eff: 2 })).toBeCloseTo(ZOOM.strong);
+    expect(peak(plan)).toBeCloseTo(ZOOM.strong);
     expect(peak({ ...plan, crit: true })).toBeCloseTo(ZOOM.crit);
+    expect(ZOOM.crit).toBeLessThanOrEqual(1.08);
     // the hit frame is centred on the target
-    const hit = cameraFrames(plan)!.find((f) => parseFloat(String(f.scale)) === ZOOM.hit)!;
+    const hit = cameraFrames(plan)!.find((f) => parseFloat(String(f.scale)) === ZOOM.strong)!;
     const [x, y] = apply(hit, foe.x, foe.y);
     expect(x).toBeCloseTo(foe.x, 0);
     expect(y).toBeCloseTo(foe.y, 0);
-  });
-
-  it('a status move only leans on its user', () => {
-    const peak = Math.max(...cameraFrames({ ...plan, kind: 'self' })!.map((f) => parseFloat(String(f.scale))));
-    expect(peak).toBeCloseTo(ZOOM.lean);
   });
 });
 

@@ -205,7 +205,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
   `calmMotion()` in `src/anim/calm.ts`) turns them into fades. Shared easing maths: `src/anim/ease.ts`.
 - The battle camera (`fx/camera.ts`): the scene is two layers, `.pk-cam` (backdrop, drawings, effect canvases)
   and `.pk-hud` (HP boxes; the foe's column keeps a `.pk-hp-space` for its box). `FxStage.play` with
-  `camera: 'hit' | 'self'` leans `.pk-cam` towards the attacker then zooms on the target at the hit
+  `camera: 'hit' | 'self'` stays still on plain hits and status moves (the owner found a zoom on every move too
+  much); a super-effective or critical hit gets a short push onto the target (×1.05, ×1.08: keep it small)
   (`translate` + `scale` from its top-left corner, only ever zooming in), and freezes everything for
   `hitStopMs` (critical hit: plus a white flash and `sfx.crit`; final blow, from `moveOutcome().ko`: the
   longest). A faint pushes the camera onto the Bestiole (`stage.focus`), it goes back to pencil and slides

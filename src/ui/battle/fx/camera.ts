@@ -1,15 +1,15 @@
 /**
- * The battle camera: during a move it leans towards the attacker, then swings onto the target and
- * zooms in at the hit (more on a critical or super-effective hit), and settles back. It only ever
- * zooms in, around a point inside the scene, so the backdrop always covers the screen.
+ * The battle camera, kept for the big moments: a plain hit or a status move leaves it still; a super-effective
+ * or critical hit gets a short push onto the target at the hit, and settles back (the owner found a zoom on every
+ * move too much). It only ever zooms in, around a point inside the scene, so the backdrop always covers the screen.
  *
  * It moves `.pk-cam` (backdrop, drawings, effects) with `translate` + `scale` from its top-left corner;
  * the HP boxes live in `.pk-hud` and stay still. Also here: the freeze-frame on big hits (hit-stop).
  */
 import type { Anchor } from './core';
 
-/** How much the camera zooms: leaning on the attacker, on a hit, on a super-effective one, on a critical one. */
-export const ZOOM = { lean: 1.04, hit: 1.08, strong: 1.11, crit: 1.15, faint: 1.07 };
+/** How much the camera pushes in: on a super-effective hit, on a critical one, onto a Bestiole fainting. */
+export const ZOOM = { strong: 1.05, crit: 1.08, faint: 1.05 };
 /** How long the camera holds on the target after the hit (ms at normal speed). */
 export const HOLD_MS = 160;
 
@@ -46,30 +46,19 @@ export interface CameraPlan {
   kind: 'hit' | 'self';
 }
 
-/** Keyframes of the camera for one move (offsets over `total`), or null for none. */
+/** Keyframes of the camera for one move (offsets over `total`), or null when it stays still. */
 export function cameraFrames(p: CameraPlan): Keyframe[] | null {
+  if (p.kind === 'self' || (!p.crit && p.eff <= 1)) return null;
   const total = Math.max(p.total, 1);
   const at = (ms: number) => Math.min(1, Math.max(0, ms / total));
-  const lean = zoomAt(p.user.x, p.user.y, ZOOM.lean);
-  if (p.kind === 'self') {
-    return settle([
-      { ...IDENTITY, offset: 0 },
-      { ...lean, offset: at(Math.min(p.userAt + total * 0.25, total * 0.4)) },
-      { ...lean, offset: 0.7 },
-      { ...IDENTITY, offset: 1 },
-    ]);
-  }
-  const s = p.crit ? ZOOM.crit : p.eff > 1 ? ZOOM.strong : ZOOM.hit;
-  const hit = zoomAt(p.target.x, p.target.y, s);
-  const leanAt = at(Math.min(p.userAt + 140, p.impact * 0.6));
+  const hit = zoomAt(p.target.x, p.target.y, p.crit ? ZOOM.crit : ZOOM.strong);
   const hitAt = at(p.impact);
-  // already at the target a little before the hit, so the hit is seen up close
-  const arrive = Math.max(leanAt + 0.01, hitAt - 0.08);
   const holdTo = Math.min(0.97, Math.max(hitAt + 0.01, at(p.impact + HOLD_MS)));
   return settle([
     { ...IDENTITY, offset: 0 },
-    { ...lean, offset: leanAt },
-    { ...hit, offset: Math.min(arrive, hitAt) },
+    // still until just before the hit, then a quick push onto the target
+    { ...IDENTITY, offset: Math.max(0, hitAt - 0.06) },
+    { ...hit, offset: hitAt },
     { ...hit, offset: holdTo },
     { ...IDENTITY, offset: 1 },
   ]);
