@@ -33,6 +33,7 @@ const TRACKS: Record<TrackId, { name: LText; where: LText }> = {
   final: { name: L('Le Grand Effaceur', 'The Great Eraser'), where: L('Le dernier combat de l’histoire', 'The story’s last battle') },
   champion: { name: L('Le Chef-d’Œuvre', 'The Masterpiece'), where: L('Finale du Grand Concours', 'Grand Contest final') },
   ending: { name: L('Bonne nuit, petite artiste', 'Good Night, Little Artist'), where: L('Fin et générique', 'Ending and credits') },
+  evolution: { name: L('Quoi ? Ça change !', 'What? It’s Changing!'), where: L('Une Bestiole qui évolue', 'A Critter evolving') },
 };
 
 /** The little tunes played once: badge, item, catch… */

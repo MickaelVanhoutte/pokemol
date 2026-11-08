@@ -283,6 +283,10 @@ conventions are in [docs/content.md](docs/content.md#flags).
 - The small moments (`MomentViews.tsx`, over the world): a badge spinning in (`showBadge`), an item's icon shown big
   while its line is said (`gotItem`, used wherever the item jingle plays), the Bestiodex page of a first catch
   stamped « Enregistré ! » (`showDexPage`, `firstCatch`).
+- Evolution (`EvolutionView`, timings in `src/ui/views/evolution.ts`): its own tune (`evolution`), rings of light, the
+  new form bigger at each swap, a sparkle burst; only a fresh B press stops it, never with `locked` (the ending's
+  Coconfus, `evoOverlay.locked`); the music before it comes back. Menus (`Frame`) open like a turned page
+  (`openScreen` plays `sfx.page`). The credits roll up (`CreditsScreen`, `creditsRoll.ts`), B held ×3.
 
 **Audio.**
 - The original tunes are notes in `src/audio/tunes.ts`. `npm run music` plays them on a music box

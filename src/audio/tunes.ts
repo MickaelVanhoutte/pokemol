@@ -10,7 +10,7 @@
 export type TrackId =
   | 'title' | 'bourg' | 'pastel' | 'plume' | 'port' | 'feutre' | 'braise' | 'paillette' | 'gouache' | 'encre' | 'galerie'
   | 'town' | 'route' | 'cave' | 'gomme' | 'edge' | 'center' | 'atelier' | 'rival'
-  | 'wild' | 'trainer' | 'gommeBattle' | 'leader' | 'final' | 'champion' | 'ending';
+  | 'wild' | 'trainer' | 'gommeBattle' | 'leader' | 'final' | 'champion' | 'ending' | 'evolution';
 
 /** Short tunes played once over the music, which comes back after them. */
 export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal' | 'spotted' | 'spottedGomme';
@@ -619,6 +619,16 @@ export const TRACKS: Record<TrackId, Track> = {
         ),
       },
     ],
+  },
+  // a Bestiole evolving: the same pulse climbing bar after bar, the drawing glowing, until it changes
+  evolution: {
+    bpm: 126,
+    voices: [
+      { notes: bars('E5 . E5 . E5 . F5 G5', 'G5 . G5 . G5 . A5 B5', 'C6 . C6 . B5 . A5 G#5', 'B5:4 G#5:2 E5:2'), with: [{ inst: 'chime', oct: 1, vol: 0.25 }] },
+      { notes: bars(oct('A2'), oct('C3'), oct('D3'), oct('E2')) },
+      { notes: bars(arp('A4 C5 E5 C5', 8, 1), arp('C5 E5 G5 E5', 8, 1), arp('D5 F5 A5 F5', 8, 1), arp('E5 G#5 B5 G#5', 8, 1)) },
+    ],
+    drums: 'k.h.k.h.k.h.k.hh',
   },
 };
 

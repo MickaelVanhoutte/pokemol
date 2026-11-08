@@ -47,6 +47,45 @@
 .credits__parade img:nth-child(2n) { animation-delay: -1.5s; }
 .credits__end { font-size: 1.3rem; color: #2a6ad6; }
 .credits__small { color: var(--ink-soft); font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; }
+/* the credits roll up the page */
+.credits-roll {
+  position: fixed; inset: 0; z-index: 60; overflow: hidden;
+  background: var(--hatch-paper) 0 0 / 72px 72px, #fbf6ea;
+  font-family: var(--pixel); font-synthesis: none; color: var(--ink);
+  animation: fade-in 0.6s ease;
+}
+.credits-roll__view { position: absolute; inset: 0; overflow: hidden; touch-action: none; }
+.credits-roll__strip {
+  position: absolute; left: 0; right: 0; top: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  padding: 0 16px; text-align: center; font-size: clamp(1.1rem, 4.6vw, 1.35rem);
+  will-change: transform;
+}
+.credits-roll__strip > p { margin: 0; max-width: 30em; }
+.credits-roll__title { margin: 0; font-weight: 400; font-size: clamp(2rem, 10vw, 3rem); }
+.credits-roll__subtitle { font-size: 1.3em; color: #7b60c3; margin-bottom: 24px !important; }
+.credits-roll__parade { display: flex; flex-direction: column; gap: 22px; width: min(100%, 420px); margin: 10px 0 26px; }
+.credits-roll__drawing { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; animation: bob 3s ease-in-out infinite; }
+.credits-roll__drawing.is-left { align-self: flex-start; rotate: -3deg; }
+.credits-roll__drawing.is-right { align-self: flex-end; rotate: 3deg; animation-delay: -1.5s; }
+.credits-roll__drawing img { width: min(46vw, 190px); height: min(40vw, 160px); object-fit: contain; background: #fff; padding: 6px; box-shadow: 2px 3px 0 rgba(43, 37, 54, 0.25); }
+.credits-roll__drawing figcaption { font-size: 1rem; color: var(--ink-soft); }
+.credits-roll__skip { position: absolute; top: max(8px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); }
+.credits-roll__hint {
+  position: absolute; left: 50%; translate: -50% 0; bottom: calc(8px + env(safe-area-inset-bottom)); margin: 0; padding: 0 10px;
+  font-size: 0.95rem; color: var(--ink-soft); pointer-events: none; white-space: nowrap;
+  background: rgba(251, 246, 234, 0.92); border-radius: 8px;
+}
+.credits-roll__fin {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;
+  background: rgba(251, 246, 234, 0.82); animation: fade-in 0.8s ease; cursor: pointer; text-align: center;
+}
+.credits-roll__fin p { margin: 0; font-size: 1.3rem; }
+.credits-roll__fin .credits-roll__fin-word { font-size: clamp(2.6rem, 14vw, 4rem); }
+.is-calm .credits-roll__drawing { animation: none; }
+@media (orientation: landscape) and (max-height: 540px) {
+  .credits-roll__drawing img { width: min(30vw, 180px); height: min(42dvh, 150px); }
+}
 @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(4deg); } }
 
 /* new game */

@@ -27,9 +27,13 @@ const SPECIES: Record<string, string[]> = {
   m3b: ['001', '002', '003'],
   // your Bestiole and the wild ones to catch for the first time
   m4a: ['021', '012', '013', '005', '009', '006'],
+  // the evolutions shown (and the ending's Coconfus becoming Libellune)
+  m4b: ['012', '015', '007', '073', '071'],
 };
+/** Demos showing her original drawings (the credits). */
+const ORIGINALS: Record<string, boolean> = { m4b: true };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
-const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true, m3a: true, m3b: true, m4a: true };
+const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
 const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true };
 
@@ -78,6 +82,7 @@ for (const dir of ['cards', 'rigs', 'minis']) {
     cpSync(resolve('public', dir, name), join(out, dir, name), { recursive: true });
   }
 }
+if (ORIGINALS[which]) cpSync(resolve('public', 'originals'), join(out, 'originals'), { recursive: true });
 if (existsSync(shots)) {
   mkdirSync(join(out, 'world'), { recursive: true });
   for (const name of readdirSync(shots)) if (name.endsWith('.webp')) copyFileSync(join(shots, name), join(out, 'world', name.replace(/^world-/, '')));

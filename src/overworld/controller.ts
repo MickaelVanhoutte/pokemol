@@ -1155,7 +1155,7 @@ export async function gotItem(id: string, line: LText, vars?: Record<string, str
 /** Evolution scene shown over the world (or null). */
 /** An egg hatching, drawn over the world. */
 export const hatchOverlay = signal<{ mon: Mon; resolve: () => void } | null>(null);
-export const evoOverlay = signal<{ mon: Mon; to: string; resolve: (evolved: boolean) => void } | null>(null);
+export const evoOverlay = signal<{ mon: Mon; to: string; locked?: boolean; resolve: (evolved: boolean) => void } | null>(null);
 
 /**
  * Evolves the party Bestioles in `grown` (uids) whose level or friendship now allows it. As on the GBA, only a
@@ -1296,6 +1296,8 @@ export function showMons(ids: string[], title?: string, pick = false): Promise<n
 
 /** Opens a full screen (shop, PC…) and resolves when it goes back to the world. */
 export function openScreen(sc: Screen): Promise<void> {
+  // a page turns (the Frame's own animation)
+  sfx.page();
   return new Promise((resolve) => {
     returnResolver = resolve;
     go(sc);

@@ -103,7 +103,7 @@ export function OverworldScreen() {
       </div>
       {monOverlay.value && <MonOverlay />}
       {hatchOverlay.value && <HatchView key={hatchOverlay.value.mon.uid} mon={hatchOverlay.value.mon} onEnd={hatchOverlay.value.resolve} />}
-      {evoOverlay.value && <EvolutionView key={evoOverlay.value.mon.uid} mon={evoOverlay.value.mon} to={evoOverlay.value.to} onEnd={evoOverlay.value.resolve} />}
+      {evoOverlay.value && <EvolutionView key={evoOverlay.value.mon.uid} mon={evoOverlay.value.mon} to={evoOverlay.value.to} locked={evoOverlay.value.locked} onEnd={evoOverlay.value.resolve} />}
       {learnOverlay.value && (
         <SummaryView
           mon={learnOverlay.value.mon}

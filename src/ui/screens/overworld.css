@@ -1,6 +1,8 @@
 .ow {
   position: fixed;
   inset: 0;
+  /* back from a menu: the page lifts off the world */
+  animation: fade-in 0.22s ease-out;
   display: flex;
   flex-direction: column;
   background: #000;

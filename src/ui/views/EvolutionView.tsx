@@ -4,17 +4,20 @@ import { creature, monLabel } from '../../data/creatures';
 import type { Mon } from '../../engine/pk/creature';
 import { monArtUrl } from '../monArt';
 import { sfx } from '../../audio/sfx';
-import { playJingle } from '../../audio/music';
+import { currentTrack, playJingle, playMusic } from '../../audio/music';
 import { TextBox } from '../paper';
+import { BURST, EVO_SWAPS, isStopKey } from './evolution';
 import './views.css';
 
 type Phase = 'intro' | 'morph' | 'done' | 'stopped';
 
 /**
- * FRLG evolution: the drawing turns into a white silhouette that swaps with the new one,
- * faster and faster, then the new Bestiole appears. B (or the button) stops it.
+ * FRLG evolution: the drawing turns into a glowing silhouette that swaps with the new, bigger one, faster and faster
+ * over its own tune, rings of light pulsing round it; then a flash, sparkles bursting out, and the new Bestiole.
+ * B (or the button) stops it, unless it is `locked` (Coconfus at the ending: nothing stops that one). Only a fresh
+ * press counts: B held before the scene, or its key repeat, doesn't. The music before it comes back after.
  */
-export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd: (evolved: boolean) => void }) {
+export function EvolutionView({ mon, to, onEnd, locked = false }: { mon: Mon; to: string; onEnd: (evolved: boolean) => void; locked?: boolean }) {
   const [phase, setPhase] = useState<Phase>('intro');
   const [showNew, setShowNew] = useState(false);
   const [flash, setFlash] = useState(false);
@@ -22,16 +25,24 @@ export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd:
   const b = creature(to);
   const name = monLabel(mon);
 
+  // its own tune while it changes, then the music that was playing
+  useEffect(() => {
+    const before = currentTrack();
+    return () => {
+      if (before) playMusic(before);
+    };
+  }, []);
+
   useEffect(() => {
     if (phase !== 'morph') return;
+    playMusic('evolution');
     let alive = true;
     (async () => {
-      const delays = [520, 460, 400, 340, 300, 260, 220, 190, 160, 130, 110, 90, 80, 70, 60, 60, 50, 50];
       let alt = false;
-      for (const d of delays) {
+      for (const d of EVO_SWAPS) {
         await new Promise((r) => setTimeout(r, d));
         if (!alive) return;
-        if (stop.current) {
+        if (stop.current && !locked) {
           setShowNew(false);
           setPhase('stopped');
           return;
@@ -40,7 +51,8 @@ export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd:
         setShowNew(alt);
       }
       setFlash(true);
-      playJingle('evolved', { fallback: sfx.levelUp });
+      playJingle('evolved', { fallback: sfx.levelUp, resume: false });
+      sfx.sparkle();
       await new Promise((r) => setTimeout(r, 450));
       if (!alive) return;
       setShowNew(true);
@@ -51,9 +63,9 @@ export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd:
   }, [phase]);
 
   useEffect(() => {
-    if (phase !== 'morph') return;
+    if (phase !== 'morph' || locked) return;
     const onKey = (e: KeyboardEvent) => {
-      if (['x', 'X', 'Escape', 'Backspace'].includes(e.key)) {
+      if (isStopKey(e)) {
         e.preventDefault();
         stop.current = true;
       }
@@ -68,15 +80,19 @@ export function EvolutionView({ mon, to, onEnd }: { mon: Mon; to: string; onEnd:
     : tr(L('Hein ? {n} a arrêté d’évoluer !', 'Huh? {n} stopped evolving!'), { n: name });
 
   return (
-    <div class={`evo ${flash ? 'is-flash' : ''}`}>
+    <div class={`evo is-${phase} ${flash ? 'is-flash' : ''}`}>
       <div class="evo__stage">
+        {phase === 'morph' && [0, 1, 2].map((i) => <span key={i} class="evo__ring" style={{ animationDelay: `${i * 0.6}s` }} aria-hidden="true" />)}
         <img
-          class={`mon-art evo__mon ${phase === 'morph' ? 'is-silhouette' : ''}`}
+          class={`mon-art evo__mon ${phase === 'morph' ? 'is-silhouette' : ''} ${showNew ? 'is-new' : ''}`}
           src={monArtUrl(showNew ? { species: to, shiny: mon.shiny } : mon)}
           alt=""
         />
+        {phase === 'done' && BURST.map(([a, r], i) => (
+          <span key={i} class="evo__spark" style={{ '--a': `${a}deg`, '--r': `${r}px`, animationDelay: `${(i % 4) * 40}ms` }} aria-hidden="true" />
+        ))}
       </div>
-      {phase === 'morph' && (
+      {phase === 'morph' && !locked && (
         <button class="pbtn pbtn--b evo__stop" onClick={() => (stop.current = true)}>{tr(L('Arrêter', 'Stop'))}</button>
       )}
       <TextBox

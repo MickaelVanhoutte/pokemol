@@ -270,7 +270,7 @@ async function dreamEvolves() {
   const i = d.party.findIndex((x) => x.uid === m.uid);
   if (i >= 0) {
     // the evolution scene, which no B can stop this time
-    await new Promise<boolean>((resolve) => (evoOverlay.value = { mon: m, to: into, resolve }));
+    await new Promise<boolean>((resolve) => (evoOverlay.value = { mon: m, to: into, locked: true, resolve }));
     evoOverlay.value = null;
   }
   update((x) => {
