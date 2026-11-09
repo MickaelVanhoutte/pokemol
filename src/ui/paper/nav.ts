@@ -30,6 +30,29 @@ export function moveCursor(i: number, n: number, dir: NavKey, cols = 1): number 
   return Math.min(n - 1, r * cols + c);
 }
 
+/**
+ * A grid of `n` cards with `cols` columns, and a button below it (index `n`, the Retour of the party screen) when
+ * `back` is set. Left and right stay in the row; up and down go through the rows, the button sitting under the
+ * last one, and wrap around.
+ */
+export function gridCursor(i: number, n: number, dir: NavKey, cols: number, back: boolean): number {
+  if (n <= 0) return back ? n : 0;
+  const rows = Math.ceil(n / cols);
+  const lastRow = (rows - 1) * cols;
+  if (back && i >= n) {
+    if (dir === 'up') return lastRow;
+    if (dir === 'down') return 0;
+    return n;
+  }
+  const r = Math.floor(i / cols), c = i % cols;
+  const inRow = Math.min(cols, n - r * cols);
+  if (dir === 'left') return r * cols + (c - 1 + inRow) % inRow;
+  if (dir === 'right') return r * cols + (c + 1) % inRow;
+  if (dir === 'up') return r > 0 ? i - cols : back ? n : Math.min(n - 1, lastRow + c);
+  if (dir === 'down') return r < rows - 1 ? Math.min(n - 1, i + cols) : back ? n : c;
+  return i;
+}
+
 /** Keyboard navigation for a menu; touch/click activate entries directly. */
 export function useMenuNav(
   n: number,
@@ -37,6 +60,8 @@ export function useMenuNav(
     onSelect: (i: number) => void; onCancel?: () => void; cols?: number; active?: boolean; initial?: number;
     /** ◀ ▶ in a one-column list (option values, pockets…). */
     onSide?: (dir: -1 | 1, i: number) => void;
+    /** Moves the cursor itself (a grid laid out by CSS), in place of `cols`. */
+    move?: (i: number, dir: NavKey) => number;
   },
 ): [number, (i: number) => void] {
   const [cur, setCur] = useState(opts.initial ?? 0);
@@ -55,6 +80,7 @@ export function useMenuNav(
       if (e.repeat && (k === 'a' || k === 'b')) return;
       if (k === 'a') ref.current.onSelect(curRef.current);
       else if (k === 'b') ref.current.onCancel?.();
+      else if (ref.current.move) setCur(ref.current.move(curRef.current, k));
       else if ((k === 'left' || k === 'right') && (ref.current.cols ?? 1) <= 1) ref.current.onSide?.(k === 'left' ? -1 : 1, curRef.current);
       else setCur(moveCursor(curRef.current, n, k, ref.current.cols));
     };

@@ -5,9 +5,11 @@ import { monArtUrl } from '../monArt';
 import { maxHp, type Mon } from '../../engine/pk/creature';
 import { ActionBar, HpBar, MenuList, PixelIcon, StatusTag, Window, lv, type MenuItem } from '../paper';
 import { item } from '../../data/items';
-import { useMenuNav } from '../paper/nav';
+import { gridCursor, useMenuNav } from '../paper/nav';
 import { SummaryView, nextMon } from './SummaryView';
 import './views.css';
+
+const LANDSCAPE = '(orientation: landscape) and (max-height: 540px)';
 
 export type PartyMode = 'field' | 'battle' | 'forced' | 'target';
 
@@ -86,6 +88,8 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
     active: menuFor === null && itemFor === null && summary === null,
     onSelect: (i) => (i >= n ? onClose?.() : choose(i)),
     onCancel: () => (swapFrom !== null ? setSwapFrom(null) : cancellable ? onClose?.() : undefined),
+    // the cards are 2 columns, 3 on a phone turned sideways (views.css), Retour under them
+    move: (i, dir) => gridCursor(i, n, dir, matchMedia(LANDSCAPE).matches ? 3 : 2, cancellable),
   });
 
   const sub: MenuItem[] = menuFor === null ? [] : mode === 'field'
