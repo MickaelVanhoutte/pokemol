@@ -200,7 +200,8 @@ conventions are in [docs/content.md](docs/content.md#flags).
   cover, a reveal and maybe a VS splash, then `playIntro` / `playOutro` (`transitions.ts`) run them on the
   curtain, a canvas `App` mounts above every screen (`Curtain.tsx`), so a transition started over the world
   ends over the battle. Each transition (`wipes.ts`) is drawn in coloured pencil from its progress alone,
-  with the move animations' `Brush`; the VS splash (`VsSplash.tsx`) puts the foe and the player face to
+  with the move animations' `Brush` (the covered page is hatched once into a picture, `sheetImage`, and the `lift`
+  reveal only moves the canvas by CSS: redrawing full-screen hatching every frame stuttered on phones); the VS splash (`VsSplash.tsx`) puts the foe and the player face to
   face on a torn page. Durations follow the battle speed; MOUVEMENTS : DOUX (`prefs.motion`,
   `calmMotion()` in `src/anim/calm.ts`) turns them into fades. Shared easing maths: `src/anim/ease.ts`.
 - The battle camera (`fx/camera.ts`): the scene is two layers, `.pk-cam` (backdrop, drawings, effect canvases)

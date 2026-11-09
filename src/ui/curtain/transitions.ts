@@ -13,7 +13,7 @@ import { signal } from '@preact/signals';
 import { prefs } from '../../state/prefs';
 import { calmMotion } from '../../anim/calm';
 import { playSound, type SoundId } from '../../audio/sfx';
-import { CALM_MS, COVER_MS, COVER_SOUNDS, REVEAL_MS, REVEAL_SOUNDS, drawCurtain, type CoverKind, type RevealKind } from './wipes';
+import { CALM_MS, COVER_MS, COVER_SOUNDS, REVEAL_MS, REVEAL_SOUNDS, drawCurtain, forgetSheet, type CoverKind, type RevealKind } from './wipes';
 import type { VsCard } from './VsSplash';
 import type { Intro } from '../battle/intro';
 
@@ -129,6 +129,11 @@ export async function uncover(kind: RevealKind, o: { ms?: number } = {}) {
   const ms = calm ? CALM_MS : o.ms ?? REVEAL_MS[kind] * transitionPace();
   Object.assign(mine, { mode: 'reveal', reveal: kind, t: 0, calm });
   if (!calm) sounds(REVEAL_SOUNDS[kind], ms);
+  if (kind === 'lift' && !calm && canvas) {
+    await liftOff(canvas, mine, ms);
+    if (state === mine) dropCurtain();
+    return;
+  }
   await run(ms, (t) => {
     if (state !== mine) return;
     mine.t = t;
@@ -137,12 +142,31 @@ export async function uncover(kind: RevealKind, o: { ms?: number } = {}) {
   if (state === mine) dropCurtain();
 }
 
+/**
+ * The covered page lifted off upwards by the compositor: drawn once, then only moved, so the screen being
+ * mounted under it (the world after a battle) can't make it stutter.
+ */
+async function liftOff(c: HTMLCanvasElement, mine: CurtainState, ms: number) {
+  mine.mode = 'still';
+  paint(true);
+  c.classList.add('is-lifting');
+  const anim = c.animate(
+    [{ transform: 'none' }, { transform: 'translateY(-112%) rotate(-2.9deg)' }],
+    { duration: ms, easing: 'cubic-bezier(0.55, 0, 0.8, 0.4)', fill: 'forwards' },
+  );
+  // a hidden page may not finish its animations: never hang on it
+  await Promise.race([anim.finished.catch(() => undefined), new Promise((r) => setTimeout(r, ms + 250))]);
+}
+
 /** Takes the curtain (and any VS splash) away at once. */
 export function dropCurtain() {
   state = null;
   vsShown.value = null;
   curtainUp.value = false;
+  forgetSheet();
   if (canvas) {
+    canvas.getAnimations().forEach((a) => a.cancel());
+    canvas.classList.remove('is-lifting');
     canvas.width = 0;
     canvas.height = 0;
   }

@@ -76,18 +76,53 @@ function poly(ctx: CanvasRenderingContext2D, pts: P[], color: string, alpha = 1)
   ctx.globalAlpha = 1;
 }
 
-/** The covered screen: a flat crayon colour with pencil hatching over it. */
+/** The covered screen: a flat crayon colour with pencil hatching over it, drawn by the brush. */
+function paintSheet(b: Brush, kind: CoverKind) {
+  const { ctx, env } = b;
+  const s = SHEET[kind];
+  ctx.fillStyle = s.fill;
+  ctx.fillRect(0, 0, env.w, env.h);
+  b.wash(s.hatch, 0.5, { gap: 7, angle: -0.6, seed: 31 });
+  // the light ones (paper) get a few stray graphite marks, so they read as a page
+  if (s.fill === PAPER) b.wash('#cfc4b2', 0.18, { gap: 22, angle: 0.9, seed: 33 });
+}
+
+/**
+ * The covered screen is hatched once into a picture, then only copied: hatching the whole screen at every
+ * frame made the page turning after a battle stutter on phones. One picture at a time, let go with the curtain.
+ */
+let sheet: { key: string; img: HTMLCanvasElement } | null = null;
+
+function sheetImage(kind: CoverKind, w: number, h: number, dpr: number): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+  const key = `${kind} ${w}x${h} ${dpr}`;
+  if (sheet?.key === key) return sheet.img;
+  const img = document.createElement('canvas');
+  img.width = Math.round(w * dpr);
+  img.height = Math.round(h * dpr);
+  const ctx = img.getContext('2d');
+  if (!ctx) return null;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  paintSheet(new Brush(ctx, screenEnv(w, h, 0), 0), kind);
+  sheet = { key, img };
+  return img;
+}
+
+/** Lets the covered screen's picture go (the curtain is gone). */
+export function forgetSheet() {
+  if (sheet) sheet.img.width = sheet.img.height = 0;
+  sheet = null;
+}
+
+/** The covered screen (`alpha` fades it in or out). */
 export function drawSheet(b: Brush, kind: CoverKind, alpha = 1) {
   if (alpha <= 0.01) return;
   const { ctx, env } = b;
-  const s = SHEET[kind];
+  const img = sheetImage(kind, env.w, env.h, ctx.getTransform().a || 1);
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = s.fill;
-  ctx.fillRect(0, 0, env.w, env.h);
+  if (img) ctx.drawImage(img, 0, 0, env.w, env.h);
+  else paintSheet(b, kind);
   ctx.globalAlpha = 1;
-  b.wash(s.hatch, 0.5 * alpha, { gap: 7, angle: -0.6, seed: 31 });
-  // the light ones (paper) get a few stray graphite marks, so they read as a page
-  if (s.fill === PAPER) b.wash('#cfc4b2', 0.18 * alpha, { gap: 22, angle: 0.9, seed: 33 });
 }
 
 /** Absolute pencil width (the brush scales its widths by `k`). */
@@ -282,11 +317,14 @@ const page: Draw = (b, t) => {
   const e = easeInOut(t);
   const curl = w * 0.22 * (1 - e * 0.6);
   const x = lerp(w + curl, -curl, e);
-  ctx.fillStyle = PAPER;
-  ctx.fillRect(x, 0, w - x + 1, h);
-  b.wash('#e4d9c6', 0.4, { gap: 7, seed: 31 });
-  // the wash covers everything: clear what the page hasn't reached yet
-  ctx.clearRect(0, 0, Math.max(0, x - curl * 0.75), h);
+  // the page already over the screen (its curl is drawn over its left edge)
+  const edge = Math.max(0, x - curl * 0.75);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(edge, 0, w - edge + 1, h);
+  ctx.clip();
+  drawSheet(b, 'page');
+  ctx.restore();
   const g = ctx.createLinearGradient(x - curl * 0.75 - 18, 0, x - curl * 0.75, 0);
   g.addColorStop(0, 'rgba(0,0,0,0)');
   g.addColorStop(1, 'rgba(40,30,50,0.28)');
