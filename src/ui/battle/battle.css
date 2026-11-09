@@ -25,25 +25,37 @@
 /* the room of the foe's HP box in its drawing's column */
 .pk-hp-space { flex: none; height: var(--hp-box); }
 /* weather, drawn like pencil strokes over the scene */
-.pk-weather { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.pk-weather--pluie {
+.pk-weather { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+/* the strokes sit on layers bigger than the scene, slid by the compositor (repainting them every frame cost) */
+.pk-weather::before, .pk-weather::after { content: none; position: absolute; will-change: transform; }
+.pk-weather--pluie::before {
+  content: ''; inset: -480px -120px 0 0;
   background: repeating-linear-gradient(105deg, transparent 0 14px, rgba(70, 120, 210, 0.35) 14px 16px, transparent 16px 34px);
-  background-size: 120px 120px; animation: rainFall 0.5s linear infinite;
+  background-size: 120px 120px; animation: rainFall 2s linear infinite;
 }
-@keyframes rainFall { to { background-position: -30px 120px; } }
+/* each loop slides by whole tiles of the pattern, so it starts again exactly where it ended */
+@keyframes rainFall { to { transform: translate(-120px, 480px); } }
 .pk-weather--soleil { background: radial-gradient(circle at 85% 8%, rgba(255, 214, 80, 0.55), rgba(255, 214, 80, 0.12) 35%, transparent 60%); animation: sunPulse 2.4s ease-in-out infinite alternate; }
 @keyframes sunPulse { to { opacity: 0.7; } }
-.pk-weather--sable {
-  background: repeating-linear-gradient(170deg, rgba(196, 154, 82, 0.28) 0 3px, transparent 3px 22px), rgba(214, 180, 120, 0.22);
-  background-size: 200px 60px; animation: sandBlow 0.9s linear infinite;
+.pk-weather--sable { background: rgba(214, 180, 120, 0.22); }
+.pk-weather--sable::before {
+  content: ''; inset: -60px 0 0 -400px;
+  background: repeating-linear-gradient(170deg, rgba(196, 154, 82, 0.28) 0 3px, transparent 3px 22px);
+  background-size: 200px 60px; animation: sandBlow 1.8s linear infinite;
 }
-@keyframes sandBlow { to { background-position: 200px 30px, 0 0; } }
-.pk-weather--grele {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2px, transparent 3px) 0 0 / 34px 34px,
-    radial-gradient(circle, rgba(200, 236, 250, 0.9) 0 2px, transparent 3px) 17px 12px / 34px 34px;
-  animation: hailFall 0.8s linear infinite;
+@keyframes sandBlow { to { transform: translate(400px, 60px); } }
+.pk-weather--grele::before {
+  content: ''; inset: -238px -34px 0 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2px, transparent 3px) 0 0 / 34px 34px;
+  animation: hailFall 2.8s linear infinite;
 }
-@keyframes hailFall { to { background-position: -10px 68px, 7px 80px; } }
+.pk-weather--grele::after {
+  content: ''; inset: -340px 0 0 -34px;
+  background: radial-gradient(circle, rgba(200, 236, 250, 0.9) 0 2px, transparent 3px) 17px 12px / 34px 34px;
+  animation: hailFall2 3.4s linear infinite;
+}
+@keyframes hailFall { to { transform: translate(-34px, 238px); } }
+@keyframes hailFall2 { to { transform: translate(34px, 340px); } }
 /* a definite grid area, so a tall drawing shrinks to its platform instead of hanging below it */
 /*
  * Each side is a column with its HP box above its drawing: the foe top right, you bottom left. The foe's column ends at 53% of the scene, below the backdrop's horizon (46% of
@@ -72,7 +84,8 @@
 .pk-plat--me { flex: 1 1 0; min-height: 0; }
 .pk-sprite {
   line-height: 0;
-  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+  /* two light passes: a third, wider one re-blurred both drawings at every frame of their idle motion */
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
   transform-origin: 50% 100%;
 }
 /* the drawing fills its platform (a size container), the box around it shrinks to it */
@@ -250,7 +263,7 @@
 .pk-hp--me .hpbar { min-width: 96px; }
 /* low HP: the bar blinks (BattleHp) */
 .pk-hp .hpbar.is-low span { animation: hpLow 0.9s ease-in-out infinite; }
-@keyframes hpLow { 50% { filter: brightness(1.3) saturate(1.5); opacity: 0.7; } }
+@keyframes hpLow { 50% { opacity: 0.55; } }
 .is-calm .pk-hp .hpbar.is-low span { animation: none; }
 /* your HP written inside the bar */
 .hpbar.hpbar--num { position: relative; height: 20px; border-width: 3px; border-image-width: 3px; }
@@ -336,12 +349,20 @@
 .bpanel__fair {
   flex: 1; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 0;
   align-self: stretch; margin: 6px 0; padding: 0 6px; line-height: 1.05; white-space: nowrap;
-  animation: fairGlow 1.8s ease-in-out infinite;
+  position: relative;
 }
+/* its glow breathes on a layer of its own (opacity only, never a filter repainted every frame) */
+.bpanel__fair::after, .is-coach::after {
+  content: ''; position: absolute; inset: 2px; pointer-events: none; border-radius: 10px;
+  box-shadow: 0 0 6px 2px #f4b81c99; opacity: 0; animation: glowBreath 1.8s ease-in-out infinite;
+}
+.bpanel__fair.is-on::after { content: none; }
+.is-coach { position: relative; }
+.is-coach::after { box-shadow: 0 0 8px 3px #f2c14ecc; animation-duration: 1s; }
+@keyframes glowBreath { 50% { opacity: 1; } }
 .bpanel__fair .fair-star { width: 1.4em; height: 1.4em; flex: none; }
 .bpanel__fair.is-on { --sk-fill: var(--butter); --sk-hatch: var(--hatch-butter); --pencil-frame: var(--frame-butter); animation: none; filter: drop-shadow(0 0 5px #f4b81c); }
-@keyframes fairGlow { 50% { filter: drop-shadow(0 0 4px #f4b81caa); } }
-@media (prefers-reduced-motion: reduce) { .bpanel__fair { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .bpanel__fair::after, .is-coach::after { animation: none; } }
 .pk-hp__fair { width: 1em; height: 1em; margin-left: 3px; vertical-align: -0.12em; }
 .bpanel__hint { display: block; font-size: 0.8em; color: var(--ink-soft); }
 /* a long press on a move: what it does, over the scene; any tap or key closes it */
@@ -397,8 +418,6 @@
 .gba-btn--team { --sk-fill: var(--mint); --sk-hatch: var(--hatch-mint); --pencil-frame: var(--frame-mint); }
 .gba-btn--run { --sk-fill: var(--sky); --sk-hatch: var(--hatch-sky); --pencil-frame: var(--frame-sky); }
 .pk-move--empty { display: grid; place-items: center; color: var(--ink-soft); opacity: 0.5; cursor: default; }
-.is-coach { animation: coachPulse 1s ease-in-out infinite; }
-@keyframes coachPulse { 50% { filter: drop-shadow(0 0 6px #f2c14e) brightness(1.06); } }
 /* inside the fixed panel the speaker label sits on the first line (nothing may stick out) */
 .bpanel__text .textbox__speaker { position: static; display: inline-block; align-self: flex-start; margin: 2px 0 0; }
 

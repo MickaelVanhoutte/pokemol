@@ -38,6 +38,38 @@ function doodle(kind: DoodleKind, color: string, v: number): CanvasLike {
   return c;
 }
 
+/**
+ * A wash hatches the whole scene: done every frame it made phones drop frames (darkening moves, weather
+ * arriving). It is hatched once per flipbook wobble (3 of them, like the doodles) into a picture, then copied
+ * at the alpha asked for. A few pictures at most, let go when the scene changes size.
+ */
+const washes = new Map<string, HTMLCanvasElement>();
+const WASHES_KEPT = 9;
+
+function washImage(b: Brush, color: string, o: { gap?: number; angle?: number; seed?: number }): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+  const { w, h, k, seed } = b.env;
+  const scale = b.ctx.getTransform().a || 1;
+  const wobble = b.boil % 3;
+  const key = `${color} ${o.gap} ${o.angle} ${o.seed} ${wobble} ${w}x${h} ${k} ${seed} ${scale}`;
+  const hit = washes.get(key);
+  if (hit) return hit;
+  const img = document.createElement('canvas');
+  img.width = Math.max(1, Math.round(w * scale));
+  img.height = Math.max(1, Math.round(h * scale));
+  const ctx = img.getContext('2d');
+  if (!ctx) return null;
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  new Brush(ctx, b.env, wobble).fill([[0, 0], [w, 0], [w, h], [0, h]], color, { alpha: 1, gap: o.gap ?? 4, angle: o.angle ?? -0.7, seed: o.seed ?? 9, wash: 0.5, width: 1.8 });
+  if (washes.size >= WASHES_KEPT) {
+    const [oldest, gone] = washes.entries().next().value!;
+    gone.width = gone.height = 0;
+    washes.delete(oldest);
+  }
+  washes.set(key, img);
+  return img;
+}
+
 export class Brush {
   constructor(public ctx: CanvasRenderingContext2D, public env: Env, public boil: number) {}
 
@@ -187,7 +219,15 @@ export class Brush {
   wash(color: string, alpha: number, o: { gap?: number; angle?: number; seed?: number } = {}) {
     if (alpha <= 0.01) return;
     const { w, h } = this.env;
-    this.fill([[0, 0], [w, 0], [w, h], [0, h]], color, { alpha, gap: o.gap ?? 4, angle: o.angle ?? -0.7, seed: o.seed ?? 9, wash: 0.5, width: 1.8 });
+    const img = washImage(this, color, o);
+    if (!img) {
+      this.fill([[0, 0], [w, 0], [w, h], [0, h]], color, { alpha, gap: o.gap ?? 4, angle: o.angle ?? -0.7, seed: o.seed ?? 9, wash: 0.5, width: 1.8 });
+      return;
+    }
+    const { ctx } = this;
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(img, 0, 0, w, h);
+    ctx.globalAlpha = 1;
   }
 
   /** Paper-white (or coloured) flash over the scene. */

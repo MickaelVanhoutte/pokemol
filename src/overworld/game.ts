@@ -102,7 +102,8 @@ export interface LoadedMap {
   doors: Map<number, MapBuilding>;
   warps: Map<number, Warp>;
   signs: Map<number, SignDef>;
-  layers: HTMLCanvasElement[];
+  /** The map painted (two frames of water and flowers): canvases, then pictures once encoded (`asPictures`). */
+  layers: (HTMLCanvasElement | HTMLImageElement)[];
 }
 
 export interface GameHooks {
@@ -200,6 +201,36 @@ export function sheetFor(look: Look): SpriteSheet {
   return s;
 }
 
+/**
+ * Android Chrome may drop a canvas's pixels when memory runs low (after a battle full of animations), and
+ * painting the whole map again on the way back held up the page lifting off the world. So each layer is
+ * encoded once (off the main thread) and drawn from a picture from then on; a picture is decoded again if
+ * needed, never repainted.
+ */
+function asPictures(layers: (HTMLCanvasElement | HTMLImageElement)[]) {
+  if (typeof Image === 'undefined' || typeof URL.createObjectURL !== 'function') return;
+  layers.forEach((c, i) => {
+    if (!(c instanceof HTMLCanvasElement) || typeof c.toBlob !== 'function') return;
+    c.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.src = url;
+      img.decode().then(
+        () => {
+          URL.revokeObjectURL(url);
+          if (layers[i] !== c) return;
+          layers[i] = img;
+          // the canvas's memory is given back
+          c.width = 0;
+          c.height = 0;
+        },
+        () => URL.revokeObjectURL(url),
+      );
+    });
+  });
+}
+
 /** How high the Pencil Balloon rises out of sight (px). */
 const BALLOON_SKY = 190;
 
@@ -224,7 +255,7 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
   const signs = new Map<number, SignDef>((def.signs ?? []).map((s) => [s.y * w + s.x, s]));
 
   const get = (x: number, y: number) => (x < 0 || y < 0 || x >= w || y >= h ? def.border : tiles[y * w + x]);
-  const layers: HTMLCanvasElement[] = [];
+  const layers: (HTMLCanvasElement | HTMLImageElement)[] = [];
   const paint = (c: HTMLCanvasElement, frame: number) => {
     const ctx = c.getContext('2d')!;
     const p = new Painter(ctx);
@@ -263,6 +294,7 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
     c.addEventListener('contextrestored', () => paint(c, frame));
     layers.push(c);
   }
+  asPictures(layers);
   const npcs: Actor[] = (def.npcs ?? []).filter(visibleNpc).map((n) => ({
     id: n.id, x: n.x, y: n.y, dir: n.facing, sheet: sheetFor(n.look), moving: false, t: 0, mini: n.mon ? miniFor(n.mon) : undefined,
     fromX: n.x, fromY: n.y, ms: WALK_MS * 1.3, step: 0, npc: n, homeX: n.x, homeY: n.y,

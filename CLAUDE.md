@@ -379,7 +379,7 @@ by `src/art/shiny.ts`, the same hue turn for the card (`monArtUrl`) and the foll
   closed midway.
 - Android Chrome can drop the pixels of canvases when memory runs low (after a battle full of
   animations): cached drawings must be images, not canvases. Sprite sheets and field sprites draw from a
-  decoded image copy, map layers repaint on `contextrestored`, and the game loop survives a frame that
+  decoded image copy, map layers become pictures once painted (`asPictures`: repainting a lost layer on the way back from a battle held up the page lifting off the world), and the game loop survives a frame that
   throws. Data-URL caches (`personUrl`, `monArtUrl`) are safe.
 - `TextBox` tags its pages, page number and typed count with the text they belong to, so a new
   message starts empty in the same render. Don't reset them in an effect: that painted one frame
