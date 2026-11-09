@@ -54,7 +54,8 @@
 /* ---------- summary */
 .summary { --type: #888; }
 .summary__tabs { flex: none; display: flex; gap: 6px; align-items: center; }
-.summary__tabs .pbtn { padding: 0 8px; }
+.summary__tabs .pbtn { position: relative; padding: 0 8px; }
+.summary__tabs .pbtn::after { content: ''; position: absolute; inset: -8px -12px; }
 /* notebook divider tabs: the open one is coloured in with the Bestiole's type */
 .summary__tabnames { flex: 1; min-width: 0; display: flex; gap: 4px; align-items: flex-end; }
 .summary__tab {
@@ -166,6 +167,13 @@
 .bag__desc { flex: none; min-width: 0; display: flex; gap: 10px; align-items: center; min-height: 4.4em; font-size: 1.05rem; }
 .bag__desc p { margin: 0; }
 .bag__actions { min-width: 10em; }
+/* landscape phones: the pocket's list on the left, what the item does on the right */
+@media (orientation: landscape) and (max-height: 540px) {
+  .bag { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
+  .bag > .bag__head, .bag > .abar { grid-column: 1 / -1; }
+  .bag__list { grid-column: 1; grid-row: 2; }
+  .bag__desc { grid-column: 2; grid-row: 2; min-height: 0; align-items: flex-start; overflow-y: auto; }
+}
 
 /* ---------- dex */
 .dex__count { flex: none; display: flex; gap: 10px; font-size: 1rem; padding: 0 6px; white-space: nowrap; }
@@ -203,7 +211,10 @@
 .pc__party { flex: none; width: 92px; overflow-y: auto; }
 .pc__label { margin: 0 0 4px; color: var(--ink-soft); font-size: 0.95rem; }
 .pc__boxnav { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px; }
-.pc__boxnav .pc__label { margin: 0; text-align: center; flex: 1; }
+.pc__boxnav .pc__label { margin: 0; text-align: center; flex: 1; min-width: 0; }
+.pc__count::before { content: ' · '; }
+/* narrow phone: the count goes under the box's name (« BOÎTE 1 · » was left alone above it) */
+@media (max-width: 400px) { .pc__count { display: block; } .pc__count::before { content: none; } }
 .pc__boxnav .pbtn { padding: 2px 8px; }
 .pc__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); gap: 4px; }
 .pc__col { display: flex; flex-direction: column; gap: 4px; }
@@ -244,7 +255,9 @@
 .opt__label { flex: 1 0 auto; }
 .opt__ctl { display: flex; align-items: center; margin-left: auto; }
 .opt__val { min-width: 6.5em; text-align: center; color: #c0392b; }
-.opt__arrow { background: none; border: 0; font: inherit; color: var(--ink); cursor: pointer; padding: 4px 6px; }
+.opt__arrow { position: relative; background: none; border: 0; font: inherit; color: var(--ink); cursor: pointer; padding: 4px 6px; }
+/* small buttons reach a finger's size (40 px and more) without growing on screen */
+.opt__arrow::after { content: ''; position: absolute; inset: -6px -10px; }
 .opts__save { font-size: 1rem; }
 .opts__save p { margin: 0 0 6px; }
 .opts__row { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -313,7 +326,7 @@
 .evo {
   position: fixed; inset: 0; z-index: 70;
   display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;
-  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  padding: max(10px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
   background: radial-gradient(circle at 50% 40%, #fff6d8, #d8c8a4 70%);
   background-color: #e8dcc0;
   font-family: var(--pixel); font-synthesis: none;
@@ -495,11 +508,17 @@
 .lookv__label { font-size: 0.9rem; color: var(--ink-soft); }
 .lookv__controls { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-width: 0; }
 .lookv__cycle { display: inline-flex; align-items: center; gap: 4px; }
-.lookv__cycle .pbtn { min-height: 0; padding: 0 8px; font-size: 1rem; }
+.lookv__cycle .pbtn { position: relative; min-height: 0; padding: 0 8px; font-size: 1rem; }
+.lookv__cycle .pbtn::after { content: ''; position: absolute; inset: -12px -12px; }
 .lookv__value { min-width: 7em; text-align: center; }
 .lookv__swatches { display: flex; flex-wrap: wrap; gap: 4px; }
 .lookv__swatch { width: 24px; height: 24px; padding: 0; border-radius: 50%; border: 2px solid var(--ink); background: var(--c); cursor: pointer; }
 .lookv__swatch.is-on { outline: 3px solid var(--cursor); outline-offset: 1px; }
+/* under a finger the colours are bigger: they sit too close for an invisible margin around each */
+@media (pointer: coarse) {
+  .lookv__swatches { gap: 6px; }
+  .lookv__swatches .lookv__swatch { width: 36px; height: 36px; }
+}
 .lookv__foot { gap: 6px; }
 .lookv__foot .pbtn { white-space: nowrap; padding-left: 10px; padding-right: 10px; }
 @media (min-width: 560px) {

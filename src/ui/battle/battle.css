@@ -342,7 +342,9 @@
   overflow: hidden;
 }
 .bpanel__prompt p { margin: 0; flex: 1; min-width: 0; }
-.bpanel__back { flex: none; font-size: 1rem; min-height: 0; padding: 0 6px; }
+.bpanel__back { position: relative; flex: none; font-size: 1rem; min-height: 0; padding: 0 6px; }
+/* a finger's size (40 px and more) without growing on screen */
+.bpanel__back::after { content: ''; position: absolute; inset: -12px -12px; }
 /* side by side with the moves, the question takes the height: Retour sits at its bottom left */
 @media (min-width: 560px) { .bpanel__back { align-self: flex-end; } }
 /* the Feutre d'Or's toggle: it glows while it waits, gold once set for the next move */

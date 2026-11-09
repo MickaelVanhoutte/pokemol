@@ -43,7 +43,7 @@
 .is-calm .ow__bar { transition: none; }
 .ow__mapname {
   position: absolute;
-  top: 8px;
+  top: max(8px, env(safe-area-inset-top));
   left: max(8px, env(safe-area-inset-left));
   z-index: 5;
   font-size: 1.2rem;
@@ -53,7 +53,7 @@
 @keyframes slideIn { from { transform: translateY(-40px); } }
 .ow__menu-btn {
   position: absolute;
-  top: 8px;
+  top: max(8px, env(safe-area-inset-top));
   right: max(8px, env(safe-area-inset-right));
   z-index: 6;
   width: 48px;

@@ -31,7 +31,11 @@
 }
 @media (orientation: landscape) and (max-height: 540px) {
   /* the choices stand beside the text, where the whole height is free */
-  .dialog-layer { flex-direction: row; align-items: flex-end; }
+  /* the whole screen is the map here: keep clear of the notch and the home bar */
+  .dialog-layer {
+    flex-direction: row; align-items: flex-end;
+    padding: 6px max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  }
   .dialog { flex: 1 1 0; min-width: 0; margin: 0; }
   .dialog-choices { order: 2; max-height: 100%; margin-right: 0; }
 }

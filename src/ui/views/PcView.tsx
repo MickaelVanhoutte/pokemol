@@ -72,7 +72,7 @@ export function PcView({ party, boxes, onDeposit, onWithdraw, onClose }: {
         <Window class="pc__box">
           <div class="pc__boxnav">
             <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>
-            <p class="pc__label">{tr(L('BOÎTE {n}', 'BOX {n}'), { n: b + 1 })} · {box.length}/{BOX_SIZE}</p>
+            <p class="pc__label">{tr(L('BOÎTE {n}', 'BOX {n}'), { n: b + 1 })}<span class="pc__count">{box.length}/{BOX_SIZE}</span></p>
             <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
           </div>
           <div class="pc__grid">

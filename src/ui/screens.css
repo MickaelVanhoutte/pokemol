@@ -2,7 +2,7 @@
 .monpick {
   position: fixed; inset: 0; z-index: 55;
   display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px;
-  padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
   background: rgba(20, 14, 30, 0.72);
   font-family: var(--pixel); font-synthesis: none;
   animation: fade-in 0.15s ease;
@@ -36,6 +36,16 @@
 .machine__box { width: min(300px, 80vw); aspect-ratio: 1; border-radius: 24px; border: 4px solid var(--ink); background: radial-gradient(circle at 50% 35%, #8a6ae0, #2b1f4a 75%); display: grid; place-items: center; box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.25); position: relative; overflow: hidden; }
 .machine__box img { max-width: 75%; max-height: 75%; filter: drop-shadow(0 0 6px #fff); animation: machineIn 1.2s cubic-bezier(.3, 1.4, .5, 1) both; }
 @keyframes machineIn { 0% { transform: scale(0) rotate(-30deg); filter: brightness(10); } 60% { filter: brightness(2); } }
+/* landscape phones: the machine beside its words, as tall as the screen allows */
+@media (orientation: landscape) and (max-height: 540px) {
+  .machine {
+    display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: center; align-items: center;
+    column-gap: 16px; row-gap: 6px; text-align: left; justify-items: start; min-height: 0; overflow-y: auto;
+  }
+  .machine > * { grid-column: 2; }
+  .machine p { margin: 0; }
+  .machine > .machine__box { grid-column: 1; grid-row: 1 / span 3; width: auto; height: min(180px, 46vh); }
+}
 .machine__box.is-spinning::after { content: '✦ ✧ ✦'; position: absolute; font-size: 2.5rem; color: #fff3a0; animation: spinStars 0.8s linear infinite; }
 @keyframes spinStars { to { transform: rotate(360deg); } }
 
@@ -124,7 +134,7 @@
 .prologue__choices { align-self: flex-end; min-width: 10em; }
 .prologue__input { display: flex; gap: 8px; align-items: center; }
 .prologue__input input { flex: 1; min-width: 0; }
-.prologue__skip { position: absolute; top: 10px; right: 8px; }
+.prologue__skip { position: absolute; top: max(10px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); }
 @keyframes heroIn { from { transform: scale(0.6) rotate(-8deg); opacity: 0; } }
 
 /* ---------- landscape phones */
@@ -149,7 +159,7 @@
 .picture {
   position: fixed; inset: 0; z-index: 55;
   display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;
-  padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
   background: rgba(20, 14, 30, 0.72);
   font-family: var(--pixel); font-synthesis: none;
   animation: fade-in 0.15s ease;

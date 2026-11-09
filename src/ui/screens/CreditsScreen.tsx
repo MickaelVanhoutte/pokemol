@@ -102,7 +102,7 @@ export function CreditsScreen({ fromWorld }: { fromWorld?: boolean }) {
         </div>
       )}
       {!done && <button class="pbtn credits-roll__skip" onClick={back}>{tr(fromWorld ? L('Passer', 'Skip') : L('Retour', 'Back'))}</button>}
-      {!done && <p class="credits-roll__hint">{tr(L('Maintiens B pour accélérer', 'Hold B to speed up'))}</p>}
+      {!done && <p class="credits-roll__hint">{tr(L('Maintiens le doigt (ou B) pour accélérer', 'Hold your finger (or B) to speed up'))}</p>}
     </div>
   );
 }
