@@ -194,7 +194,7 @@ legend is made of the stains a painter never threw away, and the one who wanted 
   boat; the Prof gives the **Bocal-Scaphandre**.
 - **The depths** (dive on the dark patches, see [content.md](content.md#diving)): `lacFonds`, with Team Gomme's
   sunken barge and its items, seaweed with the new **Poulpinceau** (Water, L18–20; it becomes **Octopeintre**,
-  Water/Fighting, at L30), the **sunken chapel** (`chapelle`) and its fresco of the legend (the 5th fresque: it gives
+  pure Water since Nov 2026, with the Water Magic Pencil), the **sunken chapel** (`chapelle`) and its fresco of the legend (the 5th fresque: it gives
   the **Carte des Fonds**, which marks the dive spots on the Town Map, and opens the crypt), the **Abysses** below
   (`abysses`, deeper Bestioles L22–25), and a tunnel west to the **Vallon Caché** (`vallon`, the painter's
   cottage, `maisonGardienne`: the Keeper tells the legend). Dark patches were added to the port, the lighthouse
@@ -250,7 +250,15 @@ the shops start selling it (Grass or Fairy, Psychic or Dark, then Ice: `gift:cra
 final of 500 with Fourrure Douce; Pandafougère has the only new move, Gifle de Fougère (Grass physical 85, 20% Defence
 drop), since every other Grass physical move of 80+ is a family's signature. The new form learns a move of its
 type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Panderive and
-Pandabraise, and the first three are in the battle tower pool. The five later forms each meet the player once on the way,
+Pandabraise, and the first three are in the battle tower pool.
+
+**Three more pencil evolutions** (Nov 2026: the owner wanted a Fire, a Grass and a Water family that evolve once,
+with a pencil rather than a level, like the Electric and Ice ones): Pétillapin → Brûlièvre (Fire pencil), Érabou →
+Érabreuil (Grass pencil), Poulpinceau → Octopeintre (Water pencil). The pencils come with the shops (Fire and Water at 4
+badges, Grass at 5), about the levels they used to evolve at (27, 26, 30). Octopeintre became pure Water, as the owner
+asked: Huit Couleurs still gives its Fighting signatures (Coup de Pinceau, Fresque Furieuse) the same-type bonus, so it
+stays the special Fighting attacker. Brûlièvre learns Queue Ardente and Érabreuil Lancer de Gland on the spot. Kid Tim,
+Painter Lili and the Érabou's owner in Gouache drop the hint. The five later forms each meet the player once on the way,
 after the 5th badge: Pandiva (Mia, Atelier Paillette), Pandafougère (Flore, Route 7), Pandivin (Opale, Route 8), Pandanuit
 (Ombelin, Atelier Encre) and Pandagivre (Ulysse, the Esquisses, with the first three).
 
@@ -744,7 +752,7 @@ and asked for Érabreuil to throw its acorn rather than eat it (the `throw` moti
 - Lumiver → Lampyrette (Bug → Bug/Electric, L18): a glow-worm, then a firefly with a light-bulb belly. Routes 1–2
   and the Misty Woods at night; Lampyrette on Route 4 at night (rare). Apprentice Malo, Rocker Jimmy. Power:
   Lanterne (`nightBoost`).
-- Érabou → Érabreuil (Grass, L26): a squirrel with a maple-leaf tail nibbling an acorn, then an autumn squirrel
+- Érabou → Érabreuil (Grass, Grass Magic Pencil since Nov 2026, was L26): a squirrel with a maple-leaf tail nibbling an acorn, then an autumn squirrel
   with an acorn-cap helmet who throws its acorns. Routes 3–4; Érabreuil on Route 7 and in the Lost Wood.
   Gardener Rosa, Landscaper Arno, Basile. Power: Lancer de Gland (Grass physical 85, 20% flinch).
 - Nénurette (Water/Grass, rare): a tree frog on a lily pad, a water lily on its head. Route 3. Swimmer Lila,
@@ -1051,7 +1059,7 @@ feather in its thimble, Coup de Chance).
 showed Fire and Grass as the thinnest types once counted by family, Fire most of all: no pure Fire line to catch
 before Mont Fusain (L19). Two new families, designed with the `bestiole-design` method (the owner picked the
 concept, each pose and approved each drawing):
-- Pétillapin → Brûlièvre (Fire, L27): an impatient baby rabbit stamping one foot, its charcoal ear tips spitting
+- Pétillapin → Brûlièvre (Fire, Fire Magic Pencil since Nov 2026, was L27): an impatient baby rabbit stamping one foot, its charcoal ear tips spitting
   sparks; then a show-off hare in a flat-out sprint, fire streaming off its flanks, who can't brake. Routes 3–4
   (L13–16). Kid Tim (Route 4) and Cyclist Léa. Power: Faux Départ (`galeWings` for Fire). The critic found the
   first draft close to a later-generation fire-rabbit starter line: no glowing soles, the fire comes from the ears

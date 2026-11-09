@@ -56,6 +56,18 @@ describe('evolution rules', () => {
     // wild or trainer ones know it too
     expect(movesAt('017', 5)).toContain('jet-d-eau');
   });
+
+  it('evolves Pétillapin, Érabou and Poulpinceau with the Fire, Grass and Water pencils, never by level', () => {
+    for (const [from, to, type, move] of [['121', '122', 'feu', 'queue-ardente'], ['093', '094', 'plante', 'lancer-de-gland'], ['113', '114', 'eau', 'coup-de-pinceau']]) {
+      const m = createMon(from, 22, { rng: 5 });
+      expect(evolutionFor(creature(from), m, { kind: 'item', item: `crayon-magique-${type}` })).toBe(to);
+      expect(evolutionFor(creature(from), m, { kind: 'item', item: 'crayon-magique-electrique' })).toBeNull();
+      expect(evolutionOf({ ...m, level: 60 })).toBeNull();
+      expect(evolutionMoves(to, 22)).toContain(move);
+    }
+    // the painter of the deep is pure Water now; its Fighting signatures keep their bonus through Huit Couleurs
+    expect(creature('114').type2).toBeUndefined();
+  });
 });
 
 describe('friendship', () => {

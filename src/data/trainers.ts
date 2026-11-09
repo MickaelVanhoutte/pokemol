@@ -320,7 +320,10 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   T({
     id: 'r4tim', name: L('Gamin Tim', 'Kid Tim'), party: [{ species: '007', level: 18 }, { species: '121', level: 18 }, { species: '035', level: 19 }], money: 400,
     before: [L('Mon Pétillapin fait des étincelles, regarde !', 'My Sparkbun throws sparks, look!')],
-    after: [L('Zéro étincelle…', 'Zero sparks…')],
+    after: [
+      L('Zéro étincelle…', 'Zero sparks…'),
+      L('Un jour, je le redessinerai avec un Crayon Magique Feu. Il paraît qu’il devient un vrai bolide !', 'One day I’ll redraw it with a Magic Fire Pencil. They say it turns into a real speedster!'),
+    ],
   }),
   T({
     id: 'r4gomme', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '103', level: 19 }, { species: '033', level: 20 }, { species: '056', level: 20 }], money: 500, grey: true,
@@ -346,7 +349,10 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   T({
     id: 'lacJ1', name: L('Peintre Lili', 'Painter Lili'), party: [{ species: '113', level: 17 }, { species: '091', level: 17 }, { species: '062', level: 18 }], money: 480,
     before: [L('Je suis venue peindre le lac… mais il n’y a plus que du gris ! Tant pis, je peins tes Bestioles.', 'I came to paint the lake… but it’s all grey! Never mind, I’ll paint your Critters.')],
-    after: [L('Mon Poulpinceau a renversé tout le pot d’eau !', 'My Octobrush knocked over the whole water jar!')],
+    after: [
+      L('Mon Poulpinceau a renversé tout le pot d’eau !', 'My Octobrush knocked over the whole water jar!'),
+      L('Avec un Crayon Magique Eau, il paraît qu’il devient un grand peintre des profondeurs.', 'With a Magic Water Pencil, they say it becomes a great painter of the deep.'),
+    ],
   }),
   T({
     id: 'lacG2', name: L('Sbire Gomme', 'Eraser Grunt'), party: [{ species: '101', level: 18 }, { species: '103', level: 19 }, { species: '056', level: 19 }], money: 500, grey: true,

@@ -1219,7 +1219,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '093', slug: 'erabou', faces: 'left', name: L('Érabou', 'Maplet'), kind: L('Bestiole Grignote', 'Nibble Critter'),
     type: 'plante', base: { hp: 50, atk: 60, def: 45, spa: 35, spd: 45, spe: 70 },
-    catchRate: 190, baseExp: 60, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '094', level: 26 }],
+    catchRate: 190, baseExp: 60, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '094', item: 'crayon-magique-plante' }],
     stencils: ['pochoir-02', 'pochoir-07', 'pochoir-10', 'pochoir-13', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
     talents: ['seve-rebelle', 'pieds-legers'], hiddenTalent: 'coup-de-chance',
     learnset: [[1, 'griffe'], [1, 'fretillement'], [5, 'coup-de-liane'], [9, 'pas-de-loup'], [13, 'griffe-pousse'], [17, 'feuille-coupante'],
@@ -1235,7 +1235,7 @@ export const CREATURES: SpeciesDef[] = [
     catchRate: 45, baseExp: 170, evYield: { atk: 2, spe: 1 }, rarity: 'uncommon', evolvesFrom: '093',
     stencils: ['pochoir-02', 'pochoir-07', 'pochoir-10', 'pochoir-13', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
     talents: ['seve-rebelle', 'pieds-legers'], hiddenTalent: 'coup-de-chance',
-    learnset: [[1, 'griffe'], [1, 'fretillement'], [5, 'coup-de-liane'], [9, 'pas-de-loup'], [13, 'griffe-pousse'], [17, 'feuille-coupante'],
+    learnset: [[0, 'lancer-de-gland'], [1, 'griffe'], [1, 'fretillement'], [5, 'coup-de-liane'], [9, 'pas-de-loup'], [13, 'griffe-pousse'], [17, 'feuille-coupante'],
       [21, 'mordillage'], [24, 'graine-gourmande'], [28, 'lancer-de-gland'], [34, 'griffe-de-nuit'], [38, 'ronron-soleil'], [43, 'rafale-de-graines']],
     dex: L(
       'Quand il arrive, c’est l’automne : sa queue fait pleuvoir des feuilles rousses. Il lance ses glands plus vite qu’on ne les voit.',
@@ -1475,7 +1475,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '113', slug: 'poulpinceau', faces: 'left', name: L('Poulpinceau', 'Octobrush'), kind: L('Bestiole Pinceau', 'Paintbrush Critter'),
     type: 'eau', base: { hp: 45, atk: 50, def: 45, spa: 70, spd: 45, spe: 45 },
-    catchRate: 190, baseExp: 64, evYield: { spa: 1 }, rarity: 'uncommon', evolutions: [{ to: '114', level: 30 }],
+    catchRate: 190, baseExp: 64, evYield: { spa: 1 }, rarity: 'uncommon', evolutions: [{ to: '114', item: 'crayon-magique-eau' }],
     stencils: ['pochoir-03', 'pochoir-11', 'pochoir-12', 'pochoir-14', 'pochoir-19', 'pochoir-27'],
     talents: ['huit-couleurs'], hiddenTalent: 'eponge',
     learnset: [[1, 'bulles'], [1, 'coup-de-liane'], [7, 'souffle-glace'], [12, 'flammeche'], [16, 'jet-d-eau'],
@@ -1487,7 +1487,7 @@ export const CREATURES: SpeciesDef[] = [
   },
   {
     id: '114', slug: 'octopeintre', faces: 'left', name: L('Octopeintre', 'Octopainter'), kind: L('Bestiole Kraken', 'Kraken Critter'),
-    type: 'eau', type2: 'combat', base: { hp: 80, atk: 85, def: 75, spa: 115, spd: 75, spe: 60 },
+    type: 'eau', base: { hp: 80, atk: 85, def: 75, spa: 115, spd: 75, spe: 60 },
     catchRate: 45, baseExp: 168, evYield: { spa: 2 }, rarity: 'uncommon', evolvesFrom: '113',
     stencils: ['pochoir-02', 'pochoir-03', 'pochoir-11', 'pochoir-12', 'pochoir-13', 'pochoir-14', 'pochoir-15', 'pochoir-19', 'pochoir-27', 'pochoir-30'],
     talents: ['huit-couleurs'], hiddenTalent: 'eponge',
@@ -1572,7 +1572,7 @@ export const CREATURES: SpeciesDef[] = [
   {
     id: '121', slug: 'petillapin', faces: 'left', name: L('Pétillapin', 'Sparkbun'), kind: L('Bestiole Trépigne', 'Stomp Critter'),
     type: 'feu', base: { hp: 45, atk: 63, def: 40, spa: 42, spd: 42, spe: 78 },
-    catchRate: 190, baseExp: 62, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '122', level: 27 }],
+    catchRate: 190, baseExp: 62, evYield: { spe: 1 }, rarity: 'uncommon', evolutions: [{ to: '122', item: 'crayon-magique-feu' }],
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19', 'pochoir-22', 'pochoir-23', 'pochoir-28', 'pochoir-29'],
     talents: ['faux-depart'], hiddenTalent: 'petits-traits',
     learnset: [[1, 'bousculade'], [1, 'grondement'], [4, 'flammeche'], [7, 'pas-de-loup'], [10, 'patte-brulante'],
@@ -1588,7 +1588,7 @@ export const CREATURES: SpeciesDef[] = [
     catchRate: 45, baseExp: 175, evYield: { atk: 1, spe: 2 }, rarity: 'uncommon', evolvesFrom: '121',
     stencils: ['pochoir-02', 'pochoir-05', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19', 'pochoir-22', 'pochoir-23', 'pochoir-28', 'pochoir-29'],
     talents: ['faux-depart'], hiddenTalent: 'petits-traits',
-    learnset: [[1, 'bousculade'], [1, 'grondement'], [4, 'flammeche'], [7, 'pas-de-loup'], [10, 'patte-brulante'],
+    learnset: [[0, 'queue-ardente'], [1, 'bousculade'], [1, 'grondement'], [4, 'flammeche'], [7, 'pas-de-loup'], [10, 'patte-brulante'],
       [13, 'lueur-brulante'], [17, 'balayette'], [21, 'coup-de-boule'], [25, 'queue-ardente'], [31, 'secousse'],
       [36, 'gros-poing'], [44, 'tremblement']],
     dex: L(

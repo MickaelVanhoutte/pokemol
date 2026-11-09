@@ -16,7 +16,7 @@ export const STOCK: Record<string, number | 'ending'> = {
   'super-crayon-ball': 1, 'super-potion': 1, rappel: 1,
   'sirop-attaque': 2, 'sirop-defense': 2, 'sirop-vitesse': 2, 'sirop-special': 2, 'sirop-precision': 2,
   'taille-crayon': 3, 'vernis': 3,
-  // the magic pencils Pandoudou's evolutions need
+  // the magic pencils: Pandoudou's forms, and Joufflux, Pétillapin, Érabou and Poulpinceau's evolutions
   'crayon-magique-eau': 4, 'crayon-magique-feu': 4, 'crayon-magique-electrique': 4,
   'crayon-magique-plante': 5, 'crayon-magique-fee': 5, 'crayon-magique-psy': 6, 'crayon-magique-tenebres': 6,
   // effort biscuits and erasers

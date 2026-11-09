@@ -189,6 +189,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
       } },
       { id: 'gouaErabou', x: 7, y: 5, mon: '093', look: LOOKS.kid, facing: 'left', wander: true, fromDoor: [['gouache', 23, 5]], text: [
         L('L’Érabou sème ses feuilles sur le tapis. La fleuriste les ramasse pour ses bouquets.', 'The Maplet sheds its leaves on the rug. The florist picks them up for her bouquets.'),
+        L('Je lui achèterai un Crayon Magique Plante. Redessiné avec, il fait tomber l’automne partout où il passe !', 'I’ll buy it a Magic Grass Pencil. Redrawn with one, it brings autumn wherever it goes!'),
       ] },
       // an old couple, who remember when the town was still being painted
       { id: 'gouaPapi', x: 2, y: 3, look: { hair: '#e8e8f0', shirt: '#7a9a5a', pants: '#5a4a3a' }, facing: 'left', fromDoor: [['gouache', 29, 5]], text: [

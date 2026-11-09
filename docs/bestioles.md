@@ -113,7 +113,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Libellune (legendary) | Veilleuse: Sp. Atk and Sp. Def ×1.3 at night; Rêve Vitrail (Fairy special 100, drains 25%) | `nightBoost` + signature move | — |
 | Noctaile (legendary) | Mauvais Rêves: a sleeping foe loses 1/8 HP each turn; Ombre-Songe (Dark special 95, 20% sleep) | `badDreams` + signature move | — |
 | Baleincre (legendary, the Bestiodex's reward) | Averse d’Encre: rain as it comes in; Jet d’Encre Noire (Water special 100, 30% accuracy drop) | `entryWeather` + signature move | — |
-| Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow; the special Fighting attacker |
+| Poulpinceau → Octopeintre | Huit Couleurs: every move gets the same-type bonus (an arm for each colour) | `allStab` | Slow; pure Water, but its Fighting signatures make it the special Fighting attacker |
 | Gecaillou → Sablerette | Sable Sec: Water and Grass damage halved | `halve` | Water and Grass ×4 |
 | Spiragneau → Hypnobélier | Laine Douillette: physical damage halved | `fluffy` | Bug and Dark, mostly physical |
 | Ratpiécé | Rapiéçage: Fighting damage halved | `halve` | Fighting ×4 |
@@ -139,7 +139,8 @@ Moves can carry `punch: true` or `cut: true` (`MoveDef` in `src/data/schema.ts`)
 
 - Every type has at least one physical and one special fully grown Bestiole you can catch during the story
   (not a legendary, after-story or reward one): Sablerette is the special Rock/Ground one, Hypnobélier the
-  physical Psychic one, Foudroule the physical Electric one, Octopeintre the special Fighting one.
+  physical Psychic one, Foudroule the physical Electric one, Octopeintre the special Fighting one (pure Water, but Huit
+  Couleurs gives its Fighting signatures the same-type bonus; the test itself counts Bouquétigre).
 - A Bestiole hits on one side: physical when its Attack beats its Sp. Atk by more than 5, special the other
   way round, both when they are within 5. Its own-type moves are on that side (the rules test checks both
   rules below with it).

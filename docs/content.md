@@ -444,7 +444,9 @@ battle on the way back. Reveals are `tear`, `erase`, `lift` (and `fade` for MOUV
   evolved form. Several rules make a branching evolution (Pandoudou's future forms):
   - `item` is a Crayon Magique used from the bag (`crayon-magique-<type>`). Water, Fire and Lightning
     are in the shops' `STOCK` from 4 badges, Grass and Fairy from 5, Psychic and Dark from 6, Ice after the ending
-    (Pandoudou's eight forms); put another one there, or as a pickup, when a drawing needs it;
+    (Pandoudou's eight forms); put another one there, or as a pickup, when a drawing needs it.
+    Besides Pandoudou, Joufflux (Electric), Floconnet (Ice), Pétillapin (Fire), Érabou (Grass) and Poulpinceau (Water)
+    evolve with one;
   - `friendship: 220` evolves on levelling up with a great friendship;
   - `level` is the usual one.
 
