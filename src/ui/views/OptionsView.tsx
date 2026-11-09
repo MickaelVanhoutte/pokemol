@@ -124,10 +124,10 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
               <div class={`opt has-cursor ${i === cur ? 'is-on' : ''}`} onClick={() => setCur(i)}>
                 <span class="opt__label">{tr(r.label)}</span>
                 <span class="opt__ctl">
-                  <button class="opt__arrow" onClick={() => cycle(r, -1)} aria-label="◀">◀</button>
+                  <button class="opt__arrow" onClick={() => cycle(r, -1)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>
                   {/* a tap on the value changes it too: the arrows alone are small targets */}
                   <span class="opt__val" onClick={() => cycle(r, 1)}>{tr(val.label)}</span>
-                  <button class="opt__arrow" onClick={() => cycle(r, 1)} aria-label="▶">▶</button>
+                  <button class="opt__arrow" onClick={() => cycle(r, 1)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>
                 </span>
               </div>
             );
@@ -139,11 +139,11 @@ export function OptionsView({ inGame, onClose, onTitle }: { inGame: boolean; onC
         {/* from the title screen, the tools work on the game picked here; in a game, on that game */}
         <div class="opts__row">
           {!inGame && (
-            <button class="opt__arrow" onClick={() => { slot.value = (slot.value + SLOTS - 2) % SLOTS + 1; setConfirmDel(false); setPending(null); setMsg(''); }} aria-label="◀">◀</button>
+            <button class="opt__arrow" onClick={() => { slot.value = (slot.value + SLOTS - 2) % SLOTS + 1; setConfirmDel(false); setPending(null); setMsg(''); }} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>
           )}
           <span class="opts__slot">{tr(L('Partie {n}', 'Game {n}'), { n: slot.value })} · {(inGame ? save.value : peekSlot(slot.value))?.player.name ?? tr(L('vide', 'empty'))}</span>
           {!inGame && (
-            <button class="opt__arrow" onClick={() => { slot.value = (slot.value % SLOTS) + 1; setConfirmDel(false); setPending(null); setMsg(''); }} aria-label="▶">▶</button>
+            <button class="opt__arrow" onClick={() => { slot.value = (slot.value % SLOTS) + 1; setConfirmDel(false); setPending(null); setMsg(''); }} aria-label={tr(L('Suivant', 'Next'))}>▶</button>
           )}
         </div>
         <div class="opts__row">

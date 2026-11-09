@@ -46,8 +46,8 @@ function fill(s: string, vars?: Record<string, string | number>): string {
   if (locale.value !== 'fr') return s;
   // « de » before a name that starts with a vowel: « Regard Noir d’Ombrouille »
   s = s.replace(/\b([Dd])e ([AEIOUYÉÈÊÀÂÎÏÔŒ])/g, '$1’$2');
-  // French puts a space before ! ? : ; — make it non-breaking so the mark never wraps alone
-  return s.replace(/ ([!?:;»])/g, '\u00a0$1');
+  // French puts a space before ! ? : ; » and after « — make it non-breaking so the mark never wraps alone
+  return s.replace(/ ([!?:;»])/g, '\u00a0$1').replace(/« /g, '«\u00a0');
 }
 
 /** UI string by key, with `{name}` placeholders. */

@@ -26,9 +26,9 @@ export function HallView({ entries, fresh, onClose }: { entries: HallEntry[]; fr
     <Frame title={tr(L('Panthéon', 'Hall of Fame'))} onBack={onClose} class="hall">
       {fresh && <Window seyes class="hall__note">{tr(L('Bienvenue au Panthéon ! Ton équipe y restera pour toujours.', 'Welcome to the Hall of Fame! Your team will stay here forever.'))}</Window>}
       <div class="hall__nav">
-        {entries.length > 1 && <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>}
+        {entries.length > 1 && <button class="pbtn" onClick={() => turn(-1)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>}
         <p class="hall__label">{tr(L('Victoire n°{n} · {d}', 'Win no. {n} · {d}'), { n: i + 1, d: date })}</p>
-        {entries.length > 1 && <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>}
+        {entries.length > 1 && <button class="pbtn" onClick={() => turn(1)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>}
       </div>
       <Window class="hall__photo">
         <div class="hall__grid">

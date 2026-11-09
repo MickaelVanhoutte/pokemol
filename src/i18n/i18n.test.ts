@@ -8,4 +8,8 @@ describe('French text', () => {
     expect(tr(L('Attaque de {n}', ''), { n: 'Scaraprisme' })).toBe('Attaque de Scaraprisme');
     expect(tr(L('Montagnarde Olga', ''))).toBe('Montagnarde Olga');
   });
+
+  it('keeps « and » with the words they enclose', () => {
+    expect(tr(L('Il a dit « bonjour » !', ''))).toBe('Il a dit «\u00a0bonjour\u00a0»\u00a0!');
+  });
 });

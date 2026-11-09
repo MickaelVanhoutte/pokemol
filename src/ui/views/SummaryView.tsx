@@ -247,11 +247,11 @@ function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
   return (
     <div class={`frame graph summary ${onMove ? 'summary--others' : ''}`} style={{ '--type': color, '--th': `var(--hatch-t-${sp.type})` }} onPointerDown={down} onPointerUp={up}>
       <div class="summary__tabs">
-        <button class="pbtn" onClick={() => arrow(-1)} aria-label="◀">◀</button>
+        <button class="pbtn" onClick={() => arrow(-1)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>
         <div class="summary__tabnames">
           {PAGES.map((p, i) => <button class={`summary__tab ${i === page ? 'is-on' : ''}`} onClick={() => setPage(i as Page)}>{tr(p)}</button>)}
         </div>
-        <button class="pbtn" onClick={() => arrow(1)} aria-label="▶">▶</button>
+        <button class="pbtn" onClick={() => arrow(1)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>
       </div>
       <Window class="summary__head">
         <div class="summary__art"><img class="mon-art" src={monArtUrl(mon)} alt="" /></div>

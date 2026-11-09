@@ -283,9 +283,9 @@ export function Frame({ title, onBack, onSide, right, children, hint, action, cl
   return (
     <div class={`frame graph ${cls}`}>
       <div class="frame__top">
-        {onSide && <button class="pbtn frame__arrow" aria-label="◀" onClick={() => onSide(-1)}>◀</button>}
+        {onSide && <button class="pbtn frame__arrow" aria-label={tr(L('Précédent', 'Previous'))} onClick={() => onSide(-1)}>◀</button>}
         <Window class="frame__title-win"><h1 class="frame__title">{title}</h1></Window>
-        {onSide && <button class="pbtn frame__arrow" aria-label="▶" onClick={() => onSide(1)}>▶</button>}
+        {onSide && <button class="pbtn frame__arrow" aria-label={tr(L('Suivant', 'Next'))} onClick={() => onSide(1)}>▶</button>}
         {right}
       </div>
       <div class="frame__body">{children}</div>

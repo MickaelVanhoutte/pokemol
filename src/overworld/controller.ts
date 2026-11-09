@@ -1,3 +1,4 @@
+import { updateReady } from '../state/pwa';
 import { effect, signal } from '@preact/signals';
 import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
@@ -67,11 +68,19 @@ export function menuAllowed(): boolean {
 }
 export const toast = signal<string | null>(null);
 
-export function showToast(msg: string) {
+export function showToast(msg: string, ms = 2200) {
   toast.value = msg;
   setTimeout(() => {
     if (toast.value === msg) toast.value = null;
-  }, 2200);
+  }, ms);
+}
+
+/** A game left open for days hears of a new version once (it switches on from the title screen). */
+let toldUpdate = false;
+function tellUpdate() {
+  if (!updateReady.value || toldUpdate || screen.value.id !== 'overworld') return;
+  toldUpdate = true;
+  showToast(tr(L('Nouvelle version du jeu prête ! Sauve, puis rouvre le jeu pour l’avoir.', 'A new version of the game is ready! Save, then open the game again to get it.')), 6000);
 }
 
 export function getGame(): Game {
@@ -89,6 +98,7 @@ export function getGame(): Game {
       refreshFollower();
     });
     effect(tellRewards);
+    effect(tellUpdate);
   }
   return game;
 }

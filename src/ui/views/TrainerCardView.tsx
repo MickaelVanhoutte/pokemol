@@ -73,7 +73,7 @@ export function TrainerCardView({ save, avatar, onLook, onClose, progress = [], 
     <Frame title={tr(L('Carte de dresseur', 'Trainer card'))} onBack={onClose}>
       <div class="tcard__pages" onPointerDown={down} onPointerUp={up}>
         <div class="summary__tabs tcard__tabs">
-          <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>
+          <button class="pbtn" onClick={() => turn(-1)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>
           <div class="summary__tabnames">
             {PAGES.map((p, i) => (
               <button class={`summary__tab ${i === page ? 'is-on' : ''}`} onClick={() => setPage(i as Page)}>
@@ -81,7 +81,7 @@ export function TrainerCardView({ save, avatar, onLook, onClose, progress = [], 
               </button>
             ))}
           </div>
-          <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
+          <button class="pbtn" onClick={() => turn(1)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>
         </div>
         {page === 0 ? <CardPage save={save} avatar={avatar} onLook={onLook} /> : (
           <ProgressPage progress={progress} more={more} cur={cur} onCursor={setCur} onCollect={onCollect} note={note} real={real} />

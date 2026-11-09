@@ -16,9 +16,9 @@ function Cycle<T extends string>({ list, value, onPick }: { list: { id: T; name:
   const step = (d: number) => onPick(list[(i + d + list.length) % list.length].id);
   return (
     <span class="lookv__cycle">
-      <button class="pbtn" onClick={() => step(-1)} aria-label="◀">◀</button>
+      <button class="pbtn" onClick={() => step(-1)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>
       <span class="lookv__value">{tr(list[i].name)}</span>
-      <button class="pbtn" onClick={() => step(1)} aria-label="▶">▶</button>
+      <button class="pbtn" onClick={() => step(1)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>
     </span>
   );
 }

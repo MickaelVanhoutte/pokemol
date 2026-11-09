@@ -107,13 +107,13 @@ export function BagView({ bag, context, wild, memory = context, onUse, onGive, o
   return (
     <div class="frame graph bag">
       <div class="bag__head">
-        <button class="pbtn" onClick={() => turn(-1)} aria-label="◀">◀</button>
+        <button class="pbtn" onClick={() => turn(-1)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>
         <Window class="bag__pocket">
           <img class="sicon" src={sketchIconUrl('bag')!} width={38} height={38} alt="" />
           <span>{tr(POCKET_NAMES[pocket])}</span>
           <span class="bag__dots">{pockets.map((p) => <i class={p === pocket ? 'is-on' : ''} />)}</span>
         </Window>
-        <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
+        <button class="pbtn" onClick={() => turn(1)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>
       </div>
       <Window class="bag__list">
         <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={moveCursor} tapFocus initial={keep(pocket)} onSide={turn} />

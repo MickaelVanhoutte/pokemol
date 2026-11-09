@@ -32,9 +32,9 @@ export function MonPick({ ids, title, pick, onChoose }: { ids: string[]; title?:
           <div class="monpick__ask">
             <Window seyes class="monpick__q">{tr(L('Tu choisis {n} ?', 'So, you want {n}?'), { n: tr(sp.name) })}</Window>
             <div class="monpick__nav">
-              {n > 1 && <button class="pbtn" onClick={() => setFocus((focus + n - 1) % n)} aria-label="◀">◀</button>}
+              {n > 1 && <button class="pbtn" onClick={() => setFocus((focus + n - 1) % n)} aria-label={tr(L('Précédent', 'Previous'))}>◀</button>}
               <YesNo onAnswer={(yes) => (yes ? onChoose(focus) : setFocus(null))} />
-              {n > 1 && <button class="pbtn" onClick={() => setFocus((focus + 1) % n)} aria-label="▶">▶</button>}
+              {n > 1 && <button class="pbtn" onClick={() => setFocus((focus + 1) % n)} aria-label={tr(L('Suivant', 'Next'))}>▶</button>}
             </div>
           </div>
         ) : (
