@@ -54,7 +54,9 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     ],
     // the vault: two boulders dropped from the crater above land on its plates and open the gate
     obstacles: [
-      { x: 1, y: 9, kind: 'boulder' },
+      // the cracked rock in front of the little nook of stencils: Lavande's mallet, given right here, breaks it
+      // (a boulder there could only be pushed up onto the items, and stayed stuck)
+      { x: 1, y: 9, kind: 'rock' },
       { x: 2, y: 1, kind: 'boulder', showIf: 'hole:montFusain2:12,1' },
       { x: 4, y: 1, kind: 'boulder', showIf: 'hole:montFusain2:15,1' },
     ],

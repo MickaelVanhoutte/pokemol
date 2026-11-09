@@ -616,6 +616,7 @@ async function talkFollower() {
 // ------------------------------------------------------------------ puzzles
 
 const PUZZLE_LOOKS: Record<string, LText> = {
+  caverock: L('Un gros rocher planté dans le sol de la grotte. Il ne bouge pas d’un poil… Seuls les rochers fissurés se cassent au maillet.', 'A big rock stuck in the cave floor. It won’t budge an inch… Only cracked rocks break with a mallet.'),
   hole: L('Un trou tout noir. On ne voit pas le fond…', 'A pitch-black hole. You can’t see the bottom…'),
   plate: L('Une dalle de pierre avec un dessin de poids. Elle ne bouge pas : tu es trop {g:légère|léger} !', 'A stone plate with a weight drawn on it. It doesn’t budge: you’re too light!'),
   gate: L('Une grille bien fermée. Un mécanisme doit l’ouvrir, quelque part…', 'A gate, shut tight. Some mechanism must open it, somewhere…'),
