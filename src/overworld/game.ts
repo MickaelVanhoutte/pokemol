@@ -14,6 +14,7 @@ import { Camera, frame, tilesInView } from './camera';
 import { sceneNow, sceneSpeed } from '../anim/sceneClock';
 import { drawParticles, dustPuff, grassBurst, ripple, stepParticles, type Particle } from './particles';
 import { drawAmbient } from './ambient';
+import { worldBroken } from '../state/crash';
 import { eraseBands, restoreRadius, riseHeight, sketchStrokes, type Rect, type RedrawKind } from './redraw';
 import { clamp01, easeIn, easeOut } from '../anim/ease';
 
@@ -462,6 +463,9 @@ export class Game {
     this.render();
   }
 
+  /** Frames that failed in a row. */
+  private failures = 0;
+
   start() {
     cancelAnimationFrame(this.raf);
     this.last = performance.now();
@@ -473,8 +477,11 @@ export class Game {
       try {
         this.update(dt);
         this.render();
+        this.failures = 0;
       } catch (e) {
         console.error(e);
+        // one bad frame is let go; a world that fails frame after frame shows the torn page
+        if (++this.failures === 30) worldBroken.value = true;
       }
     };
     this.raf = requestAnimationFrame(loop);

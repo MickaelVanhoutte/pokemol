@@ -87,7 +87,8 @@ Stack: Vite + TypeScript + Preact + `@preact/signals`; the overworld is a hand-w
 
 **Shell.** `src/main.tsx` renders `App` and imports `src/story` so every story script registers
 itself. A new game opens on `SleepIntroView` (falling asleep at the desk, pencil sounds, the title theme
-fading in) before the Prof's speech in `NewGameScreen`. `src/state/router.ts` holds one `screen` signal; `src/app.tsx` switches on it. The overworld,
+fading in) before the Prof's speech in `NewGameScreen`. `src/state/router.ts` holds one `screen` signal; `src/app.tsx` switches on it, inside `Guard` (`src/ui/Guard.tsx`): a screen that throws, or a world loop failing 30
+frames in a row (`worldBroken`, `src/state/crash.ts`), shows a torn page with Retour, Recharger and an export of the game. The overworld,
 title, new-game prologue, battle and each menu are separate screens. A script can `await openScreen(…)`
 and resume when the player returns to the world. `App` is keyed on the locale, so switching language
 re-renders everything.
@@ -103,6 +104,9 @@ re-renders everything.
   saves (v2 parties go to the PC); `repair()` then fills in what newer versions added (it runs on every
   load, so it must stay idempotent). Changing the save shape means bumping `SAVE_VERSION`, adding a
   migration or repair step and a test (`src/state/game.test.ts`).
+  A save that can't be played (`playable()`, or `repair()` throwing) is turned down, never crashing the title: `persist()`
+  keeps the save it replaces under `<key>.prev` (loaded instead, with a line, when the last one is damaged,
+  `restoredPrev`) and an unreadable one under `<key>.bad`; `deleteSave` erases all three.
 - `src/state/clock.ts`: day, evening and night from the device's clock plus `save.clockShift` (sleeping
   at an Inn or at home, `sleepUntil`). Encounter entries can be `time: 'night'`; outdoor maps get a multiplied tint.
 - `src/state/prefs.ts`: per-device preferences outside the save (text speed, battle speed, sound, music)

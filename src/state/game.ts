@@ -22,6 +22,8 @@ export const slot = signal(1);
 export const save = signal<SaveData | null>(null);
 /** A save from an older version of the game was found (it can't be loaded). */
 export const outdatedSave = signal(false);
+/** A slot holds a save that can't be read (kept aside, never overwritten without a copy). */
+export const damagedSave = signal(false);
 
 // texts use {name} and agree with the player's gender
 effect(() => {
@@ -31,18 +33,37 @@ effect(() => {
   gender.value = d.player.gender;
 });
 
-function readRaw(n = slot.value): unknown {
+/** The save before the last SAUVER, kept to fall back on. */
+const prevKeyOf = (n: number) => `${keyOf(n)}.prev`;
+/** A save that could not be read, kept aside instead of being overwritten. */
+const badKeyOf = (n: number) => `${keyOf(n)}.bad`;
+
+function readKey(key: string): unknown {
   try {
-    const raw = localStorage.getItem(keyOf(n));
+    const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch {
-    return null;
+    // unreadable JSON: still something (it must not look like an empty slot)
+    return localStorage.getItem(key) ? { broken: true } : null;
   }
+}
+
+const readRaw = (n = slot.value) => readKey(keyOf(n));
+
+/**
+ * The game in a slot: its last save, or the one before it when the last one can't be read (a write cut short,
+ * a damaged file). `fromPrev` says which.
+ */
+function readSlot(n: number): { save: SaveData | null; fromPrev: boolean } {
+  const main = migrate(readRaw(n));
+  if (main) return { save: main, fromPrev: false };
+  const prev = migrate(readKey(prevKeyOf(n)));
+  return prev ? { save: prev, fromPrev: true } : { save: null, fromPrev: false };
 }
 
 /** The game saved in a slot (without loading it), or null when the slot is empty. */
 export function peekSlot(n: number): SaveData | null {
-  return migrate(readRaw(n));
+  return readSlot(n).save;
 }
 
 /** The slots that hold a game, in order. */
@@ -50,14 +71,28 @@ export function savedSlots(): number[] {
   return Array.from({ length: SLOTS }, (_, i) => i + 1).filter((n) => !!peekSlot(n));
 }
 
+/** Enough of a save to be played: anything else (hand-edited, cut short) is turned down rather than crashing. */
+function playable(s: unknown): s is SaveData {
+  const o = s as Partial<SaveData> | null;
+  const obj = (v: unknown) => !!v && typeof v === 'object' && !Array.isArray(v);
+  return obj(o) && obj(o!.player) && typeof o!.player!.map === 'string' && Array.isArray(o!.party)
+    && obj(o!.flags) && obj(o!.bag) && obj(o!.dex) && Array.isArray(o!.dex!.seen) && Array.isArray(o!.dex!.caught)
+    && Array.isArray(o!.badges) && (o!.boxes === undefined || Array.isArray(o!.boxes));
+}
+
 /** Upgrades an older save, or returns null if it can't be used. */
 export function migrate(raw: unknown): SaveData | null {
   if (!raw || typeof raw !== 'object') return null;
   const v = (raw as { version?: number }).version;
-  const s = v === 2 ? migrateV2(raw as V2Save) : v === 3 || v === 4 || v === SAVE_VERSION ? (raw as SaveData) : null;
-  if (!s) return null;
-  s.version = SAVE_VERSION;
-  return repair(s);
+  try {
+    const s = v === 2 ? migrateV2(raw as V2Save) : v === 3 || v === 4 || v === SAVE_VERSION ? (raw as SaveData) : null;
+    if (!s || !playable(s)) return null;
+    s.version = SAVE_VERSION;
+    return repair(s);
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
 
 /**
@@ -180,28 +215,48 @@ export function migrateV2(old: V2Save): SaveData {
 
 /** Whether any slot holds a game (and notes a save too old to load). */
 export function hasSave(): boolean {
-  const raws = Array.from({ length: SLOTS }, (_, i) => readRaw(i + 1));
-  outdatedSave.value = raws.some((raw) => !!raw && !migrate(raw));
-  return raws.some((raw) => !!migrate(raw));
+  const slots = Array.from({ length: SLOTS }, (_, i) => readSlot(i + 1));
+  const lost = slots.map((x, i) => (x.save ? null : readRaw(i + 1))).filter((raw) => !!raw);
+  // a version the game no longer reads, or a file that is just damaged
+  const old = (raw: unknown) => typeof (raw as { version?: unknown }).version === 'number' && (raw as { version: number }).version < 2;
+  outdatedSave.value = lost.some(old);
+  damagedSave.value = lost.some((raw) => !old(raw));
+  return slots.some((x) => !!x.save);
 }
 
 /** Loads a slot's game (the current slot by default) and plays at its difficulty. */
 export function loadSave(n = slot.value): SaveData | null {
-  const s = migrate(readRaw(n));
+  const { save: s, fromPrev } = readSlot(n);
   slot.value = n;
   save.value = s;
+  restoredPrev.value = fromPrev;
   if (s?.difficulty) setPref('difficulty', s.difficulty);
   return s;
 }
 
 /** The last write failed (storage full or refused): SAUVER says so instead of pretending. */
 export const saveFailed = signal(false);
+/** The game just loaded is the save before the last one (the last one couldn't be read). */
+export const restoredPrev = signal(false);
 
 export function persist() {
   if (!save.value) return;
+  const key = keyOf(slot.value);
   try {
-    localStorage.setItem(keyOf(slot.value), JSON.stringify(save.value));
+    const old = localStorage.getItem(key);
+    if (old !== null) {
+      // the save being replaced becomes the one to fall back on; one that can't be read is kept aside instead
+      const good = !!migrate(readKey(key));
+      try {
+        localStorage.setItem(good ? prevKeyOf(slot.value) : badKeyOf(slot.value), old);
+      } catch {
+        // no room for the copy: the save itself comes first
+        localStorage.removeItem(prevKeyOf(slot.value));
+      }
+    }
+    localStorage.setItem(key, JSON.stringify(save.value));
     saveFailed.value = false;
+    restoredPrev.value = false;
   } catch {
     // quota or private mode: the game keeps running in memory
     saveFailed.value = true;
@@ -224,12 +279,14 @@ export function update(fn: (s: SaveData) => void) {
 
 export function deleteSave(n = slot.value) {
   try {
-    localStorage.removeItem(keyOf(n));
+    // the copy before it too, or the erased game would come back from it
+    for (const k of [keyOf(n), prevKeyOf(n), badKeyOf(n)]) localStorage.removeItem(k);
   } catch {
     // ignore
   }
   if (n === slot.value) save.value = null;
   outdatedSave.value = false;
+  damagedSave.value = false;
 }
 
 function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: string, look?: Appearance): SaveData {

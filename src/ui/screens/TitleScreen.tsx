@@ -4,7 +4,7 @@ import { L, t, tr } from '../../i18n';
 import { artUrl, dexNo, dexCount } from '../../data/creatures';
 import { originals } from '../../data/originals';
 import { enterWorld } from '../../overworld/controller';
-import { hasSave, loadSave, outdatedSave, peekSlot, savedSlots, slot, SLOTS } from '../../state/game';
+import { damagedSave, hasSave, loadSave, outdatedSave, peekSlot, savedSlots, slot, SLOTS } from '../../state/game';
 import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
 import { personUrl } from '../personArt';
@@ -166,6 +166,9 @@ export function TitleScreen() {
         <div class="title__menu" onClick={(e) => e.stopPropagation()}>
           {outdatedSave.value && (
             <Window seyes class="title__note">{tr(L('Le jeu a beaucoup changé : ton ancienne partie ne peut plus être chargée. Commence une nouvelle aventure !', 'The game changed a lot: your old save can’t be loaded anymore. Start a new adventure!'))}</Window>
+          )}
+          {damagedSave.value && !outdatedSave.value && (
+            <Window seyes class="title__note">{tr(L('Une partie est abîmée et ne peut pas être chargée. Elle est gardée de côté : une nouvelle partie ne l’efface pas.', 'A save is damaged and can’t be loaded. It is kept aside: a new game won’t erase it.'))}</Window>
           )}
           {offlineNote && (
             <Window seyes class="title__note">{tr(L('Le jeu est maintenant sur ton appareil : tu peux jouer même sans Internet !', 'The game is now on your device: you can play even without the Internet!'))}</Window>

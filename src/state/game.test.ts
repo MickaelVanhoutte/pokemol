@@ -205,6 +205,57 @@ describe('several games on one device', async () => {
     loadSave(2);
     expect(creature(CUSTOM_ID).learnset).toEqual([[1, 'flammeche']]);
   });
+
+  it('turns down a save cut short instead of crashing the title, and keeps the other games', () => {
+    store.clear();
+    slot.value = 1;
+    newGame('Papa', DEFAULT_LOOKS.m, 'm', 'Feutre');
+    persist();
+    store.set('atelier-bestioles.save.2', JSON.stringify({ version: SAVE_VERSION, player: { name: 'Lili' } }));
+    store.set('atelier-bestioles.save.3', '{"version": 5, "party": [');
+    expect(() => savedSlots()).not.toThrow();
+    expect(savedSlots()).toEqual([1]);
+    expect(peekSlot(2)).toBeNull();
+    expect(hasSave()).toBe(true);
+  });
+
+  it('falls back on the save before when the last one is damaged', async () => {
+    const { restoredPrev, update } = await import('./game');
+    store.clear();
+    slot.value = 1;
+    newGame('Papa', DEFAULT_LOOKS.m, 'm', 'Feutre');
+    persist();
+    update((x) => void (x.money = 1234));
+    persist();
+    expect(JSON.parse(store.get('atelier-bestioles.save.prev')!).money).toBe(3000);
+    // the last write was cut short
+    store.set('atelier-bestioles.save', '{"version": 5, "pla');
+    expect(peekSlot(1)?.player.name).toBe('Papa');
+    expect(loadSave(1)?.money).toBe(3000);
+    expect(restoredPrev.value).toBe(true);
+  });
+
+  it('keeps a damaged save aside rather than writing over it', () => {
+    store.clear();
+    slot.value = 2;
+    store.set('atelier-bestioles.save.2', '{"version": 5, "pla');
+    newGame('Lili', DEFAULT_LOOKS.f, 'f', 'Crayon');
+    persist();
+    expect(store.get('atelier-bestioles.save.2.bad')).toBe('{"version": 5, "pla');
+    expect(peekSlot(2)?.player.name).toBe('Lili');
+  });
+
+  it('erasing a game erases the save before it too', () => {
+    store.clear();
+    slot.value = 1;
+    newGame('Papa', DEFAULT_LOOKS.m, 'm', 'Feutre');
+    persist();
+    persist();
+    expect(store.has('atelier-bestioles.save.prev')).toBe(true);
+    deleteSave(1);
+    expect(peekSlot(1)).toBeNull();
+    expect(store.has('atelier-bestioles.save.prev')).toBe(false);
+  });
 });
 
 describe('the Bestiodex page of a first catch', () => {

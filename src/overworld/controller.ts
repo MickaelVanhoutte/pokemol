@@ -12,7 +12,7 @@ import { move } from '../data/moves';
 import { newSeed, nextRandom, pickWeighted, randomInt } from '../engine/rng';
 import type { BattleKind, BattleResult, BattleState } from '../engine/pk/battle';
 import { BASE_FRIENDSHIP, SHINY_CHANCE, STAT_KEYS, createMon, evolutionMoves, evolutionOf, evolve, growLevel, learnMove, MAX_LEVEL, maxHp, type LevelUp, type Mon } from '../engine/pk/creature';
-import { addItem, addMon, allMons, autosave, blackoutLoss, firstCatch, healParty, partyAlive, save, see, takeItem, update } from '../state/game';
+import { addItem, addMon, allMons, autosave, blackoutLoss, firstCatch, healParty, partyAlive, restoredPrev, save, see, takeItem, update } from '../state/game';
 import type { MetHow } from '../engine/pk/creature';
 import { go, screen, type Screen } from '../state/router';
 import type { SaveData } from '../save/schema';
@@ -227,6 +227,11 @@ export function enterWorld() {
   g.lock = 0;
   g.fade = 0;
   go({ id: 'overworld' });
+  // the last save couldn't be read: say the game goes on from the one before
+  if (restoredPrev.value) {
+    restoredPrev.value = false;
+    void say(L('La dernière sauvegarde était abîmée : la partie reprend à la sauvegarde d’avant.', 'The last save was damaged: the game goes on from the save before it.'));
+  }
   const onEnter = g.map.def.onEnter;
   if (onEnter) void runScript(onEnter);
 }

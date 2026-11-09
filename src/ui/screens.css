@@ -171,3 +171,11 @@
   .picture__frame { width: auto; max-width: calc(100vw - 11em); }
   .picture__img { width: auto; max-width: 100%; max-height: calc(100dvh - 5.5rem); }
 }
+
+/* ---------- a screen that crashed (Guard): a torn page with a way out */
+.crash { justify-content: center; align-items: stretch; gap: 12px; }
+.crash__note { font-size: 1.2rem; line-height: 1.35; }
+.crash__note p { margin: 0 0 0.4em; }
+.crash__title { font-size: 1.5rem; }
+.crash > .pbtn { align-self: center; }
+.crash > .abar { margin-top: auto; }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
-import { creature } from '../../data/creatures';
+import { CREATURE_BY_ID, creature } from '../../data/creatures';
 import type { HallEntry } from '../../data/postgame';
 import { monArtUrl } from '../monArt';
 import { Frame, lv, Window } from '../paper';
@@ -32,7 +32,8 @@ export function HallView({ entries, fresh, onClose }: { entries: HallEntry[]; fr
       </div>
       <Window class="hall__photo">
         <div class="hall__grid">
-          {e.team.map((m) => (
+          {/* a team from an imported save may hold species this game doesn't know (or the player's own, deleted) */}
+          {(e.team ?? []).filter((m) => m && m.species in CREATURE_BY_ID).map((m) => (
             <figure class="hall__mon">
               <img class="mon-art" src={monArtUrl(m)} alt="" />
               <figcaption>

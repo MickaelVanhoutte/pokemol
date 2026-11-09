@@ -23,33 +23,37 @@ import { FresqueScreen } from './ui/screens/FresqueScreen';
 import { MemoScreen } from './ui/screens/MemoScreen';
 import { DrawingScreen } from './ui/screens/DrawingScreen';
 import { AtelierScreen } from './ui/screens/AtelierScreen';
+import { Guard } from './ui/Guard';
 
 export function App() {
   // reading locale.value re-renders everything when the language changes
   const s = screen.value;
   return (
     <div class={`app ${prefs.value.motion === 'calm' ? 'is-calm' : ''}`} key={locale.value}>
-      {s.id === 'title' && <TitleScreen />}
-      {s.id === 'newgame' && <NewGameScreen />}
-      {s.id === 'overworld' && <OverworldScreen />}
-      {s.id === 'settings' && <SettingsScreen back={s.back} />}
-      {s.id === 'battle' && <BattleScreen key={s.props.setup.seed} {...s.props} />}
-      {s.id === 'party' && <PartyScreen />}
-      {s.id === 'bag' && <BagScreen />}
-      {s.id === 'dex' && <DexScreen />}
-      {s.id === 'pc' && <PcScreen />}
-      {s.id === 'shop' && <ShopScreen tower={s.tower} />}
-      {s.id === 'machine' && <MachineScreen />}
-      {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
-      {s.id === 'drawing' && <DrawingScreen ending={s.ending} />}
-      {s.id === 'trainercard' && <TrainerCardScreen />}
-      {s.id === 'townmap' && <TownMapScreen pick={s.pick} />}
-      {s.id === 'flight' && <FlightScreen from={s.from} to={s.to} />}
-      {s.id === 'hall' && <HallScreen fresh={s.fresh} />}
-      {s.id === 'jukebox' && <JukeboxScreen />}
-      {s.id === 'fresque' && <FresqueScreen key={s.species} species={s.species} size={s.size} onEnd={s.onEnd} />}
-      {s.id === 'memo' && <MemoScreen onEnd={s.onEnd} />}
-      {s.id === 'atelier' && <AtelierScreen fresh={s.fresh} onEnd={s.onEnd} />}
+      {/* a screen that crashes shows a torn page instead of a blank one (a new screen starts afresh) */}
+      <Guard key={s.id}>
+        {s.id === 'title' && <TitleScreen />}
+        {s.id === 'newgame' && <NewGameScreen />}
+        {s.id === 'overworld' && <OverworldScreen />}
+        {s.id === 'settings' && <SettingsScreen back={s.back} />}
+        {s.id === 'battle' && <BattleScreen key={s.props.setup.seed} {...s.props} />}
+        {s.id === 'party' && <PartyScreen />}
+        {s.id === 'bag' && <BagScreen />}
+        {s.id === 'dex' && <DexScreen />}
+        {s.id === 'pc' && <PcScreen />}
+        {s.id === 'shop' && <ShopScreen tower={s.tower} />}
+        {s.id === 'machine' && <MachineScreen />}
+        {s.id === 'credits' && <CreditsScreen fromWorld={s.fromWorld} />}
+        {s.id === 'drawing' && <DrawingScreen ending={s.ending} />}
+        {s.id === 'trainercard' && <TrainerCardScreen />}
+        {s.id === 'townmap' && <TownMapScreen pick={s.pick} />}
+        {s.id === 'flight' && <FlightScreen from={s.from} to={s.to} />}
+        {s.id === 'hall' && <HallScreen fresh={s.fresh} />}
+        {s.id === 'jukebox' && <JukeboxScreen />}
+        {s.id === 'fresque' && <FresqueScreen key={s.species} species={s.species} size={s.size} onEnd={s.onEnd} />}
+        {s.id === 'memo' && <MemoScreen onEnd={s.onEnd} />}
+        {s.id === 'atelier' && <AtelierScreen fresh={s.fresh} onEnd={s.onEnd} />}
+      </Guard>
       {/* transitions between screens (battle intros), above everything */}
       <Curtain />
     </div>
