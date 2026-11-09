@@ -18,6 +18,7 @@ import { GRUNT, MOM, PROF, RIVAL, hasTeam } from './cast';
 import { redraw } from '../overworld/scene';
 import { withPlanche } from '../ui/planche/planche';
 import { photo } from './planches';
+import { onSale } from '../ui/screens/ShopScreen';
 
 // ------------------------------------------------------------------ home
 
@@ -227,23 +228,44 @@ scripts.momShoes = async () => {
   g.remove(mom.id);
 };
 
+/**
+ * Capucine's drawings of Pandoudou, one set at a time, as the shops start selling their magic pencils (`STOCK`):
+ * each set, she gives one pencil of the player's choice.
+ */
+const PENCIL_TIERS = [
+  { flag: 'gift:crayonMagique', pencils: ['crayon-magique-eau', 'crayon-magique-feu', 'crayon-magique-electrique'],
+    drawn: L('Regarde ! J’ai dessiné Pandoudou en Bestiole Eau, en Bestiole Feu et en Bestiole Électrique !', 'Look! I drew Pandoodle as a Water Critter, a Fire Critter and a Lightning Critter!') },
+  { flag: 'gift:crayonMagique5', pencils: ['crayon-magique-plante', 'crayon-magique-fee'],
+    drawn: L('Regarde mes nouveaux dessins ! Pandoudou en Bestiole Plante, caché sous sa fougère, et en Bestiole Fée, avec tous mes crayons à la fois !', 'Look at my new drawings! Pandoodle as a Grass Critter, hiding under its fern, and as a Fairy Critter, drawn with all my pencils at once!') },
+  { flag: 'gift:crayonMagique6', pencils: ['crayon-magique-psy', 'crayon-magique-tenebres'],
+    drawn: L('J’ai encore dessiné Pandoudou ! En Bestiole Psy, qui sait tout, et en Bestiole Ténèbres, qui rôde la nuit…', 'I drew Pandoodle again! As a Psychic Critter that knows everything, and as a Dark Critter that prowls at night…') },
+  { flag: 'gift:crayonMagiqueGlace', pencils: ['crayon-magique-glace'],
+    drawn: L('Mon dernier dessin : Pandoudou en Bestiole Glace, tout emmitouflé dans sa queue. Il a toujours froid !', 'My last drawing: Pandoodle as an Ice Critter, all wrapped up in its tail. It’s always cold!') },
+];
+
 /** Ville-Pastel: a girl gives you the scruffy Bestiole she drew (the GBA games' gift Bestiole). */
 scripts.touffouGift = async () => {
   const who = L('Fillette Capucine', 'Lass Capucine');
   if (flag('gift:touffou')) {
-    // with four badges, she has finished three new drawings… and a magic pencil to spare
-    if (save.value!.badges.length >= 4 && !flag('gift:crayonMagique')) {
+    // as the badges come, she finishes new drawings of it… and has a magic pencil to spare for each set
+    const tier = PENCIL_TIERS.find((t) => !flag(t.flag) && t.pencils.every((k) => onSale(k, save.value!)));
+    if (tier) {
+      const first = tier === PENCIL_TIERS[0];
       await sayAll([
-        L('Regarde ! J’ai dessiné Pandoudou en Bestiole Eau, en Bestiole Feu et en Bestiole Électrique !', 'Look! I drew Pandoodle as a Water Critter, a Fire Critter and a Lightning Critter!'),
-        L('Il suffit de le redessiner avec un Crayon Magique pour qu’il change. Tiens, je t’en donne un !', 'You just redraw it with a Magic Pencil and it changes. Here, I’ll give you one!'),
+        tier.drawn,
+        first
+          ? L('Il suffit de le redessiner avec un Crayon Magique pour qu’il change. Tiens, je t’en donne un !', 'You just redraw it with a Magic Pencil and it changes. Here, I’ll give you one!')
+          : L('J’avais encore un Crayon Magique en trop. Tiens, il est pour toi !', 'I had one more Magic Pencil to spare. Here, it’s yours!'),
       ], who);
-      const kinds = ['crayon-magique-eau', 'crayon-magique-feu', 'crayon-magique-electrique'];
-      const c = await ask(L('Lequel veux-tu ?', 'Which one would you like?'), kinds.map((k) => item(k).name), who);
+      const kinds = tier.pencils;
+      const c = kinds.length > 1 ? await ask(L('Lequel veux-tu ?', 'Which one would you like?'), kinds.map((k) => item(k).name), who) : 0;
       update((d) => addItem(d, kinds[c], 1));
-      setFlag('gift:crayonMagique');
+      setFlag(tier.flag);
       sfx.confirm();
       await say(L('{name} reçoit {i} !', '{name} received the {i}!'), undefined, { i: tr(item(kinds[c]).name) });
-      await say(L('Utilise-le depuis ton Sac sur Pandoudou. Les autres Crayons Magiques se vendent dans les boutiques !', 'Use it on Pandoodle from your Bag. The other Magic Pencils are sold in shops!'), who);
+      await say(first
+        ? L('Utilise-le depuis ton Sac sur Pandoudou. Les autres Crayons Magiques se vendent dans les boutiques !', 'Use it on Pandoodle from your Bag. The other Magic Pencils are sold in shops!')
+        : L('Les autres se vendent dans les boutiques. Reviens me voir, je dessine encore !', 'The others are sold in shops. Come back and see me, I’m still drawing!'), who);
       return;
     }
     await say(L('Mon Pandoudou va bien ? On dit qu’en grandissant, il pourra devenir plein de choses différentes !', 'Is my Pandoodle doing well? They say that as it grows, it could become lots of different things!'), who);

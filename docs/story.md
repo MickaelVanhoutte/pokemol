@@ -245,11 +245,14 @@ bag: Water → **Panderive** (Pandrift), Fire → **Pandabraise** (Pandember), L
 rings came loose and float round its tail), Dark → **Pandanuit** (Pandusk, the menacing night prowler with a starry tail), Fairy →
 **Pandiva** (the diva drawn with the whole pencil box). The Water, Fire and Lightning pencils are sold in shops from
 4 badges, Grass and Fairy from 5, Psychic and Dark from 6; Ice only after the ending (it is also Floconnet's). Capucine
-gives one of the first three, the player's choice, once they have 4 badges (`gift:crayonMagique`). Each form is a
+gives one of the first three, the player's choice, once they have 4 badges (`gift:crayonMagique`), then one more for each later set as
+the shops start selling it (Grass or Fairy, Psychic or Dark, then Ice: `gift:crayonMagique5`, `6`, `Glace`). Each form is a
 final of 500 with Fourrure Douce; Pandafougère has the only new move, Gifle de Fougère (Grass physical 85, 20% Defence
 drop), since every other Grass physical move of 80+ is a family's signature. The new form learns a move of its
 type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Panderive and
-Pandabraise, and the first three are in the battle tower pool.
+Pandabraise, and the first three are in the battle tower pool. The five later forms each meet the player once on the way,
+after the 5th badge: Pandiva (Mia, Atelier Paillette), Pandafougère (Flore, Route 7), Pandivin (Opale, Route 8), Pandanuit
+(Ombelin, Atelier Encre) and Pandagivre (Ulysse, the Esquisses, with the first three).
 
 **The Colour Guides and the field tools** (Nov 2026: the owner found the tools too easy to miss, handed out by
 people standing in towns; `src/data/guides.ts`, `src/story/guides.ts`). An old tradition of Papeterre: when travellers

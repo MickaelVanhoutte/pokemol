@@ -513,7 +513,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // ---------------------------------------------------------------- Atelier Paillette
   T({
-    id: 'paillT1', name: L('Paillettine Mia', 'Sparkler Mia'), party: [{ species: '084', level: 24 }, { species: '006', level: 25 }, { species: '005', level: 25 }], money: 720,
+    id: 'paillT1', name: L('Paillettine Mia', 'Sparkler Mia'), party: [{ species: '084', level: 24 }, { species: '006', level: 25 }, { species: '129', level: 25 }], money: 720,
     before: [L('Ça brille, ça brille ! Tu vas en avoir plein les yeux !', 'Sparkle, sparkle! You’ll be dazzled!')],
     after: [L('Il y a des paillettes partout maintenant…', 'There’s glitter everywhere now…')],
   }),
@@ -564,7 +564,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Tu l’as mérité. Basile ne rigole pas avec ses plantes.', 'You earned it. Basil doesn’t joke about his plants.')],
   }),
   T({
-    id: 'r7a', name: L('Botaniste Flore', 'Botanist Flora'), party: [{ species: '048', level: 27 }, { species: '063', level: 27 }, { species: '007', level: 28 }], money: 780,
+    id: 'r7a', name: L('Botaniste Flore', 'Botanist Flora'), party: [{ species: '125', level: 27 }, { species: '063', level: 27 }, { species: '007', level: 28 }], money: 780,
     before: [L('Je collectionne les papillons… en photo, bien sûr !', 'I collect butterflies… in photos, of course!')],
     after: [L('Belle collection de victoires, toi.', 'Nice collection of victories you’ve got.')],
   }),
@@ -600,7 +600,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Grr… Le Grand Effaceur ne va pas aimer ça.', 'Grr… The Great Eraser won’t like this.')],
   }),
   T({
-    id: 'r8d', name: L('Médium Opale', 'Medium Opal'), party: [{ species: '043', level: 28 }, { species: '010', level: 28 }, { species: '083', level: 29 }], money: 980,
+    id: 'r8d', name: L('Médium Opale', 'Medium Opal'), party: [{ species: '127', level: 28 }, { species: '010', level: 28 }, { species: '083', level: 29 }], money: 980,
     before: [L('Les esprits de l’encre murmurent ton nom… et ils veulent se battre.', 'The spirits of the ink whisper your name… and they want to battle.')],
     after: [L('Les esprits se taisent. Pour l’instant.', 'The spirits fall silent. For now.')],
   }),
@@ -667,7 +667,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Ma plume a fourché…', 'My quill slipped…')],
   }),
   T({
-    id: 'encreT2', name: L('Conteur Ombelin', 'Storyteller Ombelin'), party: [{ species: '088', level: 30 }, { species: '053', level: 31 }, { species: '097', level: 31 }], money: 900,
+    id: 'encreT2', name: L('Conteur Ombelin', 'Storyteller Ombelin'), party: [{ species: '128', level: 30 }, { species: '053', level: 31 }, { species: '097', level: 31 }], money: 900,
     before: [L('Il était une fois une nuit sans fin…', 'Once upon a time there was an endless night…')],
     after: [L('…et le jour finit par se lever.', '…and the day finally broke.')],
   }),
@@ -770,7 +770,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon… tu iras plus loin.', 'Fine… you’ll get further.')],
   }),
   T({
-    id: 'es5', name: L('Peintre Ulysse', 'Painter Ulysses'), party: [{ species: '010', level: 35 }, { species: '017', level: 35 }, { species: '018', level: 35 }, { species: '019', level: 36 }], money: 1250,
+    id: 'es5', name: L('Peintre Ulysse', 'Painter Ulysses'), party: [{ species: '126', level: 35 }, { species: '017', level: 35 }, { species: '018', level: 35 }, { species: '019', level: 36 }], money: 1250,
     before: [L('Je suis venu colorier la forêt. Mais par où commencer ?', 'I came to colour the forest in. But where do I start?')],
     after: [L('Par le début, sans doute.', 'At the beginning, I suppose.')],
   }),

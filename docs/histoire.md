@@ -109,7 +109,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Avec le **Bocal-Scaphandre**, plonge là où l’eau est toute sombre : une épave, une chapelle
   engloutie, des algues pleines de Bestioles… et sept perles qui se souviennent d’une très vieille
   légende. Une vieille carte t’aidera à trouver où plonger.
-- Prends soin de **Pandoudou** : avec un Crayon Magique, il peut changer de forme…
+- Prends soin de **Pandoudou** : avec un Crayon Magique, il peut changer de forme… Repasse voir Capucine de temps en temps : elle continue à le dessiner, et elle a souvent un crayon en trop.
 - À Ville-Feutre, on te confie le **Feutre d’Or**, qu’aucune gomme ne peut effacer. Une fois par
   combat, il **met au propre** une Bestiole qui a fini de grandir : repassée au feutre, elle devient
   plus forte et gagne un nouveau talent (parfois même un nouveau type), le temps du combat. Les Maîtres d’Atelier ont le leur…
@@ -264,7 +264,7 @@ The story has **two endings**, and your answers choose which one you will see.
 - With the **Jar Helmet**, dive wherever the water is very dark: a wreck, a sunken chapel, seaweed full
   of Critters… and seven pearls that remember a very old legend. An old map will help you find where to
   dive.
-- Look after **Pandoodle** (Pandoudou): with a Magic Pencil, it can change shape…
+- Look after **Pandoodle** (Pandoudou): with a Magic Pencil, it can change shape… Drop in on Capucine now and then: she keeps drawing it, and often has a pencil to spare.
 - In Felt City you are given the **Golden Felt-tip**, which no eraser can rub out. Once per battle, it
   makes a **fair copy** of a fully grown Critter: gone over in felt-tip, it gets stronger and takes a new
   talent (sometimes even a new type) for the rest of the battle. The Atelier Masters have their own…

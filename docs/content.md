@@ -24,6 +24,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `guides` | `guideTalk` | The first Colour Guide told about the seven of them |
 | `gift:calque` | Prof. Fusain's aide (Inn) | Tracing Paper given |
 | `gift:crayonMagique` | Capucine (Ville-Pastel) | Magic Pencil given (4 badges, after Pandoudou) |
+| `gift:crayonMagique5`, `gift:crayonMagique6`, `gift:crayonMagiqueGlace` | Capucine | one more Magic Pencil for each later set of Pandoudou drawings (Grass/Fairy at 5 badges, Psychic/Dark at 6, Ice after the ending) |
 | `a3.note`, `a3.phare` | Nocturne's note on the Atelier door; Captain Buvard beaten | The lighthouse trip (the ferryman appears with `a3.note`, the Atelier opens with `a3.phare`) |
 | `piste.open` | `pisteGate` from the Gouache side | The Piste Cyclable's gate is open |
 | `static:<species>` | a one-time battle (`echoShadow`, `src/story/legends.ts`) | A Bestiole met once was caught (the legendaries, after the ending) or caught or beaten (Ombrouille) |
