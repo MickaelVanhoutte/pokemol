@@ -32,6 +32,8 @@ const SKETCH = 'grayscale(1) contrast(0.55) brightness(1.45)';
 const WALK_MS = 210;
 const RUN_MS = 120;
 const BIKE_MS = 85;
+/** How close (in steps) the player comes to a way out of the map before it lights up. */
+const EXIT_HINT_RANGE = 3;
 /** One tile slid on glossy paper. */
 const SLIDE_MS = 95;
 
@@ -254,7 +256,16 @@ export function loadMap(def: MapDef, visibleNpc: (n: NpcDef) => boolean): { map:
   const warps = new Map<number, Warp>((def.warps ?? []).map((wp) => [wp.y * w + wp.x, wp]));
   const signs = new Map<number, SignDef>((def.signs ?? []).map((s) => [s.y * w + s.x, s]));
 
-  const get = (x: number, y: number) => (x < 0 || y < 0 || x >= w || y >= h ? def.border : tiles[y * w + x]);
+  const get = (x: number, y: number) => {
+    if (x >= 0 && y >= 0 && x < w && y < h) return tiles[y * w + x];
+    // a river that is a way out runs on off the page (no bank drawn across it), so it reads as a way to go
+    const cx = Math.max(0, Math.min(w - 1, x)), cy = Math.max(0, Math.min(h - 1, y));
+    if ((cx === x) !== (cy === y)) {
+      const edge = tiles[cy * w + cx];
+      if (isWater(edge) && warps.has(cy * w + cx)) return edge;
+    }
+    return def.border;
+  };
   const layers: (HTMLCanvasElement | HTMLImageElement)[] = [];
   const paint = (c: HTMLCanvasElement, frame: number) => {
     const ctx = c.getContext('2d')!;
@@ -831,6 +842,47 @@ export class Game {
 
   /** Little gold stars blinking on a sparkly follower, two at a time, somewhere new each time. */
   /** The Pencil Balloon on its moorings, taking off or landing (its shadow shrinking on the ground), a passenger's head over the basket. */
+  /**
+   * The ways out of an outdoor map (its warps on the edge: a road, a river), lit up as the player comes near:
+   * a light breathing on the tile, brighter toward the edge, and a little chevron sliding out.
+   */
+  private drawExitHints(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
+    const { def, w, h, warps } = this.map;
+    if (def.indoor || !this.player) return;
+    const t = performance.now();
+    for (const wp of warps.values()) {
+      const out: Dir | null = wp.y === 0 ? 'up' : wp.y === h - 1 ? 'down' : wp.x === 0 ? 'left' : wp.x === w - 1 ? 'right' : null;
+      if (!out) continue;
+      const d = Math.abs(wp.x - this.player.x) + Math.abs(wp.y - this.player.y);
+      if (d > EXIT_HINT_RANGE) continue;
+      const near = 1 - d / (EXIT_HINT_RANGE + 1);
+      const a = near * (0.6 + 0.4 * Math.sin(t / 260));
+      const gx = Math.round(wp.x * TILE - camX), gy = Math.round(wp.y * TILE - camY);
+      // the light, brighter toward the edge it leads out of
+      const [x0, y0, x1, y1] = out === 'up' ? [0, TILE, 0, 0] : out === 'down' ? [0, 0, 0, TILE] : out === 'left' ? [TILE, 0, 0, 0] : [0, 0, TILE, 0];
+      const grad = ctx.createLinearGradient(gx + x0, gy + y0, gx + x1, gy + y1);
+      grad.addColorStop(0, 'rgba(255, 244, 200, 0)');
+      grad.addColorStop(1, `rgba(255, 246, 205, ${0.9 * a})`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(gx, gy, TILE, TILE);
+      // a chevron pointing out, sliding toward the edge (drawn pointing up, then turned)
+      const slide = Math.floor(((t / 650) % 1) * 4);
+      const turn = (x: number, y: number): [number, number] =>
+        out === 'up' ? [x, y] : out === 'down' ? [x, 15 - y] : out === 'left' ? [y, x] : [15 - y, x];
+      ctx.fillStyle = `rgba(255, 252, 235, ${Math.min(1, a * 1.6)})`;
+      for (let r = 0; r < 4; r++) {
+        const y = 6 - slide + r;
+        for (const x of [7 - r, 8 + r]) {
+          // two pixels thick, along the way out
+          for (const t2 of [0, 1]) {
+            const [px, py] = turn(x, y + t2);
+            ctx.fillRect(gx + px, gy + py, 1, 1);
+          }
+        }
+      }
+    }
+  }
+
   private drawBalloon(ctx: CanvasRenderingContext2D, camX: number, camY: number) {
     const b = this.map.def.balloon!, f = this.balloonFlight, now = sceneNow();
     let lift = this.balloonAway ? BALLOON_SKY : 0;
@@ -1005,6 +1057,7 @@ export class Game {
         ctx.strokeRect(gx + 1.5, gy + 1.5, TILE - 3, TILE - 3);
       }
     }
+    this.drawExitHints(ctx, camX, camY);
     for (const o of this.obstacles) {
       const ox = o.x * TILE - camX, oy = o.y * TILE - camY;
       if (ox < -16 || oy < -16 || ox > this.viewW || oy > this.viewH) continue;
@@ -1041,7 +1094,10 @@ export class Game {
         ctx.ellipse(sx + 8, sy + 14.5, 5, 1.6, 0, 0, Math.PI * 2);
         ctx.fill();
       }
-      if (a === this.player && this.biking) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
+      // the bike turns with the rider: from the side, or end-on (the handlebar behind the body going up)
+      const bikeEnd = a === this.player && this.biking && (a.dir === 'up' || a.dir === 'down');
+      if (a === this.player && this.biking && !bikeEnd) ctx.drawImage(fieldSprite('bike'), sx, sy + 11);
+      if (bikeEnd && a.dir === 'up') ctx.drawImage(fieldSprite('bikeBar'), sx, sy + 8);
       // in a room only sketched in pencil, the people living there are sketched too (not the player)
       if (this.map.def.sketch && a !== this.player) ctx.filter = SKETCH;
       if (a.mini) {
@@ -1049,6 +1105,10 @@ export class Game {
       } else if (a.appear) this.drawAppearing(ctx, a, sx, sy - 2);
       else a.sheet.draw(ctx, a.dir, a.moving && !a.sliding && a.t > 0.15 && a.t < 0.85, a.step, sx, sy - 2 - (a === this.player && this.surfing ? 2 : 0));
       ctx.filter = 'none';
+      if (bikeEnd) {
+        ctx.drawImage(fieldSprite('bikeWheel'), sx, sy + 12);
+        if (a.dir === 'down') ctx.drawImage(fieldSprite('bikeBar'), sx, sy + 9);
+      }
       // under water: the Bocal-Scaphandre, a glass jar over the head
       if (a === this.player && this.map.def.underwater) {
         ctx.fillStyle = 'rgba(210, 236, 255, 0.28)';
@@ -1062,7 +1122,11 @@ export class Game {
         ctx.fillRect(sx + 4, sy - 1, 2, 2);
       }
       // sailing: the paper boat hides the legs
-      if (a === this.player && this.surfing) ctx.drawImage(fieldSprite('boat'), sx, sy + 9 + Math.round(Math.sin(performance.now() / 300)));
+      if (a === this.player && this.surfing) {
+        // it turns with the rider: from the side, or end-on going up or down
+        const end = a.dir === 'up' || a.dir === 'down';
+        ctx.drawImage(fieldSprite(end ? 'boatEnd' : 'boat'), sx, sy + (end ? 8 : 9) + Math.round(Math.sin(performance.now() / 300)));
+      }
       // tall grass hides the legs
       const onGrass = !a.moving && tile(this.tileAt(a.x, a.y)).over;
       if (onGrass) {

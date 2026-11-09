@@ -164,6 +164,9 @@ re-renders everything.
   building), `ambient.ts` (each map's `ambient`, fireflies outdoors at night), and the time of day's tint from
   `tintAt(hour)` (`src/state/clock.ts`, blended over an hour round 7 h, 19 h and 21 h; `Game` slides to a new tint
   over two seconds, `updateTime(true)` snaps it when the game starts).
+  The ways out of an outdoor map (warps on its edge) light up as the player comes within three steps (`drawExitHints`:
+  a breathing light and a chevron sliding out), and a river that is a way out runs on off the page, with no bank drawn
+  across it. The bike and the paper boat turn with the player (`fieldSprites.ts`: from the side, or end-on going up or down).
 - `tiles.ts`, `buildings.ts` and `sprites.ts` paint pixel art with the `Painter` from `pixel.ts`
   (16px tiles). `LOOKS` gives the trainer and NPC chibis; `lookOf()` turns the player's look into one.
 - Wherever a character shows big (battle intros, the player's back in battle, the prologue, the trainer

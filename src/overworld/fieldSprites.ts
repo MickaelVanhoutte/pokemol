@@ -88,12 +88,38 @@ const ROWS: Record<string, string[]> = {
     '..KPPPPBPPPPPK..',
     '...KKKKKKKKKK...',
   ],
+  // seen from the side: going left or right (both views are symmetric, nothing to mirror)
   bike: [
     '..KKK......KKK..',
     '.K...K....K...K.',
     'K..R..KRRK..R..K',
     '.K...K....K...K.',
     '..KKK......KKK..',
+  ],
+  // going up or down: a wheel seen edge-on between the feet (the front one going down, the back one going up)…
+  bikeWheel: [
+    '.......KK.......',
+    '......KRRK......',
+    '......KKKK......',
+    '......KssK......',
+    '......KKKK......',
+    '.......KK.......',
+  ],
+  // …and the handlebar across, in the hands (in front of the body going down, behind it going up)
+  bikeBar: [
+    '.KKK........KKK.',
+    '...KKKKKKKKKK...',
+  ],
+  // the paper boat end-on, going up or down: the origami's two tips rise either side of the rider
+  boatEnd: [
+    '..K..........K..',
+    '..KPK......KPK..',
+    '..KPPKKKKKKPPK..',
+    '...KPPPPPPPPK...',
+    '...KPPPBBPPPK...',
+    '....KPPPPPPK....',
+    '.....KPPPPK.....',
+    '......KKKK......',
   ],
 };
 
