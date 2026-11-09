@@ -1,7 +1,7 @@
 /**
  * The air of a place, drawn over the map: petals and leaves drifting down, dust in the light of a cave,
  * fireflies at night, ink specks, eraser crumbs, glitter. Each speck's place comes from the time alone
- * (nothing is stored), with a little parallax as the camera moves.
+ * (nothing is stored). They stay on the place: walking past them, they keep their spot on the map.
  */
 export type AmbientKind = 'petals' | 'leaves' | 'motes' | 'fireflies' | 'ink' | 'crumbs' | 'glitter';
 
@@ -36,8 +36,8 @@ export interface Speck { x: number; y: number; size: number; alpha: number; colo
 export function speckAt(kind: AmbientKind, i: number, t: number, w: number, h: number, camX: number, camY: number): Speck {
   const depth = 0.4 + rnd(i, 1) * 0.6;
   const spanX = w + 24, spanY = h + 24;
-  // far specks move less with the camera: a little depth
-  const px = -camX * depth * 0.35, py = -camY * depth * 0.35;
+  // fixed on the map, not on the screen: the camera moving leaves them where they are
+  const px = -camX, py = -camY;
   const colours = COLOURS[kind];
   const colour = colours[Math.floor(rnd(i, 2) * colours.length)];
   const x0 = rnd(i, 3) * spanX, y0 = rnd(i, 4) * spanY;
