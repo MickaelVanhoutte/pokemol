@@ -60,6 +60,20 @@ brief.
 | « Pas sur les oreilles, sur les flancs ;) » | Brûlièvre's fire drawn as flame-ears | put the type's big effect where the body makes it (a runner's fire streams off its flanks); ears stay ears |
 | « Le zig zag rouge apporte rien » | the drum lacing on the turtles | a family thread must be a strong shape, not a decoration |
 | « Sa carapace est moche et n'a pas d'amélioration par rapport à ses pré-évolutions » | Tortorrent's plain hull | the final's signature part (shell, wings, mane) must visibly grow: new structure, bigger, more impressive |
+| « Pandafougère a l'air triste » | a shy face with brows tilted up in the middle | shy = a blush, a small closed smile, a glance; worried brows read sad |
+| « On dirait qu'il fait un doigt d'honneur » | Pandivin's and Pandanuit's raised paw with one stub up | never one finger raised on a paw: an open paw, or the whole paw pointing |
+| « Le début de sa queue est coupée » | Pandagivre's and Pandanuit's tails starting beside the body | a tail grows out of the rump: its root sits inside the body or behind it, never cut off |
+| « Elle ne sert plus d'écharpe » | Pandagivre's tail as a flat band over its mouth | a tail scarf goes over the back, behind the head and back round in front under the neck |
+| « J'aime pas ses pattes arrière » / « très étranges » | Pandivin's crossed legs, Pandanuit's teardrop leg | hind legs stay simple: folded under, a small foot showing |
+| « Juste une tête de panda » | dark lids and tear marks merging into giant-panda eye patches | keep pale round the eyes on a light head; tear marks stay thin |
+| « J'aime pas les crayons sur sa queue, j'aime bien les couleurs » | Pandiva's rings drawn as pencils | an object pasted on a part reads as decoration: keep the idea in the colours |
+| « Tu n'as pas fait beaucoup d'efforts » | a round of fixes shown after only a sheet glance, no critic | before every owner review, open each card at full size and run the critic on what changed: a half-done round costs the owner's trust |
+| « La fin du corps est coupée » / « sa queue commence par un carré » | bodies and tails ending in a straight cut (`lineOfAction` caps) | every body and tail ends round (`rounded` in `tools/redraws/pandaKit.ts`) |
+| « Techniquement ok, mais aucun flow… ne lui fait vraiment pas honneur » | Pandivin as a sausage body on four posts | an elegant form needs one S from nose to tail: an arched neck narrowing at the throat, a deep chest, a tucked waist, legs with joints, one gesture (a prance) |
+| « Il mériterait d'être un peu plus menaçant, c'est un type Ténèbres » | a smiling, waving Dark form | a Dark form shows menace: a low stalk, head below the back line, narrowed eyes with a glint, heavy brows, a one-sided fang grin, no blush |
+| sibling forms all walking left on straight legs (critic, « même pose ») | three new evolutions of one baby | each sibling gets its own body angle (hunched, rising, low and stretched) and draws its body as an outline, never as a tube |
+| « Pandivin ne ressemble même plus à un panda » | an elegant form drawn with a long neck and long legs | elegance stays inside the family's body: a big head, a long low body, short dark legs, a bushy tail; grace comes from the pose, not from new proportions |
+| « Son corps et ses pattes sont un peu bizarres » | Pandiva standing as a slab on stubby legs | a red panda standing up is a pear on short dark legs, feet flat; an arm on the hip leaves a gap between elbow and waist |
 
 - « Le critique est pas très critique quand même » (2026-10-31): the critic now judges against the 151 classic
   designs the owner gave as the bar (`tools/out/critic/classic-reference.jpg`, local only) and defaults to FAIL.

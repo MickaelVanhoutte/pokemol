@@ -613,6 +613,113 @@
       }
     ]
   },
+  "125": {
+    "slug": "pandafougere",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 1.2,
+        "period": 3.6,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 85.4,
+        "ox": 82.1,
+        "oy": 82.2
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 36.4,
+        "top": 56.2,
+        "width": 16.7,
+        "height": 13.3,
+        "ox": 48.6,
+        "oy": 53.8
+      }
+    ]
+  },
+  "126": {
+    "slug": "pandagivre",
+    "parts": [
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 14.5,
+        "top": 16.4,
+        "width": 24.1,
+        "height": 9.8,
+        "ox": 48.9,
+        "oy": 53.6
+      }
+    ]
+  },
+  "127": {
+    "slug": "pandivin",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 2,
+        "period": 3.6,
+        "behind": true,
+        "left": 61.2,
+        "top": 0,
+        "width": 38.8,
+        "height": 61.8,
+        "ox": 19.6,
+        "oy": 84.1
+      }
+    ]
+  },
+  "128": {
+    "slug": "pandanuit",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 1.5,
+        "period": 3.2,
+        "behind": true,
+        "left": 58.4,
+        "top": 1.9,
+        "width": 41.6,
+        "height": 58.2,
+        "ox": 19,
+        "oy": 50.9
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 7.1,
+        "top": 35.5,
+        "width": 14,
+        "height": 19.2,
+        "ox": 48.9,
+        "oy": 53.2
+      }
+    ]
+  },
+  "129": {
+    "slug": "pandiva",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 2,
+        "period": 3,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 85.7,
+        "ox": 64.1,
+        "oy": 90.3
+      }
+    ]
+  },
   "007": {
     "slug": "scaraprisme",
     "parts": [

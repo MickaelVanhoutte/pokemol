@@ -65,7 +65,7 @@ strong move or a damage bonus, low stats want a talent that changes how it fight
 | Grognours | Gros Dodo: half damage and 1/8 HP a turn while asleep | `sleepTank` | Slow, few tools |
 | Brumouille → Ombrouille | Passe-Muraille: the first attack after it comes in does half damage | `phaseFirst` | Fragile |
 | Hypnopaon | Arc-en-ciel: every move gets the same-type bonus | `allStab` | Average |
-| Pandoudou and its three forms | Fourrure Douce: physical damage halved | `fluffy` | Low stats |
+| Pandoudou and its eight forms | Fourrure Douce: physical damage halved | `fluffy` | Low stats |
 | Squillou → Marteaumante | Poings d’Acier: punches ×1.3, and Rafale de Poings | `flagBoost` `punch` | — |
 | Cailloutou → Montagnoc | Peau de Mousse: Water and Grass damage halved | `halve` | Water and Grass ×4 |
 | Roupillon → Morsommeil | Patinoire: hail as it comes in | `entryWeather` | — |

@@ -28,6 +28,16 @@ export const FAIR_COPY: Record<string, FairCopy> = {
   '018': { base: { hp: 65, atk: 135, def: 80, spa: 120, spd: 110, spe: 90 }, talent: 'feu-de-joie' },
   // Pandorage: its card gone over neatly (tools/fair)
   '019': { base: { hp: 65, atk: 80, def: 75, spa: 130, spd: 110, spe: 140 }, talent: 'vent-arriere' },
+  // Pandafougère: its card gone over neatly (tools/fair)
+  '125': { base: { hp: 65, atk: 130, def: 145, spa: 70, spd: 95, spe: 95 }, talent: 'jardin-secret' },
+  // Pandagivre: its card gone over neatly (tools/fair)
+  '126': { base: { hp: 65, atk: 70, def: 130, spa: 150, spd: 110, spe: 75 }, talent: 'patinoire' },
+  // Pandivin: its card gone over neatly (tools/fair)
+  '127': { base: { hp: 65, atk: 70, def: 75, spa: 150, spd: 115, spe: 125 }, talent: 'pressentiment' },
+  // Pandanuit: its card gone over neatly (tools/fair)
+  '128': { base: { hp: 95, atk: 80, def: 130, spa: 75, spd: 150, spe: 70 }, talent: 'lanterne' },
+  // Pandiva: its card gone over neatly (tools/fair)
+  '129': { base: { hp: 95, atk: 75, def: 80, spa: 135, spd: 160, spe: 55 }, talent: 'arc-en-ciel' },
   // Tortorock: its prow of rock gone over in felt-tip; it keeps its Water/Rock types and charges in (Cri de Charge)
   '023': { base: { hp: 79, atk: 93, def: 125, spa: 120, spd: 125, spe: 78 }, talent: 'cri-de-charge' },
   // Bouquétigre: a huge double bloom, a mane of leaves, a flower on its forehead, longer vines

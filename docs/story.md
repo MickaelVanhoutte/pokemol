@@ -240,10 +240,16 @@ Holding B runs only once you own them. Older saves already past Bourg get them i
 **Pandoudou** (EN Pandoodle, a fox that changes shape). Capucine in Ville-Pastel gives one at L8 (`touffouGift`, flag
 `gift:touffou`); it is also a rare wild find on Route 6. It evolves with a magic pencil used from the
 bag: Water → **Panderive** (Pandrift), Fire → **Pandabraise** (Pandember), Lightning → **Pandorage**
-(Zappanda). The three pencils are sold in shops from 4 badges, and Capucine gives one of the
-player's choice once they have 4 badges (`gift:crayonMagique`). The new form learns a move of its
+(Zappanda), Grass → **Pandafougère** (Pandfern, the shy one hiding under its fern tail), Ice → **Pandagivre**
+(Pandfrost, the chilly grump wearing its tail as a stole), Psychic → **Pandivin** (Pandseer, the prancing know-it-all whose
+rings came loose and float round its tail), Dark → **Pandanuit** (Pandusk, the menacing night prowler with a starry tail), Fairy →
+**Pandiva** (the diva drawn with the whole pencil box). The Water, Fire and Lightning pencils are sold in shops from
+4 badges, Grass and Fairy from 5, Psychic and Dark from 6; Ice only after the ending (it is also Floconnet's). Capucine
+gives one of the first three, the player's choice, once they have 4 badges (`gift:crayonMagique`). Each form is a
+final of 500 with Fourrure Douce; Pandafougère has the only new move, Gifle de Fougère (Grass physical 85, 20% Defence
+drop), since every other Grass physical move of 80+ is a family's signature. The new form learns a move of its
 type on the spot (learnset level 0). Marine's and Ambre's Grand Concours teams use Panderive and
-Pandabraise, and all three are in the battle tower pool.
+Pandabraise, and the first three are in the battle tower pool.
 
 **The Colour Guides and the field tools** (Nov 2026: the owner found the tools too easy to miss, handed out by
 people standing in towns; `src/data/guides.ts`, `src/story/guides.ts`). An old tradition of Papeterre: when travellers

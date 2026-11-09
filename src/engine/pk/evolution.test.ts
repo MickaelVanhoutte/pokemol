@@ -39,13 +39,14 @@ describe('evolution rules', () => {
     expect(ITEM_BY_ID['crayon-magique-feu'].kind).toBe('evo');
   });
 
-  it('turns Pandoudou into Panderive, Pandabraise or Pandorage with the water, fire or lightning pencil', () => {
+  it('turns Pandoudou into one of its eight forms with the matching magic pencil', () => {
     const touffou = createMon('016', 20, { rng: 3 });
     const by = (item: string) => evolutionFor(creature('016'), touffou, { kind: 'item', item });
-    expect([by('crayon-magique-eau'), by('crayon-magique-feu'), by('crayon-magique-electrique')]).toEqual(['017', '018', '019']);
-    expect(by('crayon-magique-plante')).toBeNull();
+    const pencils = ['eau', 'feu', 'electrique', 'plante', 'glace', 'psy', 'tenebres', 'fee'].map((t) => by(`crayon-magique-${t}`));
+    expect(pencils).toEqual(['017', '018', '019', '125', '126', '127', '128', '129']);
+    expect(by('potion')).toBeNull();
     expect(evolutionOf({ ...touffou, level: 50 })).toBeNull();
-    for (const id of ['017', '018', '019']) expect(creature(id).evolvesFrom).toBe('016');
+    for (const id of ['017', '018', '019', '125', '126', '127', '128', '129']) expect(creature(id).evolvesFrom).toBe('016');
   });
 
   it('teaches a move of the new type the moment Pandoudou evolves, at any level', () => {

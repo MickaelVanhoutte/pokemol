@@ -901,6 +901,113 @@
       }
     ]
   },
+  "125": {
+    "slug": "pandafougere",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 1.2,
+        "period": 3.6,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 85.5,
+        "ox": 82.1,
+        "oy": 81.8
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 35.8,
+        "top": 55,
+        "width": 18.1,
+        "height": 15.4,
+        "ox": 48.4,
+        "oy": 52.7
+      }
+    ]
+  },
+  "126": {
+    "slug": "pandagivre",
+    "parts": [
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 13.6,
+        "top": 15.7,
+        "width": 25.8,
+        "height": 11.5,
+        "ox": 49.3,
+        "oy": 51.9
+      }
+    ]
+  },
+  "127": {
+    "slug": "pandivin",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 2,
+        "period": 3.6,
+        "behind": true,
+        "left": 61.5,
+        "top": 0,
+        "width": 38.5,
+        "height": 62.1,
+        "ox": 20.4,
+        "oy": 83.8
+      }
+    ]
+  },
+  "128": {
+    "slug": "pandanuit",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 1.5,
+        "period": 3.2,
+        "behind": true,
+        "left": 58.3,
+        "top": 2.3,
+        "width": 41.7,
+        "height": 58,
+        "ox": 19.5,
+        "oy": 51.1
+      },
+      {
+        "name": "paupieres",
+        "motion": "blink",
+        "left": 7.1,
+        "top": 34.8,
+        "width": 14.9,
+        "height": 20.9,
+        "ox": 47.7,
+        "oy": 53.4
+      }
+    ]
+  },
+  "129": {
+    "slug": "pandiva",
+    "parts": [
+      {
+        "name": "queue",
+        "motion": "swing",
+        "amp": 2,
+        "period": 3,
+        "behind": true,
+        "left": 0,
+        "top": 0,
+        "width": 100,
+        "height": 85.6,
+        "ox": 64.1,
+        "oy": 90.2
+      }
+    ]
+  },
   "001": {
     "slug": "minousse",
     "parts": [

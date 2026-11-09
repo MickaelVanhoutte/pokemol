@@ -193,6 +193,8 @@ export const MOVE_FX: Record<string, Recipe> = {
   // the paper dragon dances in a shower of colours, then charges
   'grand-defile': { user: 'dash', shake: 0.5, layers: [...RAINBOW.slice(0, 5).map((c, i) => at(i * 70, rise({ kind: 'spark', color: c, n: 3, size: 0.22, dur: 600 }))), at(420, speedLines({ n: 10, dur: 380 })), at(620, impactStar({ size: 0.75, color: C.dragon[1] }))] },
   // the autumn squirrel winds up and throws an acorn, spinning
+  // the shy fern panda unrolls its frond in one flick: a green whip and a spray of leaves
+  'gifle-de-fougere': { user: 'lunge', layers: [whip({ color: C.plante[1], kind: 'vine' }), at(260, projectile({ kind: 'leaf', color: [C.plante[1], C.plante[0]], n: 4, gap: 30, spin: 2, size: 0.26, spread: 0.5, burst: false })), at(320, impactStar({ size: 0.55 }))] },
   'lancer-de-gland': { user: 'rear', layers: [projectile({ kind: 'acorn', color: '#c8893e', size: 0.4, fly: 340, spin: 2, burst: 'star' })] },
   // the ink ghost splashes the foe with blots of violet-black ink
   gigotage: calm({ user: 'wiggle', layers: [sparkle({ who: 'user', kind: 'bubble', color: C.eau[1], n: 5, size: 0.2 })] }),

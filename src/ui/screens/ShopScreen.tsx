@@ -18,11 +18,12 @@ export const STOCK: Record<string, number | 'ending'> = {
   'taille-crayon': 3, 'vernis': 3,
   // the magic pencils Pandoudou's evolutions need
   'crayon-magique-eau': 4, 'crayon-magique-feu': 4, 'crayon-magique-electrique': 4,
+  'crayon-magique-plante': 5, 'crayon-magique-fee': 5, 'crayon-magique-psy': 6, 'crayon-magique-tenebres': 6,
   // effort biscuits and erasers
   ...Object.fromEntries(ITEMS.filter((it) => it.kind === 'effort').map((it) => [it.id, 3])),
   // before the ending, Magic Lollipops are only found on the map
   'sucette-magique': 'ending',
-  // Floconnet's evolution, once it can be met
+  // Floconnet's evolution (and Pandagivre's), once it can be met
   'crayon-magique-glace': 'ending',
 };
 

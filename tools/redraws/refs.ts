@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import { creature } from '../../src/data/creatures.ts';
 
-export const APPROVED = ['011', '054', '001', '020', '002', '021', '025', '033', '043', '049'];
+export const APPROVED = ['011', '054', '001', '020', '002', '021', '025', '033', '043', '049', '125', '128'];
 
 const root = new URL('../..', import.meta.url).pathname;
 const S = 260, B = 140, W = S + B + 30, H = S + 30, COLS = 2;
