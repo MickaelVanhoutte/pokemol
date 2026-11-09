@@ -47,11 +47,10 @@
   content: '?'; position: absolute; inset: 0; display: grid; place-items: center;
   color: var(--ink); font-size: 1.8rem;
 }
-.memo__ok { flex: none; align-self: center; }
 
 @media (orientation: landscape) and (max-height: 540px) {
   .fresque__play { flex-direction: row; justify-content: center; }
-  .fresque__board { --side: min(calc(100dvh - 130px), 46vw, 300px); }
+  .fresque__board { --side: min(calc(100dvh - 170px), 46vw, 300px); }
   .fresque__note, .memo__note { padding-block: 2px; font-size: 0.95rem; }
   .fresque__side { flex-direction: column; }
   .memo__grid { grid-template-columns: repeat(6, 1fr); width: min(100%, 760px); }

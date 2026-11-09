@@ -125,7 +125,12 @@ export function TownMapView({ save, avatar, onClose, pick }: { save: SaveData; a
   ].filter(Boolean);
 
   return (
-    <Frame title={pick ? tr(L('Ballon-Crayon', 'Pencil Balloon')) : tr(L('Carte', 'Map'))} onBack={onClose} class="tmap">
+    <Frame title={pick ? tr(L('Ballon-Crayon', 'Pencil Balloon')) : tr(L('Carte', 'Map'))} onBack={onClose} class="tmap"
+      action={pick && (
+        <button class="pbtn pbtn--accent tmap__go" disabled={!canFly(cursor)} onClick={() => pick.onPick(cursor)}>
+          {tr(L('Décoller !', 'Lift off!'))}
+        </button>
+      )}>
       <Window seyes class="tmap__goal-text">
         {pick
           ? tr(L('Où veux-tu aller ? Touche une ville au petit ballon.', 'Where to? Tap a town with a little balloon.'))
@@ -146,11 +151,6 @@ export function TownMapView({ save, avatar, onClose, pick }: { save: SaveData; a
       <Window class="tmap__info">
         <b>{tr(MAPS[cursor].name)}</b>
         {notes.map((n) => <span>{n}</span>)}
-        {pick && (
-          <button class="pbtn pbtn--accent tmap__go" disabled={!canFly(cursor)} onClick={() => pick.onPick(cursor)}>
-            {tr(L('Décoller !', 'Lift off!'))}
-          </button>
-        )}
       </Window>
     </Frame>
   );

@@ -48,7 +48,12 @@ export function MachineScreen() {
     }, 1400);
   };
   return (
-    <Frame title={tr(L('Tombola', 'Fair Raffle'))} onBack={backToWorld} backLabel={tr(L('Sortir', 'Leave'))} right={<Window class="money-win">{d.money} ₽</Window>}>
+    <Frame title={tr(L('Tombola', 'Fair Raffle'))} onBack={backToWorld} right={<Window class="money-win">{d.money} ₽</Window>}
+      action={(
+        <button class="pbtn pbtn--accent" disabled={d.money < MACHINE_PRICE || spinning} onClick={run}>
+          {tr(L('Acheter un ticket', 'Buy a ticket'))} · {MACHINE_PRICE} ₽
+        </button>
+      )}>
       <Window class="machine">
         <p>{tr(L('Un ticket = {p} ₽. La machine dessine une Bestiole surprise ; les plus rares sortent moins souvent !', 'One ticket = ₽{p}. The machine draws a surprise Critter; rare ones come out less often!'), { p: MACHINE_PRICE })}</p>
         <div class={`machine__box ${spinning ? 'is-spinning' : ''}`}>
@@ -63,9 +68,6 @@ export function MachineScreen() {
           </p>
         )}
         {got && !spinning && <button class="pbtn" onClick={() => setNaming(true)}>{tr(L('Donner un surnom', 'Give a nickname'))}</button>}
-        <button class="pbtn pbtn--accent" disabled={d.money < MACHINE_PRICE || spinning} onClick={run}>
-          {tr(L('Acheter un ticket', 'Buy a ticket'))} · {MACHINE_PRICE} ₽
-        </button>
       </Window>
       {naming && got && (
         <NicknameView

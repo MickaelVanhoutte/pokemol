@@ -8,7 +8,7 @@ import { hasSave, loadSave, outdatedSave, peekSlot, savedSlots, slot, SLOTS } fr
 import { go } from '../../state/router';
 import type { SaveData } from '../../save/schema';
 import { personUrl } from '../personArt';
-import { MenuList, Window, YesNo } from '../paper';
+import { ActionBar, MenuList, Window, YesNo } from '../paper';
 import { playMusic } from '../../audio/music';
 import { firstOfflineReady, install, installLater, installToastDue, installWay } from '../../state/pwa';
 import './title.css';
@@ -112,6 +112,17 @@ export function TitleScreen() {
   /** Picking a game to continue, or a slot for a new one; then confirming a slot to overwrite. */
   const [picking, setPicking] = useState<'continue' | 'new' | null>(null);
   const [confirmNew, setConfirmNew] = useState<number | null>(null);
+  // B closes the game picker, like its « ◀ Retour » (the overwrite question answers its own B)
+  useEffect(() => {
+    if (!picking || confirmNew !== null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'x' && e.key !== 'X' && e.key !== 'Escape' && e.key !== 'Backspace') return;
+      e.preventDefault();
+      setPicking(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [picking, confirmNew]);
   const [hero, setHero] = useState(() => Math.floor(Math.random() * BOOK.length));
   const [offlineNote, setOfflineNote] = useState(false);
   // said once per device, when every file has been downloaded
@@ -173,7 +184,7 @@ export function TitleScreen() {
                   const g = peekSlot(n);
                   return <SlotCard n={n} s={g} onPick={() => (picking === 'continue' ? loadSave(n) && enterWorld() : g ? setConfirmNew(n) : startNew(n))} />;
                 })}
-              <button class="pbtn pbtn--back" onClick={() => setPicking(null)}>{tr(L('Retour', 'Back'))}</button>
+              <ActionBar onBack={() => setPicking(null)} />
             </Window>
           ) : (
             <Window class="title__list"><MenuList items={items} /></Window>

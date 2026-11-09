@@ -5,7 +5,7 @@ import {
   BOTTOM_STYLES, CLOTH_COLORS, EXTRAS, HAIR_COLORS, HAIR_STYLES, SKIN_COLORS, TOP_STYLES, randomLook, type Appearance,
 } from '../../data/appearance';
 import { personUrl } from '../personArt';
-import { Window } from '../paper';
+import { ActionBar, Window } from '../paper';
 import { useMenuNav } from '../paper/nav';
 import { sfx } from '../../audio/sfx';
 import './views.css';
@@ -101,11 +101,12 @@ export function LookView({ look, onChange, onDone, onCancel, title }: {
           {hasColor && <Swatches colors={CLOTH_COLORS} value={look.extraColor ?? look.topColor} onPick={(extraColor) => set({ extraColor })} />}
         </Row>
       </Window>
-      <div class="lookv__foot">
-        {onCancel && <button class="pbtn pbtn--b" onClick={onCancel}>{tr(L('Annuler', 'Cancel'))}</button>}
-        <button class="pbtn" onClick={() => { sfx.blip(); onChange(randomLook()); }}>{tr(L('Au hasard', 'Surprise me'))}</button>
-        <button class="pbtn pbtn--accent" onClick={onDone}>OK ▶</button>
-      </div>
+      <ActionBar
+        class="lookv__foot"
+        onBack={onCancel}
+        hint={<button class="pbtn" onClick={() => { sfx.blip(); onChange(randomLook()); }}>{tr(L('Au hasard', 'Surprise me'))}</button>}
+        action={<button class="pbtn pbtn--accent" onClick={onDone}>OK ▶</button>}
+      />
     </div>
   );
 }

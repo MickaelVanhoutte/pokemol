@@ -279,6 +279,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
   `paginate()` measures pages);
 - `MenuList` and `useMenuNav` (a capture-phase key handler; nested menus rely on
   `stopImmediatePropagation`), `Frame`, `YesNo`, `HpBar`…
+- Every menu has the same bottom bar (`ActionBar`, also `Frame`'s): « ◀ Retour » (B) always bottom left and the same
+  size, the main action (A) bottom right; the top only says where you are, with ◀ ▶ (also ← →) to turn pages. One
+  word, « Retour ». See [docs/content.md](docs/content.md#ui); `src/ui/paper/actionBar.test.ts` checks it;
 - `src/ui/views/*` are pure views (props in, callbacks out). `src/ui/screens/*` are thin wrappers
   bound to the save. Item, menu and badge icons are pixel art from `src/ui/icons.ts`.
 - The small moments (`MomentViews.tsx`, over the world): a badge spinning in (`showBadge`), an item's icon shown big

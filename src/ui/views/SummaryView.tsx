@@ -6,7 +6,7 @@ import { evolutionHints } from '../evolutionText';
 import { move } from '../../data/moves';
 import { STAT_NAMES, TYPES } from '../../data/types';
 import { EV_STAT_MAX, EV_TOTAL_MAX, MAX_LEVEL, STAT_KEYS, maxHp, statsOf, xpAt, type Mon } from '../../engine/pk/creature';
-import { HpBar, MenuList, MoveInfo, PixelIcon, StatusTag, TypeBadge, TypeBadges, Window, XpBar, YesNo, lv } from '../paper';
+import { ActionBar, HpBar, MenuList, MoveInfo, PixelIcon, StatusTag, TypeBadge, TypeBadges, Window, XpBar, YesNo, lv } from '../paper';
 import { item } from '../../data/items';
 import { ivGrade } from '../../engine/pk/judge';
 import { nature } from '../../data/natures';
@@ -142,9 +142,13 @@ function LearnMoves({ mon, learn }: { mon: Mon; learn: Learn }) {
             }))}
           />
         </Window>
+        {/* not learning it is the B button (left), forgetting one the A button (right) */}
         <div class="learnmv__acts" ref={acts}>
-          {old && <button class="pbtn pbtn--accent" onClick={() => setConfirm(sel)}>{tr(L('Oublier {m}', 'Forget {m}'), { m: name(old.id) })}</button>}
-          <button class="pbtn" onClick={() => setConfirm('skip')}>{tr(L('Ne pas l’apprendre', 'Don’t learn it'))}</button>
+          <ActionBar
+            onBack={() => setConfirm('skip')}
+            backLabel={tr(L('Ne pas l’apprendre', 'Don’t learn it'))}
+            action={old && <button class="pbtn pbtn--accent" onClick={() => setConfirm(sel)}>{tr(L('Oublier {m}', 'Forget {m}'), { m: name(old.id) })}</button>}
+          />
         </div>
       </div>
 
@@ -180,9 +184,7 @@ function EggSummary({ mon, onClose }: { mon: Mon; onClose: () => void }) {
         <div class="summary__id"><b class="summary__name">{monLabel(mon)}</b></div>
       </Window>
       <Window seyes class="summary__box"><p>{tr(hint)}</p></Window>
-      <div class="frame__foot summary__foot">
-        <button class="pbtn pbtn--b" onClick={onClose}>{tr(L('Retour', 'Back'))}</button>
-      </div>
+      <ActionBar class="frame__foot summary__foot" onBack={onClose} />
     </div>
   );
 }
@@ -220,17 +222,8 @@ function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
     setSel(null);
     setMoving(null);
   }, [mon.uid]);
-  useEffect(() => {
-    if (!onMove) return;
-    const key = (e: KeyboardEvent) => {
-      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      e.preventDefault();
-      onMove(e.key === 'ArrowLeft' ? -1 : 1);
-    };
-    window.addEventListener('keydown', key);
-    return () => window.removeEventListener('keydown', key);
-  }, [onMove]);
-  useMenuNav(0, { onSelect: () => undefined, onCancel: back });
+  // ← → do what the ◀ ▶ do: the next Bestiole, or the next page (on the moves page too, through its list)
+  useMenuNav(0, { onSelect: () => undefined, onCancel: back, onSide: (d) => arrow(d) });
   // swipe between pages (kept in a ref: a render between finger down and up must not reset it)
   const x0 = useRef<number | null>(null);
   const down = (e: PointerEvent) => (x0.current = e.clientX);
@@ -323,6 +316,7 @@ function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
               <MenuList
                 onCursor={(i) => setSel(i)}
                 onCancel={back}
+                onSide={arrow}
                 items={moves.map((id, i) => {
                   const mv = move(id);
                   return {
@@ -348,9 +342,7 @@ function SummaryMain({ mon, onClose, onSwapMoves, onMove }: {
         )}
       </div>
 
-      <div class="frame__foot summary__foot">
-        <button class="pbtn pbtn--b" onClick={back}>{tr(L('Retour', 'Back'))}</button>
-      </div>
+      <ActionBar class="frame__foot summary__foot" onBack={back} backLabel={moving !== null ? tr(L('Annuler', 'Cancel')) : undefined} />
 
     </div>
   );

@@ -90,16 +90,18 @@ export interface MenuItem {
  * tap on another entry only moves the cursor there (to read its description) and a second tap picks it.
  * With `tapReads`, a finger only ever moves the cursor: picking takes A, a mouse click or a button of the page.
  */
-export function MenuList({ items, onCancel, active = true, class: cls = '', onCursor, tapFocus, tapReads, initial }: {
+export function MenuList({ items, onCancel, active = true, class: cls = '', onCursor, tapFocus, tapReads, initial, onSide }: {
   items: MenuItem[]; onCancel?: () => void; active?: boolean; class?: string; onCursor?: (i: number) => void; tapFocus?: boolean;
   tapReads?: boolean; initial?: number;
+  /** ← → on the list: the screen's own ◀ ▶ (pockets, pages). */
+  onSide?: (dir: -1 | 1) => void;
 }) {
   const pick = (i: number) => {
     if (items[i]?.disabled) return;
     sfx.blip();
     items[i].onSelect();
   };
-  const [cur, setCur] = useMenuNav(items.length, { onSelect: pick, onCancel, active, initial });
+  const [cur, setCur] = useMenuNav(items.length, { onSelect: pick, onCancel, active, initial, onSide: onSide && ((d) => onSide(d)) });
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => onCursor?.(cur), [cur]);
   // in a list too long for its box, the keys bring the cursor into view
@@ -237,30 +239,57 @@ export function TextBox({ text, speaker, onAdvance, onDone, arrow = true, keys =
   );
 }
 
-/** Full-screen menu page on graph paper: title strip, body, optional footer. */
-export function Frame({ title, onBack, backLabel, right, children, foot, class: cls = '' }: {
-  title: ComponentChildren; onBack?: () => void; backLabel?: string; right?: ComponentChildren; children: ComponentChildren; foot?: ComponentChildren; class?: string;
+/**
+ * The bottom bar of every menu screen, the same everywhere: « ◀ Retour » (the B button) on the left, an optional
+ * line in the middle, the main action (the A button, `pbtn--accent`) on the right. The top of a screen only says
+ * where you are; it never holds a button that leaves.
+ */
+export function ActionBar({ onBack, backLabel, hint, action, class: cls = '' }: {
+  onBack?: () => void; backLabel?: string; hint?: ComponentChildren; action?: ComponentChildren; class?: string;
+}) {
+  return (
+    <div class={`abar ${cls}`}>
+      {onBack && <button class="pbtn pbtn--b abar__back" onClick={onBack}>{backLabel ?? tr(L('Retour', 'Back'))}</button>}
+      <div class="abar__hint">{hint}</div>
+      {action}
+    </div>
+  );
+}
+
+/**
+ * Full-screen menu page on graph paper: title strip (where you are, plus `right`: money, counters; `onSide` puts
+ * ◀ ▶ around the title, also on the ← → keys), body, and the bottom bar (`ActionBar`: « ◀ Retour » on the left,
+ * `hint` in the middle, `action` on the right).
+ */
+export function Frame({ title, onBack, onSide, right, children, hint, action, class: cls = '' }: {
+  title: ComponentChildren; onBack?: () => void; onSide?: (dir: -1 | 1) => void; right?: ComponentChildren; children: ComponentChildren;
+  hint?: ComponentChildren; action?: ComponentChildren; class?: string;
 }) {
   useEffect(() => {
-    if (!onBack) return;
+    if (!onBack && !onSide) return;
+    // bubble phase: a menu inside the page (capture phase) answers its keys first
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'x' || e.key === 'X' || e.key === 'Escape' || e.key === 'Backspace') {
+      if (onBack && (e.key === 'x' || e.key === 'X' || e.key === 'Escape' || e.key === 'Backspace')) {
         e.preventDefault();
         onBack();
+      } else if (onSide && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        e.preventDefault();
+        onSide(e.key === 'ArrowLeft' ? -1 : 1);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onBack]);
+  }, [onBack, onSide]);
   return (
     <div class={`frame graph ${cls}`}>
       <div class="frame__top">
+        {onSide && <button class="pbtn frame__arrow" aria-label="◀" onClick={() => onSide(-1)}>◀</button>}
         <Window class="frame__title-win"><h1 class="frame__title">{title}</h1></Window>
+        {onSide && <button class="pbtn frame__arrow" aria-label="▶" onClick={() => onSide(1)}>▶</button>}
         {right}
-        {onBack && <button class="pbtn pbtn--b" onClick={onBack}>{backLabel ?? tr(L('Retour', 'Back'))}</button>}
       </div>
       <div class="frame__body">{children}</div>
-      {foot && <div class="frame__foot">{foot}</div>}
+      {(onBack || hint || action) && <ActionBar class="frame__foot" onBack={onBack} hint={hint} action={action} />}
     </div>
   );
 }

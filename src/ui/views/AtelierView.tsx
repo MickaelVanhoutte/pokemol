@@ -40,21 +40,17 @@ export function AtelierView({ design, onDone, onCancel }: { design: CustomDesign
     <Frame
       class={`atelier ${tab === 'draw' ? 'atelier--draw' : ''}`}
       title={tr(L('Atelier des Brouillons', 'Draft Workshop'))}
-      onBack={leave}
-      backLabel={tr(L('Partir', 'Leave'))}
-      foot={leaving ? (
-        <div class="atelier__foot">
-          <Window seyes class="atelier__note">{tr(L('Partir sans garder ce que tu as changé ?', 'Leave without keeping your changes?'))}</Window>
-          <YesNo onAnswer={(yes) => (yes ? onCancel() : setLeaving(false))} />
-        </div>
-      ) : (
-        <div class="atelier__foot">
-          {/* in landscape the title row is hidden: leaving is down here */}
-          <button class="pbtn atelier__leave" onClick={leave}>◀ {tr(L('Partir', 'Leave'))}</button>
-          <Window seyes class="atelier__note">{problems.length ? tr(problems[0]) : tr(L('Elle est prête !', 'It’s ready!'))}</Window>
-          <button class="pbtn pbtn--accent" disabled={!!problems.length} onClick={() => onDone(d)}>{tr(L('Terminer', 'Finish'))}</button>
-        </div>
+      onBack={leaving ? () => setLeaving(false) : leave}
+      hint={(
+        <Window seyes class="atelier__note">
+          {leaving
+            ? tr(L('Partir sans garder ce que tu as changé ?', 'Leave without keeping your changes?'))
+            : problems.length ? tr(problems[0]) : tr(L('Elle est prête !', 'It’s ready!'))}
+        </Window>
       )}
+      action={leaving
+        ? <YesNo onAnswer={(yes) => (yes ? onCancel() : setLeaving(false))} />
+        : <button class="pbtn pbtn--accent" disabled={!!problems.length} onClick={() => onDone(d)}>{tr(L('Terminer', 'Finish'))}</button>}
     >
       <div class="atelier__tabs">
         {TABS.map((t) => <button class={`atelier__tab ${t.id === tab ? 'is-on' : ''}`} onClick={() => setTab(t.id)}>{tr(t.name)}</button>)}

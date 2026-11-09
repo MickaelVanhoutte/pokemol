@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { canHold, item } from '../../data/items';
-import { MenuList, PixelIcon, Window, type MenuItem } from '../paper';
+import { ActionBar, MenuList, PixelIcon, Window, type MenuItem } from '../paper';
 import { POCKETS, pocketItems, type Pocket } from '../logic/bag';
 import { sketchIconUrl } from '../sketchIcons';
 import './views.css';
@@ -116,15 +116,13 @@ export function BagView({ bag, context, wild, memory = context, onUse, onGive, o
         <button class="pbtn" onClick={() => turn(1)} aria-label="▶">▶</button>
       </div>
       <Window class="bag__list">
-        <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={moveCursor} tapFocus initial={keep(pocket)} />
+        <MenuList key={pocket} items={items} active={!action} onCancel={onClose} onCursor={moveCursor} tapFocus initial={keep(pocket)} onSide={turn} />
       </Window>
-      <div class="bag__foot">
-        <Window seyes class="bag__desc">
-          {focused && <PixelIcon id={focused.id} size={36} />}
-          <p>{msg || (noteOn && note) || (focused ? tr(focused.desc) : tr(L('Cette poche est vide.', 'This pocket is empty.')))}</p>
-        </Window>
-        <button class="pbtn pbtn--b bag__close" onClick={onClose}>{tr(L('Fermer', 'Close'))}</button>
-      </div>
+      <Window seyes class="bag__desc">
+        {focused && <PixelIcon id={focused.id} size={36} />}
+        <p>{msg || (noteOn && note) || (focused ? tr(focused.desc) : tr(L('Cette poche est vide.', 'This pocket is empty.')))}</p>
+      </Window>
+      <ActionBar onBack={onClose} />
       {action && (
         <div class="view-modal" onClick={() => setAction(null)}>
           <div onClick={(e) => e.stopPropagation()}>

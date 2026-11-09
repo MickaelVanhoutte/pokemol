@@ -75,7 +75,8 @@ export function FresqueScreen({ species, size, onEnd }: { species: string; size:
     backgroundPosition: `${((p % size) / (size - 1)) * 100}% ${(Math.floor(p / size) / (size - 1)) * 100}%`,
   });
   return (
-    <Frame title={tr(L('Fresque', 'Fresque'))} onBack={() => finish(done)} backLabel={done ? 'OK' : tr(L('Quitter', 'Quit'))} class="fresque">
+    <Frame title={tr(L('Fresque', 'Fresque'))} onBack={() => finish(done)} class="fresque"
+      action={done && <button class="pbtn pbtn--accent" onClick={() => finish(true)}>OK ▶</button>}>
       <Window seyes class="fresque__note">
         {done
           ? tr(L('Bravo ! C’est {n} ! ({m} coups)', 'Well done! It’s {n}! ({m} moves)'), { n: tr(creature(species).name), m: moves })
@@ -90,9 +91,7 @@ export function FresqueScreen({ species, size, onEnd }: { species: string; size:
         <div class="fresque__side">
           <div class="fresque__preview" style={{ backgroundImage: art ? `url(${art})` : undefined }} aria-hidden="true" />
           <p class="fresque__moves">{tr(L('Coups : {m}', 'Moves: {m}'), { m: moves })}</p>
-          {done
-            ? <button class="pbtn pbtn--accent" onClick={() => finish(true)}>OK</button>
-            : <button class="pbtn" onClick={() => { setBoard(fresh()); setMoves(0); }}>{tr(L('Mélanger', 'Shuffle'))}</button>}
+          {!done && <button class="pbtn" onClick={() => { setBoard(fresh()); setMoves(0); }}>{tr(L('Mélanger', 'Shuffle'))}</button>}
         </div>
       </div>
     </Frame>

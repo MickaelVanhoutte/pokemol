@@ -1,7 +1,8 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import type { ItemDef } from '../../data/schema';
-import { Frame, MenuList, PixelIcon, QtyPicker, Window, YesNo } from '../paper';
+import { ActionBar, Frame, MenuList, PixelIcon, QtyPicker, Window, YesNo } from '../paper';
+import { navKey } from '../paper/nav';
 import './views.css';
 
 /** FRLG shop: money box, item list with prices, quantity, confirmation. */
@@ -26,11 +27,27 @@ export function ShopView({ money, stock, bag, onBuy, onClose, title, priceOf = (
     setPicked(it);
   };
 
+  // the quantity box: ◀ ▶ (or ▲ ▼) count, A says OK, B cancels (before the Frame's own B, which would leave)
+  useEffect(() => {
+    if (!picked || confirm) return;
+    const onKey = (e: KeyboardEvent) => {
+      const k = navKey(e);
+      if (!k) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (e.repeat && (k === 'a' || k === 'b')) return;
+      if (k === 'a') setConfirm(true);
+      else if (k === 'b') setPicked(null);
+      else setQty((n) => Math.max(1, Math.min(maxQty, n + (k === 'right' || k === 'up' ? 1 : -1))));
+    };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
+  }, [picked, confirm, maxQty]);
+
   return (
     <Frame
       title={title ?? tr(L('Boutique', 'Shop'))}
       onBack={picked ? () => setPicked(null) : onClose}
-      backLabel={picked ? undefined : tr(L('Sortir', 'Leave'))}
       right={<Window class="money-win">{fmt(money)}</Window>}
     >
       <Window class="shop__list">
@@ -53,10 +70,15 @@ export function ShopView({ money, stock, bag, onBuy, onClose, title, priceOf = (
             <>
               <Window seyes class="view-modal__text">{tr(L('{i} ? Combien en veux-tu ?', '{i}? How many would you like?'), { i: tr(picked.name) })}</Window>
               <Window class="shop__qty">
-                <QtyPicker value={qty} max={maxQty} onChange={setQty} />
-                <span class="shop__total">{fmt(priceOf(picked) * qty)}</span>
-                <button class="pbtn pbtn--accent" onClick={() => setConfirm(true)}>OK</button>
-                <button class="pbtn" onClick={() => setPicked(null)}>✕</button>
+                <div class="shop__count">
+                  <QtyPicker value={qty} max={maxQty} onChange={setQty} />
+                  <span class="shop__total">{fmt(priceOf(picked) * qty)}</span>
+                </div>
+                <ActionBar
+                  onBack={() => setPicked(null)}
+                  backLabel={tr(L('Annuler', 'Cancel'))}
+                  action={<button class="pbtn pbtn--accent" onClick={() => setConfirm(true)}>OK ▶</button>}
+                />
               </Window>
             </>
           ) : (

@@ -96,7 +96,7 @@ function DexEntry({ list, index, isSeen, isCaught, fairSeen, visited, onMove, on
     }
   };
   return (
-    <Frame title={`N°${dexNo(sp.id)} ${tr(sp.name)}`} onBack={onClose}>
+    <Frame title={`N°${dexNo(sp.id)} ${tr(sp.name)}`} onBack={onClose} onSide={step}>
       <Window class="dex__entry">
         <div class="dex__paper">
           {fair ? <RigPicture class="mon-art" rig={fairRig} file={(layer) => fairFile(sp.id, fairRig, layer)} />
@@ -125,10 +125,6 @@ function DexEntry({ list, index, isSeen, isCaught, fairSeen, visited, onMove, on
         ) : <p>{tr(L('Attrape cette Bestiole pour en savoir plus !', 'Catch this Critter to learn more about it!'))}</p>}
         {isSeen(sp.id) && <Habitats species={sp.id} visited={visited} />}
       </Window>
-      <div class="dex__nav">
-        <button class="pbtn" onClick={() => step(-1)}>◀ {tr(L('Préc.', 'Prev'))}</button>
-        <button class="pbtn" onClick={() => step(1)}>{tr(L('Suiv.', 'Next'))} ▶</button>
-      </div>
     </Frame>
   );
 }

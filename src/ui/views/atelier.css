@@ -16,10 +16,16 @@
 .atelier__help { margin: 0; color: var(--ink-soft); font-size: 1rem; }
 .atelier__help b { color: #c0463c; font-weight: 400; }
 .atelier__help b.is-ok { color: #3f8f4a; }
-.atelier__foot { display: flex; gap: 6px; align-items: stretch; }
+.atelier .abar { gap: 6px; align-items: stretch; }
+.atelier .abar__hint { align-items: stretch; }
 .atelier__note { flex: 1; min-width: 0; font-size: 1rem; display: flex; align-items: center; }
-.atelier__foot .yesno { flex: none; }
-.atelier__leave { display: none; flex: none; }
+.atelier .abar .yesno { flex: none; }
+/* narrow phones: the note gets its own line above Retour and Terminer */
+@media (orientation: portrait) and (max-width: 480px) {
+  .atelier .abar { flex-wrap: wrap; }
+  .atelier .abar__hint { order: -1; flex: 1 1 100%; }
+  .atelier .abar > .pbtn:not(.abar__back) { margin-left: auto; }
+}
 
 /* the drawing sheet: a see-through canvas over ruled paper, the biggest square that fits */
 .drawpad { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
@@ -97,10 +103,9 @@
 .atelier__field > span { color: var(--ink-soft); }
 
 @media (orientation: landscape) and (max-height: 540px) {
-  /* no title row: « Partir » goes to the bottom bar and the page keeps the height */
+  /* no title row: the page keeps the height (Retour is in the bottom bar, as everywhere) */
   .atelier { gap: 6px; padding-top: max(6px, env(safe-area-inset-top)); }
   .atelier .frame__top { display: none; }
-  .atelier__leave { display: block; }
   /* the tabs in a slim column on the left, never squeezed */
   .atelier .frame__body { flex-direction: row; gap: 8px; }
   .atelier__tabs { display: flex; flex-direction: column; gap: 3px; min-width: 5.4em; overflow-y: auto; }
@@ -108,8 +113,8 @@
   .atelier__tab.is-on { transform: translateX(3px) rotate(-1deg); }
   .atelier__page { min-width: 0; }
   .atelier__note { font-size: 0.9rem; }
-  .atelier__foot .pbtn { min-height: 2.1em; font-size: 1rem; padding: 0 10px; }
-  .atelier__foot .yesno .mlist { display: flex; gap: 8px; }
+  .atelier .abar .pbtn { min-height: 2.1em; font-size: 1rem; padding: 0 10px; }
+  .atelier .abar .yesno .mlist { display: flex; gap: 8px; }
   /* drawing: the sheet as tall as the page, the hint and the pencils beside it */
   .drawpad { flex-direction: row; gap: 10px; }
   .drawpad__fit { flex: none; height: 100%; aspect-ratio: 1; max-width: 62%; min-height: 0; }
@@ -136,7 +141,7 @@
   .atelier__card { grid-row: 1 / 3; }
   .atelier__card .mon-art { max-height: 36dvh; max-width: 100%; }
   /*
-   * Drawing: the sheet takes the full height. The bar (Partir, the message, Terminer) moves to the right column
+   * Drawing: the sheet takes the full height. The bar (Retour, the message, Terminer) moves to the right column
    * under the pencils, which gets narrower: the tabs, the sheet and that column side by side.
    */
   .atelier--draw {
@@ -150,9 +155,10 @@
   .atelier--draw .drawpad__fit { grid-area: sheet; height: auto; aspect-ratio: auto; max-width: none; }
   .atelier--draw .drawpad__tools { grid-area: tools; min-height: 0; justify-content: flex-start; }
   .atelier--draw .frame__foot { grid-area: foot; }
-  .atelier--draw .atelier__foot { flex-wrap: wrap; }
-  .atelier--draw .atelier__note { flex: 1 1 100%; order: -1; font-size: 0.85rem; }
-  .atelier--draw .atelier__foot > .pbtn { flex: 1 1 0; white-space: nowrap; font-size: 0.9rem; padding: 0 6px; }
+  .atelier--draw .abar { flex-wrap: wrap; }
+  .atelier--draw .abar__hint { flex: 1 1 100%; order: -1; }
+  .atelier--draw .atelier__note { font-size: 0.85rem; }
+  .atelier--draw .abar > .pbtn { flex: 1 1 0; min-width: 0; white-space: nowrap; font-size: 0.9rem; padding: 0 6px; }
   /* the hint and the pencils compact */
   .atelier--draw .drawpad__hint { font-size: 0.75rem; line-height: 1.2; }
   .atelier--draw .drawpad__tools { gap: 4px; padding-top: 5px; }

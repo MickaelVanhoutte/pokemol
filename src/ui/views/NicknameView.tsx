@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { creature } from '../../data/creatures';
 import type { Mon } from '../../engine/pk/creature';
-import { TextBox, Window } from '../paper';
+import { ActionBar, TextBox, Window } from '../paper';
 import { monArtUrl } from '../monArt';
 import './views.css';
 
@@ -36,9 +36,13 @@ export function NicknameView({ mon, onDone }: { mon: Mon; onDone: (name: string 
               if (e.key === 'Escape') onDone(null);
             }}
           />
-          <button class="pbtn pbtn--accent" onClick={ok}>OK</button>
         </Window>
-        <button class="pbtn nickname__none" onClick={() => onDone(null)}>{tr(L('Sans surnom', 'No nickname'))}</button>
+        {/* no nickname is the B button (left), OK the A button (right) */}
+        <ActionBar
+          onBack={() => onDone(null)}
+          backLabel={tr(L('Sans surnom', 'No nickname'))}
+          action={<button class="pbtn pbtn--accent" onClick={ok}>OK ▶</button>}
+        />
       </div>
     </div>
   );

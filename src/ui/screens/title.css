@@ -86,7 +86,7 @@
 .title__slot-pic { height: 3.2em; flex: none; }
 .title__slot-text { display: flex; flex-direction: column; min-width: 0; font-size: 1rem; line-height: 1.25; overflow-wrap: anywhere; }
 .title__slot-text b { font-weight: 400; font-size: 1.15rem; color: #2a6ad6; }
-.title__slots .pbtn--back { align-self: flex-start; }
+.title__slots > .abar { flex-direction: row; }
 .title__note { font-size: 1rem; }
 /* install offer: a toast over the logo, the menu stays reachable */
 .title__install {

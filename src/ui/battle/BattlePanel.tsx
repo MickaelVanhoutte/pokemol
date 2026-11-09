@@ -125,6 +125,8 @@ export function BattlePanel(p: PanelProps) {
       {(m === 'command' || m === 'fight' || m === 'learnAsk') && (
         <div class="bpanel__split">
           <div class="window seyes bpanel__prompt">
+            {/* Retour on the left, as on every menu (B on the left, A on the right) */}
+            {m === 'fight' && <button class="pbtn pbtn--b bpanel__back" onClick={p.onBack}>{t('battle.btn.back')}</button>}
             {/* the fair-copy toggle takes the question's place: both don't fit on a small phone with large text */}
             {!(m === 'fight' && p.canFair) && <p>{p.text}{m === 'fight' && <small class="bpanel__hint">{tr(L('Appui long : détails', 'Hold for details'))}</small>}</p>}
             {m === 'fight' && p.canFair && (
@@ -132,7 +134,6 @@ export function BattlePanel(p: PanelProps) {
                 <FairStar />{tr(L('Au propre', 'Fair copy'))}
               </button>
             )}
-            {m === 'fight' && <button class="pbtn pbtn--b bpanel__back" onClick={p.onBack}>{t('battle.btn.back')}</button>}
           </div>
           {m === 'command' && <CommandGrid {...p} />}
           {m === 'fight' && <FightGrid {...p} />}

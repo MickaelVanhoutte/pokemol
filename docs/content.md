@@ -600,9 +600,20 @@ In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens
 - **Nicknames** are offered with `offerNickname(uid)` from a script, after a capture, a gift or the
   starter. The `NicknameView` entry is drawn over the map through `nameOverlay`. New Bestioles get
   `met` through `addMon(s, m, how, place)` / `giveMon(species, level, how)`.
-- Build screens from the paper kit (`src/ui/paper`): `Frame` (title strip and back button),
-  `Window`, `TextBox`, `MenuList` with `useMenuNav`, `YesNo`, `QtyPicker`. That keeps the FRLG layout
+- Build screens from the paper kit (`src/ui/paper`): `Frame` (title strip, body, bottom bar),
+  `ActionBar`, `Window`, `TextBox`, `MenuList` with `useMenuNav`, `YesNo`, `QtyPicker`. That keeps the FRLG layout
   and the keyboard, touch and B-button behaviour consistent.
+- **Every menu works the same way (B on the left, A on the right, as on the console):**
+  - leaving a screen is « ◀ Retour », always at the bottom left and always the same size: `Frame`'s `onBack`, or an
+    `ActionBar` in a view that isn't a `Frame` (Bag, Party, Summary, Look). The B key does the same;
+  - the main action, if any, goes at the bottom right in butter (`action`, a `pbtn--accent`), a short line between
+    the two (`hint`);
+  - the top only says where you are: the title, money or counters (`right`), and ◀ ▶ to change page, pocket, box or
+    Bestiole (`Frame`'s `onSide`, or `MenuList`'s `onSide`). The ← → keys do the same as those arrows;
+  - the word is « Retour » / "Back" (no Sortir, Fermer, Éteindre…). « Annuler » only cancels something under way, in
+    the same place (a swap, the shop's quantity, the ANNULER line closing a small menu);
+  - small boxes follow it too: cancel on the left, OK on the right (shop quantity, nickname, learning a move).
+  `src/ui/paper/actionBar.test.ts` checks it from the sources.
 - **The hand-drawn look** (grainy graphite lines, never black ink) comes from `src/ui/paper/sketch.ts`, drawn once at start-up into CSS
   variables: pencil frames (`--pencil-frame`, `--frame-<crayon>`, `--frame-thin-<crayon>` for bars
   and tags), coloured-pencil hatching (`--hatch-<crayon>`, `--hatch-t-<type>`, `--hatch-ink`),
@@ -639,9 +650,9 @@ In Hameau-Brouillon, la Dessinatrice (`atelierPerso`, `src/story/act4.ts`) opens
 - Lists where an entry has a description (bag, shop) use `MenuList` with `tapFocus`: on touch, the
   first tap only moves the cursor (the description shows), a second tap picks. Exits are buttons
   beside the list, not entries in it.
-- Back buttons: `pbtn--b` shows a "B" hint and must really answer to X/B (`Frame` and menus do).
-  Use `pbtn--back` (a plain ◀) where B means something else. Touch screens always get the ◀,
-  because their only B button is on the map.
+- Back buttons: `pbtn--b` (the `ActionBar`'s) shows a "B" hint and must really answer to X/B.
+  Use `pbtn--back` (a plain ◀) where B means something else (the prologue's way back to the title). Touch screens
+  always get the ◀, because their only B button is on the map.
 - Per-device options go in `src/state/prefs.ts` and get a row in `ROWS` in
   `src/ui/views/OptionsView.tsx`.
 - **MOUVEMENTS : DOUX** (`prefs.motion === 'calm'`, `calmMotion()` in `src/anim/calm.ts`, class `.app.is-calm`)

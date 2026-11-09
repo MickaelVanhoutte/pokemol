@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { monLabel } from '../../data/creatures';
 import { monArtUrl } from '../monArt';
@@ -21,6 +21,17 @@ export function PcView({ party, boxes, onDeposit, onWithdraw, onClose }: {
   const [pick, setPick] = useState<Pick | null>(null);
   const [summary, setSummary] = useState<Mon | null>(null);
   const [note, setNote] = useState('');
+  // ← → turn the boxes, like the ◀ ▶ above them (a menu or a summary open on top answers its own keys)
+  useEffect(() => {
+    if (pick || summary) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      turn(e.key === 'ArrowLeft' ? -1 : 1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [pick, summary, boxes.length]);
   const mon = pick ? (pick.where === 'party' ? party[pick.i] : box[pick.i]) : null;
 
   const actions: MenuItem[] = pick && mon ? [
@@ -56,7 +67,7 @@ export function PcView({ party, boxes, onDeposit, onWithdraw, onClose }: {
   );
 
   return (
-    <Frame title={tr(L('PC de Papeterre', 'Papeterra PC'))} onBack={onClose} backLabel={tr(L('Éteindre', 'Log off'))}>
+    <Frame title={tr(L('PC de Papeterre', 'Papeterra PC'))} onBack={onClose}>
       <div class="pc">
         <Window class="pc__box">
           <div class="pc__boxnav">

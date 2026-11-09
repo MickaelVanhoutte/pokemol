@@ -58,7 +58,7 @@ export function MemoScreen({ onEnd }: { onEnd: (tries: number | null) => void })
   };
   const medal = { gold: L('Médaille d’or !', 'Gold medal!'), silver: L('Médaille d’argent !', 'Silver medal!'), bronze: L('Médaille de bronze !', 'Bronze medal!') }[prizeTier(tries)];
   return (
-    <Frame title={tr(L('Mémo', 'Memo'))} onBack={finish} backLabel={done ? 'OK' : tr(L('Quitter', 'Quit'))} class="memo">
+    <Frame title={tr(L('Mémo', 'Memo'))} onBack={finish} class="memo" action={done && <button class="pbtn pbtn--accent" onClick={finish}>OK ▶</button>}>
       <Window seyes class="memo__note">
         {done
           ? `${tr(L('Toutes les paires en {t} essais.', 'All pairs in {t} tries.'), { t: tries })} ${tr(medal)}`
@@ -74,7 +74,6 @@ export function MemoScreen({ onEnd }: { onEnd: (tries: number | null) => void })
           );
         })}
       </div>
-      {done && <button class="pbtn pbtn--accent memo__ok" onClick={finish}>OK</button>}
     </Frame>
   );
 }

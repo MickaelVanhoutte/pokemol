@@ -3,7 +3,7 @@ import { L, tr } from '../../i18n';
 import { monLabel } from '../../data/creatures';
 import { monArtUrl } from '../monArt';
 import { maxHp, type Mon } from '../../engine/pk/creature';
-import { HpBar, MenuList, PixelIcon, StatusTag, Window, lv, type MenuItem } from '../paper';
+import { ActionBar, HpBar, MenuList, PixelIcon, StatusTag, Window, lv, type MenuItem } from '../paper';
 import { item } from '../../data/items';
 import { useMenuNav } from '../paper/nav';
 import { SummaryView, nextMon } from './SummaryView';
@@ -145,14 +145,13 @@ export function PartyView({ party, mode, active = -1, canPick = () => true, mess
         ))}
         {Array.from({ length: Math.max(0, 6 - n) }, () => <span class="pslot pslot--empty" aria-hidden="true" />)}
       </div>
-      <div class="party__foot">
-        <Window seyes class="party__msg">{prompt}</Window>
-        {cancellable && (
-          <button class={`pbtn pbtn--b party__cancel ${cur === n ? 'is-on' : ''}`} onClick={() => (swapFrom !== null ? setSwapFrom(null) : onClose?.())}>
-            {tr(L('Annuler', 'Cancel'))}
-          </button>
-        )}
-      </div>
+      {/* Retour, or « Annuler » in the same place while a swap is going on (a forced switch has none) */}
+      <ActionBar
+        class={`party__foot ${cur === n ? 'is-cur' : ''}`}
+        onBack={cancellable ? () => (swapFrom !== null ? setSwapFrom(null) : onClose?.()) : undefined}
+        backLabel={swapFrom !== null ? tr(L('Annuler', 'Cancel')) : undefined}
+        hint={<Window seyes class="party__msg">{prompt}</Window>}
+      />
       {menuFor !== null && (
         <div class="view-modal" onClick={() => setMenuFor(null)}>
           <div onClick={(e) => e.stopPropagation()}>
