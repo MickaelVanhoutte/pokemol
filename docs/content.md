@@ -453,6 +453,22 @@ battle on the way back. Reveals are `tear`, `erase`, `lift` (and `fade` for MOUV
   Every family has a **power**: a power talent as its only regular talent, or a signature move.
   [docs/bestioles.md](bestioles.md) lists them, with the stat bands, catch rates and base XP a new
   Bestiole should follow; `src/data/bestioles.test.ts` checks those rules.
+- **Moves that change the field** (Nov 2026, roadmap milestone 7; `MoveEffect` in `src/data/schema.ts`):
+  - `hazard`: Épingles lays pins on the foe's ground (`SideState.hazards`, three layers at most). Each Bestiole
+    sent out there loses 1/8, 1/6 or 1/4 of its HP in `switchIn`; flyers pass over. Pins never knock one out.
+  - `sweep`: Coup de Balai clears its own side's pins, seeds and ties.
+  - `screen`: Calque Protecteur (physical) and Vitrail (special) halve that kind of damage for 5 turns
+    (`SideState.screens`, in `computeDamage`); a critical hit goes through.
+  - `pivot`: Demi-Tour Crayonné and Éclaboussure Fuyante land, then the user goes back at the end of the turn
+    (`BattleState.pivot`). The trainer picks the healthiest teammate at once; the player is asked through the
+    forced switch (`needSwitch` while the active Bestiole is still standing; `replace` refuses the active one).
+  - `roar`: Grand Cri, priority −6, drags a random teammate of the foe out (it fails on a wild Bestiole).
+  - `taunt`: Gribouillis Moqueur leaves only attacking moves for three turns (`Volatile.taunt`, `usableSlots`).
+
+  Each has its events and lines (`hazard`, `hazardHurt`, `swept`, `screen`, `pivot`, `dragged`, `taunted`,
+  `tauntEnd`), an AI score (`statusScore`) and a planner value (`statusValue`). They are learnt by a few Bestioles
+  of the right type around L28–38, and Poing Étincelle and Poing Givré now have learners too
+  (`src/engine/pk/fieldMoves.test.ts`).
 - **Natures** (`src/data/natures.ts`): 25 kid-like personalities. Twenty raise one stat by 10% and
   lower another by 10%, and five change nothing. `calcStat` applies them in tenths, so rounding is
   exact. New Bestioles draw one at random. Trainers' Bestioles use the neutral `joyeuse`, so their

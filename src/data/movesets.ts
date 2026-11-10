@@ -47,7 +47,10 @@ function statusValue(mv: MoveDef, types: TypeId[]): number {
               : e.kind === 'substitute' ? 55
                 : e.kind === 'confuse' ? 50
                   : e.kind === 'weather' ? ((e.weather === 'pluie' && types.includes('eau')) || (e.weather === 'soleil' && (types.includes('feu') || types.includes('plante'))) ? 60 : 0)
-                    : 0;
+                    : e.kind === 'hazard' ? 70
+                      : e.kind === 'screen' ? 65
+                        : e.kind === 'taunt' ? 55
+                          : 0;
     best = Math.max(best, v * ((mv.acc ?? 100) / 100));
   }
   return best;

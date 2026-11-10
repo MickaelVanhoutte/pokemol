@@ -881,7 +881,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   T({
     id: 'blanche3', name: L('Admin Blanche', 'Admin Whiteout'), money: 5000, grey: true, items: ['super-potion', 'super-potion'],
-    party: [{ species: '043', level: 41 }, { species: '046', level: 42 }, { species: '059', level: 42 }, { species: '066', level: 42 }, { species: '049', level: 43, item: 'baie-doree' }],
+    party: [{ species: '043', level: 40 }, { species: '046', level: 41 }, { species: '059', level: 41 }, { species: '066', level: 41 }, { species: '049', level: 42, item: 'baie-doree' }],
     before: [
       L('Et moi, je suis celle qui dit : « recommence tout, depuis le début, sur une page blanche ».', 'And I’m the one who says: “start it all again, from the beginning, on a blank page”.'),
       L('Derrière moi, la Gomme Géante. Et au Bord de la Page, le patron t’attend : il veut finir de gommer ton cocon.', 'Behind me, the Giant Eraser. And at the Edge of the Page, the boss is waiting: he wants to finish rubbing out your cocoon.'),

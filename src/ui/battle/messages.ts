@@ -165,6 +165,29 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
       return e.on
         ? [tr(L('Une couche de vernis protège ton équipe : ses stats ne baisseront pas !', 'A coat of varnish protects your team: its stats won’t be lowered!'))]
         : e.side === 0 ? [tr(L('Le vernis protecteur s’écaille.', 'The protective varnish wore off.'))] : [];
+    case 'hazard':
+      return [e.side === 1
+        ? f(L('Des épingles jonchent le terrain adverse ! ({n}/3)', 'Pins are strewn around the foe! ({n}/3)'), { n: e.layers })
+        : f(L('Des épingles jonchent ton terrain ! ({n}/3)', 'Pins are strewn around your team! ({n}/3)'), { n: e.layers })];
+    case 'hazardHurt':
+      return [f(L('{n} se pique sur les épingles !', '{n} is pricked by the pins!'), { n: nm(e.side) })];
+    case 'swept':
+      return [f(L('{n} balaie le terrain : tout est propre !', '{n} sweeps the ground clean!'), { n: nm(e.side) })];
+    case 'screen': {
+      const team = e.side === 0 ? L('ton équipe', 'your team') : L('l’équipe adverse', 'the foe’s team');
+      if (!e.on) return [f(e.screen === 'phys' ? L('Le calque de {t} s’efface.', 'The tracing paper around {t} fades.') : L('Le vitrail de {t} s’efface.', 'The stained glass around {t} fades.'), { t: tr(team) })];
+      return [f(e.screen === 'phys'
+        ? L('Un calque protège {t} des attaques physiques !', 'Tracing paper shields {t} from physical attacks!')
+        : L('Un vitrail protège {t} des attaques spéciales !', 'Stained glass shields {t} from special attacks!'), { t: tr(team) })];
+    }
+    case 'pivot':
+      return [f(L('{n} revient vers son dresseur !', '{n} went back to its trainer!'), { n: nm(e.side) })];
+    case 'dragged':
+      return [f(L('{n} prend peur et rentre !', '{n} got scared and went back!'), { n: nm(e.side) })];
+    case 'taunted':
+      return [f(L('{n} se fait narguer : il ne pense plus qu’à attaquer !', '{n} fell for the taunt: it only wants to attack!'), { n: nm(e.side) })];
+    case 'tauntEnd':
+      return [f(L('{n} ne se laisse plus provoquer.', '{n} shook off the taunt.'), { n: nm(e.side) })];
     case 'talent': {
       // « Regard Noir de Brumouille ennemi ! », then what it did when that isn't another event
       const lines = [f(L('{a} de {n} !', '{n}’s {a}!'), { n: nm(e.side), a: tr(talent(e.talent).name) })];

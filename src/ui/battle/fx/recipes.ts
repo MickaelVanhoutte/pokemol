@@ -246,6 +246,15 @@ export const MOVE_FX: Record<string, Recipe> = {
   // the needle flashes in so fast only its streak shows
   'botte-secrete': { user: 'dash', layers: [speedLines({ n: 8, dur: 300 }), at(110, jab({ color: '#c9ced6', n: 1, size: 0.55 })), at(160, impactStar({ size: 0.45, color: C.acier[0] }))] },
   'estocade': { user: 'lunge', layers: [sparkle({ who: 'user', color: '#ffffff', n: 3 }), at(120, jab({ color: '#c9ced6', n: 3, gap: 90, size: 0.6 })), at(360, impactStar({ size: 0.65, color: C.acier[0] }))] },
+  // roadmap milestone 7: moves that change the field
+  'epingles': calm({ layers: [spikes({ color: '#c9ced6', n: 6 })] }),
+  'coup-de-balai': calm({ user: 'shake', layers: [sweep({ color: '#c08a4a' }), at(200, dust())] }),
+  'calque-protecteur': calm({ layers: [shield(), at(120, sparkle({ who: 'user', color: C.psy[1], n: 4, size: 0.2 }))] }),
+  'vitrail': calm({ layers: [shield(), at(120, sparkle({ who: 'user', kind: 'star', color: C.fee[1], n: 5, size: 0.22 }))] }),
+  'demi-tour': { user: 'lunge', layers: [jab({ color: C.insecte[2], n: 1, size: 0.45 }), at(160, speedLines({ n: 8, dur: 360 }))] },
+  'eclaboussure-fuyante': { layers: [jet(), at(260, sparkle({ kind: 'drop', color: C.eau[1], n: 5, size: 0.22 }))] },
+  'grand-cri': calm({ user: 'rear', shake: 0.5, layers: [notes({ colors: [C.normal[2], C.combat[1]], n: 6, size: 0.3 }), at(380, rings({ colors: [C.normal[1]], n: 3, dur: 400 }))] }),
+  'gribouillis-moqueur': calm({ layers: [scribble({ text: 'na na', color: C.tenebres[2] }), at(200, orbit({ who: 'target', kind: 'star', color: C.tenebres[1], n: 3 }))] }),
   'fresque-furieuse': { user: 'shake', shake: 0.6, layers: [...RAINBOW.slice(0, 4).map((color, i) => at(i * 80, slash({ color, n: 1, width: 1.8, len: 1.1, angle: [2.2, 0.95, 1.7, 0.4][i] }))), at(420, splat({ color: RAINBOW[5], size: 0.9 })), at(460, impactStar({ size: 0.7 }))] },
 };
 

@@ -38,6 +38,8 @@ export interface Volatile {
   toxic: number;
   /** Passe-Muraille: the next attack passes through it (set when it comes in). */
   phase: boolean;
+  /** Turns left during which only attacking moves can be picked (Gribouillis Moqueur). */
+  taunt: number;
 }
 
 export interface SideState {
@@ -58,6 +60,10 @@ export interface SideState {
   switchedAt?: number;
   /** Switches by choice a thinking trainer has left in this battle (none when absent). */
   switches?: number;
+  /** Layers of pins on this side's ground (0–3): its Bestioles get pricked coming out. */
+  hazards?: number;
+  /** Turns left of halved physical / special damage for this side. */
+  screens?: { phys: number; spec: number };
 }
 
 export interface BattleState {
@@ -77,6 +83,8 @@ export interface BattleState {
   missedBalls?: number;
   /** Rain, sunshine, sandstorm or hail, with the turns left. */
   weather: { kind: Weather; turns: number } | null;
+  /** A side whose Bestiole hit and goes back (a pivot move): it switches at the end of the turn. */
+  pivot?: Side;
   /** Night in Papeterre (Pleine Lune). */
   night?: boolean;
   /** A vision (the dream legendaries before the ending): balls go right through it. */
@@ -133,6 +141,18 @@ export type BattleEvent =
   | { t: 'gaveUp'; idx: number; move: string }
   /** An item used from a bag (`side` 1: the trainer's; absent: yours). */
   | { t: 'useItem'; item: string; target: number; amount?: number; side?: Side }
+  /** Pins laid on `side`'s ground (`layers` now). */
+  | { t: 'hazard'; side: Side; layers: number }
+  | { t: 'hazardHurt'; side: Side; amount: number }
+  /** `side` swept its ground clean. */
+  | { t: 'swept'; side: Side }
+  | { t: 'screen'; side: Side; screen: 'phys' | 'spec'; on: boolean }
+  /** `side`'s Bestiole goes back after its hit. */
+  | { t: 'pivot'; side: Side }
+  /** `side`'s Bestiole is scared back (a teammate is dragged out). */
+  | { t: 'dragged'; side: Side }
+  | { t: 'taunted'; side: Side }
+  | { t: 'tauntEnd'; side: Side }
   /** A held berry was eaten (HP restored and/or a status cured). */
   | { t: 'berry'; side: Side; item: string; amount?: number; cured?: Major | 'confusion' }
   | { t: 'regen'; side: Side; item: string; amount: number }
@@ -227,7 +247,7 @@ const STRUGGLE = 'lutte';
 const other = (s: Side): Side => (s === 0 ? 1 : 0);
 export const freshVol = (): Volatile => ({
   stages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }, confusion: 0, flinch: false, focus: false, lock: null,
-  protect: false, protectChain: 0, charging: null, invuln: null, trap: 0, seeded: false, sub: 0, toxic: 0, phase: false,
+  protect: false, protectChain: 0, charging: null, invuln: null, trap: 0, seeded: false, sub: 0, toxic: 0, phase: false, taunt: 0,
 });
 /** Effect of the item a creature holds (undefined if none or not a held item). */
 const held = (m: Mon): HoldEffect | undefined => (m.item ? ITEM_BY_ID[m.item]?.hold : undefined);
@@ -320,11 +340,12 @@ export function talentPowerMult(user: Mon, mv: MoveDef): number {
  * Moves the creature may pick: some PP left, only the locked move after a Stubborn item was used,
  * and only attacking moves with the Painter’s Apron. Empty = Struggle.
  */
-export function usableSlots(m: Mon, vol?: Pick<Volatile, 'lock'> & Partial<Pick<Volatile, 'charging'>>): number[] {
+export function usableSlots(m: Mon, vol?: Pick<Volatile, 'lock'> & Partial<Pick<Volatile, 'charging' | 'taunt'>>): number[] {
   // a two-turn move charged last turn must be released now
   if (vol?.charging && m.moves[vol.charging.slot]?.id === vol.charging.move) return [vol.charging.slot];
   let slots = m.moves.map((_, i) => i).filter((i) => m.moves[i].pp > 0);
-  if (held(m) === 'specialGuard') slots = slots.filter((i) => move(m.moves[i].id).cat !== 'status');
+  // the Painter's Apron, or taunted: attacking moves only
+  if (held(m) === 'specialGuard' || (vol?.taunt ?? 0) > 0) slots = slots.filter((i) => move(m.moves[i].id).cat !== 'status');
   const lock = vol?.lock && m.moves.some((s) => s.id === vol.lock) ? vol.lock : null;
   return lock ? slots.filter((i) => m.moves[i].id === lock) : slots;
 }
@@ -464,6 +485,16 @@ function switchIn(st: BattleState, side: Side, to: number, out: Out) {
   s.active = to;
   s.vol = freshVol();
   out.push({ t: 'sendOut', side, idx: to });
+  // pins on the ground prick it (flyers pass over; they never knock it out)
+  const layers = s.hazards ?? 0;
+  const comer = activeMon(s);
+  if (layers > 0 && !monTypes(comer).includes('vol')) {
+    const amount = Math.min(comer.hp - 1, Math.floor(maxHp(comer) * [1 / 8, 1 / 6, 1 / 4][layers - 1]));
+    if (amount > 0) {
+      comer.hp -= amount;
+      out.push({ t: 'hazardHurt', side, amount });
+    }
+  }
   if (side === 0 && !st.participants.includes(activeMon(s).uid)) st.participants.push(activeMon(s).uid);
   onEntry(st, side, out);
   checkBerry(st, side, out);
@@ -553,6 +584,8 @@ export function computeDamage(st: { rng: number; weather?: BattleState['weather'
   const eff = typeless ? 1 : moveEffectiveness(a, mv, d);
   dmg = Math.floor(dmg * eff);
   if (!typeless && dt.kind === 'halve' && dt.types.includes(mv.type)) dmg = Math.floor(dmg / 2);
+  // a tracing-paper shield or a stained-glass one halves the hits of its kind (not a critical hit)
+  if (!crit && (defSide.screens?.[phys ? 'phys' : 'spec'] ?? 0) > 0) dmg = Math.floor(dmg / 2);
   // the defender's power: Ailes Prisme, Carapace Pleine, Gros Dodo, Fourrure Douce, Passe-Muraille
   if (dt.kind === 'prism' && eff > 1) dmg = Math.floor(dmg / 2);
   if (dt.kind === 'fullHpGuard' && d.hp >= maxHp(d)) dmg = Math.floor(dmg / 2);
@@ -658,7 +691,7 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
     out.push({ t: 'fail', side });
     return;
   }
-  const targetsFoe = mv.cat !== 'status' || (mv.effects ?? []).some((e) => e.kind === 'status' || e.kind === 'confuse' || e.kind === 'toxic' || e.kind === 'seed' || (e.kind === 'stage' && e.target === 'foe'));
+  const targetsFoe = mv.cat !== 'status' || (mv.effects ?? []).some((e) => e.kind === 'status' || e.kind === 'confuse' || e.kind === 'toxic' || e.kind === 'seed' || e.kind === 'taunt' || e.kind === 'roar' || (e.kind === 'stage' && e.target === 'foe'));
   if (targetsFoe && !alive(target)) {
     out.push({ t: 'fail', side });
     return;
@@ -746,6 +779,8 @@ function useMove(st: BattleState, side: Side, slot: number, out: Out) {
   }
   foe.vol.phase = false;
   if (hits + extra > 1) out.push({ t: 'hits', count: done });
+  // a pivot move: it goes back at the end of the turn, if a teammate can come out
+  if (total > 0 && alive(user) && mv.effects?.some((e) => e.kind === 'pivot') && s.party.some((m, i) => i !== s.active && alive(m))) st.pivot = side;
   const mine = held(user);
   if (total > 0 && mine === 'drainHit') itemHp(st, side, user.item!, Math.max(1, Math.floor(total / 8)), out);
   if (total > 0 && mine === 'powerCost' && moveId !== STRUGGLE) itemHp(st, side, user.item!, -Math.max(1, Math.floor(maxHp(user) / 10)), out);
@@ -863,6 +898,46 @@ function applyStatusMove(st: BattleState, side: Side, mv: MoveDef, out: Out) {
         break;
       case 'nothing':
         out.push({ t: 'nothing' });
+        anything = true;
+        break;
+      case 'hazard': {
+        const layers = foe.hazards ?? 0;
+        if (layers >= 3) break;
+        foe.hazards = layers + 1;
+        out.push({ t: 'hazard', side: foeSide, layers: layers + 1 });
+        anything = true;
+        break;
+      }
+      case 'sweep':
+        if (!s.hazards && !s.vol.seeded && !s.vol.trap) break;
+        s.hazards = 0;
+        s.vol.seeded = false;
+        s.vol.trap = 0;
+        out.push({ t: 'swept', side });
+        anything = true;
+        break;
+      case 'screen': {
+        const sc = (s.screens ??= { phys: 0, spec: 0 });
+        if (sc[e.screen] > 0) break;
+        sc[e.screen] = 5;
+        out.push({ t: 'screen', side, screen: e.screen, on: true });
+        anything = true;
+        break;
+      }
+      case 'roar': {
+        // a wild Bestiole has nobody to come out instead
+        const others = foe.party.map((_, i) => i).filter((i) => i !== foe.active && alive(foe.party[i]));
+        if (st.kind === 'wild' || !others.length) break;
+        out.push({ t: 'dragged', side: foeSide });
+        switchIn(st, foeSide, others[randomInt(st, others.length)], out);
+        anything = true;
+        break;
+      }
+      case 'taunt':
+        if (foe.vol.taunt > 0) break;
+        // three of its turns (this turn's end counts one off)
+        foe.vol.taunt = 4;
+        out.push({ t: 'taunted', side: foeSide });
         anything = true;
         break;
       case 'rest':
@@ -1125,7 +1200,7 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
   if (st.result) throw new IllegalAction('battle over');
   if (action.type === 'replace') {
     if (!st.needSwitch) throw new IllegalAction('no switch needed');
-    if (!me.party[action.to] || !alive(me.party[action.to])) throw new IllegalAction('cannot send that one');
+    if (!me.party[action.to] || !alive(me.party[action.to]) || action.to === me.active) throw new IllegalAction('cannot send that one');
     st.needSwitch = false;
     switchIn(st, 0, action.to, out);
     return { state: st, events: out.events, snaps: out.snaps };
@@ -1304,6 +1379,29 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     s.guard--;
     if (s.guard === 0) out.push({ t: 'guard', side, on: false });
   }
+  // screens fade, a taunt wears off
+  for (const side of [0, 1] as Side[]) {
+    const s = st.sides[side];
+    if (st.result) break;
+    for (const k of ['phys', 'spec'] as const) {
+      if (!s.screens || s.screens[k] <= 0) continue;
+      s.screens[k]--;
+      if (s.screens[k] === 0) out.push({ t: 'screen', side, screen: k, on: false });
+    }
+    if (s.vol.taunt > 0 && --s.vol.taunt === 0) out.push({ t: 'tauntEnd', side });
+  }
+  // a pivot move's user goes back now: the trainer picks at once, the player is asked
+  if (st.pivot !== undefined && !st.result) {
+    const side = st.pivot;
+    const s = st.sides[side];
+    const others = s.party.map((_, i) => i).filter((i) => i !== s.active && alive(s.party[i]));
+    if (alive(activeMon(s)) && others.length) {
+      out.push({ t: 'pivot', side });
+      if (side === 1) switchIn(st, 1, others.reduce((a, i) => (s.party[i].hp / maxHp(s.party[i]) > s.party[a].hp / maxHp(s.party[a]) ? i : a)), out);
+      else if (!st.needSwitch) st.needSwitch = true;
+    }
+  }
+  delete st.pivot;
   me.vol.flinch = false;
   st.sides[1].vol.flinch = false;
   return { state: st, events: out.events, snaps: out.snaps };

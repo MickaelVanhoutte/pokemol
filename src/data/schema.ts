@@ -51,7 +51,19 @@ export type MoveEffect =
   /** Plants a greedy seed: the target loses 1/8 of its HP each turn, given to the other side. */
   | { kind: 'seed' }
   /** Spends a quarter of the user's HP on a paper doll that takes the hits for it. */
-  | { kind: 'substitute' };
+  | { kind: 'substitute' }
+  /** Pins on the foe's ground: every Bestiole it sends out gets pricked (up to three layers; flyers pass over). */
+  | { kind: 'hazard' }
+  /** Sweeps its own ground: pins, seeds and ties gone. */
+  | { kind: 'sweep' }
+  /** Five turns of halved damage for its side: physical (`phys`) or special (`spec`). */
+  | { kind: 'screen'; screen: 'phys' | 'spec' }
+  /** After landing, the user goes back and a teammate comes out (at the end of the turn). */
+  | { kind: 'pivot' }
+  /** The foe is scared back and a random teammate dragged out (not on a wild Bestiole). */
+  | { kind: 'roar' }
+  /** The foe can only attack for three turns. */
+  | { kind: 'taunt' };
 
 export interface MoveDef {
   id: string;

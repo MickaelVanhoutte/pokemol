@@ -45,13 +45,15 @@ const SPECIES: Record<string, string[]> = {
   m10: ['021'],
   // the music box only
   m11: [],
+  // moves that change the field
+  m12: ['090', '028', '007', '021', '008', '055', '001', '013'],
 };
 /** Demos showing her original drawings (the credits). */
 const ORIGINALS: Record<string, boolean> = { m4b: true, m6: true };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
 const ALL_MINIS: Record<string, boolean> = { m10: true, m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
-const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true, m8: true, m9: true };
+const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true, m8: true, m9: true, m12: true };
 
 // `import.meta.env.DEV` follows NODE_ENV, not the mode
 if (DEV[which]) process.env.NODE_ENV = 'development';

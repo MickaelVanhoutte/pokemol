@@ -117,7 +117,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['carapace-pleine'], hiddenTalent: 'grosse-vague',
     learnset: [[0, 'pluie-d-aquarelle'], [1, 'bousculade'], [1, 'fretillement'], [1, 'bulles'],
       [10, 'carapace-tambour'], [13, 'jet-d-eau'], [18, 'mordillage'], [20, 'averse'], [24, 'carapace-roulante'],
-      [27, 'souffle-glace'], [30, 'coup-de-boule'], [36, 'grosse-vague']],
+      [27, 'souffle-glace'], [28, 'eclaboussure-fuyante'], [30, 'coup-de-boule'], [36, 'grosse-vague']],
     dex: L(
       'Il dévale les vagues sur son ventre comme sur une planche, beaucoup trop vite, en hurlant de joie. Il n’est jamais tombé… presque jamais.',
       'It rides down waves on its belly like a board, far too fast, whooping with joy. It has never fallen off… almost never.',
@@ -132,7 +132,7 @@ export const CREATURES: SpeciesDef[] = [
     // its prow of rock comes with evolving
     learnset: [[0, 'eboulis'], [1, 'poing-crayon'], [1, 'bousculade'], [1, 'fretillement'], [1, 'bulles'], [1, 'pluie-d-aquarelle'],
       [10, 'carapace-tambour'], [13, 'jet-d-eau'], [18, 'mordillage'], [20, 'averse'], [24, 'carapace-roulante'],
-      [27, 'souffle-glace'], [30, 'coup-de-boule'], [34, 'tete-de-fer'], [38, 'grosse-vague'], [41, 'bombe-a-eau'],
+      [27, 'souffle-glace'], [28, 'eclaboussure-fuyante'], [30, 'coup-de-boule'], [34, 'tete-de-fer'], [38, 'grosse-vague'], [41, 'bombe-a-eau'],
       [43, 'lame-de-pierre'], [44, 'rayon-givre']],
     dex: L(
       'Son museau s’est durci en une proue de roc. Il fonce tête baissée et fend la mare comme un vieux bateau. Les petits de la mare lui obéissent comme à un capitaine.',
@@ -172,7 +172,7 @@ export const CREATURES: SpeciesDef[] = [
     learnset: [[1, 'bousculade'], [1, 'dard'], [10, 'coup-d-ailes'], [11, 'nuee-de-moucherons'], [12, 'poudre-dodo'],
       [14, 'poudre-piquante'], [15, 'poudre-toxique'], [16, 'choc-mental'], [20, 'fil-enroule'],
       [21, 'rayon-d-ailes'], [22, 'avion-en-papier'], [24, 'bourdonnement'], [27, 'poudre-arc-en-ciel'],
-      [32, 'tempete-de-plumes']],
+      [30, 'demi-tour'], [32, 'tempete-de-plumes']],
     dex: L(
       'Il soulève ses élytres comme un capot et déplie des ailes aux couleurs de l’arc-en-ciel. Il vole fièrement, la corne en avant.',
       'It lifts its wing cases like a car bonnet and unfolds rainbow wings. It flies proudly, horn first.',
@@ -212,7 +212,7 @@ export const CREATURES: SpeciesDef[] = [
     stencils: ['pochoir-01', 'pochoir-02', 'pochoir-11', 'pochoir-12', 'pochoir-17', 'pochoir-19', 'pochoir-20', 'pochoir-29'],
     talents: ['premier-envol'], hiddenTalent: 'trait-assure',
     learnset: [[0, 'bec-vrille'], [1, 'picore'], [1, 'grondement'], [5, 'pas-de-loup'], [9, 'rafale'],
-      [13, 'coup-d-ailes'], [15, 'pique'], [22, 'aile-d-acier'], [26, 'coup-de-boule'], [30, 'grand-vol'],
+      [13, 'coup-d-ailes'], [15, 'pique'], [22, 'aile-d-acier'], [26, 'coup-de-boule'], [28, 'coup-de-balai'], [30, 'grand-vol'],
       [34, 'grosse-voix']],
     dex: L(
       'Il vole en battant de ses grandes oreilles et porte le courrier de village en village. Il se trompe souvent de maison, mais il arrive toujours avec le sourire.',
@@ -241,7 +241,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['foudre-tetue'], hiddenTalent: 'pile-rechargeable',
     learnset: [[0, 'eclair-fluo'], [1, 'bousculade'], [1, 'grondement'], [1, 'petite-etincelle'], [7, 'coup-de-jus'],
       [8, 'fretillement'], [11, 'zap-zap'], [14, 'pas-de-loup'], [17, 'frisson'], [20, 'bouclier-papier'],
-      [21, 'queue-eclair'], [26, 'agilite-zigzag'], [32, 'grand-zigzag']],
+      [21, 'queue-eclair'], [26, 'agilite-zigzag'], [32, 'grand-zigzag'], [34, 'poing-etincelle']],
     dex: L(
       'Il se roule en boule et bondit dans un anneau d’éclairs sorti de ses joues. Casse-cou, il fonce d’abord et réfléchit après.',
       'It curls into a ball and leaps inside a ring of lightning that bursts from its cheeks. A daredevil, it charges first and thinks later.',
@@ -269,7 +269,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['bonne-etoile', 'rembourrage'], hiddenTalent: 'recoloriage',
     learnset: [[0, 'grosse-voix'], [1, 'berceuse'], [1, 'bousculade'], [5, 'micro-magique'], [9, 'chanson-douce'],
       [13, 'pirouette'], [17, 'bisou-magique'], [19, 'poussiere-d-etoile'], [25, 'pantin-papier'],
-      [28, 'eclat-de-lune'], [30, 'grand-concert'], [36, 'plat-du-ventre']],
+      [28, 'eclat-de-lune'], [30, 'grand-concert'], [34, 'vitrail'], [36, 'plat-du-ventre']],
     dex: L(
       'Quand il chante, son col de duvet gonfle et les cailloux roulent jusqu’en bas de la montagne. Sa berceuse endort les plus coriaces.',
       'When it sings, its fluffy ruff puffs up and pebbles roll all the way down the mountain. Its lullaby sends even the toughest to sleep.',
@@ -297,7 +297,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['pleine-lune'], hiddenTalent: 'petit-soin',
     learnset: [[0, 'eclat-de-lune'], [1, 'bousculade'], [1, 'chanson-douce'], [5, 'pirouette'], [9, 'calin-lunaire'],
       [13, 'micro-magique'], [17, 'choc-mental'], [19, 'poussiere-d-etoile'], [20, 'bouclier-papier'],
-      [22, 'bisou-magique'], [34, 'reve-eveille']],
+      [22, 'bisou-magique'], [34, 'reve-eveille'], [35, 'vitrail']],
     dex: L(
       'Il plane d’arbre en arbre, la peau de ses flancs tendue comme un morceau de ciel étoilé. Il ne quitte pas des yeux la petite lune au bout de sa queue.',
       'It glides from tree to tree, the skin of its flanks spread like a piece of starry sky. It never takes its eyes off the little moon at the tip of its tail.',
@@ -311,7 +311,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['gros-dodo'], hiddenTalent: 'increvable',
     learnset: [[1, 'bousculade'], [1, 'gros-baillement'], [8, 'ronflement'], [12, 'coup-de-boule'],
       [14, 'mordillage'], [16, 'grondement'], [20, 'plat-du-ventre'], [24, 'secousse'], [27, 'grosse-voix'],
-      [33, 'eboulis']],
+      [33, 'eboulis'], [34, 'grand-cri']],
     dex: L(
       'Il dort pour reprendre des forces, et gare à qui le réveille : il grogne, se frotte les yeux… puis se rendort, plus solide que jamais.',
       'It sleeps to get its strength back, and woe to whoever wakes it: it grumbles, rubs its eyes… then goes back to sleep, tougher than ever.',
@@ -353,7 +353,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['passe-muraille'], hiddenTalent: 'petits-traits',
     learnset: [[1, 'bouh'], [1, 'brouillard'], [1, 'coup-en-douce'], [5, 'langue-fantome'], [9, 'regard-hypnotique'],
       [11, 'murmure-noir'], [13, 'grimace'], [16, 'mains-de-brume'], [19, 'cauchemar'], [22, 'encre-toxique'],
-      [29, 'ombre-farceuse'], [32, 'pantin-papier'], [35, 'rire-sinistre']],
+      [29, 'ombre-farceuse'], [32, 'pantin-papier'], [35, 'rire-sinistre'], [36, 'gribouillis-moqueur']],
     dex: L(
       'Il se cache dans ton ombre et attend que tu rigoles pour rigoler encore plus fort.',
       'It hides in your shadow and waits for you to laugh, so it can laugh even louder.',
@@ -629,7 +629,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['patinoire'], hiddenTalent: 'souple',
     learnset: [[1, 'bousculade'], [1, 'grondement'], [5, 'bulles'], [9, 'souffle-glace'], [13, 'jet-d-eau'],
       [17, 'crocs-givre'], [19, 'flocons-dansants'], [21, 'grele'], [26, 'pluie-d-aquarelle'], [31, 'rayon-givre'],
-      [38, 'grosse-vague']],
+      [34, 'poing-givre'], [38, 'grosse-vague']],
     dex: L(
       'Ce vieux morse ne se presse jamais. Ses défenses de glace ne fondent pas, même en plein été.',
       'This old walrus never hurries. Its ice tusks never melt, even in high summer.',
@@ -657,7 +657,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['venin-frais'], hiddenTalent: 'nouvelle-peau',
     learnset: [[1, 'bousculade'], [1, 'grondement'], [5, 'dard-venin'], [9, 'mordillage'], [13, 'encre-toxique'],
       [17, 'crochet-venin'], [22, 'fil-enroule'], [27, 'pate-gluante'], [31, 'queue-venin'], [34, 'coup-en-douce'],
-      [36, 'boue-toxique'], [40, 'tremblement']],
+      [34, 'epingles'], [36, 'boue-toxique'], [40, 'tremblement']],
     dex: L(
       'Il se tient debout, les bras croisés, sa queue géante dressée derrière lui. Personne n’ose le contrarier deux fois.',
       'It stands up with its arms crossed, its giant tail raised behind it. Nobody dares to annoy it twice.',
@@ -697,7 +697,7 @@ export const CREATURES: SpeciesDef[] = [
     stencils: ['pochoir-01', 'pochoir-02', 'pochoir-10', 'pochoir-17', 'pochoir-19', 'pochoir-20', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
     talents: ['ciseaux-affutes'], hiddenTalent: 'trait-assure',
     learnset: [[1, 'griffe'], [1, 'grondement'], [5, 'pas-de-loup'], [9, 'coup-d-ailes'], [11, 'pique'],
-      [13, 'coup-de-ciseaux'], [18, 'balayette'], [24, 'rayon-d-ailes'], [30, 'griffe-metal'], [33, 'mandibules'],
+      [13, 'coup-de-ciseaux'], [18, 'balayette'], [24, 'rayon-d-ailes'], [30, 'griffe-metal'], [30, 'epingles'], [33, 'mandibules'],
       [36, 'aile-d-acier'], [38, 'grand-vol']],
     dex: L(
       'Il se fâche pour un rien et fonce en piqué, les mandibules ouvertes comme des ciseaux. Il découpe le papier en confettis.',
@@ -765,7 +765,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['pressentiment'], hiddenTalent: 'leve-tot',
     learnset: [[0, 'tempete-psy'], [1, 'choc-mental'], [1, 'gros-baillement'], [8, 'brouillard'], [12, 'regard-hypnotique'],
       [18, 'reve-eveille'], [22, 'micro-magique'], [26, 'rire-sinistre'], [30, 'ombre-farceuse'], [34, 'corne-arc-en-ciel'],
-      [42, 'eclat-de-lune']],
+      [34, 'calque-protecteur'], [42, 'eclat-de-lune']],
     dex: L(
       'Sa haute crête capte les pensées de tous ceux qui l’entourent. Un regard dans ses yeux en spirale, et l’on oublie de bouger.',
       'Its tall crest catches the thoughts of everyone around it. One look into its spiral eyes and you forget to move.',
@@ -791,7 +791,7 @@ export const CREATURES: SpeciesDef[] = [
     stencils: ['pochoir-02', 'pochoir-08', 'pochoir-10', 'pochoir-11', 'pochoir-12', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
     talents: ['griffes-malines'], hiddenTalent: 'coup-de-chance',
     learnset: [[0, 'griffe-de-nuit'], [1, 'griffe'], [1, 'grondement'], [6, 'mordillage'], [11, 'pas-de-loup'], [15, 'coup-en-douce'],
-      [20, 'grimace'], [24, 'coup-de-ciseaux'], [32, 'tache-d-encre'], [37, 'griffe-dragon'], [42, 'balayette']],
+      [20, 'grimace'], [24, 'coup-de-ciseaux'], [30, 'gribouillis-moqueur'], [32, 'tache-d-encre'], [37, 'griffe-dragon'], [42, 'balayette']],
     dex: L(
       'Elle trône sur un tas de crayons volés et ne s’en lève que pour en chiper d’autres, sans un bruit.',
       'It sits enthroned on a heap of stolen pencils, and only gets up to swipe more, without a sound.',
@@ -844,7 +844,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['coquille-de-fer'], hiddenTalent: 'increvable',
     learnset: [[0, 'lame-de-pierre'], [1, 'bousculade'], [1, 'carapace-tambour'], [6, 'souffle-glace'],
       [11, 'jet-d-eau'], [15, 'griffe-metal'], [20, 'crocs-givre'], [25, 'tete-de-fer'], [29, 'rayon-givre'],
-      [34, 'grosse-vague'], [36, 'chute-de-stalactite'], [40, 'eboulis']],
+      [34, 'grosse-vague'], [36, 'chute-de-stalactite'], [36, 'calque-protecteur'], [40, 'eboulis']],
     dex: L(
       'Sa coquille est une géode : dedans, des cristaux de glace brillent comme un trésor. Rien ne peut l’ouvrir s’il ne le veut pas.',
       'Its shell is a geode: inside, ice crystals shine like treasure. Nothing can open it unless it wants.',
@@ -965,7 +965,7 @@ export const CREATURES: SpeciesDef[] = [
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-13', 'pochoir-15', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
     talents: ['colere-noire'], hiddenTalent: 'regard-noir',
     learnset: [[1, 'griffe'], [1, 'grondement'], [6, 'balayette'], [9, 'pas-de-loup'], [13, 'grimace'],
-      [17, 'poing-crayon'], [22, 'mordillage'], [26, 'coup-de-boule'], [31, 'gros-poing'], [33, 'queue-ardente'],
+      [17, 'poing-crayon'], [22, 'mordillage'], [26, 'coup-de-boule'], [30, 'poing-etincelle'], [31, 'gros-poing'], [32, 'poing-givre'], [33, 'queue-ardente'],
       [36, 'eboulis'], [41, 'griffe-de-nuit']],
     dex: L(
       'Quand il se met en colère, rien ne l’arrête : il charge comme un bulldozer, le poil hérissé sur tout le dos.',
@@ -1020,7 +1020,7 @@ export const CREATURES: SpeciesDef[] = [
     stencils: ['pochoir-02', 'pochoir-11', 'pochoir-13', 'pochoir-15', 'pochoir-17', 'pochoir-19', 'pochoir-29'],
     talents: ['regard-noir', 'petits-traits'], hiddenTalent: 'coup-de-chance',
     learnset: [[0, 'agrafage'], [1, 'bousculade'], [1, 'grondement'], [5, 'coup-en-douce'], [9, 'griffe-metal'], [13, 'grimace'],
-      [17, 'mordillage'], [22, 'crocs-givre'], [25, 'tete-de-fer'], [34, 'griffe-de-nuit'], [38, 'eboulis'], [44, 'tremblement']],
+      [17, 'mordillage'], [22, 'crocs-givre'], [25, 'tete-de-fer'], [32, 'gribouillis-moqueur'], [34, 'griffe-de-nuit'], [38, 'eboulis'], [44, 'tremblement']],
     dex: L(
       'Les pinces de bureau sur son dos claquent quand il se fâche. Ce qu’il a agrafé ne se détache plus jamais.',
       'The binder clips on its back snap when it gets cross. Whatever it has stapled never comes loose again.',
@@ -1047,7 +1047,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['peinture-rupestre'], hiddenTalent: 'increvable',
     learnset: [[0, 'tempete-de-sable'], [1, 'bousculade'], [1, 'grondement'], [5, 'flammeche'],
       [8, 'jet-de-cailloux'], [10, 'patte-brulante'], [12, 'secousse'], [15, 'lueur-brulante'], [19, 'queue-ardente'],
-      [24, 'eboulis'], [32, 'tremblement'], [37, 'lame-de-pierre'], [43, 'grand-brasier']],
+      [24, 'eboulis'], [32, 'tremblement'], [36, 'grand-cri'], [37, 'lame-de-pierre'], [43, 'grand-brasier']],
     dex: L(
       'Quand il a froid, il se crache de la lave sur le dos avec sa trompe. En refroidissant, elle devient une carapace de pierre. Les mains sur ses flancs sont celles des tout premiers dessinateurs.',
       'When it feels cold, it sprays lava onto its back with its trunk. As it cools, the lava turns into a shell of stone. The hands on its flanks belong to the very first artists.',
@@ -1183,7 +1183,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['bouclier-punaise'], hiddenTalent: 'increvable',
     learnset: [[0, 'aile-d-acier'], [1, 'bousculade'], [1, 'fil-de-soie'], [5, 'dard'], [9, 'griffe-metal'],
       [13, 'jet-de-sable'], [17, 'coup-de-boule'], [24, 'coup-de-ciseaux'], [29, 'bouclier-papier'],
-      [32, 'mandibules'], [34, 'eboulis'], [38, 'tete-de-fer'], [44, 'gros-poing']],
+      [32, 'mandibules'], [32, 'epingles'], [34, 'eboulis'], [38, 'tete-de-fer'], [44, 'gros-poing']],
     dex: L(
       'Chevalier des tableaux de liège, il pique les intrus avec sa longue épingle. Ses clous dorés brillent quand il est fier.',
       'A knight of the corkboards, it pricks intruders with its long pin. Its gold studs shine when it is proud.',
@@ -1210,7 +1210,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['lanterne'], hiddenTalent: 'poudre-bouclier',
     learnset: [[0, 'eclair-fluo'], [1, 'bousculade'], [1, 'fil-de-soie'], [5, 'petite-etincelle'],
       [7, 'nuee-de-moucherons'], [9, 'dard'], [13, 'frisson'], [16, 'zap-zap'], [22, 'agilite-zigzag'],
-      [27, 'rayon-d-ailes'], [31, 'poudre-dodo'], [35, 'eclat-de-lune'], [38, 'grand-zigzag'], [43, 'bourdonnement']],
+      [27, 'rayon-d-ailes'], [28, 'demi-tour'], [31, 'poudre-dodo'], [35, 'eclat-de-lune'], [38, 'grand-zigzag'], [43, 'bourdonnement']],
     dex: L(
       'Son ventre brille comme une ampoule. Les soirs d’été, des nuées de Lampyrette dessinent des étoiles dans le ciel.',
       'Its belly glows like a light bulb. On summer evenings, swarms of Lampfly draw stars in the sky.',
@@ -1493,7 +1493,7 @@ export const CREATURES: SpeciesDef[] = [
     talents: ['huit-couleurs'], hiddenTalent: 'eponge',
     learnset: [[0, 'coup-de-pinceau'], [1, 'bulles'], [1, 'coup-de-liane'], [7, 'souffle-glace'], [12, 'flammeche'],
       [16, 'jet-d-eau'], [20, 'pluie-d-aquarelle'], [22, 'coup-de-pinceau'], [24, 'tourbillon-braises'],
-      [28, 'grosse-vague'], [33, 'rayon-givre'], [37, 'grand-brasier'], [41, 'fresque-furieuse'], [45, 'grand-zigzag']],
+      [28, 'grosse-vague'], [30, 'eclaboussure-fuyante'], [33, 'rayon-givre'], [37, 'grand-brasier'], [41, 'fresque-furieuse'], [45, 'grand-zigzag']],
     dex: L(
       'Chacun de ses huit bras crache une couleur différente. Il peint des fresques géantes au fond de l’eau… et gare à qui marche dessus !',
       'Each of its eight arms squirts a different colour. It paints giant murals at the bottom of the water… and woe betide anyone who treads on them!',
@@ -1549,7 +1549,7 @@ export const CREATURES: SpeciesDef[] = [
     // its horns harden as it evolves
     learnset: [[0, 'tete-de-fer'], [1, 'bousculade'], [1, 'fretillement'], [1, 'coup-de-boucle'], [10, 'regard-hypnotique'],
       [14, 'coup-de-boule'], [19, 'berceuse'], [23, 'charge-hypnotique'], [27, 'bouclier-papier'], [32, 'corne-spirale'],
-      [38, 'secousse'], [44, 'plat-du-ventre']],
+      [32, 'calque-protecteur'], [38, 'secousse'], [44, 'plat-du-ventre']],
     dex: L(
       'Il fonce tête baissée, et ses grandes cornes en spirale brillent si fort que l’ennemi ne sait plus d’où il arrive.',
       'It charges head down, and its great spiral horns glow so brightly that the foe can’t tell where it’s coming from.',
@@ -1562,7 +1562,7 @@ export const CREATURES: SpeciesDef[] = [
     stencils: ['pochoir-02', 'pochoir-10', 'pochoir-12', 'pochoir-13', 'pochoir-17', 'pochoir-19', 'pochoir-25', 'pochoir-26', 'pochoir-29'],
     talents: ['rapiecage'], hiddenTalent: 'pieds-legers',
     learnset: [[1, 'griffe'], [1, 'grondement'], [4, 'pas-de-loup'], [8, 'mordillage'], [11, 'botte-secrete'],
-      [15, 'coup-en-douce'], [19, 'griffe-metal'], [23, 'grimace'], [27, 'coup-de-boule'], [31, 'estocade'],
+      [15, 'coup-en-douce'], [19, 'griffe-metal'], [23, 'grimace'], [27, 'coup-de-boule'], [30, 'coup-de-balai'], [31, 'estocade'],
       [36, 'griffe-de-nuit'], [42, 'tete-de-fer']],
     dex: L(
       'Il a cousu ses habits lui-même avec des chutes de tissu, et il se bat avec la plus grande aiguille de la boîte à couture. Il pique d’abord, il pose les questions ensuite.',
@@ -1703,7 +1703,7 @@ export const CREATURES: SpeciesDef[] = [
     learnset: [[0, 'eclat-de-lune'], [1, 'bousculade'], [1, 'grondement'], [5, 'micro-magique'],
       [9, 'souffle-dragon'], [11, 'croc-de-dragon'], [13, 'pirouette'], [19, 'griffe-dragon'], [23, 'calin-lunaire'],
       [27, 'coup-de-boule'], [30, 'grand-defile'], [32, 'baguette-magique'], [35, 'queue-ardente'],
-      [40, 'colere-dragon'], [50, 'tremblement']],
+      [38, 'vitrail'], [40, 'colere-dragon'], [50, 'tremblement']],
     dex: L(
       'Il mène les grands défilés du Rêve en dansant. On dit que la perle qu’il serre dans sa griffe contient toutes les couleurs du monde.',
       'It leads the Dream’s great parades, dancing all the way. They say the pearl it holds in its claw contains every colour in the world.',

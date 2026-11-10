@@ -38,6 +38,8 @@ export interface Scene {
   music: TrackId;
   input: IntroInput;
   me: [string, number, string[]];
+  /** Teammates behind your Bestiole (species, level). */
+  mates?: [string, number][];
   /** Your Bestiole starts with this share of its HP. */
   meHp?: number;
   /** Your Bestiole is one point short of its next level. */
@@ -82,7 +84,8 @@ function teams(scene: Scene): [Mon[], Mon[]] {
     if (i === scene.foe.party.length - 1 && scene.foe.ace) Object.assign(m, scene.foe.ace);
     return m;
   });
-  return [[me], foe];
+  const mates = (scene.mates ?? []).map(([s, l], i) => createMon(s, l, { rng: 150 + i }, { hp: 20, atk: 20, def: 20, spa: 20, spd: 20, spe: 20 }));
+  return [[me, ...mates], foe];
 }
 
 function setupOf(scene: Scene, seed: number): BattleSetup {

@@ -132,6 +132,12 @@ function statusScore(st: BattleState, mv: MoveDef): number {
     if (e.kind === 'protect') score += me.vol.protectChain > 0 ? -60 : foe.vol.charging ? 60 : 10;
     if (e.kind === 'seed') score += foe.vol.seeded || monTypes(target).includes('plante') ? -60 : 40;
     if (e.kind === 'substitute') score += me.vol.sub > 0 || hpRatio < 0.35 ? -60 : 22;
+    // roadmap milestone 7: pins while the foe has Bestioles to send, screens not yet up, a taunt on a foe that sets up
+    if (e.kind === 'hazard') score += (foe.hazards ?? 0) >= 3 || foe.party.filter((p) => p.hp > 0).length < 2 ? -60 : 40 - 10 * (foe.hazards ?? 0);
+    if (e.kind === 'sweep') score += me.hazards || me.vol.seeded || me.vol.trap ? 45 : -60;
+    if (e.kind === 'screen') score += (me.screens?.[e.screen] ?? 0) > 0 ? -60 : 35;
+    if (e.kind === 'taunt') score += foe.vol.taunt > 0 ? -60 : target.moves.some((s) => move(s.id).cat === 'status') ? 35 : -10;
+    if (e.kind === 'roar') score += st.kind === 'wild' || foe.party.filter((p) => p.hp > 0).length < 2 ? -60 : Object.values(foe.vol.stages).reduce((a, b) => a + Math.max(0, b), 0) >= 2 ? 60 : -10;
   }
   // the foe's paper doll blocks statuses and stat drops
   if (doll && mv.effects?.some((e) => e.kind === 'status' || e.kind === 'toxic' || e.kind === 'confuse' || e.kind === 'seed' || (e.kind === 'stage' && e.target === 'foe'))) score -= 60;

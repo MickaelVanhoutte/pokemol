@@ -65,7 +65,7 @@ function winRate(player: (seed: number) => Mon[], enemy: (seed: number) => Mon[]
     for (let guard = 0; !st.result && guard < 300; guard++) {
       let a: Action;
       if (st.learnQueue.length) a = { type: 'learn', forget: null };
-      else if (st.needSwitch) a = { type: 'replace', to: st.sides[0].party.findIndex((m) => m.hp > 0) };
+      else if (st.needSwitch) a = { type: 'replace', to: st.sides[0].party.findIndex((m, i) => m.hp > 0 && i !== st.sides[0].active) };
       else a = playerChoice(st);
       st = act(st, a, aiChoose(st, slip)).state;
     }

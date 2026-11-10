@@ -519,7 +519,7 @@ describe('battle', () => {
       while (!st.result && turns++ < 400) {
         let a: Action;
         if (st.learnQueue.length) a = { type: 'learn', forget: seed % 2 ? 0 : null };
-        else if (st.needSwitch) a = { type: 'replace', to: st.sides[0].party.findIndex((m) => m.hp > 0) };
+        else if (st.needSwitch) a = { type: 'replace', to: st.sides[0].party.findIndex((m, i) => m.hp > 0 && i !== st.sides[0].active) };
         else {
           const slots = usableSlots(activeMon(st.sides[0]), st.sides[0].vol);
           a = { type: 'move', slot: slots.length ? slots[turns % slots.length] : -1 };
