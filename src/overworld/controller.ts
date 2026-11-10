@@ -3,6 +3,7 @@ import { effect, signal } from '@preact/signals';
 import { L, tr, type LText } from '../i18n';
 import { MAPS } from '../data/maps';
 import { DIFFICULTY, TRAINERS, brainOf, partyOf, rematchParty, teamLevel, trainerParty, type TrainerDef } from '../data/trainers';
+import { masterRematchParty } from '../data/postgame';
 import { creature, monLabel } from '../data/creatures';
 import { ITEM_BY_ID, item } from '../data/items';
 import { badgeDef } from '../data/badges';
@@ -969,18 +970,29 @@ function markRematches() {
 /** After the ending, Atelier Masters accept rematches with stronger teams. */
 async function rematch(id: string, actor: Actor) {
   const tdef = TRAINERS[id];
+  // once a day: the Master trains between two rematches
+  if (s().flags[`re:${id}`] === localDay() && flag(`rematch:${id}`)) {
+    await say(L('Mes Bestioles se reposent après notre combat. Reviens demain, je serai encore plus forte !', 'My Critters are resting after our battle. Come back tomorrow, I’ll be even stronger!'), tdef.name);
+    return;
+  }
   const c = await ask(L('Te revoilà ! Une revanche ? Cette fois, je ne retiens pas mes coups.', 'You’re back! A rematch? This time I won’t hold back.'), [L('Oui', 'Yes'), L('Non', 'No')], tdef.name);
   if (c !== 0) return;
   if (!partyAlive(s())) {
     await say(L('Tes Bestioles sont épuisées… Va d’abord les soigner !', 'Your Critters are worn out… Heal them first!'), tdef.name);
     return;
   }
-  const party = tdef.party.map((m) => ({ ...m, level: Math.min(MAX_LEVEL, m.level + 12) }));
-  const strong: TrainerDef = { ...tdef, id: `${id}:rematch`, badge: undefined, afterScript: undefined, money: tdef.money * 2, party };
+  // six fully grown Bestioles a little above your team, stronger at each rematch won
+  const times = s().flags[`rematch:${id}:n`] ?? (flag(`rematch:${id}`) ? 1 : 0);
+  const party = masterRematchParty(tdef, times, teamLevel(s().party));
+  const strong: TrainerDef = { ...tdef, id: `${id}:rematch`, badge: undefined, afterScript: undefined, storyFlag: undefined, money: tdef.money * Math.min(6, 2 + times), party };
   const out = await fight('trainer', tdef.name, trainerParty(strong, newSeed()), { trainer: strong, look: actor.npc?.look });
   if (out.result === 'win') {
     // remembered for the Town Map's list of things left to do
     setFlag(`rematch:${id}`);
+    update((d) => {
+      d.flags[`rematch:${id}:n`] = times + 1;
+      d.flags[`re:${id}`] = localDay();
+    });
     const colours = !flag('couleurs:bord') && rematchesWon(s().flags) >= BORD_REMATCHES;
     if (colours) setFlag('couleurs:bord');
     await say(L('Incroyable… Tu dessines de mieux en mieux !', 'Incredible… You draw better and better!'), tdef.name);

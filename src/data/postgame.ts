@@ -3,9 +3,9 @@ import { nextRandom, randomInt } from '../engine/rng';
 import { createMon, healMon, xpAt, type Mon } from '../engine/pk/creature';
 import { NEUTRAL_NATURE } from './natures';
 import { move } from './moves';
-import { creature } from './creatures';
+import { CREATURE_BY_ID, CUSTOM_ID, creature } from './creatures';
 import { ITEM_BY_ID } from './items';
-import type { TrainerDef } from './trainers';
+import type { TrainerDef, TrainerMon } from './trainers';
 
 // ------------------------------------------------------------------ Grand Concours
 
@@ -78,6 +78,101 @@ export const CONCOURS: ConcoursStage[] = [
     after: [L('Voilà la plus belle photo de ma collection.', 'That’s the finest picture in my collection.')],
   }),
 ];
+
+// ------------------------------------------------------------------ the Concours grows with you
+
+/**
+ * A Bestiole as grown as it can be by `level`: level, Magic Pencil and friendship evolutions (the first one listed),
+ * never a story one (Coconfus).
+ */
+export function fullyGrown(id: string, level: number): string {
+  const next = creature(id).evolutions?.find((e) => !e.story && (e.level === undefined || e.level <= level));
+  return next ? fullyGrown(next.to, level) : id;
+}
+
+/** No Grand Master grows past this level (Normal; the difficulty shifts it like any trainer). */
+export const CONCOURS_MAX_LEVEL = 70;
+
+/**
+ * How a Grand Master's team changes as you keep winning: a sixth Bestiole from the second win (`wins` 2), then
+ * one of two other teams of her type from the third, turn and turn about (the ace stays last).
+ */
+interface ConcoursPlan { sixth: string; variants: [string[], string[]] }
+const PLANS: Record<string, ConcoursPlan> = {
+  gcMarine: { sixth: '070', variants: [['102', '042', '114', '095', '023'], ['100', '060', '017', '042', '023']] },
+  gcAmbre: { sixth: '077', variants: [['122', '081', '018', '040', '025'], ['081', '122', '027', '050', '025']] },
+  gcCelestine: { sixth: '047', variants: [['028', '086', '119', '129', '014'], ['083', '087', '053', '028', '014']] },
+  gcNocturne: { sixth: '097', variants: [['066', '088', '075', '098', '011'], ['055', '057', '100', '128', '011']] },
+};
+
+const AGAIN = L('Te revoilà au Concours ! Depuis ta victoire, mes Bestioles ont grandi, elles aussi.', 'Back at the Contest! Since your win, my Critters have grown too.');
+const PROF_AGAIN = [
+  L('Te revoilà, {name}. Clic-clac : mes photos ont pris des couleurs depuis ta dernière victoire.', 'Here you are again, {name}. Click-clack: my photos have gained colour since your last win.'),
+  L('Montre-moi encore jusqu’où tes dessins peuvent aller !', 'Show me again how far your drawings can go!'),
+];
+const PROF_MIRROR = [
+  L('Te revoilà, {name}. Cette fois, j’ai pris en photo ton équipe du Panthéon… et je l’ai redessinée.', 'Here you are again, {name}. This time I photographed your Hall of Fame team… and drew it again.'),
+  L('Voyons si tu bats tes propres dessins !', 'Let’s see if you can beat your own drawings!'),
+];
+
+/**
+ * Stage `n` of the Grand Concours after `wins` wins (`hallOfFame.length`). The first time it is `CONCOURS` as
+ * written; after that every Bestiole is fully grown and two levels stronger per win (up to `CONCOURS_MAX_LEVEL`),
+ * the Grand Masters get a sixth Bestiole and then other teams, and from the fourth win the Prof brings your
+ * own last Hall of Fame team, redrawn.
+ */
+export function concoursStage(n: number, wins: number, hall: HallEntry[] = []): ConcoursStage {
+  const base = CONCOURS[n - 1];
+  if (wins <= 0) return base;
+  const up = 2 * Math.min(wins, 8);
+  const lv = (l: number) => Math.min(CONCOURS_MAX_LEVEL, l + up);
+  const plan = PLANS[base.trainer.id];
+  const champion = n === CONCOURS.length;
+  const mirror = champion && wins >= 4 ? (hall.at(-1)?.team ?? []).filter((m) => m.species in CREATURE_BY_ID && m.species !== CUSTOM_ID).slice(0, 6) : [];
+  let party: TrainerMon[];
+  if (mirror.length) party = mirror.map((m) => ({ species: m.species, level: 53 }));
+  else {
+    const species = plan && wins >= 3 ? plan.variants[wins % 2] : base.trainer.party.map((m) => m.species);
+    party = base.trainer.party.map((m, i) => ({ ...m, species: species[i] ?? m.species }));
+    if (plan && wins >= 2) party.splice(party.length - 1, 0, { species: plan.sixth, level: Math.min(...base.trainer.party.map((m) => m.level)) });
+  }
+  party = party.map((m) => ({ ...m, level: lv(m.level), species: fullyGrown(m.species, lv(m.level)) }));
+  const before = champion ? (mirror.length ? PROF_MIRROR : PROF_AGAIN) : n === 1 ? [base.trainer.before[0], AGAIN] : [AGAIN];
+  return { ...base, trainer: { ...base.trainer, party, before, money: base.trainer.money + 1000 * Math.min(wins, 10) } };
+}
+
+// ------------------------------------------------------------------ Atelier Masters' rematches
+
+/** No Master's rematch team grows past this level (Normal). */
+export const REMATCH_MAX_LEVEL = 75;
+
+/** Each Atelier Master's team for rematches after the story: six Bestioles of her type, her ace last. */
+export const MASTER_REMATCH: Record<string, string[]> = {
+  mireille: ['092', '090', '048', '038', '104', '007'],
+  gaspard: ['026', '049', '120', '047', '008', '036'],
+  marine: ['070', '042', '114', '102', '060', '023'],
+  zelie: ['046', '083', '079', '019', '092', '027'],
+  ambre: ['018', '081', '122', '077', '050', '025'],
+  celestine: ['047', '014', '086', '129', '119', '028'],
+  basile: ['094', '098', '064', '125', '124', '024'],
+  nocturne: ['097', '128', '066', '098', '088', '011'],
+};
+
+/**
+ * A Master's rematch team (`times`: rematches already won): six fully grown Bestioles, the ace at the player's
+ * team's level (`level`, `teamLevel`), at least L45, two more per rematch won (five times at most), up to
+ * `REMATCH_MAX_LEVEL`; its teammates two or three levels below. The ace keeps the item of her first battle.
+ */
+export function masterRematchParty(t: TrainerDef, times: number, level: number): TrainerMon[] {
+  const team = MASTER_REMATCH[t.id] ?? t.party.map((m) => m.species);
+  const ace = Math.min(REMATCH_MAX_LEVEL, Math.max(45, level) + 2 * Math.min(times, 5));
+  const item = t.party.at(-1)?.item;
+  return team.map((sp, i) => {
+    const last = i === team.length - 1;
+    const lv = last ? ace : ace - 3 + (i % 2);
+    return { species: fullyGrown(sp, lv), level: lv, ...(last && item ? { item } : {}) };
+  });
+}
 
 // ------------------------------------------------------------------ Hall of Fame
 

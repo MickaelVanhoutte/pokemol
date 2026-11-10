@@ -1,6 +1,6 @@
 import { L, tr } from '../i18n';
 import { monLabel } from '../data/creatures';
-import { CONCOURS, hallEntry, TOWER_ROUND, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from '../data/postgame';
+import { CONCOURS, concoursStage, hallEntry, TOWER_ROUND, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from '../data/postgame';
 import { partyOf, type TrainerDef } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
@@ -35,7 +35,9 @@ scripts.concoursDoor = async () => {
 };
 
 async function concoursBattle(n: number): Promise<boolean> {
-  const st = CONCOURS[n - 1];
+  // the Concours grows with every win (the Hall of Fame counts them)
+  const hall = save.value!.hallOfFame ?? [];
+  const st = concoursStage(n, hall.length, hall);
   if (flag(`gc:${n}`) || (n > 1 && !flag(`gc:${n - 1}`))) return false;
   // a win where your last Bestiole fell too: nobody is left to fight the next Grand Master
   if (!partyAlive(save.value!)) {

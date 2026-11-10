@@ -3,8 +3,9 @@ import { createMon, maxHp } from '../engine/pk/creature';
 import { CREATURES } from './creatures';
 import { ITEM_BY_ID } from './items';
 import { MOVES } from './moves';
+import { TRAINERS } from './trainers';
 import { makeEgg } from '../state/daycare';
-import { CONCOURS, hallEntry, TOWER_LEVEL, TOWER_POOL, TOWER_ROUND, TOWER_STOCK, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from './postgame';
+import { CONCOURS, CONCOURS_MAX_LEVEL, MASTER_REMATCH, REMATCH_MAX_LEVEL, concoursStage, fullyGrown, hallEntry, masterRematchParty, TOWER_LEVEL, TOWER_POOL, TOWER_ROUND, TOWER_STOCK, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from './postgame';
 
 const species = new Set(CREATURES.map((c) => c.id));
 const moves = new Set(MOVES.map((m) => m.id));
@@ -86,5 +87,74 @@ describe('Tour des Défis', () => {
 
   it('only exchanges items that exist', () => {
     for (const id of Object.keys(TOWER_STOCK)) expect(ITEM_BY_ID[id], id).toBeDefined();
+  });
+});
+
+describe('the Concours grows with you', () => {
+  it('is the written Concours the first time', () => {
+    for (const st of CONCOURS) expect(concoursStage(st.n, 0)).toBe(st);
+  });
+
+  it('gets stronger with every win, fully grown, with a sixth Bestiole from the second win, never past the cap', () => {
+    for (const st of CONCOURS) {
+      let prev = 0;
+      for (let wins = 1; wins <= 12; wins++) {
+        const party = concoursStage(st.n, wins).trainer.party;
+        for (const m of party) {
+          expect(species.has(m.species), `${st.trainer.id} ${m.species}`).toBe(true);
+          expect(m.level).toBeLessThanOrEqual(CONCOURS_MAX_LEVEL);
+          // fully grown: nothing left to evolve into but a story form
+          expect(fullyGrown(m.species, m.level), `${st.trainer.id} ${m.species}`).toBe(m.species);
+        }
+        const top = Math.max(...party.map((m) => m.level));
+        expect(top).toBeGreaterThanOrEqual(prev);
+        prev = top;
+        if (st.n < 5 && wins >= 2) expect(party).toHaveLength(6);
+      }
+    }
+  });
+
+  it('turns between two other teams from the third win, the ace always last', () => {
+    const a = concoursStage(1, 3).trainer.party.map((m) => m.species);
+    const b = concoursStage(1, 4).trainer.party.map((m) => m.species);
+    expect(a).not.toEqual(b);
+    expect(a.at(-1)).toBe(b.at(-1));
+  });
+
+  it('the Prof redraws your last Hall of Fame team from the fourth win', () => {
+    const hall = [{ date: 1, team: [{ species: '001', level: 60 }, { species: '000', level: 60 }, { species: '013', level: 60 }] }];
+    expect(concoursStage(5, 3, hall).trainer.party.map((m) => m.species)).toContain('024');
+    const mirror = concoursStage(5, 4, hall).trainer.party.map((m) => m.species);
+    // grown, the player's own drawing left out
+    expect(mirror).toEqual([fullyGrown('001', 61), fullyGrown('013', 61)]);
+  });
+});
+
+describe('Atelier Masters’ rematches', () => {
+  it('every Master has six Bestioles of her own, fully grown, her ace last and strongest', () => {
+    const masters = Object.values(TRAINERS).filter((t) => t.badge);
+    expect(Object.keys(MASTER_REMATCH).sort()).toEqual(masters.map((t) => t.id).sort());
+    for (const t of masters) {
+      for (const times of [0, 1, 3, 9]) {
+        const party = masterRematchParty(t, times, 44);
+        expect(party).toHaveLength(6);
+        expect(new Set(party.map((m) => m.species)).size, t.id).toBe(6);
+        const ace = party.at(-1)!;
+        for (const m of party) {
+          expect(species.has(m.species)).toBe(true);
+          expect(fullyGrown(m.species, m.level)).toBe(m.species);
+          expect(m.level).toBeLessThanOrEqual(ace.level);
+        }
+        expect(ace.level).toBeLessThanOrEqual(REMATCH_MAX_LEVEL);
+      }
+    }
+  });
+
+  it('starts at your team’s level (at least L45) and grows by two per rematch won', () => {
+    const t = TRAINERS.mireille;
+    expect(masterRematchParty(t, 0, 30).at(-1)!.level).toBe(45);
+    expect(masterRematchParty(t, 0, 50).at(-1)!.level).toBe(50);
+    expect(masterRematchParty(t, 2, 50).at(-1)!.level).toBe(54);
+    expect(masterRematchParty(t, 40, 100).at(-1)!.level).toBe(REMATCH_MAX_LEVEL);
   });
 });

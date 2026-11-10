@@ -68,7 +68,8 @@ English: [docs/histoire.md](docs/histoire.md).
 - A late game with detours and back-and-forth, a cycling track that loops back south, and a cave
   where something breathes in the dark.
 - Post-game: the Grand Concours (four Grand Masters and a last surprise opponent in a row, then
-  the Hall of Fame) and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to
+  the Hall of Fame; it grows stronger with every win), daily Atelier Master rematches with full teams
+  that grow, and the Challenge Tower (three Bestioles at level 50, rounds of 7, points to
   trade for items).
 - Town Map (Mom gives it at the start, START > CARTE): where you are, and a star on where to go next.
 - Side quests: 12 torn sketchbook pages to find, the Tombola at the fair,

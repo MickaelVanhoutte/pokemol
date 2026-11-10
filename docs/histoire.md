@@ -158,6 +158,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   tout pâles… plus tu avances, plus ils reprennent des couleurs. Une nuit à l’Auberge, chaque jour,
   te réserve aussi une surprise qui rend tes Bestioles plus fortes. Et on raconte qu’une récompense
   attend ceux qui auront rempli tout le Bestiodex.
+- Le **Grand Concours** grandit avec toi : à chaque victoire, les Grandes Maîtresses reviennent plus fortes, avec
+  de nouvelles Bestioles. Les Maîtres d’Atelier, eux, acceptent une revanche chaque jour, avec une équipe complète
+  qui progresse à chaque défaite.
 
 ---
 
@@ -310,3 +313,5 @@ The story has **two endings**, and your answers choose which one you will see.
   the further you go, the more colour they get back. A night at the Inn, once a day, also has a
   surprise in store that makes your Critters stronger. And they say a reward awaits whoever fills
   the whole Critterdex.
+- The **Grand Contest** grows with you: after every win, the Grand Masters come back stronger, with new Critters.
+  The Atelier Masters accept a rematch every day, with a full team that grows after every defeat.

@@ -104,6 +104,8 @@ export const TRACKS: Track[] = [
       at(1, [of('pochoir-24')], L('Remporte le Grand Concours', 'Win the Grand Contest')),
       at(3, biscuits(2)),
       at(5, [of('sucette-magique', 5)]),
+      at(10, biscuits(3)),
+      at(20, [of('sucette-magique', 10)]),
     ],
   },
   {

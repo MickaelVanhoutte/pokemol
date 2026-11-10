@@ -398,7 +398,11 @@ Details in [content.md](content.md#the-players-own-bestiole-atelier-des-brouillo
   head, gold-nib flukes (Water/Dark, legendary, 600; Averse d’Encre: rain as it comes in; signature Jet d’Encre Noire).
   L60, met like the dream legendaries (`meet`): caught, gone for good; knocked out, back after a night or the next day.
   Drawn after the owner asked for a real, darker whale in a dynamic U pose; it has a fair copy (Nage Éclair);
-- Atelier Masters offer rematches at +12 levels;
+- Atelier Masters offer rematches (Nov 2026, roadmap milestone 2), once a real day each (`re:<id>`), with six fully
+  grown Bestioles of their type (`MASTER_REMATCH`, `masterRematchParty` in `src/data/postgame.ts`): the ace at the
+  player's team level (`teamLevel`, at least L45), teammates two or three below, two more levels per rematch won
+  (`rematch:<id>:n`, five times at most, cap L75), prize money ×2 then more (×6 at most). First rematch on Normal
+  with a grown team of six at L47: 31–100% (the starter weak to that Master's type is the hard case);
 - Mom has new lines;
 - two residents per town have new lines (`afterStory` on the NPC), one of them a present once
   (`cadeau:<npc>`): Lollipops, a Snack, and held items that fit the giver (the quill maker's Swift Quill,
@@ -421,10 +425,19 @@ in. Four Grandes Maîtresses (Marine, Ambre, Célestine, Nocturne) stand in door
 aside once beaten (`gc:<n>`, NPC `hideIf`), then Prof. Fusain (6 Bestioles). No healing in
 between, the bag is allowed; a loss is a normal blackout and the next attempt starts over. Since iteration 16
 the Grandes Maîtresses stand at L52–57 and Prof. Fusain at L51–52, above the story's finale; the sims use a
-level 58 team (Normal 31–100%, Prof. Fusain 45–62%). Winning
+level 58 team. Winning
 sets `champion`, appends a `save.hallOfFame` entry (`hallEntry`: species, nickname, level, sparkle)
 and shows the Hall of Fame (`HallView`, screen `hall`); the Hall Keeper on the square shows it again.
-`npm run balance` has rows for each fight with a level 50 team.
+
+**The Concours grows with you** (Nov 2026, roadmap milestone 2). `concoursStage(n, wins, hall)` gives each stage
+after `wins` wins (`hallOfFame.length`): the first time it is `CONCOURS` as written (its teams list first forms at
+L53, as tuned); after that every Bestiole is fully grown (`fullyGrown`: level, Magic Pencil and friendship
+evolutions) and two levels stronger per win (eight wins at most, cap L70). The Grandes Maîtresses add a sixth
+Bestiole from the second win and switch between two other teams of their type from the third (`PLANS`, the ace
+kept last); from the fourth win Prof. Fusain brings the player's last Hall of Fame team, redrawn at his level
+(« j’ai pris en photo ton équipe du Panthéon… et je l’ai redessinée »). Prize money +1000 per win (ten at most).
+`npm run balance` has a row per stage with a grown team of six at L58 (`CONCOURS_WINS=n` for later runs, the team
+two levels higher per win: about 65–100% after 3 wins, 45–97% after 8), and a row per Master's first rematch.
 
 **Tour des Défis** (`tourDefis` lobby, `tourSalle` battle room): pick 3 party Bestioles; they fight
 as level 50 copies (`towerCopy`, `fight({ borrowed })`: nothing is written back, no bag, no prize,
@@ -437,7 +450,7 @@ Bestiodex diploma, the 12 pages and a tower streak of 21.
 
 **Progress rewards** (trainer card, PROGRÈS page, `src/data/progress.ts`), from the start: Bestiodex
 (5 → all caught), Adventure (badges 1–8, then the ending) and Trainers beaten (10 → 100); after the
-ending, Rematches (1, 4, 8 Masters), Grand Concours (1, 3, 5 wins) and Tower streak (7, 14, 21). Rewards
+ending, Rematches (1, 4, 8 Masters), Grand Concours (1, 3, 5, 10, 20 wins) and Tower streak (7, 14, 21). Rewards
 grow from balls and potions to the held items no shop sells any more (the 4-, 5- and 6-badge ones and
 the four pencils found nowhere else: sky blue, brown, ochre, lilac), biscuit packs (one of each),
 Magic Lollipops and stencils 21–24 (Quake at 100 caught, Stone Blade at the ending, Booming Voice at

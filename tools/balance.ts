@@ -21,12 +21,12 @@ import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
 import { CUSTOM_ID } from '../src/data/creatures.ts';
 import { designProblems, registerCustom, type CustomDesign } from '../src/data/custom.ts';
-import { DIFFICULTY, RIVAL_COUNTER, RIVAL_ITEMS, TRAINERS, brainOf, partyOf, rivalCourseTeam, rivalFinalTeam, rivalLacTeam } from '../src/data/trainers.ts';
+import { DIFFICULTY, RIVAL_COUNTER, RIVAL_ITEMS, TRAINERS, brainOf, partyOf, type TrainerDef, rivalCourseTeam, rivalFinalTeam, rivalLacTeam } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
 import { monTypes } from '../src/data/fairCopies.ts';
 import { effectiveness } from '../src/data/types.ts';
 import type { TypeId } from '../src/data/schema.ts';
-import { CONCOURS } from '../src/data/postgame.ts';
+import { CONCOURS, concoursStage, masterRematchParty } from '../src/data/postgame.ts';
 import { curve } from '../src/data/curve.ts';
 import type { Difficulty } from '../src/state/prefs.ts';
 
@@ -80,10 +80,15 @@ const n = Number(process.argv[3] ?? 300);
 const only = process.argv[4]?.split(',');
 if (!DIFFICULTY[difficulty]) throw new Error(`unknown difficulty ${difficulty} (easy | normal | hard)`);
 
+/** CONCOURS_WINS=n: the Grand Concours as it is after n wins. */
+const WINS = Number(process.env.CONCOURS_WINS ?? 0);
+const MASTER_REMATCH_IDS = Object.fromEntries(Object.values(TRAINERS).filter((t) => t.badge).map((t) => [t.id, true]));
+
 /** Starter ('S') at `lv`, then teammates a few levels below it. */
 const MATES = ['013', '009', '004', '006', '007'];
+/** A post-game team: the starter and teammates grown like a player's, `gap` levels below it. */
 function team(lv: number, size: number, gap = 3): Team {
-  const mates = MATES.slice(0, size - 1).map((sp): [string, number] => [sp === '009' && lv - gap >= 16 ? '010' : sp, lv - gap]);
+  const mates = MATES.slice(0, size - 1).map((sp): [string, number] => [grown(sp, lv - gap), lv - gap]);
   return [['S', lv], ...mates];
 }
 
@@ -183,10 +188,14 @@ const STEPS: [string, Team][] = [
   ['blanche3', teamAt('blanche3', 6)],
   ['rivalFinal', teamAt('rivalFinal', 6)],
   ['effaceur', teamAt('effaceur', 6)],
-  // post-game: the Grand Concours, each fight alone with a level 58 team
-  ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(58, 6, 0)]),
+  // post-game: the Grand Concours, each fight alone with a level 58 team (CONCOURS_WINS=n: after n wins, the team
+  // two levels higher per win, like the Concours)
+  ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(58 + 2 * Math.min(WINS, 8), 6, 0)]),
+  // the Atelier Masters' first rematch, just after the story (a team of six at L47)
+  ...Object.keys(MASTER_REMATCH_IDS).map((id): [string, Team] => [`${id}:re`, team(47, 6, 0)]),
 ];
-const trainer = (id: string) => TRAINERS[id] ?? CONCOURS.find((st) => st.trainer.id === id)!.trainer;
+const trainer = (id: string): TrainerDef => id.endsWith(':re') ? { ...TRAINERS[id.slice(0, -3)], id: `${id.slice(0, -3)}:rematch`, party: masterRematchParty(TRAINERS[id.slice(0, -3)], 0, 47) }
+  : TRAINERS[id] ?? concoursStage(CONCOURS.find((st) => st.trainer.id === id)!.n, WINS).trainer;
 /** The foe's team against this starter: the rival picks the starter that beats yours. */
 const foeParty = (id: string, starter: string) =>
   id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter]) : id === 'rivalLac' ? rivalLacTeam(RIVAL_COUNTER[starter])
