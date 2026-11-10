@@ -899,6 +899,22 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     before: [L('Au bout de cette route, la page s’arrête. Après, il n’y a plus que le réveil…', 'At the end of this road, the page stops. After that, there’s only waking up…')],
     after: [L('Bon réveil, alors !', 'Have a nice waking up, then!')],
   }),
+  // ---------------------------------------------------------------- « La page d’après » (the epilogue, src/story/epilogue.ts)
+  T({
+    id: 'buvardEp', name: L('Capitaine Buvard', 'Captain Blotter'), money: 9000, items: ['super-potion', 'super-potion'],
+    party: [{ species: '042', level: 56 }, { species: '059', level: 56 }, { species: '070', level: 57 }, { species: '100', level: 57 }, { species: '008', level: 58, item: 'baie-doree' }],
+    before: [
+      L('Ho ho… Tu ne m’attendais pas ici, hein ? Je suis venu voir cette page blanche.', 'Ho ho… Didn’t expect me here, did you? I came to see this blank page.'),
+      L('Moi aussi, je fais des taches. Montre-moi ce qu’on en fait, quand on n’a plus peur !', 'I make stains too. Show me what you do with them when you’re not afraid any more!'),
+    ],
+    after: [L('Une tache, c’est le début d’autre chose… Je commence à comprendre.', 'A stain is the start of something else… I’m beginning to understand.')],
+  }),
+  T({
+    id: 'effaceurEp', name: L('Ta petite voix', 'Your little voice'), money: 0, fairCopy: 'dark', items: ['super-potion', 'super-potion'],
+    party: [{ species: '008', level: 57 }, { species: '007', level: 57 }, { species: '027', level: 58 }, { species: '088', level: 58 }, { species: '097', level: 59 }, { species: '011', level: 61, item: 'baie-doree' }],
+    before: [],
+    after: [L('Tu vois ? Même quand je gagne pas, j’apprends.', 'See? Even when I don’t win, I learn.')],
+  }),
   T({
     id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true, fairCopy: 'dark', items: ['super-potion', 'super-potion'],
     party: [{ species: '008', level: 39 }, { species: '007', level: 39 }, { species: '027', level: 39 }, { species: '010', level: 40 }, { species: '011', level: 42 }],

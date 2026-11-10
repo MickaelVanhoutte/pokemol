@@ -86,7 +86,7 @@ export const DREAM_MAPS: Record<string, MapDef> = {
     backdrop: 'sketch',
     onEnter: 'bordPage',
     rows: [
-      'eeeeeeenneeeeeee',
+      'eeeeeeenneeeeene',
       '|nnnnnnnnnnnnnne',
       '|nnnnnnnnnnnnnne',
       '|nnnnnnnnnnnnnne',
@@ -106,10 +106,13 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       { x: 8, y: 13, to: { map: 'routeBlanche', x: 10, y: 1, facing: 'down' } },
       { x: 7, y: 0, to: { map: 'galerie', x: 10, y: 16, facing: 'up' } },
       { x: 8, y: 0, to: { map: 'galerie', x: 11, y: 16, facing: 'up' } },
+      // « La page d’après »: a corner of the sheet opens once the doubt asked for help (src/story/epilogue.ts)
+      { x: 14, y: 0, to: { map: 'margeBlanche', x: 8, y: 10, facing: 'up' } },
     ],
     // after the ending, the next page opens at the top of the sheet
     patches: [
       { id: 'galerieWay', x: 7, y: 0, rows: ['ee'], unless: 'ending' },
+      { id: 'epWay', x: 14, y: 0, rows: ['e'], unless: 'ep:1' },
       // the colours reach the edge of the page after rematches with the Atelier Masters (src/data/afterStory.ts)
       {
         id: 'bordColour', x: 1, y: 1, if: 'couleurs:bord',
@@ -151,6 +154,76 @@ export const DREAM_MAPS: Record<string, MapDef> = {
       { id: 'coconBord', x: 8, y: 4, look: LOOKS.kid, mon: '073', facing: 'down', script: 'coconBord', showIf: 'ending', hideIf: 'fin' },
     ],
     items: [{ x: 13, y: 11, item: 'page-12', hidden: true }],
+  },
+
+  // « La page d’après »: the page the doubt can’t finish, its three ink stains, and the doubt itself (src/story/epilogue.ts)
+  margeBlanche: {
+    id: 'margeBlanche',
+    name: L('La Page d’Après', 'The Next Page'),
+    border: 'erased',
+    backdrop: 'sketch',
+    ambient: 'crumbs',
+    rows: [
+      'eeeeeeeeeeeeeeee',
+      'ennnnnnnnnnnnnne',
+      'ennnnnnnnnnnnnne',
+      'ennneennnneennne',
+      'ennnnnnnnnnnnnne',
+      'enYnnnnnnnnnnYne',
+      'ennnnnnnnnnnnnne',
+      'ennnnnneennnnnne',
+      'ennnnnnnnnnnnnne',
+      'enYnnnnnnnnnnYne',
+      'ennnnnnnnnnnnnne',
+      'eeeeeeennneeeeee',
+    ],
+    warps: [
+      { x: 7, y: 11, to: { map: 'bordPage', x: 14, y: 1, facing: 'down' } },
+      { x: 8, y: 11, to: { map: 'bordPage', x: 14, y: 1, facing: 'down' } },
+      { x: 9, y: 11, to: { map: 'bordPage', x: 14, y: 1, facing: 'down' } },
+    ],
+    patches: [
+      // the page coloured in once the doubt and you finished it
+      {
+        id: 'epColour', x: 1, y: 1, if: 'ep:done',
+        rows: [
+          '..*....,....*.',
+          '......::......',
+          '...??.::.??...',
+          '.,....::....,.',
+          '.T....::....T.',
+          '......::..*...',
+          '..*...??......',
+          '......::....,.',
+          '.T....::....T.',
+          '......::......',
+        ],
+      },
+      // a stain redrawn turns into flowers (one kept stays a stain: it is part of the drawing now)
+      { id: 'epT1', x: 4, y: 3, rows: ['**'], if: 'ep:t1:a' },
+      { id: 'epT2', x: 10, y: 3, rows: ['**'], if: 'ep:t2:a' },
+      { id: 'epT3', x: 7, y: 7, rows: ['**'], if: 'ep:t3:a' },
+    ],
+    recolour: { if: 'ep:done', border: 'tree', backdrop: 'grass' },
+    encounters: {
+      rate: 7, anyTile: true,
+      table: [
+        { id: '110', w: 30, min: 55, max: 57, if: 'ep:1' },
+        { id: '111', w: 25, min: 55, max: 57, if: 'ep:1' },
+        { id: '049', w: 25, min: 55, max: 57 },
+        { id: '088', w: 20, min: 56, max: 58 },
+      ],
+    },
+    interact: [
+      { x: 4, y: 3, script: 'tache1' }, { x: 5, y: 3, script: 'tache1' },
+      { x: 10, y: 3, script: 'tache2' }, { x: 11, y: 3, script: 'tache2' },
+      { x: 7, y: 7, script: 'tache3' }, { x: 8, y: 7, script: 'tache3' },
+    ],
+    npcs: [
+      // its look is the player's own, greyed (`patched` in src/overworld/controller.ts)
+      { id: 'doute', x: 8, y: 1, look: LOOKS.effaceur, facing: 'down', script: 'doute' },
+      { id: 'buvardEp', x: 2, y: 7, look: LOOKS.buvard, facing: 'right', trainer: 'buvardEp', sight: 4 },
+    ],
   },
 
   chambre: {

@@ -193,7 +193,7 @@ describe('the rival after the story', () => {
 describe('teams with a plan', () => {
   it('every boss carries a plan of real moves it can know, and Normal keeps the story’s movesets', async () => {
     const { knowable } = await import('./movesets');
-    const { partyOf, planned } = await import('./trainers');
+    const { partyOf, planned, POSTGAME_ACE } = await import('./trainers');
     for (const t of Object.values(TRAINERS).filter((t) => t.badge || t.fairCopy || t.items?.length)) {
       for (const m of t.party) {
         expect(m.plan, `${t.id} ${m.species}`).toBeDefined();
@@ -201,8 +201,8 @@ describe('teams with a plan', () => {
         expect(m.plan!.moves.length).toBeLessThanOrEqual(4);
         for (const id of m.plan!.moves) expect(knowable(m.species, m.level, true), `${t.id} ${m.species} ${id}`).toContain(id);
       }
-      // the story's bosses play on Normal as they were tuned
-      expect(planned(t.party, 'normal'), t.id).toBe(false);
+      // the story's bosses play on Normal as they were tuned (post-game ones use their plan)
+      expect(planned(t.party, 'normal'), t.id).toBe(Math.max(...t.party.map((m) => m.level)) >= POSTGAME_ACE);
       expect(planned(t.party, 'hard')).toBe(true);
       const hard = partyOf(t.party, 1, 'hard');
       expect(hard.map((m) => m.moves.map((s) => s.id))).toEqual(t.party.map((m) => m.plan!.moves));

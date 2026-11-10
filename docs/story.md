@@ -446,6 +446,21 @@ kept last); from the fourth win Prof. Fusain brings the player's last Hall of Fa
 `npm run balance` has a row per stage with a grown team of six at L58 (`CONCOURS_WINS=n` for later runs, the team
 two levels higher per win: about 65–100% after 3 wins, 45–97% after 8), and a row per Master's first rematch.
 
+**« La page d’après », the epilogue** (Nov 2026, roadmap milestone 8, `src/story/epilogue.ts`). Once the Grand
+Concours is won and four Atelier Masters were beaten again (`champion`, `couleurs:bord`), arriving on Masterpiece
+Square brings the player's doubt, an ally now (an `arrivals` entry, the only one besides the Colour Guides'; it
+sketches itself in beside the player: the player's look greyed, without Team Gomme's cap, `doubtFriendLook`). It
+can't finish a page: a corner of the Edge of the Page opens (`ep:1`, patch `epWay`, the warp at its top right) to
+`margeBlanche`, « La Page d’Après ». Its three ink stains (`interact` spots, `tache1`–`tache3`) are redrawn into
+flowers (`ep:tN` = 1, `ep:tN:a`, a `redraw('sketch')`) or kept (`ep:tN` = 2, `ep:tN:b`: they stay, part of the
+drawing). Captain Buvard came to look (`buvardEp`, L56–58, not grey: he battles, he doesn't repent). With the three
+answered, the doubt says what it learnt (redrawn mostly: « pour t’amuser, pas parce que tu avais peur »; kept: « elles
+font partie du dessin ») and asks for a real training battle: `effaceurEp`, the Great Eraser's team of six at L57–61
+with its dark fair copy and two potions, two more levels per win (`doubtTeam`, `ep:wins`, cap L80), once a real week
+(`re:effaceur`). The first win sets `ep:done`: the page is coloured in (`redraw('restore')`, patch `epColour`, kept
+stains left white), 20 000 and 3 Magic Lollipops; the rival's weekly team gets four levels more. Normal sims: Buvard
+93–98% with a team of six at L60, the doubt 67–73% at L62. The Town Map's last post-game goal is `epilogue`.
+
 **Tour des Défis** (`tourDefis` lobby, `tourSalle` battle room): pick 3 party Bestioles; they fight
 as level 50 copies (`towerCopy`, `fight({ borrowed })`: nothing is written back, no bag, no prize,
 no blackout). Opponents come from `towerFoe(streak)`: 3 different species from `TOWER_POOL` (the

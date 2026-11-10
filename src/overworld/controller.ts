@@ -25,7 +25,7 @@ import type { FresqueDef, MapBuilding, MapDef, NpcDef, ObstacleDef, PickupDef, W
 import { flipBarriers, solvedPuzzles } from './puzzles';
 import { applyPatches } from './patches';
 import { LOOKS, lookOf, type Look } from './sprites';
-import { OLD_AVATARS, fromLook } from '../data/appearance';
+import { OLD_AVATARS, doubtLook, fromLook } from '../data/appearance';
 import { introOf, vsCardOf } from '../ui/battle/intro';
 import { playIntro, playOutro } from '../ui/curtain/transitions';
 import { sceneWait, setSceneGate } from '../anim/sceneClock';
@@ -192,6 +192,8 @@ function patched(def: MapDef): MapDef {
   if (def.npcs?.some((n) => repentant(n.trainer, !!flag('ending')))) {
     out = { ...out, npcs: def.npcs.map((n) => (repentant(n.trainer, true) ? { ...n, look: repentLook(n.id, n.look) } : n)) };
   }
+  // the doubt on its page wears the player's own look, greyed (src/story/epilogue.ts)
+  if (def.npcs?.some((n) => n.id === 'doute')) out = { ...out, npcs: (out.npcs ?? def.npcs).map((n) => (n.id === 'doute' ? { ...n, look: doubtFriend() } : n)) };
   if (def.buildings?.some((b) => b.sketchUnless)) out = { ...out, buildings: def.buildings.map((b) => (b.sketchUnless ? { ...b, sketch: !flag(b.sketchUnless) } : b)) };
   // the Inn and the shop of a town only sketched in pencil are sketched too
   const town = def.generic ? MAPS[save.value?.player.returnTo?.map ?? ''] : undefined;
@@ -528,6 +530,11 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
 }
 
 /** How the player looks (older saves are repaired on load, this is only a fallback). */
+/** The doubt as an ally: the player's own look, greyed, without Team Gomme's cap (the epilogue). */
+const doubtFriend = (): Look => {
+  const a = doubtLook(playerLook());
+  return { ...lookOf(a), appearance: a };
+};
 export const playerLook = () => save.value?.player.look ?? OLD_AVATARS[save.value?.player.avatar ?? 0] ?? OLD_AVATARS[0];
 
 /** Redraws the player's chibi after the look changed (trainer card). */

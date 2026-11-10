@@ -32,6 +32,7 @@ Progress is `save.flags: Record<string, number>`. Conventions:
 | `ko:<slug>`, `koDay:<slug>` | `src/story/legends.ts` | A legendary knocked out: the night count and the real day it comes back |
 | `away:<slug>` | the legendary's map `onEnter` | Its NPC is hidden (caught, not back yet, or Libellune by day) |
 | `rematch:<trainerId>` | `rematch()` on a win | Post-game rematch won (Town Map objectives) |
+| `ep:1`, `ep:t1`…`ep:t3` (1 redrawn, 2 kept), `ep:tN:a` / `:b`, `ep:done`, `ep:wins`, `re:effaceur` | `src/story/epilogue.ts` | « La page d’après »: the doubt asked for help, each stain's answer, the page finished, the doubt's rematches won and the week of the last one |
 | `re:<trainerId>` | `trainerBattle()` on a first win, `routeRematch()` | Local day of a route trainer's last battle: the next day they want a rematch (a ♪ bubble) |
 | `trade:<id>` | `trade()` in `src/story/world.ts` | In-game trade done (`TRADES`, one per town) |
 | `quest:<id>`, `quest:<id>.<step>` | side-quest scripts in `src/story/world.ts` | Favours for townspeople: `lulu` (`.asked`, `.found`), `feu`, `amitie`, `lettre` (`.sent`) |

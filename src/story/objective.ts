@@ -89,6 +89,8 @@ export const POST: Objective[] = [
     const t = leaderOf(b.id);
     return step(`rematch:${t.id}`, townOfTrainer(t.id)!, L(`Revanche : ${b.leader.fr} t’attend à son Atelier !`, `Rematch: ${b.leader.en} awaits at the Atelier!`), [`rematch:${t.id}`]);
   }),
+  // « La page d’après » (src/story/epilogue.ts): it opens after the Concours and four Master rematches
+  step('epilogue', 'bordPage', L('Ta petite voix t’attend sur la page d’après.', 'Your little voice waits on the next page.'), ['ep:done']),
 ];
 
 export const OBJECTIVES: Objective[] = [...MAIN, ...POST];

@@ -192,6 +192,9 @@ const STEPS: [string, Team][] = [
   // post-game: the Grand Concours, each fight alone with a level 58 team (CONCOURS_WINS=n: after n wins, the team
   // two levels higher per win, like the Concours)
   ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(58 + 2 * Math.min(WINS, 8), 6, 0)]),
+  // « La page d’après »: Captain Buvard, then the doubt's training battle (a team of six at L60 / L62)
+  ['buvardEp', team(60, 6, 0)],
+  ['effaceurEp', team(62, 6, 0)],
   // the rival's weekly rematch, once the Concours is won (RIVAL_WINS=n: after n wins, the team two levels higher per win)
   ['rivalPost', team(58 + 2 * Math.min(RIVAL_WINS, 10), 6, 0)],
   // the Atelier Masters' first rematch, just after the story (a team of six at L47)

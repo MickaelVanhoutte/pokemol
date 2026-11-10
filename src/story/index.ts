@@ -15,4 +15,6 @@ import './legends';
 import './realLife';
 import './lac';
 import './course';
+// « La page d’après », after the Grand Concours
+import './epilogue';
 import './coconfus';

@@ -67,6 +67,8 @@ export const WORLD: Record<string, WorldCell> = {
   forteresse3: { kind: 'tower', rects: at(8, 4), of: 'forteresse1' },
   routeBlanche: { kind: 'route', rects: at(18, 2) },
   bordPage: { kind: 'town', rects: at(17, 1, 3, 1) },
+  // « La page d’après »: a corner of the sheet at the top right of the Edge of the Page
+  margeBlanche: { kind: 'route', rects: at(19, 0) },
   galerie: { kind: 'town', rects: at(18, 0), fly: { x: 13, y: 13 } },
   // reached by the ferry from Port-Aquarelle
   phareIle: { kind: 'tower', rects: at(16, 16) },

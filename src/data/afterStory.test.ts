@@ -100,7 +100,8 @@ describe('the Bestioles met only after the story', () => {
     const where = (id: string) => Object.values(MAPS).filter((m) => m.encounters?.table.some((r) => r.id === id)).map((m) => m.id);
     expect(where('110')).toContain('routeBlanche');
     expect(where('108')).toContain('routeBlanche');
-    expect(where('111')).toEqual(['bordPage']);
+    // and on the epilogue's page (src/story/epilogue.ts)
+    expect(where('111')).toEqual(['bordPage', 'margeBlanche']);
   });
 
   it('never come out of the Tombola before the ending', () => {
