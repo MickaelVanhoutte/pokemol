@@ -51,11 +51,13 @@ const SPECIES: Record<string, string[]> = {
   m13: ['025', '024', '023', '036', '027', '014', '042', '059', '070', '100', '008', '007', '088', '097', '011'],
   // the weather on Route 3: your team and what lives there
   m14: ['021', '013', '006', '005', '004', '007', '008', '009', '003', '014', '031', '054', '051', '082', '093', '121', '095', '107'],
+  // New Game+: the three first Bestioles of the lab and the old lead
+  m15: ['001', '002', '003', '025', '024'],
 };
 /** Demos showing her original drawings (the credits). */
 const ORIGINALS: Record<string, boolean> = { m4b: true, m6: true };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
-const ALL_MINIS: Record<string, boolean> = { m10: true, m13: true, m14: true, m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
+const ALL_MINIS: Record<string, boolean> = { m10: true, m13: true, m14: true, m15: true, m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
 const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true, m8: true, m9: true, m12: true };
 

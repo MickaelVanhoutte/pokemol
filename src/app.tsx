@@ -33,7 +33,7 @@ export function App() {
       {/* a screen that crashes shows a torn page instead of a blank one (a new screen starts afresh) */}
       <Guard key={s.id}>
         {s.id === 'title' && <TitleScreen />}
-        {s.id === 'newgame' && <NewGameScreen />}
+        {s.id === 'newgame' && <NewGameScreen plusFrom={s.plusFrom} />}
         {s.id === 'overworld' && <OverworldScreen />}
         {s.id === 'settings' && <SettingsScreen back={s.back} />}
         {s.id === 'battle' && <BattleScreen key={s.props.setup.seed} {...s.props} />}

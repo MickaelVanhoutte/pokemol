@@ -132,6 +132,9 @@
 .prologue__answers.is-waiting { visibility: hidden; }
 .prologue__answers > .pbtn { align-self: flex-end; }
 .prologue__choices { align-self: flex-end; min-width: 10em; }
+/* the challenge rules (src/state/rules.ts): the eighteen types in three columns, and never taller than the screen */
+.prologue__rules { max-height: 62dvh; max-width: calc(100vw - 16px); overflow-y: auto; }
+.prologue__rules .mlist:has(> :nth-child(8)) { display: grid; grid-template-columns: repeat(2, minmax(0, auto)); column-gap: 0.6em; }
 .prologue__input { display: flex; gap: 8px; align-items: center; }
 .prologue__input input { flex: 1; min-width: 0; }
 .prologue__skip { position: absolute; top: max(10px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); }
@@ -153,6 +156,12 @@
   .monpick__ask { max-width: 760px; flex-direction: row; align-items: flex-end; }
   .monpick__ask .monpick__q { flex: 1; }
   .credits__parade img { width: 56px; height: 50px; }
+  /* the challenge rules (six lines, the types eighteen) fit in two or three columns under the Retour button */
+  .prologue__rules .mlist { display: grid; grid-template-columns: repeat(2, minmax(9em, auto)); column-gap: 1em; }
+  .prologue__rules .mlist:has(> :nth-child(8)) { grid-template-columns: repeat(3, minmax(6em, auto)); }
+  .prologue__ask:has(.prologue__rules) { flex-direction: column; align-items: stretch; gap: 4px; }
+  .prologue__ask:has(.prologue__rules) .prologue__choices { align-self: flex-end; }
+  .prologue__ask:has(.prologue__rules) > .textbox { margin-right: 6.5em; }
 }
 
 /* ---------- a framed picture over the world (the museum) */

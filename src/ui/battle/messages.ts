@@ -256,6 +256,7 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
         ? [f(L('Hop ! {n} est attrapé !', 'Gotcha! {n} was caught!'), { n: monLabel(st.sides[1].party[st.sides[1].active]) })]
         : [[tr(L('Oh non ! Il s’est libéré !', 'Oh no! It broke free!')), tr(L('Raah ! Presque !', 'Aargh! Almost had it!')), tr(L('Mince ! Si près du but !', 'Shoot! It was so close!')), tr(L('Mince ! Si près du but !', 'Shoot! It was so close!'))][e.shakes]];
     case 'blocked':
+      if (e.rule) return [tr(L('Ta règle de défi : pas de capture ici !', 'Your challenge rule: no catching here!'))];
       return e.reflet
         ? [tr(L('Le Croque-Carnet passe à travers ! Ce n’est qu’un reflet…', 'The Snapbook goes right through it! It’s only a reflection…'))]
         : [tr(L('Le dresseur bloque le carnet ! On ne vole pas les Bestioles des autres !', 'The trainer blocked the book! Don’t be a thief!'))];

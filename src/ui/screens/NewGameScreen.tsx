@@ -9,6 +9,9 @@ import { LookView } from '../views/LookView';
 import { SleepIntroView } from '../views/SleepIntroView';
 import { enterWorld, runScript } from '../../overworld/controller';
 import { newGame } from '../../state/game';
+import { RULE_HINTS, RULE_NAMES, type Rules } from '../../state/rules';
+import { TYPES } from '../../data/types';
+import type { TypeId } from '../../data/schema';
 import { go } from '../../state/router';
 import { MenuList, TextBox, Window } from '../paper';
 import '../screens.css';
@@ -21,6 +24,8 @@ type Step =
   | { kind: 'avatar' }
   | { kind: 'name' }
   | { kind: 'rival' }
+  /** Challenge rules, optional (src/state/rules.ts). */
+  | { kind: 'rules' }
   | { kind: 'end' };
 
 const STEPS: Step[] = [
@@ -37,6 +42,7 @@ const STEPS: Step[] = [
   { kind: 'say', show: 'rival', text: L('Et voici ton voisin. Il est un peu… vantard. Comment s’appelle-t-il, déjà ?', 'And this is your neighbour. He’s a bit of a… show-off. What was his name again?') },
   { kind: 'rival' },
   { kind: 'say', show: 'rival', text: L('Ah oui, {rival} ! Ça me revient.', 'That’s right, {rival}! I remember now.') },
+  { kind: 'rules' },
   { kind: 'say', show: 'player', text: L('{name} ! Ton aventure à Papeterre va commencer. Un monde de rêves et de dessins t’attend !', '{name}! Your adventure in Papeterra is about to begin. A world of dreams and drawings awaits!') },
   { kind: 'end' },
 ];
@@ -48,8 +54,12 @@ const NAMES: Record<'f' | 'm', LText[]> = {
 const RIVALS = [L('Feutre', 'Marker'), L('Crayon', 'Crayon'), L('Pinceau', 'Brush')];
 
 /** FRLG-style prologue: the professor's speech, girl or boy, names. Ends by waking up in the dream. */
-export function NewGameScreen() {
+export function NewGameScreen({ plusFrom }: { plusFrom?: number } = {}) {
   const [i, setI] = useState(0);
+  const [rules, setRules] = useState<Rules>({});
+  const [typePick, setTypePick] = useState(false);
+  /** The last rule touched: its explanation replaces the question. */
+  const [hint, setHint] = useState<keyof Rules | null>(null);
   const [g, setG] = useState<'f' | 'm'>('f');
   const [look, setLook] = useState<Appearance>(DEFAULT_LOOKS.f);
   const [name, setName] = useState('');
@@ -58,7 +68,7 @@ export function NewGameScreen() {
   const step = STEPS[i];
   const next = () => setI((n) => Math.min(STEPS.length - 1, n + 1));
   const finish = () => {
-    newGame(name || tr(NAMES[g][0]), look, g, rival || tr(RIVALS[0]));
+    newGame(name || tr(NAMES[g][0]), look, g, rival || tr(RIVALS[0]), { rules, plusFrom });
     enterWorld();
     void runScript('intro');
   };
@@ -131,6 +141,35 @@ export function NewGameScreen() {
         )}
         {step.kind === 'name' && chooser(tr(L('Comment t’appelles-tu ?', 'What is your name?')), name, setName, NAMES[g], next)}
         {step.kind === 'rival' && chooser(tr(L('Son nom ?', 'His name?')), rival, setRival, RIVALS, next)}
+        {step.kind === 'rules' && (
+          <Ask key={`${i}${typePick}`} text={typePick
+            ? tr(L('Quel type, pour « Une seule couleur » ?', 'Which type, for “One colour only”?'))
+            : hint ? tr(RULE_HINTS[hint])
+            : tr(plusFrom
+              ? L('Nouvelle partie + : tu gardes ton Bestiodex vu, un œuf de ta Bestiole de tête t’attend au PC. Des règles de défi, en plus ? (facultatif)', 'New Game+: you keep your seen Critterdex, an egg of your lead Critter waits in the PC. Challenge rules too? (optional)')
+              : L('Pour corser l’aventure, tu peux choisir des règles de défi. (Facultatif)', 'To spice up the adventure, you can pick challenge rules. (Optional)'))}>{(ready) => (
+            <Window class="prologue__choices prologue__rules">
+              {typePick ? (
+                <MenuList active={ready} items={[
+                  { label: tr(L('AUCUN', 'NONE')), onSelect: () => { setRules((r) => ({ ...r, monotype: undefined })); setTypePick(false); } },
+                  ...(Object.keys(TYPES) as TypeId[]).map((t) => ({ label: tr(TYPES[t].name), onSelect: () => { setRules((r) => ({ ...r, monotype: t })); setTypePick(false); } })),
+                ]} />
+              ) : (
+                <MenuList active={ready} items={[
+                  ...(Object.keys(RULE_NAMES) as (keyof Rules)[]).map((k) => ({
+                    label: `${rules[k] ? '✓' : '·'} ${tr(RULE_NAMES[k])}${k === 'monotype' && rules.monotype ? ` (${tr(TYPES[rules.monotype].name)})` : ''}`,
+                    onSelect: () => {
+                      setHint(k);
+                      if (k === 'monotype') setTypePick(true);
+                      else setRules((r) => ({ ...r, [k]: !r[k] }));
+                    },
+                  })),
+                  { label: tr(L('C’EST PARTI !', 'LET’S GO!')), onSelect: next },
+                ]} />
+              )}
+            </Window>
+          )}</Ask>
+        )}
         {step.kind === 'end' && <TextBox text="… … …" keys onAdvance={finish} />}
       </div>
       <button class="prologue__skip pbtn pbtn--back" onClick={() => go({ id: 'title' })}>{tr(L('Retour', 'Back'))}</button>

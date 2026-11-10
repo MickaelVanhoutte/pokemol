@@ -152,6 +152,16 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   (`don:<npc id>`, announced with `gotItem`). Players talk to townsfolk hoping for help, so a town has one giver
   (`src/data/balloons.test.ts` checks it): a few berries, balls or a cure, ideally with a tip for the next Atelier.
   Keep a town's other folk few, each with a line that says something (lore, a tip, a quest), not only scenery.
+- **Challenge rules and New Game+** (roadmap milestone 10; optional save fields `rules` and `plus`, no new save version): the prologue's last page offers optional rules
+  (`src/state/rules.ts`, `save.rules`): one colour only (`monotype`: catches of that type only, `catchForbidden`),
+  one catch per place (`onePerMap`, flag `catch:<map>`, legends excepted), a sealed bag (`battleBag`: Croque-Carnets
+  only in battle), a level cap (`levelCapOf`: the next Master's ace, then the Great Eraser's, none after the story;
+  battle XP stops there, `BattleSetup.levelCap`, and Lollipops refuse), and paid Inns (`innPrice`, the first visit
+  free). A blocked catch says « Ta règle de défi : pas de capture ici ! » (`blocked` with `rule`). Gifts and trades
+  are not checked (on your honour). A finished slot can start again as a New Game+ (`newGame({ plusFrom })`): the
+  Bestiodex's seen pages, sparkly odds ×3 and an egg of the old lead Bestiole in the PC (`plusEgg`: its IVs, nature,
+  sparkle and nickname); not its catches, Hall of Fame or drawn Bestiole (they would skip story gates). The trainer
+  card shows `PARTIE +` and the rules.
 - **Weather** (roadmap milestone 9, `src/state/weather.ts`): every outdoor map (`hasSky`: not indoors, under water,
   in a dungeon, in the real house or on a sketched page; `sky: false` opts one out) has one sky a real day, from the
   day and the map's id (`skyOver`): clear 55%, rain 15%, wind 15%, fog 10%, snow 5% where it can snow (`SNOWY`,

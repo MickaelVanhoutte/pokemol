@@ -154,6 +154,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   respire dans le noir.
 - Un **atelier où dessiner ta propre Bestiole** : au crayon, avec le doigt, puis tu choisis ses types, sa
   force et ses capacités. C’est la seule de son espèce, et tu peux revenir la retoucher quand tu veux.
+- Une partie terminée peut **recommencer en Nouvelle partie +** : tu gardes un peu de ton aventure (et un œuf
+  t’attend…). Et pour les plus courageux, des **règles de défi** à choisir au début : une seule couleur, une capture
+  par endroit, un sac scellé, un niveau plafond, des Auberges payantes.
 - Jusqu’à **3 parties** sur le même appareil, chacune avec sa difficulté : une pour toi, une pour un
   frère, une sœur ou un parent. En Facile et en Normal, un pouce levé montre les attaques qui marchent le
   mieux contre une Bestiole déjà rencontrée, et en Facile, les Croque-Carnets attrapent deux fois mieux.
@@ -317,6 +320,9 @@ The story has **two endings**, and your answers choose which one you will see.
   breathes in the dark.
 - A **workshop where you draw your own Bestiole**: in pencil, with your finger, then you pick its types, its
   strength and its moves. It is the only one of its kind, and you can come back to retouch it whenever you like.
+- A finished game can **start again as a New Game+**: you keep a little of your adventure (and an egg is waiting…).
+  And for the bravest, **challenge rules** to pick at the start: one colour only, one catch per place, a sealed bag,
+  a level cap, paid Inns.
 - Up to **3 games** on one device, each with its own difficulty: one for you, one for a brother, a sister
   or a parent. On Easy and Normal, a thumbs-up shows the moves that work best against a Bestiole you have
   already met, and on Easy, Snapbooks catch twice as well.

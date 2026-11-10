@@ -141,7 +141,7 @@ export function TitleScreen() {
     return () => window.removeEventListener('keydown', go);
   }, [phase]);
   const saved = exists ? savedSlots() : [];
-  const startNew = (n: number) => { slot.value = n; go({ id: 'newgame' }); };
+  const startNew = (n: number, plus = false) => { slot.value = n; go({ id: 'newgame', ...(plus ? { plusFrom: n } : {}) }); };
   const items = [
     // one game: straight in; several: pick whose
     ...(exists ? [{ label: t('menu.continue'), onSelect: () => (saved.length === 1 ? loadSave(saved[0]) && enterWorld() : setPicking('continue')) }] : []),
@@ -175,8 +175,19 @@ export function TitleScreen() {
           )}
           {confirmNew !== null ? (
             <>
-              <Window seyes class="title__note">{tr(L('La partie {n} ({p}) sera effacée. Continuer ?', 'Game {n} ({p}) will be erased. Continue?'), { n: confirmNew, p: peekSlot(confirmNew)?.player.name ?? '' })}</Window>
-              <YesNo onAnswer={(yes) => (yes ? startNew(confirmNew) : setConfirmNew(null))} />
+              <Window seyes class="title__note">{tr(peekSlot(confirmNew)?.flags.ending
+                ? L('La partie {n} ({p}) est terminée. Elle sera remplacée : en Nouvelle partie +, tu en gardes un peu.', 'Game {n} ({p}) is finished. It will be replaced: as a New Game+, you keep a little of it.')
+                : L('La partie {n} ({p}) sera effacée. Continuer ?', 'Game {n} ({p}) will be erased. Continue?'), { n: confirmNew, p: peekSlot(confirmNew)?.player.name ?? '' })}</Window>
+              {/* a finished game can start again as a New Game+ (src/state/game.ts newGame) */}
+              {peekSlot(confirmNew)?.flags.ending ? (
+                <Window class="title__list"><MenuList items={[
+                  { label: tr(L('NOUVELLE PARTIE +', 'NEW GAME +')), onSelect: () => startNew(confirmNew, true) },
+                  { label: tr(L('TOUT RECOMMENCER', 'START AFRESH')), onSelect: () => startNew(confirmNew) },
+                  { label: tr(L('Retour', 'Back')), onSelect: () => setConfirmNew(null) },
+                ]} /></Window>
+              ) : (
+                <YesNo onAnswer={(yes) => (yes ? startNew(confirmNew) : setConfirmNew(null))} />
+              )}
             </>
           ) : picking ? (
             <Window class="title__slots">

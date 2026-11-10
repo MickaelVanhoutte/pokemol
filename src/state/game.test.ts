@@ -148,7 +148,7 @@ describe('several games on one device', async () => {
     length: 0,
   } as Storage;
   const { DEFAULT_LOOKS } = await import('../data/appearance');
-  const { deleteSave, hasSave, loadSave, newGame, peekSlot, persist, savedSlots, slot } = await import('./game');
+  const { deleteSave, hasSave, loadSave, newGame, peekSlot, persist, save, savedSlots, slot } = await import('./game');
   const { prefs, setPref } = await import('./prefs');
 
   it('keeps each game in its own slot, game 1 where the single save always was', () => {
@@ -167,6 +167,29 @@ describe('several games on one device', async () => {
     expect(peekSlot(1)?.player.name).toBe('Papa');
     expect(peekSlot(3)).toBeNull();
     expect(hasSave()).toBe(true);
+  });
+
+  it('starts a New Game+ from a finished game: seen pages, an egg of its lead in the PC, rules kept', () => {
+    slot.value = 3;
+    newGame('Avant', DEFAULT_LOOKS.f, 'f', 'Feutre');
+    const lead = { ...createMon('025', 60, { rng: 9 }), nickname: 'Flamme', shiny: true };
+    save.value = { ...save.value!, party: [lead], flags: { ending: 1 }, dex: { seen: ['001', '002', '025'], caught: ['025'] } };
+    persist();
+    const s = newGame('Après', DEFAULT_LOOKS.f, 'f', 'Feutre', { plusFrom: 3, rules: { sealedBag: true, monotype: undefined } });
+    expect(s.version).toBe(SAVE_VERSION);
+    expect(s.plus?.n).toBe(1);
+    expect(s.dex.seen).toEqual(['001', '002', '025']);
+    expect(s.dex.caught).toEqual([]);
+    expect(s.rules).toEqual({ sealedBag: true, monotype: undefined });
+    const egg = s.boxes[0][0];
+    expect(egg.egg).toBeDefined();
+    expect(egg.species).toBe('002');
+    expect(egg).toMatchObject({ ivs: lead.ivs, nature: lead.nature, shiny: true, nickname: 'Flamme', level: 5 });
+    // a game not finished gives nothing; no rule picked keeps no rules
+    const plain = newGame('Rien', DEFAULT_LOOKS.f, 'f', 'Feutre', { rules: {} });
+    expect(plain.plus).toBeUndefined();
+    expect(plain.rules).toBeUndefined();
+    deleteSave(3);
   });
 
   it('plays each game at its own difficulty', () => {

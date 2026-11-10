@@ -1,6 +1,8 @@
 import { effect, signal } from '@preact/signals';
 import { gender, locale, setGlobalVars } from '../i18n';
-import { BASE_FRIENDSHIP, healMon, noStats, type MetHow, type Mon } from '../engine/pk/creature';
+import { BASE_FRIENDSHIP, createMon, healMon, noStats, type MetHow, type Mon } from '../engine/pk/creature';
+import { familyRoot } from './daycare';
+import type { Rules } from './rules';
 import { natureFromUid } from '../data/natures';
 import { talentFromUid } from '../data/talents';
 import { BOX_COUNT, BOX_SIZE, PARTY_MAX, SAVE_VERSION, type SaveData } from '../save/schema';
@@ -310,8 +312,29 @@ function freshSave(name: string, avatar: number, gender: 'f' | 'm', rivalName: s
   };
 }
 
-export function newGame(name: string, look: Appearance, gender: 'f' | 'm', rivalName: string): SaveData {
+/** New Game+: an egg of the old game's lead Bestiole (its first form), keeping what made it strong. */
+export function plusEgg(old: SaveData): Mon | null {
+  const lead = old.party.find((m) => !m.egg && m.species !== CUSTOM_ID);
+  if (!lead) return null;
+  const egg = createMon(familyRoot(lead.species), 5, { rng: Date.now() >>> 0 });
+  return { ...egg, ivs: { ...lead.ivs }, nature: lead.nature, shiny: lead.shiny, nickname: lead.nickname, egg: { steps: 300 }, friendship: 120 };
+}
+
+/**
+ * A new game; `rules`: challenge rules (src/state/rules.ts); `plusFrom`: New Game+ from the finished game in that
+ * slot (read before anything replaces it): the Bestiodex's seen pages, sparkly odds ×3 and, in the PC, an egg of its
+ * lead Bestiole with its strengths (IVs, nature, sparkle, nickname).
+ */
+export function newGame(name: string, look: Appearance, gender: 'f' | 'm', rivalName: string, extra: { rules?: Rules; plusFrom?: number } = {}): SaveData {
+  const old = extra.plusFrom ? peekSlot(extra.plusFrom) : null;
   const s = freshSave(name, 0, gender, rivalName, look);
+  if (extra.rules && Object.values(extra.rules).some(Boolean)) s.rules = extra.rules;
+  if (old?.flags.ending) {
+    s.plus = { n: (old.plus?.n ?? 0) + 1, at: Date.now() };
+    s.dex.seen = [...old.dex.seen];
+    const egg = plusEgg(old);
+    if (egg) s.boxes[0].push(egg);
+  }
   save.value = s;
   outdatedSave.value = false;
   // like the GBA games, a new adventure only replaces the old save once the player saves

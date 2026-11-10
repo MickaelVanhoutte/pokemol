@@ -5,7 +5,8 @@ import type { BalloonPick } from '../ui/views/TownMapView';
 
 export type Screen =
   | { id: 'title' }
-  | { id: 'newgame' }
+  /** `plusFrom`: New Game+ from the finished game in that slot. */
+  | { id: 'newgame'; plusFrom?: number }
   | { id: 'overworld' }
   | { id: 'settings'; back: Screen }
   | { id: 'battle'; props: BattleProps }

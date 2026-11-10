@@ -1,5 +1,6 @@
 import { L, locale, tr, type LText } from '../i18n';
 import { healParty, save, update } from '../state/game';
+import { innPrice } from '../state/rules';
 import { shiftTo } from '../state/clock';
 import { playJingle } from '../audio/music';
 import { sfx } from '../audio/sfx';
@@ -54,6 +55,16 @@ scripts.auberge = async () => {
     ? L('Tu arrives tard ! Entre vite te réchauffer. Une petite pause, ou un bon gros dodo ?', 'You’re out late! Come in and warm up. A little rest, or a good long sleep?')
     : L('Bienvenue à l’Auberge ! Une petite pause, ou un bon gros dodo ?', 'Welcome to the Inn! A little rest, or a good long sleep?'),
     [L('Se reposer', 'Rest'), morning ? L('Dormir jusqu’au matin', 'Sleep till morning') : L('Dormir jusqu’à la nuit', 'Sleep till night'), L('Non merci', 'No thanks')], INNKEEPER);
+  // the paid-Inn challenge rule (src/state/rules.ts): the first visit is on the house
+  if ((c === 0 || c === 1) && save.value!.rules?.paidInn && !first) {
+    const price = innPrice(save.value!);
+    if (save.value!.money < price) {
+      await say(L('Ce sera {p} ₽… Oh, tu n’as pas assez. Reviens quand tu pourras !', 'That’ll be ₽{p}… Oh, you don’t have enough. Come back when you can!'), INNKEEPER, { p: price });
+      return;
+    }
+    update((d) => (d.money -= price));
+    await say(L('Ça fera {p} ₽. Merci !', 'That’s ₽{p}. Thank you!'), INNKEEPER, { p: price });
+  }
   if (c === 0) {
     await say(L('Un bon chocolat chaud, une couverture toute douce… Repose-toi un peu.', 'A nice hot chocolate, a soft blanket… Have a little rest.'), INNKEEPER);
     await getGame().fadeTo(0.6, 250, 'white');
@@ -92,6 +103,15 @@ scripts.innBed = async () => {
     : L('Un lit douillet qui sent la lavande. Dormir jusqu’à la nuit ?', 'A cosy bed that smells of lavender. Sleep till night?'),
   [L('Oui', 'Yes'), L('Non', 'No')]);
   if (c !== 0) return;
+  // the paid-Inn challenge rule: the beds too
+  if (save.value!.rules?.paidInn) {
+    const price = innPrice(save.value!);
+    if (save.value!.money < price) {
+      await say(L('Une nuit coûte {p} ₽, et tu n’as pas assez.', 'A night costs ₽{p}, and you don’t have enough.'), undefined, { p: price });
+      return;
+    }
+    update((d) => (d.money -= price));
+  }
   await innSleep(morning);
 };
 

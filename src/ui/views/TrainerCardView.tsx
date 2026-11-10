@@ -9,6 +9,7 @@ import type { SaveData } from '../../save/schema';
 import { Frame, PixelIcon, Window } from '../paper';
 import { hourNow, phaseAt } from '../../state/clock';
 import { useMenuNav } from '../paper/nav';
+import { RULE_NAMES, type Rules } from '../../state/rules';
 import './views.css';
 
 /** Papeterre’s hour, with a sun or a moon. */
@@ -110,6 +111,8 @@ function CardPage({ save, avatar, onLook }: { save: SaveData; avatar: string; on
           <dt>{tr(L('HEURE', 'CLOCK'))}</dt><dd>{clock(hourNow(save.clockShift ?? 0))}</dd>
           {!!save.hallOfFame?.length && <><dt>{tr(L('CONCOURS', 'CONTEST'))}</dt><dd>×{save.hallOfFame.length}</dd></>}
           {!!save.tower?.best && <><dt>{tr(L('TOUR', 'TOWER'))}</dt><dd title={tr(L('Meilleure série', 'Best streak'))}>{save.tower.best}</dd></>}
+          {!!save.plus?.n && <><dt>{tr(L('PARTIE +', 'GAME +'))}</dt><dd>×{save.plus.n}</dd></>}
+          {save.rules && <><dt>{tr(L('DÉFI', 'CHALLENGE'))}</dt><dd class="tcard__rules">{(Object.keys(RULE_NAMES) as (keyof Rules)[]).filter((k) => save.rules![k]).map((k) => tr(RULE_NAMES[k]) + (k === 'monotype' && save.rules!.monotype ? ` (${tr(TYPES[save.rules!.monotype].name)})` : '')).join(', ')}</dd></>}
         </dl>
         <div class="tcard__me">
           <img class="tcard__avatar" src={avatar} alt="" />

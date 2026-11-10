@@ -3,6 +3,7 @@ import type { HallEntry } from '../data/postgame';
 import type { Appearance } from '../data/appearance';
 import type { Difficulty } from '../state/prefs';
 import type { CustomDesign } from '../data/custom';
+import type { Rules } from '../state/rules';
 
 export type Dir = 'down' | 'up' | 'left' | 'right';
 
@@ -52,6 +53,13 @@ export interface SaveData {
   difficulty?: Difficulty;
   /** The player's own Bestiole, drawn at the Atelier des Brouillons (src/data/custom.ts). */
   atelier?: CustomDesign;
+  /**
+   * Challenge rules picked at the start (src/state/rules.ts); none when absent. Like `plus`, an optional field added
+   * without a new save version, so a phone still running the previous version of the game loads these saves too.
+   */
+  rules?: Rules;
+  /** New Game+: how many finished games came before this one (`n`), and when it started from one. */
+  plus?: { n: number; at: number };
   bag: Record<string, number>;
   money: number;
   dex: { seen: string[]; caught: string[] };

@@ -7,7 +7,7 @@ import type { HoldEffect, Major, MoveDef, StageKey, Weather } from '../../data/s
 import { effectiveness } from '../../data/types';
 import { talentEffect, talentOf } from '../../data/talents';
 import { nextRandom, randomInt } from '../rng';
-import { addXp, gainEvs, learnMove, maxHp, statsOf, xpYield, type Mon } from './creature';
+import { addXp, gainEvs, learnMove, maxHp, statsOf, xpAt, xpYield, type Mon } from './creature';
 
 export type Side = 0 | 1;
 export type BattleKind = 'wild' | 'trainer';
@@ -87,8 +87,10 @@ export interface BattleState {
   pivot?: Side;
   /** Night in Papeterre (Pleine Lune). */
   night?: boolean;
-  /** A vision (the dream legendaries before the ending): balls go right through it. */
-  noCatch?: boolean;
+  /** A vision (the dream legendaries before the ending): balls go right through it; `'rule'`: a challenge rule. */
+  noCatch?: boolean | 'rule';
+  /** The level-cap challenge rule: no XP past this level. */
+  levelCap?: number;
   /** The player's catch rate and XP multipliers: days in the real house (src/data/realLife.ts), and Easy doubles the catch rate. */
   boosts?: { catch?: number; xp?: number };
 }
@@ -192,7 +194,7 @@ export type BattleEvent =
   /** A talent acts. `note`: it endured a knockout, cured its status, or made a move useless. */
   | { t: 'talent'; side: Side; talent: string; note?: 'endure' | 'cured' | 'immune' | 'phased' }
   | { t: 'ball'; item: string; shakes: number; caught: boolean }
-  | { t: 'blocked'; reflet?: boolean }
+  | { t: 'blocked'; reflet?: boolean; rule?: boolean }
   | { t: 'run'; ok: boolean }
   | { t: 'cantRun' }
   | { t: 'end'; result: BattleResult };
@@ -223,10 +225,13 @@ export interface BattleSetup {
   player: SideSetup;
   enemy: SideSetup;
   night?: boolean;
-  noCatch?: boolean;
+  /** No catching: a vision (`true`), or the player's own challenge rule (`'rule'`). */
+  noCatch?: boolean | 'rule';
   boosts?: BattleState['boosts'];
   /** The weather of the place (rain, hail): it lasts the whole battle unless a move changes it. */
   weather?: Weather;
+  /** No Bestiole of the player's grows past this level (the level-cap challenge rule). */
+  levelCap?: number;
 }
 
 export class IllegalAction extends Error {}
@@ -276,7 +281,8 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
     needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: setup.weather ? { kind: setup.weather, turns: 999 } : null, night: !!setup.night,
-    ...(setup.noCatch ? { noCatch: true } : {}),
+    ...(setup.noCatch ? { noCatch: setup.noCatch } : {}),
+    ...(setup.levelCap ? { levelCap: setup.levelCap } : {}),
     ...(setup.boosts ? { boosts: setup.boosts } : {}),
   };
   const out = new Recorder(state, withSnaps);
@@ -978,7 +984,7 @@ export const PITY_BALLS = 15;
  */
 function throwBall(st: BattleState, ballId: string, out: Out) {
   if (st.kind !== 'wild' || st.noCatch) {
-    out.push(st.noCatch ? { t: 'blocked', reflet: true } : { t: 'blocked' });
+    out.push(st.noCatch === 'rule' ? { t: 'blocked', rule: true } : st.noCatch ? { t: 'blocked', reflet: true } : { t: 'blocked' });
     return;
   }
   const target = activeMon(st.sides[1]);
@@ -1126,7 +1132,10 @@ function xpShares(st: BattleState, foeMon: Mon): { m: Mon; i: number; amount: nu
 
 /** Effort points, XP, level-ups and moves to learn for beating (or catching) `foeMon`. */
 function awardXp(st: BattleState, foeMon: Mon, out: Out) {
-  for (const { m, i, amount } of xpShares(st, foeMon)) {
+  for (const share of xpShares(st, foeMon)) {
+    const { m, i } = share;
+    // the level-cap rule: no XP past the cap's level
+    const amount = st.levelCap ? Math.max(0, Math.min(share.amount, xpAt(st.levelCap + 1) - 1 - m.xp)) : share.amount;
     gainEvs(m, foeMon.species);
     out.push({ t: 'xp', idx: i, amount });
     for (const up of addXp(m, amount)) {

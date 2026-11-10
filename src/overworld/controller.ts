@@ -46,6 +46,7 @@ import { playSound, sfx } from '../audio/sfx';
 import { currentTrack, playJingle, playMusic, type TrackId } from '../audio/music';
 import { MOMENT_TRACKS, trackForMap, type MusicMoment } from '../audio/mapMusic';
 import { hasSky, skyOf, skyToBattle } from '../state/weather';
+import { battleBag, catchForbidden, levelCapOf } from '../state/rules';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -1114,7 +1115,10 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       id: 'battle',
       props: {
         setup: {
-          kind, seed: newSeed(), night: dayPhase() === 'night', noCatch: opts.noCatch,
+          kind, seed: newSeed(), night: dayPhase() === 'night',
+          // a vision can't be caught, nor what the player's challenge rules forbid (src/state/rules.ts)
+          noCatch: opts.noCatch || (kind === 'wild' && !opts.borrowed && catchForbidden(d, enemy[0].species, g.map.def.id) ? 'rule' : undefined),
+          ...(!opts.borrowed && levelCapOf(d) ? { levelCap: levelCapOf(d) } : {}),
           // rain or hail where the battle is fought (src/state/weather.ts)
           ...(!opts.borrowed && hasSky(g.map.def) && skyToBattle(g.sky) ? { weather: skyToBattle(g.sky)! } : {}),
           ...(opts.borrowed ? {} : { boosts: { catch: catchBoost(d.flags) * DIFFICULTY[prefs.value.difficulty].catch, xp: xpBoost(d.flags) } }),
@@ -1126,7 +1130,7 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
             ...(kind === 'trainer' ? brainOf(opts.trainer, enemy, prefs.value.difficulty) : {}),
           },
         },
-        bag: opts.borrowed ? {} : d.bag,
+        bag: opts.borrowed ? {} : battleBag(d),
         onUseItem: (id) => update((x) => void takeItem(x, id)),
         backdrop: opts.backdrop ?? getGame().map.def.backdrop ?? 'grass',
         tutorial: opts.tutorial,
@@ -1161,6 +1165,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       caught = wild.uid;
       if (firstCatch(x, wild.species)) registered = wild.species;
       const where = addMon(x, { ...wild }, 'caught', g.map.def.id);
+      // one catch per place (challenge rule)
+      if (x.rules?.onePerMap) x.flags[`catch:${g.map.def.id}`] = 1;
       x.stats.captures++;
       if (where === 'box') showToast(tr(L('{n} est envoyé dans le PC.', '{n} was sent to the PC.'), { n: monLabel(wild) }));
     }
@@ -1310,7 +1316,8 @@ export async function wildBattle(species: string, level: number, opts: { music?:
   }
   const wild = createMon(species, level, { rng: newSeed() });
   // daydreaming at the real window makes sparkly ones a little less rare
-  const extra = (shinyChance(s().flags) - SHINY_CHANCE) / (1 - SHINY_CHANCE);
+  // New Game+ triples the odds (src/state/game.ts)
+  const extra = (Math.min(1, shinyChance(s().flags) * (s().plus ? 3 : 1)) - SHINY_CHANCE) / (1 - SHINY_CHANCE);
   if (!wild.shiny && extra > 0 && Math.random() < extra) wild.shiny = true;
   // like the GBA games, some wild creatures carry an item (kept when caught)
   const held = creature(species).wildItem;
@@ -1431,6 +1438,12 @@ export async function useLollipop(i: number) {
     for (;;) {
       const m = s().party[i];
       if (!m || m.egg || m.level >= MAX_LEVEL || !(s().bag[LOLLIPOP] > 0)) return;
+      // the level-cap rule
+      const cap = levelCapOf(s());
+      if (cap && m.level >= cap) {
+        await say(L('Ta règle de défi : {n} ne peut pas dépasser le niveau {l} pour l’instant.', 'Your challenge rule: {n} can’t go past level {l} for now.'), undefined, { n: monLabel(m), l: cap });
+        return;
+      }
       let ups: LevelUp[] = [];
       update((x) => {
         takeItem(x, LOLLIPOP);

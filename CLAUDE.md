@@ -107,6 +107,7 @@ re-renders everything.
   A save that can't be played (`playable()`, or `repair()` throwing) is turned down, never crashing the title: `persist()`
   keeps the save it replaces under `<key>.prev` (loaded instead, with a line, when the last one is damaged,
   `restoredPrev`) and an unreadable one under `<key>.bad`; `deleteSave` erases all three.
+- `src/state/rules.ts`: challenge rules (`save.rules`) and New Game+ (`save.plus`, `newGame({ plusFrom })`): optional save fields, no new save version (an older cached app still loads the save).
 - `src/state/clock.ts`: day, evening and night from the device's clock plus `save.clockShift` (sleeping
   at an Inn or at home, `sleepUntil`). Encounter entries can be `time: 'night'`; outdoor maps get a multiplied tint.
 - `src/state/prefs.ts`: per-device preferences outside the save (text speed, battle speed, sound, music)
