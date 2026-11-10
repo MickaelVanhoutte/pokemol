@@ -87,6 +87,7 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 21,
       table: [
+        { id: '011', w: 6, min: 28, max: 29, sky: 'fog' },
         { id: '009', w: 26, min: 28, max: 29 },
         { id: '010', w: 16, min: 27, max: 29 },
         { id: '013', w: 14, min: 28, max: 29 },

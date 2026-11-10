@@ -82,6 +82,7 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 21,
       table: [
+        { id: '048', w: 14, min: 25, max: 27, sky: 'wind' },
         { id: '007', w: 22, min: 25, max: 27 },
         { id: '012', w: 10, min: 26, max: 27 },
         { id: '013', w: 16, min: 25, max: 27 },

@@ -3,12 +3,12 @@
  * fireflies at night, ink specks, eraser crumbs, glitter. Each speck's place comes from the time alone
  * (nothing is stored). They stay on the place: walking past them, they keep their spot on the map.
  */
-export type AmbientKind = 'petals' | 'leaves' | 'motes' | 'fireflies' | 'ink' | 'crumbs' | 'glitter';
+export type AmbientKind = 'petals' | 'leaves' | 'motes' | 'fireflies' | 'ink' | 'crumbs' | 'glitter' | 'rain' | 'snow' | 'wind';
 
-export const AMBIENT_KINDS: AmbientKind[] = ['petals', 'leaves', 'motes', 'fireflies', 'ink', 'crumbs', 'glitter'];
+export const AMBIENT_KINDS: AmbientKind[] = ['petals', 'leaves', 'motes', 'fireflies', 'ink', 'crumbs', 'glitter', 'rain', 'snow', 'wind'];
 
-/** How many specks of each kind are on screen. */
-export const AMBIENT_COUNT: Record<AmbientKind, number> = { petals: 28, leaves: 26, motes: 34, fireflies: 20, ink: 22, crumbs: 26, glitter: 22 };
+/** How many specks of each kind are on screen (the weather's too: rain, snow, gusts of wind). */
+export const AMBIENT_COUNT: Record<AmbientKind, number> = { petals: 28, leaves: 26, motes: 34, fireflies: 20, ink: 22, crumbs: 26, glitter: 22, rain: 64, snow: 40, wind: 14 };
 
 const COLOURS: Record<AmbientKind, string[]> = {
   petals: ['#f7b6cf', '#fde3ec', '#f29ac8'],
@@ -18,6 +18,9 @@ const COLOURS: Record<AmbientKind, string[]> = {
   ink: ['#2b2536', '#3a3a6a'],
   crumbs: ['#f4a3ba', '#d9cfc4', '#c9bfb2'],
   glitter: ['#fff6b8', '#ffd3ea', '#cfe8ff'],
+  rain: ['#5a6f9c', '#7086b4'],
+  snow: ['#ffffff', '#f1f6ff'],
+  wind: ['#ffffff', '#f4f1ea'],
 };
 
 /** A fixed random number for speck `i` (the same every frame). */
@@ -79,6 +82,13 @@ export function speckAt(kind: AmbientKind, i: number, t: number, w: number, h: n
         alpha: Math.max(0, Math.sin(t * (1.6 + rnd(i, 7)) + i * 4)) ** 3,
         colour,
       };
+    // the weather: short slanted graphite strokes of rain, drifting paper flakes, gusts of wind
+    case 'rain':
+      return { x: wrap(x0 - t * 40 * depth + px, spanX) - 12, y: wrap(y0 + t * 170 * depth + py, spanY) - 12, size: 1, alpha: 0.85, colour };
+    case 'snow':
+      return { x: wrap(x0 + Math.sin(t * 0.8 + i) * 8 + t * 6 * depth + px, spanX) - 12, y: wrap(y0 + t * 22 * depth + py, spanY) - 12, size: 2, alpha: 0.95, colour };
+    case 'wind':
+      return { x: wrap(x0 + t * 110 * depth + px, spanX) - 12, y: wrap(y0 + Math.sin(t + i) * 4 + py, spanY) - 12, size: 1, alpha: 0.35 + 0.25 * Math.sin(t * 2 + i), colour };
   }
 }
 
@@ -136,6 +146,21 @@ export function drawAmbient(ctx: CanvasRenderingContext2D, kind: AmbientKind, w:
         px(-2, 0, s.colour, s.alpha * 0.7, 5, 1);
         px(0, -2, s.colour, s.alpha * 0.7, 1, 5);
         px(0, 0, '#ffffff', s.alpha);
+        break;
+      case 'rain':
+        // a slanted pencil stroke, darker on its lower side so it reads over the paper grain
+        px(1, -1, '#dfe8f6', s.alpha * 0.7, 1, 3);
+        px(0, 0, s.colour, s.alpha, 1, 4);
+        px(-1, 4, edge(s.colour), s.alpha, 1, 3);
+        break;
+      case 'snow':
+        px(0, 0, s.colour, s.alpha, 2, 2);
+        px(0, 2, '#9fb1d1', s.alpha * 0.8, 2, 1);
+        break;
+      case 'wind':
+        px(0, 0, s.colour, s.alpha, 9, 1);
+        px(9, -1, s.colour, s.alpha * 0.6, 4, 1);
+        px(-3, 1, '#c9c2b4', s.alpha * 0.5, 4, 1);
         break;
     }
   }

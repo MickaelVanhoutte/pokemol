@@ -84,6 +84,7 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 21,
       table: [
+        { id: '078', w: 12, min: 15, max: 17, sky: 'rain' },
         { id: '004', w: 22, min: 16, max: 17 },
         { id: '013', w: 18, min: 16, max: 17 },
         { id: '005', w: 14, min: 15, max: 17 },

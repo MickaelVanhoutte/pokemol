@@ -225,6 +225,8 @@ export interface BattleSetup {
   night?: boolean;
   noCatch?: boolean;
   boosts?: BattleState['boosts'];
+  /** The weather of the place (rain, hail): it lasts the whole battle unless a move changes it. */
+  weather?: Weather;
 }
 
 export class IllegalAction extends Error {}
@@ -273,13 +275,14 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   });
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
-    needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: null, night: !!setup.night,
+    needSwitch: false, learnQueue: [], participants: [], escapes: 0, weather: setup.weather ? { kind: setup.weather, turns: 999 } : null, night: !!setup.night,
     ...(setup.noCatch ? { noCatch: true } : {}),
     ...(setup.boosts ? { boosts: setup.boosts } : {}),
   };
   const out = new Recorder(state, withSnaps);
   out.push({ t: 'sendOut', side: 1, idx: state.sides[1].active });
   out.push({ t: 'sendOut', side: 0, idx: state.sides[0].active });
+  if (setup.weather) out.push({ t: 'weather', kind: setup.weather, on: true });
   state.participants = [activeMon(state.sides[0]).uid];
   onEntry(state, 1, out);
   onEntry(state, 0, out);

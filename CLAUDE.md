@@ -160,6 +160,8 @@ re-renders everything.
   pencil, the eraser, eyelids (`lids`, shared with the prologue) and a camera (`camAt`, `look`). `showPlanche(p)` waits
   for it (`end: 'tap'`: until a press), `withPlanche(p, fn)` keeps its last picture while someone talks. Used for the
   Prof's photo (`profPhoto`, `act1.ts`), the Great Eraser's face (`reveal`, `finale.ts`) and waking up (`eyesOpen`).
+- The weather (`src/state/weather.ts`): one sky a real day per outdoor map (`Game.sky`), drawn over it, carried into
+  battles (rain, hail) and into a few encounter rows (`sky`).
 - The living world: `particles.ts` (grass blades from tall grass, dust landing from a ledge, rings behind the boat,
   a pool stepped and drawn by `Game`), a soft shadow under everyone, `doors.ts` (doorways open, `stepOut` from a
   building), `ambient.ts` (each map's `ambient`, fireflies outdoors at night), and the time of day's tint from

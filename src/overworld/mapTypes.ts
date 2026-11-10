@@ -1,3 +1,4 @@
+import type { Sky } from '../state/weather';
 import type { DayPhase } from '../state/clock';
 import type { Backdrop } from '../data/schema';
 import type { DrainMix, Primary } from '../data/primaries';
@@ -141,7 +142,8 @@ export interface EncounterTable {
   /** Encounters on every walkable tile (caves), not only tall grass. */
   anyTile?: boolean;
   /** `time`: only by day (evening included) or only at night; `if`: only once this flag is set (after the story). */
-  table: { id: string; w: number; min: number; max: number; time?: 'day' | 'night'; if?: string }[];
+  /** `sky`: only under that weather (src/state/weather.ts), on top of the usual ones. */
+  table: { id: string; w: number; min: number; max: number; time?: 'day' | 'night'; if?: string; sky?: Sky }[];
 }
 
 /** An item lying on the ground (picked up once). */
@@ -203,6 +205,8 @@ export interface MapDef {
   sketch?: boolean;
   /** Drifting fog wisps. */
   fog?: boolean;
+  /** `false`: no weather here, though outdoors (src/state/weather.ts). */
+  sky?: false;
   /** What drifts in the air (ambient.ts): petals, leaves, dust, fireflies, ink, eraser crumbs, glitter. Outdoors
    *  without one, fireflies come out at night. */
   ambient?: AmbientKind;

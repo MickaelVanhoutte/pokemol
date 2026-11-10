@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { L, locale, tr } from '../../i18n';
 import { BADGES } from '../../data/badges';
 import { MAPS } from '../../data/maps';
+import { SKY_NAMES, hasSky, skyOf } from '../../state/weather';
 import { TOWNS, WORLD, placeOf, playerSpot, townOfTrainer } from '../../data/worldmap';
 import { currentObjective, leaderOf } from '../../story/objective';
 import type { SaveData } from '../../save/schema';
@@ -122,6 +123,8 @@ export function TownMapView({ save, avatar, onClose, pick }: { save: SaveData; a
     WORLD[cursor].kind === 'town' && cursor !== 'bordPage' && !visited(cursor) ? tr(L('Pas encore visité', 'Not visited yet')) : '',
     badge ? `${tr(badge.name)} ${save.badges.includes(badge.id) ? '✓' : '—'}` : '',
     visited(cursor) && innServices(cursor).length ? `${tr(L('Auberge', 'Inn'))}${locale.value === 'fr' ? '\u00a0: ' : ': '}${innServices(cursor).join(', ')}` : '',
+    // today's weather over the place (src/state/weather.ts), once visited
+    visited(cursor) && MAPS[cursor] && hasSky(MAPS[cursor]) ? `${tr(L('Météo', 'Weather'))}${locale.value === 'fr' ? '\u00a0: ' : ': '}${tr(SKY_NAMES[skyOf(MAPS[cursor])])}` : '',
   ].filter(Boolean);
 
   return (

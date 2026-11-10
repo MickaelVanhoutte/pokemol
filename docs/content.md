@@ -152,6 +152,13 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   (`don:<npc id>`, announced with `gotItem`). Players talk to townsfolk hoping for help, so a town has one giver
   (`src/data/balloons.test.ts` checks it): a few berries, balls or a cure, ideally with a tip for the next Atelier.
   Keep a town's other folk few, each with a line that says something (lore, a tip, a quest), not only scenery.
+- **Weather** (roadmap milestone 9, `src/state/weather.ts`): every outdoor map (`hasSky`: not indoors, under water,
+  in a dungeon, in the real house or on a sketched page; `sky: false` opts one out) has one sky a real day, from the
+  day and the map's id (`skyOver`): clear 55%, rain 15%, wind 15%, fog 10%, snow 5% where it can snow (`SNOWY`,
+  rain elsewhere); Act 1's places are always clear. `Game.sky` is drawn after the place's own air (graphite rain
+  strokes and a greyer light, paper flakes, gusts, fog banks; only the light under MOUVEMENTS : DOUX). Rain and snow
+  start the battles fought there with rain or hail for the whole fight (`BattleSetup.weather`). An encounter row can
+  ask for a sky (`sky: 'rain'`), on top of the usual ones; the Town Map shows a visited place's weather.
 - On an NPC, `when: ['day' | 'evening' | 'night', …]`: only there at those times of the day (day 7–19 h, evening
   19–21 h, night 21–7 h, the device's clock shifted by naps). Each town has one person of the night (a stargazer,
   the lamplighter, the baker before dawn…) and its children go home at night. `night: [lines]` replaces `text` after

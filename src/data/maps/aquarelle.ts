@@ -76,6 +76,8 @@ export const AQUARELLE_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 21,
       table: [
+        { id: '003', w: 16, min: 13, max: 15, sky: 'rain' },
+        { id: '095', w: 10, min: 14, max: 15, sky: 'rain' },
         { id: '013', w: 22, min: 14, max: 15 },
         { id: '006', w: 18, min: 14, max: 15 },
         { id: '005', w: 16, min: 13, max: 15 },

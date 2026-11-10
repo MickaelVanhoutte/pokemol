@@ -45,6 +45,7 @@ import { hourNow, meetsTime, phaseAt, tintAt, type DayPhase } from '../state/clo
 import { playSound, sfx } from '../audio/sfx';
 import { currentTrack, playJingle, playMusic, type TrackId } from '../audio/music';
 import { MOMENT_TRACKS, trackForMap, type MusicMoment } from '../audio/mapMusic';
+import { hasSky, skyOf, skyToBattle } from '../state/weather';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -126,6 +127,12 @@ export function updateTime(snap = false) {
   game.timeTint = tintAt(hourNow(save.value?.clockShift ?? 0));
   game.night = dayPhase() === 'night';
   if (snap) game.snapTint();
+  // a new day: a new sky (src/state/weather.ts)
+  const today = localDay();
+  if (skyDay !== today) {
+    skyDay = today;
+    if (game.map) game.sky = skyOf(game.map.def, today);
+  }
   // the time of day turned while you stand there: people who keep hours come and go (`when` on an NPC)
   const phase = dayPhase();
   const turned = shownPhase !== null && shownPhase !== phase;
@@ -136,6 +143,8 @@ export function updateTime(snap = false) {
 }
 /** The time of day the map's people were last placed for. */
 let shownPhase: DayPhase | null = null;
+/** The day the sky was last chosen for. */
+let skyDay: number | null = null;
 export const flag = (name: string) => !!save.value?.flags[name];
 /** Set when a flag changes, so the map (patches, NPCs) is rebuilt once the script ends. */
 let mapDirty = false;
@@ -217,6 +226,8 @@ function loadMap(id: string) {
   g.glows = glowingSpots({ interact: def.interact, npcs: g.npcs.flatMap((n) => (n.npc ? [n.npc] : [])) }, save.value?.flags ?? {});
   // places visited (the Bestiodex only names habitats you have been to)
   if (save.value) save.value.flags[`seen:${def.id}`] = 1;
+  // today's weather over this map (src/state/weather.ts)
+  g.sky = skyOf(g.map.def);
   updateTime();
   markRematches();
 }
@@ -425,7 +436,7 @@ function onStep(x: number, y: number): boolean {
     const st = { rng: newSeed() };
     // some Bestioles only come out at night (or by day), or once the story is over
     const phase = dayPhase();
-    const table = enc.table.filter((r) => meetsTime(r.time, phase) && (!r.if || flag(r.if)));
+    const table = enc.table.filter((r) => meetsTime(r.time, phase) && (!r.if || flag(r.if)) && (!r.sky || r.sky === g.sky));
     if (!table.length) return false;
     const e = pickWeighted(st, table, (r) => r.w);
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));
@@ -1104,6 +1115,8 @@ export async function fight(kind: BattleKind, enemyName: LText, enemy: Mon[], op
       props: {
         setup: {
           kind, seed: newSeed(), night: dayPhase() === 'night', noCatch: opts.noCatch,
+          // rain or hail where the battle is fought (src/state/weather.ts)
+          ...(!opts.borrowed && hasSky(g.map.def) && skyToBattle(g.sky) ? { weather: skyToBattle(g.sky)! } : {}),
           ...(opts.borrowed ? {} : { boosts: { catch: catchBoost(d.flags) * DIFFICULTY[prefs.value.difficulty].catch, xp: xpBoost(d.flags) } }),
           // eggs stay out of battles
           player: { name: L(d.player.name, d.player.name), party: opts.borrowed ?? d.party.filter((m) => !m.egg), isAI: false, fairCopy: d.bag['feutre-or'] ? 'light' : undefined },

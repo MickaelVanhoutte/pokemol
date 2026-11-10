@@ -73,6 +73,7 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
     encounters: {
       rate: 21,
       table: [
+        { id: '010', w: 12, min: 21, max: 23, sky: 'fog' },
         { id: '005', w: 20, min: 22, max: 23 },
         { id: '006', w: 32, min: 22, max: 23, time: 'night' },
         { id: '013', w: 16, min: 22, max: 23, time: 'day' },

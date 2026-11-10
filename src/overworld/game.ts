@@ -1,3 +1,5 @@
+import type { Sky } from '../state/weather';
+import { calmMotion } from '../anim/calm';
 import type { Dir } from '../save/schema';
 import { footprint, lights, paintBuilding } from './buildings';
 import { LEGEND, type BerryBushDef, type MapBuilding, type MapDef, type NpcDef, type ObstacleDef, type PickupDef, type SignDef, type Warp } from './mapTypes';
@@ -336,6 +338,8 @@ export class Game {
   private tintShown: [number, number, number] = [255, 255, 255];
   /** Night in Papeterre: fireflies come out where nothing else is in the air. */
   night = false;
+  /** Today's weather over this map (src/state/weather.ts, set by the controller). */
+  sky: Sky = 'clear';
 
   /** The time of day's colour at once (no slide): the game starts. */
   snapTint() {
@@ -1183,20 +1187,41 @@ export class Game {
       drawAmbient(ctx, air, this.viewW, this.viewH, camX, camY, performance.now() / 1000);
       ctx.restore();
     }
-    if (def.fog) {
-      const t = performance.now() / 1000;
-      ctx.fillStyle = 'rgba(235, 235, 255, 0.10)';
-      for (let i = 0; i < 7; i++) {
-        const fx = ((i * 97 + t * (8 + i * 2)) % (this.viewW + 160)) - 80 - ((camX * 0.3) % 40);
-        const fy = ((i * 53) % Math.max(1, this.viewH - 20)) + Math.sin(t * 0.5 + i) * 6;
+    if (def.fog) this.drawFog(ctx, camX, 0.1);
+    // the day's weather (src/state/weather.ts): a greyer light under rain and snow, falling specks, gusts, fog
+    if (this.sky !== 'clear' && !def.indoor) {
+      if (this.sky === 'rain' || this.sky === 'snow') {
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.fillStyle = this.sky === 'rain' ? 'rgb(222, 228, 240)' : 'rgb(238, 242, 252)';
+        ctx.fillRect(0, 0, this.viewW, this.viewH);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      if (this.sky === 'fog') this.drawFog(ctx, camX, 0.18);
+      else if (!calmMotion()) {
+        ctx.save();
         ctx.beginPath();
-        ctx.ellipse(fx, fy, 60, 10, 0, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.rect(-camX, -camY, this.map.w * TILE, this.map.h * TILE);
+        ctx.clip();
+        drawAmbient(ctx, this.sky, this.viewW, this.viewH, camX, camY, performance.now() / 1000);
+        ctx.restore();
       }
     }
     if (this.fade > 0) {
       ctx.fillStyle = `rgba(${this.fadeColor},${this.fade})`;
       ctx.fillRect(0, 0, this.viewW, this.viewH);
+    }
+  }
+
+  /** Banks of fog drifting across the view (a foggy place, or a foggy day). */
+  private drawFog(ctx: CanvasRenderingContext2D, camX: number, alpha: number) {
+    const t = performance.now() / 1000;
+    ctx.fillStyle = `rgba(235, 235, 255, ${alpha})`;
+    for (let i = 0; i < 7; i++) {
+      const fx = ((i * 97 + t * (8 + i * 2)) % (this.viewW + 160)) - 80 - ((camX * 0.3) % 40);
+      const fy = ((i * 53) % Math.max(1, this.viewH - 20)) + Math.sin(t * 0.5 + i) * 6;
+      ctx.beginPath();
+      ctx.ellipse(fx, fy, 60, 10, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
