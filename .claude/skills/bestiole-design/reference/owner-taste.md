@@ -74,6 +74,8 @@ brief.
 | sibling forms all walking left on straight legs (critic, « même pose ») | three new evolutions of one baby | each sibling gets its own body angle (hunched, rising, low and stretched) and draws its body as an outline, never as a tube |
 | « Pandivin ne ressemble même plus à un panda » | an elegant form drawn with a long neck and long legs | elegance stays inside the family's body: a big head, a long low body, short dark legs, a bushy tail; grace comes from the pose, not from new proportions |
 | « Son corps et ses pattes sont un peu bizarres » | Pandiva standing as a slab on stubby legs | a red panda standing up is a pear on short dark legs, feet flat; an arm on the hip leaves a gap between elbow and waist |
+| « 3 propositions d'animaux pour une plante ? Ça ne colle pas » | Grass/Poison cards that were animals carrying mushrooms or brambles | a Grass family can be the plant itself (a walking sundew): « animals, not objects » does not make every plant an animal |
+| « Fouettipède et le corbeau feu sont ok, les autres sont vraiment pas beaux » | a first wave of 14 direction sketches | kept: one strong line of action through the whole body (the reared S, the lean forward crow) and deep saturated colour with one hot accent; refused: blob or capsule bodies with stick or post legs, pale washed colours (khaki, sand), fins and leaves stuck on rather than grown |
 
 - « Le critique est pas très critique quand même » (2026-10-31): the critic now judges against the 151 classic
   designs the owner gave as the bar (`tools/out/critic/classic-reference.jpg`, local only) and defaults to FAIL.
