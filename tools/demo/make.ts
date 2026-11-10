@@ -43,6 +43,8 @@ const SPECIES: Record<string, string[]> = {
   m9: ['025', '036', '008', '050', '053', '007', '027', '024'],
   // the people of the night: your Braisaure
   m10: ['021'],
+  // the music box only
+  m11: [],
 };
 /** Demos showing her original drawings (the credits). */
 const ORIGINALS: Record<string, boolean> = { m4b: true, m6: true };

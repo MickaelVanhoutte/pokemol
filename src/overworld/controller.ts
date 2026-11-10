@@ -43,8 +43,8 @@ import { prefs } from '../state/prefs';
 import { mixPrimaries } from '../data/primaries';
 import { hourNow, meetsTime, phaseAt, tintAt, type DayPhase } from '../state/clock';
 import { playSound, sfx } from '../audio/sfx';
-import { playJingle, playMusic, type TrackId } from '../audio/music';
-import { trackForMap } from '../audio/mapMusic';
+import { currentTrack, playJingle, playMusic, type TrackId } from '../audio/music';
+import { MOMENT_TRACKS, trackForMap, type MusicMoment } from '../audio/mapMusic';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -131,6 +131,8 @@ export function updateTime(snap = false) {
   const turned = shownPhase !== null && shownPhase !== phase;
   shownPhase = phase;
   if (turned && game.lock === 0 && screen.value.id === 'overworld' && !dialog.value && game.map.def.npcs?.some((n) => n.when)) refreshMap();
+  // night falls on the route: its night tune
+  if (turned) mapMusicNow();
 }
 /** The time of day the map's people were last placed for. */
 let shownPhase: DayPhase | null = null;
@@ -349,6 +351,7 @@ function maybeArrival() {
 let repelWoreOff = false;
 
 function onStep(x: number, y: number): boolean {
+  mapMusicNow();
   const g = getGame();
   if (++stepsSinceSave >= 12) {
     stepsSinceSave = 0;
@@ -828,6 +831,8 @@ export function toggleBike(): LText | null {
   if (g.surfing) return L('Pas de vélo sur l’eau !', 'No cycling on water!');
   g.biking = !g.biking;
   sfx.confirm();
+  // the bike's tune (src/audio/mapMusic.ts)
+  mapMusicNow();
   return null;
 }
 
@@ -1303,9 +1308,28 @@ export async function flash(color: 'white' | 'black' = 'white', ms = 140) {
 }
 
 /** Back to the current map's tune (after a scene with its own music). */
+/** The bike, the boat and the night, for the map's music. */
+export const musicMoment = (): MusicMoment => {
+  const g = getGame();
+  return { biking: g.biking, surfing: g.surfing, night: dayPhase() === 'night' };
+};
+
 export function mapMusic() {
   const g = getGame();
-  if (g.map) playMusic(trackForMap(g.map.def, save.value?.player.returnTo));
+  if (g.map) playMusic(trackForMap(g.map.def, save.value?.player.returnTo, musicMoment()));
+}
+
+/**
+ * Getting on the bike or the boat, landing, night falling: the map's music follows (`MOMENT_TRACKS`), but only
+ * while the map's own music or a moment's plays, never over a scene's.
+ */
+export function mapMusicNow() {
+  const g = getGame();
+  if (!g.map || g.lock > 0 || screen.value.id !== 'overworld') return;
+  const now = currentTrack();
+  const own = trackForMap(g.map.def, save.value?.player.returnTo);
+  const want = trackForMap(g.map.def, save.value?.player.returnTo, musicMoment());
+  if (now !== want && (now === own || (now && MOMENT_TRACKS.includes(now)))) playMusic(want);
 }
 
 /** Shakes the view (`rumble`, a low tremble; `jolt`, one hard knock; `quake`, the ground moving) and waits for it. */

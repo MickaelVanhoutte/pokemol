@@ -58,3 +58,10 @@ describe('transitions', () => {
     for (const k of REVEAL_KINDS) expect(REVEAL_MS[k]).toBeGreaterThan(200);
   });
 });
+
+describe('the intros of the new tunes', () => {
+  it('a legendary battle with its own tune and a Grand Concours battle keep their splashes', () => {
+    expect(introOf({ kind: 'wild', music: 'legende' }).vs).toBe('legend');
+    expect(introOf({ kind: 'trainer', music: 'concours', trainerId: 'gcMarine' }).vs).toBe('concours');
+  });
+});

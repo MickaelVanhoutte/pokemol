@@ -39,7 +39,7 @@ async function vision(o: { id: string; slug: string; level: number; intro: LText
     await sayAll(o.intro);
     await shake(500, 'quake');
   });
-  const out = await wildBattle(o.id, o.level, { music: 'final', noCatch: true });
+  const out = await wildBattle(o.id, o.level, { music: 'legende', noCatch: true });
   if (out !== 'win' && out !== 'flee') return;
   setFlag(`vision:${o.slug}`);
   if (save.value && findCoconfus(save.value)) await say(o.clue);
@@ -53,7 +53,7 @@ async function meet(o: { id: string; slug: string; level: number; intro: LText[]
     await sayAll(o.intro);
     await shake(500, 'quake');
   });
-  const out = await wildBattle(o.id, o.level, { music: 'final' });
+  const out = await wildBattle(o.id, o.level, { music: 'legende' });
   if (out === 'capture') {
     setFlag(`static:${o.slug}`);
     await say(o.caught);

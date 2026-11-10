@@ -341,7 +341,7 @@ scripts.aquarelline = async () => {
     L('Elle te regarde longtemps… comme si elle reconnaissait quelqu’un qui aime les taches.', 'She looks at you for a long time… as if she recognised someone who likes stains.'),
   ]);
   await shake(500);
-  const out = await wildBattle('115', 40, { music: 'final' });
+  const out = await wildBattle('115', 40, { music: 'legende' });
   if (out === 'capture') {
     setFlag('static:aquarelline');
     await say(L('Aquarelline est dans ton Croque-Carnet… Elle laisse une petite traînée de couleur derrière elle.', 'Aquarelline is in your Snapbook… She leaves a little trail of colour behind.'));

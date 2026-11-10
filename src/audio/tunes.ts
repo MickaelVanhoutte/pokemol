@@ -10,7 +10,8 @@
 export type TrackId =
   | 'title' | 'bourg' | 'pastel' | 'plume' | 'port' | 'feutre' | 'braise' | 'paillette' | 'gouache' | 'encre' | 'galerie'
   | 'town' | 'route' | 'cave' | 'gomme' | 'edge' | 'center' | 'atelier' | 'rival'
-  | 'wild' | 'trainer' | 'gommeBattle' | 'leader' | 'final' | 'champion' | 'ending' | 'evolution';
+  | 'wild' | 'trainer' | 'gommeBattle' | 'leader' | 'final' | 'champion' | 'ending' | 'evolution'
+  | 'routeNuit' | 'route2' | 'velo' | 'mer' | 'fonds' | 'legende' | 'concours';
 
 /** Short tunes played once over the music, which comes back after them. */
 export type JingleId = 'badge' | 'item' | 'caught' | 'victory' | 'evolved' | 'heal' | 'spotted' | 'spottedGomme';
@@ -118,6 +119,48 @@ const FILL = 'KhhhnhKhnhnnnnnn', ROLL = 'Thhhnnnnnnnnnnnn';
 const POUND = 'KhKhnhKhKhKhnhKh', POUND_START = 'XhKhnhKhKhKhnhKh';
 
 // ------------------------------------------------------------------ the tunes
+
+/** The routes' tune (the night variant and the late routes' theme sit next to it). */
+const ROUTE: Track = {
+  bpm: 138,
+  voices: [
+    {
+      notes: bars(
+        'D5 G5 B5:2 A5 G5 D5:2', 'C5 F5 A5:2 G5 F5 C5:2', 'E5 G5 C6:3 B5 A5 G5', 'F#5:2 A5:2 D6:3 .',
+        'B5 A5 G5 D5 G5:2 B5:2', 'C6 A5 F5 C5 F5:2 A5:2', 'G5 E5 C5 E5 F#5 A5 D6 C6', 'B5:4 G5:2 .:2',
+        'E5:3 F#5 G5:2 B5:2', 'C6:3 B5 A5:2 G5:2', 'B5 D6 B5 G5 D5:2 G5:2', 'F#5:4 A5:2 D5:2',
+        'G5:3 F#5 E5:2 B4:2', 'C5 E5 G5 C6 B5:2 G5:2', 'A5 C6 E6 C6 D6:2 F#5:2', 'G5:6 .:2',
+      ),
+    },
+    {
+      notes: bars(
+        drive('G2', 'D3'), drive('F2', 'C3'), drive('C3', 'G3'), drive('D3', 'A3'),
+        drive('G2', 'D3'), drive('F2', 'C3'), 'C3 C3 G3 C3 D3 D3 A3 D3', drive('G2', 'D3'),
+        drive('E2', 'B2'), drive('C3', 'G3'), drive('G2', 'D3'), drive('D3', 'A3'),
+        drive('E2', 'B2'), drive('C3', 'G3'), 'A2 A2 E3 A2 D3 D3 A3 D3', 'G2 G2 D3 G2 G2:4',
+      ),
+    },
+    {
+      notes: bars(
+        'B4:8', 'A4:8', 'G4:8', 'A4:8', 'B4:8', 'A4:8', 'G4:4 F#4:4', 'G4:8',
+        'G4:8', 'E4:8', 'D4:8', 'F#4:8', 'B4:8', 'G4:8', 'A4:4 F#4:4', 'B4:8',
+      ),
+    },
+  ],
+  drums: `${rep('k.h.s.h.k.k.s.h.', 7)} k.h.s.h.k.s.sss.`,
+};
+
+/**
+ * A tune at night: slower, swung a little, its melody a tone lower on the music box with a soft echo, the shaker and
+ * brushes only (the routes after dark).
+ */
+function nightOf(t: Track): Track {
+  return {
+    bpm: Math.round(t.bpm * 0.7), swing: 0.25,
+    voices: t.voices.map((v, i) => ({ ...v, notes: transpose(v.notes, -2), ...(i === 0 ? { echo: 3, vol: 1.15 } : { vol: 1.05 }) })),
+    drums: t.drums?.replace(/k/g, 'o').replace(/[sr]/g, '.'),
+  };
+}
 
 export const TRACKS: Record<TrackId, Track> = {
   // C major, a hopeful theme with a harp underneath; the second half soars
@@ -288,34 +331,9 @@ export const TRACKS: Record<TrackId, Track> = {
   },
 
   // G mixolydian (F naturals): an adventurous walk, then a wider B part in E minor
-  route: {
-    bpm: 138,
-    voices: [
-      {
-        notes: bars(
-          'D5 G5 B5:2 A5 G5 D5:2', 'C5 F5 A5:2 G5 F5 C5:2', 'E5 G5 C6:3 B5 A5 G5', 'F#5:2 A5:2 D6:3 .',
-          'B5 A5 G5 D5 G5:2 B5:2', 'C6 A5 F5 C5 F5:2 A5:2', 'G5 E5 C5 E5 F#5 A5 D6 C6', 'B5:4 G5:2 .:2',
-          'E5:3 F#5 G5:2 B5:2', 'C6:3 B5 A5:2 G5:2', 'B5 D6 B5 G5 D5:2 G5:2', 'F#5:4 A5:2 D5:2',
-          'G5:3 F#5 E5:2 B4:2', 'C5 E5 G5 C6 B5:2 G5:2', 'A5 C6 E6 C6 D6:2 F#5:2', 'G5:6 .:2',
-        ),
-      },
-      {
-        notes: bars(
-          drive('G2', 'D3'), drive('F2', 'C3'), drive('C3', 'G3'), drive('D3', 'A3'),
-          drive('G2', 'D3'), drive('F2', 'C3'), 'C3 C3 G3 C3 D3 D3 A3 D3', drive('G2', 'D3'),
-          drive('E2', 'B2'), drive('C3', 'G3'), drive('G2', 'D3'), drive('D3', 'A3'),
-          drive('E2', 'B2'), drive('C3', 'G3'), 'A2 A2 E3 A2 D3 D3 A3 D3', 'G2 G2 D3 G2 G2:4',
-        ),
-      },
-      {
-        notes: bars(
-          'B4:8', 'A4:8', 'G4:8', 'A4:8', 'B4:8', 'A4:8', 'G4:4 F#4:4', 'G4:8',
-          'G4:8', 'E4:8', 'D4:8', 'F#4:8', 'B4:8', 'G4:8', 'A4:4 F#4:4', 'B4:8',
-        ),
-      },
-    ],
-    drums: `${rep('k.h.s.h.k.k.s.h.', 7)} k.h.s.h.k.s.sss.`,
-  },
+  route: ROUTE,
+  routeNuit: nightOf(ROUTE),
+
 
   // D dorian, slow and sparse: a lonely melody with an echo, water drops, tom drips
   cave: {
@@ -596,6 +614,183 @@ export const TRACKS: Record<TrackId, Track> = {
   },
 
   // a lullaby in 6/8: music-box melody with an echo over rocking arpeggios
+  // ---------------------------------------------------------------- roadmap milestone 6: a tune for each moment
+  // the later routes (Act 3 on): D major, a strummed bass and the wood block
+  route2: {
+    bpm: 132,
+    voices: [
+      {
+        vol: 1.2,
+        notes: bars(
+          'D5 F#5 A5:2 B5 A5 F#5:2', 'G5 B5 D6:2 C#6 B5 G5:2', 'A5:3 F#5 E5:2 D5:2', 'E5:6 .:2',
+          'D5 F#5 A5:2 B5 A5 D6:2', 'C#6 B5 A5 G5 F#5:2 E5:2', 'F#5 G5 A5 B5 A5:2 C#5:2', 'D5:6 .:2',
+          'B5:3 A5 G5:2 F#5:2', 'E5:3 F#5 G5:2 B5:2', 'A5:3 G5 F#5:2 D5:2', 'E5:4 A5:4',
+          'B5 C#6 D6:2 A5 F#5 D5:2', 'G5 A5 B5:2 E5 G5 B5:2', 'A5:2 B5 A5 G5:2 E5:2', 'D5:6 .:2',
+        ),
+      },
+      {
+        notes: bars(
+          strum('D3'), strum('G2'), strum('D3'), strum('A2'), strum('D3'), strum('A2'), strum('A2'), strum('D3'),
+          strum('G2'), strum('E2'), strum('D3'), strum('A2'), strum('D3'), strum('E2'), strum('A2'), 'D3:8',
+        ),
+      },
+      {
+        notes: bars(
+          'F#4:8', 'B4:8', 'A4:8', 'C#5:8', 'F#4:8', 'A4:8', 'C#5:8', 'D5:8',
+          'B4:8', 'G4:8', 'F#4:8', 'E4:8', 'A4:8', 'G4:8', 'C#5:8', 'D5:8',
+        ),
+      },
+    ],
+    drums: `${rep('k.h.r.h.k.h.r.hh', 7)} k.h.r.h.k.s.sss.`,
+  },
+  // on the bike: A major, fast and bouncy
+  velo: {
+    bpm: 164,
+    voices: [
+      {
+        notes: bars(
+          'A5 E5 C#6:2 B5 A5 E5:2', 'F#5 A5 D6:2 C#6 B5 A5:2', 'E5 G#5 B5:2 E6:2 D6 B5', 'C#6:3 B5 A5:4',
+          'A5 E5 C#6:2 B5 A5 E5:2', 'D6 C#6 B5 A5 F#5:2 A5:2', 'E5 F#5 G#5 A5 B5 C#6 D6 B5', 'A5:6 .:2',
+          'C#6:2 D6 E6:3 C#6:2', 'B5:2 A5 F#5:3 A5:2', 'G#5:2 A5 B5:3 E6:2', 'C#6:4 B5:2 E5:2',
+          'A5 B5 C#6 A5 D6:2 C#6:2', 'B5 C#6 D6 B5 E6:2 D6:2', 'C#6 B5 A5 G#5 F#5 G#5 A5 B5', 'A5:6 .:2',
+        ),
+      },
+      {
+        notes: bars(
+          drive('A2', 'E3'), drive('D3', 'A3'), drive('E2', 'B2'), drive('A2', 'E3'), drive('A2', 'E3'), drive('D3', 'A3'), drive('E2', 'B2'), 'A2 A2 E3 A2 A2:4',
+          drive('A2', 'E3'), drive('D3', 'A3'), drive('E2', 'B2'), drive('A2', 'E3'), drive('F#2', 'C#3'), drive('E2', 'B2'), drive('E2', 'B2'), 'A2 A2 E3 A2 A2:4',
+        ),
+      },
+      {
+        notes: bars(
+          arp('A4 C#5 E5', 8, 1), arp('D5 F#5 A5', 8, 1), arp('E4 G#4 B4', 8, 1), arp('A4 C#5 E5', 8, 1),
+          arp('A4 C#5 E5', 8, 1), arp('D5 F#5 A5', 8, 1), arp('E4 G#4 B4', 8, 1), 'A4:8',
+          arp('A4 C#5 E5', 8, 1), arp('D5 F#5 A5', 8, 1), arp('E4 G#4 B4', 8, 1), arp('A4 C#5 E5', 8, 1),
+          arp('F#4 A4 C#5', 8, 1), arp('E4 G#4 B4', 8, 1), arp('E4 G#4 B4', 8, 1), 'A4:8',
+        ),
+      },
+    ],
+    drums: `${rep('k.r.s.r.k.k.s.r.', 7)} k.r.s.r.k.s.sss.`,
+  },
+  // on the boat: F major in 6/8, rolling like the waves
+  mer: {
+    bpm: 112, bar: 6,
+    voices: [
+      {
+        vol: 1.35,
+        notes: bars(
+          'C5:2 F5 A5:2 G5', 'F5:3 C5:3', 'D5:2 G5 A#5:2 A5', 'G5:3 E5:3',
+          'C5:2 F5 A5:2 C6', 'D6:2 C6 A#5:2 A5', 'G5:2 A5 A#5:2 G5', 'F5:6',
+          'A5:2 C6 F6:2 E6', 'D6:3 A#5:3', 'G5:2 A#5 D6:2 C6', 'A5:3 F5:3',
+          'C5:2 D5 E5:2 F5', 'G5:2 A5 A#5:2 C6', 'A5:2 G5 E5:2 G5', 'F5:6',
+        ),
+      },
+      {
+        vol: 1.3,
+        notes: bars(
+          'F2:3 C3:3', 'F2:3 C3:3', 'G2:3 D3:3', 'C3:3 G2:3', 'F2:3 C3:3', 'A#2:3 F3:3', 'C3:3 G2:3', 'F2:3 C3:3',
+          'F2:3 C3:3', 'A#2:3 F3:3', 'G2:3 D3:3', 'F2:3 C3:3', 'C3:3 G2:3', 'C3:3 G2:3', 'C3:3 G2:3', 'F2:6',
+        ),
+      },
+      {
+        notes: bars(
+          arp('F4 A4 C5', 6, 1), arp('F4 A4 C5', 6, 1), arp('G4 A#4 D5', 6, 1), arp('E4 G4 C5', 6, 1),
+          arp('F4 A4 C5', 6, 1), arp('F4 A#4 D5', 6, 1), arp('E4 G4 C5', 6, 1), 'F4:6',
+          arp('F4 A4 C5', 6, 1), arp('F4 A#4 D5', 6, 1), arp('G4 A#4 D5', 6, 1), arp('F4 A4 C5', 6, 1),
+          arp('E4 G4 C5', 6, 1), arp('E4 G4 A#4', 6, 1), arp('E4 G4 C5', 6, 1), 'F4:6',
+        ),
+      },
+    ],
+    drums: rep('k.hs.h', 16),
+  },
+  // under the water: D minor, slow, every note echoing
+  fonds: {
+    bpm: 76,
+    voices: [
+      {
+        echo: 3, vol: 1.8,
+        notes: bars(
+          'D5:4 F5:2 A5:2', 'G5:6 F5:2', 'E5:4 C5:2 E5:2', 'A4:8',
+          'D5:4 F5:2 A5:2', 'C6:4 A#5:2 A5:2', 'G5:4 E5:2 C#5:2', 'D5:8',
+          'F5:4 A5:2 D6:2', 'C6:6 A5:2', 'A#5:4 G5:2 D5:2', 'E5:8',
+          'F5:4 E5:2 D5:2', 'C#5:4 E5:2 A5:2', 'G5:2 F5:2 E5:2 C#5:2', 'D5:8',
+        ),
+      },
+      { vol: 1.6, notes: bars('D3:8', 'A#2:8', 'C3:8', 'A2:8', 'D3:8', 'A#2:8', 'A2:8', 'D3:8', 'D3:8', 'F2:8', 'G2:8', 'A2:8', 'A#2:8', 'A2:8', 'A2:8', 'D3:8') },
+      {
+        echo: 2, vol: 1.5,
+        notes: bars(
+          arp('D4 F4 A4', 8, 1), arp('A#3 D4 F4', 8, 1), arp('C4 E4 G4', 8, 1), arp('A3 C#4 E4', 8, 1),
+          arp('D4 F4 A4', 8, 1), arp('A#3 D4 F4', 8, 1), arp('A3 C#4 E4', 8, 1), arp('D4 F4 A4', 8, 1),
+          arp('D4 F4 A4', 8, 1), arp('F4 A4 C5', 8, 1), arp('G3 A#3 D4', 8, 1), arp('A3 C#4 E4', 8, 1),
+          arp('A#3 D4 F4', 8, 1), arp('A3 C#4 E4', 8, 1), arp('A3 C#4 E4', 8, 1), arp('D4 F4 A4', 8, 1),
+        ),
+      },
+    ],
+    drums: rep('o.......o.......', 8),
+  },
+  // a legendary Bestiole: C minor, strings and brass, the timpani often
+  legende: {
+    bpm: 164,
+    voices: [
+      {
+        with: [{ inst: 'brass', oct: -1, vol: 0.35 }],
+        notes: bars(
+          'C5:2 G5:2 D#5 F5 G5:2', 'G#5:3 G5 F5:2 D#5:2', 'F5:2 G#5:2 C6:2 A#5:2', 'G5:4 D5:4',
+          'C6:2 A#5 G#5 G5:2 D#5:2', 'F5:2 G#5:2 C6:2 D6:2', 'D#6:3 D6 C6:2 G5:2', 'B5:.5 C6:.5 D6:.5 D#6:.5 F6:2 D6:2 B5:2',
+          'C6:4 G5:2 D#5:2', 'G#5:3 G5 F5:2 C5:2', 'A#5:2 G#5 G5 F5:2 A#5:2', 'G5:3 G#5 A#5:2 D6:2',
+          'D#6:2 D6:2 C6:2 G#5:2', 'A#5:3 G#5 G5:2 F5:2', 'G5 G#5 A#5 B5 C6:2 D6:2', 'C6:6 .:2',
+        ),
+      },
+      {
+        inst: 'staccato', vol: 1.4,
+        notes: bars(
+          gallop('C2'), gallop('G#2'), gallop('F2'), gallop('G2'), gallop('G#2'), gallop('F2'), gallop('D#2'), gallop('G2'),
+          gallop('C2'), gallop('G#2'), gallop('A#2'), gallop('D#2'), gallop('G#2'), gallop('A#2'), gallop('G2'), 'C2 C2:.5 C2:.5 C3 C2 C2:4',
+        ),
+      },
+      {
+        inst: 'strings', vol: 0.6,
+        notes: bars(
+          'G4:8', 'C5:8', 'C5:8', 'B4:8', 'D#5:8', 'C5:8', 'G4:8', 'D5:8',
+          'G4:8', 'C5:8', 'D5:8', 'D#5:8', 'C5:8', 'D5:8', 'B4:4 D5:4', 'D#5:8',
+        ),
+      },
+    ],
+    drums: [START, BOOM, BEAT2, BOOM, BEAT2, BEAT, BOOM, FILL, START, BOOM, BEAT2, BOOM, BEAT2, BEAT, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
+  },
+  // the Grand Concours: B♭ major, a fanfare
+  concours: {
+    bpm: 160,
+    voices: [
+      {
+        with: [{ inst: 'brass', oct: -1, vol: 0.4 }],
+        notes: bars(
+          'A#4:2 D5:2 F5 A#5 F5:2', 'G5:3 F5 D#5:2 D5:2', 'C5 D5 D#5:2 G5 F5 D#5:2', 'D5:4 F5:4',
+          'A#5:2 A5 G5 F5:2 D5:2', 'D#5:2 G5:2 A#5:2 C6:2', 'D6:3 C6 A#5:2 A5:2', 'A5:.5 A#5:.5 C6:.5 D6:.5 F6:2 C6:2 A5:2',
+          'A#5:4 F5:2 D5:2', 'D#5:3 F5 G5:2 D#5:2', 'F5:2 A5:2 C6:2 A5:2', 'A#5:3 C6 D6:2 A#5:2',
+          'G5:2 A#5:2 D#6:2 D6:2', 'C6:3 A#5 A5:2 F5:2', 'G5 A5 A#5 C6 D6:2 C6:2', 'A#5:6 .:2',
+        ),
+      },
+      {
+        inst: 'staccato', vol: 1.4,
+        notes: bars(
+          gallop('A#2'), gallop('D#2'), gallop('C2'), gallop('F2'), gallop('G2'), gallop('D#2'), gallop('F2'), gallop('F2'),
+          gallop('A#2'), gallop('D#2'), gallop('F2'), gallop('A#2'), gallop('D#2'), gallop('F2'), gallop('F2'), 'A#2 A#2:.5 A#2:.5 A#3 A#2 A#2:4',
+        ),
+      },
+      {
+        inst: 'strings', vol: 0.6,
+        notes: bars(
+          'D5:8', 'G4:8', 'G4:8', 'F4:4 A4:4', 'D5:8', 'G4:8', 'C5:8', 'A4:8',
+          'D5:8', 'G4:8', 'A4:8', 'F4:8', 'G4:8', 'C5:8', 'A4:4 C5:4', 'D5:8',
+        ),
+      },
+    ],
+    drums: [START, BEAT, BEAT2, BEAT, BEAT2, BEAT, BEAT2, FILL, START, BEAT, BEAT2, BEAT, BEAT2, BOOM, BOOM, ROLL].join(' | '),
+    drumStep: 0.5,
+  },
   ending: {
     bpm: 100, bar: 6,
     voices: [

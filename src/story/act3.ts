@@ -271,7 +271,7 @@ scripts.echoShadow = async () => {
     await shake(500, 'quake');
     await say(L('… Elle se jette sur toi !', '… It leaps at you!'));
   });
-  const out = await wildBattle('011', 38, { music: 'final' });
+  const out = await wildBattle('011', 38, { music: 'legende' });
   if (out === 'capture' || out === 'win') {
     setFlag('static:ombrouille');
     await say(out === 'capture'

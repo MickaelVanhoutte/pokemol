@@ -185,7 +185,12 @@ The map test rejects unknown characters.
 
 **Music** follows the map automatically (`trackForMap` in `src/audio/mapMusic.ts`): every town has
 its own theme (`TOWN_THEMES`), also played in its houses; the Ateliers play `atelier`; then routes,
-caves and towers. Special maps are listed in `BY_MAP`. A new town needs a theme there. The rival's
+caves and towers. Special maps are listed in `BY_MAP`. A new town needs a theme there. It also follows the
+moment (`MusicMoment`, roadmap milestone 6): `fonds` under the water, `mer` on the boat, `velo` on the bike outdoors,
+`routeNuit` on a route at night (the route theme slower, a tone down, with an echo: `nightOf`), and `route2` on the
+later routes (`LATE_ROUTES`). `mapMusicNow()` checks it at every step, on the bike and when night falls, but only
+switches while the map's own music or a moment's plays (`MOMENT_TRACKS`), never over a scene's. Legendary battles
+play `legende`, the Grand Concours `concours` (its finale `champion`). The rival's
 scenes call `playMusic('rival')` and `mapMusic()` to come back.
 
 **Jingles** (`playJingle` in `src/audio/music.ts`) play once and bring the music back: `badge`,

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { waiting } from '../../data/progress';
 import { L, tr } from '../../i18n';
 import type { Dir } from '../../save/schema';
-import { badgeOverlay, dexPageOverlay, evoOverlay, getGame, hatchOverlay, itemShown, learnOverlay, menuOpen, monOverlay, nameOverlay, openScreen, pictureOverlay, showToast, toast, toggleBike } from '../../overworld/controller';
+import { badgeOverlay, dexPageOverlay, evoOverlay, getGame, hatchOverlay, itemShown, learnOverlay, menuOpen, monOverlay, musicMoment, nameOverlay, openScreen, pictureOverlay, showToast, toast, toggleBike } from '../../overworld/controller';
 import { BadgeGetView, DexPageView, ItemGet } from '../views/MomentViews';
 import { PictureView } from '../views/PictureView';
 import { NicknameView } from '../views/NicknameView';
@@ -82,7 +82,7 @@ export function OverworldScreen() {
     const g = getGame();
     if (!g.map) return;
     setMapName(tr(g.map.def.name));
-    playMusic(trackForMap(g.map.def, save.value?.player.returnTo));
+    playMusic(trackForMap(g.map.def, save.value?.player.returnTo, musicMoment()));
     const id = setTimeout(() => setMapName(null), 1800);
     return () => clearTimeout(id);
   }, [currentMap]);

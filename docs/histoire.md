@@ -143,6 +143,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une nuit à l’Auberge ou
   dans ton lit). Certaines Bestioles ne sortent que la nuit… et certains habitants aussi : dans chaque ville,
   quelqu’un ne se montre qu’une fois les étoiles allumées, pendant que les enfants rentrent se coucher.
+- Des **musiques** pour chaque moment : à vélo, en bateau, sous l’eau, sur les routes la nuit, face aux légendes…
 - Les habitants te proposent des **échanges** de Bestioles, et certains ont besoin d’un coup de main :
   une Bestiole perdue, une lettre à porter, une curiosité à satisfaire…
 - Les dresseurs des routes veulent leur **revanche** dès le lendemain, avec une équipe qui progresse avec
@@ -301,6 +302,7 @@ The story has **two endings**, and your answers choose which one you will see.
 - Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed).
   Some Critters only come out at night… and so do some people: in every town, someone only shows up once the
   stars are out, while the children go home to bed.
+- **Music** for each moment: on the bike, on the boat, under the water, on the routes at night, facing the legends…
 - Townspeople offer Critter **trades**, and some need a hand: a lost Critter, a letter to carry, a
   curiosity to satisfy…
 - Route trainers want a **rematch** the very next day, with a team that grows with yours but never outgrows

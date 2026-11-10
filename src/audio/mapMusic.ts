@@ -24,12 +24,24 @@ const TOWN_THEMES: Record<string, TrackId> = {
  * Ateliers, routes, caves and towers, Team Gomme hideouts… `returnTo` tells which town a shared
  * interior belongs to.
  */
-export function trackForMap(def: MapDef, returnTo?: Pick<Place, 'map'>): TrackId {
+/** The later routes (Act 3 on, the cycling track, the sketch forest): their own theme. */
+const LATE_ROUTES = new Set(['route6', 'route7', 'route8', 'route9', 'piste', 'esquisses']);
+
+/** What changes the music on the way (roadmap milestone 6): the bike, the boat, the night. */
+export interface MusicMoment { biking?: boolean; surfing?: boolean; night?: boolean }
+/** The tunes of a moment: when one plays, the map's music may take over again (`mapMusicNow`). */
+export const MOMENT_TRACKS: TrackId[] = ['velo', 'mer', 'routeNuit'];
+
+export function trackForMap(def: MapDef, returnTo?: Pick<Place, 'map'>, moment: MusicMoment = {}): TrackId {
   if (BY_MAP[def.id]) return BY_MAP[def.id];
   if (def.id.startsWith('atelier')) return 'atelier';
+  if (def.underwater) return 'fonds';
+  if (moment.surfing && !def.indoor) return 'mer';
+  if (moment.biking && !def.indoor && !def.dungeon) return 'velo';
   if (TOWN_THEMES[def.id]) return TOWN_THEMES[def.id];
   if (def.backdrop === 'cave' || def.backdrop === 'tower' || def.border === 'cavewall') return 'cave';
   if (def.indoor) return TOWN_THEMES[regionOf(def.id, returnTo) ?? ''] ?? 'town';
   if (def.onEnter === 'visitTown') return 'town';
-  return 'route';
+  if (moment.night) return 'routeNuit';
+  return LATE_ROUTES.has(def.id) ? 'route2' : 'route';
 }

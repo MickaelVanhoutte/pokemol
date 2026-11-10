@@ -34,6 +34,13 @@ const TRACKS: Record<TrackId, { name: LText; where: LText }> = {
   champion: { name: L('Le Chef-d’Œuvre', 'The Masterpiece'), where: L('Finale du Grand Concours', 'Grand Contest final') },
   ending: { name: L('Bonne nuit, petite artiste', 'Good Night, Little Artist'), where: L('Fin et générique', 'Ending and credits') },
   evolution: { name: L('Quoi ? Ça change !', 'What? It’s Changing!'), where: L('Une Bestiole qui évolue', 'A Critter evolving') },
+  routeNuit: { name: L('En route, sous les étoiles', 'On the Road, Under the Stars'), where: L('Routes, la nuit', 'Routes at night') },
+  route2: { name: L('Plus loin que la carte', 'Further Than the Map'), where: L('Routes de la fin du voyage', 'The journey’s later routes') },
+  velo: { name: L('Roule, crayon !', 'Roll On, Pencil!'), where: L('À vélo', 'On the bike') },
+  mer: { name: L('Au fil de l’eau', 'With the Current'), where: L('En bateau', 'On the boat') },
+  fonds: { name: L('Sous l’aquarelle', 'Beneath the Watercolour'), where: L('Sous l’eau', 'Under water') },
+  legende: { name: L('Un rêve de légende', 'A Legendary Dream'), where: L('Combats contre les légendes', 'Legendary battles') },
+  concours: { name: L('Les Grandes Maîtresses', 'The Grand Masters'), where: L('Combats du Grand Concours', 'Grand Contest battles') },
 };
 
 /** The little tunes played once: badge, item, catch… */

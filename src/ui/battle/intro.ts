@@ -33,7 +33,7 @@ export interface Intro {
 export function introOf(i: IntroInput): Intro {
   if (i.kind === 'wild') {
     // legends, and the story's big wild encounters (they play the final battle's music)
-    if (i.legendary || i.music === 'final') return { cover: 'legend', reveal: 'tear', vs: 'legend' };
+    if (i.legendary || i.music === 'final' || i.music === 'legende') return { cover: 'legend', reveal: 'tear', vs: 'legend' };
     if (i.ground === 'water') return { cover: 'water', reveal: 'lift' };
     if (i.ground === 'cave') return { cover: 'cave', reveal: 'lift' };
     return { cover: 'grass', reveal: 'lift' };
@@ -42,7 +42,7 @@ export function introOf(i: IntroInput): Intro {
   if (i.borrowed) return { cover: i.music === 'leader' ? 'boss' : 'trainer', reveal: 'tear' };
   if (i.music === 'champion') return { cover: 'boss', reveal: 'tear', vs: 'champion' };
   if (i.badge) return { cover: 'boss', reveal: 'tear', vs: 'leader' };
-  if (i.music === 'leader') return { cover: 'boss', reveal: 'tear', vs: 'concours' };
+  if (i.music === 'leader' || i.music === 'concours') return { cover: 'boss', reveal: 'tear', vs: 'concours' };
   if (i.music === 'rival') return { cover: 'trainer', reveal: 'tear', vs: 'rival' };
   if (i.grey) return { cover: 'gomme', reveal: 'erase' };
   return { cover: 'trainer', reveal: 'tear' };
