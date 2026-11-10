@@ -41,11 +41,13 @@ const SPECIES: Record<string, string[]> = {
   m8: ['025', '024', '092', '090', '048', '038', '104', '007', '100', '060', '017', '042', '070', '023'],
   // the rival's two post-game teams
   m9: ['025', '036', '008', '050', '053', '007', '027', '024'],
+  // the people of the night: your Braisaure
+  m10: ['021'],
 };
 /** Demos showing her original drawings (the credits). */
 const ORIGINALS: Record<string, boolean> = { m4b: true, m6: true };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
-const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
+const ALL_MINIS: Record<string, boolean> = { m10: true, m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
 const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true, m8: true, m9: true };
 
