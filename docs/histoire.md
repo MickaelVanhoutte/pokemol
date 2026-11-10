@@ -143,6 +143,9 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
 - Papeterre vit **le jour et la nuit**, à l’heure de ton appareil (ou après une nuit à l’Auberge ou
   dans ton lit). Certaines Bestioles ne sortent que la nuit… et certains habitants aussi : dans chaque ville,
   quelqu’un ne se montre qu’une fois les étoiles allumées, pendant que les enfants rentrent se coucher.
+- Chaque jour, une Bestiole se montre **en masse** sur une route, chaque semaine un **marché** s’installe dans une ville
+  (avec un objet introuvable ailleurs), et en décembre, trois nuits de **Bal des Étoiles** à Bourg-Paillette… Demande
+  « Quoi de neuf ? » à l’Auberge, ou regarde la carte.
 - Il **pleut**, il vente, le brouillard tombe ou il neige, selon les jours et les endroits (la carte le dit) : la
   pluie arrive jusque dans les combats, et certaines Bestioles ne sortent que par mauvais temps…
 - Des **musiques** pour chaque moment : à vélo, en bateau, sous l’eau, sur les routes la nuit, face aux légendes…
@@ -309,6 +312,9 @@ The story has **two endings**, and your answers choose which one you will see.
 - Papeterra has **day and night**, by your device's clock (or after a night at the Inn or in your bed).
   Some Critters only come out at night… and so do some people: in every town, someone only shows up once the
   stars are out, while the children go home to bed.
+- Each day a Critter shows up **in numbers** on one route, each week a **market** comes to a town (with something
+  found nowhere else), and in December, three nights of **Star Ball** in Glimmerton… Ask « Any news? » at the Inn, or
+  look at the map.
 - It **rains**, the wind blows, fog rolls in or it snows, depending on the day and the place (the map tells you):
   the rain gets into the battles too, and some Critters only come out in bad weather…
 - **Music** for each moment: on the bike, on the boat, under the water, on the routes at night, facing the legends…

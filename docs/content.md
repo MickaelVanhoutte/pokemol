@@ -152,6 +152,15 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   (`don:<npc id>`, announced with `gotItem`). Players talk to townsfolk hoping for help, so a town has one giver
   (`src/data/balloons.test.ts` checks it): a few berries, balls or a cure, ideally with a tip for the next Atelier.
   Keep a town's other folk few, each with a line that says something (lore, a tip, a quest), not only scenery.
+- **Papeterre's calendar** (roadmap milestone 11, `src/data/events.ts`, scripts in `src/story/calendar.ts`), from the
+  real day (`localDay()`): a daily swarm (`SWARMS`, `swarmOf`: from the second badge, on a route already visited, one
+  uncommon Bestiole that lives there comes out about one time in two, at the route's levels, `swarmRow`); a weekly
+  market on the week's sixth day (`marketTown`: the towns with a shop in turn; a stall, NPC `marchande` with
+  `onlyOn: 'market'` in the shared shop, sells `marketItem`, one a week, flag `marche:semaine`); the Bal des Étoiles
+  in Bourg-Paillette, 21–23 December (`isBal`, NPC `balDanseuse` `onlyOn: 'bal'`: a dance and a sparkly Hypnopaon
+  once a year, flag `bal:<year>`). The innkeeper's « Quoi de neuf ? » (from the second badge) and the Town Map's
+  « Aujourd'hui : » tell the news (`todayNews`). The real house keeps a quiet day a week once every activity is grown
+  (`reel:semaine`), and the Tombola's first ticket of the day is half price (`tombola:jour`).
 - **Challenge rules and New Game+** (roadmap milestone 10; optional save fields `rules` and `plus`, no new save version): the prologue's last page offers optional rules
   (`src/state/rules.ts`, `save.rules`): one colour only (`monotype`: catches of that type only, `catchForbidden`),
   one catch per place (`onePerMap`, flag `catch:<map>`, legends excepted), a sealed bag (`battleBag`: Croque-Carnets

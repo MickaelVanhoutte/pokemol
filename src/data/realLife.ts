@@ -88,4 +88,6 @@ export function glowingSpots(def: { interact?: { x: number; y: number; script: s
  * existed never had it set.)
  */
 export const wakesAtHome = (flags: Flags, today: number) =>
-  !!flags.ending && flags['reel:jour'] !== today && ACTIVITIES.some((a) => realLevel(flags, a.id) < REAL_MAX);
+  !!flags.ending && flags['reel:jour'] !== today
+  // once every activity is done to the full, a quiet day at home each real week still (roadmap milestone 11)
+  && (ACTIVITIES.some((a) => realLevel(flags, a.id) < REAL_MAX) || flags['reel:semaine'] !== Math.floor(today / 7));

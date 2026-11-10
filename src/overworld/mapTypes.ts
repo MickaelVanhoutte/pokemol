@@ -60,6 +60,11 @@ export interface NpcDef {
    * time of day turns while you stand there (`updateTime`).
    */
   when?: DayPhase[];
+  /**
+   * Only on a day of Papeterre's calendar (src/data/events.ts): `market`, in the shop of the week's market town;
+   * `bal`, the nights of the Bal des Étoiles.
+   */
+  onlyOn?: 'market' | 'bal';
   /** Lines said at night instead of `text` (a character without a script). */
   night?: LText[];
   /** Once the story is over: lines said instead of `text`, and a present given the first time (`cadeau:<id>`). */

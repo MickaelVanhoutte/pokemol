@@ -145,6 +145,8 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'block1', x: 9, y: 1, look: LOOKS.gomme, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },
       { id: 'block2', x: 10, y: 1, look: LOOKS.gommeF, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },
       // the stargazer
+      // the Star Ball, three nights in December (src/story/calendar.ts)
+      { id: 'balDanseuse', x: 17, y: 9, look: { hair: '#f2c14e', shirt: '#c7a6f0', pants: '#5a4a8a', longHair: true, bow: '#fff6b8' }, facing: 'left', script: 'bal', onlyOn: 'bal' },
       { id: 'paillNuit', x: 16, y: 9, look: LOOKS.ghostgirl, facing: 'up', when: ['night'], text: [L('Regarde là-haut : à Paillette, même les étoiles ont des paillettes.', 'Look up there: in Glitter, even the stars are glittery.')] },
       { id: 'paillGirl', x: 16, y: 13, look: LOOKS.girl, facing: 'left', wander: true, script: 'paillGirl' },
       { id: 'paillVoeu', x: 20, y: 12, look: { hair: '#f2d05a', shirt: '#f29ac8', pants: '#7b60c3', longHair: true, bow: '#ffffff' }, facing: 'right', text: [

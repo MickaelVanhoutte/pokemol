@@ -29,7 +29,7 @@ scripts.reveilMaison = async () => {
     d.clockShift = shiftTo(morning ? 8 : 22);
     d.flags.nuits = (d.flags.nuits ?? 0) + 1;
     healParty(d);
-    Object.assign(d.flags, { 'reel:jour': localDay(), 'reel:visite': 1, 'reel:fait': 0 });
+    Object.assign(d.flags, { 'reel:jour': localDay(), 'reel:semaine': Math.floor(localDay() / 7), 'reel:visite': 1, 'reel:fait': 0 });
   });
   await wait(700);
   updateTime();

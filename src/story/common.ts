@@ -51,10 +51,16 @@ async function innSleep(morning: boolean) {
 scripts.auberge = async () => {
   const first = !flag('visitedCenter');
   const morning = dayPhase() === 'night';
+  // from the second badge she knows the day's news: the swarm, the market, the Star Ball (src/story/calendar.ts)
+  const news = save.value!.badges.length >= 2;
   const c = await ask(morning
     ? L('Tu arrives tard ! Entre vite te réchauffer. Une petite pause, ou un bon gros dodo ?', 'You’re out late! Come in and warm up. A little rest, or a good long sleep?')
     : L('Bienvenue à l’Auberge ! Une petite pause, ou un bon gros dodo ?', 'Welcome to the Inn! A little rest, or a good long sleep?'),
-    [L('Se reposer', 'Rest'), morning ? L('Dormir jusqu’au matin', 'Sleep till morning') : L('Dormir jusqu’à la nuit', 'Sleep till night'), L('Non merci', 'No thanks')], INNKEEPER);
+    [L('Se reposer', 'Rest'), morning ? L('Dormir jusqu’au matin', 'Sleep till morning') : L('Dormir jusqu’à la nuit', 'Sleep till night'), ...(news ? [L('Quoi de neuf ?', 'Any news?')] : []), L('Non merci', 'No thanks')], INNKEEPER);
+  if (news && c === 2) {
+    await scripts.gazette?.();
+    return;
+  }
   // the paid-Inn challenge rule (src/state/rules.ts): the first visit is on the house
   if ((c === 0 || c === 1) && save.value!.rules?.paidInn && !first) {
     const price = innPrice(save.value!);

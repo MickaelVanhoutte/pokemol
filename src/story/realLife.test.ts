@@ -106,7 +106,7 @@ describe('a day in the real house', () => {
     expect(f()['reel:parents']).toBe(1);
   });
 
-  it('keeps a level at its best, and stops waking up once all four are', async () => {
+  it('keeps a level at its best, and only wakes up once a week once all four are', async () => {
     start({ 'reel:fenetre': 5 });
     await scripts.innBed();
     said.length = 0;
@@ -114,7 +114,7 @@ describe('a day in the real house', () => {
     expect(f()['reel:fenetre']).toBe(5);
     expect(f()['reel:fait']).toBe(0);
     expect(said.join('\n')).toContain('Ton imagination déborde');
-    start({ 'reel:dessin': 5, 'reel:fenetre': 5, 'reel:livre': 5, 'reel:parents': 5 });
+    start({ 'reel:dessin': 5, 'reel:fenetre': 5, 'reel:livre': 5, 'reel:parents': 5, 'reel:semaine': Math.floor(localDay() / 7) });
     await scripts.innBed();
     expect(fake.warps).toEqual([]);
   });

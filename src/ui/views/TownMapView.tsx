@@ -3,6 +3,8 @@ import { L, locale, tr } from '../../i18n';
 import { BADGES } from '../../data/badges';
 import { MAPS } from '../../data/maps';
 import { SKY_NAMES, hasSky, skyOf } from '../../state/weather';
+import { todayNews } from '../../data/events';
+import { localDay } from '../../overworld/berries';
 import { TOWNS, WORLD, placeOf, playerSpot, townOfTrainer } from '../../data/worldmap';
 import { currentObjective, leaderOf } from '../../story/objective';
 import type { SaveData } from '../../save/schema';
@@ -57,6 +59,7 @@ export function TownMapView({ save, avatar, onClose, pick }: { save: SaveData; a
   const art = useMemo(() => paintTownMap(visited, !!save.bag['carte-fonds']), [save.flags, save.bag]);
   const me = playerSpot(save.player);
   const goal = currentObjective(save);
+  const news = todayNews(localDay(), save);
   const places = pick ? FLY : PLACES;
   const canFly = (id: string) => !!pick && FLY.includes(id) && visited(id) && id !== pick.here;
   const [cursor, setCursor] = useState(pick ? pick.here : me ? placeOf(me.place) : 'bourg');
@@ -137,7 +140,9 @@ export function TownMapView({ save, avatar, onClose, pick }: { save: SaveData; a
       <Window seyes class="tmap__goal-text">
         {pick
           ? tr(L('Où veux-tu aller ? Touche une ville au petit ballon.', 'Where to? Tap a town with a little balloon.'))
-          : <><b>{tr(L('Objectif :', 'Next:'))}</b> {goal ? tr(goal.text, goal.vars?.(save)) : tr(L('Tout est fini ! Tu es {g:une vraie artiste|un vrai artiste} de Papeterre.', 'All done! You’re a true artist of Papeterra.'))}</>}
+          : <><b>{tr(L('Objectif :', 'Next:'))}</b> {goal ? tr(goal.text, goal.vars?.(save)) : tr(L('Tout est fini ! Tu es {g:une vraie artiste|un vrai artiste} de Papeterre.', 'All done! You’re a true artist of Papeterra.'))}
+            {/* the day's news: a swarm, the market, the Star Ball (src/data/events.ts) */}
+            {news.length > 0 && <><br /><b>{tr(L('Aujourd’hui :', 'Today:'))}</b> {news.map((n) => tr(n)).join(' ')}</>}</>}
       </Window>
       <div class="tmap__sheet">
         <div class="tmap__map" style={{ '--ratio': VIEW.w / VIEW.h }} onClick={tap}>

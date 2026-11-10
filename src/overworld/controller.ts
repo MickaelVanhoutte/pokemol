@@ -47,6 +47,7 @@ import { currentTrack, playJingle, playMusic, type TrackId } from '../audio/musi
 import { MOMENT_TRACKS, trackForMap, type MusicMoment } from '../audio/mapMusic';
 import { hasSky, skyOf, skyToBattle } from '../state/weather';
 import { battleBag, catchForbidden, levelCapOf } from '../state/rules';
+import { isBal, marketTown, swarmOf, swarmRow } from '../data/events';
 
 let game: Game | null = null;
 let stepsSinceSave = 0;
@@ -158,6 +159,9 @@ function visibleNpc(n: NpcDef): boolean {
   if (n.showIf && !flag(n.showIf)) return false;
   // people who keep hours: the night watch, children called in at night…
   if (n.when && !n.when.includes(dayPhase())) return false;
+  // Papeterre's calendar: the market stall, the Star Ball (src/data/events.ts)
+  if (n.onlyOn === 'market' && marketTown(localDay()) !== save.value?.player.returnTo?.map) return false;
+  if (n.onlyOn === 'bal' && !isBal(new Date())) return false;
   // after the ending, Team Gomme's admins wait at the fortress top only
   if (n.trainer && RETIRED.includes(n.trainer) && flag('ending')) return false;
   if (n.hideIf && flag(n.hideIf)) return false;
@@ -438,6 +442,9 @@ function onStep(x: number, y: number): boolean {
     // some Bestioles only come out at night (or by day), or once the story is over
     const phase = dayPhase();
     const table = enc.table.filter((r) => meetsTime(r.time, phase) && (!r.if || flag(r.if)) && (!r.sky || r.sky === g.sky));
+    // today's swarm (src/data/events.ts): about one wild Bestiole in two, on land
+    const swarm = !onWater ? swarmOf(localDay(), s()) : null;
+    if (swarm?.map === g.map.def.id) table.push(swarmRow(swarm.map, swarm.species));
     if (!table.length) return false;
     const e = pickWeighted(st, table, (r) => r.w);
     const level = e.min + Math.floor(nextRandom(st) * (e.max - e.min + 1));
@@ -1301,7 +1308,7 @@ async function blackout() {
 }
 
 /** A wild battle (random encounters, fishing, or a Bestiole waiting somewhere); returns how it ended. */
-export async function wildBattle(species: string, level: number, opts: { music?: TrackId; noCatch?: boolean; ground?: string } = {}): Promise<BattleResult | null> {
+export async function wildBattle(species: string, level: number, opts: { music?: TrackId; noCatch?: boolean; ground?: string; shiny?: boolean } = {}): Promise<BattleResult | null> {
   // fishing or a Bestiole waiting somewhere, with nobody able to fight (eggs don't)
   if (!partyAlive(s())) {
     await say(L('Tes Bestioles sont épuisées… Va vite les reposer à l’Auberge !', 'Your Critters are worn out… Go rest them at the Inn!'));
@@ -1319,6 +1326,8 @@ export async function wildBattle(species: string, level: number, opts: { music?:
   // New Game+ triples the odds (src/state/game.ts)
   const extra = (Math.min(1, shinyChance(s().flags) * (s().plus ? 3 : 1)) - SHINY_CHANCE) / (1 - SHINY_CHANCE);
   if (!wild.shiny && extra > 0 && Math.random() < extra) wild.shiny = true;
+  // a sparkly one promised (the Star Ball)
+  if (opts.shiny) wild.shiny = true;
   // like the GBA games, some wild creatures carry an item (kept when caught)
   const held = creature(species).wildItem;
   if (held && Math.random() * 100 < held.pct) wild.item = held.id;

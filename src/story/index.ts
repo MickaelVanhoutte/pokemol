@@ -17,4 +17,6 @@ import './lac';
 import './course';
 // « La page d’après », after the Grand Concours
 import './epilogue';
+// Papeterre's calendar: the crier, the market, the Star Ball
+import './calendar';
 import './coconfus';

@@ -1,3 +1,4 @@
+import { localDay } from '../../overworld/berries';
 import { useState } from 'preact/hooks';
 import { L, tr } from '../../i18n';
 import { CREATURES, monLabel } from '../../data/creatures';
@@ -29,8 +30,11 @@ export function MachineScreen() {
   const [spinning, setSpinning] = useState(false);
   const [got, setGot] = useState<{ mon: Mon; where: 'party' | 'box' } | null>(null);
   const [naming, setNaming] = useState(false);
+  // the day's first ticket is half price (roadmap milestone 11)
+  const lucky = d.flags['tombola:jour'] !== localDay();
+  const price = lucky ? MACHINE_PRICE / 2 : MACHINE_PRICE;
   const run = () => {
-    if (save.value!.money < MACHINE_PRICE || spinning) return;
+    if (save.value!.money < price || spinning) return;
     setGot(null);
     setSpinning(true);
     sfx.sparkle();
@@ -39,7 +43,8 @@ export function MachineScreen() {
       const mon = machineRoll(newSeed(), top, !!d.flags.ending);
       let where: 'party' | 'box' = 'party';
       update((x) => {
-        x.money -= MACHINE_PRICE;
+        x.money -= price;
+        x.flags['tombola:jour'] = localDay();
         where = addMon(x, mon, 'tombola');
       });
       setSpinning(false);
@@ -50,12 +55,12 @@ export function MachineScreen() {
   return (
     <Frame title={tr(L('Tombola', 'Fair Raffle'))} onBack={backToWorld} right={<Window class="money-win">{d.money} ₽</Window>}
       action={(
-        <button class="pbtn pbtn--accent" disabled={d.money < MACHINE_PRICE || spinning} onClick={run}>
-          {tr(L('Acheter un ticket', 'Buy a ticket'))} · {MACHINE_PRICE} ₽
+        <button class="pbtn pbtn--accent" disabled={d.money < price || spinning} onClick={run}>
+          {tr(lucky ? L('Ticket du jour', 'Today’s ticket') : L('Acheter un ticket', 'Buy a ticket'))} · {price} ₽
         </button>
       )}>
       <Window class="machine">
-        <p>{tr(L('Un ticket = {p} ₽. La machine dessine une Bestiole surprise ; les plus rares sortent moins souvent !', 'One ticket = ₽{p}. The machine draws a surprise Critter; rare ones come out less often!'), { p: MACHINE_PRICE })}</p>
+        <p>{tr(L('Un ticket = {p} ₽ (le premier de la journée, moitié prix). La machine dessine une Bestiole surprise ; les plus rares sortent moins souvent !', 'One ticket = ₽{p} (the day’s first, half price). The machine draws a surprise Critter; rare ones come out less often!'), { p: MACHINE_PRICE })}</p>
         <div class={`machine__box ${spinning ? 'is-spinning' : ''}`}>
           {got && <img key={got.mon.uid} src={monArtUrl(got.mon)} alt="" />}
         </div>

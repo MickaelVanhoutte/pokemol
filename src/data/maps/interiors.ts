@@ -73,7 +73,11 @@ export const INTERIOR_MAPS: Record<string, MapDef> = {
       'WWWWXWWWW',
     ],
     warps: [{ x: 4, y: 7, to: 'back' }],
-    npcs: [{ id: 'clerk', x: 1, y: 1, look: LOOKS.clerk, facing: 'down', script: 'clerk' }],
+    npcs: [
+      { id: 'clerk', x: 1, y: 1, look: LOOKS.clerk, facing: 'down', script: 'clerk' },
+      // market day: a stall in the week's market town (src/data/events.ts, src/story/calendar.ts)
+      { id: 'marchande', x: 6, y: 3, look: { hair: '#5a3a20', shirt: '#5cae5a', pants: '#8a5a32', hat: '#f2c14e', longHair: true }, facing: 'down', script: 'marchande', onlyOn: 'market' },
+    ],
   },
   // a house in town: one room shared by the houses you can enter; who lives there depends on the door (`fromDoor`)
   maisonVille: {

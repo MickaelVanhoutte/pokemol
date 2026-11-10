@@ -21,14 +21,16 @@ describe('days in the real house', () => {
     for (const a of ACTIVITIES) expect(a.amount(0) < a.amount(REAL_MAX), a.id).toBe(true);
   });
 
-  it('wake the player at home once a real day, after the ending, while something can still grow', () => {
+  it('wake the player at home once a real day, after the ending, while something can still grow (then once a week)', () => {
     const after = { ending: 1 };
     expect(wakesAtHome({}, 100)).toBe(false);
     // games that ended before `reveil:dodo` existed wake up at home too
     expect(wakesAtHome(after, 100)).toBe(true);
     expect(wakesAtHome({ ...after, 'reel:jour': 100 }, 100)).toBe(false);
     expect(wakesAtHome({ ...after, 'reel:jour': 100 }, 101)).toBe(true);
-    expect(wakesAtHome({ ...after, ...flags(5) }, 101)).toBe(false);
+    // everything grown: a quiet day at home once a real week still
+    expect(wakesAtHome({ ...after, ...flags(5), 'reel:semaine': Math.floor(101 / 7) }, 101)).toBe(false);
+    expect(wakesAtHome({ ...after, ...flags(5), 'reel:semaine': Math.floor(101 / 7) - 1 }, 101)).toBe(true);
   });
 });
 
