@@ -2,7 +2,7 @@ import { L, tr } from '../i18n';
 import { monLabel } from '../data/creatures';
 import { healMon } from '../engine/pk/creature';
 import { newSeed } from '../engine/rng';
-import { ask, say, scripts } from '../overworld/controller';
+import { ask, say, sayAll, scripts } from '../overworld/controller';
 import { save, update } from '../state/game';
 import { canBreed, DAYCARE_MAX, makeEgg, withdrawPrice } from '../state/daycare';
 import { PARTY_MAX } from '../save/schema';
@@ -29,6 +29,14 @@ scripts.pension = async () => {
     });
     sfx.capture();
     await say(L('{name} reçoit un Œuf ! Garde-le dans ton équipe : il éclora en marchant.', '{name} received an Egg! Keep it in your party: it will hatch as you walk.'));
+    // once: what an egg can get from its parents (roadmap milestone 12)
+    if (!save.value!.flags['pension:tip']) {
+      update((x) => (x.flags['pension:tip'] = 1));
+      await sayAll([
+        L('Tu sais, les petits apprennent parfois une attaque que leurs parents connaissent, une qu’ils n’auraient jamais trouvée seuls !', 'You know, little ones sometimes learn a move their parents know, one they’d never have found on their own!'),
+        L('Et si un parent porte un Ruban Rouge, l’œuf reçoit encore plus de ses qualités de naissance.', 'And if a parent holds a Red Ribbon, the egg gets even more of its born qualities.'),
+      ], KEEPER);
+    }
     return;
   }
   const hello = dc.slots.length === 2

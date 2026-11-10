@@ -126,6 +126,9 @@ export const TRACKS: Track[] = [
       at(7, [of('sucette-magique', 2)]),
       at(14, biscuits()),
       at(21, [of('sucette-magique', 5)]),
+      at(28, [of('ruban-rouge')]),
+      at(35, [of('crayon-magique-glace')]),
+      at(49, [of('sucette-magique', 10)]),
     ],
   },
 ];

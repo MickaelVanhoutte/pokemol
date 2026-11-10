@@ -305,7 +305,10 @@ Bestioles), falling back to the list below. The Bestiole hooked is the team's le
 rules in `src/state/daycare.ts`): Mamie Pension keeps up to 2 Bestioles in `save.daycare`. They
 gain 1 XP per step (level-up moves replace the oldest one) and cost 100 ₽ + 100 ₽ per level gained
 to take back. Two of the same evolution family (`familyRoot`) have a 50% chance every 256 steps to
-leave an egg (`daycare.egg`), collected from her: the base form at L5, 3 IVs from the parents, the
+leave an egg (`daycare.egg`), collected from her: the base form at L5, 3 IVs from the parents (5 when one holds the
+Ruban Rouge, `hold: 'ribbon'`, from the tower), its egg moves a parent knows first (`EGG_MOVES` in
+`src/data/eggMoves.ts`: two moves of the family's types that it can't learn itself, never another family's signature;
+roadmap milestone 12; Mamie Pension explains once, `pension:tip`), the
 nature of a parent holding the Pierre Immuable (Everstone, pickup in the Pension), the hidden
 talent half the time if a parent has it. An egg is a `Mon` with `egg.steps` (600–1200): it can't
 fight (`partyAlive`, battles and the repel ignore it), counts down per step in the party and
@@ -468,7 +471,9 @@ legendary from round 3), IVs, held items and stencil moves growing each round of
 keeps `streak`, `best` and `points` (1 per win, a bonus at the end of a round); the streak survives
 breaks and ends on a loss. Points buy `TOWER_STOCK` items (and missing stencils) at the Exchange
 (`ShopScreen` with `tower`). The trainer card shows a gold star each for the Concours, the
-Bestiodex diploma, the 12 pages and a tower streak of 21.
+Bestiodex diploma, the 12 pages and a tower streak of 21. From the second round one opponent in two brings a themed
+team (`TOWER_TEAMS`: rain, sun, wall, lightning, shadow, fists, dragon, dream; planned moves and natures, items),
+its theme in its name; the streak track rewards 28 (Ruban Rouge), 35 and 49 too.
 
 **Progress rewards** (trainer card, PROGRÈS page, `src/data/progress.ts`), from the start: Bestiodex
 (5 → all caught), Adventure (badges 1–8, then the ending) and Trainers beaten (10 → 100); after the

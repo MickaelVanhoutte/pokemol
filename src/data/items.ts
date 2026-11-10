@@ -167,6 +167,10 @@ export const ITEMS: ItemDef[] = [
   },
   // ---------------------------------------------------------------- held items
   {
+    id: 'ruban-rouge', name: L('Ruban Rouge', 'Red Ribbon'), price: 0, kind: 'hold', amount: 0, hold: 'ribbon',
+    desc: L('À faire tenir. À la Pension, l’œuf reçoit cinq des qualités de naissance des parents au lieu de trois.', 'An item to hold. At the Day Care, the egg gets five of its parents’ born qualities instead of three.'),
+  },
+  {
     id: 'pierre-immuable', name: L('Pierre Immuable', 'Everstone'), price: 0, kind: 'hold', amount: 0, hold: 'everstone',
     desc: L('À faire tenir. La Bestiole n’évolue pas en grandissant (un Crayon Magique marche quand même), et à la Pension, son œuf garde sa nature.', 'An item to hold. Its holder doesn’t evolve as it grows (a Magic Pencil still works), and at the Day Care its egg keeps its nature.'),
   },

@@ -5,7 +5,7 @@ import { NEUTRAL_NATURE } from './natures';
 import { move } from './moves';
 import { CREATURE_BY_ID, CUSTOM_ID, creature } from './creatures';
 import { ITEM_BY_ID } from './items';
-import { planTeam, POSTGAME_ACE, rivalFinalTeam, type TrainerDef, type TrainerMon } from './trainers';
+import { partyOf, planTeam, POSTGAME_ACE, rivalFinalTeam, type TrainerDef, type TrainerMon } from './trainers';
 
 // ------------------------------------------------------------------ Grand Concours
 
@@ -240,12 +240,37 @@ export interface TowerFoe {
   party: Mon[];
 }
 
+/**
+ * Themed tower teams (roadmap milestone 12): from the second round, one opponent in two brings one of these, its theme
+ * in its name, each Bestiole with its planned moves and nature, and the items listed.
+ */
+export const TOWER_TEAMS: { name: LText; species: [string, string, string]; items?: [string?, string?, string?] }[] = [
+  { name: L('équipe Pluie', 'Rain team'), species: ['042', '070', '100'], items: ['baie-doree', undefined, 'ruban-tenace'] },
+  { name: L('équipe Soleil', 'Sun team'), species: ['077', '094', '025'], items: [undefined, 'baie-doree', 'bille-ardente'] },
+  { name: L('équipe Mur', 'Wall team'), species: ['023', '059', '047'], items: ['casque-pointes', 'baie-doree', 'clochette'] },
+  { name: L('équipe Éclair', 'Lightning team'), species: ['079', '046', '083'], items: ['plume-vive', undefined, 'lunettes-tetues'] },
+  { name: L('équipe Ombre', 'Shadow team'), species: ['097', '075', '066'], items: [undefined, 'bandeau-tetu', 'baie-doree'] },
+  { name: L('équipe Coups de poing', 'Fists team'), species: ['038', '081', '068'], items: ['bandeau-tetu', undefined, 'loupe'] },
+  { name: L('équipe Dragon', 'Dragon team'), species: ['086', '124', '045'], items: [undefined, 'baie-doree', 'echarpe-tetue'] },
+  { name: L('équipe Rêve', 'Dream team'), species: ['014', '087', '119'], items: ['baie-reveil', undefined, 'tablier-peintre'] },
+];
+
 /** A random tower opponent: three different Bestioles at level 50, tougher round after round. */
 export function towerFoe(streak: number, st: { rng: number }): TowerFoe {
   const round = towerRound(streak);
   const iv = Math.min(31, 6 + 4 * round);
   const pool = round >= 3 ? [...TOWER_POOL, ...LEGENDS] : [...TOWER_POOL];
   const party: Mon[] = [];
+  // from the second round, one opponent in two brings a themed team
+  if (round >= 2 && nextRandom(st) < 0.5) {
+    const team = TOWER_TEAMS[randomInt(st, TOWER_TEAMS.length)];
+    const plan = planTeam(team.species.map((species, i) => ({ species, level: TOWER_LEVEL, item: team.items?.[i] })));
+    const mons = partyOf(plan, Math.floor(nextRandom(st) * 1e9), 'hard').map((m, i) => ({ ...m, level: TOWER_LEVEL, ivs: { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv }, item: team.items?.[i] ?? null }));
+    for (const m of mons) healMon(Object.assign(m, { xp: xpAt(TOWER_LEVEL) }));
+    const cls = CLASSES[randomInt(st, CLASSES.length)];
+    const who = NAMES[randomInt(st, NAMES.length)];
+    return { name: L(`${cls.fr} ${who}, ${team.name.fr}`, `${cls.en} ${who}, ${team.name.en}`), look: LOOKS[randomInt(st, LOOKS.length)], party: mons };
+  }
   const usedItems = new Set<string>();
   while (party.length < TOWER_TEAM) {
     const species = pool.splice(randomInt(st, pool.length), 1)[0];
@@ -289,7 +314,7 @@ export function towerPoints(streak: number): number {
 export const TOWER_STOCK: Record<string, number> = {
   'super-spray': 2, 'baie-doree': 4, 'baie-prisme': 4, 'pierre-immuable': 8, 'papier-calque': 12,
   'plume-vive': 12, 'loupe': 12, 'couronne-carton': 12, 'clochette': 12, 'ruban-tenace': 16, 'casque-pointes': 16,
-  'bille-ardente': 16, 'tablier-peintre': 16, 'bandeau-tetu': 24, 'lunettes-tetues': 24, 'echarpe-tetue': 24,
+  'bille-ardente': 16, 'tablier-peintre': 16, 'ruban-rouge': 24, 'bandeau-tetu': 24, 'lunettes-tetues': 24, 'echarpe-tetue': 24,
   // only the Magic Pencils some Bestiole evolves with
   'crayon-magique-feu': 16, 'crayon-magique-eau': 16, 'crayon-magique-electrique': 16, 'crayon-magique-glace': 16,
 };

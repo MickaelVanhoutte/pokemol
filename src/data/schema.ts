@@ -127,7 +127,7 @@ export type HoldEffect =
   | 'lockAtk' | 'lockSpe' | 'lockSpa' | 'powerCost' | 'specialGuard' | 'spikes' | 'holdOn'
   | 'quickStart' | 'critUp' | 'flinchUp' | 'drainHit'
   /** Everstone: no evolution, and an egg takes this parent's nature. */
-  | 'everstone';
+  | 'everstone' | 'ribbon';
 
 /**
  * `berry`: eaten by its holder in battle (or used from the bag); `hold`: works while held;

@@ -1,4 +1,5 @@
 import { creature } from '../data/creatures';
+import { EGG_MOVES } from '../data/eggMoves';
 import { move } from '../data/moves';
 import { HIDDEN_TALENT_CHANCE } from '../data/talents';
 import { nextRandom, randomInt } from '../engine/rng';
@@ -36,9 +37,12 @@ export function hatchSteps(st: { rng: number }): number {
  * parent has it.
  */
 export function makeEgg(a: Mon, b: Mon, st: { rng: number }): Mon {
-  const m = createMon(familyRoot(a.species), 5, st);
+  const root = familyRoot(a.species);
+  const m = createMon(root, 5, st);
   const keys = [...STAT_KEYS];
-  for (let n = 0; n < 3; n++) {
+  // the Ruban Rouge: a parent holding it hands down five strengths (IVs) instead of three
+  const handed = a.item === 'ruban-rouge' || b.item === 'ruban-rouge' ? 5 : 3;
+  for (let n = 0; n < handed; n++) {
     const k = keys.splice(randomInt(st, keys.length), 1)[0];
     m.ivs[k] = (nextRandom(st) < 0.5 ? a : b).ivs[k];
   }
@@ -46,6 +50,13 @@ export function makeEgg(a: Mon, b: Mon, st: { rng: number }): Mon {
   if (stone) m.nature = stone.nature;
   if ((a.talent === 2 || b.talent === 2) && nextRandom(st) < 0.5) m.talent = 2;
   else if (m.talent === 2 && nextRandom(st) >= HIDDEN_TALENT_CHANCE) m.talent = 0;
+  // egg moves a parent knows (src/data/eggMoves.ts) come first, then the moves it learns by itself
+  const known = new Set([...a.moves, ...b.moves].map((s) => s.id));
+  const inherited = (EGG_MOVES[root] ?? []).filter((id) => known.has(id));
+  if (inherited.length) {
+    const ids = [...new Set([...inherited, ...m.moves.map((s) => s.id)])].slice(0, 4);
+    m.moves = ids.map((id) => ({ id, pp: move(id).pp }));
+  }
   m.friendship = 120;
   m.egg = { steps: hatchSteps(st) };
   return m;

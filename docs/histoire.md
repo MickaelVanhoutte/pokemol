@@ -157,6 +157,7 @@ L’histoire a **deux fins**, et ce sont tes réponses qui choisissent laquelle 
   respire dans le noir.
 - Un **atelier où dessiner ta propre Bestiole** : au crayon, avec le doigt, puis tu choisis ses types, sa
   force et ses capacités. C’est la seule de son espèce, et tu peux revenir la retoucher quand tu veux.
+- À la Pension, les petits héritent parfois d’une **attaque de leurs parents** qu’ils n’auraient jamais apprise seuls.
 - Une partie terminée peut **recommencer en Nouvelle partie +** : tu gardes un peu de ton aventure (et un œuf
   t’attend…). Et pour les plus courageux, des **règles de défi** à choisir au début : une seule couleur, une capture
   par endroit, un sac scellé, un niveau plafond, des Auberges payantes.
@@ -326,6 +327,7 @@ The story has **two endings**, and your answers choose which one you will see.
   breathes in the dark.
 - A **workshop where you draw your own Bestiole**: in pencil, with your finger, then you pick its types, its
   strength and its moves. It is the only one of its kind, and you can come back to retouch it whenever you like.
+- At the Day Care, little ones sometimes inherit **a move from their parents** they'd never have learnt on their own.
 - A finished game can **start again as a New Game+**: you keep a little of your adventure (and an egg is waiting…).
   And for the bravest, **challenge rules** to pick at the start: one colour only, one catch per place, a sealed bag,
   a level cap, paid Inns.

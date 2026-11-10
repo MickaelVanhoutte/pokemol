@@ -12,6 +12,23 @@ continuing after the credits, as a Pokémon-style fan game. Decisions taken with
   there (`src/story/guides.ts:166`), and two arrivals on one map would collide. The rival keeps his story
   scenes and gets a postgame loop instead.
 
+**Status (10 Nov 2026): all twelve milestones shipped**, in this order: 2.1, 3.1, 1.1, 1.2, 2.2, 1.4, 2.3, 3.2, 1.3,
+3.4, 1.5 with 3.3, 2.4 (commits dc44316 … on `main`, a demo page each: `npm run demo -- m7` … `m16`). Where they
+differ from the plan below, after the sims and the owner's rules:
+- 2.1: on Normal, thinking trainers don't switch during the story (a single counter-switch swept teams in the sims);
+  they do after it (ace L48+, `POSTGAME_ACE`) and on Hard. The rival never drops by after Ateliers (owner's call).
+- 2.2: planned movesets and natures (`plan`) are used on Hard and for post-game teams only; the story's bosses keep
+  their tuned movesets on Normal (the plans made them far harder).
+- 3.1: Masters' first rematch at the player's level (at least L48), not two above.
+- 3.2: the epilogue's reward is the page coloured in (`redraw('restore')`), not a new planche; no progress-track step.
+- 1.3: no Town Map doodle per sky, a « Météo » line instead.
+- 3.4: no save version bump (`rules` and `plus` are optional fields: an older cached app still loads the save); New
+  Game+ keeps the seen Bestiodex, sparkly ×3 and an egg of the lead, not the caught list, Hall of Fame or drawn
+  Bestiole; gifts and trades are not checked against « Une seule couleur ».
+- 1.5/3.3: the news come from the innkeeper (« Quoi de neuf ? ») and the Town Map, no new NPC in every Inn; the
+  tower's « Défi du jour » was left out.
+- 2.4: egg moves live in `src/data/eggMoves.ts` (generated, then checked by a test), not on `SpeciesDef`.
+
 This document is written for another model to implement milestone by milestone. Every section names the
 exact files, types and functions as they are today (line numbers from the current tree, Nov 2026).
 
