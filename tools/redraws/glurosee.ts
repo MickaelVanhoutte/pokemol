@@ -29,17 +29,17 @@ export default {
     // curious: brows high and arched, wide eyes looking down along its arm at the catch, a little « o »
     c.eye(456, 470, 36, 46);
     c.eye(576, 460, 46, 58);
-    stroke([[410, 396], [446, 366], [492, 380]], { w: 6 });
+    stroke([[404, 380], [444, 344], [494, 360]], { w: 6.5 });
     stroke([[530, 372], [578, 336], [628, 360]], { w: 6 });
     c.dot(500, 560, 15, 18, '#7a3040');
     c.cheek(640, 550, 32, 20);
     // the near leaf stretched far out ahead from its side, splitting into two equal paddles (the final's fork), a dry
     // leaf stuck to the upper one
     c.part('bras', { pivot: [410, 660], motion: 'reach', amp: 4, period: 2.4 }, () => {
-      const t = tailBand([[420, 670], [320, 700], [220, 720], [170, 720]], () => 36, 20);
+      const t = tailBand([[420, 670], [320, 700], [210, 712]], () => 36, 20);
       shape(t.out, GREEN, { angle: 20, over: 0.2 });
-      const up = leaf(c, [[180, 718], [120, 690], [80, 640]], 104, 4, { stalk: 0.32 });
-      leaf(c, [[180, 722], [120, 760], [90, 810]], 104, 4, { stalk: 0.32 });
+      const up = leaf(c, [[214, 708], [160, 660], [130, 600]], 104, 4, { stalk: 0.32 });
+      leaf(c, [[214, 716], [160, 770], [140, 830]], 104, 4, { stalk: 0.32 });
       const [x, y] = up.tip;
       const dry: P[] = [[x - 60, y - 30], [x - 14, y - 64], [x + 34, y - 46], [x + 40, y - 6], [x + 10, y + 22], [x - 30, y + 12], [x - 56, y - 2]];
       shape(dry, '#c08a40', { angle: 20, over: 0.2 }, { w: 4 });

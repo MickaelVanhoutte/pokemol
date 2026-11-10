@@ -41,7 +41,8 @@ export default {
     // the lump of wet mud, lumpy, a shine along its edge, a little splash ring under the elbow
     c.part('vase', { pivot: [540, 880], motion: 'nod', amp: 1, period: 3, decor: true, behind: true }, () => {
       // a lumpy puddle of wet mud: an uneven rim, darker and shiny at its wet edge, a splash ring under the elbow
-      shape([[150, 880], [200, 850], [260, 866], [320, 836], [400, 852], [470, 826], [560, 846], [640, 822], [740, 846], [820, 836], [890, 874], [850, 906], [880, 930], [760, 926], [660, 944], [560, 930], [440, 950], [340, 932], [240, 944], [180, 920]], MUD, { angle: 10, over: 0.3 });
+      shape([[150, 880], [200, 850], [260, 866], [320, 836], [400, 852], [470, 826], [560, 846], [640, 822], [740, 846], [820, 836], [890, 874], [850, 906], [880, 930], [760, 926], [660, 944], [560, 930], [440, 950], [340, 932], [240, 944], [180, 920]], MUD, { angle: 60, over: 0.9, gap: 6 });
+      for (const [x, y, r] of [[300, 880, 30], [520, 870, 36], [720, 880, 28], [430, 910, 22]] as [number, number, number][]) c.tint(c.potato(x, y, r, r * 0.6, 8, 0.2), '#5a3c24', { angle: 30, wash: 0.6 });
       c.tint([[160, 900], [260, 930], [440, 942], [660, 936], [860, 920], [700, 912], [460, 920], [260, 912]], '#4a3220', { angle: 10, wash: 0.6 });
       stroke([[230, 862], [300, 846]], { w: 4, col: '#c0a080' });
       stroke([[620, 832], [700, 844]], { w: 4, col: '#c0a080' });
@@ -69,7 +70,7 @@ export default {
     shape(potato(300, 440, 72, 76, 10, 0.04), BODY, { angle: 60, over: 0.2 });
     c.eye(300, 434, 48, 56);
     // one brow cocked, daring
-    stroke([[262, 376], [300, 350], [346, 362]], { w: 6.5 });
+    stroke([[258, 394], [300, 372], [344, 384]], { w: 6.5 });
     // a one-sided smirk under the tip of the snout
     stroke([[200, 600], [240, 622], [292, 618], [320, 596]], { w: 6 });
     stroke([[312, 604], [328, 590]], { w: 4.5 });

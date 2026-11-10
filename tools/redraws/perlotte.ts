@@ -33,7 +33,7 @@ export default {
     shape([[430, 676], [462, 664], [494, 674], [486, 702], [454, 710], [434, 696]], '#7a3040', { angle: 90, over: 0 }, { w: 4 });
     // the near leaf, curled up from the front of the rosette, its paddle at the mouth
     c.part('sucette', { pivot: [390, 790], motion: 'nod', amp: 3, period: 2.2 }, () => {
-      leaf(c, [[400, 790], [350, 750], [326, 700], [322, 650]], 132, 5, { stalk: 0.28 });
+      leaf(c, [[400, 860], [320, 820], [286, 740], [316, 660]], 132, 5, { stalk: 0.32 });
     });
     // the tongue curling up onto the paddle
     shape([[444, 690], [404, 676], [372, 652], [368, 664], [398, 690], [440, 702]], '#f28aa8', { angle: 0, over: 0 }, { w: 3.5 });

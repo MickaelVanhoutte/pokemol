@@ -70,9 +70,13 @@ export default {
     // the head, the snout lifted to sniff the air
     const T = aardHead(c, hx, hy, 0.95, -32, 0.92);
     c.dot(...T([-262, 42]), 6, 5);
-    // curious, one emotion: big round eyes, brows lifted, looking up along the snout
-    c.eye(...T([-56, -24]), 30, 38);
-    c.eye(...T([30, -34]), 38, 48);
+    // curious, one emotion: brows lifted
+    // its eyes on the pebble: white eyes, the pupils low and toward its nose
+    for (const [e, rx, ry] of [[T([-56, -24]), 30, 38], [T([30, -34]), 38, 48]] as [P, number, number][]) {
+      c.shape(c.potato(e[0], e[1], rx, ry, 10, 0.03), '#ffffff', { angle: 90, over: 0 }, { w: 3.5 });
+      c.dot(e[0] - rx * 0.3, e[1] + ry * 0.32, rx * 0.62, ry * 0.58, '#241c38');
+      c.dot(e[0] - rx * 0.45, e[1] + ry * 0.12, rx * 0.2, ry * 0.18, '#ffffff');
+    }
     stroke([T([-92, -86]), T([-62, -104]), T([-30, -98])], { w: 5 });
     stroke([T([-4, -116]), T([34, -138]), T([74, -122])], { w: 5 });
     c.cheek(...T([64, 46]), 28, 18);
@@ -83,8 +87,10 @@ export default {
       c.shape(c.potato(paw[0] - 8, paw[1] + 8, 36, 28, 8, 0.06), col, { angle: 20 }, { w: 4.5 });
       for (const dx of [-30, -10, 10]) c.shape([[paw[0] + dx - 8, paw[1] + 26], [paw[0] + dx + 6, paw[1] + 30], [paw[0] + dx - 4, paw[1] + 54]], '#5a4640', { angle: 0, over: 0 }, { w: 3 }, false);
     }
-    c.shape(c.potato(380, 790, 34, 28, 9, 0.08), '#9aa4b4', { angle: 30 }, { w: 4 });
-    c.dot(370, 780, 8, 6, '#ffffff');
+    // the pebble right under its nose
+    const [nx, ny] = T([-262, 42]);
+    c.shape(c.potato(nx + 4, ny + 52, 34, 28, 9, 0.08), '#9aa4b4', { angle: 30 }, { w: 4 });
+    c.dot(nx - 6, ny + 42, 8, 6, '#ffffff');
     c.part('paupieres', { pivot: T([-10, -30]), motion: 'blink', extra: true }, () => {
       c.lid(...T([-56, -24]), 30, 38, FUR);
       c.lid(...T([30, -34]), 38, 48, FUR);

@@ -16,9 +16,10 @@ export default {
     const spine: P[] = [[330, 600], [420, 560], [520, 520], [620, 520], [710, 550], [790, 590], [860, 610], [920, 600], [970, 570]];
     const widths = [120, 190, 210, 200, 170, 120, 84, 60, 40];
     const down = [0, 26, 20, 10, 24, 0, 0, 0, 0];
-    // clods of earth thrown from the scraping paw in one arc, up and back past its face
-    c.part('mottes', { pivot: [300, 700], motion: 'nod', amp: 3, period: 1.4, decor: true, behind: true }, () => {
-      for (const [x, y, r] of [[230, 700, 24], [200, 600, 22], [230, 500, 18], [300, 420, 15], [380, 370, 12]] as [number, number, number][]) c.shape(c.potato(x, y, r, r * 0.8, 8, 0.15), EARTH, { angle: 30 });
+    // clods of earth flung back from the scraping paw, low between its legs, the way a digger throws them
+    c.part('mottes', { pivot: [420, 860], motion: 'nod', amp: 3, period: 1.4, decor: true, behind: true }, () => {
+      for (const [x, y, r] of [[380, 850, 22], [470, 830, 20], [560, 846, 18], [640, 880, 15]] as [number, number, number][]) c.shape(c.potato(x, y, r, r * 0.8, 8, 0.15), EARTH, { angle: 30 });
+      stroke([[360, 880], [480, 860], [600, 880]], { w: 4 });
     });
     // the far legs, darker: the front one braced, the hind one under the hips
     flankLeg(c, [430, 600], [330, 860], DEEP, 90);
@@ -65,11 +66,12 @@ export default {
       shape(c.potato(306, 800, 40, 32, 8, 0.06), FUR, { angle: 20 }, { w: 4.5 });
       for (const d of [200, 225, 250]) bigClaw(c, [290, 850], d, 76, 30);
     });
-    // the heap it has dug: a mound of loose earth, the dark hole in it, a wet rim
+    // the heap it has dug: an uneven mound of loose earth, the dark hole dug into its side, facing the paw
     c.part('trou', { pivot: [200, 900], motion: 'nod', amp: 1, period: 3, decor: true, behind: true }, () => {
-      shape([[40, 920], [80, 860], [150, 830], [250, 840], [330, 870], [370, 920], [200, 940]], EARTH, { angle: 20, over: 0.3 });
-      shape(c.potato(200, 872, 80, 26, 10, 0.06), '#3a2618', { angle: 0 }, { w: 4 });
-      stroke([[130, 880], [200, 892], [270, 880]], { w: 3.5, col: '#b08a6a' });
+      shape([[30, 930], [50, 880], [90, 860], [120, 830], [160, 846], [200, 820], [240, 850], [290, 870], [330, 930]], EARTH, { angle: 30, over: 0.6 });
+      shape([[230, 930], [234, 890], [260, 872], [292, 884], [306, 930]], '#2e1e14', { angle: 0, over: 0 }, { w: 4 });
+      c.dot(110, 900, 10, 8, '#5a3c24');
+      c.dot(180, 880, 8, 6, '#5a3c24');
     });
     c.part('paupieres', { pivot: T([-16, -24]), motion: 'blink', extra: true }, () => {
       c.lid(...T([-56, -20]), 26, 32, FUR);

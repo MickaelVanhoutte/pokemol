@@ -36,13 +36,13 @@ export default {
       wingFin(c, [680, 600], [[700, 670], [770, 730], [860, 750], [830, 680]], GOLD);
     });
     // the spear: its upper jaw running on past the lower jaw as a thin lance, a darker tip
-    shape([[150, 462], [20, 452], [0, 456], [20, 462], [150, 478]], BLUE, { angle: 0, over: 0 }, { w: 4 }, false);
+    shape([[160, 458], [24, 448], [2, 456], [24, 466], [160, 482]], BLUE, { angle: 0, over: 0 }, { w: 4 }, false);
     c.tint([[0, 456], [40, 452], [40, 462], [10, 460]], BDEEP, { wash: 0.9 });
     // a dark streak through the eye like a mask
     c.tint([[220, 450], [300, 432], [380, 446], [380, 490], [300, 500], [220, 486]], BDEEP, { angle: 0, wash: 0.8 });
     // one eye, open, focused: a low straight brow
-    c.eye(300, 470, 40, 44, '#241c38');
-    stroke([[250, 422], [350, 420]], { w: 7.5 });
+    c.eye(300, 470, 40, 44, '#241c38', { lid: 0.16, skin: '#2c5aa8' });
+    stroke([[246, 436], [300, 420], [356, 410]], { w: 8 });
     stroke([[160, 512], [240, 516]], { w: 5.5 });
     // speed lines behind it
     stroke([[900, 330], [990, 310]], { w: 5 });

@@ -49,7 +49,7 @@ export default {
       wingFin(c, [470, 500], [[500, 380], [560, 290], [640, 230], [730, 220], [740, 290]], GDEEP);
     });
     // the plump body leaping up and to the left: a pointed fish snout, deepest at the shoulder, a thin tail stalk
-    fishBody(c, [[230, 370], [400, 450], [560, 570], [700, 690], [760, 750]], (k) => (k < 0.26 ? 50 + (k / 0.26) * 270 : 320 - ((k - 0.26) / 0.74) * 290), BLUE, SILVER, 36, 9);
+    fishBody(c, [[230, 370], [400, 450], [560, 570], [700, 690], [760, 750]], (k) => (k < 0.26 ? 50 + (k / 0.26) * 270 : 320 - ((k - 0.26) / 0.74) * 290), BLUE, SILVER, 36, 14);
     c.tint([[400, 360], [520, 440], [640, 550], [560, 500], [440, 420]], BDEEP, { angle: 40, wash: 0.5 });
     stroke([[430, 390], [460, 450], [450, 520]], { w: 4.5 });
     // the near wing-fin, big, from the shoulder, spread forward and down
@@ -58,7 +58,6 @@ export default {
     });
     // one huge happy eye, high on the head (a fish in profile shows one)
     c.eye(370, 380, 52, 58);
-    stroke([[320, 302], [370, 286], [420, 302]], { w: 5 });
     // a wide « D » grin at the tip of its snout
     shape([[220, 392], [262, 404], [296, 404], [272, 446], [236, 440]], '#7a3040', { angle: 90, over: 0 }, { w: 4 });
     c.dot(264, 432, 12, 7, '#f28aa8');
