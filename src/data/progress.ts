@@ -109,6 +109,16 @@ export const TRACKS: Track[] = [
     ],
   },
   {
+    id: 'rival', name: L('Rival', 'Rival'), post: true,
+    label: L('Bats ton rival {n} fois après l’histoire', 'Beat your rival {n} times after the story'),
+    count: (s) => s.flags['rival:revanches'] ?? 0,
+    steps: [
+      at(1, [of('sucette-magique', 2)], L('Bats ton rival Place des Chefs-d’Œuvre', 'Beat your rival at Masterpiece Square')),
+      at(5, biscuits()),
+      at(10, [of('sucette-magique', 5)]),
+    ],
+  },
+  {
     id: 'tour', name: L('Tour des Défis', 'Challenge Tower'), post: true,
     label: L('Gagne {n} combats d’affilée à la Tour', 'Win {n} battles in a row at the Tower'),
     count: (s) => s.tower?.best ?? 0,

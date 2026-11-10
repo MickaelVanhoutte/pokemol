@@ -46,6 +46,8 @@ export interface Scene {
     name: LText; party: [string, number][]; look?: Look; quote?: string; moves?: string[];
     /** Its first Bestiole starts with this share of its HP. */
     hp?: number;
+    /** Its last Bestiole (the ace) is sparkly and nicknamed. */
+    ace?: { shiny?: boolean; nickname?: string };
     /** How the trainer battles (src/engine/pk/ai.ts): thinking ahead, switches, potions. */
     brain?: Pick<BattleSetup['enemy'], 'smart' | 'switches' | 'items'>;
   };
@@ -77,6 +79,7 @@ function teams(scene: Scene): [Mon[], Mon[]] {
     const m = createMon(s, l, { rng: 202 + i }, { hp: 20, atk: 10, def: 10, spa: 10, spd: 10, spe: 1 });
     if (scene.foe.moves) m.moves = scene.foe.moves.map((id) => ({ id, pp: 30 }));
     if (i === 0 && scene.foe.hp !== undefined) m.hp = Math.max(1, Math.round(maxHp(m) * scene.foe.hp));
+    if (i === scene.foe.party.length - 1 && scene.foe.ace) Object.assign(m, scene.foe.ace);
     return m;
   });
   return [[me], foe];

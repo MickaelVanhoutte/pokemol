@@ -908,15 +908,24 @@ const RIVAL_ACE: Record<string, { level: number; item?: string }> = {
   '001': { level: 47, item: 'lunettes-tetues' }, '002': { level: 41 }, '003': { level: 37 },
 };
 
-export function rivalFinalTeam(rivalStarter: string): TrainerDef['party'] {
+export function rivalFinalTeam(rivalStarter: string, choice?: 'a' | 'b'): TrainerDef['party'] {
   const ace = RIVAL_ACE[rivalStarter] ?? RIVAL_ACE['001'];
   // with Bouquétigre (weak to the fire and wings of the starter that beats it) he brings a stone falcon to cover it
   const third = rivalStarter === '001' ? { species: '050', level: 40 } : { species: '053', level: 40, item: 'lunettes-tetues' };
+  // told to train (choice 5 « entraîne-toi »), he did: two of his Bestioles are stronger and hold an item
+  const trained = choice === 'a';
   return [
     { species: '036', level: 40, item: 'plume-vive' }, { species: '008', level: 40 }, third,
-    { species: '007', level: 40 }, { species: '027', level: 40 }, { species: grownForm(rivalStarter, ace.level), ...ace },
+    trained ? { species: '007', level: 41, item: 'bandeau-tetu' } : { species: '007', level: 40 },
+    trained ? { species: '027', level: 41, item: 'loupe' } : { species: '027', level: 40 },
+    { species: grownForm(rivalStarter, ace.level), ...ace },
   ];
 }
+
+/** The answer the player gave the rival at the Misty Tower (choice 5): 'a' train, 'b' you're great as you are. */
+export const rivalChoice = (flags: Record<string, number>): 'a' | 'b' | undefined => (flags['choix:rival:a'] ? 'a' : flags['choix:rival:b'] ? 'b' : undefined);
+/** Told he was great as he is (choice 5 « t’es génial comme t’es »), he keeps his first Bestiole as it is and proud: sparkly, nicknamed. */
+export const RIVAL_ACE_NAME = L('Mon Trait', 'My Line');
 
 /** The rival's team at the Lac des Couleurs: his starter, grown, is the ace. */
 export function rivalLacTeam(rivalStarter: string): TrainerDef['party'] {

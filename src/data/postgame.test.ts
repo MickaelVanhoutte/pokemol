@@ -3,9 +3,9 @@ import { createMon, maxHp } from '../engine/pk/creature';
 import { CREATURES } from './creatures';
 import { ITEM_BY_ID } from './items';
 import { MOVES } from './moves';
-import { TRAINERS } from './trainers';
+import { TRAINERS, rivalFinalTeam } from './trainers';
 import { makeEgg } from '../state/daycare';
-import { CONCOURS, CONCOURS_MAX_LEVEL, MASTER_REMATCH, REMATCH_MAX_LEVEL, concoursStage, fullyGrown, hallEntry, masterRematchParty, TOWER_LEVEL, TOWER_POOL, TOWER_ROUND, TOWER_STOCK, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from './postgame';
+import { CONCOURS, CONCOURS_MAX_LEVEL, MASTER_REMATCH, REMATCH_MAX_LEVEL, RIVAL_MAX_LEVEL, rivalPostTeam, concoursStage, fullyGrown, hallEntry, masterRematchParty, TOWER_LEVEL, TOWER_POOL, TOWER_ROUND, TOWER_STOCK, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from './postgame';
 
 const species = new Set(CREATURES.map((c) => c.id));
 const moves = new Set(MOVES.map((m) => m.id));
@@ -156,5 +156,36 @@ describe('Atelier Masters’ rematches', () => {
     expect(masterRematchParty(t, 0, 50).at(-1)!.level).toBe(50);
     expect(masterRematchParty(t, 2, 50).at(-1)!.level).toBe(54);
     expect(masterRematchParty(t, 40, 100).at(-1)!.level).toBe(REMATCH_MAX_LEVEL);
+  });
+});
+
+describe('the rival after the story', () => {
+  it('brings his finale team fully grown, ten levels up, two more per win, never past the cap', () => {
+    for (const starter of ['001', '002', '003']) {
+      for (const choice of [undefined, 'a', 'b'] as const) {
+        let prev = 0;
+        for (const wins of [0, 1, 4, 10, 30]) {
+          const team = rivalPostTeam(starter, wins, choice);
+          expect(team).toHaveLength(6);
+          for (const m of team) {
+            expect(species.has(m.species)).toBe(true);
+            expect(fullyGrown(m.species, m.level)).toBe(m.species);
+            expect(m.level).toBeLessThanOrEqual(RIVAL_MAX_LEVEL);
+          }
+          const top = Math.max(...team.map((m) => m.level));
+          expect(top).toBeGreaterThanOrEqual(prev);
+          prev = top;
+        }
+      }
+    }
+    // his starter's line stays his ace
+    expect(rivalPostTeam('002', 0).at(-1)!.species).toBe(fullyGrown('002', 60));
+  });
+
+  it('trained (choice 5 « entraîne-toi »), two of his Bestioles are stronger and hold an item', () => {
+    const plain = rivalFinalTeam('001');
+    const trained = rivalFinalTeam('001', 'a');
+    expect(trained.filter((m, i) => m.level > plain[i].level && m.item)).toHaveLength(2);
+    expect(rivalFinalTeam('001', 'b')).toEqual(plain);
   });
 });

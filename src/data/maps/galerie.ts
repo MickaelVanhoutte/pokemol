@@ -54,6 +54,8 @@ export const GALERIE_MAPS: Record<string, MapDef> = {
     fresques: [{ x: 6, y: 8, id: 'galerie', species: '011', size: 4, reward: { item: 'bandeau-tetu' } }],
     npcs: [
       { id: 'pantheon', x: 14, y: 7, look: LOOKS.grandma, facing: 'left', script: 'pantheon' },
+      // the rival, once the Concours is won: a rematch a week (src/story/postgame.ts)
+      { id: 'rivalGalerie', x: 7, y: 16, look: LOOKS.rival, facing: 'right', script: 'rivalGalerie', showIf: 'champion' },
       { id: 'galerieKid', x: 6, y: 10, look: LOOKS.kid, facing: 'down', wander: true,
         text: [L('Cette page-là, la petite artiste l’a coloriée en dernier. Regarde comme les couleurs débordent !', 'The little artist coloured this page in last. Look how the colours go over the lines!')] },
       { id: 'galerieGirl', x: 13, y: 15, look: LOOKS.girl, facing: 'up',

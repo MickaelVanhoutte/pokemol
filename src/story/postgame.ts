@@ -1,13 +1,14 @@
 import { L, tr } from '../i18n';
 import { monLabel } from '../data/creatures';
-import { CONCOURS, concoursStage, hallEntry, TOWER_ROUND, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from '../data/postgame';
-import { partyOf, type TrainerDef } from '../data/trainers';
+import { CONCOURS, concoursStage, hallEntry, rivalPostTeam, TOWER_ROUND, TOWER_TEAM, towerCopy, towerFoe, towerPoints, towerRound } from '../data/postgame';
+import { partyOf, rivalChoice, RIVAL_ACE_NAME, RIVAL_ITEMS, type TrainerDef } from '../data/trainers';
+import { localDay } from '../overworld/berries';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
 import { healParty, partyAlive, save, update } from '../state/game';
 import { ask, fight, flag, getGame, openScreen, say, sayAll, scripts, setFlag, showToast, warpTo } from '../overworld/controller';
 import { sfx } from '../audio/sfx';
-import { PROF } from './cast';
+import { PROF, RIVAL } from './cast';
 
 // ------------------------------------------------------------------ Grand Concours
 
@@ -106,6 +107,58 @@ scripts.pantheon = async () => {
   if ((await ask(L('Ton équipe est au Panthéon ({n} fois) ! Tu veux revoir les photos ?', 'Your team is in the Hall of Fame ({n} times)! Want to look at the pictures?'), [L('Oui', 'Yes'), L('Non', 'No')], who, { n })) === 0) {
     await openScreen({ id: 'hall' });
   }
+};
+
+// ------------------------------------------------------------------ the rival, every week
+
+/** The rival waits for one rematch a week (`re:rival` holds the week of the last one won). */
+const weekOf = (day = localDay()) => Math.floor(day / 7);
+
+scripts.rivalGalerie = async () => {
+  const d = save.value!;
+  const choice = rivalChoice(d.flags);
+  const wins = d.flags['rival:revanches'] ?? 0;
+  if (d.flags['re:rival'] === weekOf()) {
+    await say(choice === 'a'
+      ? L('Je m’entraîne ! Reviens la semaine prochaine, tu ne vas pas me reconnaître.', 'I’m training! Come back next week, you won’t recognise me.')
+      : choice === 'b'
+        ? L('Pfiou, quel combat ! Reviens la semaine prochaine, on recommence juste pour le plaisir.', 'Phew, what a battle! Come back next week, we’ll do it again just for fun.')
+        : L('Reviens la semaine prochaine. D’ici là, mes Bestioles auront grandi.', 'Come back next week. By then my Critters will have grown.'), RIVAL);
+    return;
+  }
+  await say(wins
+    ? L('Te revoilà, {name} ! Cette semaine, c’est moi qui gagne.', 'There you are, {name}! This week, I win.')
+    : choice === 'b'
+      ? L('{name} ! Je t’attendais. Plus de course, plus de badges… juste un combat pour le plaisir. Ça te dit ?', '{name}! I was waiting for you. No more race, no more badges… just a battle for fun. How about it?')
+      : L('{name} ! Je t’attendais. Depuis la Route Blanche, je me suis entraîné tous les jours.', '{name}! I was waiting for you. Since the Blank Road, I’ve trained every day.'), RIVAL);
+  if ((await ask(L('Une revanche ?', 'A rematch?'), [L('Oui', 'Yes'), L('Non', 'No')], RIVAL)) !== 0) {
+    await say(L('Quand tu veux. Je ne bouge pas d’ici.', 'Whenever you like. I’m not going anywhere.'), RIVAL);
+    return;
+  }
+  // a real battle, a fair one: he heals your team first, as he always did
+  const g = getGame();
+  await g.fadeTo(0.6, 200, 'white');
+  update((x) => healParty(x));
+  await g.fadeTo(0, 300);
+  const starter = String(d.flags.rivalStarter ?? 2).padStart(3, '0');
+  const party = partyOf(rivalPostTeam(starter, wins, choice, d.flags['ep:done'] ? 4 : 0), newSeed());
+  if (choice === 'b') Object.assign(party[party.length - 1], { shiny: true, nickname: tr(RIVAL_ACE_NAME) });
+  const out = await fight('trainer', RIVAL, party, {
+    trainer: { id: 'rivalPost', name: RIVAL, party: [], money: 6000 + 500 * Math.min(wins, 10), fairCopy: true, items: RIVAL_ITEMS.rivalFinal, before: [], after: [L('Encore une page d’avance… Mais je te rattrape !', 'Another page ahead… But I’m catching up!')] },
+    look: LOOKS.rival, backdrop: 'city', music: 'rival',
+  });
+  if (out.result !== 'win') return;
+  update((x) => {
+    x.flags['re:rival'] = weekOf();
+    x.flags['rival:revanches'] = wins + 1;
+    healParty(x);
+  });
+  await sayAll([
+    choice === 'a'
+      ? L('Encore perdu ! Bon. Je retourne m’entraîner. Et tu sais quoi ? J’adore toujours ça.', 'Beaten again! Fine. Back to training. And you know what? I still love it.')
+      : L('Perdu… et pourtant je souris. Ça doit être ça, dessiner pour le plaisir.', 'Beaten… and yet I’m smiling. That must be what drawing for fun feels like.'),
+    L('Je t’ai soigné l’équipe. À la semaine prochaine !', 'I healed your team. See you next week!'),
+  ], RIVAL);
 };
 
 // ------------------------------------------------------------------ Tour des Défis

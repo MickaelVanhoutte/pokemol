@@ -5,7 +5,7 @@ import { NEUTRAL_NATURE } from './natures';
 import { move } from './moves';
 import { CREATURE_BY_ID, CUSTOM_ID, creature } from './creatures';
 import { ITEM_BY_ID } from './items';
-import type { TrainerDef, TrainerMon } from './trainers';
+import { rivalFinalTeam, type TrainerDef, type TrainerMon } from './trainers';
 
 // ------------------------------------------------------------------ Grand Concours
 
@@ -171,6 +171,24 @@ export function masterRematchParty(t: TrainerDef, times: number, level: number):
     const last = i === team.length - 1;
     const lv = last ? ace : ace - 3 + (i % 2);
     return { species: fullyGrown(sp, lv), level: lv, ...(last && item ? { item } : {}) };
+  });
+}
+
+// ------------------------------------------------------------------ the rival, after the story
+
+/** No rival rematch team grows past this level (Normal). */
+export const RIVAL_MAX_LEVEL = 80;
+
+/**
+ * The rival's team for his weekly rematch at Masterpiece Square (`wins`: rematches the player won): his finale team
+ * (with choice 5's touches), fully grown, fifteen levels higher (a little under a Concours winner) and two more per win (ten wins at most), up to
+ * `RIVAL_MAX_LEVEL`; `extra` levels on top (he trains harder after the epilogue).
+ */
+export function rivalPostTeam(rivalStarter: string, wins: number, choice?: 'a' | 'b', extra = 0): TrainerMon[] {
+  const up = 15 + 2 * Math.min(wins, 10) + extra;
+  return rivalFinalTeam(rivalStarter, choice).map((m) => {
+    const level = Math.min(RIVAL_MAX_LEVEL, m.level + up);
+    return { ...m, level, species: fullyGrown(m.species, level) };
   });
 }
 

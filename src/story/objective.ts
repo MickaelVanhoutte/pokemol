@@ -70,6 +70,7 @@ export const MAIN: Objective[] = [
 /** After the ending: what is left to do. */
 export const POST: Objective[] = [
   step('concours', 'galerie', L('Remporte le Grand Concours, après le Bord de la Page.', 'Win the Grand Contest past the Edge of the Page.'), ['champion']),
+  step('rivalPost', 'galerie', L('Revanche : {rival} t’attend sur la Place.', 'Rematch: {rival} is waiting on the Square.'), ['rival:revanches']),
   {
     ...step('dex', 'bourg', L('Complète ton Bestiodex ({c}/{t}).', 'Complete your Critterdex ({c}/{t}).'), [], (s) => dexCount(s.dex.caught) >= DEX_GOAL || on(s, 'ilePage')),
     vars: (s) => ({ c: dexCount(s.dex.caught), t: DEX_GOAL }),

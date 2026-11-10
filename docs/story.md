@@ -84,8 +84,15 @@ answer. When Coconfus is in the party it reacts to each answer (a pink glow, or 
 | final | `final` (counts double) | Edge of the Page, the Great Eraser with the player's face (`finalBoss`) | « je vais le refaire… pour m’amuser, pas par peur ! » | « il n’est pas parfait, c’est pour ça qu’il est à moi » |
 
 Lison's drawing then hangs in the Museum of First Sketches (`lisonMusee`), redone or as it was. The rival's
-lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`); his team
-does not change. Every battle he forces on you (the lake camp, Route 6, Route Blanche) starts with him healing your team. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
+lines on Route Blanche and when he heals you at the fortress follow choice 5 (`choix:rival:a` / `:b`), and so does
+his finale team (Nov 2026, `rivalFinalTeam(starter, choice)`, `rivalChoice`): told to train, his Scaraprisme and
+Foudroule are a level up and hold a Stubborn Band and a Loupe; told he is great as he is, his ace comes sparkly and
+nicknamed « Mon Trait » (`RIVAL_ACE_NAME`). After the ending he waits on Masterpiece Square once the Concours is
+won (NPC `rivalGalerie`, `showIf: 'champion'`, `scripts.rivalGalerie` in `src/story/postgame.ts`): a rematch a
+real week (`re:rival` = week, `rival:revanches` counts the wins), his team fully grown fifteen levels above his
+finale and two more per win (`rivalPostTeam`, cap L80; Normal sims 50–86% with a team of six at L58), four more
+after the epilogue (`ep:done`). He heals your team first, as always. The trainer card has a Rival track (1, 5, 10
+wins) and the Town Map a `rivalPost` goal. Every battle he forces on you (the lake camp, Route 6, Route Blanche) starts with him healing your team. The ending is saved as `fin` (1 or 2) with the win over the Great Eraser.
 
 **Choices remembered later.** A few answers come back further on, shown rather than explained, and both ways
 are an act of care (nobody says which was right). Saves that skipped a choice keep the old lines.

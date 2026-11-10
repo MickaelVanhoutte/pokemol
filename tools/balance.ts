@@ -26,7 +26,7 @@ import { grownForm } from '../src/data/creatures.ts';
 import { monTypes } from '../src/data/fairCopies.ts';
 import { effectiveness } from '../src/data/types.ts';
 import type { TypeId } from '../src/data/schema.ts';
-import { CONCOURS, concoursStage, masterRematchParty } from '../src/data/postgame.ts';
+import { CONCOURS, concoursStage, masterRematchParty, rivalPostTeam } from '../src/data/postgame.ts';
 import { curve } from '../src/data/curve.ts';
 import type { Difficulty } from '../src/state/prefs.ts';
 
@@ -82,6 +82,7 @@ if (!DIFFICULTY[difficulty]) throw new Error(`unknown difficulty ${difficulty} (
 
 /** CONCOURS_WINS=n: the Grand Concours as it is after n wins. */
 const WINS = Number(process.env.CONCOURS_WINS ?? 0);
+const RIVAL_WINS = Number(process.env.RIVAL_WINS ?? 0);
 const MASTER_REMATCH_IDS = Object.fromEntries(Object.values(TRAINERS).filter((t) => t.badge).map((t) => [t.id, true]));
 
 /** Starter ('S') at `lv`, then teammates a few levels below it. */
@@ -191,6 +192,8 @@ const STEPS: [string, Team][] = [
   // post-game: the Grand Concours, each fight alone with a level 58 team (CONCOURS_WINS=n: after n wins, the team
   // two levels higher per win, like the Concours)
   ...CONCOURS.map((st): [string, Team] => [st.trainer.id, team(58 + 2 * Math.min(WINS, 8), 6, 0)]),
+  // the rival's weekly rematch, once the Concours is won (RIVAL_WINS=n: after n wins, the team two levels higher per win)
+  ['rivalPost', team(58 + 2 * Math.min(RIVAL_WINS, 10), 6, 0)],
   // the Atelier Masters' first rematch, just after the story (a team of six at L47)
   ...Object.keys(MASTER_REMATCH_IDS).map((id): [string, Team] => [`${id}:re`, team(47, 6, 0)]),
 ];
@@ -198,14 +201,15 @@ const trainer = (id: string): TrainerDef => id.endsWith(':re') ? { ...TRAINERS[i
   : TRAINERS[id] ?? concoursStage(CONCOURS.find((st) => st.trainer.id === id)!.n, WINS).trainer;
 /** The foe's team against this starter: the rival picks the starter that beats yours. */
 const foeParty = (id: string, starter: string) =>
-  id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter]) : id === 'rivalLac' ? rivalLacTeam(RIVAL_COUNTER[starter])
-    : id === 'rivalCourse' ? rivalCourseTeam(RIVAL_COUNTER[starter]) : trainer(id).party;
+  id === 'rivalFinal' ? rivalFinalTeam(RIVAL_COUNTER[starter], process.env.RIVAL_CHOICE as 'a' | 'b' | undefined) : id === 'rivalLac' ? rivalLacTeam(RIVAL_COUNTER[starter])
+    : id === 'rivalCourse' ? rivalCourseTeam(RIVAL_COUNTER[starter])
+      : id === 'rivalPost' ? rivalPostTeam(RIVAL_COUNTER[starter], RIVAL_WINS, process.env.RIVAL_CHOICE as 'a' | 'b' | undefined) : trainer(id).party;
 
 /** Zélie gives the Feutre d'Or before her own battle. */
 const feutre = STEPS.findIndex(([id]) => id === 'zelie');
 /** Who makes a fair copy in this fight. */
 const pensAt = (k: number, id: string): Pens => {
-  const t = id === 'rivalFinal' ? { fairCopy: true as const } : id === 'rivalLac' || id === 'rivalCourse' ? {} : trainer(id);
+  const t = id === 'rivalFinal' || id === 'rivalPost' ? { fairCopy: true as const } : id === 'rivalLac' || id === 'rivalCourse' ? {} : trainer(id);
   return { me: k >= feutre ? 'light' : undefined, foe: t.fairCopy === 'dark' ? 'dark' : t.fairCopy ? 'light' : undefined };
 };
 
@@ -214,7 +218,7 @@ for (const [k, [id, t]] of STEPS.entries()) {
   if (only && !only.includes(id)) continue;
   const cells = ['001', '002', '003'].map((starter) => {
     const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? grownForm(starter, lv) : sp, lv, { rng: seed * 13 + i }));
-    const def = id in RIVAL_ITEMS ? { id, items: RIVAL_ITEMS[id as keyof typeof RIVAL_ITEMS], fairCopy: id === 'rivalFinal' ? (true as const) : undefined } : trainer(id);
+    const def = id === 'rivalPost' ? { id, items: RIVAL_ITEMS.rivalFinal, fairCopy: true as const } : id in RIVAL_ITEMS ? { id, items: RIVAL_ITEMS[id as keyof typeof RIVAL_ITEMS], fairCopy: id === 'rivalFinal' ? (true as const) : undefined } : trainer(id);
     const brain = brainOf(def, partyOf(foeParty(id, starter), 1, difficulty), difficulty);
     const rate = winRate(mk, (seed) => partyOf(foeParty(id, starter), seed, difficulty), DIFFICULTY[difficulty].slip, n, pensAt(k, id), brain);
     return `${Math.round(rate * 100)}%`.padStart(5);

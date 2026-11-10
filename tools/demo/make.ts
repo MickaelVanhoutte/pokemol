@@ -39,13 +39,15 @@ const SPECIES: Record<string, string[]> = {
   m7: ['021', '008', '022', '001'],
   // the post-game that grows: Mireille's rematch team and Marine's Concours team after three wins
   m8: ['025', '024', '092', '090', '048', '038', '104', '007', '100', '060', '017', '042', '070', '023'],
+  // the rival's two post-game teams
+  m9: ['025', '036', '008', '050', '053', '007', '027', '024'],
 };
 /** Demos showing her original drawings (the credits). */
 const ORIGINALS: Record<string, boolean> = { m4b: true, m6: true };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
 const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
-const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true, m8: true };
+const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true, m8: true, m9: true };
 
 // `import.meta.env.DEV` follows NODE_ENV, not the mode
 if (DEV[which]) process.env.NODE_ENV = 'development';
