@@ -32,6 +32,8 @@ export interface TrainerDef {
   storyFlag?: string;
   /** Makes its ace a fair copy (« mise au propre ») in battle; the Great Eraser's is scribbled black. */
   fairCopy?: true | 'dark';
+  /** Potions in its bag, used when its Bestiole would fall to the next hit (Normal; doubled on Hard, none on Easy). */
+  items?: string[];
 }
 
 /**
@@ -61,6 +63,32 @@ export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty
     ...createMon(t.species, Math.min(cap, trainerLevel(t.level, difficulty)), { rng: seed + i }, ivs),
     item: t.item ?? null, nature: NEUTRAL_NATURE, talent: 0, shiny: false,
   }));
+}
+
+/** On Normal, a trainer whose best Bestiole reaches this level thinks ahead even without a badge (from mid Act 2). */
+export const SMART_FROM = 20;
+/** A team whose best Bestiole reaches this level is a post-game one (Concours, rematches): it may switch on Normal. */
+export const POSTGAME_ACE = 45;
+
+/**
+ * How a trainer battles at a difficulty: whether it thinks ahead (knock-outs, danger, switching out of a bad
+ * matchup: src/engine/pk/ai.ts) and the potions in its bag. Easy: nobody, no potions. Normal: Atelier Masters,
+ * admins, fair-copy bosses and trainers from `SMART_FROM` on, with the potions written on them; they switch by
+ * choice only after the story (`POSTGAME_ACE`), once. Hard: every trainer, three switches, bosses with twice the
+ * potions, others from level 30 with one Super Potion.
+ */
+export function brainOf(t: Pick<TrainerDef, 'badge' | 'fairCopy' | 'items' | 'grey'> & { id?: string } | undefined, party: { level: number }[], difficulty: Difficulty): { smart?: boolean; switches?: number; items?: { id: string; n: number }[] } {
+  if (!t || difficulty === 'easy') return {};
+  const ace = Math.max(0, ...party.map((m) => m.level));
+  const boss = !!(t.badge || t.fairCopy || t.items?.length || t.id?.endsWith(':rematch'));
+  const smart = difficulty === 'hard' || boss || ace >= SMART_FROM;
+  let list = t.items ?? [];
+  if (difficulty === 'hard') list = boss ? [...list, ...(list.length ? list : ['super-potion'])] : ace >= 30 ? ['super-potion'] : [];
+  const items = [...new Set(list)].map((id) => ({ id, n: list.filter((x) => x === id).length }));
+  // switching out of a hopeless matchup: up to three times on Hard; on Normal only once, and only after the story
+  // (a player who never switches back would see a whole team swept by one counter)
+  const switches = difficulty === 'hard' ? 3 : ace >= POSTGAME_ACE ? 1 : 0;
+  return { ...(smart ? { smart } : {}), ...(smart && switches ? { switches } : {}), ...(items.length ? { items } : {}) };
 }
 
 /** The player's level for rematches: the average of the three strongest Bestioles in the team (eggs left out). */
@@ -289,7 +317,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Les vagues ont perdu le rythme…', 'The waves lost the beat…')],
   }),
   T({
-    id: 'marine', name: L('Maître d’Atelier Marine', 'Atelier Master Marine'), money: 2000, badge: 'aquarelle', afterScript: 'marineAfter', storyFlag: 'a2.bridge',
+    id: 'marine', name: L('Maître d’Atelier Marine', 'Atelier Master Marine'), money: 2000, badge: 'aquarelle', afterScript: 'marineAfter', storyFlag: 'a2.bridge', items: ['potion'],
     party: [{ species: '069', level: 16 }, { species: '032', level: 16 }, { species: '022', level: 19 }],
     before: [
       L('L’aquarelle, c’est de l’eau qui rêve d’être une couleur. Tu le savais ?', 'Watercolour is water dreaming of being a colour. Did you know that?'),
@@ -392,7 +420,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon… Dérange-le, alors.', 'Fine… Disturb him, then.')],
   }),
   T({
-    id: 'rature', name: L('Admin Rature', 'Admin Smudge'), money: 2600, grey: true, afterScript: 'feutreRestore', storyFlag: 'a2.feutre',
+    id: 'rature', name: L('Admin Rature', 'Admin Smudge'), money: 2600, grey: true, afterScript: 'feutreRestore', storyFlag: 'a2.feutre', items: ['potion'],
     party: [{ species: '026', level: 19 }, { species: '010', level: 21 }, { species: '010', level: 23 }],
     before: [
       L('Tiens, tiens. C’est toi qui recolories tout derrière nous ?', 'Well, well. So you’re the one colouring everything back in behind us?'),
@@ -413,7 +441,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Le concert est annulé…', 'The concert is cancelled…')],
   }),
   T({
-    id: 'zelie', name: L('Maître d’Atelier Zélie', 'Atelier Master Zelie'), money: 2400, badge: 'fluo',
+    id: 'zelie', name: L('Maître d’Atelier Zélie', 'Atelier Master Zelie'), money: 2400, badge: 'fluo', items: ['potion'],
     party: [{ species: '035', level: 24 }, { species: '082', level: 24 }, { species: '004', level: 26, item: 'baie-bleue' }],
     before: [
       L('Merci d’avoir rendu ses couleurs à ma ville ! Maintenant… on va voir si tu brilles autant que mes feutres fluo !', 'Thanks for giving my city its colours back! Now… let’s see if you shine as bright as my neon markers!'),
@@ -456,7 +484,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Mon crayon a fondu…', 'My pencil melted…')],
   }),
   T({
-    id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise',
+    id: 'ambre', name: L('Maître d’Atelier Ambre', 'Atelier Master Amber'), money: 2800, badge: 'braise', items: ['potion'],
     party: [{ species: '021', level: 27 }, { species: '018', level: 26 }, { species: '021', level: 28, item: 'baie-doree' }],
     before: [
       L('Tu as monté le Mont Fusain jusqu’ici ? Courageux. Mais ici, ça chauffe !', 'You climbed all of Mount Charcoal? Brave. But here, things heat up!'),
@@ -529,7 +557,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Le tour a raté…', 'The trick failed…')],
   }),
   T({
-    id: 'celestine', name: L('Maître d’Atelier Célestine', 'Atelier Master Celestine'), money: 3200, badge: 'paillette', fairCopy: true,
+    id: 'celestine', name: L('Maître d’Atelier Célestine', 'Atelier Master Celestine'), money: 3200, badge: 'paillette', fairCopy: true, items: ['super-potion'],
     party: [{ species: '006', level: 27 }, { species: '005', level: 28, item: 'baie-reveil' }, { species: '014', level: 28 }, { species: '028', level: 29 }],
     before: [L('Bienvenue dans mon atelier étoilé ! Chaque paillette ici est un vœu. Voyons si le tien est le plus fort !', 'Welcome to my starry atelier! Every speck of glitter here is a wish. Let’s see if yours is the strongest!')],
     after: [
@@ -549,7 +577,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon, passe…', 'Fine, pass…')],
   }),
   T({
-    id: 'blanche', name: L('Admin Blanche', 'Admin Whiteout'), money: 3600, grey: true, afterScript: 'towerFreed', storyFlag: 'a3.tour',
+    id: 'blanche', name: L('Admin Blanche', 'Admin Whiteout'), money: 3600, grey: true, afterScript: 'towerFreed', storyFlag: 'a3.tour', items: ['super-potion'],
     party: [{ species: '043', level: 23 }, { species: '010', level: 24 }, { species: '007', level: 23 }, { species: '008', level: 24 }],
     before: [
       L('Chut. Ici, tout est blanc, propre, silencieux. Plus un trait qui dépasse.', 'Shh. Here everything is white, clean, silent. Not a single line out of place.'),
@@ -591,7 +619,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Mes papillons sont partis butiner ailleurs…', 'My butterflies went to forage elsewhere…')],
   }),
   T({
-    id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache', fairCopy: true,
+    id: 'basile', name: L('Maître d’Atelier Basile', 'Atelier Master Basil'), money: 3600, badge: 'gouache', fairCopy: true, items: ['super-potion'],
     party: [{ species: '094', level: 31, item: 'baie-menthe' }, { species: '098', level: 32 }, { species: '063', level: 33 }, { species: '024', level: 36, item: 'baie-bleue' }],
     before: [L('La gouache, c’est épais, c’est généreux, ça ne s’efface pas facilement. Comme mes Bestioles !', 'Gouache is thick, generous, hard to rub out. Just like my Critters!')],
     after: [
@@ -637,7 +665,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Pfff… Ils étaient lourds, en plus.', 'Phew… They were heavy, too.')],
   }),
   T({
-    id: 'buvard', name: L('Capitaine Buvard', 'Captain Blotter'), money: 4200, grey: true, afterScript: 'phareEnd', storyFlag: 'a3.phare',
+    id: 'buvard', name: L('Capitaine Buvard', 'Captain Blotter'), money: 4200, grey: true, afterScript: 'phareEnd', storyFlag: 'a3.phare', items: ['super-potion'],
     party: [{ species: '006', level: 32 }, { species: '042', level: 31 }, { species: '010', level: 32 }, { species: '008', level: 33, item: 'baie-doree' }],
     before: [
       L('Ho ho ! {g:Une petite artiste|Un petit artiste} dans mon phare ?', 'Ho ho! A little artist in my lighthouse?'),
@@ -678,7 +706,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('…et le jour finit par se lever.', '…and the day finally broke.')],
   }),
   T({
-    id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre', afterScript: 'encreChoice', fairCopy: true,
+    id: 'nocturne', name: L('Maître d’Atelier Nocturne', 'Atelier Master Nocturne'), money: 4000, badge: 'encre', afterScript: 'encreChoice', fairCopy: true, items: ['super-potion', 'retouche'],
     party: [{ species: '097', level: 32 }, { species: '010', level: 32 }, { species: '066', level: 33 }, { species: '098', level: 33 }, { species: '011', level: 33 }],
     before: [
       L('Bonsoir. L’encre de nuit cache tout ce qu’on n’ose pas dessiner…', 'Good evening. Night ink hides everything we don’t dare to draw…'),
@@ -711,13 +739,13 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Il est en haut… Oups.', 'He’s upstairs… Oops.')],
   }),
   T({
-    id: 'rature2', name: L('Admin Rature', 'Admin Smudge'), money: 4200, grey: true,
+    id: 'rature2', name: L('Admin Rature', 'Admin Smudge'), money: 4200, grey: true, items: ['super-potion'],
     party: [{ species: '036', level: 32 }, { species: '010', level: 32 }, { species: '010', level: 33 }, { species: '057', level: 32 }, { species: '008', level: 33 }],
     before: [L('Encore toi ! Cette fois, je vais te raturer pour de bon.', 'You again! This time I’ll scratch you out for good.')],
     after: [L('Je… je raye ce combat de ma mémoire.', 'I… I’m crossing this battle out of my memory.')],
   }),
   T({
-    id: 'blanche2', name: L('Admin Blanche', 'Admin Whiteout'), money: 4400, grey: true, afterScript: 'usineEnd', storyFlag: 'a3.usine',
+    id: 'blanche2', name: L('Admin Blanche', 'Admin Whiteout'), money: 4400, grey: true, afterScript: 'usineEnd', storyFlag: 'a3.usine', items: ['super-potion', 'super-potion'],
     party: [{ species: '043', level: 34 }, { species: '010', level: 33 }, { species: '007', level: 34 }, { species: '046', level: 33 }, { species: '008', level: 34 }],
     before: [L('Le patron est juste derrière moi. Il ne faut pas le déranger… Il prépare la page blanche.', 'The boss is right behind me. He mustn’t be disturbed… He is preparing the blank page.')],
     after: [L('Même mon blanc… a des couleurs, maintenant.', 'Even my white… has colours in it now.')],
@@ -818,7 +846,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   }),
   // the three admins, one last time: they are the little voices of doubt
   T({
-    id: 'buvard2', name: L('Capitaine Buvard', 'Captain Blotter'), money: 5000, grey: true, afterScript: 'buvardFresque',
+    id: 'buvard2', name: L('Capitaine Buvard', 'Captain Blotter'), money: 5000, grey: true, afterScript: 'buvardFresque', items: ['super-potion', 'super-potion'],
     party: [{ species: '042', level: 40 }, { species: '059', level: 40 }, { species: '070', level: 41 }, { species: '100', level: 39 }, { species: '008', level: 42, item: 'baie-doree' }],
     before: [
       L('Ho ho… Te revoilà. Tu sais ce que je suis, au fond ?', 'Ho ho… You again. Do you know what I really am?'),
@@ -827,7 +855,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Les autres font autrement. Pas mieux. Je crois que je viens de comprendre…', 'The others do it differently. Not better. I think I just understood…')],
   }),
   T({
-    id: 'rature3', name: L('Admin Rature', 'Admin Smudge'), money: 5000, grey: true, afterScript: 'ratureTraits',
+    id: 'rature3', name: L('Admin Rature', 'Admin Smudge'), money: 5000, grey: true, afterScript: 'ratureTraits', items: ['super-potion', 'super-potion'],
     party: [{ species: '036', level: 39 }, { species: '057', level: 39 }, { species: '055', level: 39 }, { species: '010', level: 40 }, { species: '011', level: 40, item: 'baie-doree' }],
     before: [
       L('Moi, je suis la voix qui dit : « ça dépasse, c’est raté, barre tout ». On n’est pas méchants, tu sais.', 'I’m the voice that says: “it goes over, it’s wrong, cross it all out”. We’re not mean, you know.'),
@@ -836,8 +864,8 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Une rature, ça peut aussi devenir un dessin. Je ne savais pas.', 'A crossing-out can become a drawing too. I didn’t know that.')],
   }),
   T({
-    id: 'blanche3', name: L('Admin Blanche', 'Admin Whiteout'), money: 5000, grey: true,
-    party: [{ species: '043', level: 42 }, { species: '046', level: 43 }, { species: '059', level: 43 }, { species: '066', level: 43 }, { species: '049', level: 44, item: 'baie-doree' }],
+    id: 'blanche3', name: L('Admin Blanche', 'Admin Whiteout'), money: 5000, grey: true, items: ['super-potion', 'super-potion'],
+    party: [{ species: '043', level: 41 }, { species: '046', level: 42 }, { species: '059', level: 42 }, { species: '066', level: 42 }, { species: '049', level: 43, item: 'baie-doree' }],
     before: [
       L('Et moi, je suis celle qui dit : « recommence tout, depuis le début, sur une page blanche ».', 'And I’m the one who says: “start it all again, from the beginning, on a blank page”.'),
       L('Derrière moi, la Gomme Géante. Et au Bord de la Page, le patron t’attend : il veut finir de gommer ton cocon.', 'Behind me, the Giant Eraser. And at the Edge of the Page, the boss is waiting: he wants to finish rubbing out your cocoon.'),
@@ -856,7 +884,7 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
     after: [L('Bon réveil, alors !', 'Have a nice waking up, then!')],
   }),
   T({
-    id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true, fairCopy: 'dark',
+    id: 'effaceur', name: L('Le Grand Effaceur', 'The Great Eraser'), money: 0, grey: true, fairCopy: 'dark', items: ['super-potion', 'super-potion'],
     party: [{ species: '008', level: 39 }, { species: '007', level: 39 }, { species: '027', level: 39 }, { species: '010', level: 40 }, { species: '011', level: 42 }],
     before: [],
     after: [L('Tes… dessins… ils sont pleins… de couleurs…', 'Your… drawings… they’re full… of colours…')],
@@ -865,6 +893,11 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   ...ATELIER_TEAMS,
 ].map((t) => [t.id, t]));
 
+/** The rival's potions in each of his battles (he plays like an Atelier Master). */
+export const RIVAL_ITEMS: Record<'rivalLac' | 'rivalCourse' | 'rivalFinal', string[]> = {
+  rivalLac: ['potion'], rivalCourse: ['super-potion'], rivalFinal: ['super-potion', 'super-potion'],
+};
+
 /** The rival's team on Route Blanche: his starter, grown to its level, is the ace. */
 /**
  * The rival's starter in the last battle, by the starter it took. As a fair copy each one weighs differently against
@@ -872,16 +905,16 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
  * `npm run balance`.
  */
 const RIVAL_ACE: Record<string, { level: number; item?: string }> = {
-  '001': { level: 48, item: 'lunettes-tetues' }, '002': { level: 41 }, '003': { level: 37 },
+  '001': { level: 47, item: 'lunettes-tetues' }, '002': { level: 41 }, '003': { level: 37 },
 };
 
 export function rivalFinalTeam(rivalStarter: string): TrainerDef['party'] {
   const ace = RIVAL_ACE[rivalStarter] ?? RIVAL_ACE['001'];
   // with Bouquétigre (weak to the fire and wings of the starter that beats it) he brings a stone falcon to cover it
-  const third = rivalStarter === '001' ? { species: '050', level: 41 } : { species: '053', level: 41, item: 'lunettes-tetues' };
+  const third = rivalStarter === '001' ? { species: '050', level: 40 } : { species: '053', level: 40, item: 'lunettes-tetues' };
   return [
-    { species: '036', level: 41, item: 'plume-vive' }, { species: '008', level: 41 }, third,
-    { species: '007', level: 41 }, { species: '027', level: 41 }, { species: grownForm(rivalStarter, ace.level), ...ace },
+    { species: '036', level: 40, item: 'plume-vive' }, { species: '008', level: 40 }, third,
+    { species: '007', level: 40 }, { species: '027', level: 40 }, { species: grownForm(rivalStarter, ace.level), ...ace },
   ];
 }
 

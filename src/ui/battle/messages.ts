@@ -132,6 +132,13 @@ export function describe(e: BattleEvent, st: BattleState): string[] {
     case 'gaveUp':
       return [f(L('{n} n’apprend pas {m}.', '{n} did not learn {m}.'), { n: mine(e.idx), m: tr(move(e.move).name) })];
     case 'useItem': {
+      // a trainer's own potion
+      if (e.side === 1) {
+        const n = monName(st, 1, e.target);
+        const lines = [f(L('{t} utilise {i} sur {n} !', '{t} used {i} on {n}!'), { t: tr(st.sides[1].name), i: tr(item(e.item).name), n })];
+        if (e.amount) lines.push(f(L('{n} récupère {x} PV.', '{n} recovered {x} HP.'), { n, x: e.amount }));
+        return lines;
+      }
       const lines = [f(L('Tu utilises {i} sur {n} !', 'You used {i} on {n}!'), { i: tr(item(e.item).name), n: mine(e.target) })];
       if (e.amount) lines.push(f(L('{n} récupère {x} PV.', '{n} recovered {x} HP.'), { n: mine(e.target), x: e.amount }));
       return lines;

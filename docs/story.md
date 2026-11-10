@@ -582,9 +582,23 @@ Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Ha
 
 | | Levels | Trainer IVs | AI | Catch rate |
 |---|---|---|---|---|
-| Easy | −15% (at least −1) | 6 | Random move 35% of the time (`aiChoose` `slip`) | ×2 |
-| Normal | as written | 12 | Best move | ×1 |
-| Hard | +10% | 20 | Best move | ×1 |
+| Easy | −15% (at least −1) | 6 | Random move 35% of the time (`aiChoose` `slip`), nobody thinks ahead, no potions | ×2 |
+| Normal | as written | 12 | Best move; bosses and trainers from L20 think ahead and use their potions; after the story, one switch | ×1 |
+| Hard | +10% | 20 | Every trainer thinks ahead, three switches, bosses with twice the potions, others from L30 one Super Potion | ×1 |
+
+**Trainers who think (Nov 2026, roadmap milestone 1).** `brainOf` (`src/data/trainers.ts`) gives a trainer a `smart`
+side, a number of `switches` and its bag (`items`); `src/engine/pk/ai.ts` then estimates each move's damage with the
+real formula and a middle roll (`expectedDamage`, no random number used), finishes a Bestiole it can knock out first,
+keeps set-up and status moves for when the next hit can't knock it out, heals with a move or a potion only when that
+outlasts the next hit, and switches out of a hopeless matchup (`matchup` ≤ −0.5) to a teammate clearly better,
+three turns apart at least. Plain trainers (Act 1, Easy) play exactly as before. On Normal they don't switch during
+the story: in the sims a single switch to a counter swept a whole team whose player never switched back (the
+Grand Concours' Nocturne opens on a Bug/Flying Bestiole against a Grass lead). The balance sim's player thinks ahead
+too, but never switches and uses no potions, so real players do better. Blanche's last team and the rival's
+finale (his Bestioles L40, the Minousse line's ace L47) came down a level to stay where they were.
+Normal sims, before → after (Minousse / Braisou / Clapotin): Marine 95/86/87 → 98/81/84, Basile 82/98/75 →
+87/95/67, Blanche (last) 61/93/67 → 60/86/60, rival (finale) 51/62/77 → 62/50/91, Great Eraser 99% → 100%, Grand
+Concours Nocturne 72/75/73 → 5/82/73, the Prof 43/47/55 → 56/63/70.
 
 **Catching** is FireRed's formula (`catchChance`, `throwBall` in `src/engine/pk/battle.ts`): the HP left, the
 species' catch rate, the ball (Croque-Carnet ×1, Super ×1.5), sleep or freeze ×2 and the other statuses ×1.5, four

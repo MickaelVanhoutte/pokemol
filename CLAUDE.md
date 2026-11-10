@@ -231,7 +231,9 @@ conventions are in [docs/content.md](docs/content.md#flags).
     `{ state, events, snaps }` built on a `structuredClone`;
   - randomness comes from `state.rng`;
   - `blocked()` means waiting for a forced switch or a move-learn choice;
-  - `ai.ts` has `aiChoose(st, slip)`;
+  - `ai.ts` has `aiChoose(st, slip)`: plain trainers score moves; a `smart` side (`brainOf` in `src/data/trainers.ts`,
+    by difficulty) estimates damage (`expectedDamage`, no random numbers), finishes knock-outs, drinks potions from its
+    bag (`SideState.items`, the `useItem` event with `side: 1`) and switches out of a bad `matchup` (`switches` left);
   - catching is FireRed's formula (`catchChance`) with a hidden pity counter (`missedBalls`: the 16th ball of a
     battle always holds); `boosts.catch` multiplies the ball (×2 on Easy, `DIFFICULTY.catch`, and the real house);
   - `creature.ts` covers stats, XP (`level³`, Gen 3 yield, ×1.5 for traded Bestioles) and evolutions; the level cap is 100

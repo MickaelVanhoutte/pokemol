@@ -14,7 +14,7 @@ import { playJingle } from '../audio/music';
 import { sfx } from '../audio/sfx';
 import { item, PEARLS } from '../data/items';
 import { mixPrimaries, PRIMARY_COLOUR, type DrainMix } from '../data/primaries';
-import { partyOf, rivalLacTeam } from '../data/trainers';
+import { partyOf, rivalLacTeam, RIVAL_ITEMS } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { localDay } from '../overworld/berries';
 import {
@@ -190,7 +190,7 @@ async function colourBack(from?: DrainMix) {
 async function rivalBattle() {
   const starter = String(num('rivalStarter') || 2).padStart(3, '0');
   const out = await fight('trainer', RIVAL, partyOf(rivalLacTeam(starter), newSeed()), {
-    trainer: { id: 'rivalLac', name: RIVAL, party: [], money: 1600, before: [], after: [L('J’étais à deux doigts !', 'I was this close!')] },
+    trainer: { id: 'rivalLac', name: RIVAL, party: [], money: 1600, items: RIVAL_ITEMS.rivalLac, before: [], after: [L('J’étais à deux doigts !', 'I was this close!')] },
     look: LOOKS.rival, music: 'rival',
   });
   if (out.result !== 'win') return;

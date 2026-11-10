@@ -387,6 +387,10 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
   good. `trainerBattle()` saves `tr:<id>`, `storyFlag` and the badge in one `update` before any line is
   said; `repair()` in `src/state/game.ts` also restores them for saves made by older versions.
 - `item` on a party entry: a held item (berries are eaten in battle).
+- `items`: potions in the trainer's bag (`potion`, `super-potion`, `retouche`), used by a thinking trainer when its
+  Bestiole would fall to the next hit (or is asleep, frozen or paralysed while healthy). Give them to Atelier
+  Masters from Marine on, admins and bosses, not to Act 1 trainers. `brainOf` (same file) decides by difficulty who
+  thinks ahead and doubles them on Hard; the rival's are in `RIVAL_ITEMS`.
 - Run `npm run balance` before and after changing levels or teams (see [testing.md](testing.md)).
   Keep the early game gentle ([story.md](story.md#level-curve-and-difficulty)).
 

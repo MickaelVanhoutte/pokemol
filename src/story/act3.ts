@@ -1,7 +1,7 @@
 import { L, tr } from '../i18n';
 import { playMusic } from '../audio/music';
 import { DEX_GOAL, dexCount } from '../data/creatures';
-import { partyOf, rivalFinalTeam } from '../data/trainers';
+import { partyOf, rivalFinalTeam, RIVAL_ITEMS } from '../data/trainers';
 import { TOWNS } from '../data/worldmap';
 import { newSeed } from '../engine/rng';
 import { LOOKS } from '../overworld/sprites';
@@ -375,7 +375,7 @@ scripts.rivalFinal = async () => {
   showToast(tr(L('Tes Bestioles sont en pleine forme !', 'Your Critters are in top shape!')));
   const party = partyOf(rivalFinalTeam(String(save.value!.flags.rivalStarter ?? 2).padStart(3, '0')), newSeed());
   const out = await fight('trainer', RIVAL, party, {
-    trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, fairCopy: true, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
+    trainer: { id: 'rivalFinal', name: RIVAL, party: [], money: 5000, fairCopy: true, items: RIVAL_ITEMS.rivalFinal, before: [], after: [L('Toujours un coup d’avance sur moi, hein…', 'Always one step ahead of me, huh…')] },
     look: LOOKS.rival, backdrop: 'sketch', music: 'rival',
   });
   if (out.result !== 'win') return;

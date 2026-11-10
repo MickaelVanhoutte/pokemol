@@ -35,13 +35,15 @@ const SPECIES: Record<string, string[]> = {
   m5: ['036', '021', '012', '008'],
   // phones: the party, the box and the wild one
   m6: ['012', '013', '021', '030', '040', '014', '001', '002'],
+  // trainers who think: your Braisaure against Marine's team
+  m7: ['021', '008', '022', '001'],
 };
 /** Demos showing her original drawings (the credits). */
 const ORIGINALS: Record<string, boolean> = { m4b: true, m6: true };
 /** Demos running the whole game: every miniature (people in the world carry Bestioles too). */
 const ALL_MINIS: Record<string, boolean> = { m2a: true, m2b: true, m3a: true, m3b: true, m4a: true, m4b: true, menus: true, m6: true };
 /** Demos that drive the battle through `window.__battle` are built in development mode, where it exists. */
-const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true };
+const DEV: Record<string, boolean> = { m1b: true, m1c: true, m4a: true, m5: true, m7: true };
 
 // `import.meta.env.DEV` follows NODE_ENV, not the mode
 if (DEV[which]) process.env.NODE_ENV = 'development';

@@ -18,7 +18,7 @@ export interface ConcoursStage {
 }
 
 const stage = (n: number, look: string, t: Omit<TrainerDef, 'money'> & { money?: number }): ConcoursStage =>
-  ({ n, look, trainer: { money: 5000 + n * 1000, fairCopy: true, ...t } });
+  ({ n, look, trainer: { money: 5000 + n * 1000, fairCopy: true, items: ['super-potion', 'super-potion'], ...t } });
 
 /**
  * Four Atelier Masters at their best, then Prof. Fusain. Levels are for Normal (Easy and Hard

@@ -4,8 +4,9 @@
  *   npm run balance                 # normal difficulty, 300 fights per row
  *   npm run balance -- hard 100     # another difficulty / fewer fights
  *
- * The player side is played by the trainer AI looking at a mirrored state; it uses no items,
- * so real players (with potions) do a bit better. Each row prints the win rate for each starter
+ * The player side is played by the trainer AI looking at a mirrored state; it thinks ahead but never switches
+ * and uses no items, so real players do a bit better. The foe battles as `brainOf` says (thinking, switches,
+ * potions); BRAIN=simple plays the old plain AI on both sides, BRAIN=nopotions takes the trainers' potions away. Each row prints the win rate for each starter
  * (Minousse 001, Braisou 002, Clapotin 003) with a typical team for that point of the story.
  * Team make-up changes the numbers a lot, so compare runs before and after a change rather than
  * chasing exact values. Targets on Normal: Act 1 route trainers mostly won by the starter alone,
@@ -20,7 +21,7 @@ import { aiChoose } from '../src/engine/pk/ai.ts';
 import { createMon, type Mon } from '../src/engine/pk/creature.ts';
 import { CUSTOM_ID } from '../src/data/creatures.ts';
 import { designProblems, registerCustom, type CustomDesign } from '../src/data/custom.ts';
-import { DIFFICULTY, RIVAL_COUNTER, TRAINERS, partyOf, rivalCourseTeam, rivalFinalTeam, rivalLacTeam } from '../src/data/trainers.ts';
+import { DIFFICULTY, RIVAL_COUNTER, RIVAL_ITEMS, TRAINERS, brainOf, partyOf, rivalCourseTeam, rivalFinalTeam, rivalLacTeam } from '../src/data/trainers.ts';
 import { grownForm } from '../src/data/creatures.ts';
 import { monTypes } from '../src/data/fairCopies.ts';
 import { effectiveness } from '../src/data/types.ts';
@@ -44,14 +45,22 @@ function playerChoice(st: BattleState): Action {
   return worst(monTypes({ ...me, fair: true })) > worst(monTypes(me)) ? { ...a, fair: undefined } : a;
 }
 
-function winRate(player: (seed: number) => Mon[], enemy: (seed: number) => Mon[], slip: number, n: number, pens: Pens = {}): number {
+/**
+ * BRAIN=simple: every trainer plays the old plain way, without potions, and so does the player (to compare).
+ * BRAIN=nopotions: trainers think ahead but carry no potions.
+ */
+const SIMPLE = process.env.BRAIN === 'simple';
+const NO_POTIONS = process.env.BRAIN === 'nopotions';
+
+function winRate(player: (seed: number) => Mon[], enemy: (seed: number) => Mon[], slip: number, n: number, pens: Pens = {}, brain: Pick<SideSetup, 'smart' | 'switches' | 'items'> = {}): number {
   let wins = 0;
   for (let seed = 1; seed <= n; seed++) {
     let st = createBattle({
       kind: 'trainer',
       seed: seed * 7919,
-      player: { name: L('player'), party: player(seed), isAI: false, fairCopy: pens.me },
-      enemy: { name: L('trainer'), party: enemy(seed), isAI: true, fairCopy: pens.foe },
+      // the player thinks ahead like a real one (it still uses no potions)
+      player: { name: L('player'), party: player(seed), isAI: false, fairCopy: pens.me, smart: !SIMPLE, switches: Number(process.env.PLAYER_SWITCHES ?? 0) },
+      enemy: { name: L('trainer'), party: enemy(seed), isAI: true, fairCopy: pens.foe, ...(SIMPLE ? {} : NO_POTIONS ? { smart: brain.smart, switches: brain.switches } : brain) },
     }).state;
     for (let guard = 0; !st.result && guard < 300; guard++) {
       let a: Action;
@@ -196,7 +205,9 @@ for (const [k, [id, t]] of STEPS.entries()) {
   if (only && !only.includes(id)) continue;
   const cells = ['001', '002', '003'].map((starter) => {
     const mk = (seed: number) => t.map(([sp, lv], i) => createMon(sp === 'S' ? grownForm(starter, lv) : sp, lv, { rng: seed * 13 + i }));
-    const rate = winRate(mk, (seed) => partyOf(foeParty(id, starter), seed, difficulty), DIFFICULTY[difficulty].slip, n, pensAt(k, id));
+    const def = id in RIVAL_ITEMS ? { id, items: RIVAL_ITEMS[id as keyof typeof RIVAL_ITEMS], fairCopy: id === 'rivalFinal' ? (true as const) : undefined } : trainer(id);
+    const brain = brainOf(def, partyOf(foeParty(id, starter), 1, difficulty), difficulty);
+    const rate = winRate(mk, (seed) => partyOf(foeParty(id, starter), seed, difficulty), DIFFICULTY[difficulty].slip, n, pensAt(k, id), brain);
     return `${Math.round(rate * 100)}%`.padStart(5);
   });
   const foe = foeParty(id, '001').map((m) => m.level).join('/');

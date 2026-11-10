@@ -1,5 +1,5 @@
 import { L, tr } from '../i18n';
-import { partyOf, rivalCourseTeam } from '../data/trainers';
+import { partyOf, rivalCourseTeam, RIVAL_ITEMS } from '../data/trainers';
 import { newSeed } from '../engine/rng';
 import { fight, getGame, mapMusic, sayAll, scripts, setFlag, showToast } from '../overworld/controller';
 import { LOOKS } from '../overworld/sprites';
@@ -34,7 +34,7 @@ scripts.pastelRival = async () => {
 async function courseBattle() {
   const starter = String(num('rivalStarter') || 2).padStart(3, '0');
   const out = await fight('trainer', RIVAL, partyOf(rivalCourseTeam(starter), newSeed()), {
-    trainer: { id: 'rivalCourse', name: RIVAL, party: [], money: 2000, before: [], after: [L('Encore toi devant ! Pour l’instant…', 'You’re ahead again! For now…')] },
+    trainer: { id: 'rivalCourse', name: RIVAL, party: [], money: 2000, items: RIVAL_ITEMS.rivalCourse, before: [], after: [L('Encore toi devant ! Pour l’instant…', 'You’re ahead again! For now…')] },
     look: LOOKS.rival, music: 'rival',
   });
   if (out.result !== 'win') return false;

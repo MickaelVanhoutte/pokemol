@@ -35,8 +35,10 @@ reach up to `CHECKED_UNTIL`, which moves forward as each act's routes are made l
 
 ## Balance (`npm run balance`)
 
-`tools/balance.ts` simulates trainer fights in story order: the trainer AI plays both sides, with no
-items. It prints the win rate for each starter (Minousse / Braisou / Clapotin), with the team the
+`tools/balance.ts` simulates trainer fights in story order: the trainer AI plays both sides. The foe gets what
+`brainOf` gives it at that difficulty (thinking ahead, switches, potions); the player thinks ahead but never switches
+and uses no items (`PLAYER_SWITCHES=3` lets it switch, which it does badly). `BRAIN=simple` replays the old plain
+AI on both sides, `BRAIN=nopotions` keeps the thinking without the trainers' potions, to compare. It prints the win rate for each starter (Minousse / Braisou / Clapotin), with the team the
 level curve gives at that point of the story (the starter and its best teammates). Pass a difficulty and a fight count, e.g. `npm run balance -- easy 100`, and optionally
 some row ids to run only those: `npm run balance -- normal 300 effaceur,gcFusain`.
 

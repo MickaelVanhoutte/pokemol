@@ -42,7 +42,13 @@ export interface Scene {
   meHp?: number;
   /** Your Bestiole is one point short of its next level. */
   xpShort?: boolean;
-  foe: { name: LText; party: [string, number][]; look?: Look; quote?: string; moves?: string[] };
+  foe: {
+    name: LText; party: [string, number][]; look?: Look; quote?: string; moves?: string[];
+    /** Its first Bestiole starts with this share of its HP. */
+    hp?: number;
+    /** How the trainer battles (src/engine/pk/ai.ts): thinking ahead, switches, potions. */
+    brain?: Pick<BattleSetup['enemy'], 'smart' | 'switches' | 'items'>;
+  };
   /** Prize money for a won trainer battle. */
   money?: number;
   /** What the first turn must do, read from its events (and the battle after it). */
@@ -70,6 +76,7 @@ function teams(scene: Scene): [Mon[], Mon[]] {
   const foe = scene.foe.party.map(([s, l], i) => {
     const m = createMon(s, l, { rng: 202 + i }, { hp: 20, atk: 10, def: 10, spa: 10, spd: 10, spe: 1 });
     if (scene.foe.moves) m.moves = scene.foe.moves.map((id) => ({ id, pp: 30 }));
+    if (i === 0 && scene.foe.hp !== undefined) m.hp = Math.max(1, Math.round(maxHp(m) * scene.foe.hp));
     return m;
   });
   return [[me], foe];
@@ -80,7 +87,7 @@ function setupOf(scene: Scene, seed: number): BattleSetup {
   return {
     kind: scene.input.kind, seed,
     player: { name: L(ME.name, ME.name), party: me, isAI: false },
-    enemy: { name: scene.foe.name, party: foe, isAI: true },
+    enemy: { name: scene.foe.name, party: foe, isAI: true, ...scene.foe.brain },
   };
 }
 

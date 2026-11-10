@@ -50,6 +50,14 @@ export interface SideState {
   guard: number;
   /** The Feutre d'Or: this side can make one fair copy in the battle (`dark`: the Great Eraser's, scribbled black). */
   fairCopy?: { dark: boolean; used: boolean } | null;
+  /** A trainer's bag (enemy side): potions it may use, each `n` times. */
+  items?: { id: string; n: number }[];
+  /** The trainer thinks ahead (src/engine/pk/ai.ts): knock-outs, danger, switching out of a bad matchup. */
+  smart?: boolean;
+  /** Turn of this side's last switch by choice (the AI waits a little before switching again). */
+  switchedAt?: number;
+  /** Switches by choice a thinking trainer has left in this battle (none when absent). */
+  switches?: number;
 }
 
 export interface BattleState {
@@ -123,7 +131,8 @@ export type BattleEvent =
   | { t: 'learnPrompt'; idx: number; move: string }
   | { t: 'forgot'; idx: number; old: string; move: string }
   | { t: 'gaveUp'; idx: number; move: string }
-  | { t: 'useItem'; item: string; target: number; amount?: number }
+  /** An item used from a bag (`side` 1: the trainer's; absent: yours). */
+  | { t: 'useItem'; item: string; target: number; amount?: number; side?: Side }
   /** A held berry was eaten (HP restored and/or a status cured). */
   | { t: 'berry'; side: Side; item: string; amount?: number; cured?: Major | 'confusion' }
   | { t: 'regen'; side: Side; item: string; amount: number }
@@ -180,6 +189,12 @@ export interface SideSetup {
   isAI: boolean;
   /** Can make a fair copy (the player with the Feutre d'Or, Atelier Masters…), `dark` for the Great Eraser. */
   fairCopy?: 'light' | 'dark';
+  /** A trainer's potions (see `SideState.items`). */
+  items?: { id: string; n: number }[];
+  /** A trainer that thinks ahead (see `SideState.smart`). */
+  smart?: boolean;
+  /** How many times it may switch by choice (see `SideState.switches`). */
+  switches?: number;
 }
 
 export interface BattleSetup {
@@ -232,6 +247,9 @@ export function createBattle(setup: BattleSetup, withSnaps = false): Step {
   const mk = (s: SideSetup): SideState => ({
     name: s.name, party: structuredClone(s.party).map((m) => (delete m.fair, m)), active: Math.max(0, s.party.findIndex(alive)), isAI: s.isAI,
     vol: freshVol(), guard: 0, fairCopy: s.fairCopy ? { dark: s.fairCopy === 'dark', used: false } : null,
+    ...(s.items?.length ? { items: s.items.map((i) => ({ ...i })) } : {}),
+    ...(s.smart ? { smart: true } : {}),
+    ...(s.switches ? { switches: s.switches } : {}),
   });
   const state: BattleState = {
     kind: setup.kind, sides: [mk(setup.player), mk(setup.enemy)], rng: setup.seed >>> 0, turn: 0, result: null,
@@ -500,7 +518,11 @@ function onLeave(m: Mon) {
 // ------------------------------------------------------------------ damage
 
 /** Gen 3 style damage for one hit. */
-export function computeDamage(st: { rng: number; weather?: BattleState['weather']; night?: boolean }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean) {
+/**
+ * `roll`: the 85–100 % random factor's step (0–15) instead of a random one, so the AI can estimate damage
+ * without using up random numbers (it passes `forceCrit` false too).
+ */
+export function computeDamage(st: { rng: number; weather?: BattleState['weather']; night?: boolean }, atkSide: SideState, defSide: SideState, mv: MoveDef, power: number, forceCrit?: boolean, roll?: number) {
   const a = activeMon(atkSide), d = activeMon(defSide);
   const phys = mv.cat === 'phys';
   const h = held(a);
@@ -538,7 +560,7 @@ export function computeDamage(st: { rng: number; weather?: BattleState['weather'
   if (dt.kind === 'fluffy' && phys) dmg = Math.floor(dmg / 2);
   if (defSide.vol.phase) dmg = Math.floor(dmg / 2);
   if (dt.kind === 'filter' && eff > 1) dmg = Math.floor(dmg * 0.75);
-  dmg = Math.floor((dmg * (85 + randomInt(st, 16))) / 100);
+  dmg = Math.floor((dmg * (85 + (roll ?? randomInt(st, 16)))) / 100);
   if (h === 'powerCost' && mv.id !== STRUGGLE) dmg = Math.floor(dmg * 1.3);
   if (eff > 0) dmg = Math.max(1, dmg);
   return { dmg, crit, eff };
@@ -928,20 +950,20 @@ function tryRun(st: BattleState, out: Out): boolean {
 
 // ------------------------------------------------------------------ items
 
-export function itemUsable(st: BattleState, itemId: string, target: number): boolean {
+export function itemUsable(st: BattleState, itemId: string, target: number, side: Side = 0): boolean {
   const def = item(itemId);
-  const m = st.sides[0].party[target];
-  if (def.kind === 'ball') return st.kind === 'wild';
+  const m = st.sides[side].party[target];
+  if (def.kind === 'ball') return side === 0 && st.kind === 'wild';
   if (!m) return false;
   if (def.kind === 'heal') return alive(m) && m.hp < maxHp(m);
   if (def.kind === 'status') return alive(m) && !!m.status;
   if (def.kind === 'berry') {
-    const confused = target === st.sides[0].active && st.sides[0].vol.confusion > 0;
+    const confused = target === st.sides[side].active && st.sides[side].vol.confusion > 0;
     return alive(m) && ((def.amount > 0 && m.hp < maxHp(m)) || (!!m.status && !!def.cures?.includes(m.status)) || (confused && !!def.cures?.includes('confusion')));
   }
   if (def.kind === 'revive') return !alive(m);
   if (def.kind === 'battle') {
-    const me = st.sides[0];
+    const me = st.sides[side];
     if (target !== me.active || !alive(m)) return false;
     if (def.boost === 'crit') return !me.vol.focus;
     if (def.boost === 'guard') return me.guard === 0;
@@ -950,22 +972,22 @@ export function itemUsable(st: BattleState, itemId: string, target: number): boo
   return false;
 }
 
-function useItem(st: BattleState, itemId: string, target: number, out: Out) {
+function useItem(st: BattleState, itemId: string, target: number, out: Out, side: Side = 0) {
   const def = item(itemId);
-  const m = st.sides[0].party[target];
+  const m = st.sides[side].party[target];
   if (def.kind === 'heal') {
     const h = Math.min(def.amount, maxHp(m) - m.hp);
     m.hp += h;
-    out.push({ t: 'useItem', item: itemId, target, amount: h });
+    out.push({ t: 'useItem', item: itemId, target, amount: h, ...(side ? { side } : {}) });
   } else if (def.kind === 'status') {
     m.status = null;
     m.sleepTurns = 0;
-    if (target === st.sides[0].active) st.sides[0].vol.confusion = 0;
-    out.push({ t: 'useItem', item: itemId, target });
+    if (target === st.sides[side].active) st.sides[side].vol.confusion = 0;
+    out.push({ t: 'useItem', item: itemId, target, ...(side ? { side } : {}) });
   } else if (def.kind === 'revive') {
     m.hp = Math.max(1, Math.floor((maxHp(m) * def.amount) / 100));
     m.status = null;
-    out.push({ t: 'useItem', item: itemId, target, amount: m.hp });
+    out.push({ t: 'useItem', item: itemId, target, amount: m.hp, ...(side ? { side } : {}) });
   } else if (def.kind === 'berry') {
     const h = Math.min(def.amount, maxHp(m) - m.hp);
     m.hp += h;
@@ -973,17 +995,17 @@ function useItem(st: BattleState, itemId: string, target: number, out: Out) {
       m.status = null;
       m.sleepTurns = 0;
     }
-    if (target === st.sides[0].active && def.cures?.includes('confusion')) st.sides[0].vol.confusion = 0;
-    out.push({ t: 'useItem', item: itemId, target, amount: h || undefined });
+    if (target === st.sides[side].active && def.cures?.includes('confusion')) st.sides[side].vol.confusion = 0;
+    out.push({ t: 'useItem', item: itemId, target, amount: h || undefined, ...(side ? { side } : {}) });
   } else if (def.kind === 'battle') {
-    out.push({ t: 'useItem', item: itemId, target });
+    out.push({ t: 'useItem', item: itemId, target, ...(side ? { side } : {}) });
     if (def.boost === 'crit') {
-      st.sides[0].vol.focus = true;
-      out.push({ t: 'focus', side: 0 });
+      st.sides[side].vol.focus = true;
+      out.push({ t: 'focus', side });
     } else if (def.boost === 'guard') {
-      st.sides[0].guard = 5;
-      out.push({ t: 'guard', side: 0, on: true });
-    } else if (def.boost) changeStage(st, 0, def.boost, 1, out);
+      st.sides[side].guard = 5;
+      out.push({ t: 'guard', side, on: true });
+    } else if (def.boost) changeStage(st, side, def.boost, 1, out);
   }
 }
 
@@ -1126,6 +1148,8 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     if (tryRun(st, out)) return { state: st, events: out.events, snaps: out.snaps };
   } else if (action.type === 'switch') {
     switchIn(st, 0, action.to, out);
+    me.switchedAt = st.turn;
+    if (me.switches) me.switches--;
   } else if (action.type === 'item') {
     useItem(st, action.item, action.target, out);
   } else if (action.type === 'ball') {
@@ -1133,7 +1157,20 @@ export function act(prev: BattleState, action: Action, enemy: Action, withSnaps 
     if (st.result) return { state: st, events: out.events, snaps: out.snaps };
   }
 
-  if (enemy.type === 'switch' && !st.sides[1].vol.trap && st.sides[1].party[enemy.to] && alive(st.sides[1].party[enemy.to])) switchIn(st, 1, enemy.to, out);
+  if (enemy.type === 'switch' && !st.sides[1].vol.trap && st.sides[1].party[enemy.to] && alive(st.sides[1].party[enemy.to]) && enemy.to !== st.sides[1].active) {
+    switchIn(st, 1, enemy.to, out);
+    st.sides[1].switchedAt = st.turn;
+    if (st.sides[1].switches) st.sides[1].switches--;
+  }
+  // a trainer's potion, from its own bag
+  if (enemy.type === 'item') {
+    const foe = st.sides[1];
+    const own = foe.items?.find((i) => i.id === enemy.item && i.n > 0);
+    if (own && itemUsable(st, enemy.item, enemy.target, 1)) {
+      own.n--;
+      useItem(st, enemy.item, enemy.target, out, 1);
+    }
+  }
 
   // fair copies before anyone moves (its new Speed counts this turn), the player's first
   if (action.type === 'move' && action.fair) makeFair(st, 0, out);

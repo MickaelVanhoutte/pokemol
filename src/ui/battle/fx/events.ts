@@ -81,7 +81,7 @@ export function eventFx(e: BattleEvent, snap: BattleState, moveShown: { side: Si
     case 'hangOn': return on(e.side, [pulse({ color: '#e0453a', n: 1 }), sparkle({ who: 'user', color: SPARK, n: 3 })]);
     case 'quick': return on(e.side, [speedLines({ who: 'user', n: 8, dur: 460 }), sparkle({ who: 'user', kind: 'feather', color: PAL.vol[0], n: 3, size: 0.24 })]);
     case 'itemHurt': return on(e.side, [impactStar({ who: 'user', size: 0.35 })]);
-    case 'useItem': return e.target === snap.sides[0].active ? on(0, [rise({ kind: 'spark', color: '#8fd0ff', n: 6, size: 0.2 })]) : null;
+    case 'useItem': return e.target === snap.sides[e.side ?? 0].active ? on(e.side ?? 0, [rise({ kind: 'spark', color: '#8fd0ff', n: 6, size: 0.2 })]) : null;
     case 'focus': return on(e.side, [pulse({ color: '#e0453a', n: 2 })]);
     case 'guard': return e.on ? on(e.side, [shield({ dur: 600 })]) : null;
     default: return null;
