@@ -4,12 +4,23 @@ import { createMon, MAX_LEVEL, type Mon } from '../engine/pk/creature';
 import { prefs, type Difficulty } from '../state/prefs';
 import { grownForm } from './creatures';
 import { NEUTRAL_NATURE } from './natures';
+import { move } from './moves';
+import { plannedMoves, plannedNature } from './movesets';
+import type { TalentSlot } from './talents';
 
 export interface TrainerMon {
   species: string;
   level: number;
   /** Held item (berries are eaten in battle, like the GBA games' stronger trainers). */
   item?: string;
+  /** Its nature (neutral when absent; bosses get a planned one, `planTeam`). */
+  nature?: string;
+  /** Its talent slot (0 when absent; 2 is the hidden talent). */
+  talent?: TalentSlot;
+  /** Its moves (up to four ids; the last four learnt when absent). */
+  moves?: string[];
+  /** A boss's planned moveset and nature (`planTeam`), used on Hard and, on Normal, after the story (`planned`). */
+  plan?: { moves: string[]; nature: string };
 }
 
 export interface TrainerDef {
@@ -59,16 +70,21 @@ export function trainerLevel(level: number, difficulty: Difficulty): number {
 export function partyOf(list: TrainerMon[], seed: number, difficulty: Difficulty = prefs.value.difficulty, cap = MAX_LEVEL): Mon[] {
   const iv = DIFFICULTY[difficulty].iv;
   const ivs = { hp: iv, atk: iv, def: iv, spa: iv, spd: iv, spe: iv };
-  return list.map((t, i) => ({
-    ...createMon(t.species, Math.min(cap, trainerLevel(t.level, difficulty)), { rng: seed + i }, ivs),
-    item: t.item ?? null, nature: NEUTRAL_NATURE, talent: 0, shiny: false,
-  }));
+  const plan = planned(list, difficulty);
+  return list.map((t, i) => {
+    const moves = t.moves ?? (plan ? t.plan?.moves : undefined);
+    return {
+      ...createMon(t.species, Math.min(cap, trainerLevel(t.level, difficulty)), { rng: seed + i }, ivs),
+      item: t.item ?? null, nature: t.nature ?? (plan ? t.plan?.nature : undefined) ?? NEUTRAL_NATURE, talent: t.talent ?? 0, shiny: false,
+      ...(moves ? { moves: moves.map((id) => ({ id, pp: move(id).pp })) } : {}),
+    };
+  });
 }
 
 /** On Normal, a trainer whose best Bestiole reaches this level thinks ahead even without a badge (from mid Act 2). */
 export const SMART_FROM = 20;
-/** A team whose best Bestiole reaches this level is a post-game one (Concours, rematches): it may switch on Normal. */
-export const POSTGAME_ACE = 45;
+/** A team whose best Bestiole reaches this level is a post-game one (Concours, rematches; the rival's finale ace is L47): on Normal it may switch and uses its plan. */
+export const POSTGAME_ACE = 48;
 
 /**
  * How a trainer battles at a difficulty: whether it thinks ahead (knock-outs, danger, switching out of a bad
@@ -893,6 +909,41 @@ export const TRAINERS: Record<string, TrainerDef> = Object.fromEntries([
   ...ATELIER_TEAMS,
 ].map((t) => [t.id, t]));
 
+/**
+ * A team with a plan (roadmap milestone 5): each Bestiole gets a moveset chosen like a player's (`plannedMoves`:
+ * its own types, coverage, one status or set-up move; stencils from `STENCILS_FROM`) and a nature that suits it,
+ * kept in `plan`: `partyOf` uses it where `planned` says (moves and natures written in the data always win).
+ */
+/** From this level a planned Bestiole may use its stencil moves (after the story). */
+export const STENCILS_FROM = 45;
+
+export function planTeam(list: TrainerMon[]): TrainerMon[] {
+  return list.map(({ plan: _old, ...m }) => {
+    const moves = plannedMoves(m.species, m.level, m.level >= STENCILS_FROM);
+    return { ...m, plan: { moves, nature: plannedNature(m.species, moves) } };
+  });
+}
+
+/**
+ * Whether a team's plans are used (`partyOf`): always on Hard; on Normal only for post-game teams (`POSTGAME_ACE`),
+ * the story's bosses keeping the moves they were tuned with; never on Easy.
+ */
+export function planned(list: { level: number }[], difficulty: Difficulty): boolean {
+  return difficulty === 'hard' || (difficulty === 'normal' && Math.max(0, ...list.map((m) => m.level)) >= POSTGAME_ACE);
+}
+
+/** A route trainer whose best Bestiole reaches this level gives it a Golden Berry (from Route 6 on). */
+export const ACE_BERRY_FROM = 26;
+
+// bosses (Atelier Masters, admins, fair-copy trainers) bring teams with a plan; later route trainers a berry
+for (const t of Object.values(TRAINERS)) {
+  if (t.badge || t.fairCopy || t.items?.length) t.party = planTeam(t.party);
+  else if (!t.party.some((m) => m.item) && Math.max(...t.party.map((m) => m.level)) >= ACE_BERRY_FROM) {
+    const ace = t.party.reduce((a, m) => (m.level >= a.level ? m : a));
+    ace.item = 'baie-doree';
+  }
+}
+
 /** The rival's potions in each of his battles (he plays like an Atelier Master). */
 export const RIVAL_ITEMS: Record<'rivalLac' | 'rivalCourse' | 'rivalFinal', string[]> = {
   rivalLac: ['potion'], rivalCourse: ['super-potion'], rivalFinal: ['super-potion', 'super-potion'],
@@ -914,12 +965,12 @@ export function rivalFinalTeam(rivalStarter: string, choice?: 'a' | 'b'): Traine
   const third = rivalStarter === '001' ? { species: '050', level: 40 } : { species: '053', level: 40, item: 'lunettes-tetues' };
   // told to train (choice 5 « entraîne-toi »), he did: two of his Bestioles are stronger and hold an item
   const trained = choice === 'a';
-  return [
+  return planTeam([
     { species: '036', level: 40, item: 'plume-vive' }, { species: '008', level: 40 }, third,
     trained ? { species: '007', level: 41, item: 'bandeau-tetu' } : { species: '007', level: 40 },
     trained ? { species: '027', level: 41, item: 'loupe' } : { species: '027', level: 40 },
     { species: grownForm(rivalStarter, ace.level), ...ace },
-  ];
+  ]);
 }
 
 /** The answer the player gave the rival at the Misty Tower (choice 5): 'a' train, 'b' you're great as you are. */
@@ -929,15 +980,15 @@ export const RIVAL_ACE_NAME = L('Mon Trait', 'My Line');
 
 /** The rival's team at the Lac des Couleurs: his starter, grown, is the ace. */
 export function rivalLacTeam(rivalStarter: string): TrainerDef['party'] {
-  return [{ species: '026', level: 15 }, { species: '004', level: 18 }, { species: grownForm(rivalStarter, 20), level: 20 }];
+  return planTeam([{ species: '026', level: 15 }, { species: '004', level: 18 }, { species: grownForm(rivalStarter, 20), level: 20 }]);
 }
 
 /** The rival's team on Glitter Road, between the fifth and sixth badges: the race to the eight badges, halfway. */
 export function rivalCourseTeam(rivalStarter: string): TrainerDef['party'] {
-  return [
+  return planTeam([
     { species: '026', level: 25 }, { species: '008', level: 25 }, { species: '027', level: 26 },
     { species: grownForm(rivalStarter, 28), level: 28 },
-  ];
+  ]);
 }
 
 /** The rival picks the starter that yours beats, so the very first battle is winnable. */

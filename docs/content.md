@@ -393,6 +393,13 @@ test in `src/data/ateliers/<town>.test.ts`, with the searches of `src/data/puzzl
   good. `trainerBattle()` saves `tr:<id>`, `storyFlag` and the badge in one `update` before any line is
   said; `repair()` in `src/state/game.ts` also restores them for saves made by older versions.
 - `item` on a party entry: a held item (berries are eaten in battle).
+- `nature`, `talent`, `moves` on a party entry: written by hand, they always apply (neutral nature, talent slot 0
+  and the last four moves learnt otherwise). Bosses (a `badge`, `fairCopy` or `items`), the rival's teams and the
+  post-game teams also carry a `plan` (`planTeam`, `src/data/movesets.ts`: the best hit of each of its types, the hit
+  that covers most other types, one status or set-up move, a nature for the side its moves lean on; stencil moves
+  from L45). `partyOf` uses it on Hard, and on Normal only for post-game teams (ace L48+, `POSTGAME_ACE`, `planned`):
+  the story's bosses keep the moves they were tuned with. A route trainer whose ace reaches L26 without an item gives
+  it a Golden Berry (`ACE_BERRY_FROM`).
 - `items`: potions in the trainer's bag (`potion`, `super-potion`, `retouche`), used by a thinking trainer when its
   Bestiole would fall to the next hit (or is asleep, frozen or paralysed while healthy). Give them to Atelier
   Masters from Marine on, admins and bosses, not to Act 1 trainers. `brainOf` (same file) decides by difficulty who

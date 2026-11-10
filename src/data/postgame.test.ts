@@ -150,9 +150,9 @@ describe('Atelier Masters’ rematches', () => {
     }
   });
 
-  it('starts at your team’s level (at least L45) and grows by two per rematch won', () => {
+  it('starts at your team’s level (at least L48) and grows by two per rematch won', () => {
     const t = TRAINERS.mireille;
-    expect(masterRematchParty(t, 0, 30).at(-1)!.level).toBe(45);
+    expect(masterRematchParty(t, 0, 30).at(-1)!.level).toBe(48);
     expect(masterRematchParty(t, 0, 50).at(-1)!.level).toBe(50);
     expect(masterRematchParty(t, 2, 50).at(-1)!.level).toBe(54);
     expect(masterRematchParty(t, 40, 100).at(-1)!.level).toBe(REMATCH_MAX_LEVEL);
@@ -187,5 +187,25 @@ describe('the rival after the story', () => {
     const trained = rivalFinalTeam('001', 'a');
     expect(trained.filter((m, i) => m.level > plain[i].level && m.item)).toHaveLength(2);
     expect(rivalFinalTeam('001', 'b')).toEqual(plain);
+  });
+});
+
+describe('teams with a plan', () => {
+  it('every boss carries a plan of real moves it can know, and Normal keeps the story’s movesets', async () => {
+    const { knowable } = await import('./movesets');
+    const { partyOf, planned } = await import('./trainers');
+    for (const t of Object.values(TRAINERS).filter((t) => t.badge || t.fairCopy || t.items?.length)) {
+      for (const m of t.party) {
+        expect(m.plan, `${t.id} ${m.species}`).toBeDefined();
+        expect(m.plan!.moves.length).toBeGreaterThan(0);
+        expect(m.plan!.moves.length).toBeLessThanOrEqual(4);
+        for (const id of m.plan!.moves) expect(knowable(m.species, m.level, true), `${t.id} ${m.species} ${id}`).toContain(id);
+      }
+      // the story's bosses play on Normal as they were tuned
+      expect(planned(t.party, 'normal'), t.id).toBe(false);
+      expect(planned(t.party, 'hard')).toBe(true);
+      const hard = partyOf(t.party, 1, 'hard');
+      expect(hard.map((m) => m.moves.map((s) => s.id))).toEqual(t.party.map((m) => m.plan!.moves));
+    }
   });
 });

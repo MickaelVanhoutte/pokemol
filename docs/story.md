@@ -603,8 +603,15 @@ Normal sims: 52–100% (Basile with Minousse is the hardest); Easy 89–100%; Ha
 | | Levels | Trainer IVs | AI | Catch rate |
 |---|---|---|---|---|
 | Easy | −15% (at least −1) | 6 | Random move 35% of the time (`aiChoose` `slip`), nobody thinks ahead, no potions | ×2 |
-| Normal | as written | 12 | Best move; bosses and trainers from L20 think ahead and use their potions; after the story, one switch | ×1 |
-| Hard | +10% | 20 | Every trainer thinks ahead, three switches, bosses with twice the potions, others from L30 one Super Potion | ×1 |
+| Normal | as written | 12 | Best move; bosses and trainers from L20 think ahead and use their potions; after the story (ace L48+), one switch and planned teams | ×1 |
+| Hard | +10% | 20 | Every trainer thinks ahead, three switches, bosses with twice the potions and planned teams, others from L30 one Super Potion | ×1 |
+
+**Teams with a plan (Nov 2026, roadmap milestone 5).** Bosses, the rival and the post-game carry a planned moveset and
+nature (`planTeam`, `src/data/movesets.ts`), used on Hard and on Normal after the story only. On Normal the plans
+made the story's bosses much harder in the sims (Basile 95/67 → 45/31, the rival on Route 6 63/94 → 31/59, Blanche's
+last 60/60 → 19/24 even without stencils), so the story keeps its tuned movesets there. Hard got harder:
+Nocturne 19–24%, the rival's finale 2–19%, the Great Eraser 61–80% (the sim's player never switches nor heals).
+Route trainers' aces from L26 hold a Golden Berry.
 
 **Trainers who think (Nov 2026, roadmap milestone 1).** `brainOf` (`src/data/trainers.ts`) gives a trainer a `smart`
 side, a number of `switches` and its bag (`items`); `src/engine/pk/ai.ts` then estimates each move's damage with the

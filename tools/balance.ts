@@ -195,9 +195,9 @@ const STEPS: [string, Team][] = [
   // the rival's weekly rematch, once the Concours is won (RIVAL_WINS=n: after n wins, the team two levels higher per win)
   ['rivalPost', team(58 + 2 * Math.min(RIVAL_WINS, 10), 6, 0)],
   // the Atelier Masters' first rematch, just after the story (a team of six at L47)
-  ...Object.keys(MASTER_REMATCH_IDS).map((id): [string, Team] => [`${id}:re`, team(47, 6, 0)]),
+  ...Object.keys(MASTER_REMATCH_IDS).map((id): [string, Team] => [`${id}:re`, team(48, 6, 0)]),
 ];
-const trainer = (id: string): TrainerDef => id.endsWith(':re') ? { ...TRAINERS[id.slice(0, -3)], id: `${id.slice(0, -3)}:rematch`, party: masterRematchParty(TRAINERS[id.slice(0, -3)], 0, 47) }
+const trainer = (id: string): TrainerDef => id.endsWith(':re') ? { ...TRAINERS[id.slice(0, -3)], id: `${id.slice(0, -3)}:rematch`, party: masterRematchParty(TRAINERS[id.slice(0, -3)], 0, 48) }
   : TRAINERS[id] ?? concoursStage(CONCOURS.find((st) => st.trainer.id === id)!.n, WINS).trainer;
 /** The foe's team against this starter: the rival picks the starter that beats yours. */
 const foeParty = (id: string, starter: string) =>

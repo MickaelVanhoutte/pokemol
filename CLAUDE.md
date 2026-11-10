@@ -120,7 +120,8 @@ re-renders everything.
   `grownForm(id, level)` for trainer teams), natures;
 - moves, the type chart, items (`kind: 'key'` for story items); one fishing rod, whose catch follows the
   team's level (`fishing.ts`, a map's `fishing: { low, mid, high }`);
-- trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`), badges, sketchbook pages;
+- trainers (levels are the Normal difficulty; `partyOf` applies `DIFFICULTY`; bosses carry a `plan`, a moveset and
+  nature from `src/data/movesets.ts`, used on Hard and after the story: `planTeam`, `planned`), badges, sketchbook pages;
 - `maps/<area>.ts`, merged in `maps/index.ts`. Map rows are strings; `LEGEND` in
   `src/overworld/mapTypes.ts` maps each character to a tile id;
 - `custom.ts`: the player's own Bestiole, drawn at the Atelier des Brouillons (`save.atelier`): registered as

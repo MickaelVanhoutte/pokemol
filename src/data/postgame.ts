@@ -5,7 +5,7 @@ import { NEUTRAL_NATURE } from './natures';
 import { move } from './moves';
 import { CREATURE_BY_ID, CUSTOM_ID, creature } from './creatures';
 import { ITEM_BY_ID } from './items';
-import { rivalFinalTeam, type TrainerDef, type TrainerMon } from './trainers';
+import { planTeam, POSTGAME_ACE, rivalFinalTeam, type TrainerDef, type TrainerMon } from './trainers';
 
 // ------------------------------------------------------------------ Grand Concours
 
@@ -18,7 +18,7 @@ export interface ConcoursStage {
 }
 
 const stage = (n: number, look: string, t: Omit<TrainerDef, 'money'> & { money?: number }): ConcoursStage =>
-  ({ n, look, trainer: { money: 5000 + n * 1000, fairCopy: true, items: ['super-potion', 'super-potion'], ...t } });
+  ({ n, look, trainer: { money: 5000 + n * 1000, fairCopy: true, items: ['super-potion', 'super-potion'], ...t, party: planTeam(t.party) } });
 
 /**
  * Four Atelier Masters at their best, then Prof. Fusain. Levels are for Normal (Easy and Hard
@@ -136,7 +136,8 @@ export function concoursStage(n: number, wins: number, hall: HallEntry[] = []): 
     party = base.trainer.party.map((m, i) => ({ ...m, species: species[i] ?? m.species }));
     if (plan && wins >= 2) party.splice(party.length - 1, 0, { species: plan.sixth, level: Math.min(...base.trainer.party.map((m) => m.level)) });
   }
-  party = party.map((m) => ({ ...m, level: lv(m.level), species: fullyGrown(m.species, lv(m.level)) }));
+  // grown and stronger: their moves and natures are planned again for what they became
+  party = planTeam(party.map((m) => ({ ...m, level: lv(m.level), species: fullyGrown(m.species, lv(m.level)) })));
   const before = champion ? (mirror.length ? PROF_MIRROR : PROF_AGAIN) : n === 1 ? [base.trainer.before[0], AGAIN] : [AGAIN];
   return { ...base, trainer: { ...base.trainer, party, before, money: base.trainer.money + 1000 * Math.min(wins, 10) } };
 }
@@ -160,18 +161,18 @@ export const MASTER_REMATCH: Record<string, string[]> = {
 
 /**
  * A Master's rematch team (`times`: rematches already won): six fully grown Bestioles, the ace at the player's
- * team's level (`level`, `teamLevel`), at least L45, two more per rematch won (five times at most), up to
+ * team's level (`level`, `teamLevel`), at least `POSTGAME_ACE` (L48), two more per rematch won (five times at most), up to
  * `REMATCH_MAX_LEVEL`; its teammates two or three levels below. The ace keeps the item of her first battle.
  */
 export function masterRematchParty(t: TrainerDef, times: number, level: number): TrainerMon[] {
   const team = MASTER_REMATCH[t.id] ?? t.party.map((m) => m.species);
-  const ace = Math.min(REMATCH_MAX_LEVEL, Math.max(45, level) + 2 * Math.min(times, 5));
+  const ace = Math.min(REMATCH_MAX_LEVEL, Math.max(POSTGAME_ACE, level) + 2 * Math.min(times, 5));
   const item = t.party.at(-1)?.item;
-  return team.map((sp, i) => {
+  return planTeam(team.map((sp, i) => {
     const last = i === team.length - 1;
     const lv = last ? ace : ace - 3 + (i % 2);
     return { species: fullyGrown(sp, lv), level: lv, ...(last && item ? { item } : {}) };
-  });
+  }));
 }
 
 // ------------------------------------------------------------------ the rival, after the story
@@ -186,10 +187,10 @@ export const RIVAL_MAX_LEVEL = 80;
  */
 export function rivalPostTeam(rivalStarter: string, wins: number, choice?: 'a' | 'b', extra = 0): TrainerMon[] {
   const up = 15 + 2 * Math.min(wins, 10) + extra;
-  return rivalFinalTeam(rivalStarter, choice).map((m) => {
+  return planTeam(rivalFinalTeam(rivalStarter, choice).map((m) => {
     const level = Math.min(RIVAL_MAX_LEVEL, m.level + up);
     return { ...m, level, species: fullyGrown(m.species, level) };
-  });
+  }));
 }
 
 // ------------------------------------------------------------------ Hall of Fame
