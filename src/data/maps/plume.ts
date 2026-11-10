@@ -60,7 +60,8 @@ export const PLUME_MAPS: Record<string, MapDef> = {
       { id: 'papiPlume', x: 14, y: 15, look: { hair: '#e8e8f0', shirt: '#8a5a32', pants: '#5a4a3a', hat: '#e0a030' }, facing: 'left', script: 'papiPlume' },
       { id: 'bridgeMan', x: 16, y: 8, look: LOOKS.sailor, facing: 'right', script: 'plumeBridge' },
       { id: 'birdKid', x: 5, y: 14, look: LOOKS.kid, facing: 'right', wander: true, text: [L('Les Piafou chantent tous les matins. Mais ce matin, ils se sont tus d’un coup…', 'The Chirpies sing every morning. But this morning they suddenly went quiet…')], afterStory: { text: [L('Les Piafou chantent de nouveau tous les matins. Et depuis quelques jours, ils chantent deux fois plus fort !', 'The Chirpies sing every morning again. And for a few days now, they’ve been singing twice as loud!')] } },
-      { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true, text: [
+      { id: 'plumeGranny', x: 14, y: 4, look: LOOKS.granny, facing: 'down', wander: true,
+        night: [L('Il est tard ! Au clair de lune, certaines Bestioles sortent enfin de leur cachette.', 'It’s late! By moonlight, some Critters finally come out of hiding.')], text: [
         L('Gaspard, le Maître d’Atelier, dort plus qu’il ne se bat. Mais quand il se réveille… attention !', 'Gaspard, the Atelier Master, sleeps more than he battles. But when he wakes up… watch out!'),
         L('Ses Bestioles Normal ne craignent qu’une chose : les coups des Bestioles Combat. Et les attaques Spectre leur passent au travers, sans rien leur faire.', 'His Normal Critters fear only one thing: Fighting Critters’ blows. And Ghost attacks go right through them without doing a thing.'),
       ] },

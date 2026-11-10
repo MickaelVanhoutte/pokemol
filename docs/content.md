@@ -151,6 +151,12 @@ in `maps/index.ts`. The fields are documented in `src/overworld/mapTypes.ts`.
   (`don:<npc id>`, announced with `gotItem`). Players talk to townsfolk hoping for help, so a town has one giver
   (`src/data/balloons.test.ts` checks it): a few berries, balls or a cure, ideally with a tip for the next Atelier.
   Keep a town's other folk few, each with a line that says something (lore, a tip, a quest), not only scenery.
+- On an NPC, `when: ['day' | 'evening' | 'night', …]`: only there at those times of the day (day 7–19 h, evening
+  19–21 h, night 21–7 h, the device's clock shifted by naps). Each town has one person of the night (a stargazer,
+  the lamplighter, the baker before dawn…) and its children go home at night. `night: [lines]` replaces `text` after
+  dark. Neither goes on a trainer, a script, a giver or an Inn helper (`maps.test.ts`), so nothing the story needs
+  ever hides. When the time of day turns while you stand there, `updateTime` rebuilds the map (`refreshMap`, at most
+  every 30 s) and they come and go.
 - The Pencil Balloon (`src/data/balloons.ts`) stands at least 2 tiles from the town's exits (and the 5 tiles leading
   in) and from every door, with nobody standing within 2 tiles (a wanderer within 4): test-enforced. Move the
   town's `fly` tile in `WORLD` with it.

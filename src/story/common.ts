@@ -50,7 +50,9 @@ async function innSleep(morning: boolean) {
 scripts.auberge = async () => {
   const first = !flag('visitedCenter');
   const morning = dayPhase() === 'night';
-  const c = await ask(L('Bienvenue à l’Auberge ! Une petite pause, ou un bon gros dodo ?', 'Welcome to the Inn! A little rest, or a good long sleep?'),
+  const c = await ask(morning
+    ? L('Tu arrives tard ! Entre vite te réchauffer. Une petite pause, ou un bon gros dodo ?', 'You’re out late! Come in and warm up. A little rest, or a good long sleep?')
+    : L('Bienvenue à l’Auberge ! Une petite pause, ou un bon gros dodo ?', 'Welcome to the Inn! A little rest, or a good long sleep?'),
     [L('Se reposer', 'Rest'), morning ? L('Dormir jusqu’au matin', 'Sleep till morning') : L('Dormir jusqu’à la nuit', 'Sleep till night'), L('Non merci', 'No thanks')], INNKEEPER);
   if (c === 0) {
     await say(L('Un bon chocolat chaud, une couverture toute douce… Repose-toi un peu.', 'A nice hot chocolate, a soft blanket… Have a little rest.'), INNKEEPER);

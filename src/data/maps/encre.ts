@@ -179,6 +179,8 @@ export const ENCRE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'encreOld', x: 9, y: 12, look: LOOKS.granny, facing: 'down', script: 'encreOld' },
       { id: 'encreGuard', x: 5, y: 11, look: LOOKS.gomme, facing: 'up', hideIf: 'badge:encre', text: [L('L’Usine à Gommes ? Interdit d’entrer ! … À moins d’avoir battu Nocturne, hé hé.', 'The Eraser Factory? No entry! … Unless you’ve beaten Nocturne, hee hee.')] },
+      // a poet under the street lamp
+      { id: 'encreNuit', x: 11, y: 5, look: LOOKS.clerk, facing: 'down', when: ['night'], text: [L('J’écris des poèmes à l’encre de nuit. Le jour, on ne peut pas les lire !', 'I write poems in night ink. By day, you can’t read them!')] },
       { id: 'encreWish', x: 2, y: 13, look: LOOKS.girl, facing: 'left', wander: true, text: [L('Si tu jettes une pièce dans la Fontaine-Encrier, ton vœu s’écrit tout seul sur l’eau ! Moi, j’ai souhaité un Brumouille.', 'Toss a coin in the Inkwell Fountain and your wish writes itself on the water! I wished for a Mistchief.')] },
       // a fan of Nocturne's, waiting by the Atelier: while she is away, then once she is back
       { id: 'encreFan', x: 13, y: 11, look: { hair: '#1a1424', shirt: '#7b60c3', pants: '#2a2238', longHair: true }, facing: 'up', hideIf: 'a3.phare', text: [L('L’Atelier est fermé depuis des jours… Nocturne est partie en courant, la cape au vent et un encrier vide à la main.', 'The Atelier’s been shut for days… Nocturne ran off, cape flying, an empty inkwell in her hand.')] },

@@ -194,7 +194,8 @@ evolution; `coconfus.ts` wraps other scripts, so it is imported last. Maps refer
 - a trainer's `afterScript`.
 
 Progress lives in `save.flags`. Maps react to flags declaratively:
-- `showIf` / `hideIf` on NPCs, and `if` / `unless` on triggers;
+- `showIf` / `hideIf` on NPCs, and `if` / `unless` on triggers; `when` (day, evening, night) and `night` lines on
+  townsfolk, the map rebuilt when the time of day turns (`updateTime`);
 - `patches`, which redraw part of the map (erased or restored areas; `?` keeps the tile underneath);
 - `tintUnless` (and `drained`, real greys until the flag; `primaries` tint them one paint colour at a time);
 - `sketchUnless` on buildings and on a town (only pencil lines until the flag; its Inn and shop rooms too).

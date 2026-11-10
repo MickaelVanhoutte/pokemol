@@ -1,3 +1,4 @@
+import type { DayPhase } from '../state/clock';
 import type { Backdrop } from '../data/schema';
 import type { DrainMix, Primary } from '../data/primaries';
 import type { LText } from '../i18n';
@@ -53,6 +54,13 @@ export interface NpcDef {
    * (a few berries, balls, a cure), often with a tip. `if`: only once that flag is set.
    */
   gift?: { item: string; n?: number; text: LText; if?: string };
+  /**
+   * Only there at these times of the day (day 7–19 h, evening 19–21 h, night 21–7 h): the map is rebuilt when the
+   * time of day turns while you stand there (`updateTime`).
+   */
+  when?: DayPhase[];
+  /** Lines said at night instead of `text` (a character without a script). */
+  night?: LText[];
   /** Once the story is over: lines said instead of `text`, and a present given the first time (`cadeau:<id>`). */
   afterStory?: { text: LText[]; gift?: { item: string; n?: number; text: LText } };
 }

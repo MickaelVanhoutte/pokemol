@@ -143,6 +143,8 @@ export const PAILLETTE_MAPS: Record<string, MapDef> = {
       { id: 'tradePaillette', x: 3, y: 13, look: LOOKS.ghostgirl, facing: 'right', script: 'trade_paillette' },
       { id: 'block1', x: 9, y: 1, look: LOOKS.gomme, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },
       { id: 'block2', x: 10, y: 1, look: LOOKS.gommeF, facing: 'down', script: 'paillBlock', hideIf: 'a3.tour' },
+      // the stargazer
+      { id: 'paillNuit', x: 16, y: 9, look: LOOKS.ghostgirl, facing: 'up', when: ['night'], text: [L('Regarde là-haut : à Paillette, même les étoiles ont des paillettes.', 'Look up there: in Glitter, even the stars are glittery.')] },
       { id: 'paillGirl', x: 16, y: 13, look: LOOKS.girl, facing: 'left', wander: true, script: 'paillGirl' },
       { id: 'paillVoeu', x: 20, y: 12, look: { hair: '#f2d05a', shirt: '#f29ac8', pants: '#7b60c3', longHair: true, bow: '#ffffff' }, facing: 'right', text: [
         L('Chut… je fais un vœu. On jette une paillette dans la fontaine et on ferme les yeux très fort.', 'Shh… I’m making a wish. You throw a speck of glitter into the fountain and shut your eyes really tight.'),

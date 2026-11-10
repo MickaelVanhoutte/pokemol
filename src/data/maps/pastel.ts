@@ -80,7 +80,9 @@ export const PASTEL_MAPS: Record<string, MapDef> = {
         L('Ici, tout est dessiné aux pastels. Quand il pleut, les couleurs coulent un peu, c’est joli !', 'Everything here is drawn in pastels. When it rains, the colours run a little. It’s pretty!'),
         L('Pistache t’a donné ses ciseaux ? Alors nos haies sont entre de bonnes mains !', 'Pistachio gave you his scissors? Then our hedges are in good hands!'),
       ] } },
-      { id: 'kid2', afterStory: { text: [L('Depuis ton retour, Mireille a planté plein de nouvelles fleurs dans son jardin. Ses Bestioles Insecte n’ont jamais été aussi contentes !', 'Since you came back, Mireille has planted lots of new flowers in her garden. Her Bug Critters have never been so happy!')] }, x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, text: [
+      // a painter who only comes out at night
+      { id: 'pastelNuit', x: 16, y: 10, look: LOOKS.clerk, facing: 'up', when: ['night'], text: [L('Je peins la lune. Le jour, elle se cache derrière les nuages au pastel.', 'I’m painting the moon. By day it hides behind the pastel clouds.')] },
+      { id: 'kid2', afterStory: { text: [L('Depuis ton retour, Mireille a planté plein de nouvelles fleurs dans son jardin. Ses Bestioles Insecte n’ont jamais été aussi contentes !', 'Since you came back, Mireille has planted lots of new flowers in her garden. Her Bug Critters have never been so happy!')] }, x: 19, y: 8, look: { hair: '#5a3a20', shirt: '#f8d030', pants: '#3a5aa8' }, facing: 'left', wander: true, when: ['day', 'evening'], text: [
         L('Mireille, la Maître d’Atelier, adore les Bestioles Insecte. Le Feu, le Vol et la Roche, elles détestent !', 'Mireille, the Atelier Master, loves Bug Critters. They hate Fire, Flying and Rock!'),
         L('Et regarde souvent ta Carte de Dresseur, page PROGRÈS : à force de combattre et d’attraper, on y gagne des cadeaux !', 'And keep an eye on your Trainer Card, PROGRESS page: battle and catch enough and you win presents there!'),
       ] },

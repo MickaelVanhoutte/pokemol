@@ -60,6 +60,16 @@ describe('maps', () => {
         }
       });
 
+      it('gives hours only to people without a part to play (no trainer, script, present or service)', () => {
+        for (const n of map.npcs ?? []) {
+          if (!n.when && !n.night) continue;
+          for (const p of n.when ?? []) expect(['day', 'evening', 'night'], n.id).toContain(p);
+          if (n.when) expect(n.when.length, n.id).toBeGreaterThan(0);
+          expect(n.trainer ?? n.script ?? n.gift ?? n.service, n.id).toBeUndefined();
+          if (n.night) expect(n.text, `${n.id}: night lines replace its day lines`).toBeDefined();
+        }
+      });
+
       it('places NPCs and triggers on free tiles', () => {
         for (const n of map.npcs ?? []) {
           expect(walkable(map, n.x, n.y, false), `npc ${n.id}`).toBe(true);

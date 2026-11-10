@@ -158,6 +158,8 @@ export const GOUACHE_MAPS: Record<string, MapDef> = {
     berries: [{ x: 2, y: 8, item: 'baie-doree' }],
     npcs: [
       { id: 'rosalie', x: 16, y: 13, look: LOOKS.granny, facing: 'left', script: 'rosalie' },
+      // watering by moonlight
+      { id: 'gouaNuit', x: 15, y: 10, look: LOOKS.granny, facing: 'left', when: ['night'], text: [L('La nuit, les fleurs de gouache se referment, pour que leurs couleurs ne coulent pas.', 'At night the gouache flowers close up, so their colours don’t run.')] },
       { id: 'gouaKid', x: 8, y: 13, look: LOOKS.kid, facing: 'left', text: [L('Au nord, la Cité-Encre est toute noire… On dit que le chef des Gomme s’y cache.', 'Up north, Ink City is all black… They say the Team Gomme boss hides there.')] },
       // the fisher gave up on the town's flower beds: she sits by the lily pond now
       {

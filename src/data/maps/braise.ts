@@ -177,7 +177,9 @@ export const BRAISE_MAPS: Record<string, MapDef> = {
     npcs: [
       { id: 'tradeBraise', x: 11, y: 12, look: LOOKS.hiker, facing: 'down', script: 'trade_braise' },
       { id: 'braiseOld', x: 21, y: 5, look: LOOKS.granny, facing: 'down', text: [L('Le volcan ? Il crache des étincelles de crayon orange quand il est content.', 'The volcano? It spits orange crayon sparks when it’s happy.')] },
-      { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, text: [
+      // the baker, before dawn
+      { id: 'braiseNuit', x: 13, y: 9, look: LOOKS.grandma, facing: 'down', when: ['night'], text: [L('Je prépare le pain de demain dans le four à braises. Ça sent bon, hein ?', 'I’m baking tomorrow’s bread in the ember oven. Smells good, doesn’t it?')] },
+      { id: 'braiseKid', x: 6, y: 13, look: LOOKS.kid, facing: 'up', wander: true, when: ['day', 'evening'], text: [
         L('Ambre allume les bougies d’anniversaire avec son Braisou. Trop fort !', 'Amber lights birthday candles with her Embersal. So cool!'),
         L('Mais ses Bestioles Feu ont peur de l’Eau, de la Roche et du Sol. Et les Plante, Insecte et Glace, elles, fondent comme neige !', 'But her Fire Critters are scared of Water, Rock and Ground. And Grass, Bug and Ice ones just melt away!'),
       ] },

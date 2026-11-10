@@ -126,7 +126,14 @@ export function updateTime(snap = false) {
   game.timeTint = tintAt(hourNow(save.value?.clockShift ?? 0));
   game.night = dayPhase() === 'night';
   if (snap) game.snapTint();
+  // the time of day turned while you stand there: people who keep hours come and go (`when` on an NPC)
+  const phase = dayPhase();
+  const turned = shownPhase !== null && shownPhase !== phase;
+  shownPhase = phase;
+  if (turned && game.lock === 0 && screen.value.id === 'overworld' && !dialog.value && game.map.def.npcs?.some((n) => n.when)) refreshMap();
 }
+/** The time of day the map's people were last placed for. */
+let shownPhase: DayPhase | null = null;
 export const flag = (name: string) => !!save.value?.flags[name];
 /** Set when a flag changes, so the map (patches, NPCs) is rebuilt once the script ends. */
 let mapDirty = false;
@@ -137,6 +144,8 @@ export function setFlag(name: string, v = 1) {
 
 function visibleNpc(n: NpcDef): boolean {
   if (n.showIf && !flag(n.showIf)) return false;
+  // people who keep hours: the night watch, children called in at night…
+  if (n.when && !n.when.includes(dayPhase())) return false;
   // after the ending, Team Gomme's admins wait at the fortress top only
   if (n.trainer && RETIRED.includes(n.trainer) && flag('ending')) return false;
   if (n.hideIf && flag(n.hideIf)) return false;
@@ -446,6 +455,7 @@ function onInteract(target: { npc?: Actor; sign?: { text: LText }; pickup?: Pick
     if (def.afterStory && flag('ending')) return void locked(() => afterStoryTalk(def));
     if (def.script && scripts[def.script]) return void runScript(def.script);
     if (def.later && flag(def.later.if)) return void locked(() => sayAll(def.later!.text));
+    if (def.night && dayPhase() === 'night') return void locked(() => sayAll(def.night!));
     const gift = def.gift;
     if (gift && !flag(`don:${def.id}`) && (!gift.if || flag(gift.if))) {
       return void locked(async () => {

@@ -178,6 +178,8 @@ export const FEUTRE_MAPS: Record<string, MapDef> = {
     ],
     npcs: [
       { id: 'tradeFeutre', x: 18, y: 17, look: LOOKS.girl, facing: 'left', script: 'trade_feutre' },
+      // the lamplighter, at dusk and at night
+      { id: 'feutreNuit', x: 12, y: 10, look: LOOKS.hiker, facing: 'down', when: ['evening', 'night'], text: [L('J’allume les lampadaires au feutre jaune. Sans moi, la ville serait toute noire !', 'I light the street lamps with yellow felt-tip. Without me, the town would be pitch black!')] },
       { id: 'theo', x: 2, y: 17, look: LOOKS.kid, facing: 'right', script: 'theo' },
       { id: 'feutreMan', x: 10, y: 17, look: LOOKS.hiker, facing: 'left', script: 'feutreMan' },
       { id: 'feutreKid', x: 15, y: 18, look: LOOKS.kid, facing: 'left', wander: true, script: 'feutreKid' },

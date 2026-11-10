@@ -56,7 +56,9 @@ export const GALERIE_MAPS: Record<string, MapDef> = {
       { id: 'pantheon', x: 14, y: 7, look: LOOKS.grandma, facing: 'left', script: 'pantheon' },
       // the rival, once the Concours is won: a rematch a week (src/story/postgame.ts)
       { id: 'rivalGalerie', x: 7, y: 16, look: LOOKS.rival, facing: 'right', script: 'rivalGalerie', showIf: 'champion' },
-      { id: 'galerieKid', x: 6, y: 10, look: LOOKS.kid, facing: 'down', wander: true,
+      // the night guard
+      { id: 'galerieNuit', x: 18, y: 15, look: LOOKS.hiker, facing: 'left', when: ['night'], text: [L('Je veille sur les chefs-d’œuvre. La nuit, on dirait que les tableaux respirent…', 'I watch over the masterpieces. At night, the paintings almost seem to breathe…')] },
+      { id: 'galerieKid', x: 6, y: 10, look: LOOKS.kid, facing: 'down', wander: true, when: ['day', 'evening'],
         text: [L('Cette page-là, la petite artiste l’a coloriée en dernier. Regarde comme les couleurs débordent !', 'The little artist coloured this page in last. Look how the colours go over the lines!')] },
       { id: 'galerieGirl', x: 13, y: 15, look: LOOKS.girl, facing: 'up',
         text: [L('Au Grand Concours, on enchaîne cinq combats sans passer par une Auberge. Prends plein de potions !', 'At the Grand Contest you fight five battles in a row without resting at an Inn. Bring lots of potions!')] },
